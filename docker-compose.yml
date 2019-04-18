@@ -1,0 +1,74 @@
+version: '3.3'
+
+services:
+  db:
+    image: seism-db-img
+    container_name: seism-db
+    build:
+      context: ./services/app_api/main/db
+      dockerfile: Dockerfile
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - local-network
+
+  api:
+    image: seism-api-img
+    container_name: seism-api
+    build:
+      context: ./services/app_api
+      dockerfile: Dockerfile
+    volumes:
+      - './services/app_api:/usr/app'
+    ports:
+      - '5000:5000'
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=main.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/db_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@db:5432/db_test
+    depends_on:
+      - db
+    networks:
+      - local-network
+
+  ui:
+    image: seism-ui-img
+    container_name: seism-ui
+    build:
+      context: ./AngularApp
+      dockerfile: ./Dockerfile
+    ports:
+      - '3030:3030'
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+    volumes:
+      - www:/usr/app/dist/www
+    networks:
+      - local-network
+
+  nginx:
+    image: seism-nginx-img
+    container_name: seism-nginx
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - api
+      - ui
+    networks:
+      - local-network
+
+networks:
+ local-network:
+  driver: bridge
+volumes:
+ www:
