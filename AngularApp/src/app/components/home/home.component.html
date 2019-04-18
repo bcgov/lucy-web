@@ -1,0 +1,11 @@
+<div class="container">
+  <app-nav-bar></app-nav-bar>
+  <div class="container dashboard">
+      <div *ngIf="!isLogin" class="alert alert-warning" role="alert">
+          <strong>Login!</strong> Please login to view Species list.
+      </div>
+      <div *ngIf="isLogin">
+          <app-species-table></app-species-table>
+      </div>
+  </div>
+</div>
