@@ -1,5 +1,4 @@
 import { Component, ElementRef, AfterViewInit, EventEmitter, Output, NgZone, AfterViewChecked } from '@angular/core';
-import { StoreService, UserRemoteService } from '../../services';
 import { User, RemoteAPIStatus } from 'src/app/models';
 declare const gapi: any;
 declare const location: any;
@@ -51,7 +50,6 @@ export class GoogleSigninComponent implements AfterViewInit, AfterViewChecked {
               token: googleUser.getAuthResponse().id_token,
               profileImageURL: profile.getImageUrl()
             };
-            StoreService.getInstance().saveUser(user);
             location.href = `http://localhost:80`;
           }, (error: any)  => {
               console.log(JSON.stringify(error, undefined, 2));
@@ -59,7 +57,7 @@ export class GoogleSigninComponent implements AfterViewInit, AfterViewChecked {
           });
       }
 
-      constructor(private element: ElementRef, private zone: NgZone, private userService: UserRemoteService) {
+      constructor(private element: ElementRef, private zone: NgZone) {
           console.log('ElementRef: ', this.element);
       }
 
