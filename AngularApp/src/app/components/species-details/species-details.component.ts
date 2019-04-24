@@ -1,7 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SpeciesService, Store} from '../../services';
 import { AppRoutes, AppRoutesParams} from '../../constants';
 import { Species, SpeciesDetails, Category, SpeciesPost, RemoteAPIStatus} from '../../models';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -47,7 +46,7 @@ export class SpeciesDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private zone: NgZone,
-    private service: SpeciesService, private _sanitizer: DomSanitizer) {
+    private _sanitizer: DomSanitizer) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       latin: ['', Validators.required],
@@ -57,7 +56,6 @@ export class SpeciesDetailsComponent implements OnInit {
   }
   get f() { return this.registerForm.controls; }
   ngOnInit() {
-    this.categories = Store.categories;
     this.route.params.subscribe((params) => {
       this.action = params.action;
       this.id = +params.id;
@@ -85,32 +83,7 @@ export class SpeciesDetailsComponent implements OnInit {
   }
 
   async fetchSpecies() {
-    const value: SpeciesDetails = await this.service.species(this.id);
-    if (value && value.id === this.id) {
-      this.zone.run(() => {
-        if (this.isEditable) {
-          this.registerForm = this.formBuilder.group({
-            name: [value.name, Validators.required],
-            latin: [value.latin, Validators.required],
-            description: [value.description, [Validators.required]]
-          });
-        } else {
-          console.log('Disabling Form');
-          this.registerForm = this.formBuilder.group({
-            name: [{value: value.name, disabled: true}],
-            latin: [{value: value.latin, disabled: true}],
-            description: [{value: value.description, disabled: true}]
-          });
-          this.registerForm.controls['name'].disable();
-          this.registerForm.controls['latin'].disable();
-          this.registerForm.controls['description'].disable();
-        }
-        this.selectedDate = value.introduction;
-        this.selectCategory(value.category);
-      });
-    } else {
-      alert('Unable to fetch species details');
-    }
+    
   }
 
   selectCategory(input: string) {
@@ -131,38 +104,12 @@ export class SpeciesDetailsComponent implements OnInit {
   }
 
   async create() {
-    console.log('Will Create');
-    const post: SpeciesPost = {
-      name: this.f['name'].value as string,
-      category: this.selectedCategoryName,
-      introduction: this.selectedDate,
-      description: this.f['description'].value as string,
-      latin: this.f['latin'].value as string
-    };
-
-    const status: RemoteAPIStatus = await this.service.create(post);
-    alert(status.message);
-    if (status.success) {
-      this.submitted = false;
-      this.clear();
-    }
+   
     this.router.navigate(['/']);
   }
 
   async update() {
-    console.log('Will Upate');
-    const post: SpeciesDetails = {
-      id: this.id,
-      name: this.f['name'].value as string,
-      category: this.selectedCategoryName,
-      introduction: this.selectedDate,
-      description: this.f['description'].value as string,
-      latin: this.f['latin'].value as string
-    };
-
-    const status: RemoteAPIStatus = await this.service.update(post);
-    alert(status.message);
-    this.submitted = false;
+    
   }
 
   clear() {

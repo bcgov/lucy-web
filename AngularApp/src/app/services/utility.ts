@@ -1,4 +1,3 @@
-import { Store } from './store-service';
 import { AppRoutes} from '../constants/app-routes.enum';
 import { RemoteAPIStatus } from '../models';
 import { HttpHeaders } from '@angular/common/http';
@@ -14,12 +13,6 @@ export class Utility {
        return this.instance || (this.instance = new this());
    }
 
-   // Bootstrap Login check
-   public get isUserLogin(): boolean {
-       Store.loadUser();
-       return Store.isUserLoggedIn;
-   }
-
    public appRoute(route: AppRoutes): string {
        return `/${route}`;
    }
@@ -32,13 +25,6 @@ export class Utility {
        return apiStatus;
    }
 
-   public get hettpOptions(): object {
-       return {
-        headers: new HttpHeaders({
-            'Authorization': `Bearer ${Store.user.token}`
-          })
-       };
-   }
 }
 
 export const UtilityService = Utility.getInstance();

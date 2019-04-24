@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Species , Category} from '../../models';
-import { SpeciesService, CategoryService } from 'src/app/services';
-import { UtilityService, Store} from '../../services';
+import { UtilityService} from '../../services';
 import { Router } from '@angular/router';
 import { AppRoutes, AppRoutesParams} from '../../constants/app-routes.enum';
 @Component({
@@ -27,20 +26,14 @@ export class SpeciesTableComponent implements OnInit {
   sortingByIntroductionDate = false;
 
   /* Setup Functions */
-  constructor(private speciesService: SpeciesService, private categoryService: CategoryService,private router: Router) {
+  constructor() {
     this.fetchData();
   }
 
   async fetchSpecies() {
-    let allSpecies = await this.speciesService.all();
-    this.models = allSpecies;
-    this.sortByName();
   }
 
   async fetchCategories() {
-    let allCategories = await this.categoryService.categories();
-    this.categories = allCategories;
-    this.categories.unshift(this.getAllCategoriesOption());
   }
 
   fetchData() {
@@ -72,21 +65,7 @@ export class SpeciesTableComponent implements OnInit {
   }
 
   async selectCategory(id: String) {
-    //getted from event
-    console.log(id);
-    if (id == this.getAllCategoriesOption().id) {
-      this.fetchSpecies();
-    } else {
-      let category = this.getCategory(id)
-      let allSpecies = await this.speciesService.all();
-      let filtered: Species[] = [];
-      for (let species of allSpecies) {
-        if (species.category == category.name) {
-          filtered.push(species);
-        }
-      }
-      this.models = filtered;
-    }
+    
   }
 
   /* Sorting Functions*/
@@ -233,24 +212,16 @@ export class SpeciesTableComponent implements OnInit {
 
   /* Action functions */
   async delete(species) {
-    console.log("Delete " + species.name)
-    if(confirm("Delete " + species.name + "?")) {
-      await this.speciesService.remove(species)
-      this.fetchSpecies()
-    }
   }
 
   edit(species) {
     console.log("Edit " + species.name)
-    this.router.navigate([UtilityService.appRoute(AppRoutes.DetailRef), AppRoutesParams.DetailEdit, species.id]);
   }
 
   view(species) {
     console.log("View " + species.name)
-    this.router.navigate([UtilityService.appRoute(AppRoutes.DetailRef), AppRoutesParams.DetailView, species.id]);
   }
 
   create() {
-    this.router.navigate([UtilityService.appRoute(AppRoutes.DetailRef), AppRoutesParams.DetailAdd, -1]);
   }
 }
