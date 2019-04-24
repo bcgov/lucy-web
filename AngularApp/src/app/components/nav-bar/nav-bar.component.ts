@@ -17,7 +17,7 @@ export class NavBarComponent implements OnInit {
   @Input() hideAddButton = false;
 
   // Local state
-  isLogin = false;
+  isLogin = true;
 
   userName = '';
 
@@ -25,7 +25,6 @@ export class NavBarComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    this.isLogin = UtilityService.isUserLogin;
   }
 
   logout() {
