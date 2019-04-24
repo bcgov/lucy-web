@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import {UserRemoteService, CategoryService } from '../../services';
 
 import { HomeComponent } from './home.component';
 
@@ -13,8 +12,7 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
       declarations: [ HomeComponent ],
-      schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-      providers: [UserRemoteService, CategoryService]
+      schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

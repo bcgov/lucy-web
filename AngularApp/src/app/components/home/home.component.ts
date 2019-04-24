@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UtilityService, Store, UserRemoteService, CategoryService} from '../../services';
+import { UtilityService} from '../../services';
 import { RemoteAPIStatus} from '../../models';
 @Component({
   selector: 'app-home',
@@ -7,23 +7,18 @@ import { RemoteAPIStatus} from '../../models';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  isLogin = false;
+  isLogin = true;
 
-  constructor(private userService: UserRemoteService, private categoryService: CategoryService) {
+  constructor() {
     this.update();
   }
 
   async update() {
-    if (UtilityService.isUserLogin) {
-      const user = Store.user;
-      const status: RemoteAPIStatus = await this.userService.updateUser(user) as RemoteAPIStatus;
-
-      await this.categoryService.categories();
-    }
+    
   }
 
   ngOnInit() {
-    this.isLogin = UtilityService.isUserLogin;
+   
   }
 
 }
