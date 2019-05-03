@@ -1,0 +1,30 @@
+{
+  "generator-bcdk": {
+    "promptValues": {
+      "modules": {
+        "jenkins": {
+          "path": ".jenkins",
+          "namespace": "8ecbmv-tools",
+          "name": "jenkins",
+          "version": "1.0.0",
+          "environments": {
+            "build": {
+              "namespace": "8ecbmv-tools"
+            },
+            "dev": {
+              "namespace": "8ecbmv-tools"
+            },
+            "prod": {
+              "namespace": "8ecbmv-tools"
+            }
+          },
+          "jenkinsJobName": "_jenkins",
+          "github_owner": "bcgov",
+          "github_repo": "lucy-web",
+          "jenkinsFilePath": ".jenkins/Jenkinsfile",
+          "uuid": "cd2a6d2e-4e8a-41e1-a732-9f54569d8758"
+        }
+      }
+    }
+  }
+}
