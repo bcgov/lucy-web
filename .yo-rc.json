@@ -23,6 +23,30 @@
           "github_repo": "lucy-web",
           "jenkinsFilePath": ".jenkins/Jenkinsfile",
           "uuid": "cd2a6d2e-4e8a-41e1-a732-9f54569d8758"
+        },
+        "app": {
+          "name": "app",
+          "version": "1.0.0",
+          "path": "app",
+          "environments": {
+            "build": {
+              "namespace": "8ecbmv-tools"
+            },
+            "dev": {
+              "namespace": "8ecbmv-dev"
+            },
+            "test": {
+              "namespace": "8ecbmv-test"
+            },
+            "prod": {
+              "namespace": "8ecbmv-prod"
+            }
+          },
+          "jenkinsJobName": "app",
+          "github_owner": "bcgov",
+          "github_repo": "lucy-web",
+          "jenkinsFilePath": "app/Jenkinsfile",
+          "uuid": "559063ad-8a62-4321-a014-e9c174d8153b"
         }
       }
     }
