@@ -25,6 +25,7 @@ pipeline {
                 sh "cd .jenkins/.pipeline && ./npmw ci && ./npmw run build -- --pr=${CHANGE_ID}"
             }
         }
+	//Test update
         stage('Deploy (DEV)') {
             agent { label 'deploy' }
             steps {
