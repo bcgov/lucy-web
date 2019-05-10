@@ -29,7 +29,7 @@
     <data>
       <jenkins.branch.BranchSource>
         <source class="org.jenkinsci.plugins.github_branch_source.GitHubSCMSource" plugin="github-branch-source@2.3.6">
-          <id>0e302194-2a5b-454c-87b2-188a96bd3b2e</id>
+          <id>a056ed1a-aff3-4477-944d-30471f610682</id>
           <credentialsId>github-account</credentialsId>
           <repoOwner>bcgov</repoOwner>
           <repository>lucy-web</repository>
