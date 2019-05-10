@@ -11,6 +11,7 @@ module.exports = (settings)=>{
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
 
   // The building of your cool app goes here ▼▼▼
+  console.log('build app');
 
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, phases[phase].changeId, phases[phase].instance)
   oc.applyAndBuild(objects)
