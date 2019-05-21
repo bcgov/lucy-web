@@ -1,0 +1,32 @@
+.circle {
+    border-radius: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    background: #d6d6d6;
+   
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+  }
+
+  .user-button {
+    font-size: 30px;
+	font-weight: bold; 
+    line-height: 41px;
+    color: #ffffff;
+  }
+
+  .user-role{ 
+      
+  }
+
+  .user-name {
+    color: #000000;
+	font-family: "SF Pro Display";
+	font-size: 34px;
+	font-weight: bold;
+	line-height: 41px;
+  }
+
+  .user-access {
+  }
