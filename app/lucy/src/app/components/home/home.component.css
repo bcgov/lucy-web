@@ -1,0 +1,14 @@
+.dashboard {
+    height: 80%;
+    width: 100%
+}
+
+.dash-box {
+    margin: 15px;
+    border-radius: 2px;
+    border: 0.5px solid black;
+}
+
+.col-fixed, .row {
+  float: left;
+}

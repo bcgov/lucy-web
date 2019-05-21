@@ -1,0 +1,214 @@
+<div class="view-title-section">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-9 view-title">
+        Add Observation <span class="view-title-detail">- Plant</span>
+      </div>
+      <div class="col-12 col-md-3">
+        <button type="button" class="btn btn-secondary submit-button">Submit Observation</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 subsection-title">
+      Location
+      <hr>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Easting</label>
+        <input type="text" [(ngModel)]="eastings" (change)="utmValuesChanged()"
+          class="form-control field-box field-input" />
+      </div>
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Northings</label>
+        <input type="text" [(ngModel)]="northings" (change)="utmValuesChanged()"
+          class="form-control field-box field-input" />
+      </div>
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Zone</label>
+        <input type="text" [(ngModel)]="zone" (change)="utmValuesChanged()"
+          class="form-control field-box field-input" />
+      </div>
+    </div>
+    <div class="col-12 col-md-1"></div>
+    <div class="col-12 col-md-1 seperator">
+      <div class="separator-inner"> OR </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Latitude</label>
+        <input type="text" [(ngModel)]="lat" (change)="latLongValuesChanged()" class="form-control field-box"
+          [ngClass]="validLat ? 'field-input' : 'field-input-invalid'" />
+      </div>
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Longitude</label>
+        <input type="text" [(ngModel)]="long" (change)="latLongValuesChanged()" class="form-control field-box"
+          [ngClass]="validLong ? 'field-input' : 'field-input-invalid'" />
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div id="map" style="height: 400px; position: relative;"></div>
+    </div>
+
+  </div>
+  <!-- <p>
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+      hello world hello world hello world hello world hello world hello world
+  </p> -->
+  <div class="row">
+    <div class="col-12">
+
+    </div>
+
+  </div>
+</div>
+<br>
+<!-- Test Buttons -->
+<hr>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <button type="button" (click)="testWithLatLon()" class="btn btn-secondary">Test - Autofill Victoria Lat
+        Lon</button>
+    </div>
+    <div class="col-12 col-md-6">
+      <button type="button" (click)="testWithUTM()" class="btn btn-secondary">Test - Autofill Victoria UTM</button>
+    </div>
+    <div class="col-12 col-md-6">
+      <button type="button" (click)="testWithKewloanaLatLong()" class="btn btn-secondary">Test - Autofill Kewlona Lat
+        Lon</button>
+    </div>
+    <div class="col-12 col-md-6">
+      <button type="button" (click)="testWithKewloanaUTM()" class="btn btn-secondary">Test - Autofill Kewlona
+        UTM</button>
+    </div>
+  </div>
+</div>
+<hr>
+<!-- ------ -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 subsection-title">
+      Details
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-md-3 field">
+      <label for="name" class="field-header">Survey Date</label>
+      <input type="text" [(ngModel)]="surveyDate" (change)="surveyDateChanged()" class="form-control field-box field-input" />
+    </div>
+    <div class="col-12 col-md-3 field">
+      <label for="name" class="field-header">Survery Agency</label>
+      <input type="text" [(ngModel)]="surveryAgency" (change)="surveryAgencyChanged()" class="form-control field-box field-input" />
+    </div>
+    <div class="col-12 col-md-3 field">
+      <label for="name" class="field-header">Surveyors</label>
+      <input type="text" [(ngModel)]="surveyors" (change)="surveyorsChanged()" class="form-control field-box field-input" />
+    </div>
+    <div class="col-12 col-md-3">
+      <button type="button" class="btn btn-secondary">+ Add Surveyor</button>
+    </div>
+  </div>
+</div>

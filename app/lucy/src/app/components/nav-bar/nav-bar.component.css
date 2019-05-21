@@ -1,0 +1,45 @@
+.app-navbar {
+  margin: 10px;
+  border-bottom: 1px solid black;
+  background: #333333;
+}
+
+.title-app {
+  font-style: normal;
+  font-weight: 600;
+  line-height: 23px;
+  font-size: 18px;
+  letter-spacing: -0.434118px;
+  color: #ffffff;
+}
+
+.nav-logout-btn {
+  border-radius: 2px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.logout-icon {
+  margin-left: 5px;
+}
+
+.user-name {
+  font-style: normal;
+  font-weight: 500;
+  line-height: 23px;
+  font-size: 15px;
+  letter-spacing: -0.434118px;
+  color: #000000;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.circle {
+  border-radius: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  background: #d6d6d6;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}

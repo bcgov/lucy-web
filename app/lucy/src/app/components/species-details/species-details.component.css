@@ -1,0 +1,44 @@
+.details-action-button {
+    width: 100%;
+    border-radius: 2px;
+    border: 1px solid #979797;
+}
+
+.top-buffer { 
+    margin-top:20px; 
+}
+
+.field-box {
+    border: 1px solid #333333;
+    box-sizing: border-box;
+}
+
+textarea {
+    height: 200px;
+}
+
+.add-new {
+    background: #9B9B9B;
+}
+
+.field-header {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    font-size: 15px;
+    color: #999999;
+}
+
+.field-input {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    font-size: 15px;
+    color: #333333;
+}
+
+.line-break {
+    border: 1px;
+    background: #333333;
+    box-shadow: inset 0px 1px 0px #999999;
+}
