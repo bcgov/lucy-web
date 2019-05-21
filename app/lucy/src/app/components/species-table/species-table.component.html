@@ -1,0 +1,72 @@
+<div>{{selectedCategoryName}}</div>
+<div class="container">
+  <div class="row align-center">
+      <div class="col-lg-5 col-md-12 col-sm-12">
+        <h3>Species Library</h3>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="row filter-category">
+          <div class="col-md-5 col-sm-5 filter-label">
+            <div>Filter Library:</div>
+          </div>
+          <div class="col-md-7 col-sm-7">
+              <select (change)="selectCategory($event.target.value)" [(ngModel)]="selectedCategoryId" class="filter-dropdown">
+                  <option *ngFor="let cat of categories" [value]="cat.id" [selected]="cat.id === selectedCategoryId">{{cat.name}}</option>
+              </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 ccol-md-6 col-sm-12">
+        <button class="btn create-button" type="button" (click)="create()">Create New Library Item</button>
+      </div>
+  </div>
+  <div class="row">
+      <table class="table  table-hover">
+          <thead class="thead, table-header">
+            <tr>
+              <th scope="col" (click)="sortByName()">
+                COMMON NAME
+                <i *ngIf="sortingByName && !sortAscending" class="material-icons">arrow_downward</i>
+                <i *ngIf="sortingByName && sortAscending" class="material-icons">arrow_upward</i>
+              </th>
+              <th scope="col" (click)="sortByLatinName()">
+                LATIN NAME
+                <i *ngIf="sortingByLatinName && !sortAscending" class="material-icons">arrow_downward</i>
+                <i *ngIf="sortingByLatinName && sortAscending" class="material-icons">arrow_upward</i>
+              </th>
+              <th scope="col" (click)="sortByCategory()">
+                CATEGORY
+                <i *ngIf="sortingByCategory && !sortAscending" class="material-icons">arrow_downward</i>
+                <i *ngIf="sortingByCategory && sortAscending" class="material-icons">arrow_upward</i>
+              </th>
+              <th scope="col" (click)="sortByIntroductionDate()">
+                DATE INTRODUCED
+                <i *ngIf="sortingByIntroductionDate && !sortAscending" class="material-icons">arrow_downward</i>
+                <i *ngIf="sortingByIntroductionDate && sortAscending" class="material-icons">arrow_upward</i>
+              </th>
+              <th scope="col">
+                ACTIONS
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-row" *ngFor="let item of models">
+              <td scope="row" (click)="view(item)">{{item.name}}</td>
+              <td scope="row" (click)="view(item)">{{item.latin}}</td>
+              <td scope="row" (click)="view(item)">{{item.category}}</td>
+              <td scope="row" (click)="view(item)">{{item.introduction}}</td>
+              <td>
+                <div class="option-buttons">
+                  <button class="btn action-button table-row float-left edit-button" type="button" (click)="edit(item)">
+                      Edit
+                  </button>
+                <button class="btn action-button table-row float-right" type="button" (click)="delete(item)"> 
+                      Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+    <app-nav-bar hideAddButton="true"></app-nav-bar>
+    <div class="container">
+        <h5>{{title}}</h5>
+        <h6 *ngIf="isEditable"> {{subTitle}} </h6>
+        <hr style="border: 1px solid #d6d6d6" />
+        <div class="row">
+            <div class="col-sm-12">
+                <form  [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <img class="img-thumbnail float-left" [src]="image">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <fieldset [disabled]="!isEditable">
+                                <div class="col-sm-12">
+                                    <label for="name" class="field-header">Common Name</label>
+                                    <input type="text" formControlName="name" class="form-control field-box field-input" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                                        <div *ngIf="f.name.errors.required">Name is required</div>
+                                     </div>
+                                </div>
+                                <div class="col-sm-12 top-buffer">
+                                    <label for="latin" class="field-header">Latin Name</label>
+                                    <input type="text" formControlName="latin" class="form-control field-box field-input" [ngClass]="{ 'is-invalid': submitted && f.latin.errors }" />
+                                    <div *ngIf="submitted && (f.latin.errors)" class="invalid-feedback">
+                                        <div *ngIf="f.latin.errors && f.latin.errors.required">Latin name is required</div>
+                                        <div>Please enter a valid latin name</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-12 top-buffer">
+                                                <label for="introduction" class="field-header">Date Introduced</label>
+                                                <br/>
+                                                <dp-date-picker [disabled]="!isEditable" [config]="pickerConfig" [placeholder]="selectedDate" [mode]="'day'" (onChange)="onTimePickFrom($event)" ></dp-date-picker>
+                                                <div *ngIf="submitted && !selectedDate" class="invalid-feedback">
+                                                    <div>Introduction date is required</div>
+                                                    <div>Please select date</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12 top-buffer">
+                                                <label for="category" class="field-header">Category</label>
+                                                    <select [disabled]="!isEditable" (change)="onCategorySelect($event.target.value)"  class="form-control field-box " [ngClass]="{ 'is-invalid': submitted && !selectedCategory }">
+                                                        <option *ngFor="let c of categories" [selected]="c.name === selectedCategoryName">{{c.name}}</option>
+                                                    </select>
+                                                <div *ngIf="submitted && !selectedCategory" class="invalid-feedback">
+                                                    <div>Category is required</div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 top-buffer">
+                                    <label for="description" class="field-header">Description</label>
+                                    <textarea formControlName="description" class="form-control field-box" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" ></textarea>
+                                    <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                                        <div *ngIf="f.description.errors.required">Description is required</div>
+                                        <div>Please add a description</div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <!-- buttons-->
+                    <hr style="border: 1px solid #d6d6d6" />
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="row top-buffer">
+                                <div class="col-lg-6 col-md-6 col-sm-12">    
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a [routerLink]="['/']" class="btn details-action-button">Cancel</a>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button *ngIf="isEditable" [disabled]="loading && isEditable" class="btn details-action-button add-new" type="button" (click)="onSubmit()">
+                                                {{actionButtonTitle}}
+                                            </button>
+                                            <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                        </div>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
