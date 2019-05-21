@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+_app_data
+
+**/node_modules
+**/npm-debug.log
+**/dist/**
+**/server-dist/**
+**/_app_data
+
+app_api/node_modules
+app_api/npm-debug.log
+app_api/server-dist
+app_api/_app_data
