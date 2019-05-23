@@ -9,7 +9,7 @@ import { AppRoutes} from './constants/app-routes.enum'
 import { HomeComponent } from './components/home/home.component';
 import { SpeciesDetailsComponent} from './components/species-details/species-details.component'
 import { ProfileComponent } from './components/profile/profile.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   {
