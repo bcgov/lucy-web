@@ -36,17 +36,13 @@ export class SsoService {
   private code: string = "";
   private refreshTimer = null;
 
-  // public static get shared(): SsoService {
-  //   return this.instance || (this.instance = new this());
-  // }
-
   constructor(private cookieService: CookieService, private httpClient: HttpClient, private activatedRoute: ActivatedRoute, private router: Router) {
     // If user is not authenticated, listen to route changes
     if (!this.isAuthenticated()) {
       this.listenForRidirect();
     } else {
       // User is not authenticated. wait for redirect.
-      this.beginTokeRefreshTimer()
+      this.beginTokeRefreshTimer();
     }
   }
 

@@ -8,6 +8,8 @@ import { AppRoutes} from './constants/app-routes.enum'
 // Local
 import { HomeComponent } from './components/home/home.component';
 import { SpeciesDetailsComponent} from './components/species-details/species-details.component'
+import { ProfileComponent } from './components/profile/profile.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {
@@ -18,7 +20,9 @@ const routes: Routes = [
     path: AppRoutes.Detail,
     component: SpeciesDetailsComponent
   },
-  { path: '**', component: HomeComponent }
+  { path: '**', component: HomeComponent },
+  { path: 'login', component: LoginComponent},
+  { path: 'profile', component: ProfileComponent}
 ];
 
 @NgModule({

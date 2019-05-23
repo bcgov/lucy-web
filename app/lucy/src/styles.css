@@ -1,18 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
 .dashboard-body {
-    top: 100px
+  top: 100px
+}
+
+.form-container {
+  border: 1px solid #999999;
+  width: 450px;
+}
+
+.box-header {
+  margin-top: 20px;
+}
+
+/* Common Buttons */
+.button-fill {
+  color: #FFFFFF !important;
+  background-color: #333333 !important;
+}
+
+.button-hollow {
+  color: black !important;
+  background-color: #F7F7F7 !important;
+  border: 1px solid #333333 !important;
+}
+
+/* Center material icons with text */
+.material-icons {
+  vertical-align: middle;
+}
+
+/* clobal class for alignment */
+.to-the-left {
+    text-align: left;
+}
+
+.to-the-right {
+    text-align: right;
 }
 
 .text-center {
     text-align: center;
 }
 
-
-.form-container {
-    border: 1px solid #999999;
-    width: 450px;
+/* Make all headers bold */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold !important;
 }
 
-.box-header {
-    margin-top: 20px;
+/* Normal text content */
+.body-text {
+
 }
+
+/* Buttons with Material icons*/
+.btn-with-icon {
+    border-radius: 2px;
+    display: flex;
+    flex-wrap: wrap;
+  }
