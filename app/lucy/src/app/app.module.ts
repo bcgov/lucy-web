@@ -16,12 +16,15 @@ import {DpDatePickerModule} from 'ng2-date-picker';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 
+// Mock backend
+import { InMemoryWebApiModule } from 'angular-in-memory-web-api';  
+import { MockBackendService } from './services/mock-Backend.service';
+
 // Application
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GoogleSigninComponent } from './components/google-signin/google-signin.component';
 import { SpeciesDetailsComponent } from './components/species-details/species-details.component';
 import { SpeciesTableComponent } from './components/species-table/species-table.component';
 import { AddPlantObservationComponent } from './components/add-plant-observation/add-plant-observation.component';
@@ -36,7 +39,6 @@ import { ProfileComponent } from './components/profile/profile.component';
     AppComponent,
     HomeComponent,
     NavBarComponent,
-    GoogleSigninComponent,
     SpeciesDetailsComponent,
     SpeciesTableComponent,
     AddPlantObservationComponent,
@@ -53,6 +55,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     NgbModule,
     DpDatePickerModule,
     RouterModule,
+    // InMemoryWebApiModule.forRoot(MockBackendService, { dataEncapsulation: false, passThruUnknownUrl: true })
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [CookieService, SsoService],

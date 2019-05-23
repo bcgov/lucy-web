@@ -2,6 +2,8 @@
 
 
 export class AppConstants {
+
+    // SSO
     static SSOConstants = {
         SSO_CLIENT_ID : "lucy",
         SSO_BASE_URL : "https://sso.pathfinder.gov.bc.ca",
@@ -17,6 +19,8 @@ export class AppConstants {
     static SSO_TokenEndpoint() : string {
         return `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect/token`;
     }
+    
+
 }
 
 
