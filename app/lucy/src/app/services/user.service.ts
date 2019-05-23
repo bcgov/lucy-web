@@ -3,7 +3,6 @@ import {User, UserAccessType } from 'src/app/models';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
 import { RemoteEndPointService } from '../constants';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
