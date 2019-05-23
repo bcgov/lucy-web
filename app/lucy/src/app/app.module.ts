@@ -16,10 +16,6 @@ import {DpDatePickerModule} from 'ng2-date-picker';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 
-// Mock backend
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';  
-import { MockBackendService } from './services/mock-Backend.service';
-
 // Application
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
@@ -55,7 +51,6 @@ import { ProfileComponent } from './components/profile/profile.component';
     NgbModule,
     DpDatePickerModule,
     RouterModule,
-    // InMemoryWebApiModule.forRoot(MockBackendService, { dataEncapsulation: false, passThruUnknownUrl: true })
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [CookieService, SsoService],
