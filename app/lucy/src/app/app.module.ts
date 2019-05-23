@@ -28,7 +28,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { SpeciesDetailsComponent } from './components/species-details/species-details.component';
 import { SpeciesTableComponent } from './components/species-table/species-table.component';
 import { AddPlantObservationComponent } from './components/add-plant-observation/add-plant-observation.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './components/login/login.component';
 import { Injector } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SsoService } from './services/sso.service';
