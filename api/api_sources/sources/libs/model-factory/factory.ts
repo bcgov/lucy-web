@@ -1,4 +1,4 @@
-import { getConnection, Connection, ObjectType } from 'typeorm';
+import { getConnection, Connection } from 'typeorm';
 import { BaseModel } from '../../database/models/BaseModel';
 
 type getData = (() => object);
