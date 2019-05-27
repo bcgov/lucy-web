@@ -1,0 +1,29 @@
+FROM postgres:9.5
+
+
+ENV POSTGISV 2.5
+ENV TZ America/New_York
+
+# add addressing dictionary
+RUN mkdir -p /opt/apps
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+  postgresql-$PG_MAJOR-postgis-$POSTGISV \
+  postgresql-$PG_MAJOR-postgis-$POSTGISV-scripts \
+  postgresql-$PG_MAJOR-pgrouting \
+  postgresql-$PG_MAJOR-pgrouting-scripts \
+  postgresql-server-dev-$PG_MAJOR \
+  && apt-get purge -y --auto-remove postgresql-server-dev-$PG_MAJOR \
+  && apt-get clean
+
+# set time zone
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+
+# add init script
+RUN mkdir -p /docker-entrypoint-initdb.d
+COPY ./create_postgis.sql /docker-entrypoint-initdb.d/postgis.sql
+
+EXPOSE 5432
+CMD ["postgres"]
