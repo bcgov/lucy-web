@@ -32,7 +32,7 @@ services:
   container_name: ${PROJECT_NAME}-${TAG}-db
   build:
     context: ./.docker/db
-    dockerfile: Dockerfile
+    dockerfile: Dockerfile.local
   ports:
     - 5435:5432
   environment:
