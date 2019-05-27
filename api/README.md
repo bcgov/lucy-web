@@ -1,4 +1,4 @@
-# HarbourAir Flight Ops
+# Lucy - Invasive species management tools (ISMT)
 
 
 
@@ -9,8 +9,20 @@
 * Install GMAKE
 * Clone repository
 * Change to project dir (from command line or terminal)
+
 ## Docker
-#### Unix/Linux/Mac/Windows
+
+### Unix/Linux/Mac/Windows
+
+### Setting up Env
+
+* Duplicate env.example to env.local file
+* Create Empty .env file in root dir
+* Update app secret values in env.local (env.local is .gitignored)
+
+### Run App in Local env
+
 * RUN APP : make local
 * DEBUG APP: make local_debug
 * Stop App: make close_local
+* Clean App: make clean_local
