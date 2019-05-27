@@ -1,7 +1,7 @@
 import { CreateDateColumn, UpdateDateColumn, Connection} from "typeorm";
 
 
-export abstract class BaseModel implements FactoryModel {
+export abstract class BaseModel  {
     
     @CreateDateColumn({ 
         name: 'create_at',
