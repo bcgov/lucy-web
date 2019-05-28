@@ -27,10 +27,10 @@ RUN rm -rf ./dist-server
 # Building App
 RUN npm run build
 
-ENV NODE_PATH /home/nodejs/app/sources
+ENV NODE_PATH /opt/app-root/app
 
 
-VOLUME /home/nodejs/app
+VOLUME /opt/app-root/app
 
 EXPOSE 3001
 
