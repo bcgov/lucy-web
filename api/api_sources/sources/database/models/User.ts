@@ -4,12 +4,13 @@
 
  // Lib Import
 //import * as bcryptjs from  'bcryptjs';
-import {Column, Entity, PrimaryGeneratedColumn, Unique, OneToMany} from "typeorm";
+import {Column, Entity, PrimaryGeneratedColumn, Unique, OneToMany, ManyToOne, JoinColumn} from "typeorm";
 
 // Local Import
-import { BaseModel } from './BaseModel';
+import { BaseModel, LoadData } from './BaseModel';
 import { UserSession } from './UserSession';
-import { LoadData} from './BaseModel';
+import { LoginAccessCode } from './LoginAccessCode';
+import { DataModelController } from '../DataModelController'
 
 
 
@@ -22,8 +23,7 @@ export interface UserData {
     firstName: string,
     lastName: string,
     email: string,
-    type: string,
-    password?: string
+    accessCode: number,
 }
 
 @Entity({
@@ -33,24 +33,32 @@ export interface UserData {
 export class User extends BaseModel implements LoadData<UserData>{
     
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    email: string
+    email: string;
 
     @Column({ 
         name: 'first_name',
         nullable: true 
     })
-    firstName: string
+    firstName: string;
 
     @Column({ 
         name: 'last_name',
         nullable: true 
     })
-    lastName: string
+    lastName: string;
 
     
+
+    @ManyToOne(type => LoginAccessCode, { eager: true} )
+    @JoinColumn({
+        name: 'login_access_code',
+        referencedColumnName: 'id'
+    })
+    accessCode: LoginAccessCode;
+
 
     @OneToMany(type => UserSession, session => session.user)
     sessions: Promise<UserSession[]>
@@ -62,4 +70,9 @@ export class User extends BaseModel implements LoadData<UserData>{
         this.email = input.email;
         //
     }
+
+    public static get controller(): DataModelController<User> {
+        return new DataModelController<User>(this);
+    }
+
 }
