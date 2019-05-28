@@ -1,10 +1,15 @@
 FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 
-RUN apt-get update
+USER root
+RUN mkdir -p /home/nodejs/app
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/home/nodejs/app/node_modules/.bin/:/home/nodejs/app.npm-global/bin/://home/nodejs/app/bin:/home/nodejs/app/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# RUN set -x \
+
 RUN npm install -g npm
 
 # Create app directory
-RUN mkdir -p /home/nodejs/app
+
 WORKDIR /home/nodejs/app
 
 # Install app dependencies
