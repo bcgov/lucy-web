@@ -1,8 +1,7 @@
 FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 
-USER root
-RUN mkdir -p /home/nodejs/app
-ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/home/nodejs/app/node_modules/.bin/:/home/nodejs/app.npm-global/bin/:/home/nodejs/app/bin:/home/nodejs/app/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN mkdir -p /opt/app-root/app
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/app/node_modules/.bin/:/opt/app-root/app/app.npm-global/bin/:/opt/app-root/app/app/bin:/opt/app-root/app/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # RUN set -x \
 
@@ -10,7 +9,7 @@ RUN npm install -g npm
 
 # Create app directory
 
-WORKDIR /home/nodejs/app
+WORKDIR /opt/app-root/app
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
