@@ -9,9 +9,10 @@
     "docker_start": "npm-run-all -p hotload watch",
     "hotload": "npm run migration:run && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
     "watch": "gulp watch",
-    "test": "NODE_ENV=unit_test npm run migration:run && NODE_ENV=unit_test jest --verbose --coverage --detectOpenHandles sources",
+    "test:all": "NODE_ENV=unit_test npm run migration:run && NODE_ENV=unit_test jest --verbose --coverage --detectOpenHandles sources",
     "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "typeorm": "typeorm"
+    "typeorm": "typeorm",
+    "test": "NODE_ENV=unit_test jest"
   },
   "author": "Pushan Mitra",
   "license": "MIT",

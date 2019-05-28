@@ -35,7 +35,7 @@ class Seeder<D, T extends BaseModel> extends LoggerBase {
                     const newItem: T = newObj as T
                     const newLoad: LoadData<D> = newObj as LoadData<D>
                     newLoad.loadMap(d);
-                    newItem.save(conn)
+                    newItem.loadData(d);
                 }
             } catch(err) {
                 SeedManager.logger.info(`Error while seeding ${seedFileName} => ${err}`)
