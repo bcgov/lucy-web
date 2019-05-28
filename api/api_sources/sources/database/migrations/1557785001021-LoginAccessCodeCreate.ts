@@ -6,6 +6,7 @@ export class LoginAccessCodeCreate1557785001021 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         // Creating table
+        // Schema 
         await queryRunner.query(`CREATE TABLE login_access_codes (
             id SERIAL PRIMARY KEY,
             code VARCHAR (100) NOT NULL,

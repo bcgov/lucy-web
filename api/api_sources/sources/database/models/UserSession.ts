@@ -1,6 +1,7 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, Unique} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, Unique, JoinColumn} from "typeorm";
 import { BaseModel } from "./BaseModel";
 import { User } from './User';
+import { DataModelController } from '../DataModelController'
 
 @Entity({
     name: 'user_sessions'
@@ -45,6 +46,14 @@ export class UserSession extends BaseModel {
      * Relationship
      */
     @ManyToOne(type => User, user => user.sessions, { eager: true})
+    @JoinColumn({
+        name: 'user_id',
+        referencedColumnName: 'id'
+    })
     user: User;
+
+    public static get controller(): DataModelController<UserSession> {
+        return new DataModelController<UserSession>(this);
+    }
 
 }

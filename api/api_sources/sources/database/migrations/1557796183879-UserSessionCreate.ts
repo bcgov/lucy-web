@@ -1,5 +1,5 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
-// import { DatabaseMigrationHelper} from '../migration.helpers';
+import { DatabaseMigrationHelper} from '../migration.helpers';
 
 export class UserSessionCreate1557796183879 implements MigrationInterface {
 
@@ -16,6 +16,9 @@ export class UserSessionCreate1557796183879 implements MigrationInterface {
             user_id INT NULL,
             delete_at TIMESTAMP NULL
         );`);
+
+        // Creating timestamp column
+        await queryRunner.query(DatabaseMigrationHelper.shared.createTimestampsColumns('user_sessions'));
 
         // Foreign Key
         await queryRunner.query(`ALTER TABLE user_sessions

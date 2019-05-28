@@ -1,5 +1,6 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 import { DatabaseMigrationHelper} from '../migration.helpers';
+import { InitialAdmins } from '../initial-data'
 
 export class UserCreate1557785001092 implements MigrationInterface {
 
@@ -13,7 +14,8 @@ export class UserCreate1557785001092 implements MigrationInterface {
             email VARCHAR (100) UNIQUE NOT NULL,
             preferred_username VARCHAR (100) NULL,
             login_type SMALLINT NULL,
-            login_access_code INT NULL
+            login_access_code INT NULL,
+            expiry_date DATE NULL
         );`);
 
         // Creating timestamp column
@@ -25,6 +27,10 @@ export class UserCreate1557785001092 implements MigrationInterface {
         REFERENCES login_access_codes(id)
         ON DELETE SET NULL;`);
 
+        // Create Initial Admins
+        for (const admin of InitialAdmins) {
+            await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB('users', admin));
+        }
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
