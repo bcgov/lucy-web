@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 
 USER root
 RUN mkdir -p /home/nodejs/app
-ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/home/nodejs/app/node_modules/.bin/:/home/nodejs/app.npm-global/bin/://home/nodejs/app/bin:/home/nodejs/app/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/home/nodejs/app/node_modules/.bin/:/home/nodejs/app.npm-global/bin/:/home/nodejs/app/bin:/home/nodejs/app/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # RUN set -x \
 
@@ -15,7 +15,7 @@ WORKDIR /home/nodejs/app
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY ./package*.json ./
+COPY ./package*.json .
 
 RUN npm install
 # If you are building your code for production
@@ -34,6 +34,8 @@ ENV NODE_PATH /home/nodejs/app/sources
 
 
 VOLUME /home/nodejs/app
+
+EXPOSE 3001
 
 CMD ["npm", "run", "deploy_run"]
 
