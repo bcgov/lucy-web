@@ -35,6 +35,7 @@ ENV NODE_PATH /home/nodejs/app/sources
 
 VOLUME /home/nodejs/app
 
+CMD ["npm", "run", "deploy_run"]
 
 #ENTRYPOINT [ "npm", "run", "docker_start" ]
 
