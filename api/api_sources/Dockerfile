@@ -32,7 +32,7 @@ ENV NODE_PATH /opt/app-root/src
 RUN ls -a
 
 
-VOLUME /opt/app-root/app
+VOLUME /opt/app-root/src
 
 EXPOSE 3001
 
