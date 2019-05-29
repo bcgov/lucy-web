@@ -10,6 +10,8 @@ import { SeedManager } from './seed.manager'
 
 export * from './models'
 
+var dbConfig = require('../../ormconfig');
+
 export class DBManager extends LoggerBase {
     private static instance: DBManager;
 
@@ -37,8 +39,19 @@ export class DBManager extends LoggerBase {
                 resolve(true);
             }).catch((err) => {
                 DBManager.logger.error(`[DB Connection] Error: ${err}`);
-                DBManager.logger.error(`[DB Config]: ${JSON.stringify(DBConfig)}`);
-                reject(err)
+                DBManager.logger.error(`[DB Config]: ${JSON.stringify(dbConfig)}`);
+
+                // Try to connect with options directly 
+                createConnections(dbConfig).then((connections: Connection[]) => {
+                    this.connection = connections[0];
+                    DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
+                    resolve(true);
+                }).catch(() => {
+                    DBManager.logger.error(`[DB Connection - 2] Error: ${err}`);
+                    DBManager.logger.error(`[DB Config - 2]: ${JSON.stringify(dbConfig)}`);
+                    reject(err)
+                });
+                
             })
         });
 
