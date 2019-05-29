@@ -6,8 +6,9 @@
   "scripts": {
     "build": "gulp",
     "start": "npm run build && node dist-server/index.js",
+    "app": "ts-node sources",
     "docker_start": "npm-run-all -p hotload watch",
-    "deploy_run": "npm run migration:run && node dist-server/index.js",
+    "deploy_run": "npm run migration:run && npm run app",
     "hotload": "npm run migration:run && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
     "watch": "gulp watch",
     "test:all": "NODE_ENV=unit_test npm run migration:run && NODE_ENV=unit_test jest --verbose --coverage --detectOpenHandles sources",
