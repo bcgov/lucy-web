@@ -17,7 +17,7 @@ class AppConfiguration {
     }
 
     constructor() {
-        this.port = process.env.PORT || 8002;
+        this.port = process.env.PORT || 3001;
         this.host = process.env.HOST || '127.0.0.1';
     }
     
