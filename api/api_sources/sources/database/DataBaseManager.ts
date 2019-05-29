@@ -1,4 +1,4 @@
-import {createConnections, Connection} from 'typeorm';
+import {createConnection, Connection} from 'typeorm';
 //import AppConfig from '../../appConfig'
 import { LoggerBase} from '../server/logger';
 import { RetryManager } from '../server/core/retry.manager'
@@ -32,8 +32,8 @@ export class DBManager extends LoggerBase {
             });
         }
         return new Promise<boolean>((resolve, reject) => {
-            createConnections().then((connections: Connection[]) => {
-                this.connection = connections[0];
+            createConnection().then((connection: Connection) => {
+                this.connection = connection;
                 DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
                 resolve(true);
             }).catch((err) => {
@@ -41,8 +41,8 @@ export class DBManager extends LoggerBase {
                 DBManager.logger.error(`[DB Config]: ${JSON.stringify(dbConfig)}`);
 
                 // Try to connect with options directly 
-                createConnections(dbConfig).then((connections: Connection[]) => {
-                    this.connection = connections[0];
+                createConnection(dbConfig).then((connection: Connection) => {
+                    this.connection = connection;
                     DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
                     resolve(true);
                 }).catch(() => {
