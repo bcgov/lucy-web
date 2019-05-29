@@ -1,5 +1,4 @@
 import {createConnections, Connection} from 'typeorm';
-import { DBConfig } from './db.config';
 //import AppConfig from '../../appConfig'
 import { LoggerBase} from '../server/logger';
 import { RetryManager } from '../server/core/retry.manager'
