@@ -6,6 +6,7 @@ import { AppRoutes, AppRoutesParams} from '../../constants/app-routes.enum';
 import { UtilityService} from '../../services';
 import { SsoService } from 'src/app/services/sso.service';
 import { UserService } from 'src/app/services/user.service';
+import { UserAccessType } from 'src/app/models';
 
 declare const location: any;
 
@@ -15,11 +16,23 @@ declare const location: any;
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit {
-  public get isAuthenticated() : boolean {
+  public userInitials: string = ""
+  public accessType: UserAccessType = UserAccessType.view
+
+  public get isAuthenticated(): boolean {
     return this.ssoService.isAuthenticated();
   }
 
-  public userInitials: string = ""
+  public get isAdmin(): boolean {
+    return (this.accessType == UserAccessType.admin);
+  }
+
+  public get hasDataEntryAccess(): boolean {
+    return (
+      this.accessType == UserAccessType.admin ||
+      this.accessType == UserAccessType.dataEntry
+      );
+  }
 
   // Input
   @Input() hideAddButton = false;
@@ -47,6 +60,13 @@ export class NavBarComponent implements OnInit {
   private setInitials() {
     this.userService.getInitials().then((value) => {
       this.userInitials = value
+      }
+    );
+  }
+
+  private setAccessType() {
+    this.userService.getAccess().then((value) => {
+      this.accessType = value
       }
     );
   }
