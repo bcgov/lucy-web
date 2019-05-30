@@ -27,8 +27,8 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have isLogin', () => {
-    expect(component.isLogin).toBeDefined();
-  });
+//   it('should have isLogin', () => {
+//     expect(component.isLogin).toBeDefined();
+//   });
 
 });
