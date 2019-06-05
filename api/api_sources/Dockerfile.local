@@ -26,6 +26,7 @@ RUN rm -rf ./dist-server
 RUN npm run build
 
 ENV NODE_PATH /home/nodejs/app/sources
+ENV PATH /home/nodejs/app/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 
 VOLUME /home/nodejs/app

@@ -1,21 +1,31 @@
-import { Connection} from 'typeorm';
+// Session Factory
 import * as faker from 'faker';
 import { userFactory } from './UserFactory';
-import { User, UserSession, LoginAccessCodeValue} from '../models';
+import { User, UserSession, UserSessionDataController, LoginAccessCodeValue, SessionActivity, SessionActivityCodeController, SessionActivityController, SessionActivityCodeValues} from '../models';
 
-export const sessionFactory = async (login: LoginAccessCodeValue, connection: Connection): Promise <UserSession> => {
+export const sessionFactory = async (login: LoginAccessCodeValue): Promise <UserSession> => {
     // 1. Create User
-    const user: User = await userFactory(login, connection);
+    const user: User = await userFactory(login);
 
     // 2. Create 
-    const session: UserSession = UserSession.controller.create();
+    const session: UserSession = UserSessionDataController.shared.create();
     session.lastActiveAt = faker.date.recent();
     session.lastActiveAt = faker.date.recent();
     session.token = faker.random.alphaNumeric();
     session.tokenExpiry = faker.date.future();
-    session.tokenExpiryTime = faker.random.number();
+    session.tokenLifeTime = faker.random.number();
     session.user = user;
 
     return session;
 
 };
+
+export const sessionActivityFactory = async (code: SessionActivityCodeValues): Promise<SessionActivity>  => {
+    // 1. Create session
+    const session: UserSession = await sessionFactory(LoginAccessCodeValue.admin);
+    const sessionActivity: SessionActivity = SessionActivityController.shared.create();
+    sessionActivity.session = session;
+    sessionActivity.code = await SessionActivityCodeController.shared.code(code);
+    sessionActivity.info = faker.random.word();
+    return sessionActivity;
+}

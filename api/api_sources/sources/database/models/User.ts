@@ -4,13 +4,14 @@
 
  // Lib Import
 //import * as bcryptjs from  'bcryptjs';
-import {Column, Entity, PrimaryGeneratedColumn, Unique, OneToMany, ManyToOne, JoinColumn} from "typeorm";
+import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany} from "typeorm";
 
 // Local Import
 import { BaseModel, LoadData } from './BaseModel';
 import { UserSession } from './UserSession';
 import { LoginAccessCode } from './LoginAccessCode';
-import { DataModelController } from '../DataModelController'
+import { DataModelController } from '../DataModelController';
+import { UserSchema, LoginAccessTableSchema} from '../database-schema'
 
 
 
@@ -27,37 +28,43 @@ export interface UserData {
 }
 
 @Entity({
-    name: 'users'
+    name: UserSchema.schema.name
 })
-@Unique(['email'])
 export class User extends BaseModel implements LoadData<UserData>{
     
     @PrimaryGeneratedColumn()
-    id: number;
+    user_id: number;
 
     @Column()
     email: string;
 
     @Column({ 
-        name: 'first_name',
+        name: UserSchema.schema.columns.firstName,
         nullable: true 
     })
     firstName: string;
 
     @Column({ 
-        name: 'last_name',
+        name: UserSchema.schema.columns.lastName,
         nullable: true 
     })
     lastName: string;
 
     
 
-    @ManyToOne(type => LoginAccessCode, { eager: true} )
-    @JoinColumn({
-        name: 'login_access_code',
-        referencedColumnName: 'id'
+    @ManyToMany(type => LoginAccessCode, { eager: true} )
+    @JoinTable({
+        name: 'user_role',
+        joinColumn: {
+            name: 'ref_user_id',
+            referencedColumnName: UserSchema.schema.columns.id
+        },
+        inverseJoinColumn: {
+            name: 'ref_access_role_id',
+            referencedColumnName: LoginAccessTableSchema.schema.columns.id
+        }
     })
-    accessCode: LoginAccessCode;
+    accessCodes: LoginAccessCode[];
 
 
     @OneToMany(type => UserSession, session => session.user)
@@ -75,4 +82,10 @@ export class User extends BaseModel implements LoadData<UserData>{
         return new DataModelController<User>(this);
     }
 
+}
+
+export class UserDataController extends DataModelController<User> {
+    public static get shared(): UserDataController {
+        return this.sharedInstance<User>(User, UserSchema) as UserDataController;
+    }
 }

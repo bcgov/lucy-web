@@ -1,22 +1,21 @@
 import { CreateDateColumn, UpdateDateColumn} from "typeorm";
+import { BaseTableSchema } from "../ApplicationSchemaInterface";
 
 
 export abstract class BaseModel  {    
     @CreateDateColumn({ 
-        name: 'create_at',
+        name: BaseTableSchema.timestampColumns.createdAt,
         nullable: true,
         comment: 'Create Timestamp'
     })
     createdAt: Date
 
     @UpdateDateColumn({ 
-        name: 'update_at',
+        name: BaseTableSchema.timestampColumns.updatedAt,
         comment: 'Update Timestamp',
         nullable: true 
     })
     updateAt: Date
-
-    
 
     loadData<T>(data: T) {
         

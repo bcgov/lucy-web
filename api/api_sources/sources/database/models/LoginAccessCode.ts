@@ -2,7 +2,8 @@ import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
 // Local Import
 import { BaseModel } from './BaseModel';
-import { DataModelController } from '../DataModelController'
+import { DataModelController } from '../DataModelController';
+import { LoginAccessTableSchema} from '../database-schema'
 
 /**
  * LoginAccessCodeValues
@@ -16,28 +17,42 @@ export enum LoginAccessCodeValue {
 }
 
 @Entity({
-    name: 'login_access_codes'
+    name: LoginAccessTableSchema.schema.name
 })
 export class LoginAccessCode extends BaseModel {
     @PrimaryGeneratedColumn()
-    id: number;
+    login_access_code_id: number;
 
     @Column({
-        name: 'code'
+        name: LoginAccessTableSchema.schema.columns.code
     })
     code: string;
 
     @Column({
-        name: 'role'
+        name: LoginAccessTableSchema.schema.columns.role
     })
     role: string;
 
     @Column({
-        name: 'description'
+        name: LoginAccessTableSchema.schema.columns.description
     })
     description: string;
+}
 
-    public static get controller(): DataModelController<LoginAccessCode> {
-        return new DataModelController<LoginAccessCode>(this);
+export class LoginAccessCodeController extends DataModelController<LoginAccessCode> {
+
+    private static instance: LoginAccessCodeController
+
+    public static get shared(): LoginAccessCodeController {
+        return this.instance || (this.instance = new this());
+    }
+
+    constructor() {
+        super(LoginAccessCode, LoginAccessTableSchema);
+    }
+
+    async getCode(code: LoginAccessCodeValue): Promise<LoginAccessCode> {
+        return this.fetchOne({code: code})
     }
 }
+

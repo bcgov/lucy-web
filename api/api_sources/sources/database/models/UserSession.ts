@@ -1,19 +1,21 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, Unique, JoinColumn} from "typeorm";
+import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn, OneToMany} from "typeorm";
 import { BaseModel } from "./BaseModel";
 import { User } from './User';
-import { DataModelController } from '../DataModelController'
+import { SessionActivity } from './UserSessionActivity';
+import { DataModelController } from '../DataModelController';
+import { UserSchema, UserSessionSchema} from '../database-schema'
 
 @Entity({
-    name: 'user_sessions'
+    name: UserSessionSchema.schema.name
 })
-@Unique(['token'])
+@Unique([UserSessionSchema.schema.columns.token])
 export class UserSession extends BaseModel {
-
+    
     @PrimaryGeneratedColumn()
-    id: number
+    session_id: number
 
     @Column({ 
-        name: 'last_login_at',
+        name: UserSessionSchema.schema.columns.lastLoginAt,
         nullable: true 
     })
     lastLoginAt: Date;
@@ -25,19 +27,19 @@ export class UserSession extends BaseModel {
     token: string;
 
     @Column({ 
-        name: 'token_expiry',
+        name: UserSessionSchema.schema.columns.tokenExpiry,
         nullable: true 
     })
     tokenExpiry: Date;
 
     @Column({ 
-        name: 'token_lifetime',
+        name: UserSessionSchema.schema.columns.tokenLifetime,
         nullable: true 
     })
-    tokenExpiryTime: number;
+    tokenLifeTime: number;
 
     @Column({ 
-        name: 'last_active_at',
+        name: UserSessionSchema.schema.columns.lastActiveAt,
         nullable: true 
     })
     lastActiveAt: Date;
@@ -45,15 +47,26 @@ export class UserSession extends BaseModel {
     /**
      * Relationship
      */
+    // User
     @ManyToOne(type => User, user => user.sessions, { eager: true})
     @JoinColumn({
-        name: 'user_id',
-        referencedColumnName: 'id'
+        name: UserSessionSchema.schema.columns.refUserId,
+        referencedColumnName: UserSchema.schema.columns.id
     })
     user: User;
+
+    // Activities 
+    @OneToMany(type => SessionActivity, activity => activity.session)
+    activities: Promise<SessionActivity[]>;
 
     public static get controller(): DataModelController<UserSession> {
         return new DataModelController<UserSession>(this);
     }
 
+}
+
+export class UserSessionDataController extends DataModelController<UserSession> {
+    public static get shared(): UserSessionDataController {
+        return this.sharedInstance<UserSession>(UserSession, UserSessionSchema);
+    }
 }

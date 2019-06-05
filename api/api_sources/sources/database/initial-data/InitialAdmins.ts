@@ -4,6 +4,8 @@ export const InitialAdmins = [
         preferred_username:'ashayega@idir',
         first_name: 'Amir',
         last_name: 'Shayegh',
-        login_access_code: 1
+        additionalInitDataInfo: {
+            roles: [1]
+        }
     }
 ];
