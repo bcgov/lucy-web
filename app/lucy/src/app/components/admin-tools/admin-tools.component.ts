@@ -4,6 +4,7 @@ import { usersList } from 'src/app/models/usersList';
 import { RolesService } from 'src/app/services/roles.service';
 import { userRole } from 'src/app/models/userRole';
 import { FormsModule }   from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-admin-tools',
@@ -66,6 +67,34 @@ export class AdminToolsComponent implements OnInit {
     }
   }
 
+  public removeUser(user: usersList) {
+    console.log(user.role);
+    console.log(user.isActive);
+    console.log("******")
+    console.log("TODO: Make api call to Remove User user:")
+    console.log(user)
+    console.log("******")
+  }
+
+  public setUserRole(user: usersList, role: userRole) {
+    user.role = role.name
+    console.log("******")
+    console.log("TODO: Make api call to set role on user:")
+    console.log(user)
+    console.log("New Role:")
+    console.log(role)
+    console.log("******")
+  }
+
+  public userActiveStatusChanged(user: usersList, isActive: boolean) {
+    console.log("******")
+    console.log("TODO: Make api call to Activate/DeActivate user access:")
+    console.log(user)
+    console.log("Account status active:")
+    console.log(isActive)
+    console.log("******")
+  }
+
   async getDummyRequests(): Promise<accessRequest[]> {
     const names = ["Mike Shasko", "Roop Jawl", "Pushan Mitra", "Kendall Olsen", "Jake Morris", "Amir Shayegh"]
     var requests: accessRequest[] = []
@@ -105,6 +134,7 @@ export class AdminToolsComponent implements OnInit {
         lastName: item.name.split(" ")[1],
         email: item.username + "@gov.bc.ca",
         role: item.currentRole,
+        isActive: true,
       }
       usersList.push(userListItem);
     });

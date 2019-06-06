@@ -5,4 +5,5 @@ export interface usersList {
     lastName: string;
     email: string;
     role: string;
+    isActive: boolean;
 }
