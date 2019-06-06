@@ -1,4 +1,5 @@
 export enum UserAccessType {
+    admin,
     view,
     dataEntry,
 }

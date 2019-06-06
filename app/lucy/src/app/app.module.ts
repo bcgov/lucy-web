@@ -30,6 +30,8 @@ import { RouterModule } from '@angular/router';
 import { SsoService } from './services/sso.service';
 import { ProfileComponent } from './components/profile/profile.component';
 import { UserInformationComponent } from './components/user-information/user-information.component';
+import { AdminToolsComponent } from './components/admin-tools/admin-tools.component';
+import { RouterService } from './services/router.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { UserInformationComponent } from './components/user-information/user-inf
     AddPlantObservationComponent,
     LoginComponent,
     ProfileComponent,
-    UserInformationComponent
+    UserInformationComponent,
+    AdminToolsComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,7 @@ import { UserInformationComponent } from './components/user-information/user-inf
     RouterModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [CookieService, SsoService],
+  providers: [CookieService, SsoService, RouterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { 
