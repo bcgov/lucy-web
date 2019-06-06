@@ -189,8 +189,8 @@ export class SsoService {
   }
 
   /**
-   * Remove cookies 
-   * end refresh timer
+   * Remove cookies, 
+   * end refresh timer,
    * and end keycloak session
    */
   public logout() {

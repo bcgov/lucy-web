@@ -63,10 +63,9 @@ export class ProfileComponent implements OnInit {
     // Redirect to user info page if basic information isnt filled
     this.userService.basicInformationExists().then((exists) => {
       if (!exists) {
-        this.router.navigate([AppRoutes.UserInfo])
+        this.navigateToUserInfo();
       } 
     });
-
   }
   
   /**
@@ -80,6 +79,11 @@ export class ProfileComponent implements OnInit {
   // TODO:
   public requestDataEntryAccess() {
 
+  }
+
+
+  public navigateToUserInfo() {
+    this.router.navigate([AppRoutes.UserInfo])
   }
   
 
