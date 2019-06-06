@@ -81,3 +81,23 @@
     font-size: 15px;
     line-height: 18px;
   }
+
+  .button-dropdown {
+    text-align: left;
+    height: 40px;
+    width: 234px;
+    border: 1px solid #999999;
+    border-radius: 3px;
+  }
+
+  .dropdown-box {
+    width: 270px;
+  }
+
+  .inActiveUser {
+    color: #999999;
+  }
+
+  .activeUser {
+    color: black;
+  }
