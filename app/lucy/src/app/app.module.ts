@@ -17,7 +17,7 @@ import {DpDatePickerModule} from 'ng2-date-picker';
 import { CookieService } from 'ngx-cookie-service';
 
 // Application
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './components/app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
@@ -29,17 +29,20 @@ import { Injector } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SsoService } from './services/sso.service';
 import { ProfileComponent } from './components/profile/profile.component';
+import { UserInformationComponent } from './components/user-information/user-information.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    routingComponents,
     HomeComponent,
     NavBarComponent,
     SpeciesDetailsComponent,
     SpeciesTableComponent,
     AddPlantObservationComponent,
     LoginComponent,
-    ProfileComponent
+    ProfileComponent,
+    UserInformationComponent
   ],
   imports: [
     BrowserModule,

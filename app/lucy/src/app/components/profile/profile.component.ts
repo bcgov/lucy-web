@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { User, UserAccessType } from 'src/app/models';
 import { StringConstants } from 'src/app/constants/string-constants';
+import { Router } from '@angular/router';
+import { AppRoutes } from 'src/app/constants';
 
 @Component({
   selector: 'app-profile',
@@ -9,6 +11,8 @@ import { StringConstants } from 'src/app/constants/string-constants';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+
+  private userAccessType: UserAccessType = UserAccessType.view
 
   public get requestDataEntryAccessMessage(): string {
     return StringConstants.databaseAccess_requestDataEntryAccess_Message;
@@ -18,32 +22,32 @@ export class ProfileComponent implements OnInit {
     return StringConstants.databaseAccess_requestDataEntryAccess_Title;
   }
 
-  public showRequestDataEntryAccessMessage: boolean = false
-  public userRoleAndOrganization: string = ""
-  public accessTypeMessage: string = ""
+  public get showRequestDataEntryAccessMessage(): boolean {
+    if (this.userAccessType == UserAccessType.dataEntry) {
+      return false;
+    } else {
+      return this.userService.showRequestDataEntryAccessMessage();
+    }
+  }
+
+  public userRoleAndOrganization: string = "";
+  public accessTypeMessage: string = "";
   public userFullName: string = "";
   public userInitials: string = "";
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit() {
     this.userService.getFullName().then((value) => {
-      this.userFullName = value
+      this.userFullName = value;
     });
 
     this.userService.getInitials().then((value) => {
-      this.userInitials = value
+      this.userInitials = value;
     });
 
     this.userService.getAccess().then((value) => {
-      if (value == UserAccessType.dataEntry) {
-        this.showRequestDataEntryAccessMessage = false
-      } else {
-        this.showRequestDataEntryAccessMessage = this.userService.showRequestDataEntryAccessMessage()
-      }
-    });
-
-    this.userService.getAccess().then((value) => {
+      this.userAccessType = value
       switch(value) {
         case UserAccessType.dataEntry:
             this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
@@ -53,7 +57,14 @@ export class ProfileComponent implements OnInit {
     });
 
     this.userService.getOranizarionAndRole().then((value) => {
-      this.userRoleAndOrganization = value
+      this.userRoleAndOrganization = value;
+    });
+
+    // Redirect to user info page if basic information isnt filled
+    this.userService.basicInformationExists().then((exists) => {
+      if (!exists) {
+        this.router.navigate([AppRoutes.UserInfo])
+      } 
     });
 
   }
