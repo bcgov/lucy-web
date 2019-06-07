@@ -1,9 +1,10 @@
 /* switch - in dropdown for user actions */
 .switch {
     position: relative;
-    display: inline-block;
+    /* display: inline-block; */
     width: 60px;
     height: 34px;
+    float: right;
   }
   
   .switch input {
@@ -37,11 +38,11 @@
   }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #7ED321;;
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #7ED321;
   }
   
   input:checked + .slider:before {
