@@ -1,9 +1,9 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 import { DatabaseMigrationHelper} from '../migration.helpers';
 import { DefaultLoginAccessCodes } from '../initial-data';
-import { LoginAccessTableSchema} from '../database-schema'
+import { RolesCodeTableSchema} from '../database-schema'
 
-export class LoginAccessCodeCreate1557785001021 extends LoginAccessTableSchema implements MigrationInterface {
+export class LoginAccessCodeCreate1557785001021 extends RolesCodeTableSchema implements MigrationInterface {
     
     
     public async up(queryRunner: QueryRunner): Promise<any> {

@@ -1,6 +1,6 @@
 // Admin related schemas
 
-import { ApplicationTable, BaseTableSchema, defineColumn} from '../ApplicationSchemaInterface';
+import { ApplicationTable, BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
 
 export class RequestAccessTableSchema extends BaseTableSchema {
     defineTable() {

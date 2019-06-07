@@ -1,5 +1,5 @@
 
-import AppConfig  from './AppConfig'
+import AppConfig  from './app.config'
 
 // Test
 describe('application configuration', () => {

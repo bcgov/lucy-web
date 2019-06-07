@@ -9,10 +9,12 @@ import {Logger} from '../logger';
 
 import AppConfig from '../../AppConfig';
 
-import { routes } from './routes'
+import { routes } from './routes';
 
-import { SharedDBManager } from '../../database'
-import { ApplicationManager } from '../../application-manager'
+import { SharedDBManager } from '../../database/dataBaseManager';
+import { ApplicationManager } from '../../application-manager';
+import { authenticationMiddleWare, errorHandler } from '../core';
+
 
 // declare const __dirname: any;
 
@@ -31,13 +33,23 @@ class ExpressApp {
     constructor() { }
 
     public initExpress() {
+        // Body parser
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({
             extended: true
         }));
+
+        // Cross origin 
         this.app.use(cross());
 
+        // Auth middleware
+        this.app.use(authenticationMiddleWare());
+
+        // App router
         routes(this.app);
+
+        // Global error handler
+        this.app.use(errorHandler);
     }
 
     public start() {
@@ -56,6 +68,7 @@ class ExpressApp {
         ApplicationManager.shared.init();
         this.initExpress();
         try {
+            console.dir(SharedDBManager);
             await SharedDBManager.connect();
             ApplicationManager.shared.state.isDBUp = true
             this.start();

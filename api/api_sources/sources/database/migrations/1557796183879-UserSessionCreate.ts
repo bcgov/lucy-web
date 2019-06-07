@@ -27,10 +27,17 @@ export class UserSessionCreate1557796183879 extends UserSessionSchema implements
         ADD CONSTRAINT FK_2019051d15h34m FOREIGN KEY (${this.table.columns.refUserId})
         REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id})
         ON DELETE CASCADE;`);
+
+        // Alter user table to add foreign key ref to user table
+        await queryRunner.query(`ALTER TABLE ${UserSchema.schema.name}
+        ADD CONSTRAINT FK_20190606d9h38m FOREIGN KEY (${UserSchema.schema.columns.refCurrentSession})
+        REFERENCES ${this.table.name}(${this.table.columns.id})
+        ON DELETE SET NULL;`);
         
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
+        await queryRunner.query(`ALTER TABLE ${UserSchema.schema.name} DROP CONSTRAINT FK_20190606d9h38m`);
         await queryRunner.query(this.dropTable());
     }
 

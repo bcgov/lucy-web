@@ -1,5 +1,6 @@
-import { Connection, createConnection} from 'typeorm';
+import { Connection } from 'typeorm';
 import { LoggerBase} from '../server/logger';
+import { SharedDBManager } from './dataBaseManager';
 
 var dbConfig = require('../../ormconfig');
 export class DatabaseMigrationHelper {
@@ -102,20 +103,24 @@ export class AppDatabaseMigrationManager extends LoggerBase {
 
     public async refresh(): Promise<void> {
         try {
-            const connection: Connection = await createConnection(dbConfig);
+            console.dir(dbConfig);
+            await SharedDBManager.connect();
+            let connection = SharedDBManager.connection;
+            AppDatabaseMigrationManager.logger.info('Connection Created');
             await this.revert(connection);
             await connection.runMigrations({transaction: true});
-            await connection.close();
+            await SharedDBManager.close();
         } catch (excp) {
-            AppDatabaseMigrationManager.logger.error(`revert | Exception received while refresh database: ${excp}`);
+            AppDatabaseMigrationManager.logger.error(`refresh | Exception received while refresh database: ${excp}`);
         }
     }
 
     public async migrate(): Promise<void> {
         try {
-            const connection: Connection = await createConnection(dbConfig);
+            await SharedDBManager.connect();
+            const connection: Connection = SharedDBManager.connection;
             await connection.runMigrations({transaction: true});
-            await connection.close();
+            await SharedDBManager.close();
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`revert | Exception received while refresh database: ${excp}`);
         }

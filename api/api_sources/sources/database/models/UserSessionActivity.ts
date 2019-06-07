@@ -2,9 +2,9 @@
 
 import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn} from "typeorm";
 import { SessionActivityCodeSchema, SessionActivitySchema, UserSessionSchema} from '../database-schema';
-import { BaseModel } from './BaseModel';
-import { UserSession} from './UserSession';
-import { DataModelController } from '../DataModelController'
+import { BaseModel } from './baseModel';
+import { DataModelController } from '../data.model.controller';
+import { UserSession } from './user.session';
 
 export enum SessionActivityCodeValues {
     dataEdit = 'DE',

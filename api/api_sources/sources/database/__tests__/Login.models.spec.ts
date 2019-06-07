@@ -1,16 +1,16 @@
-import { User, UserDataController, LoginAccessCodeValue, UserSession, UserSessionDataController, SessionActivity, SessionActivityCodeValues, SessionActivityController } from '../models';
-import { SharedDBManager } from '../DataBaseManager';
+import { User, UserDataController, RolesCodeValue, UserSession, UserSessionDataController, SessionActivity, SessionActivityCodeValues, SessionActivityController } from '../models';
+import { SharedDBManager } from '../dataBaseManager';
 import { userFactory, sessionFactory, sessionActivityFactory } from '../factory'
 
 describe('Test Login Data Model', () => {
-    beforeAll(() => {
-        return  SharedDBManager.connect();
+    beforeAll(async () => {
+        return  await SharedDBManager.connect();
     });
-    afterAll(() => {
-        return SharedDBManager.close();
+    afterAll(async () => {
+        return await SharedDBManager.close();
     });
     test('-should create/fetch model (admin)-', async (done) => {
-        const user = await userFactory(LoginAccessCodeValue.admin);
+        const user = await userFactory(RolesCodeValue.admin);
         expect(user).toBeDefined();
         let repo = SharedDBManager.connection.getRepository(User);
         await repo.save(user);
@@ -23,7 +23,7 @@ describe('Test Login Data Model', () => {
             expect(dbUser.firstName).toEqual(user.firstName);
             expect(dbUser.lastName).toEqual(user.lastName);
             expect(dbUser.accessCodes).toBeDefined();
-            expect(dbUser.accessCodes[0].code).toEqual(LoginAccessCodeValue.admin);
+            expect(dbUser.accessCodes[0].code).toEqual(RolesCodeValue.admin);
 
             // Cleaning
             repo.remove(dbUser);
@@ -31,36 +31,50 @@ describe('Test Login Data Model', () => {
 
         done();
     });
+
+
+    test('should fail to fetch user', async (done) => {
+        const user: User = await UserDataController.shared.fetchOne({ email: 'ios.dev@email.com'});
+        expect(user).toBeUndefined();
+        
+        expect(UserSession).toBeDefined();
+        expect(UserSessionDataController).toBeDefined();
+        expect(SessionActivity).toBeDefined();
+        expect(SessionActivityController).toBeDefined();
+        expect(SessionActivityCodeValues).toBeDefined();
+        expect(sessionActivityFactory).toBeDefined();
+        expect(sessionFactory).toBeDefined();
+        done()
+    });
+
     test('should create / fetch UserSession', async (done) => {
         // Create user-session
-        const userSession = await sessionFactory(LoginAccessCodeValue.admin)
+        const userSession = await sessionFactory(RolesCodeValue.admin)
         expect(userSession).toBeDefined();
 
         // Save user
-        try {
-            await UserDataController.shared.saveInDB(userSession.user);
-            await UserSessionDataController.shared.saveInDB(userSession);
-        } catch(excp) {
-            console.log(`Exception: ${excp}`);
-            expect(expect).toBeUndefined();
-            done();
-        }
+        await UserDataController.shared.saveInDB(userSession.user);
+        await UserSessionDataController.shared.saveInDB(userSession);
 
-        // Fetch
-        try {
-            const dbSession = await UserSession.controller.fetchOne( {
-                token: userSession.token
-            });
-            expect(dbSession.lastLoginAt).toEqual(userSession.lastLoginAt);
-            expect(dbSession.lastActiveAt).toEqual(userSession.lastActiveAt);
-            expect(dbSession.tokenLifeTime).toEqual(userSession.tokenLifeTime);
-            expect(dbSession.user).toBeDefined();
-            expect(dbSession.user.email).toEqual(userSession.user.email);
-        } catch (excp) {
-            console.log(`Exception: ${excp}`);
-            expect(expect).toBeUndefined();
-            
-        }
+        // Save user current session
+        await userSession.user.setCurrentSession(userSession);
+
+        const dbSession: UserSession = await UserSession.controller.fetchOne( {
+            token: userSession.token
+        });
+        // Checking basic data
+        expect(dbSession.lastLoginAt).toEqual(userSession.lastLoginAt);
+        expect(dbSession.lastActiveAt).toEqual(userSession.lastActiveAt);
+        expect(dbSession.tokenLifeTime).toEqual(userSession.tokenLifeTime);
+
+        // Checking user relationship
+        expect(dbSession.user).toBeDefined();
+        expect(dbSession.user.email).toEqual(userSession.user.email);
+
+        // Checking currentSession relationship of user
+        let currentSession: UserSession = await dbSession.user.currentSession();
+        expect(currentSession).toBeDefined();
+        expect(currentSession.session_id).toEqual(dbSession.session_id)
 
         await UserDataController.shared.remove(userSession.user);
         await UserSessionDataController.shared.remove(userSession);
@@ -73,27 +87,17 @@ describe('Test Login Data Model', () => {
         const sessionActivity: SessionActivity = await sessionActivityFactory(SessionActivityCodeValues.dataAdd);
 
         // Save
-        try {
-            await UserDataController.shared.saveInDB(sessionActivity.session.user);
-            await UserSessionDataController.shared.saveInDB(sessionActivity.session);
-            await SessionActivityController.shared.saveInDB(sessionActivity);
-        } catch(excp) {
-            console.log(`Exception{0}: ${excp}`);
-            expect(expect).toBeUndefined();
-        }
+        await UserDataController.shared.saveInDB(sessionActivity.session.user);
+        await UserSessionDataController.shared.saveInDB(sessionActivity.session);
+        await SessionActivityController.shared.saveInDB(sessionActivity);
 
         // Fetch
-        try {
-            const fetchValues: SessionActivity = await SessionActivityController.shared.findById(sessionActivity.activity_id);
+        const fetchValues: SessionActivity = await SessionActivityController.shared.findById(sessionActivity.activity_id);
 
-            expect(fetchValues.session).toEqual(sessionActivity.session);
-            expect(fetchValues.info).toEqual(sessionActivity.info);
-            expect(fetchValues.code).toEqual(sessionActivity.code);
-
-        } catch(excp) {
-            console.log(`Exception{1}: ${excp}`);
-            expect(expect).toBeUndefined();
-        }
+        // Test
+        expect(fetchValues.session).toEqual(sessionActivity.session);
+        expect(fetchValues.info).toEqual(sessionActivity.info);
+        expect(fetchValues.code).toEqual(sessionActivity.code);
 
         // Remove
         const session = sessionActivity.session;

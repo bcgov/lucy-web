@@ -1,1 +1,2 @@
-export * from './Miscellaneous';
+export * from './miscellaneous';
+export * from './account';

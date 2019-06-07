@@ -7,11 +7,11 @@
 import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany} from "typeorm";
 
 // Local Import
-import { BaseModel, LoadData } from './BaseModel';
-import { UserSession } from './UserSession';
-import { LoginAccessCode } from './LoginAccessCode';
-import { DataModelController } from '../DataModelController';
-import { UserSchema, LoginAccessTableSchema} from '../database-schema'
+import { BaseModel, LoadData } from './baseModel';
+import { UserSession, UserSessionDataController } from './user.session';
+import { RolesCode } from './appRolesCode';
+import { DataModelController } from '../data.model.controller';
+import { UserSchema, RolesCodeTableSchema} from '../database-schema'
 
 
 
@@ -50,9 +50,21 @@ export class User extends BaseModel implements LoadData<UserData>{
     })
     lastName: string;
 
+    @Column({
+        name: UserSchema.schema.columns.preferredUsername,
+        nullable: true
+    })
+    preferredUsername: string;
+
+    @Column({
+        name: UserSchema.schema.columns.refCurrentSession,
+        nullable: true,
+    })
+    currentSessionId?: number;
+
     
 
-    @ManyToMany(type => LoginAccessCode, { eager: true} )
+    @ManyToMany(type => RolesCode, { eager: true} )
     @JoinTable({
         name: 'user_role',
         joinColumn: {
@@ -61,15 +73,28 @@ export class User extends BaseModel implements LoadData<UserData>{
         },
         inverseJoinColumn: {
             name: 'ref_access_role_id',
-            referencedColumnName: LoginAccessTableSchema.schema.columns.id
+            referencedColumnName: RolesCodeTableSchema.schema.columns.id
         }
     })
-    accessCodes: LoginAccessCode[];
+    accessCodes: RolesCode[];
 
 
     @OneToMany(type => UserSession, session => session.user)
     sessions: Promise<UserSession[]>
 
+    async currentSession(): Promise< UserSession> {
+        return await UserDataController.shared.getCurrentSession(this)
+    }
+
+    async setCurrentSession(session: UserSession): Promise<void> {
+        this.currentSessionId = session.session_id;
+        await UserDataController.shared.saveInDB(this);
+    }
+
+    async removeCurrentSession(): Promise<void> {
+        this.currentSessionId = undefined;
+        await UserDataController.shared.saveInDB(this);
+    }
 
     loadMap(input: UserData) {
         this.firstName = input.firstName;
@@ -87,5 +112,10 @@ export class User extends BaseModel implements LoadData<UserData>{
 export class UserDataController extends DataModelController<User> {
     public static get shared(): UserDataController {
         return this.sharedInstance<User>(User, UserSchema) as UserDataController;
+    }
+
+    public async getCurrentSession(user: User): Promise<UserSession> {
+        let session: UserSession = await UserSessionDataController.shared.findById((user.currentSessionId || -1));
+        return session;
     }
 }

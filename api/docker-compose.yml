@@ -16,6 +16,7 @@ services:
     - DB_PASS=${DB_PASS}
     - DB_PORT=${DB_PORT}
     - DB_DATABASE=${DB_DATABASE}
+    - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
   volumes:
     - ./api_sources:/home/nodejs/app
 

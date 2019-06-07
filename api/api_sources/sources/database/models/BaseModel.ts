@@ -1,5 +1,5 @@
 import { CreateDateColumn, UpdateDateColumn} from "typeorm";
-import { BaseTableSchema } from "../ApplicationSchemaInterface";
+import { BaseTableSchema } from "../applicationSchemaInterface";
 
 
 export abstract class BaseModel  {    

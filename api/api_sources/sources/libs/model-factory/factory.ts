@@ -1,5 +1,5 @@
 import { getConnection, Connection } from 'typeorm';
-import { BaseModel } from '../../database/models/BaseModel';
+import { BaseModel } from '../../database/models/baseModel';
 
 type getData = (() => object);
 

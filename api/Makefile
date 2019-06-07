@@ -75,7 +75,7 @@ print-status:
 
 local-env:   ## -- Target : Sets up the local .env options
 	@echo "+\n++ Preparing project for local development ...\n+"
-	@cp .config/.env.local app/.env
+	@cp env_config/.env.local app/.env
 
 build-local: ## -- Target : Builds the local development containers.
 	@echo "+\n++ Make: Building local Docker image ...\n+"
@@ -83,7 +83,7 @@ build-local: ## -- Target : Builds the local development containers.
 
 setup-local: ## -- Target : Prepares the environment variables for local development.
 	@echo "+\n++ Make: Preparing project for local development ...\n+"
-	@cp .config/.env.dev .env
+	@cp env_config/.env.dev .env
 	@mkdir -p ./_app_data
 
 run-local: ## -- Target : Runs the local development containers.
