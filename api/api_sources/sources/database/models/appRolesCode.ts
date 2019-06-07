@@ -44,11 +44,11 @@ export class RolesCode extends BaseModel {
     }
 }
 
-export class LoginAccessCodeController extends DataModelController<RolesCode> {
+export class RoleCodeController extends DataModelController<RolesCode> {
 
-    private static instance: LoginAccessCodeController
+    private static instance: RoleCodeController
 
-    public static get shared(): LoginAccessCodeController {
+    public static get shared(): RoleCodeController {
         return this.instance || (this.instance = new this());
     }
 

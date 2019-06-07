@@ -2,7 +2,7 @@
 import * as faker from 'faker';
 
 import { userFactory} from './userFactory'
-import { RequestAccess, RequestAccessController, LoginAccessCodeController, User, RolesCodeValue } from '../models'
+import { RequestAccess, RequestAccessController, RoleCodeController, User, RolesCodeValue } from '../models'
 
 
 export const requestAccessFactory = async (requesterIP?: User, approverIP?: User): Promise<RequestAccess> => {
@@ -14,7 +14,7 @@ export const requestAccessFactory = async (requesterIP?: User, approverIP?: User
     request.approverNote = faker.random.word()
     request.approver = approver;
     request.requester = requester;
-    request.requestedAccessCode = await LoginAccessCodeController.shared.getCode(RolesCodeValue.editor);
+    request.requestedAccessCode = await RoleCodeController.shared.getCode(RolesCodeValue.editor);
 
     return request;
 };
