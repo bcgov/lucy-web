@@ -30,7 +30,7 @@
           <td>{{request.requestedRole}}</td>
           <td>{{request.reasons}}</td>
           <td>
-            <button type="button" class="btn button-fill" (click)="setRequestModalrequest(request)" data-toggle="modal"
+            <button type="button" class="btn button-fill" (click)="setFocusedAccessRequest(request)" data-toggle="modal"
               data-target="#requestResponseModal">
               Respond
             </button>
@@ -40,87 +40,9 @@
     </table>
   </div>
   <!-- End Requests -->
-  <!-- Modal -->
-  <div class="modal fade" id="requestResponseModal" tabindex="-1" role="dialog"
-    aria-labelledby="requestResponseModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <!-- Modal Title -->
-        <div class="modal-header">
-          <h5 class="modal-title" id="requestResponseModalTitle">Respond to Request</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <!-- Modal Body -->
-        <div class="modal-body">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-12 text-center">
-                <h5>{{modalRequest.name}}</h5>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-6 centerd">
-                <div class="user-access-level">
-                  <i class="material-icons">info</i>
-                  {{modalRequest.currentRole}}
-                </div>
-              </div>
-            </div>
-            <br />
-            <div class="row">
-              <div class="col-12">
-                <h6>Access Request Reasons:</h6>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 access-reaquest-reasons">
-                <p>
-                  {{modalRequest.reasons}}
-                </p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <h6>Update User Access Level:</h6>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="form-check radio radio-item" *ngFor="let activeRole of activeRoles; let i = index">
-                  <input type="radio" class="form-check-input" [(ngModel)]="modalRequest.responseRole"
-                    value="{{activeRole.name}}" name="selected-role">
-                  <label class="form-check-label" for="selected-role">
-                    <span class="color">{{activeRole.name}}</span> - <span
-                      class="color">{{activeRole.description}}</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            <br />
-            <div class="row">
-              <div class="col-12 form-group">
-                <label for="requestResponse">
-                  <h6>Add an Access Request Response:</h6>
-                </label>
-                <textarea class="form-control" rows="4" id="requestResponse"></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn button-hollow" (click)="closeRequestResponse()" data-dismiss="modal">
-            Cancel
-          </button>
-          <button type="button" class="btn button-fill" (click)="sumbitRequestResponse()">
-            Update User Permission
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- END Modal -->
+  <!-- Access Request Modal -->
+  <app-access-request-response-modal [accessRequest]="focusedAccessRequest"></app-access-request-response-modal>
+  <!-- END Access Request Modal -->
   <br />
   <!-- All Users -->
   <div class="row">

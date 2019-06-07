@@ -17,7 +17,7 @@ export class AdminToolsComponent implements OnInit {
   public allUsers: usersList[] = []
   public activeRoles: userRole[] = []
 
-  public modalRequest: accessRequest = {
+  public focusedAccessRequest: accessRequest = {
     id: 0,
     username: "",
     name: "",
@@ -43,28 +43,9 @@ export class AdminToolsComponent implements OnInit {
     });
   }
 
-  public setRequestModalrequest(request: accessRequest) {
-    this.modalRequest = request;
+  public setFocusedAccessRequest(request: accessRequest) {
+    this.focusedAccessRequest = request;
     console.log("request for modal set");
-  }
-
-  public sumbitRequestResponse() {
-    console.log(this.modalRequest.responseRole);
-  }
-
-  public closeRequestResponse() {
-    console.log("closing");
-    this.modalRequest = {
-      id: 0,
-      username: "",
-      name: "",
-      currentRole: "",
-      requestedRole: "",
-      reasons: "",
-  
-      responseRole: "",
-      responseMessage: "",
-    }
   }
 
   public removeUser(user: usersList) {
