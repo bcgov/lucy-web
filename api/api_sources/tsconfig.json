@@ -3,7 +3,7 @@
     "outDir": "dist",
     "module": "commonjs",
     "target": "es5",
-    "lib": ["es6"],
+    "lib": ["es6", "es2016"],
     "sourceMap": true,
     "allowJs": true,
     "moduleResolution": "node",
@@ -37,6 +37,7 @@
   "files": [
     "./node_modules/@types/mocha/index.d.ts",
     "./node_modules/@types/node/index.d.ts",
-    "./node_modules/@types/jest/index.d.ts"
+    "./node_modules/@types/jest/index.d.ts",
+    "./typings-custom/@bcgov/nodejs-common-utils.d.ts"
   ]
 }

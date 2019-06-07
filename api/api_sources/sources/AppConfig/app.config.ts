@@ -1,4 +1,5 @@
 import * as path from 'path'
+import * as assert from 'assert';
 declare const process: any;
 declare const __dirname: any;
 
@@ -62,6 +63,18 @@ class AppConfiguration {
         return path.resolve(__dirname, '../../_app_data');
     }
 
+    public get certificateURL(): string {
+        assert(process.env.APP_CERTIFICATE_URL, `No App Certificate url`);
+        return process.env.APP_CERTIFICATE_URL;
+    }
+
+    public get sessionLifeTime(): number {
+        return (86400 * 1000)
+    }
+
+    public get bypassTokenExpiry(): boolean {
+        return true;
+    }
 
 }
 

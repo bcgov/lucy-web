@@ -25,13 +25,15 @@
     "@types/chalk": "^2.2.0",
     "@types/cors": "^2.8.5",
     "@types/csvtojson": "^1.1.5",
-    "@types/express": "^4.16.1",
+    "@types/express": "^4.17.0",
     "@types/faker": "^4.1.5",
     "@types/jest": "^24.0.13",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/mocha": "^5.2.7",
     "@types/moment": "^2.13.0",
-    "@types/mongoose": "^5.5.3",
+    "@types/mongoose": "^5.5.5",
+    "@types/passport": "^1.0.0",
+    "@types/passport-jwt": "^3.0.1",
     "awesome-typescript-loader": "^3.4.1",
     "del": "^3.0.0",
     "faker": "^4.1.0",
@@ -48,6 +50,7 @@
     "typescript": "^2.6.2"
   },
   "dependencies": {
+    "@bcgov/nodejs-common-utils": "0.0.16",
     "@types/node": "^11.13.13",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -62,11 +65,14 @@
     "mocha": "^5.2.0",
     "moment": "^2.24.0",
     "nodemailer": "^5.1.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-mock-strategy": "^2.0.0",
     "pg": "^7.11.0",
     "q": "^1.5.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.2",
     "source-map-loader": "^0.2.4",
-    "typeorm": "latest"
+    "typeorm": "^0.2.18"
   }
 }

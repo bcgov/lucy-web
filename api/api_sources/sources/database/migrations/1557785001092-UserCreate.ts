@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 import { DatabaseMigrationHelper} from '../migration.helpers';
 import { InitialAdmins } from '../initial-data'
-import { UserSchema, LoginAccessTableSchema } from '../database-schema'
+import { UserSchema, RolesCodeTableSchema } from '../database-schema'
 
 export class UserCreate1557785001092 extends UserSchema implements MigrationInterface {
 
@@ -16,7 +16,8 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
             ${this.table.columns.preferredUsername} VARCHAR (100) NULL,
             ${this.table.columns.loginType} SMALLINT NULL,
             ${this.table.columns.expiryDate} DATE NULL,
-            ${this.table.columns.activation} SMALLINT NULL
+            ${this.table.columns.activation} SMALLINT NULL,
+            ${this.table.columns.refCurrentSession} INT NULL
         );`);
 
         // Creating timestamp column
@@ -28,7 +29,7 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
         // Create Join table for user and assigned role
         await queryRunner.query(`CREATE TABLE user_role (
             ref_user_id INT  REFERENCES ${this.table.name}(${this.table.columns.id}) ON DELETE CASCADE,
-            ref_access_role_id INT REFERENCES ${LoginAccessTableSchema.schema.name}(${LoginAccessTableSchema.schema.columns.id}) ON DELETE CASCADE,
+            ref_access_role_id INT REFERENCES ${RolesCodeTableSchema.schema.name}(${RolesCodeTableSchema.schema.columns.id}) ON DELETE CASCADE,
             PRIMARY KEY (ref_user_id, ref_access_role_id)
         );`);
 

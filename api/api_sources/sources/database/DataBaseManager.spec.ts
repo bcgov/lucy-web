@@ -1,5 +1,5 @@
 // Unit test for database manger
-import { SharedDBManager } from './DataBaseManager'
+import { SharedDBManager } from './dataBaseManager'
 
 // Test
 describe('Database Manager and models', () => {

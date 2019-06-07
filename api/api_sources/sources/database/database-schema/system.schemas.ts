@@ -1,6 +1,6 @@
 // System related schema
 
-import { ApplicationTable, BaseTableSchema, defineColumn} from '../ApplicationSchemaInterface';
+import { ApplicationTable, BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
 
 export class ApplicationEventSchema extends BaseTableSchema {
     defineTable() {

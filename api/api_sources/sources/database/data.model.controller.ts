@@ -1,12 +1,12 @@
 // DataModelController
 import {Connection, getConnection, Repository, ObjectLiteral} from 'typeorm';
 import { LoggerBase} from '../server/logger'
-import { SharedDBManager} from './DataBaseManager';
-import { ApplicationTable } from './ApplicationSchemaInterface'
+import { SharedDBManager} from './dataBaseManager';
+import { ApplicationTable } from './applicationSchemaInterface';
 
 //import { BaseModel} from './models';
 export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
-    static shareInstance: any;
+    protected static shareInstance: any;
     entity: any;
     schemaInterface: any;
     constructor(entity: any, schema?: any) {
@@ -48,7 +48,7 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
         return await this.repo.findOne(this.idQuery(id)) as T;
     }
 
-    async fetchData(query: object): Promise<T[]> {
+    async all(query?: object): Promise<T[]> {
         const items:T[] = await this.repo.find(query) as T[]
         return items;
     }

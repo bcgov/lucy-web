@@ -1,5 +1,5 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
-import { RequestAccessTableSchema, LoginAccessTableSchema, UserSchema} from '../database-schema'
+import { RequestAccessTableSchema, RolesCodeTableSchema, UserSchema} from '../database-schema'
 
 export class RequestAccessCreate1559696717385 extends RequestAccessTableSchema implements MigrationInterface {
 
@@ -24,7 +24,7 @@ export class RequestAccessCreate1559696717385 extends RequestAccessTableSchema i
         // 1. Request type
         await queryRunner.query(`ALTER TABLE ${this.table.name}
         ADD CONSTRAINT FK_201906056h25m FOREIGN KEY (${this.table.columns.refRequestType})
-        REFERENCES ${LoginAccessTableSchema.schema.name}(${LoginAccessTableSchema.schema.columns.id})
+        REFERENCES ${RolesCodeTableSchema.schema.name}(${RolesCodeTableSchema.schema.columns.id})
         ON DELETE CASCADE;`);
         // 2. Requester
         await queryRunner.query(`ALTER TABLE ${this.table.name}

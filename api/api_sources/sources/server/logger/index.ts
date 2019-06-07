@@ -56,4 +56,6 @@ export class LoggerBase {
     public static get logger(): Logger {
         return this._logger || (this._logger = new Logger(this.className))
     } 
+
+    
 }

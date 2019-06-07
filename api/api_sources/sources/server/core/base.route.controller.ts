@@ -2,69 +2,55 @@
 
 // @IMPORT
 // LIB
-import { Request, Response } from 'express';
-
+import * as express from 'express';
+import * as passport from 'passport';
 // SOURCE
-import { Logger } from "../logger"
+import { Logger } from "../logger";
+import { errorBody } from '../core';
 
-let CommonSuccessMessage: string = "API call succes"
+
+let CommonSuccessMessage: string = "API call success";
 
 export interface ValidationKeys {
     key: string,
     insideKeys?: ValidationKeys[]
 }
 
-export default class BaseRoutController  {
-    
-    logger: Logger
+
+export class BaseRoutController<DataController>  {
+    route: express.Router = express.Router(); 
+    logger: Logger;
+    dataController: DataController;
     constructor() {
-        
         this.logger = new Logger(this.constructor.name)
     }
 
-    private _validate(object: any, keys: ValidationKeys[]): boolean {
-        var result = true
-        for (let k of keys) {
-            let item = object[k.key]
-            if (item) {
-                if (k.insideKeys) {
-                    result = result && this._validate(item, k.insideKeys)
-                    if (!result) {
-                        break
-                    }
-                } else {
-                    result = true
-                }
-            } else {
-                result = false
-                break
-            }
-        }
-        return result
-    }
-
-    public validation(req: Request, keys: ValidationKeys[]): boolean {
-        let body = req.body
-        return this._validate(body, keys)
-    }
-
-    public getErrorJSON(error: any) {
+    public getErrorJSON(message: string,errors: object[]) {
         return {
-            succes: false,
-            message: `${error}`
+            message, 
+            errors
         }
     }
 
-    public getSuccessJSON(message?: any, data?: any) {
+    public getSuccessJSON(data?: any, message?: string) {
         return {
-            succes: true,
             message: message || CommonSuccessMessage,
             data: data || {}
         }
     }
 
-    public commonError(status: number, tag: string, error: any, resp: Response) {
+    public commonError(status: number, tag: string, error: any, resp: express.Response, message?: string) {
         this.logger.error(`API-${tag} Call Error => ${error}`);
-        resp.status(status).send(this.getErrorJSON(error))
+        let errMsg = message || `${error}`
+        resp.status(status).json(errorBody(errMsg, [error]));
+    }
+
+}
+
+export class SecureRouteController<T> extends BaseRoutController<T> {
+    constructor(){
+        super();
+        // Register auth middleware
+        this.route.use(passport.authenticate('jwt', {session : false}));
     }
 }

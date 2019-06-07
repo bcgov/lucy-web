@@ -1,3 +1,3 @@
-export * from './UserFactory';
-export * from './UserSessionFactory';
-export * from './RequestAccessFactory';
+export * from './userFactory';
+export * from './userSessionFactory';
+export * from './requestAccessFactory';

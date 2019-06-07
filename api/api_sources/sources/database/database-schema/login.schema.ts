@@ -1,14 +1,14 @@
 // Application Login Schemas
 
 
-import { ApplicationTable, ApplicationTableColumn, BaseTableSchema, defineColumn} from '../ApplicationSchemaInterface';
+import { ApplicationTable, ApplicationTableColumn, BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
 
-export class LoginAccessTableSchema extends BaseTableSchema {
+export class RolesCodeTableSchema extends BaseTableSchema {
     defineTable(): ApplicationTable {
         const table: ApplicationTable = new ApplicationTable();
-        table.name = 'login_access_code';
+        table.name = 'app_roles_code';
         table.columnsDefinition = {
-           id: new ApplicationTableColumn('login_access_code_id', 'Auto generated incremental primary key column'),
+           id: new ApplicationTableColumn('role_code_id', 'Auto generated incremental primary key column'),
            code: new ApplicationTableColumn('code', 'Application level identifier code'),
            role: new ApplicationTableColumn('role', 'User role as per access'),
            description: new ApplicationTableColumn('description', 'Description of each access level item')
@@ -31,7 +31,8 @@ export class UserSchema extends BaseTableSchema {
             preferredUsername: new ApplicationTableColumn('preferred_username', 'User name provided by KeyClock'),
             loginType: new ApplicationTableColumn('login_type', 'Login type BCeID or IDR'),
             expiryDate: new ApplicationTableColumn('expiry_date', 'Expiry date of account'),
-            activation: new ApplicationTableColumn('activation', 'Activation status of account')
+            activation: new ApplicationTableColumn('activation', 'Activation status of account'),
+            refCurrentSession: defineColumn('ref_current_session_id', 'FOREIGN KEY reference to session table to track current sessions of users')
         };
         return table;
     }
@@ -75,8 +76,8 @@ export class SessionActivitySchema extends BaseTableSchema {
         table.columnsDefinition = {
             id: defineColumn('activity_id', 'Activity id auto generated incremental primary key column'),
             info: defineColumn('info', 'Information of activity'),
-            refSessionId: defineColumn('session_id', 'FOREIGN KEY reference to user_session table'),
-            refActivityCode: defineColumn('activity_code', 'FOREIGN KEY reference to session_activity_code table')
+            refSessionId: defineColumn('ref_session_id', 'FOREIGN KEY reference to user_session table'),
+            refActivityCode: defineColumn('ref_activity_code', 'FOREIGN KEY reference to session_activity_code table')
         }
         return table;
     }
