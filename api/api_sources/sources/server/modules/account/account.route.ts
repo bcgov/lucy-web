@@ -3,12 +3,28 @@
  */
 
 import { Request, Response, Router} from 'express';
-import { SecureRouteController, roleAuthenticationMiddleware } from '../../core';
-import { UserDataController, User, RolesCodeValue } from '../../../database/models';
+import { SecureRouteController, roleAuthenticationMiddleware, BaseRoutController } from '../../core';
+import { UserDataController, User, RolesCodeValue, RoleCodeController } from '../../../database/models';
 import * as assert from 'assert';
 
- class AccountRouteController extends SecureRouteController<UserDataController> {
+class RolesRouteController extends BaseRoutController<RoleCodeController> {
+    constructor() {
+        super();
+        this.dataController = RoleCodeController.shared;
 
+        // Routes
+        this.route.get('/', this.index.bind(this))
+    }
+
+    async index(req: Request, res: Response) {
+        assert(req, 'No request object');
+        let roles = await this.dataController.all();
+        return res.status(200).json(this.getSuccessJSON(roles));
+    }
+}
+
+ class AccountRouteController extends SecureRouteController<UserDataController> {
+     roleRouteController: RolesRouteController = new RolesRouteController();
      constructor() {
          super();
          this.dataController = UserDataController.shared;
@@ -16,6 +32,9 @@ import * as assert from 'assert';
          this.logger.info('Creating Account route controller');
 
          // Route Configure
+         // Get roles
+         this.route.use('/roles', this.roleRouteController.route);
+         
          // Get own info
          this.route.get('/me', this.me.bind(this));
 

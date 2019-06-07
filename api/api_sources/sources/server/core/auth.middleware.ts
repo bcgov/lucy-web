@@ -4,7 +4,7 @@ import * as express from 'express';
 import * as assert from 'assert';
 import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
 import AppConfig from '../../AppConfig'
-import { UserDataController, User, LoginAccessCodeController, RolesCodeValue, RolesCode, UserSessionDataController} from '../../database/models';
+import { UserDataController, User, RoleCodeController, RolesCodeValue, RolesCode, UserSessionDataController} from '../../database/models';
 import { LoggerBase } from '../logger';
 import { errorBody } from './common.error.handler';
 
@@ -88,7 +88,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  user.preferredUsername = preferred_username;
                  user.firstName = given_name;
                  user.lastName = family_name;
-                 user.accessCodes = [await LoginAccessCodeController.shared.getCode(RolesCodeValue.viewer)];
+                 user.accessCodes = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
 
                  await UserDataController.shared.saveInDB(user);
              }
