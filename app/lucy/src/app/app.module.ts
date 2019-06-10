@@ -17,31 +17,32 @@ import {DpDatePickerModule} from 'ng2-date-picker';
 import { CookieService } from 'ngx-cookie-service';
 
 // Application
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './components/app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { GoogleSigninComponent } from './components/google-signin/google-signin.component';
 import { SpeciesDetailsComponent } from './components/species-details/species-details.component';
 import { SpeciesTableComponent } from './components/species-table/species-table.component';
 import { AddPlantObservationComponent } from './components/add-plant-observation/add-plant-observation.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './components/login/login.component';
 import { Injector } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SsoService } from './services/sso.service';
 import { ProfileComponent } from './components/profile/profile.component';
+import { UserInformationComponent } from './components/user-information/user-information.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    routingComponents,
     HomeComponent,
     NavBarComponent,
-    GoogleSigninComponent,
     SpeciesDetailsComponent,
     SpeciesTableComponent,
     AddPlantObservationComponent,
     LoginComponent,
-    ProfileComponent
+    ProfileComponent,
+    UserInformationComponent
   ],
   imports: [
     BrowserModule,

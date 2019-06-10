@@ -21,24 +21,24 @@
         <!-- User icon -->
         <div div class="col-6">
             <div ngbDropdown class="circle">
-              <button class="btn" id="userActions" ngbDropdownToggle>BB</button>
+              <button class="btn d-inline-block" id="userActions" ngbDropdownToggle>{{userInitials}}</button>
+              <!-- Options -->
               <div ngbDropdownMenu aria-labelledby="userActions">
                 <div class="col-12">
                   <!-- Profile -->
-                    <button type="button" class="btn nav-logout-btn" (click)="profile()">
-                        Profile <i class="material-icons logout-icon">account_circle</i> 
+                    <button [routerLink]="'/profile'" type="button" class="btn btn-with-icon" (click)="profile()">
+                        Profile <i class="material-icons">account_circle</i> 
                       </button>
                 </div>
                 <div class="col-12">
                   <!-- Logout -->
-                    <button type="button" class="btn nav-logout-btn" (click)="logout()">
-                      Logout <i class="material-icons logout-icon">input</i> 
+                    <button type="button" class="btn btn-with-icon" (click)="logout()">
+                      Logout <i class="material-icons">input</i> 
                     </button>
                 </div>
               </div>
             </div>
           </div>
-        
       </div>
       <div *ngIf="!isAuthenticated">
       </div>
