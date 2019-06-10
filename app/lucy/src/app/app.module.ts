@@ -29,7 +29,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { UserInformationComponent } from './components/user-information/user-information.component';
 import { AdminToolsComponent } from './components/admin-tools/admin-tools.component';
 import { RouterService } from './services/router.service';
-
+import { AccessRequestResponseModalComponent} from './components/access-request-response-modal/access-request-response-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +41,8 @@ import { RouterService } from './services/router.service';
     LoginComponent,
     ProfileComponent,
     UserInformationComponent,
-    AdminToolsComponent
+    AdminToolsComponent,
+    AccessRequestResponseModalComponent
   ],
   imports: [
     BrowserModule,
