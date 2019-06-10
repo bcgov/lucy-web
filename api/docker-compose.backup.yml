@@ -1,0 +1,75 @@
+version: "3.3"
+
+services:
+ angular_app:
+  build:
+   context: .
+   dockerfile: ./AngularApp/Dockerfile
+  container_name: AngularApp_3
+  volumes:
+   - angular:/usr/src/AngularApp
+  networks:
+  - local-network
+ node_api:
+  image: ${PROJECT_NAME}-api-${APP_VERSION}-img
+  container_name: ${PROJECT_NAME}-api-${APP_VERSION}
+  build:
+   context: .
+   dockerfile: ./node_api/Dockerfile
+  ports:
+   - ${API_PORT}:${API_PORT}
+  volumes:
+   - type: volume
+     source: angular
+     target: /usr/src/AngularApp
+     volume:
+      nocopy: true
+  environment:
+    - PORT: ${API_PORT}
+  networks:
+  - local-network
+  depends_on:
+    - mongo
+    - angular_app
+ mongo:
+  image: mongo:latest
+  container_name: ${PROJECT_NAME}-mongo
+  volumes:
+   - ./mongo_data:/data/db
+  networks:
+  - local-network
+  ports:
+   - "27017:27017"
+ db:
+    image: ${PROJECT_NAME}-postgress-img
+    container_name: seism-db
+    build:
+      context: ./node_api/db
+      dockerfile: Dockerfile
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - local-network
+ nginx:
+    image: seism-nginx-img
+    container_name: seism-nginx
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - mongo
+      - db
+      - node_api
+    networks:
+      - local-network
+networks:
+ local-network:
+  driver: bridge
+volumes:
+ angular:
