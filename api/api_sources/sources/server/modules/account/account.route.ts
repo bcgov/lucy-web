@@ -2,10 +2,10 @@
  * Account route and controllers
  */
 
+import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
 import { SecureRouteController, roleAuthenticationMiddleware, BaseRoutController, RouteHandler } from '../../core';
 import { UserDataController, User, RolesCodeValue, RoleCodeController, RolesCode } from '../../../database/models';
-import * as assert from 'assert';
 
 class RolesRouteController extends BaseRoutController<RoleCodeController> {
     constructor() {
@@ -13,15 +13,15 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
         this.dataController = RoleCodeController.shared;
 
         // Routes
-        this.route.get('/', this.index)
+        this.route.get('/', this.index);
     }
 
     get index(): RouteHandler {
         return async (req: Request, resp: Response) => {
             assert(req, 'No request object');
-            let roles = await this.dataController.all();
+            const roles = await this.dataController.all();
             return resp.status(200).json(this.getSuccessJSON(roles));
-        }
+        };
     }
 }
 
@@ -97,7 +97,7 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
                     }
                     if (userRoles.length > 0) {
                         this.logger.info(`Adding user roles => ${JSON.stringify(roles)}`);
-                        user.accessCodes = userRoles;
+                        user.roles = userRoles;
                     }
                 }
 
@@ -135,8 +135,11 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
  }
 
  export const accountRoute = (): Router => {
-    let controller = new AccountRouteController(); 
+    const controller = new AccountRouteController();
     return controller.route;
- }
+ };
+
+// ---------
+
 
 

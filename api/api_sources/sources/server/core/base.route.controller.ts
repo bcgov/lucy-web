@@ -7,11 +7,13 @@ import * as passport from 'passport';
 // SOURCE
 import { Logger } from '../logger';
 import { errorBody } from '../core';
+import { roleAuthenticationMiddleware } from './auth.middleware';
+import { RolesCodeValue } from '../../database/models';
 
 
 const CommonSuccessMessage = 'API call success';
 
-export type RouteHandler = (req: express.Request, res: express.Response) => Promise<any>
+export type RouteHandler = (req: express.Request, res: express.Response) => Promise<any>;
 export type RouteMiddlewareHandler = (req: express.Request, res: express.Response, next: any) => Promise<any>;
 
 export interface ValidationKeys {
@@ -51,9 +53,18 @@ export class BaseRoutController<DataController>  {
 }
 
 export class SecureRouteController<T> extends BaseRoutController<T> {
-    constructor(){
+    constructor() {
         super();
         // Register auth middleware
         this.route.use(passport.authenticate('jwt', {session : false}));
+    }
+}
+
+export class BaseAdminRouteController<T> extends SecureRouteController<T> {
+    constructor() {
+        super();
+
+        // Register role middleware
+        this.route.use(roleAuthenticationMiddleware([RolesCodeValue.admin]));
     }
 }

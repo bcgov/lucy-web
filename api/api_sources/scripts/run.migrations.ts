@@ -2,5 +2,7 @@ import { AppDatabaseMigrationManager } from '../sources/database/migration.helpe
 
 (() => {
     AppDatabaseMigrationManager.shared.refresh();
-    //AppDatabaseMigrationManager.shared.migrate();
-})()
+    // AppDatabaseMigrationManager.shared.migrate();
+})();
+
+// -----

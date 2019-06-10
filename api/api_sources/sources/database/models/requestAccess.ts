@@ -6,6 +6,11 @@ import { User } from './user';
 import { DataModelController} from '../data.model.controller';
 import { RolesCode } from './appRolesCode';
 
+export enum RequestStatus {
+    requested = 0,
+    approved = 1,
+    rejected = 2
+}
 @Entity({
     name: RequestAccessTableSchema.schema.name,
 })

@@ -21,8 +21,8 @@ describe('Test Login Data Model', () => {
             expect(dbUser.email).toEqual(user.email);
             expect(dbUser.firstName).toEqual(user.firstName);
             expect(dbUser.lastName).toEqual(user.lastName);
-            expect(dbUser.accessCodes).toBeDefined();
-            expect(dbUser.accessCodes[0].code).toEqual(RolesCodeValue.admin);
+            expect(dbUser.roles).toBeDefined();
+            expect(dbUser.roles[0].code).toEqual(RolesCodeValue.admin);
 
             // Cleaning
             repo.remove(dbUser);
