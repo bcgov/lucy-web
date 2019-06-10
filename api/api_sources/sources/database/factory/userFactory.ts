@@ -9,6 +9,6 @@ export const userFactory = async (accessCodeValue: RolesCodeValue): Promise<User
     user.email = faker.internet.email();
     user.firstName = faker.name.firstName();
     user.lastName = faker.name.lastName();
-    user.accessCodes = [ await RoleCodeController.shared.fetchOne({code: accessCodeValue})];
+    user.roles = [ await RoleCodeController.shared.fetchOne({code: accessCodeValue})];
     return user;
 };

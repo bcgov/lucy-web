@@ -88,7 +88,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  user.preferredUsername = preferred_username;
                  user.firstName = given_name;
                  user.lastName = family_name;
-                 user.accessCodes = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
+                 user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
 
                  await UserDataController.shared.saveInDB(user);
              }
@@ -152,7 +152,8 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
         try {
             assert(req.user || req['appUser'], 'Invalid request parmas: [No User]');
             const user: User = req.user || req['appUser'];
-            const userRoles = user.accessCodes;
+            const userRoles = user.roles;
+            LoggerBase.logger.info(`roleAuthenticationMiddleware | get `);
             const acceptedRoles = userRoles.filter((item: RolesCode) => {
                 const rc: RolesCodeValue = item.code as RolesCodeValue;
                 const value = roles.includes(rc);
@@ -171,4 +172,10 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
             resp.status(500).json(errorBody(`${excp}`, [excp]));
         }
     };
-}
+};
+
+export const adminOnlyMiddleware = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin]);
+};
+
+// -----------------

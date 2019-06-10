@@ -49,12 +49,12 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
     }
 
     async all(query?: object): Promise<T[]> {
-        const items:T[] = await this.repo.find(query) as T[]
+        const items: T[] = await this.repo.find(query) as T[];
         return items;
     }
 
     async fetchOne(query: object): Promise<T> {
-        const item:T = await this.repo.findOne(query) as T
+        const item: T = await this.repo.findOne(query) as T;
         return item;
     }
 
@@ -65,12 +65,12 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
 
     async findOneOrCreate(info: object): Promise<T> {
         try {
-            const item:T = await this.repo.findOne(info) as T;
+            const item: T = await this.repo.findOne(info) as T;
             if (item) {
                 return item;
             } else {
                 const manager = this.connection.manager;
-                const newItem:T = await manager.create(this.entity, info) as T;
+                const newItem: T = await manager.create(this.entity, info) as T;
                 return newItem;
             }
         } catch (exp) {

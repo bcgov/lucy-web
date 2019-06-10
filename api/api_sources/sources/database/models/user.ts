@@ -74,7 +74,7 @@ export class User extends BaseModel implements LoadData<UserData> {
             referencedColumnName: RolesCodeTableSchema.schema.columns.id
         }
     })
-    accessCodes: RolesCode[];
+    roles: RolesCode[];
 
 
     @OneToMany(type => UserSession, session => session.user)
