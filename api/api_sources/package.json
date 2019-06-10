@@ -9,7 +9,7 @@
     "app": "ts-node sources",
     "docker_start": "npm-run-all -p hotload watch",
     "deploy_run": "npm run migration && npm run app",
-    "hotload": "npm run migration && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
+    "hotload": "npm install && npm run migration && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
     "watch": "gulp watch",
     "test:all": "NODE_ENV=unit_test jest --verbose --coverage --detectOpenHandles sources",
     "migration": "ts-node scripts/run.migrations.ts",
