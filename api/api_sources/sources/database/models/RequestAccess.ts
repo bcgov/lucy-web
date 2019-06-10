@@ -1,13 +1,13 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn} from 'typeorm';
 
 import { RequestAccessTableSchema, UserSchema, RolesCodeTableSchema} from '../database-schema'
 import { BaseModel } from './baseModel';
-import { User } from "./user";
-import { DataModelController} from '../data.model.controller'
-import { RolesCode } from "./appRolesCode";
+import { User } from './user';
+import { DataModelController} from '../data.model.controller';
+import { RolesCode } from './appRolesCode';
 
 @Entity({
-    name: RequestAccessTableSchema.schema.name
+    name: RequestAccessTableSchema.schema.name,
 })
 export class RequestAccess extends BaseModel {
     @PrimaryGeneratedColumn()
@@ -26,16 +26,17 @@ export class RequestAccess extends BaseModel {
         name: RequestAccessTableSchema.schema.columns.approverNote,
         nullable: true
     })
-    approverNote: string
+    approverNote: string;
 
     // Relationships
+    // Access Code
     @ManyToOne(type => RolesCode, {eager: true})
     @JoinColumn({
         name: RequestAccessTableSchema.schema.columns.refRequestType,
         referencedColumnName: RolesCodeTableSchema.schema.columns.id
     })
-    requestedAccessCode: RolesCode
-    
+    requestedAccessCode: RolesCode;
+    // Requester
     @OneToOne( type => User, {eager: true})
     @JoinColumn({
         name: RequestAccessTableSchema.schema.columns.refRequester,

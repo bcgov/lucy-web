@@ -11,8 +11,7 @@ import { BaseModel, LoadData } from './baseModel';
 import { UserSession, UserSessionDataController } from './user.session';
 import { RolesCode } from './appRolesCode';
 import { DataModelController } from '../data.model.controller';
-import { UserSchema, RolesCodeTableSchema} from '../database-schema'
-
+import { UserSchema, RolesCodeTableSchema} from '../database-schema';
 
 
 export enum UserRole {
@@ -21,17 +20,17 @@ export enum UserRole {
 }
 
 export interface UserData {
-    firstName: string,
-    lastName: string,
-    email: string,
-    accessCode: number,
+    firstName: string;
+    lastName: string;
+    email: string;
+    accessCode: number;
 }
 
 @Entity({
     name: UserSchema.schema.name
 })
-export class User extends BaseModel implements LoadData<UserData>{
-    
+export class User extends BaseModel implements LoadData<UserData> {
+    // Props
     @PrimaryGeneratedColumn()
     user_id: number;
 
@@ -40,13 +39,13 @@ export class User extends BaseModel implements LoadData<UserData>{
 
     @Column({ 
         name: UserSchema.schema.columns.firstName,
-        nullable: true 
+        nullable: true
     })
     firstName: string;
 
-    @Column({ 
+    @Column({
         name: UserSchema.schema.columns.lastName,
-        nullable: true 
+        nullable: true
     })
     lastName: string;
 
@@ -62,7 +61,6 @@ export class User extends BaseModel implements LoadData<UserData>{
     })
     currentSessionId?: number;
 
-    
 
     @ManyToMany(type => RolesCode, { eager: true} )
     @JoinTable({
@@ -80,21 +78,7 @@ export class User extends BaseModel implements LoadData<UserData>{
 
 
     @OneToMany(type => UserSession, session => session.user)
-    sessions: Promise<UserSession[]>
-
-    async currentSession(): Promise< UserSession> {
-        return await UserDataController.shared.getCurrentSession(this)
-    }
-
-    async setCurrentSession(session: UserSession): Promise<void> {
-        this.currentSessionId = session.session_id;
-        await UserDataController.shared.saveInDB(this);
-    }
-
-    async removeCurrentSession(): Promise<void> {
-        this.currentSessionId = undefined;
-        await UserDataController.shared.saveInDB(this);
-    }
+    sessions: Promise<UserSession[]>;
 
     loadMap(input: UserData) {
         this.firstName = input.firstName;
@@ -115,7 +99,17 @@ export class UserDataController extends DataModelController<User> {
     }
 
     public async getCurrentSession(user: User): Promise<UserSession> {
-        let session: UserSession = await UserSessionDataController.shared.findById((user.currentSessionId || -1));
+        const session: UserSession = await UserSessionDataController.shared.findById((user.currentSessionId || -1));
         return session;
+    }
+
+    public async setCurrentSession(user: User, session: UserSession): Promise<void> {
+        user.currentSessionId = session.session_id;
+        this.saveInDB(user);
+    }
+
+    public async removeSession(user: User): Promise<void> {
+        user.currentSessionId = undefined;
+        this.saveInDB(user);
     }
 }

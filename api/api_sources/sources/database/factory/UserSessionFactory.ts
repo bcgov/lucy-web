@@ -1,7 +1,8 @@
 // Session Factory
 import * as faker from 'faker';
 import { userFactory } from './userFactory';
-import { User, UserSession, UserSessionDataController, RolesCodeValue, SessionActivity, SessionActivityCodeController, SessionActivityController, SessionActivityCodeValues} from '../models';
+import { User, UserSession, UserSessionDataController, RolesCodeValue, SessionActivity, } from '../models';
+import {SessionActivityCodeController, SessionActivityController, SessionActivityCodeValues} from '../models';
 
 export const sessionFactory = async (login: RolesCodeValue): Promise <UserSession> => {
     // 1. Create User
