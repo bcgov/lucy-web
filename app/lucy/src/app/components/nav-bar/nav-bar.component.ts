@@ -29,6 +29,22 @@ export class NavBarComponent implements OnInit {
   constructor(private router: Router, private ssoService: SsoService, private userService: UserService) { }
 
   ngOnInit() {
+    this.setInitials()
+    this.listenForRouteChanges()
+  }
+
+  /**
+   * For refreshing navbar conent that
+   * may change based on user's 
+   * interactions with the app
+  */ 
+  private listenForRouteChanges() {
+    var listener = this.router.events.subscribe((val) => {
+      this.setInitials()
+    });
+  }
+
+  private setInitials() {
     this.userService.getInitials().then((value) => {
       this.userInitials = value
       }
@@ -44,7 +60,7 @@ export class NavBarComponent implements OnInit {
   }
 
   onAdd() {
-    this.router.navigate([UtilityService.appRoute(AppRoutes.DetailRef), AppRoutesParams.DetailAdd, -1]);
+    // this.router.navigate([UtilityService.appRoute(AppRoutes.DetailRef), AppRoutesParams.DetailAdd, -1]);
   }
 
 }

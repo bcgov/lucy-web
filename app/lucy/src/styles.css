@@ -31,30 +31,70 @@
 
 /* clobal class for alignment */
 .to-the-left {
-    text-align: left;
+  text-align: left;
 }
 
 .to-the-right {
-    text-align: right;
+  text-align: right;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 /* Make all headers bold */
-h1, h2, h3, h4, h5, h6 {
-    font-weight: bold !important;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold !important;
+}
+
+.sub-header {
+  color: rgba(0,0,0,0.4);
 }
 
 /* Normal text content */
-.body-text {
+.body-text {}
 
+/* Buttons with Material icons */
+.btn-with-icon {
+  border-radius: 2px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-/* Buttons with Material icons*/
-.btn-with-icon {
-    border-radius: 2px;
-    display: flex;
-    flex-wrap: wrap;
-  }
+/* Input Fields */
+.field-header {
+  font-style: normal;
+  font-weight: normal;
+  line-height: 19px;
+  font-size: 15px;
+  color: #999999;
+}
+
+.field-input {
+  font-style: normal;
+  font-weight: normal;
+  line-height: 19px;
+  font-size: 15px;
+  color: #333333;
+  border: 1px solid #333333;
+  box-sizing: border-box;
+}
+
+.field-input-invalid {
+  font-style: normal;
+  font-weight: normal;
+  line-height: 19px;
+  font-size: 15px;
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  box-sizing: border-box;
+}
+
+.field {
+  margin-top: 8px;
+}

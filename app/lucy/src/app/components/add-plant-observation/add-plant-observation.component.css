@@ -46,38 +46,6 @@
     
 }
 
-.field-header {
-    font-style: normal;
-    font-weight: normal;
-    line-height: 19px;
-    font-size: 15px;
-    color: #999999;
-}
-
-.field-input {
-    font-style: normal;
-    font-weight: normal;
-    line-height: 19px;
-    font-size: 15px;
-    color: #333333;
-    border: 1px solid #333333;
-    box-sizing: border-box;
-}
-
-.field-input-invalid {
-    font-style: normal;
-    font-weight: normal;
-    line-height: 19px;
-    font-size: 15px;
-    color: #ff0000;
-    border: 1px solid #ff0000;
-    box-sizing: border-box;
-}
-
-.field {
-    margin-top: 8px;
-}
-
 .seperator {
     border-left: 1px solid black;
     margin-top: -1px;
