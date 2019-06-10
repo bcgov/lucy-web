@@ -10,17 +10,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "resolveJsonModule": true,
     "target": "es5",
     "typeRoots": [
-      "node_modules/@types",
-      "typings",
-      "node"
+      "node_modules/@types"
     ],
     "lib": [
       "es2018",
       "dom"
-    ],
-    "allowJs": true
+    ]
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AppRoutes, AppRoutesParams} from '../../constants/app-routes.enum';
-import { SsoService } from 'src/app/services/sso.service';
-import { UserService } from 'src/app/services/user.service';
-import { UserAccessType } from 'src/app/models';
-import { RouterService } from 'src/app/services/router.service';
+import { SsoService } from '../../services/sso.service';
+import { UserService } from '../../services/user.service';
+import { UserAccessType } from '../../models';
+import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
 
 declare const location: any;
