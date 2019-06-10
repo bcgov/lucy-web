@@ -1,6 +1,5 @@
 {
   "rulesDirectory": [
-    "codelyzer"
   ],
   "rules": {
     "arrow-return-shorthand": true,
@@ -22,8 +21,7 @@
     ],
     "import-spacing": true,
     "indent": [
-      true,
-      "tabs"
+      true
     ],
     "interface-over-type-literal": true,
     "label-position": true,

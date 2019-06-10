@@ -12,9 +12,8 @@ describe('Test Login Data Model', () => {
     test('-should create/fetch model (admin)-', async (done) => {
         const user = await userFactory(RolesCodeValue.admin);
         expect(user).toBeDefined();
-        let repo = SharedDBManager.connection.getRepository(User);
+        const repo = SharedDBManager.connection.getRepository(User);
         await repo.save(user);
-        
         if (user) {
             // Fetching
             const dbUser: User  = await repo.findOne({ email : user.email}) || new User();
@@ -36,7 +35,6 @@ describe('Test Login Data Model', () => {
     test('should fail to fetch user', async (done) => {
         const user: User = await UserDataController.shared.fetchOne({ email: 'ios.dev@email.com'});
         expect(user).toBeUndefined();
-        
         expect(UserSession).toBeDefined();
         expect(UserSessionDataController).toBeDefined();
         expect(SessionActivity).toBeDefined();
@@ -44,7 +42,7 @@ describe('Test Login Data Model', () => {
         expect(SessionActivityCodeValues).toBeDefined();
         expect(sessionActivityFactory).toBeDefined();
         expect(sessionFactory).toBeDefined();
-        done()
+        done();
     });
 
     test('should create / fetch UserSession', async (done) => {

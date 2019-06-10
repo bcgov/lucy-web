@@ -5,31 +5,34 @@
 import * as express from 'express';
 import * as passport from 'passport';
 // SOURCE
-import { Logger } from "../logger";
+import { Logger } from '../logger';
 import { errorBody } from '../core';
 
 
-let CommonSuccessMessage: string = "API call success";
+const CommonSuccessMessage = 'API call success';
+
+export type RouteHandler = (req: express.Request, res: express.Response) => Promise<any>
+export type RouteMiddlewareHandler = (req: express.Request, res: express.Response, next: any) => Promise<any>;
 
 export interface ValidationKeys {
-    key: string,
-    insideKeys?: ValidationKeys[]
+    key: string;
+    insideKeys?: ValidationKeys[];
 }
 
 
 export class BaseRoutController<DataController>  {
-    route: express.Router = express.Router(); 
+    route: express.Router = express.Router();
     logger: Logger;
     dataController: DataController;
     constructor() {
         this.logger = new Logger(this.constructor.name)
     }
 
-    public getErrorJSON(message: string,errors: object[]) {
+    public getErrorJSON(message: string, errors: object[]) {
         return {
-            message, 
+            message,
             errors
-        }
+        };
     }
 
     public getSuccessJSON(data?: any, message?: string) {
@@ -41,7 +44,7 @@ export class BaseRoutController<DataController>  {
 
     public commonError(status: number, tag: string, error: any, resp: express.Response, message?: string) {
         this.logger.error(`API-${tag} Call Error => ${error}`);
-        let errMsg = message || `${error}`
+        const errMsg = message || `${error}`;
         resp.status(status).json(errorBody(errMsg, [error]));
     }
 

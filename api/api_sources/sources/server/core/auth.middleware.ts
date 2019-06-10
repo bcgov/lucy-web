@@ -4,16 +4,16 @@ import * as express from 'express';
 import * as assert from 'assert';
 import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
 import AppConfig from '../../AppConfig'
-import { UserDataController, User, RoleCodeController, RolesCodeValue, RolesCode, UserSessionDataController} from '../../database/models';
+import { UserDataController, User, RoleCodeController, RolesCodeValue, RolesCode, UserSessionDataController, UserSession} from '../../database/models';
 import { LoggerBase } from '../logger';
 import { errorBody } from './common.error.handler';
 
 const commonUtility = require('@bcgov/nodejs-common-utils');
 
 export interface MiddlewareValidationResult {
-    message?: string,
-    code?: number,
-    success: boolean
+    message?: string;
+    code?: number;
+    success: boolean;
 }
 
 export class ApplicationAuthMiddleware extends LoggerBase {
@@ -64,9 +64,9 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              assert(given_name, 'JWT payload given_name is missing');
 
              // Check token expiry
-             let expiry = (payload.exp * 1000);
+             const expiry = (payload.exp * 1000);
              if (expiry && expiry > Date.now()) {
-                 let message = `Token is expired for user ${email}`;
+                 const message = `Token is expired for user ${email}`;
                  ApplicationAuthMiddleware.logger.info(message);
                  if (!AppConfig.bypassTokenExpiry) {
                     done(errorWithCode(401, message), false);
@@ -78,7 +78,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
 
              // Get user
              ApplicationAuthMiddleware.logger.info(`Getting user`);
-             let user: User = await UserDataController.shared.fetchOne({email: email})
+             let user: User = await UserDataController.shared.fetchOne({email: email});
              if (!user) {
                  ApplicationAuthMiddleware.logger.info(`Creating new user with email and username: {${email}, ${preferred_username}}`);
 
@@ -93,7 +93,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  await UserDataController.shared.saveInDB(user);
              }
 
-             ApplicationAuthMiddleware.logger.info(`User {${user.email}, ${user.preferredUsername}`);
+             ApplicationAuthMiddleware.logger.info(`User {${user.email}, ${user.preferredUsername}}`);
 
              // Checking user validity {for subclasses}
              const valid: MiddlewareValidationResult = await this.validateUser(user, payload);
@@ -103,39 +103,41 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              }
 
              // Session Handling
-             const session = await user.currentSession();
+             const session = await UserDataController.shared.getCurrentSession(user);
              if (session) {
                  // Check session validity
                  if (session.tokenExpiry > new Date() && !AppConfig.bypassTokenExpiry) {
-                     let message = `Session Expire for user ${user.email} at ${session.tokenExpiry}`;
+                     const message = `Session Expire for user ${user.email} at ${session.tokenExpiry}`;
                      ApplicationAuthMiddleware.logger.info(message);
                      // Remove current
-                     await user.removeCurrentSession();
+                     await UserDataController.shared.removeSession(user);
                       // Fail Session
                     done(errorWithCode(message, 401));
                  } else {
                     ApplicationAuthMiddleware.logger.info(`Session Active for user ${user.email}`);
                      session.lastActiveAt = new Date();
-                     session.tokenExpiry = new Date((payload.exp * 1000) || Date.now() + AppConfig.sessionLifeTime)
+                     session.tokenExpiry = new Date((payload.exp * 1000) || Date.now() + AppConfig.sessionLifeTime);
                      request['appUser'] = user;
                      done(null, user);
                  }
              } else {
+                 // Create New Session
                  ApplicationAuthMiddleware.logger.info(`Create New Session for user ${user.email}`);
-                 let session = UserSessionDataController.shared.create();
-                 session.lastActiveAt = new Date();
-                 session.lastLoginAt = new Date();
-                 session.user = user;
-                 session.tokenExpiry = new Date((payload.exp * 1000) || Date.now() + AppConfig.sessionLifeTime)
-                 await UserSessionDataController.shared.saveInDB(session);
-                 await user.setCurrentSession(session);
+                 const newSession: UserSession = UserSessionDataController.shared.create();
+                 newSession.lastActiveAt = new Date();
+                 newSession.lastLoginAt = new Date();
+                 newSession.user = user;
+                 newSession.tokenExpiry = new Date((payload.exp * 1000) || Date.now() + AppConfig.sessionLifeTime);
 
+                 // Saving new session and users
+                 await UserSessionDataController.shared.saveInDB(newSession);
+                 await UserDataController.shared.setCurrentSession(user, newSession);
                  done(null, user);
              }
 
-        } catch(excp) {
+        } catch (excp) {
             ApplicationAuthMiddleware.logger.error(`_tokenCallback | Exception | ${excp}`);
-            done(excp, false)
+            done(excp, false);
         }
     }
 }
@@ -145,29 +147,28 @@ export const authenticationMiddleWare = () => {
 };
 
 export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
-    
+    // Returning Middleware callback
     return (req: express.Request, resp: express.Response, next: any) => {
         try {
             assert(req.user || req['appUser'], 'Invalid request parmas: [No User]');
             const user: User = req.user || req['appUser'];
             const userRoles = user.accessCodes;
             const acceptedRoles = userRoles.filter((item: RolesCode) => {
-                let rc: RolesCodeValue = item.code as RolesCodeValue;
-                let value = roles.includes(rc);
+                const rc: RolesCodeValue = item.code as RolesCodeValue;
+                const value = roles.includes(rc);
                 if (value) {
                     LoggerBase.logger.info(`roleAuthenticationMiddleware => true ${rc}`);
                 } else {
                     LoggerBase.logger.info(`roleAuthenticationMiddleware => false ${rc}`);
                 }
-                
-                return value
+                return value;
             });
             return acceptedRoles.length > 0 ? next() : (resp.status(401).json(errorBody('User role is not authorized to access this route', [{
                 acceptedRoles: `Accepted roles are [${roles}]`
             }])));
 
-        } catch(excp) {
+        } catch (excp) {
             resp.status(500).json(errorBody(`${excp}`, [excp]));
         }
-    }
+    };
 }
