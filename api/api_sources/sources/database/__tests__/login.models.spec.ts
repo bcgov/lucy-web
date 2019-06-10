@@ -55,7 +55,7 @@ describe('Test Login Data Model', () => {
         await UserSessionDataController.shared.saveInDB(userSession);
 
         // Save user current session
-        await userSession.user.setCurrentSession(userSession);
+        await UserDataController.shared.setCurrentSession(userSession.user, userSession);
 
         const dbSession: UserSession = await UserSession.controller.fetchOne( {
             token: userSession.token
@@ -70,13 +70,12 @@ describe('Test Login Data Model', () => {
         expect(dbSession.user.email).toEqual(userSession.user.email);
 
         // Checking currentSession relationship of user
-        let currentSession: UserSession = await dbSession.user.currentSession();
+        const currentSession: UserSession = await UserDataController.shared.getCurrentSession(dbSession.user);
         expect(currentSession).toBeDefined();
-        expect(currentSession.session_id).toEqual(dbSession.session_id)
+        expect(currentSession.session_id).toEqual(dbSession.session_id);
 
         await UserDataController.shared.remove(userSession.user);
         await UserSessionDataController.shared.remove(userSession);
-        
         done();
     });
 
@@ -107,3 +106,5 @@ describe('Test Login Data Model', () => {
         done();
     });
 });
+
+// ---------------
