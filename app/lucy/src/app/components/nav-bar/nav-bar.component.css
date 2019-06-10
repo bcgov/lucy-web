@@ -13,16 +13,6 @@
   color: #ffffff;
 }
 
-.nav-logout-btn {
-  border-radius: 2px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.logout-icon {
-  margin-left: 5px;
-}
-
 .user-name {
   font-style: normal;
   font-weight: 500;

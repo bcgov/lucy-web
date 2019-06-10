@@ -3,4 +3,5 @@
         <strong>Login!</strong> Please login to view Species list.
 </div>
 <app-login *ngIf="!isAuthenticated"></app-login>
-<app-profile *ngIf="isAuthenticated"></app-profile>
+<!-- <app-profile *ngIf="isAuthenticated"></app-profile> -->
+<app-user-information *ngIf="isAuthenticated"></app-user-information>

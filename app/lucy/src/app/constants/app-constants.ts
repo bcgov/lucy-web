@@ -2,11 +2,13 @@
 
 
 export class AppConstants {
+
+    // SSO
     static SSOConstants = {
         SSO_CLIENT_ID : "lucy",
         SSO_BASE_URL : "https://sso.pathfinder.gov.bc.ca",
         SSO_REALM_NAME : "dfmlcg7z",
-        SSO_LOGIN_REDIRECT_URI : "http://localhost:4200/",
+        SSO_LOGIN_REDIRECT_URI : "http://localhost:4200/userinfo",
     }
 
     static SSO_LoginEndpoint() : string {
@@ -17,6 +19,8 @@ export class AppConstants {
     static SSO_TokenEndpoint() : string {
         return `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect/token`;
     }
+    
+
 }
 
 

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { SsoService } from '../services/sso.service';
+import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { AppRoutes } from '../constants';
 
 @Component({
   selector: 'app-root',
@@ -7,13 +10,15 @@ import { SsoService } from '../services/sso.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'SEISM';
-
-  constructor(private ssoService: SsoService) {
-
+  public get isAuthenticated() : boolean {
+    return this.ssoService.isAuthenticated();
   }
 
+  constructor(private router: Router, private ssoService: SsoService, private userService: UserService) {}
+
   ngOnInit() {
-    console.log(this.ssoService.getUsername());
+    if (this.ssoService.isAuthenticated()) {
+      this.router.navigate([AppRoutes.Profile])
+    }
   }
 }

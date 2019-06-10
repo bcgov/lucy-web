@@ -1,2 +1,7 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<router-outlet></router-outlet>
+
+<app-nav-bar></app-nav-bar>
+<div *ngIf="!isAuthenticated" class="alert alert-warning" role="alert">
+        <strong>Login!</strong> Please login to view Species list.
+</div>
+<app-login *ngIf="!isAuthenticated"></app-login>
+<router-outlet *ngIf="isAuthenticated"></router-outlet>

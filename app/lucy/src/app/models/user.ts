@@ -1,7 +1,14 @@
+export enum UserAccessType {
+    view,
+    dataEntry,
+}
+
 export interface User {
+    first: string;
+    last: string;
     email: string;
     id: string;
-    token: string;
-    profileImageURL: string;
-    name: string;
+    access: any;
+    organization: string;
+    roleInOrganization: string;
 }
