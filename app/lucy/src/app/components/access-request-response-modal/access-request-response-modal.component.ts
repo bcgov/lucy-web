@@ -31,6 +31,8 @@ export class AccessRequestResponseModalComponent implements OnInit {
     this.roles.getAllActiveRoles().then((value) => {
       this.activeRoles = value;
     });
+
+    console.log("showing modal")
   }
 
   public sumbitRequestResponse() {
