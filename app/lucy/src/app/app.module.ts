@@ -10,8 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 // Third-party
 // ng-bootstrap
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-// Date picker
-import {DpDatePickerModule} from 'ng2-date-picker';
 
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
@@ -21,7 +19,6 @@ import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './components/app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { SpeciesDetailsComponent } from './components/species-details/species-details.component';
 import { SpeciesTableComponent } from './components/species-table/species-table.component';
 import { AddPlantObservationComponent } from './components/add-plant-observation/add-plant-observation.component';
 import { LoginComponent } from './components/login/login.component';
@@ -39,7 +36,6 @@ import { RouterService } from './services/router.service';
     routingComponents,
     HomeComponent,
     NavBarComponent,
-    SpeciesDetailsComponent,
     SpeciesTableComponent,
     AddPlantObservationComponent,
     LoginComponent,
@@ -55,14 +51,13 @@ import { RouterService } from './services/router.service';
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
-    DpDatePickerModule,
     RouterModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [CookieService, SsoService, RouterService],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
+export class AppModule {
   constructor(private injector: Injector) {
   }
 }
