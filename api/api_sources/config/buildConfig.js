@@ -1,4 +1,0 @@
-
-module.export = {
-    allTS: './s'
-}
