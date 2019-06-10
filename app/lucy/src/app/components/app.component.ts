@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { SsoService } from '../services/sso.service';
-import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { AppRoutes } from '../constants';
+import { RouterService } from '../services/router.service';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +14,13 @@ export class AppComponent {
     return this.ssoService.isAuthenticated();
   }
 
-  constructor(private router: Router, private ssoService: SsoService, private userService: UserService) {}
+  constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService) {}
 
   ngOnInit() {
     if (this.ssoService.isAuthenticated()) {
-      this.router.navigate([AppRoutes.Profile])
+      if (this.routerService.current == AppRoutes.Root) {
+        this.routerService.navigateTo(AppRoutes.Profile)
+      }
     }
   }
 }
