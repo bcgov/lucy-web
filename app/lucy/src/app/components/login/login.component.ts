@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SsoService, SSOLoginProvider } from 'src/app/services/sso.service';
+import { SsoService, SSOLoginProvider } from '../../services/sso.service';
 
 @Component({
   selector: 'app-login',
