@@ -1,0 +1,1 @@
+declare module '@bcgov/nodejs-common-utils';

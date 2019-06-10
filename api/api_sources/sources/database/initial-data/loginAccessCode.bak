@@ -1,0 +1,33 @@
+export const DefaultLoginAccessCodes = [
+    {
+        id: 'DEFAULT',
+        code : 'ADM',
+        role : 'Admin',
+        description: 'Overall SEISM Access',
+        update_at: 'DEFAULT',
+        create_at: 'DEFAULT'
+    },
+    {
+        id: 'DEFAULT',
+        code : 'DAV',
+        role : 'Data Viewer',
+        description: 'General data view access',
+        update_at: 'DEFAULT',
+        create_at: 'DEFAULT'
+    },
+    {
+        id: 'DEFAULT',
+        code : 'DAE',
+        role : 'Data Editor',
+        description: 'General access',
+        update_at: 'DEFAULT',
+        create_at: 'DEFAULT'
+    },
+    {
+        code : 'SUP',
+        role : 'Super User',
+        description: 'Lead admin for each of the taxonomic components',
+        update_at: 'DEFAULT',
+        create_at: 'DEFAULT'
+    }
+];
