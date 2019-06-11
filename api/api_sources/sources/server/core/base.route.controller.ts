@@ -8,12 +8,24 @@ import * as passport from 'passport';
 import { Logger } from '../logger';
 import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
-import { RolesCodeValue } from '../../database/models';
+import { RolesCodeValue, UserDataController } from '../../database/models';
 
-
+/**
+ * Common Message for API success
+ * @const CommonSuccessMessage
+ */
 const CommonSuccessMessage = 'API call success';
 
+/**
+ * Express route handler closure type
+ * @export type RouteHandler
+ */
 export type RouteHandler = (req: express.Request, res: express.Response) => Promise<any>;
+
+/**
+ * Express middleware handler closure type
+ * @export type RouteMiddlewareHandler
+ */
 export type RouteMiddlewareHandler = (req: express.Request, res: express.Response, next: any) => Promise<any>;
 
 export interface ValidationKeys {
@@ -23,11 +35,12 @@ export interface ValidationKeys {
 
 
 export class BaseRoutController<DataController>  {
-    route: express.Router = express.Router();
+    router: express.Router = express.Router();
     logger: Logger;
     dataController: DataController;
+    userController: UserDataController = UserDataController.shared;
     constructor() {
-        this.logger = new Logger(this.constructor.name)
+        this.logger = new Logger(this.constructor.name);
     }
 
     public getErrorJSON(message: string, errors: object[]) {
@@ -37,11 +50,11 @@ export class BaseRoutController<DataController>  {
         };
     }
 
-    public getSuccessJSON(data?: any, message?: string) {
+    public successResp(data?: any, message?: string) {
         return {
             message: message || CommonSuccessMessage,
             data: data || {}
-        }
+        };
     }
 
     public commonError(status: number, tag: string, error: any, resp: express.Response, message?: string) {
@@ -56,7 +69,7 @@ export class SecureRouteController<T> extends BaseRoutController<T> {
     constructor() {
         super();
         // Register auth middleware
-        this.route.use(passport.authenticate('jwt', {session : false}));
+        this.router.use(passport.authenticate('jwt', {session : false}));
     }
 }
 
@@ -65,6 +78,6 @@ export class BaseAdminRouteController<T> extends SecureRouteController<T> {
         super();
 
         // Register role middleware
-        this.route.use(roleAuthenticationMiddleware([RolesCodeValue.admin]));
+        this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin]));
     }
 }

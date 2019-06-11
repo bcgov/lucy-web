@@ -6,7 +6,19 @@ import { UserMessagesSchema, UserSchema } from '../database-schema';
 import { User } from './user';
 import { DataModelController } from '../data.model.controller';
 
+/**
+ * @description Status of message
+ * @export enum UserMessageStatus
+ */
+export enum UserMessageStatus {
+    unseen = 0,
+    seen = 1
+}
 
+/**
+ * @description UserMessage Model class
+ * @export class UserMessage
+ */
 @Entity({
     name: UserMessagesSchema.schema.name
 })
@@ -50,7 +62,10 @@ export class UserMessage {
     creator: User;
 
 }
-
+/**
+ * @description User message data controller
+ * @export class UserMessageController
+ */
 export class UserMessageController extends DataModelController<UserMessage> {
     public static get shared(): UserMessageController {
         return this.sharedInstance<UserMessage>(UserMessage, UserMessagesSchema) as UserMessageController;
