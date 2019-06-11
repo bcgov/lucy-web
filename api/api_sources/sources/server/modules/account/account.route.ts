@@ -6,6 +6,7 @@ import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
 import { SecureRouteController, roleAuthenticationMiddleware, BaseRoutController, RouteHandler } from '../../core';
 import { UserDataController, User, RolesCodeValue, RoleCodeController, RolesCode } from '../../../database/models';
+import { userMessagesRoute } from './messages.route';
 
 class RolesRouteController extends BaseRoutController<RoleCodeController> {
     constructor() {
@@ -13,18 +14,21 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
         this.dataController = RoleCodeController.shared;
 
         // Routes
-        this.route.get('/', this.index);
+        this.router.get('/', this.index);
     }
 
     get index(): RouteHandler {
         return async (req: Request, resp: Response) => {
             assert(req, 'No request object');
             const roles = await this.dataController.all();
-            return resp.status(200).json(this.getSuccessJSON(roles));
+            return resp.status(200).json(this.successResp(roles));
         };
     }
 }
-
+/**
+ * AccountRouteController
+ * @description Account route controller
+ */
  class AccountRouteController extends SecureRouteController<UserDataController> {
      roleRouteController: RolesRouteController = new RolesRouteController();
      constructor() {
@@ -35,33 +39,44 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
 
          // Route Configure
          // Get roles
-         this.route.use('/roles', this.roleRouteController.route);
+         this.router.use('/roles', this.roleRouteController.router);
+
+         // User messages
+         this.router.use('/message', userMessagesRoute());
 
          // Get own info
-         this.route.get('/me', this.me);
+         this.router.get('/me', this.me);
 
          // Update own info
-         this.route.put('/me', this.update);
+         this.router.put('/me', this.update);
 
          // Get user info
-         this.route.get('/user/:userId', roleAuthenticationMiddleware([RolesCodeValue.admin]), this.index);
+         this.router.get('/user/:userId', roleAuthenticationMiddleware([RolesCodeValue.admin]), this.index);
 
          // Update user
-         this.route.put('/user/:userId', [roleAuthenticationMiddleware([RolesCodeValue.viewer])], this.update);
+         this.router.put('/user/:userId', [roleAuthenticationMiddleware([RolesCodeValue.viewer])], this.update);
          // Get All users
-         this.route.get('/users', roleAuthenticationMiddleware([RolesCodeValue.admin]), this.index);
+         this.router.get('/users', roleAuthenticationMiddleware([RolesCodeValue.admin]), this.index);
 
 
      }
 
+     /**
+      * @description User info route handling
+      * @return RouteHandler
+      */
      get me(): RouteHandler {
          return async (req: Request, res: Response) => {
             assert(req);
             assert(req.user);
-            return res.status(200).json(this.getSuccessJSON(req.user || req['appUser']));
+            return res.status(200).json(this.successResp(req.user || req['appUser']));
          };
      }
 
+     /**
+      * @description User info update route
+      * @return RouteHandler
+      */
      get update(): RouteHandler {
          return async (req: Request, resp: Response) => {
              try {
@@ -105,15 +120,19 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
                 await this.dataController.saveInDB(user);
                 this.logger.info(`Update user ${user.email}`);
                 // Response
-                resp.status(200).json(this.getSuccessJSON(user, 'Data Updated'));
+                resp.status(200).json(this.successResp(user, 'Data Updated'));
 
              } catch (excp) {
                 this.commonError(500, 'update', excp, resp);
                 return;
              }
-         }
+         };
      }
 
+     /**
+      * @description Any user or all users info route handling
+      * @return RouteHandler
+      */
      get index(): RouteHandler {
          return async (req: Request, resp: Response) => {
             try {
@@ -124,7 +143,7 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
                 } else {
                     result = await this.dataController.all();
                 }
-                return resp.status(200).json(this.getSuccessJSON(result));
+                return resp.status(200).json(this.successResp(result));
             } catch (excp) {
                 this.commonError(500, 'index', excp, resp);
                 return;
@@ -136,7 +155,7 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
 
  export const accountRoute = (): Router => {
     const controller = new AccountRouteController();
-    return controller.route;
+    return controller.router;
  };
 
 // ---------

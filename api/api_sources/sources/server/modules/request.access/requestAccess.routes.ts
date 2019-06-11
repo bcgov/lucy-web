@@ -7,11 +7,17 @@ import { RouteHandler, SecureRouteController, adminOnlyMiddleware } from '../../
 import { UserDataController, RequestAccessController, User, RequestStatus, RequestAccess } from '../../../database/models';
 import { UserMessage, UserMessageController, RolesCode, RoleCodeController} from '../../../database/models';
 
+/**
+ * @description Create request body structure
+ */
 interface CreateRequestAccess {
     requestedAccessCode: number;
     requestNote: string;
 }
 
+/**
+ * @description Request access route controller
+ */
 class RequestAccessRouteController extends SecureRouteController<RequestAccessController> {
     userController: UserDataController = UserDataController.shared;
     constructor() {
@@ -20,20 +26,17 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
 
         // Configure route
         // Index for all request-access
-        this.route.get('/', [adminOnlyMiddleware()], this.index);
+        this.router.get('/', [adminOnlyMiddleware()], this.index);
 
         // Update request-access
-        this.route.put('/:requestId', [adminOnlyMiddleware()], this.update);
+        this.router.put('/:requestId', [adminOnlyMiddleware()], this.update);
 
         // Create
-        this.route.post('/', this.create);
+        this.router.post('/', this.create);
     }
 
     /**
      * Route's Handler
-     */
-    /**
-     * Create Request Access
      */
 
     /**
@@ -46,7 +49,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
                 // Now fetch all request access and send it
                 assert(req.user, 'No user for request');
                 this.logger.info(`index | send all request access to user ${req.user.email}`);
-                return resp.status(200).json(this.getSuccessJSON(await this.dataController.all({
+                return resp.status(200).json(this.successResp(await this.dataController.all({
                     status: 0
                 })));
 
@@ -80,7 +83,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
                 await this.dataController.saveInDB(accessRequest);
 
                 // Send Response
-                resp.status(200).json(this.getSuccessJSON(accessRequest));
+                resp.status(200).json(this.successResp(accessRequest));
             } catch (excp) {
                 this.commonError(500, 'update', excp, resp);
                 return;
@@ -88,6 +91,10 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
         };
     }
 
+    /**
+     * @description Create new request access for user
+     * @return RouteHandler
+     */
     get create(): RouteHandler {
         return async (req: Request, resp: Response) => {
             try {
@@ -108,7 +115,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
                 assert(requestAccess.request_id, 'No request id created');
 
                 // Send new object
-                resp.status(201).json(this.getSuccessJSON(requestAccess));
+                resp.status(201).json(this.successResp(requestAccess));
             } catch (excp) {
                 this.commonError(500, 'update', excp, resp);
                 return;
@@ -145,6 +152,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
             if (!roles.includes(requestAccess.requestedAccessCode)) {
                 roles.push(requestAccess.requestedAccessCode);
                 requester.roles = roles;
+                await this.userController.saveInDB(requester);
             }
         } else if (status === RequestStatus.rejected) {
             this.logger.info(`Access request ${requestAccess.request_id} is rejected by ${requestAccess.approver.email}`);
@@ -166,9 +174,13 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
 
 }
 
+/**
+ * @description Function to return Request access route handle
+ * @export const requestAccessRoutes
+ */
 export const requestAccessRoutes = (): Router => {
     const controller = new RequestAccessRouteController();
-    return controller.route;
+    return controller.router;
 };
 
 // -----------------------------------------------------------------------
