@@ -417,8 +417,8 @@ export class SsoService {
    */
   private storeAccessToken(token: string, expiery: number) {
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
-    const expieryDate = new Date(tokenExpieryInSconds)
-    const expieryDateUTC = expieryDate.toUTCString()
+    const expieryDate = new Date(tokenExpieryInSconds);
+    const expieryDateUTC = expieryDate.toUTCString();
     this.cookieService.set('accessToken', token, expieryDate);
     this.cookieService.set('accessTokenExpiery', expieryDateUTC, expieryDate);
     // TODO: consider using this.beginTokeRefreshTimer()
@@ -443,7 +443,7 @@ export class SsoService {
     if (token == undefined) {
       return "";
     } else {
-      return token
+      return token;
     }
   }
 
@@ -469,7 +469,7 @@ export class SsoService {
    */
   private convertUTCDateStringToMillisecondsFromNow(dateUTCString): number {
     if (dateUTCString == "") {
-      return -1
+      return -1;
     }
     const expieryDate = new Date(Date.parse(dateUTCString));
     return expieryDate.getTime() - new Date().getTime();
@@ -484,12 +484,12 @@ export class SsoService {
     if (token == undefined) {
       return "";
     } else {
-      return token
+      return token;
     }
   }
 
   /**
-   * Return qccess token with 'bearer' appended
+   * Return access token with 'bearer' appended
    */
   public getBearerAccessToken(): string {
     return ("Bearer " + this.getAccessToken());
@@ -510,7 +510,7 @@ export class SsoService {
   public getUsername(): string {
     const jwtDecoded = this.getTokenInformation();
     if (jwtDecoded == null) {
-      return undefined
+      return undefined;
     }
     const username = jwtDecoded['preferred_username'];
     return username;
