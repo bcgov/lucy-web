@@ -1,16 +1,14 @@
-//import { express } from 'express'
+/**
+ * Express Application
+ */
 
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as cross from 'cors';
-//import * as path from 'path';
 
 import {Logger} from '../logger';
-
 import AppConfig from '../../AppConfig';
-
 import { routes } from './routes';
-
 import { SharedDBManager } from '../../database/dataBaseManager';
 import { ApplicationManager } from '../../application-manager';
 import { authenticationMiddleWare, errorHandler } from '../core';
@@ -21,7 +19,6 @@ import { authenticationMiddleWare, errorHandler } from '../core';
 class ExpressApp {
 
     private static instance: ExpressApp;
-    
     public app: any = express();
 
     private logger: Logger = new Logger('ExpressApp');
@@ -30,49 +27,49 @@ class ExpressApp {
         return this.instance || (this.instance = new this());
     }
 
-    constructor() { }
+    constructor() {
+    }
 
-    public initExpress() {
+    public async initExpress(): Promise<any> {
         // Body parser
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({
             extended: true
         }));
 
-        // Cross origin 
+        // Cross origin
         this.app.use(cross());
 
         // Auth middleware
-        this.app.use(authenticationMiddleWare());
+        this.app.use(await authenticationMiddleWare());
 
         // App router
         routes(this.app);
 
         // Global error handler
         this.app.use(errorHandler);
+
+        return this.app;
     }
 
     public start() {
         const port = AppConfig.port;
         this.app.listen(port, () => {
             this.logger.info('Server running on port => ' + port);
-            ApplicationManager.shared.state.isReady = true
+            ApplicationManager.shared.state.isReady = true;
             ApplicationManager.shared.save();
         });
     }
 
-    
-
     public async init() {
         this.logger.info('Starting API Server');
         ApplicationManager.shared.init();
-        this.initExpress();
         try {
             console.dir(SharedDBManager);
             await SharedDBManager.connect();
-            ApplicationManager.shared.state.isDBUp = true
+            ApplicationManager.shared.state.isDBUp = true;
             this.start();
-        } catch(err) {
+        } catch (err) {
             this.logger.error(`*** Unable to start API ***`);
             this.logger.error(`*** Error: ${err} **`);
             process.exit(1);
@@ -81,4 +78,4 @@ class ExpressApp {
     }
 }
 
-export default ExpressApp.getInstance();
+export const SharedExpressApp =  ExpressApp.getInstance();

@@ -15,6 +15,7 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
             ${this.table.columns.email} VARCHAR (100) NOT NULL UNIQUE,
             ${this.table.columns.preferredUsername} VARCHAR (100) NULL,
             ${this.table.columns.loginType} SMALLINT NULL,
+            ${this.table.columns.accountStatus} SMALLINT DEFAULT 0,
             ${this.table.columns.expiryDate} DATE NULL,
             ${this.table.columns.activation} SMALLINT NULL,
             ${this.table.columns.refCurrentSession} INT NULL
@@ -47,14 +48,9 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
                         await queryRunner.query(`INSERT INTO user_role VALUES (${result[0].user_id}, ${role})`);
                         console.log(`Role is created for user [${result[0].user_id}, ${admin.email}] role: ${role}`);
                     }
-                   
-                } 
+                }
             }
         }
-
-        
-
-        // Create role
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

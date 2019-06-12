@@ -1,5 +1,6 @@
 // Test for admin ops data models
 import {  UserDataController, RequestAccessController, UserMessageController, UserMessage } from '../models';
+
 import { SharedDBManager } from '../dataBaseManager';
 import {  requestAccessFactory, userMessageFactory } from '../factory';
 
@@ -10,7 +11,6 @@ describe('Test Admin ops data models', () => {
     afterAll(async () => {
         return await SharedDBManager.close();
     });
-
     test('should create/fetch request access', async (done) => {
         // Obj
         const obj = await requestAccessFactory();
