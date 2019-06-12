@@ -10,10 +10,9 @@ export interface accessCode {
     createdAt: string;
     description: string;
     role: string;
-    role_code_id: 1;
+    role_code_id: number;
     updateAt: string;
 }
-
 export interface User {
     // first: string;
     // last: string;

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { User, UserAccessType } from 'src/app/models';
+import { User, UserAccessType, accessCode } from 'src/app/models';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { AppConstants } from '../constants';
 import { SsoService } from './sso.service';
-import { allowSanitizationBypass } from '@angular/core/src/sanitization/bypass';
 
 @Injectable({
   providedIn: 'root'
@@ -90,8 +89,7 @@ export class UserService {
       console.log("User not found");
       return UserAccessType.DataViewer;
     }
-    const userAccess = user.accessCodes[0];
-    switch (userAccess.code) {
+    switch (this.getUserAccessCode(user).code) {
       case "ADM":
         return UserAccessType.Admin;
       case "DAV":
@@ -101,6 +99,10 @@ export class UserService {
       case "SUP":
         return UserAccessType.SuperUser;
     }
+  }
+
+  public getUserAccessCode(user: User): accessCode {
+    return user.accessCodes[0];
   }
 
   // TODO: Does not exist in api yet
