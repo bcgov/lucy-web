@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
-import { UserRole } from 'src/app/models/userRole';
 import { FormsModule }   from '@angular/forms';
 import { accessRequest } from 'src/app/models/accessRequest';
+import { accessCode } from 'src/app/models';
 
 @Component({
   selector: 'app-access-request-response-modal',
@@ -11,7 +11,7 @@ import { accessRequest } from 'src/app/models/accessRequest';
 })
 export class AccessRequestResponseModalComponent implements OnInit {
 
-  public activeRoles: UserRole[] = []
+  public activeRoles: accessCode[] = []
 
   @Input() accessRequest: accessRequest = {
     id: 0,

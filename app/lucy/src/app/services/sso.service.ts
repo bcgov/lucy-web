@@ -213,14 +213,14 @@ export class SsoService {
   /**
    * End session on Keycloak
    */
-  endKeycloakSession() {
+  private endKeycloakSession() {
     window.open(this.SSO_LogoutEndpoint(), "_self");
   }
 
   /**
    * Refresh Access token using refresh token
    */
-  private async refreshToken(): Promise<boolean> {
+  public async refreshToken(): Promise<boolean> {
     const result = await this.getAccessTokenFromRefreshToken(this.getRefreshToken());
     if (result.success) {
       this.storeAccessToken(result.accessToken, result.accessTokenExpiery);

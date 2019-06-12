@@ -69,7 +69,7 @@
           <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.firstName}}</td>
           <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.lastName}}</td>
           <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.email}}</td>
-          <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.role}}</td>
+          <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{getUserRole(user)}}</td>
           <td>
             <!-- Dropdown -->
             <ng-template #userActionsDropdown>
@@ -80,13 +80,13 @@
                         class="form-control field-box field-input" 
                         id="rolesDropdown" ngbDropdownAnchor
                         (focus)="roleDropdown.open()" readonly
-                        [(ngModel)]="user.role"
+                        [(ngModel)]="user.accessCodes[0].role"
                         (change)="setUserRole(user, role)"
                         />
                   <div ngbDropdownMenu aria-labelledby="rolesDropdown">
                     <div class="col-12" *ngFor="let role of activeRoles; let i = index">
                       <button class="btn" ngbDropdownItem (click)='setUserRole(user, role)'>
-                        {{role.name}}
+                        {{role.role}}
                       </button>
                     </div>
                   </div>

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { accessRequest } from 'src/app/models/accessRequest';
 import { usersList } from 'src/app/models/usersList';
 import { RolesService } from 'src/app/services/roles.service';
-import { UserRole } from 'src/app/models/userRole';
-import { FormsModule }   from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminService } from 'src/app/services/admin.service';
-import { User } from 'src/app/models';
+import { User, accessCode } from 'src/app/models';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-tools',
@@ -17,7 +17,7 @@ import { User } from 'src/app/models';
 export class AdminToolsComponent implements OnInit {
   public requests: accessRequest[] = []
   public allUsers: User[] = []
-  public activeRoles: UserRole[] = []
+  public activeRoles: accessCode[] = []
 
   public focusedAccessRequest: accessRequest = {
     id: 0,
@@ -31,7 +31,7 @@ export class AdminToolsComponent implements OnInit {
     responseMessage: "",
   }
 
-  constructor(private roles: RolesService, private admin: AdminService, private formsModule: FormsModule) { }
+  constructor(private roles: RolesService, private userService: UserService, private admin: AdminService, private formsModule: FormsModule) { }
 
   ngOnInit() {
   }
@@ -47,9 +47,10 @@ export class AdminToolsComponent implements OnInit {
     // this.getDummyRequests().then((value) => {
     //   this.requests = value;
     // });
-    // this.getDummyUserslist().then((value) => {
-    //   this.allUsers = value;
-    // });
+  }
+
+  getUserRole(user: User) {
+    return this.userService.getUserAccessCode(user).role;
   }
 
   public setFocusedAccessRequest(request: accessRequest) {
@@ -66,14 +67,10 @@ export class AdminToolsComponent implements OnInit {
     console.log("******")
   }
 
-  public setUserRole(user: usersList, role: UserRole) {
-    user.role = role.role
-    console.log("******")
-    console.log("TODO: Make api call to set role on user:")
-    console.log(user)
-    console.log("New Role:")
-    console.log(role)
-    console.log("******")
+  public setUserRole(user: User, role: accessCode) {
+    this.admin.changeUserRole(user, role).then((value) => {
+      console.log(value ? "success user role change" : "fail user role change")
+    });
   }
 
   public userActiveStatusChanged(user: usersList, isActive: boolean) {
