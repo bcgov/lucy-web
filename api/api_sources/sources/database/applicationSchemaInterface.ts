@@ -1,8 +1,11 @@
+/**
+ * Application Schema design classes
+ */
 
-
-// Application Migration interface
-
-
+/**
+ * @description Column definition descriptor class
+ * @export class ApplicationTableColumn
+ */
 export class ApplicationTableColumn {
     name: string;
     comment = 'Application table column';
@@ -13,6 +16,10 @@ export class ApplicationTableColumn {
     }
 }
 
+/**
+ * @description Table definition descriptor class
+ * @export class ApplicationTable
+ */
 export class ApplicationTable {
     name: string;
     columnsDefinition: {[key: string]: ApplicationTableColumn};
@@ -35,12 +42,20 @@ export class ApplicationTable {
     }
 }
 
+/**
+ * @description Schema holder for entity
+ * @export class BaseTableSchema
+ */
 export class  BaseTableSchema {
 
     static shareInstance: BaseTableSchema;
     table: ApplicationTable;
     joinTables: {[key: string]: ApplicationTable};
 
+    /**
+     * @description Timestamps column associated with schema
+     * @return object
+     */
     static get timestampColumns(): {[key: string]: string} {
         return {
             updatedAt: 'updated_at',
@@ -49,28 +64,51 @@ export class  BaseTableSchema {
         };
     }
 
+    /**
+     * @description Getter for shared instance
+     * @return BaseTableSchema
+     */
     static get shared(): BaseTableSchema {
         return this.shareInstance || (this.shareInstance = new this());
     }
 
-    defineTable(): ApplicationTable {
-        return new ApplicationTable();
-    }
-
-    defineJoinTable(): {[key: string]: ApplicationTable} {
-        return {};
-    }
-
+    /**
+     * @description Constructor
+     */
     constructor() {
         this.table = this.defineTable();
         this.joinTables = this.defineJoinTable();
     }
 
+    /**
+     * @description Method to create table of schema, subclass should override this methods
+     * @return ApplicationTable
+     */
+    defineTable(): ApplicationTable {
+        return new ApplicationTable();
+    }
+
+    /**
+     * @description Method to create join table associated with schema, subclass should override this methods
+     * @return object
+     */
+    defineJoinTable(): {[key: string]: ApplicationTable} {
+        return {};
+    }
+
+     /**
+     * @description Create SQL query string to add timestamps column in schema table
+     * @return string
+     */
     createTimestampsColumn(): string {
         return `ALTER TABLE ${this.table.name} ADD COLUMN ${BaseTableSchema.timestampColumns.createdAt} TIMESTAMP DEFAULT NOW();
         ALTER TABLE ${this.table.name} ADD COLUMN ${BaseTableSchema.timestampColumns.updatedAt} TIMESTAMP DEFAULT NOW();`;
     }
 
+    /**
+     * @description Create SQL query string to add columns and table in schema 
+     * @return string
+     */
     createComments(): string {
         let commentForColumns = ``;
         for (const key in this.table.columnsDefinition) {
@@ -82,10 +120,18 @@ export class  BaseTableSchema {
         return `COMMENT ON TABLE ${this.table.name} IS '${this.table.description}';\n${commentForColumns}`;
     }
 
+    /**
+     * @description Create SQL query string to drop table in schema
+     * @return string
+     */
     dropTable(): string {
         return `DROP TABLE IF EXISTS ${this.table.name}`;
     }
 
+    /**
+     * @description Schema table
+     * @return ApplicationTable
+     */
     public static get schema(): ApplicationTable {
         return this.shared.table;
     }
@@ -94,4 +140,6 @@ export class  BaseTableSchema {
 
 export const defineColumn = (name: string, comment: string, struct?: string): ApplicationTableColumn => {
     return new ApplicationTableColumn(name, comment, struct);
-}
+};
+
+// ---------------------------------------------------------------------------------
