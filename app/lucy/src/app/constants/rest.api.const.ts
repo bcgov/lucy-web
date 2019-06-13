@@ -17,6 +17,10 @@ class RemoteEndPoints {
         return `${this.origin}/api/v1`;
     }
 
+    get usetInfo(): string {
+        return this.baseURL + `/userInfo`;
+    }
+
     get categories(): string {
         return this.baseURL + `/categories`;
     }

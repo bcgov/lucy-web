@@ -3,7 +3,6 @@
     display: flex;
     flex-wrap: wrap;
     background: #d6d6d6;
-   
     width: 65px;
     height: 65px;
     border-radius: 50%;
@@ -11,22 +10,37 @@
 
   .user-button {
     font-size: 30px;
-	font-weight: bold; 
+	  font-weight: bold; 
     line-height: 41px;
-    color: #ffffff;
+    color: #333333;
   }
 
-  .user-role{ 
-      
+  .user-access-request {
+    text-align: center;
+    border: 1px solid #CCCCCC;
+    background-color: #F7F7F7;
+    padding: 15px;
   }
 
-  .user-name {
-    color: #000000;
-	font-family: "SF Pro Display";
-	font-size: 34px;
-	font-weight: bold;
-	line-height: 41px;
+  .user-access-request-button {
+    height: 50px;
+    width: 250px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 21px;
+    text-align: center;
   }
 
-  .user-access {
+  .user-access-level {
+    text-align: center;
+    border: 1px solid #CCCCCC;
+    background-color: #F7F7F7;
+    padding: 5px;
+    border-radius: 9px;
+    font-weight: bold;
+    font-size: 12px;
   }
+
+  .dropdown-toggle::after {
+    display:none;
+}
