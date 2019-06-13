@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User, UserAccessType, accessCode } from 'src/app/models';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
-import { ApiService, APIRequestMethod } from './api.service';
+import { ApiService, APIRequestMethod, APIRequestResult } from './api.service';
 import { AppConstants } from '../constants';
 import { SsoService } from './sso.service';
 
@@ -12,11 +12,11 @@ import { SsoService } from './sso.service';
 export class UserService {
 
   private current: User | null = null;
+  private APIPromise: Promise<APIRequestResult> | null = null;
   public shouldRefresh: boolean = false;
 
   constructor(private http: HttpClient, private cookieService: CookieService, private api: ApiService, private ssoService: SsoService) { }
 
-  /**** Get ****/
   /**
    * Return a User object 
    * containing user information.
@@ -35,13 +35,40 @@ export class UserService {
     }
 
     // Make the API call
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
+   const userInfo = await this.requestUserInfo();
+   return userInfo === null ? null : userInfo;
+  }
+
+  /*------------------------------------API CALL------------------------------------*/
+  /**
+   * Make an API Call through 
+   * getUserRequestPromise() 
+   * to get the current users informartion.
+   * 
+   * @returns User | null
+   */
+  private async requestUserInfo(): Promise<User | null> {
+    const response = await this.getUserRequestPromise();
+    // Reset promise
+    this.APIPromise = null
     if (this.isUserObject(response.response)) {
       this.current = response.response;
       return response.response;
     } else {
       return null;
     }
+  }
+
+  /**
+   * If a promise for the call is in progress, 
+   * Return the same promise to avoid an extra call.
+   * @returns Promise 
+   */
+  private async getUserRequestPromise():Promise<APIRequestResult> {
+    if (this.APIPromise === null) {
+      this.APIPromise = this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
+    }
+    return this.APIPromise
   }
 
   /**
@@ -52,7 +79,9 @@ export class UserService {
     if (user === undefined || user === null) {return false}; 
     return (<User>user.email) !== undefined;
   }
+  /*------------------------------------End of API Call------------------------------------*/
 
+  /*------------------------------------GETs------------------------------------*/
   async getFirstName(): Promise<string> {
     const user = await this.getUser();
     return (user == null ? "" :
@@ -86,7 +115,6 @@ export class UserService {
   async getAccess(): Promise<UserAccessType> {
     const user = await this.getUser();
     if (user == null) {
-      console.log("User not found");
       return UserAccessType.DataViewer;
     }
     switch (this.getUserAccessCode(user).code) {
@@ -130,9 +158,14 @@ export class UserService {
       (user.email != "")
     );
   }
-  /**** **** ****/
+  /*------------------------------------END OF GETs------------------------------------*/
 
-  /**** SET ****/
+  /*------------------------------------SETs------------------------------------*/
+  /**
+   * Update User information
+   * @param firstName 
+   * @param lastName 
+   */
   async updateUserInfo(firstName: string, lastName: string): Promise<boolean> {
     let user = await this.getUser()
     user.firstName = firstName;
@@ -145,12 +178,16 @@ export class UserService {
     }
   }
 
-  async submitDataEntryRequest(): Promise<boolean> {
+  /**
+   * Create an Access Request
+   * @param notes 
+   */
+  async submitDataEntryRequest(notes: string): Promise<boolean> {
     let user = await this.getUser()
     // TODO: dont hardcode the id. use roles service.
     const body = {
       "requestedAccessCode": 3,
-	    "requestNote": ""
+	    "requestNote": notes
     }
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_me, body);
     if (!this.isUserObject(response)) {
@@ -159,16 +196,16 @@ export class UserService {
       return (response.firstName === user.firstName && response.lastName === user.lastName)
     }
   }
-  /**** **** ****/
+  /*------------------------------------END OF SETs------------------------------------*/
 
-  /***** User Preferences *****/
+  /*------------------------------------User Preferences------------------------------------*/
   /**
    * Check if a cookie named
    * ShowRequestDataEntryAccessMessage exists.
-   * if not, 
-   * user preference has not been saved: return true
-   * if exists, 
-   * check if value is not false
+   *  * if not, 
+   *    * user preference has not been saved: return true
+   *  * if exists, 
+   *    * check if value is not false
    */
   public showRequestDataEntryAccessMessage(): boolean {
     const value = this.cookieService.get('ShowRequestDataEntryAccessMessage');
@@ -187,7 +224,8 @@ export class UserService {
     this.cookieService.set('ShowRequestDataEntryAccessMessage', String(show));
   }
 
-  /**** Mock data ****/
+  /*------------------------------------ END OF User Preferences------------------------------------*/
+  /*------------------------------------MOCK DATA------------------------------------*/
   private getMockUser(): User {
     var user: User = {
       accessCodes: [{
@@ -209,6 +247,6 @@ export class UserService {
     };
     return user
   }
-  /**** **** ****/
+  /*------------------------------------END OF MOCK DATA------------------------------------*/
 
 }
