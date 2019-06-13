@@ -34,6 +34,10 @@ export interface APIError {
 
 export class ApiService {
 
+  /**
+   * Maximum number of Request retry calls 
+   * After failures.
+   */
   private MAX_NUMBER_OF_API_RETRY: number = 3;
 
   constructor(private httpClient: HttpClient, private ssoService: SsoService) { }
@@ -96,13 +100,9 @@ export class ApiService {
    * @returns Success | Fail & Response
    */
   private async postCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
-    console.log("POST: ")
-    console.dir(body)
     const jsonBody = JSON.parse(JSON.stringify(body))
     try {
       const result = await this.httpClient.post<any>(endpoint, jsonBody, { headers: this.getHeaders() }).toPromise();
-      console.log(result['message'])
-
       const requestResult: APIRequestResult = {
         success: true,
         response: result['data']
@@ -130,15 +130,9 @@ export class ApiService {
   * @returns Success | Fail & Response
   */
   private async putCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
-    console.log("PUT: ")
-    console.dir(body)
     const jsonBody = JSON.parse(JSON.stringify(body))
-    console.log(jsonBody);
-    console.dir(this.getHeaders());
     try {
       const result = await this.httpClient.put<any>(endpoint, jsonBody, { headers: this.getHeaders() }).toPromise();
-      console.log(result['message'])
-
       const requestResult: APIRequestResult = {
         success: true,
         response: result['data']
@@ -167,8 +161,6 @@ export class ApiService {
   private async getCall(endpoint: string, attempts: number): Promise<APIRequestResult> {
     try {
       const result = await this.httpClient.get(endpoint, { headers: this.getHeaders() }).toPromise();
-      console.log(result['message'])
-
       const requestResult: APIRequestResult = {
         success: true,
         response: result['data']
