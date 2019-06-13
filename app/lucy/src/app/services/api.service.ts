@@ -233,6 +233,8 @@ export class ApiService {
    */
   private async decideOn401(error: APIError): Promise<APIErrorDescision> {
     if (error.attempts >= this.MAX_NUMBER_OF_API_RETRY) {
+      console.log("REQUEST REACHED MAX NUMBER OF ATTEMPTS:");
+      console.dir(error);
       return APIErrorDescision.Stop;
     }
     const refreshed = await this.ssoService.refreshToken();
