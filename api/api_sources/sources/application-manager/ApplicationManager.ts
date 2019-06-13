@@ -24,18 +24,18 @@ export class ApplicationManager extends LoggerBase {
     state: ApplicationState;
 
     constructor() {
-       super() 
+       super();
     }
 
     init() {
-        const statusFile = AppConfig.dataDirPath + status_fileName
+        const statusFile = AppConfig.dataDirPath + status_fileName;
         if (fs.existsSync(statusFile)) {
             const buffer = fs.readFileSync(statusFile, {encoding: 'utf8', flag:'r'})
-            this.state = JSON.parse(buffer)
+            this.state = JSON.parse(buffer);
             ApplicationManager.logger.info(`Load application state from file: ${buffer}`);
-            this.state.isReady = false
-            this.state.isDBUp = false
-            return
+            this.state.isReady = false;
+            this.state.isDBUp = false;
+            return;
         } else {
             this.state = {
                 isSeeded: false,
@@ -43,7 +43,7 @@ export class ApplicationManager extends LoggerBase {
                 isDBUp: false,
                 lastDeployDate: new Date(),
                 lastErrorDetails: {}
-            }
+            };
         }
     }
 
@@ -52,5 +52,6 @@ export class ApplicationManager extends LoggerBase {
         //fs.writeFileSync(statusFile, JSON.stringify(this.state));
         ApplicationManager.logger.info(`App Status saved`);
     }
-    
-}
+};
+
+//  ----------------

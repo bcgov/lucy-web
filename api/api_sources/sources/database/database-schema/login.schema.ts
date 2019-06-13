@@ -31,6 +31,7 @@ export class UserSchema extends BaseTableSchema {
             preferredUsername: new ApplicationTableColumn('preferred_username', 'User name provided by KeyClock'),
             loginType: new ApplicationTableColumn('login_type', 'Login type BCeID or IDR'),
             expiryDate: new ApplicationTableColumn('expiry_date', 'Expiry date of account'),
+            accountStatus: defineColumn('account_status', 'Status of account'),
             activation: new ApplicationTableColumn('activation', 'Activation status of account'),
             refCurrentSession: defineColumn('ref_current_session_id', 'FOREIGN KEY reference to session table to track current sessions of users')
         };

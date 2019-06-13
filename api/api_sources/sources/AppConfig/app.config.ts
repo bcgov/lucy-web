@@ -18,12 +18,10 @@ class AppConfiguration {
     }
 
     constructor() {
-        this.port = process.env.PORT || 3001;
+        this.port = (process.env.PORT || 3001);
         this.host = process.env.HOST || '127.0.0.1';
     }
-    
     // environments:  = ['local-dev', 'docker-dev', 'prod']
-    
 
     public getEnv = () => {
         return process.env.NODE_ENV;
