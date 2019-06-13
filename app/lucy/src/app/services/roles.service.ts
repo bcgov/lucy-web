@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
+import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
 import { accessCode, User } from '../models';
 
@@ -33,8 +33,13 @@ export class RolesService {
   // }
 
   async getAllActiveRoles(): Promise<accessCode[] | null> {
-    const response = await this.api.getCall(AppConstants.API_refrenceData.roles)
-    return this.isValidRolesResponse(response)? response : null
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_refrenceData.roles, null);
+    if (response.success) {
+      return this.isValidRolesResponse(response.response)? response.response : null;
+    } else {
+      return null
+    }
+    
   }
 
   private getDummyRoles(): accessCode[] {
