@@ -1,7 +1,9 @@
 export enum AppRoutes {
     Root = '',
-    Detail = 'details/:action/:id',
-    DetailRef = 'details'
+    Login = 'Login',
+    UserInfo = 'UserInfo',
+    Profile = 'Profile',
+    AdminTools = 'AdminTools'
 }
 
 export enum AppRoutesParams {
