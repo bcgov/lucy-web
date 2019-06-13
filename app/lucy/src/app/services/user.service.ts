@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User, UserAccessType, accessCode } from 'src/app/models';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
-import { ApiService } from './api.service';
+import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
 import { SsoService } from './sso.service';
 
@@ -35,10 +35,10 @@ export class UserService {
     }
 
     // Make the API call
-    const response = await this.api.getCall(AppConstants.API_me);
-    if (this.isUserObject(response)) {
-      this.current = response;
-      return response;
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
+    if (this.isUserObject(response.response)) {
+      this.current = response.response;
+      return response.response;
     } else {
       return null;
     }
@@ -137,7 +137,7 @@ export class UserService {
     let user = await this.getUser()
     user.firstName = firstName;
     user.lastName = lastName;
-    const response = await this.api.putCall(AppConstants.API_me, JSON.parse(JSON.stringify(user)));
+    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_me, user);
     if (!this.isUserObject(response)) {
       return false
     } else {
@@ -147,11 +147,12 @@ export class UserService {
 
   async submitDataEntryRequest(): Promise<boolean> {
     let user = await this.getUser()
+    // TODO: dont hardcode the id. use roles service.
     const body = {
       "requestedAccessCode": 3,
 	    "requestNote": ""
     }
-    const response = await this.api.putCall(AppConstants.API_me, JSON.parse(JSON.stringify(user)));
+    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_me, body);
     if (!this.isUserObject(response)) {
       return false
     } else {
