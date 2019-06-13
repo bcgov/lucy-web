@@ -1,0 +1,50 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: '2019-05-22T22:33:32Z'
+  labels:
+    app: lucy-app
+  name: lucy-app
+  namespace: 8ecbmv-dev
+  resourceVersion: '788403975'
+  selfLink: /apis/build.openshift.io/v1/namespaces/8ecbmv-dev/buildconfigs/lucy-app
+  uid: a14fa05e-7ce1-11e9-bf26-0050568379a2
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'lucy-app:latest'
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: app/lucy
+    git:
+      uri: 'https://github.com/bcgov/lucy-web.git'
+    type: Git
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 'node:9'
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+    - github:
+        secret: fT94ctykslmWZgzDhuWe
+      type: GitHub
+    - generic:
+        secret: Atjvk6HAWSNz2lmpIH3q
+      type: Generic
+    - type: ConfigChange
+    - imageChange:
+        lastTriggeredImageID: >-
+          node@sha256:5aa0756284c7f0222c2c16988fb58d6446427ac7ae8891aa50a2de721ef4191c
+      type: ImageChange
+status:
+  lastVersion: 1
+
