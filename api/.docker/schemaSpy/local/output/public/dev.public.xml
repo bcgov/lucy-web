@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database name="dev" schema="public" type="PostgreSQL - 9.5.17">
    <tables>
-      <table name="access_request" numRows="0" remarks="Application table" schema="public" type="TABLE">
+      <table name="access_request" numRows="0" remarks="Table to store requests of access level change for a user. Request will be handle by admin" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('access_request_request_id_seq'::regclass)" digits="0" id="0" name="request_id" nullable="false" remarks="Auto generated incremental primary key column" size="10" type="serial"/>
          <column autoUpdated="false" digits="0" id="1" name="request_note" nullable="true" remarks="Note with request" size="500" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="requested_access_code" nullable="false" remarks="FOREIGN KEY reference to login_access_code table. Requested access code id" size="10" type="int4">
@@ -31,7 +31,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="app_roles_code" numRows="4" remarks="Application table" schema="public" type="TABLE">
+      <table name="app_roles_code" numRows="4" remarks="Table to store different roles of application along with unique code and description" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('app_roles_code_role_code_id_seq'::regclass)" digits="0" id="0" name="role_code_id" nullable="false" remarks="Auto generated incremental primary key column" size="10" type="serial">
             <child column="requested_access_code" foreignKey="fk_201906056h25m" implied="false" onDeleteCascade="true" schema="public" table="access_request"/>
             <child column="ref_access_role_id" foreignKey="user_role_ref_access_role_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="user_role"/>
@@ -39,8 +39,8 @@
          <column autoUpdated="false" digits="0" id="1" name="code" nullable="false" remarks="Application level identifier code" size="100" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="role" nullable="false" remarks="User role as per access" size="100" type="varchar"/>
          <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="Description of each access level item" size="500" type="varchar"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="created_at" nullable="true" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="updated_at" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="created_at" nullable="true" remarks="Row create timestamp" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="updated_at" nullable="true" remarks="Row update timestamp" size="29" type="timestamp"/>
          <primaryKey column="role_code_id" sequenceNumberInPK="1"/>
          <index name="app_roles_code_pkey" unique="true">
             <column ascending="true" name="role_code_id"/>
@@ -49,7 +49,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="application_event" numRows="0" remarks="Application table" schema="public" type="TABLE">
+      <table name="application_event" numRows="0" remarks="Table to store different application level events. This table will help to debug production defects and maintenance" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('application_event_event_id_seq'::regclass)" digits="0" id="0" name="event_id" nullable="false" remarks="Auto generated incremental primary key column" size="10" type="serial"/>
          <column autoUpdated="false" digits="0" id="1" name="type" nullable="false" remarks="Event type {Like info, warning, error}" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="2" name="source" nullable="true" remarks="Event source information" size="200" type="varchar"/>
@@ -57,8 +57,8 @@
             <parent column="session_id" foreignKey="fk_2019052812h49m" implied="false" onDeleteCascade="false" schema="public" table="user_session"/>
          </column>
          <column autoUpdated="false" digits="0" id="4" name="note" nullable="true" remarks="Note associated with event" size="500" type="varchar"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="created_at" nullable="true" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="6" name="updated_at" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="created_at" nullable="true" remarks="Row create timestamp" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="6" name="updated_at" nullable="true" remarks="Row update timestamp" size="29" type="timestamp"/>
          <primaryKey column="event_id" sequenceNumberInPK="1"/>
          <index name="application_event_pkey" unique="true">
             <column ascending="true" name="event_id"/>
@@ -84,8 +84,8 @@
          <column autoUpdated="false" digits="0" id="9" name="ref_current_session_id" nullable="true" remarks="FOREIGN KEY reference to session table to track current sessions of users" size="10" type="int4">
             <parent column="session_id" foreignKey="fk_20190606d9h38m" implied="false" onDeleteCascade="false" schema="public" table="user_session"/>
          </column>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="10" name="created_at" nullable="true" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="11" name="updated_at" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="10" name="created_at" nullable="true" remarks="Row create timestamp" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="11" name="updated_at" nullable="true" remarks="Row update timestamp" size="29" type="timestamp"/>
          <primaryKey column="user_id" sequenceNumberInPK="1"/>
          <index name="application_user_pkey" unique="true">
             <column ascending="true" name="user_id"/>
@@ -142,14 +142,14 @@
          <column autoUpdated="false" digits="0" id="7" name="r_raster_column" nullable="true" remarks="" size="2147483647" type="name"/>
          <column autoUpdated="false" digits="0" id="8" name="overview_factor" nullable="true" remarks="" size="10" type="int4"/>
       </table>
-      <table name="session_activity_code" numRows="5" remarks="Application table" schema="public" type="TABLE">
+      <table name="session_activity_code" numRows="5" remarks="Code table to hold different activity of user in application" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('session_activity_code_session_activity_id_seq'::regclass)" digits="0" id="0" name="session_activity_id" nullable="false" remarks="Auto generated incremental primary key column" size="10" type="serial">
             <child column="ref_activity_code" foreignKey="fk_2019052812h38m" implied="false" onDeleteCascade="true" schema="public" table="user_session_activity"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="code" nullable="true" remarks="Unique code for activity" size="100" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="Description of activity" size="500" type="varchar"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="created_at" nullable="true" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="updated_at" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="created_at" nullable="true" remarks="Row create timestamp" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="updated_at" nullable="true" remarks="Row update timestamp" size="29" type="timestamp"/>
          <primaryKey column="session_activity_id" sequenceNumberInPK="1"/>
          <index name="session_activity_code_pkey" unique="true">
             <column ascending="true" name="session_activity_id"/>
@@ -233,7 +233,7 @@
             <column ascending="true" name="ref_access_role_id"/>
          </index>
       </table>
-      <table name="user_session" numRows="0" remarks="Application table" schema="public" type="TABLE">
+      <table name="user_session" numRows="0" remarks="User session information table. Store active user sessions of application" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('user_session_session_id_seq'::regclass)" digits="0" id="0" name="session_id" nullable="false" remarks="Session id auto generated incremental primary key column" size="10" type="serial">
             <child column="ref_session_id" foreignKey="fk_2019052812h49m" implied="false" onDeleteCascade="false" schema="public" table="application_event"/>
             <child column="ref_current_session_id" foreignKey="fk_20190606d9h38m" implied="false" onDeleteCascade="false" schema="public" table="application_user"/>
@@ -247,14 +247,14 @@
          <column autoUpdated="false" digits="0" id="6" name="ref_user_id" nullable="true" remarks="FOREIGN KEY reference to user table" size="10" type="int4">
             <parent column="user_id" foreignKey="fk_2019051d15h34m" implied="false" onDeleteCascade="true" schema="public" table="application_user"/>
          </column>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="created_at" nullable="true" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="8" name="updated_at" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="created_at" nullable="true" remarks="Row create timestamp" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="8" name="updated_at" nullable="true" remarks="Row update timestamp" size="29" type="timestamp"/>
          <primaryKey column="session_id" sequenceNumberInPK="1"/>
          <index name="user_session_pkey" unique="true">
             <column ascending="true" name="session_id"/>
          </index>
       </table>
-      <table name="user_session_activity" numRows="0" remarks="Application table" schema="public" type="TABLE">
+      <table name="user_session_activity" numRows="0" remarks="Collection table to hold information of users session activities" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('user_session_activity_activity_id_seq'::regclass)" digits="0" id="0" name="activity_id" nullable="false" remarks="Activity id auto generated incremental primary key column" size="10" type="serial"/>
          <column autoUpdated="false" digits="0" id="1" name="ref_session_id" nullable="false" remarks="FOREIGN KEY reference to user_session table" size="10" type="int4">
             <parent column="session_id" foreignKey="fk_2019052812h36m" implied="false" onDeleteCascade="true" schema="public" table="user_session"/>
@@ -263,8 +263,8 @@
             <parent column="session_activity_id" foreignKey="fk_2019052812h38m" implied="false" onDeleteCascade="true" schema="public" table="session_activity_code"/>
          </column>
          <column autoUpdated="false" digits="0" id="3" name="info" nullable="true" remarks="Information of activity" size="500" type="varchar"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="created_at" nullable="true" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="updated_at" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="created_at" nullable="true" remarks="Row create timestamp" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="updated_at" nullable="true" remarks="Row update timestamp" size="29" type="timestamp"/>
          <primaryKey column="activity_id" sequenceNumberInPK="1"/>
          <index name="user_session_activity_pkey" unique="true">
             <column ascending="true" name="activity_id"/>
