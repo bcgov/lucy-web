@@ -1,20 +1,50 @@
+/**
+ * Migration helper classes
+ */
 import { Connection } from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager } from './dataBaseManager';
 
-var dbConfig = require('../../ormconfig');
+/**
+ * @description Database config for orm
+ * @const object dbConfig
+ */
+const dbConfig = require('../../ormconfig');
+
+/**
+ * @description Migration Helper class
+ * @export class DatabaseMigrationHelper
+ */
 export class DatabaseMigrationHelper {
+    /**
+     * @description Static shared instance
+     */
     private static instance: DatabaseMigrationHelper;
 
+    /**
+     * @description Getter for shared instance
+     * @return DatabaseMigrationHelper
+     */
     public static get shared(): DatabaseMigrationHelper {
         return this.instance || (this.instance = new this());
     }
 
+    /**
+     * @description Create SQL query string to add timestamps column in given table
+     * @param string tableName
+     * @return string
+     */
     public createTimestampsColumns(tableName: string): string {
         return `ALTER TABLE ${tableName} ADD COLUMN create_at TIMESTAMP DEFAULT NOW();
         ALTER TABLE ${tableName} ADD COLUMN update_at TIMESTAMP DEFAULT NOW();`;
     }
 
+    /**
+     * @description Create query to insert data into table
+     * @param string table
+     * @param any data
+     * @return void
+     */
     public insertJSONInDB(table: string, data: any) {
         const queryPart1 = `INSERT INTO ${table}`;
         let insertStmt = ``;
@@ -26,7 +56,7 @@ export class DatabaseMigrationHelper {
             }
             keys = keys + `${k},`;
         }
-        keys = keys.replace(/.$/, "");
+        keys = keys.replace(/.$/, '');
         for (const key in data) {
             if (key === 'additionalInitDataInfo') {
                 // Skip
@@ -34,29 +64,33 @@ export class DatabaseMigrationHelper {
             }
             const item = data[key];
             if (item === 'DEFAULT') {
-                insertStmt = insertStmt + ` ${item},`
-            }
-            else if (typeof item === 'string') {
-                insertStmt = insertStmt + ` '${item}',`
+                insertStmt = insertStmt + ` ${item},`;
+            } else if (typeof item === 'string') {
+                insertStmt = insertStmt + ` '${item}',`;
             } else {
-                insertStmt = insertStmt + ` ${item},`
+                insertStmt = insertStmt + ` ${item},`;
             }
         }
-        insertStmt = insertStmt.replace(/.$/, "");
+        insertStmt = insertStmt.replace(/.$/, '');
         return `${queryPart1} (${keys}) VALUES (${insertStmt});`;
     }
 
+    /**
+     * @description Create query to insert data array into table
+     * @param string table
+     * @param any[] data
+     * @return void
+     */
     public insertJSONArrayInDB(table: string, data: any[]) {
         const queryPart1 = `INSERT INTO ${table} VALUES (`;
         let insertStmt = ``;
         for (const item of data) {
             if (item === 'DEFAULT') {
-                insertStmt = insertStmt + ` ${item},`
-            }
-            else if (typeof item === 'string') {
-                insertStmt = insertStmt + ` '${item}',`
+                insertStmt = insertStmt + ` ${item},`;
+            } else if (typeof item === 'string') {
+                insertStmt = insertStmt + ` '${item}',`;
             } else {
-                insertStmt = insertStmt + ` ${item},`
+                insertStmt = insertStmt + ` ${item},`;
             }
         }
         return `${queryPart1}${insertStmt});`;
@@ -64,15 +98,31 @@ export class DatabaseMigrationHelper {
 
 }
 
+/**
+ * @description Database Migration Manager
+ * @export class AppDatabaseMigrationManager
+ */
 export class AppDatabaseMigrationManager extends LoggerBase {
+     /**
+     * @description Static shared instance
+     */
     private static instance: AppDatabaseMigrationManager;
 
+    /**
+     * @description Getter for shared instance
+     * @return DatabaseMigrationHelper
+     */
     public static get shared(): AppDatabaseMigrationManager {
         return this.instance || (this.instance = new this());
     }
 
+    /**
+     * @description Recursively revert each migration
+     * @param Connection con
+     * @param number count
+     */
     private async _revert(con: Connection, count: number): Promise<any> {
-        if (count == 0) {
+        if (count === 0) {
             AppDatabaseMigrationManager.logger.info('Revert Migration [DONE]');
             return;
         } else {
@@ -86,9 +136,14 @@ export class AppDatabaseMigrationManager extends LoggerBase {
         }
     }
 
+    /**
+     * @description Revert all existing migrations
+     * @param Connection connection
+     * @return Promise<void>
+     */
     public async revert(connection: Connection) {
         try {
-            const result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.migrationsTableName}`)
+            const result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.migrationsTableName}`);
             AppDatabaseMigrationManager.logger.info(`revert | Migration count: ${JSON.stringify(result)}`);
             if (result[0].count > 0) {
                 await this._revert(connection, parseInt(result[0].count));
@@ -99,13 +154,16 @@ export class AppDatabaseMigrationManager extends LoggerBase {
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`revert | Exception received while running revert migrations: ${excp}`);
         }
-    } 
+    }
 
+    /**
+     * @description Revert all existing migration then run fresh migrations
+     * @return Promise<void>
+     */
     public async refresh(): Promise<void> {
         try {
-            console.dir(dbConfig);
             await SharedDBManager.connect();
-            let connection = SharedDBManager.connection;
+            const connection = SharedDBManager.connection;
             AppDatabaseMigrationManager.logger.info('Connection Created');
             await this.revert(connection);
             await connection.runMigrations({transaction: true});
@@ -115,6 +173,10 @@ export class AppDatabaseMigrationManager extends LoggerBase {
         }
     }
 
+    /**
+     * @description Run fresh migrations
+     * @return Promise<void>
+     */
     public async migrate(): Promise<void> {
         try {
             await SharedDBManager.connect();
@@ -122,8 +184,10 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             await connection.runMigrations({transaction: true});
             await SharedDBManager.close();
         } catch (excp) {
-            AppDatabaseMigrationManager.logger.error(`revert | Exception received while refresh database: ${excp}`);
+            AppDatabaseMigrationManager.logger.error(`migrate | Exception received while refresh database: ${excp}`);
         }
     }
 }
+
+// -----------------------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@
  */
 import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
-import { RouteHandler, SecureRouteController, adminOnlyMiddleware } from '../../core';
+import { RouteHandler, SecureRouteController, adminOnlyRoute } from '../../core';
 import { UserDataController, RequestAccessController, User, RequestStatus, RequestAccess } from '../../../database/models';
 import { UserMessage, UserMessageController, RolesCode, RoleCodeController} from '../../../database/models';
 
@@ -26,10 +26,10 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
 
         // Configure route
         // Index for all request-access
-        this.router.get('/', [adminOnlyMiddleware()], this.index);
+        this.router.get('/', [adminOnlyRoute()], this.index);
 
         // Update request-access
-        this.router.put('/:requestId', [adminOnlyMiddleware()], this.update);
+        this.router.put('/:requestId', [adminOnlyRoute()], this.update);
 
         // Create
         this.router.post('/', this.create);

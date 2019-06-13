@@ -1,4 +1,6 @@
-import ExpressApp  from "./expressApp";
-export default function server() {
-    ExpressApp.init();
-}
+/**
+ * Exporting express app
+ */
+export * from './expressApp';
+
+// --------------------------------

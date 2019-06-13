@@ -19,6 +19,12 @@ export enum UserRole {
     SuperAdmin = 'superUser'
 }
 
+export enum AccountStatus {
+    active = 0,
+    inactive = 1,
+    suspended = 2
+}
+
 export interface UserData {
     firstName: string;
     lastName: string;
@@ -37,7 +43,7 @@ export class User extends BaseModel implements LoadData<UserData> {
     @Column()
     email: string;
 
-    @Column({ 
+    @Column({
         name: UserSchema.schema.columns.firstName,
         nullable: true
     })
@@ -60,6 +66,11 @@ export class User extends BaseModel implements LoadData<UserData> {
         nullable: true,
     })
     currentSessionId?: number;
+
+    @Column({
+        name: UserSchema.schema.columns.accountStatus
+    })
+    accountStatus: number;
 
 
     @ManyToMany(type => RolesCode, { eager: true} )
@@ -105,7 +116,7 @@ export class UserDataController extends DataModelController<User> {
 
     public async setCurrentSession(user: User, session: UserSession): Promise<void> {
         user.currentSessionId = session.session_id;
-        this.saveInDB(user);
+        await this.saveInDB(user);
     }
 
     public async removeSession(user: User): Promise<void> {

@@ -13,26 +13,6 @@ define deployTag
 "${PROJECT}-${GIT_LOCAL_BRANCH}-${DEPLOY_DATE}"
 endef
 
-ifndef PROJECT_NAME
-$(error The PROJECT_NAME variable is missing.)
-endif
-
-ifndef ENVIRONMENT
-$(error The ENVIRONMENT variable is missing.)
-endif
-
-ifndef DB_USER
-$(error The DB_USER variable is missing.)
-endif
-
-ifndef DB_DATABASE
-$(error The DB_DATABASE variable is missing.)
-endif
-
-ifndef DB_PASS
-$(error The DB_PASS variable is missing.)
-endif
-
 #ifndef BUILD_TARGET
 #$(error The BUILD_TARGET variable is missing.)
 #endif

@@ -1,32 +1,52 @@
+/**
+ * Database Manager
+ */
 import {createConnection, Connection} from 'typeorm';
-//import AppConfig from '../../appConfig'
 import { LoggerBase} from '../server/logger';
-import { RetryManager } from '../server/core/retry.manager'
+import { RetryManager } from '../server/core/retry.manager';
 
 // import { User, UserRole } from './models/User';
-import { SeedManager } from './seed.manager'
+import { SeedManager } from './seed.manager';
+const dbConfig = require('../../ormconfig');
 
-
-export * from './models'
-
-var dbConfig = require('../../ormconfig');
-
+/**
+ * @description Database manager class
+ * @export class DBManager
+ */
 export class DBManager extends LoggerBase {
+    // Share Instance
     private static instance: DBManager;
 
+    // DB connection object
     connection: Connection;
 
+    // Props
     maxRetry = 3;
     noOfRetry = 1;
 
-
+    // Getter for share instance
+    /**
+     * @description Static getter for share instance
+     * @return DBManager
+     */
     public static get shared(): DBManager {
         return this.instance || (this.instance = new this());
     }
 
+    /**
+     * @description Connect database call internally
+     * @method _connect
+     * @return Promise<boolean>
+     */
     async _connect(): Promise<boolean> {
         if (this.connection && this.connection.isConnected) {
             DBManager.logger.info('ALREADY CONNECTED');
+            return new Promise<boolean>((res) => {
+                res(true);
+            });
+        } else if (global['connection'] ) {
+            this.connection = global['connection'] as Connection;
+            DBManager.logger.info('CONNECTED GLOBALLY');
             return new Promise<boolean>((res) => {
                 res(true);
             });
@@ -34,7 +54,7 @@ export class DBManager extends LoggerBase {
         return new Promise<boolean>((resolve, reject) => {
             createConnection().then((connection: Connection) => {
                 this.connection = connection;
-                DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
+                // DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
                 resolve(true);
             }).catch((err) => {
                 DBManager.logger.error(`[DB Connection] Error: ${err}`);
@@ -48,25 +68,31 @@ export class DBManager extends LoggerBase {
                 }).catch(() => {
                     DBManager.logger.error(`[DB Connection - 2] Error: ${err}`);
                     DBManager.logger.error(`[DB Config - 2]: ${JSON.stringify(dbConfig)}`);
-                    reject(err)
+                    reject(err);
                 });
-                
-            })
+            });
         });
-
     }
 
+    /**
+     * @description API to connect db
+     * @method connect
+     */
     async connect(): Promise<void> {
         const retryManager = new RetryManager<void>();
         try {
             await retryManager.tryAction(this, '_connect');
             DBManager.logger.info('DB Connection DONE');
-            return
+            return;
         } catch (err) {
             throw Error(`Unable to connect DB, please check log`);
         }
     }
 
+    /**
+     * @description API to close db connection
+     * @method close
+     */
     async close(): Promise<void> {
         if (this.connection) {
             return await this.connection.close();
@@ -74,12 +100,20 @@ export class DBManager extends LoggerBase {
         return;
     }
 
-    
-
+    /**
+     * @description API to seed db
+     * @method seed
+     */
     async seed(): Promise<void> {
         await SeedManager.shared.seedAdmin();
-        return
+        return;
     }
 }
 
-export const SharedDBManager = DBManager.shared 
+/**
+ * @description Exporting Shared Database manager
+ * @export const SharedDBManager
+ */
+export const SharedDBManager = DBManager.shared;
+
+// -------------------------------------------------------

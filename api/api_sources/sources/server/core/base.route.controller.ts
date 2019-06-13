@@ -58,7 +58,7 @@ export class BaseRoutController<DataController>  {
     }
 
     public commonError(status: number, tag: string, error: any, resp: express.Response, message?: string) {
-        this.logger.error(`API-${tag} Call Error => ${error}`);
+        this.logger.error(`[API-${tag}] | Call Error => ${error}`);
         const errMsg = message || `${error}`;
         resp.status(status).json(errorBody(errMsg, [error]));
     }
@@ -69,7 +69,28 @@ export class SecureRouteController<T> extends BaseRoutController<T> {
     constructor() {
         super();
         // Register auth middleware
-        this.router.use(passport.authenticate('jwt', {session : false}));
+        // this.router.use(passport.authenticate('jwt', {session : false}));
+        this.router.use(this.authHandle);
+    }
+
+    get authHandle(): RouteMiddlewareHandler {
+        return async (req: express.Request, resp: express.Response, next: any) => {
+            try {
+                passport.authenticate('jwt', {session: false}, (err, user) => {
+                    if (err) {
+                        const msg = `Authorization fail with error ${err}`;
+                        this.commonError(401, 'authHandle', err, resp, msg);
+                    } else if (!user) {
+                        this.commonError(401, 'authHandle', 'Un-authorize access', resp, 'Un-authorize access');
+                    } else {
+                        req.user = user;
+                        next();
+                    }
+                })(req, resp, next);
+            } catch (excp) {
+                this.commonError(500, 'authHandler', excp, resp);
+            }
+        };
     }
 }
 

@@ -15,7 +15,10 @@ export interface MiddlewareValidationResult {
     code?: number;
     success: boolean;
 }
-
+/**
+ * @description JWT bases passport auth middleware manager
+ * @export class ApplicationAuthMiddleware
+ */
 export class ApplicationAuthMiddleware extends LoggerBase {
     private static shareInstance: any;
     app: any = express();
@@ -25,20 +28,21 @@ export class ApplicationAuthMiddleware extends LoggerBase {
     }
 
     constructor() {
-        super()
-        this._configure();
+        super();
     }
 
     async validateUser(user: User, payload?: any): Promise<MiddlewareValidationResult> {
         return {success: true};
     }
 
+    /**
+     * @description Configure passport and app
+     */
     async _configure() {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
         const { getJwtCertificate} = commonUtility;
         assert(getJwtCertificate, 'No getJwtCertificate lib');
-
         // Get algorithm and public key
         const { algorithm, certificate } = await getJwtCertificate(AppConfig.certificateURL);
         const options: StrategyOptions = {
@@ -53,6 +57,12 @@ export class ApplicationAuthMiddleware extends LoggerBase {
         passport.use(jwtStrategy);
     }
 
+    /**
+     * @description Passport token callback
+     * @param express.Request request
+     * @param any payload
+     * @param any closure done
+     */
     async _tokenCallback(request: express.Request, payload: any, done: any) {
         const { errorWithCode } = commonUtility;
         try {
@@ -62,6 +72,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              assert(email, 'JWT payload email is missing');
              assert(family_name, 'JWT payload family_name is missing');
              assert(given_name, 'JWT payload given_name is missing');
+             const api = request.originalUrl;
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
@@ -72,15 +83,15 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                     done(errorWithCode(401, message), false);
                     return;
                  } else {
-                    ApplicationAuthMiddleware.logger.info(`Allowing user in dev env`);
+                    ApplicationAuthMiddleware.logger.info(`${api} | Allowing user in dev env`);
                  }
              }
 
              // Get user
-             ApplicationAuthMiddleware.logger.info(`Getting user`);
+             ApplicationAuthMiddleware.logger.info(`${api} | Getting user`);
              let user: User = await UserDataController.shared.fetchOne({email: email});
              if (!user) {
-                 ApplicationAuthMiddleware.logger.info(`Creating new user with email and username: {${email}, ${preferred_username}}`);
+                 ApplicationAuthMiddleware.logger.info(`${api} | Creating new user with email and username: {${email}, ${preferred_username}}`);
 
                  // Creating new user with viewer role
                  user = UserDataController.shared.create();
@@ -93,12 +104,12 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  await UserDataController.shared.saveInDB(user);
              }
 
-             ApplicationAuthMiddleware.logger.info(`User {${user.email}, ${user.preferredUsername}}`);
+             ApplicationAuthMiddleware.logger.info(`${api} | User {${user.email}, ${user.preferredUsername}}`);
 
              // Checking user validity {for subclasses}
              const valid: MiddlewareValidationResult = await this.validateUser(user, payload);
              if (!valid.success) {
-                 done(errorWithCode(valid.message, valid.code), false)
+                 done(errorWithCode(valid.message, valid.code), false);
                  return;
              }
 
@@ -107,14 +118,14 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              if (session) {
                  // Check session validity
                  if (session.tokenExpiry > new Date() && !AppConfig.bypassTokenExpiry) {
-                     const message = `Session Expire for user ${user.email} at ${session.tokenExpiry}`;
+                     const message = `${api} |  Session Expire for user ${user.email} at ${session.tokenExpiry}`;
                      ApplicationAuthMiddleware.logger.info(message);
                      // Remove current
                      await UserDataController.shared.removeSession(user);
                       // Fail Session
                     done(errorWithCode(message, 401));
                  } else {
-                    ApplicationAuthMiddleware.logger.info(`Session Active for user ${user.email}`);
+                    ApplicationAuthMiddleware.logger.info(`${api} | Session Active for user ${user.email}`);
                      session.lastActiveAt = new Date();
                      session.tokenExpiry = new Date((payload.exp * 1000) || Date.now() + AppConfig.sessionLifeTime);
                      request['appUser'] = user;
@@ -122,7 +133,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  }
              } else {
                  // Create New Session
-                 ApplicationAuthMiddleware.logger.info(`Create New Session for user ${user.email}`);
+                 ApplicationAuthMiddleware.logger.info(`${api} | Create New Session for user ${user.email}`);
                  const newSession: UserSession = UserSessionDataController.shared.create();
                  newSession.lastActiveAt = new Date();
                  newSession.lastLoginAt = new Date();
@@ -142,25 +153,34 @@ export class ApplicationAuthMiddleware extends LoggerBase {
     }
 }
 
-export const authenticationMiddleWare = () => {
+/**
+ * @description Exposing Auth middleware
+ * @export closure authenticationMiddleWare
+ */
+export const authenticationMiddleWare = async (): Promise<void> => {
+    await ApplicationAuthMiddleware.shared._configure();
     return ApplicationAuthMiddleware.shared.app;
 };
 
+/**
+ * @description Role authentication middleware
+ * @export closure roleAuthenticationMiddleware
+ * @param RolesCodeValue[] roles
+ */
 export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
     // Returning Middleware callback
     return (req: express.Request, resp: express.Response, next: any) => {
         try {
-            assert(req.user || req['appUser'], 'Invalid request parmas: [No User]');
+            assert(req.user || req['appUser'], 'Invalid request parameters: [No User]');
             const user: User = req.user || req['appUser'];
             const userRoles = user.roles;
-            LoggerBase.logger.info(`roleAuthenticationMiddleware | get `);
             const acceptedRoles = userRoles.filter((item: RolesCode) => {
                 const rc: RolesCodeValue = item.code as RolesCodeValue;
                 const value = roles.includes(rc);
                 if (value) {
-                    LoggerBase.logger.info(`roleAuthenticationMiddleware => true ${rc}`);
+                    LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Accepted ${rc}`);
                 } else {
-                    LoggerBase.logger.info(`roleAuthenticationMiddleware => false ${rc}`);
+                    LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
                 }
                 return value;
             });
@@ -174,7 +194,11 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
     };
 };
 
-export const adminOnlyMiddleware = () => {
+/**
+ * @description Admin only route check authentication middleware
+ * @export closure adminOnlyRoute
+ */
+export const adminOnlyRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin]);
 };
 
