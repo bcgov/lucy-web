@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
-import { accessCode, User } from '../models';
+import { Role, User, UserAccessType } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +15,9 @@ export class RolesService {
    * Check if object is a UserRole 
    * @param role
    */
-  private isRoleObject(role: any): role is accessCode {
+  private isRoleObject(role: any): role is Role {
     if (role === undefined || role === null) {return false}; 
-    return (<accessCode>role.role) !== undefined;
+    return (<Role>role.role) !== undefined;
   }
 
   private isValidRolesResponse(object: any): boolean {
@@ -32,18 +32,35 @@ export class RolesService {
   //   return this.getDummyRoles();
   // }
 
-  async getAllActiveRoles(): Promise<accessCode[] | null> {
+  async getRoles(): Promise<Role[] | null> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_refrenceData.roles, null);
     if (response.success) {
       return this.isValidRolesResponse(response.response)? response.response : null;
     } else {
-      return null
+      return null;
     }
-    
   }
 
-  private getDummyRoles(): accessCode[] {
-    var roles: accessCode[] = [
+  async getDataEntryRole(): Promise<Role | null> {
+    const allRoles = await this.getRoles();
+    return allRoles !== null ? allRoles.find(i => i.code === "DAE") : null;
+  }
+
+  public roleToAccessType(role: Role): UserAccessType {
+    switch (role.code) {
+      case "ADM":
+        return UserAccessType.Admin;
+      case "DAV":
+        return UserAccessType.DataViewer;
+      case "DAE":
+        return UserAccessType.DataEditor;
+      case "SUP":
+        return UserAccessType.SuperUser;
+    }
+  }
+
+  private getDummyRoles(): Role[] {
+    var roles: Role[] = [
       {
         createdAt: "2019-06-11T12:10:12.495Z",
         updateAt: "2019-06-11T12:10:12.495Z",

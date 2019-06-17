@@ -5,7 +5,7 @@ import { RolesService } from 'src/app/services/roles.service';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminService } from 'src/app/services/admin.service';
-import { User, accessCode } from 'src/app/models';
+import { User, Role } from 'src/app/models';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -17,7 +17,7 @@ import { UserService } from 'src/app/services/user.service';
 export class AdminToolsComponent implements OnInit {
   public requests: accessRequest[] = []
   public allUsers: User[] = []
-  public activeRoles: accessCode[] = []
+  public activeRoles: Role[] = []
 
   public focusedAccessRequest: accessRequest = {
     id: 0,
@@ -37,16 +37,30 @@ export class AdminToolsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.roles.getAllActiveRoles().then((value) => {
-      this.activeRoles = value;
-    });
+    this.getAllRoles();
 
-    this.admin.getAllUsers().then((value) => {
-      this.allUsers = value
-    });
+    this.getAllUsers();
+
+    this.getAllRequests();
     // this.getDummyRequests().then((value) => {
     //   this.requests = value;
     // });
+  }
+
+  private getAllRequests() {
+
+  }
+
+  private getAllUsers() {
+    this.admin.getAllUsers().then((value) => {
+      this.allUsers = value
+    });
+  }
+
+  private getAllRoles()  {
+    this.roles.getRoles().then((value) => {
+      this.activeRoles = value;
+    });
   }
 
   getUserRole(user: User) {
@@ -67,9 +81,13 @@ export class AdminToolsComponent implements OnInit {
     console.log("******")
   }
 
-  public setUserRole(user: User, role: accessCode) {
-    this.admin.changeUserRole(user, role).then((value) => {
-      console.log(value ? "success user role change" : "fail user role change")
+  public setUserRole(user: User, role: Role) {
+    this.admin.changeUserRole(user, role).then((success) => {
+      console.log(success ? "success user role change" : "fail user role change")
+
+      if(success) {
+        user.roles = [role];
+      }
     });
   }
 
