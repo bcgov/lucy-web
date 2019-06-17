@@ -5,9 +5,10 @@ objects:
   metadata:
     annotations:
       description: Nodejs Runtime Image
+    labels:
+      shared: "true"
     creationTimestamp: null
     generation: 0
-    labels: {}
     name: ${NAME}
   spec:
     lookupPolicy:
