@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
 import { FormsModule }   from '@angular/forms';
 import { accessRequest } from 'src/app/models/accessRequest';
-import { accessCode } from 'src/app/models';
+import { Role } from 'src/app/models';
 
 @Component({
   selector: 'app-access-request-response-modal',
@@ -11,7 +11,7 @@ import { accessCode } from 'src/app/models';
 })
 export class AccessRequestResponseModalComponent implements OnInit {
 
-  public activeRoles: accessCode[] = []
+  public activeRoles: Role[] = []
 
   @Input() accessRequest: accessRequest = {
     id: 0,
@@ -28,7 +28,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
   constructor(private roles: RolesService, private formsModule: FormsModule) { }
 
   ngOnInit() {
-    this.roles.getAllActiveRoles().then((value) => {
+    this.roles.getRoles().then((value) => {
       this.activeRoles = value;
     });
 

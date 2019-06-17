@@ -101,7 +101,12 @@ export class ProfileComponent implements OnInit {
 
   // TODO:
   public requestDataEntryAccess() {
-
+    const success = this.userService.submitDataEntryRequest("Let me in please.");
+    if (success) {
+      console.log("Request sent")
+    } else {
+      console.log("Request failed")
+    }
   }
 
 

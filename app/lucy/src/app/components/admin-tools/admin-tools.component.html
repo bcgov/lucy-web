@@ -66,10 +66,10 @@
       <tbody>
         <tr *ngFor="let user of allUsers; let i = index">
           <td scope="row" [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.username}}</td>
-          <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.firstName}}</td>
-          <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.lastName}}</td>
-          <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{user.email}}</td>
-          <td [ngClass]="user.isActive ? 'activeUser' : 'inActiveUser'">{{getUserRole(user)}}</td>
+          <td [ngClass]="user.accountStatus === 0 ? 'activeUser' : 'inActiveUser'">{{user.firstName}}</td>
+          <td [ngClass]="user.accountStatus === 0  ? 'activeUser' : 'inActiveUser'">{{user.lastName}}</td>
+          <td [ngClass]="user.accountStatus === 0  ? 'activeUser' : 'inActiveUser'">{{user.email}}</td>
+          <td [ngClass]="user.accountStatus === 0  ? 'activeUser' : 'inActiveUser'">{{getUserRole(user)}}</td>
           <td>
             <!-- Dropdown -->
             <ng-template #userActionsDropdown>
@@ -80,7 +80,7 @@
                         class="form-control field-box field-input" 
                         id="rolesDropdown" ngbDropdownAnchor
                         (focus)="roleDropdown.open()" readonly
-                        [(ngModel)]="user.accessCodes[0].role"
+                        [(ngModel)]="user.roles[0].role"
                         (change)="setUserRole(user, role)"
                         />
                   <div ngbDropdownMenu aria-labelledby="rolesDropdown">
@@ -101,7 +101,7 @@
                 </div>
                 <div class="col-6">
                   <label class="switch">
-                    <input name="active" type="checkbox" [(ngModel)]="user.isActive" (change)="userActiveStatusChanged(user, user.isActive)">
+                    <input name="active" type="checkbox" [(ngModel)]="user.accountStatus" (change)="userActiveStatusChanged(user, user.accountStatus)">
                     <span class="slider round"></span>
                   </label>
                 </div>

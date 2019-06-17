@@ -5,7 +5,7 @@ export enum UserAccessType {
     SuperUser,
 }
 
-export interface accessCode {
+export interface Role {
     code: string;
     createdAt: string;
     description: string;
@@ -30,5 +30,6 @@ export interface User {
     preferredUsername: string;
     updateAt: string;
     user_id: number;
-    accessCodes: accessCode[];
+    roles: Role[];
+    accountStatus: number;
 }

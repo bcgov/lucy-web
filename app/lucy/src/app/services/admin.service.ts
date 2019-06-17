@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
 import { promise } from 'protractor';
-import { User, accessCode } from '../models';
+import { User, Role } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class AdminService {
     }
   }
 
-  async changeUserRole(user: User, accessCode: accessCode): Promise<boolean> {
+  async changeUserRole(user: User, accessCode: Role): Promise<boolean> {
     const body = {
       "roles": [accessCode.role_code_id],
     }
@@ -32,5 +32,9 @@ export class AdminService {
     } else {
       return false
     }
+  }
+
+  async getRequests() {
+
   }
 }

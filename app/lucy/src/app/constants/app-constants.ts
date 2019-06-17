@@ -25,6 +25,7 @@ export class AppConstants {
 
     // API authenticated user endpoints
     static API_me: string = `${AppConstants.API_baseURL}/account/me`;
+    static API_DataEntryAccessRequest: string = `${AppConstants.API_baseURL}/request-access`;
     static API_messages: string = `${AppConstants.API_baseURL}/account/message`;
 
     static API_allUsers: string = `${AppConstants.API_baseURL}/account/users`;
