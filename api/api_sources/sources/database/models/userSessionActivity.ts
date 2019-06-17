@@ -1,6 +1,6 @@
 // UserSessionActivity.ts
 
-import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn} from 'typeorm';
 import { SessionActivityCodeSchema, SessionActivitySchema, UserSessionSchema} from '../database-schema';
 import { BaseModel } from './baseModel';
 import { DataModelController } from '../data.model.controller';
@@ -30,20 +30,15 @@ export class SessionActivityCode extends BaseModel {
 }
 
 export class SessionActivityCodeController extends DataModelController<SessionActivityCode> {
-    private static instance: SessionActivityCodeController
-
-    public static get shared(): SessionActivityCodeController {
-        return this.instance || (this.instance = new this());
+    public static get shared():  SessionActivityCodeController {
+        return this.sharedInstance<SessionActivityCode>(SessionActivityCode, SessionActivityCodeSchema) as SessionActivityCodeController;
     }
-
-    constructor() {
-        super(SessionActivityCode, SessionActivityCodeSchema);
-    }
-
     async code(code: SessionActivityCodeValues): Promise<SessionActivityCode> {
-        const query: {[key: string] : string} = {};
-        query[`${SessionActivityCodeSchema.schema.columns.code}`] = code
-        return await this.fetchOne(query)
+        const query: {[key: string]: string} = {};
+        query[`${SessionActivityCodeSchema.schema.columns.code}`] = code;
+        const codeValue = await this.fetchOne(query) || new this.entity();
+        codeValue.code = code;
+        return codeValue;
     }
 }
 

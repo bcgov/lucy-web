@@ -28,8 +28,12 @@ import { UserMessageController, UserMessageStatus, UserMessage } from '../../../
              try {
                  assert(req.user, 'No User of request, should handle by middleware');
                  this.logger.info(`Will Fetch messages for user ${req.user.email}`);
-                 const messages = await this.dataController.all({status: UserMessageStatus.unseen});
-                 return resp.status(200).json(this.successResp(messages));
+                 const user = req.user;
+                 const userMessages: UserMessage[] = await user.message;
+                 const results = userMessages.filter( msg => {
+                     return (msg.status === UserMessageStatus.unseen);
+                 });
+                 return resp.status(200).json(this.successResp(results));
              } catch (excp) {
                  this.commonError(500, 'index', excp, resp);
                  return;

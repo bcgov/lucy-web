@@ -2,28 +2,32 @@
  * Test for user messages
  */
 import * as request from 'supertest';
-import { SharedDBManager } from '../../../../database';
+// import { SharedDBManager } from '../../../../database';
 import { SharedExpressApp } from '../../../initializers';
-import { UserDataController, RolesCodeValue, UserMessageController } from '../../../../database/models';
+import { UserDataController, RolesCodeValue, UserMessageController, User } from '../../../../database/models';
 import { userFactory, userMessageFactory } from '../../../../database/factory';
-import { verifySuccessBody} from '../../../../test-resources/testHelpers';
+import { verifySuccessBody, createAdmin} from '../../../../test-resources/testHelpers';
 import { adminToken } from '../../../../test-resources/token';
 
+jest.mock('../../../../database/data.model.controller');
+let admin: User;
 describe('Test User Messages', () => {
     beforeAll(async () => {
         await SharedExpressApp.initExpress();
-        return  await SharedDBManager.connect();
+        admin = await createAdmin();
+        return;
     });
     afterAll(async () => {
-        return await SharedDBManager.close();
+        return;
     });
 
     test('should fetch user messages', async (done) => {
         // 1. Create receiver, creator and message
-        const receiver = await UserDataController.shared.findById(1);
         const sender = await userFactory(RolesCodeValue.admin);
-        const message = await userMessageFactory(receiver, sender);
-
+        const message = await userMessageFactory(admin, sender);
+        admin.messages = new Promise((resolve) => {
+            resolve([message]);
+        });
         // 2. Route
         await request(SharedExpressApp.app)
         .get('/api/v1/account/message')

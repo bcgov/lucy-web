@@ -1,10 +1,10 @@
 // DataModelController
 import {Connection, getConnection, Repository, ObjectLiteral} from 'typeorm';
-import { LoggerBase} from '../server/logger'
+import { LoggerBase} from '../server/logger';
 import { SharedDBManager} from './dataBaseManager';
 import { ApplicationTable } from './applicationSchemaInterface';
 
-//import { BaseModel} from './models';
+// import { BaseModel} from './models';
 export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
     protected static shareInstance: any;
     entity: any;
@@ -12,7 +12,7 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
     constructor(entity: any, schema?: any) {
         super();
         this.entity = entity;
-        this.schemaInterface = schema
+        this.schemaInterface = schema;
     }
 
     static sharedInstance<U>(entity: any, schema?: any): DataModelController<U> {
@@ -20,13 +20,11 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
     }
 
     private get connection(): Connection {
-        return SharedDBManager.connection || getConnection()
+        return SharedDBManager.connection || getConnection();
     }
 
-    
-
     idQuery(value: number): object {
-       let qry = {};
+       const qry = {};
        qry[this.schema.columns.id] = value;
        return qry;
     }
@@ -89,3 +87,5 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
         return this.schemaInterface.schema;
     }
 }
+
+// -------------------------------------------------------------
