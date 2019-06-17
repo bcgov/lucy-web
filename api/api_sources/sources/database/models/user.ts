@@ -12,6 +12,7 @@ import { UserSession, UserSessionDataController } from './user.session';
 import { RolesCode } from './appRolesCode';
 import { DataModelController } from '../data.model.controller';
 import { UserSchema, RolesCodeTableSchema} from '../database-schema';
+import { UserMessage } from "./userMessage";
 
 
 export enum UserRole {
@@ -91,17 +92,16 @@ export class User extends BaseModel implements LoadData<UserData> {
     @OneToMany(type => UserSession, session => session.user)
     sessions: Promise<UserSession[]>;
 
+
+    @OneToMany(type => UserMessage, message => message.receiver)
+    messages: Promise<UserMessage[]>;
+
     loadMap(input: UserData) {
         this.firstName = input.firstName;
         this.lastName = input.lastName;
         this.email = input.email;
         //
     }
-
-    public static get controller(): DataModelController<User> {
-        return new DataModelController<User>(this);
-    }
-
 }
 
 export class UserDataController extends DataModelController<User> {

@@ -46,18 +46,14 @@ export class RolesCode extends BaseModel {
 
 export class RoleCodeController extends DataModelController<RolesCode> {
 
-    private static instance: RoleCodeController
-
     public static get shared(): RoleCodeController {
-        return this.instance || (this.instance = new this());
-    }
-
-    constructor() {
-        super(RolesCode, RolesCodeTableSchema);
+        return this.sharedInstance<RolesCode>(RolesCode, RolesCodeTableSchema) as RoleCodeController;
     }
 
     async getCode(code: RolesCodeValue): Promise<RolesCode> {
-        return this.fetchOne({code: code})
+        const codeValue: RolesCode = await this.fetchOne({code: code}) || new this.entity();
+        codeValue.code = code;
+        return codeValue;
     }
 }
 

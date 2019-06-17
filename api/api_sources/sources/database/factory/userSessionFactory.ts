@@ -12,9 +12,9 @@ import {SessionActivityCodeController, SessionActivityController, SessionActivit
  * @param RolesCodeValue login
  * @return Promise<UserSession>
  */
-export const sessionFactory = async (login: RolesCodeValue): Promise <UserSession> => {
+export const sessionFactory = async (login?: RolesCodeValue, noSave?: boolean, id?: number): Promise <UserSession> => {
     // 1. Create User
-    const user: User = await userFactory(login);
+    const user: User = await userFactory(login, noSave);
 
     // 2. Create
     const session: UserSession = UserSessionDataController.shared.create();
@@ -24,9 +24,14 @@ export const sessionFactory = async (login: RolesCodeValue): Promise <UserSessio
     session.tokenExpiry = faker.date.future();
     session.tokenLifeTime = faker.random.number();
     session.user = user;
-    await UserSessionDataController.shared.saveInDB(session);
+    if (!noSave) {
+        await UserSessionDataController.shared.saveInDB(session);
+    } else {
+        if (id) {
+            session.session_id = id || 0;
+        }
+    }
     return session;
-
 };
 
 /**
@@ -35,14 +40,20 @@ export const sessionFactory = async (login: RolesCodeValue): Promise <UserSessio
  * @param SessionActivityCodeValues code
  * @return Promise<SessionActivity>
  */
-export const sessionActivityFactory = async (code: SessionActivityCodeValues): Promise<SessionActivity>  => {
+export const sessionActivityFactory = async (code?: SessionActivityCodeValues, noSave?: boolean, id?: number): Promise<SessionActivity>  => {
     // 1. Create session
-    const session: UserSession = await sessionFactory(RolesCodeValue.admin);
+    const session: UserSession = await sessionFactory(RolesCodeValue.admin, noSave);
     const sessionActivity: SessionActivity = SessionActivityController.shared.create();
     sessionActivity.session = session;
-    sessionActivity.code = await SessionActivityCodeController.shared.code(code);
+    sessionActivity.code = await SessionActivityCodeController.shared.code(code || SessionActivityCodeValues.dataAdd);
     sessionActivity.info = faker.random.word();
-    await SessionActivityController.shared.saveInDB(sessionActivity);
+    if (!noSave) {
+        await SessionActivityController.shared.saveInDB(sessionActivity);
+    } else {
+        if (id) {
+            sessionActivity.activity_id = id || 0;
+        }
+    }
     return sessionActivity;
 };
 

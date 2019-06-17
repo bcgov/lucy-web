@@ -1,7 +1,7 @@
 /**
  * Migration helper classes
  */
-import { Connection } from 'typeorm';
+import { Connection, MigrationInterface } from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager } from './dataBaseManager';
 
@@ -127,7 +127,12 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             return;
         } else {
             try {
-                AppDatabaseMigrationManager.logger.info(`_revert | Reverting migration ${count}`);
+                if (count - 1 <= con.migrations.length) {
+                    const migration: MigrationInterface = con.migrations[count - 1];
+                    AppDatabaseMigrationManager.logger.info(`_revert | Reverting migration ${migration.constructor.name} [${count - 1}]`);
+                } else {
+                    AppDatabaseMigrationManager.logger.info(`_revert | Reverting migration [${count - 1}]`);
+                }
                 await con.undoLastMigration({ transaction: true});
             } catch (excp) {
                 AppDatabaseMigrationManager.logger.error(`_revert | Exception received while running revert migration => ${count}: ${excp}`);
