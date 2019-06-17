@@ -34,6 +34,7 @@ export class AdminToolsComponent implements OnInit {
   constructor(private roles: RolesService, private userService: UserService, private admin: AdminService, private formsModule: FormsModule) { }
 
   ngOnInit() {
+    
   }
 
   ngAfterViewInit() {
@@ -42,9 +43,6 @@ export class AdminToolsComponent implements OnInit {
     this.getAllUsers();
 
     this.getAllRequests();
-    // this.getDummyRequests().then((value) => {
-    //   this.requests = value;
-    // });
   }
 
   private getAllRequests() {
@@ -63,41 +61,9 @@ export class AdminToolsComponent implements OnInit {
     });
   }
 
-  getUserRole(user: User) {
-    return this.userService.getUserAccessCode(user).role;
-  }
-
   public setFocusedAccessRequest(request: accessRequest) {
     this.focusedAccessRequest = request;
     console.log("request for modal set");
-  }
-
-  public removeUser(user: usersList) {
-    console.log(user.role);
-    console.log(user.isActive);
-    console.log("******")
-    console.log("TODO: Make api call to Remove User user:")
-    console.log(user)
-    console.log("******")
-  }
-
-  public setUserRole(user: User, role: Role) {
-    this.admin.changeUserRole(user, role).then((success) => {
-      console.log(success ? "success user role change" : "fail user role change")
-
-      if(success) {
-        user.roles = [role];
-      }
-    });
-  }
-
-  public userActiveStatusChanged(user: usersList, isActive: boolean) {
-    console.log("******")
-    console.log("TODO: Make api call to Activate/DeActivate user access:")
-    console.log(user)
-    console.log("Account status active:")
-    console.log(isActive)
-    console.log("******")
   }
 
   async getDummyRequests(): Promise<accessRequest[]> {
