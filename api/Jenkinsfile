@@ -21,14 +21,14 @@ pipeline {
                     abortAllPreviousBuildInProgress(currentBuild)
                 }
                 echo "Building ..."
-                sh "cd api/.pipeline && ./npmw ci && ./npmw run build -- --pr=${CHANGE_ID}"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID}"
             }
         }
         stage('Deploy (DEV)') {
             agent { label 'deploy' }
             steps {
                 echo "Deploying ..."
-                sh "cd api/.pipeline && ./npmw ci && ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
             }
         }
         stage('Deploy (TEST)') {
@@ -39,7 +39,7 @@ pipeline {
             }
             steps {
                 echo "Deploying ..."
-                sh "cd api/.pipeline && ./npmw ci && ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
             }
         }
         stage('Deploy (PROD)') {
@@ -50,7 +50,7 @@ pipeline {
             }
             steps {
                 echo "Deploying ..."
-                sh "cd api/.pipeline && ./npmw ci && ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
             }
         }
     }
