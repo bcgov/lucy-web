@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { SharedExpressApp } from '../../../initializers';
-import { adminToken } from '../../../../test-resources/token';
-import { verifySuccessBody, verifyErrorBody, createAdmin} from '../../../../test-resources/testHelpers';
+import { adminToken } from '../../../../test-helpers/token';
+import { verifySuccessBody, verifyErrorBody, createAdmin} from '../../../../test-helpers/testHelpers';
 import { UserDataController, RolesCodeValue, User } from '../../../../database/models';
 import { userFactory } from '../../../../database/factory';
 

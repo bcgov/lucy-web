@@ -17,7 +17,6 @@ describe('Test Login Data Model', () => {
         if (user) {
             // Fetching
             const dbUser: User  = await UserDataController.shared.fetchOne({ email : user.email});
-            console.dir(dbUser);
             expect(dbUser).toBeDefined();
             expect(dbUser.email).toEqual(user.email);
             expect(dbUser.firstName).toEqual(user.firstName);

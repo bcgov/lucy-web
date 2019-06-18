@@ -4,10 +4,10 @@
 import * as request from 'supertest';
 // import { SharedDBManager } from '../../../../database';
 import { SharedExpressApp } from '../../../initializers';
-import { UserDataController, RolesCodeValue, UserMessageController, User } from '../../../../database/models';
+import { UserDataController, RolesCodeValue, UserMessageController, User, UserMessage } from '../../../../database/models';
 import { userFactory, userMessageFactory } from '../../../../database/factory';
-import { verifySuccessBody, createAdmin} from '../../../../test-resources/testHelpers';
-import { adminToken } from '../../../../test-resources/token';
+import { verifySuccessBody, createAdmin, verifyErrorBody} from '../../../../test-helpers/testHelpers';
+import { adminToken, viewerToken } from '../../../../test-helpers/token';
 
 jest.mock('../../../../database/data.model.controller');
 let admin: User;
@@ -72,6 +72,54 @@ describe('Test User Messages', () => {
         });
     });
 
+    test('should create new message', async  (done) => {
+        const receiver = await userFactory(RolesCodeValue.editor);
+        const createBody = {
+            receiver: receiver.user_id,
+            title: 'Test',
+            body: 'Test 2',
+            type: 0
+        };
+        await request(SharedExpressApp.app)
+        .post(`/api/v1/account/message/`)
+        .set('Authorization', `Bearer ${adminToken()}`)
+        .send(createBody)
+        .expect(200)
+        .expect(async (resp) => {
+            await verifySuccessBody(resp.body, async (body) => {
+                expect(body.title).toEqual(createBody.title);
+                expect(body.receiver).toBeDefined();
+                expect(body.receiver.user_id).toEqual(receiver.user_id);
+                expect(body.message_id).toBeDefined();
+                const message: UserMessage = await UserMessageController.shared.findById(body.message_id);
+                await UserMessageController.shared.remove(message);
+            });
+            // Clean
+            await UserDataController.shared.remove(receiver);
+            done();
+        });
+    });
+
+    test('should fail to create new message for viewer', async  (done) => {
+        const receiver = await userFactory(RolesCodeValue.editor);
+        const createBody = {
+            receiver: receiver.user_id,
+            title: 'Test',
+            body: 'Test 2',
+            type: 0
+        };
+        await request(SharedExpressApp.app)
+        .post(`/api/v1/account/message/`)
+        .set('Authorization', `Bearer ${viewerToken()}`)
+        .send(createBody)
+        .expect(401)
+        .expect(async (resp) => {
+            await verifyErrorBody(resp.body);
+            // Clean
+            await UserDataController.shared.remove(receiver);
+            done();
+        });
+    });
 });
 
 // ---------------------------------------------------------

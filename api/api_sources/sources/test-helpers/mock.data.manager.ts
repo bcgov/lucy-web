@@ -1,6 +1,7 @@
 /**
  * Mock Data Manager
  */
+import * as _ from 'underscore';
 import {User, UserSession, SessionActivity} from '../database/models';
 import { userFactory, sessionFactory, sessionActivityFactory} from '../database/factory';
 import { appLogger, Logger } from '../server/logger';
@@ -75,7 +76,7 @@ export class SessionActivityData extends EntityData<SessionActivity> {
  */
 export class MemoryDataManager {
     static  _shared: MemoryDataManager;
-    globalDataMap: object = {};
+    globalDataMap: any = {};
 
     constructor() {
     }
@@ -89,7 +90,7 @@ export class MemoryDataManager {
         if (data[key] && map[data[key]]) {
             // Update
             map[data[key]] = data;
-            this.globalDataMap = map;
+            this.globalDataMap[schema] = map;
             return;
         }
         // Create
@@ -114,27 +115,19 @@ export class MemoryDataManager {
         return map[key];
     }
 
-    findQuery(className: string, query?: object): any[] {
-        const map: object = this.globalDataMap[className] || {};
-        const returns: any[] = [];
-        for (const k in map) {
-            if (map.hasOwnProperty(k)) {
-                const val = map[k];
-                if (query) {
-                    for (const kk in query) {
-                        if (query.hasOwnProperty(kk) && val.hasOwnProperty(kk)) {
-                            const queryVal = query[kk];
-                            if (queryVal === val[kk]) {
-                                returns.push(val);
-                                break;
-                            }
-                        }
-                    }
+    findQuery(className: string, query?: any): any[] {
+        const map: any = this.globalDataMap[className] || {};
+        const returns: any[] = _.filter(map, (value: any) => {
+            let pass = false;
+            _.each(query, (qVal, qKey) => {
+                if (qVal === value[qKey]) {
+                    pass = true;
                 } else {
-                    returns.push(val);
+                    pass = false;
                 }
-            }
-        }
+            });
+            return pass;
+        });
         return returns;
     }
 }
