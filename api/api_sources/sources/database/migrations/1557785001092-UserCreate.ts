@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 import { DatabaseMigrationHelper} from '../migration.helpers';
-import { InitialAdmins } from '../initial-data'
+import { InitialUsers } from '../initial-data'
 import { UserSchema, RolesCodeTableSchema } from '../database-schema'
 
 export class UserCreate1557785001092 extends UserSchema implements MigrationInterface {
@@ -15,7 +15,7 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
             ${this.table.columns.email} VARCHAR (100) NOT NULL UNIQUE,
             ${this.table.columns.preferredUsername} VARCHAR (100) NULL,
             ${this.table.columns.loginType} SMALLINT NULL,
-            ${this.table.columns.accountStatus} SMALLINT DEFAULT 0,
+            ${this.table.columns.accountStatus} SMALLINT DEFAULT 1,
             ${this.table.columns.expiryDate} DATE NULL,
             ${this.table.columns.activation} SMALLINT NULL,
             ${this.table.columns.refCurrentSession} INT NULL
@@ -36,7 +36,7 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
 
 
         // Create Initial Admins
-        for (const admin of InitialAdmins) {
+        for (const admin of InitialUsers) {
             await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB(this.table.name, admin));
             if (admin.additionalInitDataInfo) {
                 const roles = admin.additionalInitDataInfo.roles;

@@ -3,12 +3,11 @@ import * as passport from 'passport';
 import * as express from 'express';
 import * as assert from 'assert';
 import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
-import AppConfig from '../../AppConfig'
-import { UserDataController, User, RoleCodeController, RolesCodeValue, RolesCode, UserSessionDataController, UserSession} from '../../database/models';
+import AppConfig from '../../AppConfig';
+import { UserDataController, User, RoleCodeController, RolesCodeValue, RolesCode, UserSessionDataController, UserSession, AccountStatus} from '../../database/models';
 import { LoggerBase } from '../logger';
 import { errorBody } from './common.error.handler';
-
-const commonUtility = require('@bcgov/nodejs-common-utils');
+import { BCHelperLib } from '../../libs/utilities/bc.helpers';
 
 export interface MiddlewareValidationResult {
     message?: string;
@@ -41,10 +40,8 @@ export class ApplicationAuthMiddleware extends LoggerBase {
     async _configure() {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
-        const { getJwtCertificate} = commonUtility;
-        assert(getJwtCertificate, 'No getJwtCertificate lib');
         // Get algorithm and public key
-        const { algorithm, certificate } = await getJwtCertificate(AppConfig.certificateURL);
+        const { algorithm, certificate } = await BCHelperLib.getCertificate();
         const options: StrategyOptions = {
             jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
             algorithms: [algorithm],
@@ -64,7 +61,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
      * @param any closure done
      */
     async _tokenCallback(request: express.Request, payload: any, done: any) {
-        const { errorWithCode } = commonUtility;
+        const { errorWithCode } = BCHelperLib.getCommonUtility();
         try {
             // Get user info
              const { preferred_username, email, family_name, given_name} = payload;
@@ -73,6 +70,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              assert(family_name, 'JWT payload family_name is missing');
              assert(given_name, 'JWT payload given_name is missing');
              const api = request.originalUrl;
+             ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
@@ -100,11 +98,27 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  user.firstName = given_name;
                  user.lastName = family_name;
                  user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
-
+                 user.accountStatus = AccountStatus.active;
                  await UserDataController.shared.saveInDB(user);
+             } else {
+                 // Update user data if require
+                 if (user.preferredUsername !== preferred_username) {
+                    user.preferredUsername = preferred_username;
+                    user.firstName = given_name;
+                    user.lastName = family_name;
+                    user.accountStatus = AccountStatus.active;
+                    await UserDataController.shared.saveInDB(user);
+                 }
              }
 
-             ApplicationAuthMiddleware.logger.info(`${api} | User {${user.email}, ${user.preferredUsername}}`);
+             ApplicationAuthMiddleware.logger.info(`${api} | User {${user.email}, ${user.preferredUsername} and status: ${user.accountStatus}}`);
+
+             // Checking and creating status
+             if (user.accountStatus === undefined) {
+                 user.accountStatus = AccountStatus.active;
+                 await UserDataController.shared.saveInDB(user);
+                 ApplicationAuthMiddleware.logger.info(`Creating status for user: ${user.email}`);
+             }
 
              // Checking user validity {for subclasses}
              const valid: MiddlewareValidationResult = await this.validateUser(user, payload);

@@ -5,8 +5,9 @@
 import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
 import { SecureRouteController, adminOnlyRoute, BaseRoutController, RouteHandler } from '../../core';
-import { UserDataController, User, RoleCodeController, RolesCode } from '../../../database/models';
+import { UserDataController, User, RoleCodeController, RolesCode, AccountStatus } from '../../../database/models';
 import { userMessagesRoute } from './messages.route';
+import { unWrap } from '../../../libs/utilities';
 
 interface UserUpdateRequestData {
     firstName?: string;
@@ -173,7 +174,9 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
          }
 
          // Update account status if any
-         user.accountStatus = update.accountStatus || user.accountStatus;
+         user.accountStatus = unWrap(update.accountStatus, unWrap(user.accountStatus, AccountStatus.active));
+
+         this.logger.info(`Update object ${JSON.stringify(update)}, user: ${JSON.stringify(user)}`);
 
          return;
      }

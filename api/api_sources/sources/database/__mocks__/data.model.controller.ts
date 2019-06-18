@@ -3,7 +3,7 @@
  */
 import { LoggerBase} from '../../server/logger';
 import { ApplicationTable } from '../applicationSchemaInterface';
-import { MemoryDataManager } from '../../test-resources/mock.data.manager';
+import { MemoryDataManager } from '../../test-helpers/mock.data.manager';
 
 
 export class DataModelController<T> extends LoggerBase {
@@ -41,7 +41,8 @@ export class DataModelController<T> extends LoggerBase {
     }
 
     async findById(id: number): Promise<T> {
-        return this.memoryDB.findByKey(id, this.schema.name);
+        const data = this.memoryDB.findByKey(id, this.schema.name);
+        return data;
     }
 
     async all(query?: object): Promise<T[]> {
