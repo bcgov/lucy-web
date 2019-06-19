@@ -63,6 +63,8 @@ objects:
                 name: ${NAME}${SUFFIX}
           - name: DB_PORT
             value: "5432"
+          - name: APP_CERTIFICATE_URL
+             value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
           image: " "
           imagePullPolicy: Always
           name: api
