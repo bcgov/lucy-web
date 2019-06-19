@@ -21,7 +21,7 @@
           "displayName": "Name Suffix",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-app"
+          "value": "dev"
         },
         {
           "name": "VERSION",
