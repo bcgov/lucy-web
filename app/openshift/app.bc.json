@@ -42,6 +42,16 @@
           "name": "SOURCE_REPOSITORY_REF",
           "required": false,
           "value": "dev-api"
+        }, 
+        {
+          "name": "SOURCE_IMAGE_NAME",
+          "required": true,
+          "value": "rhscl-nodejs-8-rhel7"
+        },
+        {
+          "name": "SOURCE_IMAGE_TAG",
+          "required": true,
+          "value": "1-50"
         }
     ],
     "objects":[
@@ -49,7 +59,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-              "name": "nodejs-11:1-50",
+              "name": "${SOURCE_IMAGE_NAME}",
               "creationTimestamp": null,
               "annotations": {
                 "description": "Nodejs Base Image"
@@ -64,11 +74,11 @@
               },
               "tags": [
                 {
-                  "name": "1-50",
+                  "name": "${SOURCE_IMAGE_TAG}",
                   "annotations": null,
                   "from": {
                     "kind": "DockerImage",
-                    "name": "registry.connect.redhat.com/bitnami/nodejs:1-50"
+                    "name": "registry.access.redhat.com/rhscl/nodejs-8-rhel7:1-50"
                   },
                   "importPolicy": {},
                   "referencePolicy": {
@@ -139,7 +149,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "nodejs-11:1-50"
+                            "name": "${SOURCE_IMAGE_NAME}:${SOURCE_IMAGE_TAG}"
                         }
                     },
                     "type": "Docker"

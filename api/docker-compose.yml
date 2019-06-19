@@ -58,8 +58,6 @@ services:
     - app_api
   networks:
     - local-network
-  networks:
-    - local-network
 networks:
  local-network:
   driver: bridge
