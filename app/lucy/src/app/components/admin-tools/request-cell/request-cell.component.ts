@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AccessRequest } from 'src/app/models/accessRequest';
 import { UserService } from 'src/app/services/user.service';
+import { AccessRequestResponseModalEmitterResponse } from '../../access-request-response-modal/access-request-response-modal.component';
 
 @Component({
   selector: 'tr[app-request-cell]',
@@ -57,5 +58,19 @@ export class RequestCellComponent implements OnInit {
   @Input() request: AccessRequest;
 
   ngOnInit() {
+  }
+
+  acessRequestModalEmitted(event: AccessRequestResponseModalEmitterResponse) {
+    console.log("Event heard");
+    switch(event) {
+      case AccessRequestResponseModalEmitterResponse.responded:
+          console.log("responded");
+        this.responding = false
+        break;
+      case AccessRequestResponseModalEmitterResponse.cancelled:
+          console.log("cancelled");
+        this.responding = false
+        break;
+    }
   }
 }

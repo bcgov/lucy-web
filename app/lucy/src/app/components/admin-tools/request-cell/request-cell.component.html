@@ -4,11 +4,12 @@
 <td>{{requestedAccessCode}}</td>
 <td>{{requestNote}}</td>
 <td>
-  <button type="button" class="btn button-fill" data-toggle="modal"
+  <button type="button" class="btn button-fill" (click)="responding = true" data-toggle="modal"
     data-target="#requestResponseModal">
     Respond
   </button>
 </td>
 <!-- Access Request Modal -->
-<app-access-request-response-modal [accessRequest]="request"></app-access-request-response-modal>
+<app-access-request-response-modal *ngIf="responding" (acessRequestModalEmitter)='acessRequestModalEmitted($event)' [accessRequest]="request">
+</app-access-request-response-modal>
 <!-- END Access Request Modal -->
