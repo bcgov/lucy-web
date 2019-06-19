@@ -65,7 +65,6 @@ class ExpressApp {
         this.logger.info('Starting API Server');
         ApplicationManager.shared.init();
         try {
-            console.dir(SharedDBManager);
             await SharedDBManager.connect();
             ApplicationManager.shared.state.isDBUp = true;
             this.start();

@@ -75,6 +75,11 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
                 // Get approver
                 accessRequest.approverNote = req.body.approverNote || accessRequest.approverNote;
                 accessRequest.requestNote = req.body.requestNote || accessRequest.requestNote;
+                // Check change in access request requested role
+                if (req.body.requestedAccessCode !== accessRequest.requestedAccessCode.role_code_id) {
+                    this.logger.info(`Update change in requested access code for req id ${accessRequest.request_id} new access code: ${req.body.requestedAccessCode}`);
+                    accessRequest.requestedAccessCode = await RoleCodeController.shared.findById(req.body.requestedAccessCode);
+                }
                 // Check status
                 if (req.body.status && req.body.status !== accessRequest.status) {
                     accessRequest = await this.handleStatusUpdate(req.body.status, accessRequest, req.user);

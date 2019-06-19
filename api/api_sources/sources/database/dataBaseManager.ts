@@ -3,7 +3,6 @@
  */
 import {createConnection, Connection} from 'typeorm';
 import { LoggerBase} from '../server/logger';
-import { RetryManager } from '../server/core/retry.manager';
 
 // import { User, UserRole } from './models/User';
 import { SeedManager } from './seed.manager';
@@ -79,10 +78,8 @@ export class DBManager extends LoggerBase {
      * @method connect
      */
     async connect(): Promise<void> {
-        const retryManager = new RetryManager<void>();
         try {
-            await retryManager.tryAction(this, '_connect');
-            DBManager.logger.info('DB Connection DONE');
+            await this._connect();
             return;
         } catch (err) {
             throw Error(`Unable to connect DB, please check log`);
@@ -94,8 +91,8 @@ export class DBManager extends LoggerBase {
      * @method close
      */
     async close(): Promise<void> {
-        if (this.connection) {
-            return await this.connection.close();
+        if (this.connection && this.connection.isConnected) {
+            await this.connection.close();
         }
         return;
     }
