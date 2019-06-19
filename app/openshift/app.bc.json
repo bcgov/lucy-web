@@ -41,7 +41,7 @@
         {
           "name": "SOURCE_REPOSITORY_REF",
           "required": false,
-          "value": "ci-cd-update"
+          "value": "dev-api"
         }, 
         {
           "name": "SOURCE_IMAGE_NAME",
