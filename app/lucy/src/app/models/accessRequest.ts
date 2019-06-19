@@ -1,12 +1,13 @@
-export interface accessRequest {
-    id: number;
-    username: string;
-    name: string;
-    currentRole: string;
-    requestedRole: string;
-    reasons: string;
-    
-    responseRole: string,
-    responseMessage: string,
-}
+import { Role, User } from './user';
 
+export interface AccessRequest {
+    createdAt: string
+    updateAt: string
+    request_id: number
+    requestNote: string
+    status: number
+    approverNote: string
+    requestedAccessCode: Role
+    requester: User
+    approver: User | null
+}

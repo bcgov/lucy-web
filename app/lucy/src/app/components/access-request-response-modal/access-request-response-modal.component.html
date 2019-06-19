@@ -6,7 +6,7 @@
         <!-- Modal Title -->
         <div class="modal-header">
           <h5 class="modal-title" id="requestResponseModalTitle">Respond to Request</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" (click)="cancelAction()" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -15,14 +15,14 @@
           <div class="container">
             <div class="row justify-content-center">
               <div class="col-12 text-center">
-                <h5>{{accessRequest.name}}</h5>
+                <h5>{{userName}}</h5>
               </div>
             </div>
             <div class="row justify-content-center">
               <div class="col-6 centerd">
                 <div class="user-access-level">
                   <i class="material-icons">info</i>
-                  {{accessRequest.currentRole}}
+                  {{userRole}}
                 </div>
               </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="row">
               <div class="col-12 access-reaquest-reasons">
                 <p>
-                  {{accessRequest.reasons}}
+                  {{requestNote}}
                 </p>
               </div>
             </div>
@@ -47,10 +47,10 @@
             <div class="row">
               <div class="col-12">
                 <div class="form-check radio radio-item" *ngFor="let activeRole of activeRoles; let i = index">
-                  <input type="radio" class="form-check-input" [(ngModel)]="accessRequest.responseRole"
-                    value="{{activeRole.name}}" name="selected-role">
+                  <input type="radio" class="form-check-input" [(ngModel)]="requestedAccessCode"
+                    value="{{activeRole.role}}" name="selected-role">
                   <label class="form-check-label" for="selected-role">
-                    <span class="color">{{activeRole.name}}</span> - <span
+                    <span class="color">{{activeRole.role}}</span> - <span
                       class="color">{{activeRole.description}}</span>
                   </label>
                 </div>
@@ -68,7 +68,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn button-hollow" (click)="closeRequestResponse()" data-dismiss="modal">
+          <button type="button" class="btn button-hollow" data-dismiss="modal">
             Cancel
           </button>
           <button type="button" class="btn button-fill" (click)="sumbitRequestResponse()">

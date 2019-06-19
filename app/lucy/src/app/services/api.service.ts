@@ -45,6 +45,7 @@ export class ApiService {
    */
   private MAX_NUMBER_OF_API_RETRY: number = 3;
   private APIRequests: APIRequest[] = [];
+  private BearerToken: string = ""
 
   constructor(private httpClient: HttpClient, private ssoService: SsoService) { }
 
@@ -52,8 +53,13 @@ export class ApiService {
    * Returns headers
    */
   private getHeaders(): HttpHeaders {
+    const bearer = this.ssoService.getBearerAccessToken();
+    if (bearer != this.BearerToken) {
+      console.log("Token is different:" + bearer);
+    }
+    this.BearerToken = bearer
     return new HttpHeaders({
-      'Authorization': this.ssoService.getBearerAccessToken(),
+      'Authorization': bearer,
       'Content-Type': 'application/json'
     });
   }
@@ -169,8 +175,9 @@ export class ApiService {
    */
   private async postCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
     const jsonBody = JSON.parse(JSON.stringify(body))
+    const headers = this.getHeaders()
     try {
-      const promise = this.httpClient.post<any>(endpoint, jsonBody, { headers: this.getHeaders() }).toPromise();
+      const promise = this.httpClient.post<any>(endpoint, jsonBody, { headers: headers }).toPromise();
       const result = await promise;
       const requestResult: APIRequestResult = {
         success: true,
@@ -179,6 +186,8 @@ export class ApiService {
       return requestResult
 
     } catch (error) {
+      console.log("API ERROR");
+      console.log();
       const apiError: APIError = {
         endpoint: endpoint,
         body: body,
@@ -200,8 +209,9 @@ export class ApiService {
   */
   private async putCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
     const jsonBody = JSON.parse(JSON.stringify(body))
+    const headers = this.getHeaders()
     try {
-      const promise = this.httpClient.put<any>(endpoint, jsonBody, { headers: this.getHeaders() }).toPromise();
+      const promise = this.httpClient.put<any>(endpoint, jsonBody, {headers: headers}).toPromise();
       const result = await promise;
       const requestResult: APIRequestResult = {
         success: true,
@@ -229,16 +239,15 @@ export class ApiService {
    * @returns Success | Fail & Response
    */
   private async getCall(endpoint: string, attempts: number): Promise<APIRequestResult> {
+    const headers = this.getHeaders()
     try {
       var promise: Promise<Object>;
       // Check if a call to this endpoint has already been initiated and awaiting response
       const existingRequest = this.requestExists(endpoint, APIRequestMethod.GET)
       if (existingRequest !== null) {
         promise = existingRequest.promise
-        console.log("EXISTING PROMISE")
       } else {
-        promise = this.httpClient.get(endpoint, { headers: this.getHeaders()}).toPromise();
-        console.log("NEW PROMISE")
+        promise = this.httpClient.get(endpoint, {headers: headers}).toPromise();
       }
       // Cache the promise to fullfill the top code block next time
       this.cacheRequstPromise(endpoint, APIRequestMethod.GET, promise);

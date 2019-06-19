@@ -35,6 +35,8 @@ export class SsoService {
 
   private code: string = "";
   private refreshTimer = null;
+  private bearerToken: string | null = null;
+  private tokenExpiery: Date | null;
 
   constructor(private cookieService: CookieService, private httpClient: HttpClient, private activatedRoute: ActivatedRoute, private router: Router) {
     // If user is not authenticated, listen to route changes
@@ -416,11 +418,16 @@ export class SsoService {
    * @param expiery 
    */
   private storeAccessToken(token: string, expiery: number) {
+    this.bearerToken = token;
+    console.log("Storing new token:");
+    console.dir(this.bearerToken);
+    console.log("////////////////////////////");
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
     const expieryDateUTC = expieryDate.toUTCString();
     this.cookieService.set('accessToken', token, expieryDate);
     this.cookieService.set('accessTokenExpiery', expieryDateUTC, expieryDate);
+    
     // TODO: consider using this.beginTokeRefreshTimer()
   }
 
@@ -439,10 +446,14 @@ export class SsoService {
    * Return empty string if doesnt exist.
    */
   private getAccessToken(): string {
+    if (this.bearerToken !== null) {
+      return this.bearerToken;
+    }
     const token = this.cookieService.get('accessToken');
     if (token == undefined) {
       return "";
     } else {
+      this.bearerToken = (token);
       return token;
     }
   }

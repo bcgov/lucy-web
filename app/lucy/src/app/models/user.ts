@@ -14,22 +14,14 @@ export interface Role {
     updateAt: string;
 }
 export interface User {
-    // first: string;
-    // last: string;
-    // email: string;
-    // id: string;
-    // access: any;
-    // organization: string;
-    // roleInOrganization: string;
-
+    accountStatus: number;
     createdAt: string;
     currentSessionId: number;
     email: string;
     firstName: string;
     lastName: string;
     preferredUsername: string;
+    roles: Role[];
     updateAt: string;
     user_id: number;
-    roles: Role[];
-    accountStatus: number;
 }
