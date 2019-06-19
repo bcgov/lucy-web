@@ -9,6 +9,7 @@
 * Install GMAKE
 * Clone repository
 * Change to project dir (from command line or terminal)
+* oc for open shift build and deployment
 
 ## Docker
 
