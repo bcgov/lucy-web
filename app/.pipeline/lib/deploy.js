@@ -12,8 +12,14 @@ module.exports = (settings)=>{
   var objects = []
 
   // The deployment of your cool app goes here ▼▼▼
-console.log('deploy app');
-
+  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/app.dc.yaml`, {
+    'param':{
+      'NAME': phases[phase].name,
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'HOST': phases[phase].host
+    }
+  }))
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, phases[phase].instance)
   oc.importImageStreams(objects, phases[phase].tag, phases.build.namespace, phases.build.tag)
   oc.applyAndDeploy(objects, phases[phase].instance)
