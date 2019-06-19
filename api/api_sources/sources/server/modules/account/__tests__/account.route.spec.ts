@@ -1,20 +1,22 @@
 import * as request from 'supertest';
-import { SharedDBManager } from '../../../../database';
 import { SharedExpressApp } from '../../../initializers';
-import { adminToken } from '../../../../test-resources/token';
-import { verifySuccessBody, verifyErrorBody} from '../../../../test-resources/testHelpers';
+import { adminToken } from '../../../../test-helpers/token';
+import { verifySuccessBody, verifyErrorBody, createAdmin} from '../../../../test-helpers/testHelpers';
 import { UserDataController, RolesCodeValue, User } from '../../../../database/models';
 import { userFactory } from '../../../../database/factory';
+
+jest.mock('../../../../database/data.model.controller');
+
 /**
  * Test for account route
  */
 describe('Test account routes', () => {
     beforeAll(async () => {
         await SharedExpressApp.initExpress();
-        return  await SharedDBManager.connect();
+        await createAdmin();
     });
     afterAll(async () => {
-        return await SharedDBManager.close();
+        return;
     });
 
     test('should fail to fetch me', async (done) => {
@@ -101,7 +103,6 @@ describe('Test account routes', () => {
 
     test('should fetch user with {id}', async (done) => {
         const newUser = await userFactory(RolesCodeValue.viewer);
-        await UserDataController.shared.saveInDB(newUser);
         await request(SharedExpressApp.app)
         .get(`/api/v1/account/user/${newUser.user_id}`)
         .set('Authorization', `Bearer ${adminToken()}`)
@@ -120,7 +121,6 @@ describe('Test account routes', () => {
 
     test('should not fetch user with {id}', async (done) => {
         const newUser = await userFactory(RolesCodeValue.viewer);
-        await UserDataController.shared.saveInDB(newUser);
         await request(SharedExpressApp.app)
         .get(`/api/v1/account/user/${newUser.user_id}`)
         .expect(401)
