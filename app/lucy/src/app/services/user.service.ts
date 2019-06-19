@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { User, UserAccessType, Role } from 'src/app/models';
+import { User} from 'src/app/models';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
-import { ApiService, APIRequestMethod, APIRequestResult } from './api.service';
+import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
 import { SsoService } from './sso.service';
 import { RolesService } from './roles.service';
 import { ObjectValidatorService } from './object-validator.service';
+import { Role, UserAccessType } from '../models/Role';
 
 export interface UserChangeResult {
   success: boolean

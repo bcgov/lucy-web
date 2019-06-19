@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
-import { Role, User, UserAccessType } from '../models';
 import { ObjectValidatorService } from './object-validator.service';
+import { Role, UserAccessType } from '../models/Role';
 
 @Injectable({
   providedIn: 'root'

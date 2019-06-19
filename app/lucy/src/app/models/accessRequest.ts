@@ -1,4 +1,5 @@
-import { Role, User } from './user';
+import { User } from './user';
+import { Role } from './Role';
 
 export interface AccessRequest {
     createdAt: string

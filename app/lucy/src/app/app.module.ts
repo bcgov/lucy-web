@@ -29,7 +29,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { UserInformationComponent } from './components/user-information/user-information.component';
 import { AdminToolsComponent } from './components/admin-tools/admin-tools.component';
 import { RouterService } from './services/router.service';
-import { AccessRequestResponseModalComponent} from './components/access-request-response-modal/access-request-response-modal.component';
+import { AccessRequestResponseModalComponent} from './components/admin-tools/access-request-response-modal/access-request-response-modal.component';
 import { UserCellComponent } from './components/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/admin-tools/request-cell/request-cell.component';
 @NgModule({

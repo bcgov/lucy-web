@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
-import { User, Role } from '../models';
-import { UserService, UserChangeResult } from './user.service';
+import { User} from '../models';
+import { UserChangeResult } from './user.service';
 import { ObjectValidatorService } from './object-validator.service';
 import { AccessRequest } from '../models/accessRequest';
+import { Role } from '../models/Role';
 
 @Injectable({
   providedIn: 'root'

@@ -2,12 +2,12 @@ import { Component, OnInit, Input, Output } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
 import { FormsModule }   from '@angular/forms';
 import { AccessRequest } from 'src/app/models/accessRequest';
-import { Role } from 'src/app/models';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
 import * as bootstrap from 'bootstrap';
 import * as $AB from 'jquery';
+import { Role } from 'src/app/models/Role';
 
 export enum AccessRequestResponseModalEmitterResponse {
   responded,
