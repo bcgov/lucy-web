@@ -41,7 +41,7 @@
         {
           "name": "SOURCE_REPOSITORY_REF",
           "required": false,
-          "value": "dev-api"
+          "value": "ci-cd-update"
         }, 
         {
           "name": "SOURCE_IMAGE_NAME",
@@ -59,7 +59,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-              "name": "${SOURCE_IMAGE_NAME}",
+              "name": "rhscl-nodejs-8-rhel7",
               "creationTimestamp": null,
               "annotations": {
                 "description": "Nodejs Base Image"
@@ -74,7 +74,7 @@
               },
               "tags": [
                 {
-                  "name": "${SOURCE_IMAGE_TAG}",
+                  "name": "1-50",
                   "annotations": null,
                   "from": {
                     "kind": "DockerImage",
@@ -149,7 +149,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "${SOURCE_IMAGE_NAME}:${SOURCE_IMAGE_TAG}"
+                            "name": "rhscl-nodejs-8-rhel7:1-50"
                         }
                     },
                     "type": "Docker"
