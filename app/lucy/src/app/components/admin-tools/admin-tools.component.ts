@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { accessRequest } from 'src/app/models/accessRequest';
+import { AccessRequest } from 'src/app/models/accessRequest';
 import { usersList } from 'src/app/models/usersList';
 import { RolesService } from 'src/app/services/roles.service';
 import { FormsModule } from '@angular/forms';
@@ -15,21 +15,11 @@ import { UserService } from 'src/app/services/user.service';
 })
 
 export class AdminToolsComponent implements OnInit {
-  public requests: accessRequest[] = []
+  public requests: AccessRequest[] = []
   public allUsers: User[] = []
   public activeRoles: Role[] = []
 
-  public focusedAccessRequest: accessRequest = {
-    id: 0,
-    username: "",
-    name: "",
-    currentRole: "",
-    requestedRole: "",
-    reasons: "",
-
-    responseRole: "",
-    responseMessage: "",
-  }
+  public focusedAccessRequest: AccessRequest;
 
   constructor(private roles: RolesService, private userService: UserService, private admin: AdminService, private formsModule: FormsModule) { }
 
@@ -46,7 +36,11 @@ export class AdminToolsComponent implements OnInit {
   }
 
   private getAllRequests() {
-
+    this.admin.getRequests().then((value) => {
+      console.log("got requests")
+      console.dir(value)
+      this.requests = value
+    });
   }
 
   private getAllUsers() {
@@ -61,36 +55,37 @@ export class AdminToolsComponent implements OnInit {
     });
   }
 
-  public setFocusedAccessRequest(request: accessRequest) {
+  public setFocusedAccessRequest(request: AccessRequest) {
     this.focusedAccessRequest = request;
     console.log("request for modal set");
   }
+  /*
 
   async getDummyRequests(): Promise<accessRequest[]> {
     const names = ["Mike Shasko", "Roop Jawl", "Pushan Mitra", "Kendall Olsen", "Jake Morris", "Amir Shayegh"]
     var requests: accessRequest[] = []
-    // const allroles = this.activeRoles;
-    // names.forEach((item, index) => {
-    //   const randomInitialRole = Math.floor(Math.random() * 3) + 0
-    //   var randomRequestedRole = Math.floor(Math.random() * 3) + 0
-    //   while (randomRequestedRole == randomInitialRole) {
-    //     randomRequestedRole = Math.floor(Math.random() * 3) + 0;
-    //   }
-    //   const currentRoleName = allroles.find(x => x.role_code_id === randomInitialRole).role;
-    //   const requestedRoleName = allroles.find(x => x.role_code_id === randomRequestedRole).role;
-    //   const request: accessRequest = {
-    //     id: index,
-    //     username: item.replace(/\s/g, "").toLowerCase(),
-    //     name: item,
-    //     currentRole: currentRoleName,
-    //     requestedRole: requestedRoleName,
-    //     reasons: "My reasons and stuff for " + item,
+    const allroles = this.activeRoles;
+    names.forEach((item, index) => {
+      const randomInitialRole = Math.floor(Math.random() * 3) + 0
+      var randomRequestedRole = Math.floor(Math.random() * 3) + 0
+      while (randomRequestedRole == randomInitialRole) {
+        randomRequestedRole = Math.floor(Math.random() * 3) + 0;
+      }
+      const currentRoleName = allroles.find(x => x.role_code_id === randomInitialRole).role;
+      const requestedRoleName = allroles.find(x => x.role_code_id === randomRequestedRole).role;
+      const request: accessRequest = {
+        id: index,
+        username: item.replace(/\s/g, "").toLowerCase(),
+        name: item,
+        currentRole: currentRoleName,
+        requestedRole: requestedRoleName,
+        reasons: "My reasons and stuff for " + item,
 
-    //     responseRole: requestedRoleName,
-    //     responseMessage: ""
-    //   }
-    //   requests.push(request)
-    // });
+        responseRole: requestedRoleName,
+        responseMessage: ""
+      }
+      requests.push(request)
+    });
     return requests;
   }
 
@@ -110,5 +105,5 @@ export class AdminToolsComponent implements OnInit {
       usersList.push(userListItem);
     });
     return usersList
-  }
+  }*/
 }
