@@ -1,0 +1,34 @@
+FROM node:11.0.0
+
+# RUN apt-get update
+
+ENV PATH /opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Creating Root dir
+RUN mkdir -p /opt/app-root/src
+
+# Setting Root dir
+WORKDIR /opt/app-root/src
+
+# COPY PACKAGE JSON
+COPY ./package*.json ./
+
+# INSATLL NODE DEPENDENCIES
+RUN npm install
+
+# Copy All the sources
+COPY ./ .
+
+# BUILD APP
+RUN npm run build
+
+# MESSAGE
+RUN echo 'BUILD SUCCESS'
+
+EXPOSE 3030
+
+CMD ["npm", "run", "deploy_run"]
+
+
+
+
