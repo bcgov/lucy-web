@@ -6,6 +6,7 @@ import { ApiService, APIRequestMethod, APIRequestResult } from './api.service';
 import { AppConstants } from '../constants';
 import { SsoService } from './sso.service';
 import { RolesService } from './roles.service';
+import { ObjectValidatorService } from './object-validator.service';
 
 export interface UserChangeResult {
   success: boolean
@@ -23,7 +24,8 @@ export class UserService {
     private cookieService: CookieService,
     private api: ApiService,
     private ssoService: SsoService,
-    private roles: RolesService) { }
+    private roles: RolesService,
+    private objectValidator: ObjectValidatorService) { }
 
   /**
    * Return a User object 
@@ -38,7 +40,7 @@ export class UserService {
     }
 
     // If a chached user exists, return it
-    if (this.isUserObject(this.current) && !this.shouldRefresh) {
+    if (this.objectValidator.isUserObject(this.current) && !this.shouldRefresh) {
       return this.current;
     }
 
@@ -57,20 +59,12 @@ export class UserService {
    */
   private async requestUserInfo(): Promise<User | null> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
-    if (this.isUserObject(response.response)) {
+    if (this.objectValidator.isUserObject(response.response)) {
       this.current = response.response;
       return response.response;
     } else {
       return null;
     }
-  }
-  /**
-   * Check if object is a User object
-   * @param user 
-   */
-  public isUserObject(user: any): user is User {
-    if (user === undefined || user === null) { return false };
-    return (<User>user.email) !== undefined;
   }
   /*------------------------------------End of API Call------------------------------------*/
 
@@ -193,7 +187,7 @@ export class UserService {
     user.lastName = lastName;
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_me, user);
     if (response.success) {
-      if (!this.isUserObject(response.response)) {
+      if (!this.objectValidator.isUserObject(response.response)) {
         return false
       } else {
         return (response.response.firstName === user.firstName && response.response.lastName === user.lastName)
@@ -218,7 +212,7 @@ export class UserService {
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_DataEntryAccessRequest, body);
     console.log("Response:")
     console.dir(response)
-    if (!this.isUserObject(response)) {
+    if (!this.objectValidator.isUserObject(response)) {
       return false
     } else {
       return (response.firstName === user.firstName && response.lastName === user.lastName)

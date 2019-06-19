@@ -4,7 +4,6 @@ export enum UserAccessType {
     DataEditor,
     SuperUser,
 }
-
 export interface Role {
     code: string;
     createdAt: string;
