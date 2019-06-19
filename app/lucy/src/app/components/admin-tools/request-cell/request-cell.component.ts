@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AccessRequest } from 'src/app/models/accessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { AccessRequestResponseModalEmitterResponse } from '../../access-request-response-modal/access-request-response-modal.component';
@@ -9,8 +9,6 @@ import { AccessRequestResponseModalEmitterResponse } from '../../access-request-
   styleUrls: ['./request-cell.component.css']
 })
 export class RequestCellComponent implements OnInit {
-
-  constructor(private userService: UserService) { }
 
   responding: boolean = false
 
@@ -56,16 +54,29 @@ export class RequestCellComponent implements OnInit {
   }
 
   @Input() request: AccessRequest;
+  @Output() shouldRefresh = new EventEmitter();
+
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
+
   }
 
+  /**
+   * Listen for changes emitted by request modal.
+   * responding flag is used to add or remove 
+   * the modal component.
+   * If the even requires a refresh of content,
+   * Emits an event via shouldRefresh
+   * @param event AccessRequestResponseModalEmitterResponse
+   */
   acessRequestModalEmitted(event: AccessRequestResponseModalEmitterResponse) {
     console.log("Event heard");
     switch(event) {
       case AccessRequestResponseModalEmitterResponse.responded:
           console.log("responded");
-        this.responding = false
+          this.responding = false
+          this.shouldRefresh.emit();
         break;
       case AccessRequestResponseModalEmitterResponse.cancelled:
           console.log("cancelled");
@@ -73,4 +84,6 @@ export class RequestCellComponent implements OnInit {
         break;
     }
   }
+
+  
 }

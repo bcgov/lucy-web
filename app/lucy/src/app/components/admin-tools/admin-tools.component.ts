@@ -59,6 +59,11 @@ export class AdminToolsComponent implements OnInit {
     this.focusedAccessRequest = request;
     console.log("request for modal set");
   }
+
+  public refreshRequests() {
+    console.log("refreshing all requests")
+    this.getAllRequests();
+  }
   /*
 
   async getDummyRequests(): Promise<accessRequest[]> {

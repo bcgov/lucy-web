@@ -35,8 +35,12 @@ export class AppConstants {
         return `${AppConstants.API_baseURL}/account/user/${id}`;
     }
 
-    static API_updateUserMessage(id: number) : string {
+    static API_updateUserMessage(id: number): string {
         return `${AppConstants.API_baseURL}/account/message/${id}`;
+    }
+
+    static API_AcessRequestResponse(id: number): string {
+        return `${AppConstants.API_baseURL}/request-access/${id}`;
     }
 
     // API Reference data

@@ -5,6 +5,7 @@ import { AccessRequest } from 'src/app/models/accessRequest';
 import { Role } from 'src/app/models';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
+import { AdminService } from 'src/app/services/admin.service';
 
 export enum AccessRequestResponseModalEmitterResponse {
   responded,
@@ -64,10 +65,25 @@ export class AccessRequestResponseModalComponent implements OnInit {
     }
   }
 
+  get approverNote() {
+    if (this.accessRequest === undefined) {
+      return "";
+    } else {
+      return this.accessRequest.approverNote;
+    }
+  }
+
+  set approverNote(note: string) {
+    if (this.accessRequest === undefined) {
+      return;
+    }
+    this.accessRequest.approverNote = note;
+  }
+
   @Input() accessRequest: AccessRequest;
   @Output() acessRequestModalEmitter = new EventEmitter<AccessRequestResponseModalEmitterResponse>();
 
-  constructor(private roles: RolesService, private formsModule: FormsModule, private userService: UserService) { }
+  constructor(private admin: AdminService ,private roles: RolesService, private formsModule: FormsModule, private userService: UserService) { }
 
   ngOnInit() {
     this.roles.getRoles().then((value) => {
@@ -78,7 +94,14 @@ export class AccessRequestResponseModalComponent implements OnInit {
   public sumbitRequestResponse() {
     console.log("TODO: Make API CALL TO SUBMIT REQUEST RESPONSE");
     console.dir(this.accessRequest)
-    this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.responded);
+    this.admin.respondToRequest(this.accessRequest).then((success) => {
+     if (success) {
+      this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.responded);
+     } else {
+       // TODO: Handle with an alert or something
+       console.log("Could not respond");
+     }
+    });
   }
 
   public cancelAction() {
