@@ -23,26 +23,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let request of requests; let i = index">
-          <td scope="row">{{request.username}}</td>
-          <td>{{request.name}}</td>
-          <td>{{request.currentRole}}</td>
-          <td>{{request.requestedRole}}</td>
-          <td>{{request.reasons}}</td>
-          <td>
-            <button type="button" class="btn button-fill" (click)="setFocusedAccessRequest(request)" data-toggle="modal"
-              data-target="#requestResponseModal">
-              Respond
-            </button>
-          </td>
-        </tr>
+          <tr app-request-cell *ngFor="let request of requests; let i = index" [request]="request">
       </tbody>
     </table>
   </div>
   <!-- End Requests -->
-  <!-- Access Request Modal -->
-  <app-access-request-response-modal [accessRequest]="focusedAccessRequest"></app-access-request-response-modal>
-  <!-- END Access Request Modal -->
   <br />
   <!-- All Users -->
   <div class="row">
