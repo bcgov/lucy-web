@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AccessRequest } from 'src/app/models/accessRequest';
-import { usersList } from 'src/app/models/usersList';
 import { RolesService } from 'src/app/services/roles.service';
-import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminService } from 'src/app/services/admin.service';
-import { User, Role } from 'src/app/models';
-import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/models';
+import { Role } from 'src/app/models/Role';
 
 @Component({
   selector: 'app-admin-tools',

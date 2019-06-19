@@ -2,9 +2,9 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AppRoutes, AppRoutesParams} from '../../constants/app-routes.enum';
 import { SsoService } from '../../services/sso.service';
 import { UserService } from '../../services/user.service';
-import { UserAccessType } from '../../models';
 import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
+import { UserAccessType } from 'src/app/models/Role';
 
 declare const location: any;
 

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { User, UserAccessType } from 'src/app/models';
 import { StringConstants } from 'src/app/constants/string-constants';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'src/app/constants';
+import { UserAccessType } from 'src/app/models/Role';
 
 @Component({
   selector: 'app-profile',

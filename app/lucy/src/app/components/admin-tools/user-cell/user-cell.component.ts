@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User, Role } from 'src/app/models';
+import { User } from 'src/app/models';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserService } from 'src/app/services/user.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { FormsModule } from '@angular/forms';
+import { Role } from 'src/app/models/Role';
 
 @Component({
   selector: 'tr[app-user-cell]',
