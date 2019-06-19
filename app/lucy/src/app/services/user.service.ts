@@ -7,13 +7,16 @@ import { AppConstants } from '../constants';
 import { SsoService } from './sso.service';
 import { RolesService } from './roles.service';
 
+export interface UserChangeResult {
+  success: boolean
+  response: User | null
+}
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
   private current: User | null = null;
-  private APIPromise: Promise<APIRequestResult> | null = null;
   public shouldRefresh: boolean = false;
 
   constructor(private http: HttpClient,
@@ -54,8 +57,6 @@ export class UserService {
    */
   private async requestUserInfo(): Promise<User | null> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
-    // Reset promise
-    this.APIPromise = null
     if (this.isUserObject(response.response)) {
       this.current = response.response;
       return response.response;
@@ -63,24 +64,11 @@ export class UserService {
       return null;
     }
   }
-
-  /**
-   * If a promise for the call is in progress, 
-   * Return the same promise to avoid an extra call.
-   * @returns Promise 
-   */
-  private async getUserRequestPromise(): Promise<APIRequestResult> {
-    if (this.APIPromise === null) {
-      this.APIPromise = this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
-    }
-    return this.APIPromise
-  }
-
   /**
    * Check if object is a User object
    * @param user 
    */
-  private isUserObject(user: any): user is User {
+  public isUserObject(user: any): user is User {
     if (user === undefined || user === null) { return false };
     return (<User>user.email) !== undefined;
   }
@@ -204,10 +192,14 @@ export class UserService {
     user.firstName = firstName;
     user.lastName = lastName;
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_me, user);
-    if (!this.isUserObject(response)) {
-      return false
+    if (response.success) {
+      if (!this.isUserObject(response.response)) {
+        return false
+      } else {
+        return (response.response.firstName === user.firstName && response.response.lastName === user.lastName)
+      }
     } else {
-      return (response.firstName === user.firstName && response.lastName === user.lastName)
+      return false
     }
   }
 

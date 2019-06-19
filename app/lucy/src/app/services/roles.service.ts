@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
 import { Role, User, UserAccessType } from '../models';
+import { ObjectValidatorService } from './object-validator.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,33 +10,22 @@ import { Role, User, UserAccessType } from '../models';
 
 export class RolesService {
 
-  constructor(private api: ApiService) { }
+  private roles: Role[] | null = null;
 
-  /**
-   * Check if object is a UserRole 
-   * @param role
-   */
-  private isRoleObject(role: any): role is Role {
-    if (role === undefined || role === null) {return false}; 
-    return (<Role>role.role) !== undefined;
-  }
-
-  private isValidRolesResponse(object: any): boolean {
-    if (object === undefined || object === null) {
-      return false;
-    }
-    return this.isRoleObject(object[0]);
-  }
-
-  // async getAllRoles(): Promise<UserRole[]> {
-  //   const allRoles = await 
-  //   return this.getDummyRoles();
-  // }
+  constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
   async getRoles(): Promise<Role[] | null> {
+    if (this.roles !== null) {
+      return this.roles
+    }
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_refrenceData.roles, null);
     if (response.success) {
-      return this.isValidRolesResponse(response.response)? response.response : null;
+      if ((Array.isArray(response.response) && this.objectValidator.isRoleObject(response.response[0]))) {
+        this.roles = response.response;
+        return response.response
+      } else {
+        return null
+      }
     } else {
       return null;
     }
