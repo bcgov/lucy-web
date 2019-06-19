@@ -1,4 +1,4 @@
-FROM registry.connect.redhat.com/bitnami/nodejs
+FROM registry.connect.redhat.com/bitnami/nodejs:1-50
 
 # RUN mkdir -p /opt/app-root/app
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
