@@ -12,7 +12,7 @@ import { AccessRequest } from '../models/accessRequest';
 
 export class AdminService {
 
-  constructor(private api: ApiService, private userService: UserService, private objectValidator: ObjectValidatorService) { }
+  constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
   async getRequests(): Promise<AccessRequest[]> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_DataEntryAccessRequest, null);
@@ -20,7 +20,7 @@ export class AdminService {
       if ((Array.isArray(response.response) && this.objectValidator.isAccessRequestObject(response.response[0]))) {
         return response.response
       } else {
-        return []
+        return [];
       }
     } else {
       return [];
@@ -30,10 +30,10 @@ export class AdminService {
   async respondToRequest(request: AccessRequest): Promise<boolean> {
     request.status = 1
     console.log("responding to request")
-    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_DataEntryAccessRequest, request);
+    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_AcessRequestResponse(request.request_id), request);
     console.dir(response)
     if (response.success) {
-      
+      return true;
     } else {
       return false;
     }
@@ -45,7 +45,7 @@ export class AdminService {
       if (Array.isArray(response.response) && this.objectValidator.isUserObject(response.response[0])) {
         return response.response
       } else {
-        return []
+        return [];
       }
     } else {
       return [];
@@ -56,7 +56,7 @@ export class AdminService {
     console.log("Changing user info:")
     console.log(changes)
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_user(user.user_id), changes);
-    if (response.success && this.userService.isUserObject(response.response)) {
+    if (response.success && this.objectValidator.isUserObject(response.response)) {
       return {
         success: true,
         response: response.response
