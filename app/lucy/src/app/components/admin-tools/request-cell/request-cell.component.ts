@@ -58,9 +58,7 @@ export class RequestCellComponent implements OnInit {
 
   constructor(private userService: UserService) { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   /**
    * Listen for changes emitted by request modal.
@@ -74,12 +72,10 @@ export class RequestCellComponent implements OnInit {
     console.log("Event heard");
     switch(event) {
       case AccessRequestResponseModalEmitterResponse.responded:
-          console.log("responded");
           this.responding = false
           this.shouldRefresh.emit();
         break;
       case AccessRequestResponseModalEmitterResponse.cancelled:
-          console.log("cancelled");
         this.responding = false
         break;
     }

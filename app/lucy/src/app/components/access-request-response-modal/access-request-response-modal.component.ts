@@ -6,6 +6,8 @@ import { Role } from 'src/app/models';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
+import * as bootstrap from 'bootstrap';
+import * as $AB from 'jquery';
 
 export enum AccessRequestResponseModalEmitterResponse {
   responded,
@@ -92,10 +94,9 @@ export class AccessRequestResponseModalComponent implements OnInit {
   }
 
   public sumbitRequestResponse() {
-    console.log("TODO: Make API CALL TO SUBMIT REQUEST RESPONSE");
-    console.dir(this.accessRequest)
     this.admin.respondToRequest(this.accessRequest).then((success) => {
      if (success) {
+      this.removeModal();
       this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.responded);
      } else {
        // TODO: Handle with an alert or something
@@ -105,8 +106,13 @@ export class AccessRequestResponseModalComponent implements OnInit {
   }
 
   public cancelAction() {
-    console.log("cancel action")
+    this.removeModal();
     this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.cancelled);
+  }
+
+  private removeModal(){
+    $('#modal').modal('hide'); 
+    $('.modal-backdrop').remove();
   }
 
 }
