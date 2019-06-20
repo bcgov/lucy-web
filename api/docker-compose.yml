@@ -16,6 +16,7 @@ services:
     - DB_PASS=${DB_PASS}
     - DB_PORT=${DB_PORT}
     - DB_DATABASE=${DB_DATABASE}
+    - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
   volumes:
     - ./api_sources:/home/nodejs/app
 
@@ -57,27 +58,6 @@ services:
     - app_api
   networks:
     - local-network
-  networks:
-    - local-network
- workspace:
-  image: ${PROJECT_NAME}-${TAG}-workspace-img
-  container_name: ${PROJECT_NAME}-${TAG}-workspace
-  build:
-    context: ./.docker/workspace
-    dockerfile: Dockerfile
-  environment:
-    - PORT=${API_PORT}
-    - DB_HOST=${DB_HOST}
-    - DB_USER=${DB_USER}
-    - DB_PASS=${DB_PASS}
-    - DB_PORT=${DB_PORT}
-    - DB_DATABASE=${DB_DATABASE}
-  links:
-    - db
-  depends_on:
-    - app_api
-  volumes:
-    - ./api_sources:/opt/app
 networks:
  local-network:
   driver: bridge

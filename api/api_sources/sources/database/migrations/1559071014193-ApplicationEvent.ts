@@ -1,31 +1,34 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
-import { DatabaseMigrationHelper } from '../migration.helpers';
+import { ApplicationEventSchema, UserSessionSchema} from '../database-schema'
 
-export class ApplicationEvent1559071014193 implements MigrationInterface {
+export class ApplicationEvent1559071014193 extends ApplicationEventSchema implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         // Creating table
-        await queryRunner.query(`CREATE TABLE application_events (
-            id SERIAL PRIMARY KEY,
-            type INT NOT NULL,
-            source VARCHAR(200) NULL,
-            session_id INT NULL,
-            note VARCHAR(500)
+        await queryRunner.query(`CREATE TABLE ${this.table.name} (
+            ${this.table.columns.id} SERIAL PRIMARY KEY,
+            ${this.table.columns.type} INT NOT NULL,
+            ${this.table.columns.source} VARCHAR(200) NULL,
+            ${this.table.columns.refSessionId} INT NULL,
+            ${this.table.columns.note} VARCHAR(500)
         );`);
 
         // Creating timestamp column
-        await queryRunner.query(DatabaseMigrationHelper.shared.createTimestampsColumns('application_events'));
+        await queryRunner.query(this.createTimestampsColumn());
+
+        // Creating comments
+        await queryRunner.query(this.createComments());
 
         // Foreign key -> session
-        await queryRunner.query(`ALTER TABLE application_events
-        ADD CONSTRAINT FK_2019052812h49m FOREIGN KEY (session_id)
-        REFERENCES user_sessions(id)
-        ON DELETE CASCADE;`);
+        await queryRunner.query(`ALTER TABLE ${this.table.name}
+        ADD CONSTRAINT FK_2019052812h49m FOREIGN KEY (${this.table.columns.refSessionId})
+        REFERENCES ${UserSessionSchema.schema.name}(${UserSessionSchema.schema.columns.id})
+        ON DELETE SET NULL;`);
 
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`DROP TABLE IF EXISTS application_events;`);
+        await queryRunner.query(this.dropTable());
     }
 
 }

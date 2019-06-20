@@ -12,12 +12,13 @@ WORKDIR /home/nodejs/app
 # where available (npm@5+)
 COPY ./package*.json ./
 
-RUN npm install
 # If you are building your code for production
 # RUN npm install --only=production
 
 # Bundle app source
 COPY ./ .
+
+RUN npm install
 
 # Cleaning any existing generated file
 RUN rm -rf ./dist-server
@@ -26,6 +27,7 @@ RUN rm -rf ./dist-server
 RUN npm run build
 
 ENV NODE_PATH /home/nodejs/app/sources
+ENV PATH /home/nodejs/app/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 
 VOLUME /home/nodejs/app
@@ -33,5 +35,5 @@ VOLUME /home/nodejs/app
 
 #ENTRYPOINT [ "npm", "run", "docker_start" ]
 
-#CMD [ "npm", "run", "watch" ]
+CMD [ "npm", "run", "hotload" ]
 #ENTRYPOINT /usr/bin/tail -f /dev/null
