@@ -1,5 +1,7 @@
-
-import AppConfig  from './app.config'
+/**
+ * Test for Application Configuration
+ */
+import AppConfig from './app.config';
 
 // Test
 describe('application configuration', () => {
