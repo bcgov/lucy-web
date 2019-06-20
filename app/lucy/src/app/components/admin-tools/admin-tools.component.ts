@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AccessRequest } from 'src/app/models/accessRequest';
+import { AccessRequest } from 'src/app/models/AccessRequest';
 import { RolesService } from 'src/app/services/roles.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { User } from 'src/app/models';

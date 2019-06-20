@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
 import { FormsModule }   from '@angular/forms';
-import { AccessRequest } from 'src/app/models/accessRequest';
+import { AccessRequest } from 'src/app/models/AccessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';

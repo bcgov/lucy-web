@@ -1,4 +1,4 @@
-import { User } from './user';
+import { User } from './User';
 import { Role } from './Role';
 
 export interface AccessRequest {
