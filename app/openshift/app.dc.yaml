@@ -102,7 +102,7 @@ objects:
     - name: 3030-tcp
       port: 3030
       protocol: TCP
-      targetPort: 3001
+      targetPort: 3030
     - name: 8088-tcp
       port: 8088
       protocol: TCP
