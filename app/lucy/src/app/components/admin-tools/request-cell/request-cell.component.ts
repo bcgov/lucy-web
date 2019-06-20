@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { AccessRequest } from 'src/app/models/accessRequest';
+import { AccessRequest } from 'src/app/models/AccessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { AccessRequestResponseModalEmitterResponse } from '../access-request-response-modal/access-request-response-modal.component';
 

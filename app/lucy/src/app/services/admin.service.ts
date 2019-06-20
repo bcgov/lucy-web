@@ -4,7 +4,7 @@ import { AppConstants } from '../constants';
 import { User} from '../models';
 import { UserChangeResult } from './user.service';
 import { ObjectValidatorService } from './object-validator.service';
-import { AccessRequest } from '../models/accessRequest';
+import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 
 @Injectable({

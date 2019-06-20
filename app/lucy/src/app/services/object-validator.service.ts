@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User} from '../models';
-import { AccessRequest } from '../models/accessRequest';
+import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 
 @Injectable({
