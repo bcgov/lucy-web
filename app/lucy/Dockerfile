@@ -27,4 +27,5 @@ RUN echo 'BUILD SUCCESS'
 
 EXPOSE 3030
 
+# RUN APP
 CMD ["npm", "run", "deploy_run"]
