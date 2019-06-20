@@ -1,9 +1,20 @@
-export const InitialAdmins = [
+export const InitialUsers = [
     {
         email: 'amir@freshworks.io',
-        preferred_username:'ashayega@idir',
+        preferred_username:'###',
         first_name: 'Amir',
         last_name: 'Shayegh',
-        login_access_code: 1
+        additionalInitDataInfo: {
+            roles: [1]
+        }
+    },
+    {
+        email: 'pushan@freshworks.io',
+        preferred_username:'#',
+        first_name: 'Pushan',
+        last_name: 'Mitra',
+        additionalInitDataInfo: {
+            roles: [2]
+        }
     }
 ];

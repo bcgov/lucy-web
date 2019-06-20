@@ -1,5 +1,24 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 .editorconfig
+# Some local
+node_modules
+dist
+npm-debug.log
+
+**/node_modules
+**/npm-debug.log
+**/dist/**
+
+# Dependencies and generated 
+node_modules
+dist
+npm-debug.log
+_app_data
+
+**/node_modules
+**/npm-debug.log
+**/dist/**
+
 # compiled output
 /dist
 /tmp

@@ -54,6 +54,11 @@ export class LoggerBase {
     }
 
     public static get logger(): Logger {
-        return this._logger || (this._logger = new Logger(this.className))
-    } 
+        return this._logger || (this._logger = new Logger(this.className));
+    }
 }
+
+let globalLogger: Logger;
+export const appLogger = (): Logger => {
+    return globalLogger || (globalLogger = new Logger('global'));
+};
