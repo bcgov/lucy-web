@@ -3,8 +3,6 @@
  */
 import {createConnection, Connection} from 'typeorm';
 import { LoggerBase} from '../server/logger';
-
-// import { User, UserRole } from './models/User';
 import { SeedManager } from './seed.manager';
 const dbConfig = require('../../ormconfig');
 
