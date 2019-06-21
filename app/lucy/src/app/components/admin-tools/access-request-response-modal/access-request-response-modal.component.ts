@@ -9,6 +9,15 @@ import * as bootstrap from 'bootstrap';
 import * as $AB from 'jquery';
 import { Role } from 'src/app/models/Role';
 
+/**
+ * Output of Access request modal
+ *  * responsed:
+ *    if a response has been sent and
+ * the listener may want to refresh its content
+ *  * cancelled:
+ *    if canceleld, no action has been taken and 
+ * the listener may want to do something
+ */
 export enum AccessRequestResponseModalEmitterResponse {
   responded,
   cancelled,
@@ -25,16 +34,16 @@ export class AccessRequestResponseModalComponent implements OnInit {
 
   get userName(): string {
     if (this.accessRequest === undefined) {
-      return "";
+      return ``;
     } else {
       return (this.accessRequest.requester.firstName + 
-        " " + this.accessRequest.requester.lastName);
+        ` ` + this.accessRequest.requester.lastName);
     }
   }
 
   get userRole(): string {
     if (this.accessRequest === undefined) {
-      return "";
+      return ``;
     } else {
       return this.userService.getUserAccessCode(this.accessRequest.requester).role;
     }
@@ -42,7 +51,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
 
   get requestNote(): string {
     if (this.accessRequest === undefined) {
-      return "";
+      return ``;
     } else {
       return this.accessRequest.requestNote;
     }
@@ -50,7 +59,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
 
   get requestedAccessCode(): string {
     if (this.accessRequest === undefined) {
-      return "";
+      return ``;
     } else {
       return this.accessRequest.requestedAccessCode.role;
     }
@@ -69,7 +78,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
 
   get approverNote() {
     if (this.accessRequest === undefined) {
-      return "";
+      return ``;
     } else {
       return this.accessRequest.approverNote;
     }
