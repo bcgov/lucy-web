@@ -1,7 +1,7 @@
 //
 // Code Sign
 //
-// Copyright © 2018 Province of British Columbia
+// Copyright © 2019 Province of British Columbia
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Created by Jason Leach on 2018-09-28.
+// Created by Pushan Mitra on 2019-06-10.
 //
 
 'use strict';
