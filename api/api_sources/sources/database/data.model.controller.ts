@@ -16,7 +16,7 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
     }
 
     static sharedInstance<U>(entity: any, schema?: any): DataModelController<U> {
-        return (this.shareInstance || (this.shareInstance = new this(entity, schema)))
+        return (this.shareInstance || (this.shareInstance = new this(entity, schema)));
     }
 
     private get connection(): Connection {
