@@ -28,19 +28,19 @@ export class AdminToolsComponent implements OnInit {
     this.getAllRequests();
   }
 
-  private getAllRequests() {
+  private async getAllRequests() {
     this.admin.getRequests().then((value) => {
       this.requests = value
     });
   }
 
-  private getAllUsers() {
+  private async getAllUsers() {
     this.admin.getAllUsers().then((value) => {
       this.allUsers = value
     });
   }
 
-  private getAllRoles()  {
+  private async getAllRoles()  {
     this.roles.getRoles().then((value) => {
       this.activeRoles = value;
     });
