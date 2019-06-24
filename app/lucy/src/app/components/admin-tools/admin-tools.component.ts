@@ -23,7 +23,15 @@ export class AdminToolsComponent implements OnInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
+    this.fetchStaticData();
+    this.fetchNonStaticData();
+  }
+
+  private fetchStaticData() {
     this.getAllRoles();
+  }
+
+  private fetchNonStaticData() {
     this.getAllUsers();
     this.getAllRequests();
   }
@@ -48,8 +56,8 @@ export class AdminToolsComponent implements OnInit {
     });
   }
 
-  public refreshRequests() {
+  public requestResponseSent() {
     console.log("refreshing");
-    this.getAllRequests();
+    this.fetchNonStaticData();
   }
 }
