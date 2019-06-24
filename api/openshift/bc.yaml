@@ -1,30 +1,52 @@
-apiVersion: build.openshift.io/v1
-kind: BuildConfig
+apiVersion: v1
+kind: Template
+parameters:
+  - suffix:
+      name: 'SUFFIX'
+      displayName: 'SUFFIX'
+      required: true
+  - name:
+      name: 'NAME'
+      displayName: 'NAME'
+      required: true
+      value: 'lucy-api'
+  - version:
+      name: 'VERSION'
+      required: true
+      value: 1.0
+  - repo:
+      name: "SOURCE_REPOSITORY_URL"
+      required: true
+      value: 'https://github.com/bcgov/lucy-web.git'
+  - repo_ref:
+      name: "SOURCE_REPOSITORY_REF"
+      required: true
+      value: 'dev-api'
+  - context_dir:
+      name: "SOURCE_CONTEXT_DIR"
+      required: true
+      value: "/api/api_sources"
 metadata:
-  annotations:
-    openshift.io/generated-by: OpenShiftNewApp
-  creationTimestamp: '2019-05-22T22:33:32Z'
+  creationTimestamp: null
   labels:
-    app: lucy-app
-  name: lucy-app
+    app: ${}
+  name: ${SUFFIX}
   namespace: 8ecbmv-dev
-  resourceVersion: '788403975'
-  selfLink: /apis/build.openshift.io/v1/namespaces/8ecbmv-dev/buildconfigs/lucy-app
-  uid: a14fa05e-7ce1-11e9-bf26-0050568379a2
 spec:
   failedBuildsHistoryLimit: 5
   nodeSelector: null
   output:
     to:
       kind: ImageStreamTag
-      name: 'lucy-app:latest'
+      name: '${NAME}:latest'
   postCommit: {}
   resources: {}
   runPolicy: Serial
   source:
     contextDir: app/lucy
     git:
-      uri: 'https://github.com/bcgov/lucy-web.git'
+      uri: "${SOURCE_REPOSITORY_URL}"
+      ref: "SOURCE_REPOSITORY_REF"
     type: Git
   strategy:
     dockerStrategy:

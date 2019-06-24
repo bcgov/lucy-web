@@ -1,5 +1,23 @@
+//
+// Request-access route controller
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-06-10.
 /**
- * Admin Routs
+ * Imports
  */
 import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
@@ -75,6 +93,11 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
                 // Get approver
                 accessRequest.approverNote = req.body.approverNote || accessRequest.approverNote;
                 accessRequest.requestNote = req.body.requestNote || accessRequest.requestNote;
+                // Check change in access request requested role
+                if (req.body.requestedAccessCode !== accessRequest.requestedAccessCode.role_code_id) {
+                    this.logger.info(`Update change in requested access code for req id ${accessRequest.request_id} new access code: ${req.body.requestedAccessCode}`);
+                    accessRequest.requestedAccessCode = await RoleCodeController.shared.findById(req.body.requestedAccessCode);
+                }
                 // Check status
                 if (req.body.status && req.body.status !== accessRequest.status) {
                     accessRequest = await this.handleStatusUpdate(req.body.status, accessRequest, req.user);
@@ -183,4 +206,4 @@ export const requestAccessRoutes = (): Router => {
     return controller.router;
 };
 
-// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------

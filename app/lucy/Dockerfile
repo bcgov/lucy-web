@@ -1,4 +1,4 @@
-FROM registry.connect.redhat.com/bitnami/nodejs:1-50
+FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 
 # RUN mkdir -p /opt/app-root/app
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -6,6 +6,8 @@ ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/o
 # Create app directory
 
 WORKDIR /opt/app-root/src
+
+RUN echo ' --- [BUILD START] --- '
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -23,8 +25,9 @@ COPY ./ .
 RUN npm run build
 
 # MESSAGE
-RUN echo 'BUILD SUCCESS'
+RUN echo ' --- [BUILD SUCCESS] --- '
 
 EXPOSE 3030
 
+# RUN APP
 CMD ["npm", "run", "deploy_run"]

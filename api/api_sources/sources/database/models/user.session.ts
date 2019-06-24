@@ -1,46 +1,70 @@
-import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn, OneToMany} from "typeorm";
-import { BaseModel } from "./baseModel";
+//
+// UserSession DataModel
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-05-10.
+/**
+ * Imports
+ */
+import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
+import { BaseModel } from './baseModel';
 import { User } from './user';
 import { SessionActivity } from './userSessionActivity';
 import { DataModelController } from '../data.model.controller';
 import { UserSchema, UserSessionSchema} from '../database-schema'
 
+/**
+ * @description Model class to hold and handle user session data
+ * @export class UserSession
+ */
 @Entity({
     name: UserSessionSchema.schema.name
 })
 @Unique([UserSessionSchema.schema.columns.token])
 export class UserSession extends BaseModel {
-    
     @PrimaryGeneratedColumn()
-    session_id: number
+    session_id: number;
 
-    @Column({ 
+    @Column({
         name: UserSessionSchema.schema.columns.lastLoginAt,
-        nullable: true 
+        nullable: true
     })
     lastLoginAt: Date;
 
 
-    @Column({ 
-        nullable: true 
+    @Column({
+        nullable: true
     })
     token: string;
 
-    @Column({ 
+    @Column({
         name: UserSessionSchema.schema.columns.tokenExpiry,
-        nullable: true 
+        nullable: true
     })
     tokenExpiry: Date;
 
-    @Column({ 
+    @Column({
         name: UserSessionSchema.schema.columns.tokenLifetime,
-        nullable: true 
+        nullable: true
     })
     tokenLifeTime: number;
 
-    @Column({ 
+    @Column({
         name: UserSessionSchema.schema.columns.lastActiveAt,
-        nullable: true 
+        nullable: true
     })
     lastActiveAt: Date;
 
@@ -55,18 +79,23 @@ export class UserSession extends BaseModel {
     })
     user: User;
 
-    // Activities 
+    // Activities
     @OneToMany(type => SessionActivity, activity => activity.session)
     activities: Promise<SessionActivity[]>;
 
-    public static get controller(): DataModelController<UserSession> {
-        return new DataModelController<UserSession>(this);
-    }
-
 }
 
+/**
+ * @description Data Model Controller for session data
+ * @export class UserSessionDataController
+ */
 export class UserSessionDataController extends DataModelController<UserSession> {
+    /**
+     * @description Getter for shared instance
+     */
     public static get shared(): UserSessionDataController {
         return this.sharedInstance<UserSession>(UserSession, UserSessionSchema);
     }
 }
+
+// ----------------------------------------------------------

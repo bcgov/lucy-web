@@ -54,9 +54,6 @@ objects:
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-          volumeMounts:
-          - mountPath: /opt/app-root/app
-            name: lucy-app
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -64,13 +61,13 @@ objects:
         terminationGracePeriodSeconds: 30
         volumes:
         - emptyDir: {}
-          name: lucy-api-test-1
+          name: ${NAME}${SUFFIX}
     test: false
     triggers:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - api
+        - app
         from:
           kind: ImageStreamTag
           name: ${NAME}:${VERSION}
@@ -90,8 +87,6 @@ objects:
     database-user: ""
   kind: Secret
   metadata:
-    annotations:
-      as-copy-of: lucy-db
     creationTimestamp: null
     name: ${NAME}${SUFFIX}
   type: Opaque
@@ -104,14 +99,14 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     ports:
-    - name: 3001-tcp
-      port: 3001
+    - name: 3030-tcp
+      port: 3030
       protocol: TCP
-      targetPort: 3001
-    - name: 8080-tcp
-      port: 8080
+      targetPort: 3030
+    - name: 8088-tcp
+      port: 8088
       protocol: TCP
-      targetPort: 8080
+      targetPort: 8088
     selector:
       deploymentconfig: ${NAME}${SUFFIX}
     sessionAffinity: None
@@ -128,7 +123,7 @@ objects:
   spec:
     host: ${HOST}
     port:
-      targetPort: 3001-tcp
+      targetPort: 3030-tcp
     to:
       kind: Service
       name: ${NAME}${SUFFIX}
@@ -144,7 +139,7 @@ parameters:
 - name: NAME
   value: lucy-app
 - name: SUFFIX
-  value: "-dev"
+  value: "dev"
 - name: VERSION
-  value: "1.0.0"
+  value: "1.0"
 - name: HOST

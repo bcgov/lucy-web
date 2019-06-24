@@ -19,6 +19,34 @@ export class AppConstants {
     static SSO_TokenEndpoint() : string {
         return `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect/token`;
     }
+
+    // API
+    static API_baseURL: string = "http://localhost:80/api/v1";
+
+    // API authenticated user endpoints
+    static API_me: string = `${AppConstants.API_baseURL}/account/me`;
+    static API_DataEntryAccessRequest: string = `${AppConstants.API_baseURL}/request-access`;
+    static API_messages: string = `${AppConstants.API_baseURL}/account/message`;
+
+    static API_allUsers: string = `${AppConstants.API_baseURL}/account/users`;
+
+    // API Non static endpoints
+    static API_user(id: number) : string {
+        return `${AppConstants.API_baseURL}/account/user/${id}`;
+    }
+
+    static API_updateUserMessage(id: number): string {
+        return `${AppConstants.API_baseURL}/account/message/${id}`;
+    }
+
+    static API_AcessRequestResponse(id: number): string {
+        return `${AppConstants.API_baseURL}/request-access/${id}`;
+    }
+
+    // API Reference data
+    static API_refrenceData = {
+        roles: `${AppConstants.API_baseURL}/account/roles`
+    }
     
 
 }

@@ -14,7 +14,7 @@ define deployTag
 endef
 
 #ifndef BUILD_TARGET
-#$(error The BUILD_TARGET variable is missing.)
+#$(error The BUILD_TARGET variable is missing.,)
 #endif
 
 DIR := ${CURDIR}

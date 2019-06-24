@@ -54,6 +54,7 @@
   "dependencies": {
     "@bcgov/nodejs-common-utils": "0.0.16",
     "@types/node": "^11.13.13",
+    "@types/underscore": "^1.8.20",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
@@ -75,6 +76,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.2",
     "source-map-loader": "^0.2.4",
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.18",
+    "underscore": "^1.9.1"
   }
 }
