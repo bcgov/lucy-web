@@ -142,6 +142,7 @@ export class SsoService {
    * Check if access token OR exiery token exist
    */
   public isAuthenticated(): boolean {
+    console.log("\nChcecking is authenticated.\n")
     return (this.cookieService.check('accessToken') || this.cookieService.check('refreshToken'));
   }
 
