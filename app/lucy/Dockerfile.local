@@ -4,6 +4,8 @@ FROM node:11.0.0
 
 ENV PATH /opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+ENV APP_PORT 3030
+
 # Creating Root dir
 RUN mkdir -p /opt/app-root/src
 
@@ -25,9 +27,9 @@ RUN npm run build
 # MESSAGE
 RUN echo 'BUILD SUCCESS'
 
-EXPOSE 3030
+EXPOSE $APP_PORT
 
-CMD ["npm", "run", "deploy_run"]
+CMD ["npm", "run", "deploy_start"]
 
 
 
