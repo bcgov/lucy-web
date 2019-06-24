@@ -17,10 +17,20 @@ export class AppComponent {
   constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService) {}
 
   ngOnInit() {
+
+  }
+  ngAfterViewInit() {
     if (this.ssoService.isAuthenticated()) {
-      if (this.routerService.current == AppRoutes.Root) {
-        this.routerService.navigateTo(AppRoutes.Profile)
-      }
+      this.userService.basicInformationExists().then((exists) => {
+        if (!exists) {
+          this.routerService.navigateTo(AppRoutes.UserInfo)
+        } else {
+          if (this.routerService.current == AppRoutes.Root) {
+            this.routerService.navigateTo(AppRoutes.Profile)
+          }
+        }
+      });
+      
     }
   }
 }

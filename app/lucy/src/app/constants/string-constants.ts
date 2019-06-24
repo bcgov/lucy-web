@@ -10,6 +10,10 @@ export const StringConstants = {
     databaseAccess_DataEntry_Badge: (() => {
         return 'Data Entry Access';
     })(),
+
+    databaseAccess_Admin_Badge: (() => {
+        return 'Admin Access';
+    })(),
     ////////////////////////////////////////////
 
     // Request Data entry access dialog

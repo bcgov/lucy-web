@@ -24,7 +24,7 @@
       <li class="nav-item" [class.active]="isProfileActive">
         <a class="nav-link" (click)="navigateToProfile()">Home</a>
       </li>
-      <li class="nav-item"  [class.active]="isAdminToolsActive">
+      <li *ngIf="isAdmin" class="nav-item"  [class.active]="isAdminToolsActive">
         <a class="nav-link" (click)="navigateToAdminTools()">Admin Tools</a>
       </li>
       <li class="nav-item">
