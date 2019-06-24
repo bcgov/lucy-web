@@ -19,8 +19,11 @@ export class AppComponent {
   ngOnInit() {
 
   }
+
   ngAfterViewInit() {
+    console.log("\n\n*** AT APP COMPONENT AFTER VIEW INIT")
     if (this.ssoService.isAuthenticated()) {
+      console.log("\n\n*** USER IS AUTHENTICATED")
       this.userService.basicInformationExists().then((exists) => {
         if (!exists) {
           this.routerService.navigateTo(AppRoutes.UserInfo)
