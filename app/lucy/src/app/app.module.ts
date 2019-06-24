@@ -32,6 +32,8 @@ import { RouterService } from './services/router.service';
 import { AccessRequestResponseModalComponent} from './components/admin-tools/access-request-response-modal/access-request-response-modal.component';
 import { UserCellComponent } from './components/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/admin-tools/request-cell/request-cell.component';
+import { AddPlantObservationBasicInformationComponent } from './components/add-plant-observation/add-plant-observation-basic-information/add-plant-observation-basic-information.component';
+import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species/add-plant-observation-invasive-plant-species.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +48,9 @@ import { RequestCellComponent } from './components/admin-tools/request-cell/requ
     AdminToolsComponent,
     AccessRequestResponseModalComponent,
     UserCellComponent,
-    RequestCellComponent
+    RequestCellComponent,
+    AddPlantObservationBasicInformationComponent,
+    AddPlantObservationInvasivePlantSpeciesComponent
   ],
   imports: [
     BrowserModule,

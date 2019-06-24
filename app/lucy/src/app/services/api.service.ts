@@ -97,25 +97,28 @@ export class ApiService {
         method: method,
         promise: promise
       })
-      // TODO: Remove
-      console.log("Added request:")
-      console.dir(this.APIRequests)
     }
   }
 
   /**
-   * Sets promise to null and
-   * calls removeEndedRequests()
-   * to remove all requests in APIRequests 
-   * where promise === null.
    * @param request 
    */
   private endRequest(request: APIRequest) {
-    if (request === null || request === undefined) {
+    if (request === null || request === undefined || this.APIRequests.length < 1) {
       return
     }
-    request.promise = null
-    this.removeEndedRequests()
+    let index = -1
+    this.APIRequests.forEach((item, i) => {
+      if (item.URL == request.URL && item.method == request.method) {
+        index = i
+      }
+    });
+    if (index > -1) {
+      this.APIRequests.splice(index, 1);
+   }
+   if (this.APIRequests.length < 1) {
+     console.log("** No more requests in waiting **")
+   }
   }
 
   /**
@@ -123,7 +126,11 @@ export class ApiService {
    * where promise === null.
    */
   private removeEndedRequests() {
+    console.log("Removing nulled before")
+    console.dir(this.APIRequests)
     this.APIRequests = this.APIRequests.filter(item => item.promise !== null);
+    console.log("Removing nulled after")
+    console.dir(this.APIRequests)
   }
   /*------------------------------------END OF TYING SOMETHING------------------------------------*/
   /*------------------------------------Requests------------------------------------*/
@@ -247,6 +254,8 @@ export class ApiService {
       if (existingRequest !== null) {
         promise = existingRequest.promise
       } else {
+        console.log("Making new api call")
+        console.log(endpoint)
         promise = this.httpClient.get(endpoint, {headers: headers}).toPromise();
       }
       // Cache the promise to fullfill the top code block next time
@@ -257,7 +266,11 @@ export class ApiService {
         response: result['data']
       }
       // remove cached request
-      this.endRequest(existingRequest);
+      this.endRequest({
+        URL: endpoint,
+        method: APIRequestMethod.GET,
+        promise: null
+      });
       return requestResult
 
     } catch (error) {

@@ -30,7 +30,9 @@ export class AdminToolsComponent implements OnInit {
 
   private async getAllRequests() {
     this.admin.getRequests().then((value) => {
+      console.log("got requests")
       this.requests = value
+      console.dir(value)
     });
   }
 
@@ -47,6 +49,7 @@ export class AdminToolsComponent implements OnInit {
   }
 
   public refreshRequests() {
+    console.log("refreshing");
     this.getAllRequests();
   }
 }
