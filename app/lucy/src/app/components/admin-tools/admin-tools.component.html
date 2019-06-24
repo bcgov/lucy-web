@@ -23,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-          <tr app-request-cell *ngFor="let request of requests; let i = index" [request]="request" (shouldRefresh)="refreshRequests()">
+          <tr app-request-cell *ngFor="let request of requests; let i = index" [request]="request" (shouldRefresh)="requestResponseSent()">
       </tbody>
     </table>
   </div>
