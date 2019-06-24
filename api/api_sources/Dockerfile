@@ -13,15 +13,22 @@ RUN npm install -g npm
 
 WORKDIR /opt/app-root/src
 
+# Logging in Build Console
+RUN echo ' --- BUILD START --- '
+
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY ./ .
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+# RUN npm install --only=production
+COPY ./package*.json ./
 
 RUN npm install
-# If you are building your code for production
-# RUN npm install --only=production
 
+# If you are building your code for production, copy all files
+COPY ./ .
 
 # Cleaning any existing generated file
 RUN rm -rf ./dist-server
@@ -38,9 +45,7 @@ VOLUME /opt/app-root/src
 
 EXPOSE 3001
 
+# Logging in Build Console Build DONE
+RUN echo ' --- BUILD SUCCESS: DONE --- '
+
 CMD ["npm", "run", "deploy_run"]
-
-#ENTRYPOINT [ "npm", "run", "docker_start" ]
-
-#CMD [ "npm", "run", "watch" ]
-#ENTRYPOINT /usr/bin/tail -f /dev/null
