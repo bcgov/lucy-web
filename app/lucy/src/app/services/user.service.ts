@@ -142,7 +142,7 @@ export class UserService {
    * @returns accessCode
    */
   public getUserAccessCode(user: User): Role {
-    return user.roles[0];
+    return user.roles[user.roles.length-1];
   }
 
   // TODO: Does not exist in api yet
