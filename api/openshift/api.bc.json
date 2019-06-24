@@ -41,7 +41,7 @@
         {
           "name": "SOURCE_REPOSITORY_REF",
           "required": false,
-          "value": "dev-api"
+          "value": "dev"
         }
     ],
     "objects":[
