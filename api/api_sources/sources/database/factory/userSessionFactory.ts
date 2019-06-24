@@ -1,5 +1,22 @@
+//
+// UserSession, SessionActivity Factory
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-05-10.
 /**
- * Factories: UserSession, SessionActivity
+ * Imports
  */
 import * as faker from 'faker';
 import { userFactory } from './userFactory';
@@ -12,9 +29,9 @@ import {SessionActivityCodeController, SessionActivityController, SessionActivit
  * @param RolesCodeValue login
  * @return Promise<UserSession>
  */
-export const sessionFactory = async (login: RolesCodeValue): Promise <UserSession> => {
+export const sessionFactory = async (login?: RolesCodeValue, noSave?: boolean, id?: number): Promise <UserSession> => {
     // 1. Create User
-    const user: User = await userFactory(login);
+    const user: User = await userFactory(login, noSave);
 
     // 2. Create
     const session: UserSession = UserSessionDataController.shared.create();
@@ -24,9 +41,14 @@ export const sessionFactory = async (login: RolesCodeValue): Promise <UserSessio
     session.tokenExpiry = faker.date.future();
     session.tokenLifeTime = faker.random.number();
     session.user = user;
-    await UserSessionDataController.shared.saveInDB(session);
+    if (!noSave) {
+        await UserSessionDataController.shared.saveInDB(session);
+    } else {
+        if (id) {
+            session.session_id = id || 0;
+        }
+    }
     return session;
-
 };
 
 /**
@@ -35,14 +57,20 @@ export const sessionFactory = async (login: RolesCodeValue): Promise <UserSessio
  * @param SessionActivityCodeValues code
  * @return Promise<SessionActivity>
  */
-export const sessionActivityFactory = async (code: SessionActivityCodeValues): Promise<SessionActivity>  => {
+export const sessionActivityFactory = async (code?: SessionActivityCodeValues, noSave?: boolean, id?: number): Promise<SessionActivity>  => {
     // 1. Create session
-    const session: UserSession = await sessionFactory(RolesCodeValue.admin);
+    const session: UserSession = await sessionFactory(RolesCodeValue.admin, noSave);
     const sessionActivity: SessionActivity = SessionActivityController.shared.create();
     sessionActivity.session = session;
-    sessionActivity.code = await SessionActivityCodeController.shared.code(code);
+    sessionActivity.code = await SessionActivityCodeController.shared.code(code || SessionActivityCodeValues.dataAdd);
     sessionActivity.info = faker.random.word();
-    await SessionActivityController.shared.saveInDB(sessionActivity);
+    if (!noSave) {
+        await SessionActivityController.shared.saveInDB(sessionActivity);
+    } else {
+        if (id) {
+            sessionActivity.activity_id = id || 0;
+        }
+    }
     return sessionActivity;
 };
 

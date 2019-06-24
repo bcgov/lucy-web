@@ -1,0 +1,63 @@
+
+<td scope="row" [ngClass]="isActive ? 'activeUser' : 'inActiveUser'">{{username}}</td>
+<td [ngClass]="isActive ? 'activeUser' : 'inActiveUser'">{{firstName}}</td>
+<td [ngClass]="isActive ? 'activeUser' : 'inActiveUser'">{{lastName}}</td>
+<td [ngClass]="isActive ? 'activeUser' : 'inActiveUser'">{{email}}</td>
+<td [ngClass]="isActive ? 'activeUser' : 'inActiveUser'">{{role}}</td>
+<td>
+  <!-- Dropdown -->
+  <ng-template #userActionsDropdown>
+    <div class="row dropdown-box">
+      <div class="col-sm-12 field d-inline-block" ngbDropdown #roleDropdown="ngbDropdown">
+        <label for="UserRole" class="field-header">Role</label>
+        <input type="text" class="form-control field-box field-input" id="rolesDropdown" ngbDropdownAnchor
+          (focus)="roleDropdown.open()" readonly [(ngModel)]="user.roles[0].role" (change)="setUserRole(role)" />
+        <div ngbDropdownMenu aria-labelledby="rolesDropdown">
+          <div class="col-12" *ngFor="let role of activeRoles; let i = index">
+            <button class="btn" ngbDropdownItem (click)='setUserRole(role)'>
+              {{role.role}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-6">
+        <label for="active" class="field-header">
+          Account Active
+        </label>
+      </div>
+      <div class="col-6">
+        <label class="switch">
+          <input name="active" type="checkbox" [(ngModel)]="isActive">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <hr style="width: 100%; color: lightgray; height: 1px; background-color:lightgray;" />
+        <button type="button" class="btn button-fill centerd btn-block" (click)="removeUser(user); userActions.close()">
+          Remove User
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #userActionsDropdownTitle>
+    <div class="row">
+      <div class="col-12">
+        User Actions
+        <button type="button" class="close" (click)="userActions.close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <!-- End of Dropdown -->
+  <button type="button" class="btn button-hollow" [ngbPopover]="userActionsDropdown"
+    [popoverTitle]="userActionsDropdownTitle" [autoClose]="false" triggers="manual" #userActions="ngbPopover"
+    (click)="userActions.open()">
+    Actions
+  </button>
+</td>

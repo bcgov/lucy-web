@@ -1,15 +1,38 @@
-// Application Auth Middleware
+//
+// Auth Middleware
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-06-6.
+/**
+ * Imports
+ */
 import * as passport from 'passport';
 import * as express from 'express';
 import * as assert from 'assert';
 import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
-import AppConfig from '../../AppConfig'
-import { UserDataController, User, RoleCodeController, RolesCodeValue, RolesCode, UserSessionDataController, UserSession} from '../../database/models';
+import AppConfig from '../../AppConfig';
+import { UserDataController, User, RoleCodeController, RolesCodeValue, RolesCode, UserSessionDataController, UserSession, AccountStatus} from '../../database/models';
 import { LoggerBase } from '../logger';
 import { errorBody } from './common.error.handler';
+import { BCHelperLib } from '../../libs/utilities/bc.helpers';
 
-const commonUtility = require('@bcgov/nodejs-common-utils');
-
+/**
+ * @description Model interface for Middleware result
+ * @export interface MiddlewareValidationResult
+ */
 export interface MiddlewareValidationResult {
     message?: string;
     code?: number;
@@ -41,10 +64,8 @@ export class ApplicationAuthMiddleware extends LoggerBase {
     async _configure() {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
-        const { getJwtCertificate} = commonUtility;
-        assert(getJwtCertificate, 'No getJwtCertificate lib');
         // Get algorithm and public key
-        const { algorithm, certificate } = await getJwtCertificate(AppConfig.certificateURL);
+        const { algorithm, certificate } = await BCHelperLib.getCertificate();
         const options: StrategyOptions = {
             jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
             algorithms: [algorithm],
@@ -64,7 +85,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
      * @param any closure done
      */
     async _tokenCallback(request: express.Request, payload: any, done: any) {
-        const { errorWithCode } = commonUtility;
+        const { errorWithCode } = BCHelperLib.getCommonUtility();
         try {
             // Get user info
              const { preferred_username, email, family_name, given_name} = payload;
@@ -73,6 +94,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              assert(family_name, 'JWT payload family_name is missing');
              assert(given_name, 'JWT payload given_name is missing');
              const api = request.originalUrl;
+             ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
@@ -100,11 +122,27 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  user.firstName = given_name;
                  user.lastName = family_name;
                  user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
-
+                 user.accountStatus = AccountStatus.active;
                  await UserDataController.shared.saveInDB(user);
+             } else {
+                 // Update user data if require
+                 if (user.preferredUsername !== preferred_username) {
+                    user.preferredUsername = preferred_username;
+                    user.firstName = given_name;
+                    user.lastName = family_name;
+                    user.accountStatus = AccountStatus.active;
+                    await UserDataController.shared.saveInDB(user);
+                 }
              }
 
-             ApplicationAuthMiddleware.logger.info(`${api} | User {${user.email}, ${user.preferredUsername}}`);
+             ApplicationAuthMiddleware.logger.info(`${api} | User {${user.email}, ${user.preferredUsername} and status: ${user.accountStatus}}`);
+
+             // Checking and creating status
+             if (user.accountStatus === undefined) {
+                 user.accountStatus = AccountStatus.active;
+                 await UserDataController.shared.saveInDB(user);
+                 ApplicationAuthMiddleware.logger.info(`Creating status for user: ${user.email}`);
+             }
 
              // Checking user validity {for subclasses}
              const valid: MiddlewareValidationResult = await this.validateUser(user, payload);
@@ -201,5 +239,4 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
 export const adminOnlyRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin]);
 };
-
-// -----------------
+// -----------------------------------------------------------------------------------------------------------

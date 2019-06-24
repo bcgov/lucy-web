@@ -1,6 +1,7 @@
 version: "3.5"
 
 services:
+# Application API Container and service
  app_api:
   image: ${PROJECT_NAME}-${TAG}-api-img
   container_name: ${PROJECT_NAME}-${TAG}-api
@@ -28,6 +29,7 @@ services:
     - db
   restart: always
   command: ["npm", "run", "hotload"]
+# Application Local Database Container and service
  db:
   image: ${PROJECT_NAME}-${TAG}-postgress-img
   container_name: ${PROJECT_NAME}-${TAG}-db
@@ -44,6 +46,7 @@ services:
     - local-network
   volumes:
     - postgres:/var/lib/postgresql/data
+# Application Local NGINX Service
  nginx:
   image: ${PROJECT_NAME}-${TAG}-nginx-img
   container_name: ${PROJECT_NAME}-${TAG}-nginx
@@ -58,8 +61,22 @@ services:
     - app_api
   networks:
     - local-network
+# Application Web component
+ app:
+  image: ${PROJECT_NAME}-${TAG}-app-img
+  container_name: ${PROJECT_NAME}-${TAG}-app
+  build:
+    context: ../app/lucy
+    dockerfile: Dockerfile.local
+  ports:
+    - 3030:3030
+  volumes: 
+   - ../app/lucy/src:/opt/app-root/src/src
   networks:
     - local-network
+  depends_on:
+    - nginx
+# Application Local docker network
 networks:
  local-network:
   driver: bridge

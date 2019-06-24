@@ -21,7 +21,7 @@
           "displayName": "Name Suffix",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-app"
+          "value": "dev"
         },
         {
           "name": "VERSION",
@@ -42,6 +42,16 @@
           "name": "SOURCE_REPOSITORY_REF",
           "required": false,
           "value": "dev-api"
+        }, 
+        {
+          "name": "SOURCE_IMAGE_NAME",
+          "required": true,
+          "value": "rhscl-nodejs-8-rhel7"
+        },
+        {
+          "name": "SOURCE_IMAGE_TAG",
+          "required": true,
+          "value": "1-50"
         }
     ],
     "objects":[
@@ -49,7 +59,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-              "name": "nodejs-11:1-50",
+              "name": "rhscl-nodejs-8-rhel7",
               "creationTimestamp": null,
               "annotations": {
                 "description": "Nodejs Base Image"
@@ -68,7 +78,7 @@
                   "annotations": null,
                   "from": {
                     "kind": "DockerImage",
-                    "name": "registry.connect.redhat.com/bitnami/nodejs:1-50"
+                    "name": "registry.access.redhat.com/rhscl/nodejs-8-rhel7:1-50"
                   },
                   "importPolicy": {},
                   "referencePolicy": {
@@ -139,7 +149,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "nodejs-11:1-50"
+                            "name": "rhscl-nodejs-8-rhel7:1-50"
                         }
                     },
                     "type": "Docker"

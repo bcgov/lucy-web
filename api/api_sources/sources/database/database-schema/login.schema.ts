@@ -1,8 +1,30 @@
+//
 // Application Login Schemas
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-06-2.
 
 
+// Imports
 import { ApplicationTable, ApplicationTableColumn, BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
 
+/**
+ * @description Table schema for table to store various application role
+ * @export class RolesCodeTableSchema
+ */
 export class RolesCodeTableSchema extends BaseTableSchema {
     defineTable(): ApplicationTable {
         const table: ApplicationTable = new ApplicationTable();
@@ -12,12 +34,15 @@ export class RolesCodeTableSchema extends BaseTableSchema {
            code: new ApplicationTableColumn('code', 'Application level identifier code'),
            role: new ApplicationTableColumn('role', 'User role as per access'),
            description: new ApplicationTableColumn('description', 'Description of each access level item')
-        }
-
+        };
         return table;
     }
 }
 
+/**
+ * @description Table schema for table to store application user info
+ * @export class UserSchema
+ */
 export class UserSchema extends BaseTableSchema {
     defineTable() {
         const table = new ApplicationTable();
@@ -39,7 +64,10 @@ export class UserSchema extends BaseTableSchema {
     }
 }
 
-
+/**
+ * @description Table schema for table to store application user session info
+ * @export class UserSessionSchema
+ */
 export class UserSessionSchema extends BaseTableSchema {
     defineTable() {
         const table = new ApplicationTable();
@@ -57,6 +85,10 @@ export class UserSessionSchema extends BaseTableSchema {
     }
 }
 
+/**
+ * @description Table schema for table to store various session activity code of user
+ * @export class SessionActivityCodeSchema
+ */
 export class SessionActivityCodeSchema extends BaseTableSchema {
     defineTable() {
         const table = new ApplicationTable();
@@ -70,6 +102,10 @@ export class SessionActivityCodeSchema extends BaseTableSchema {
     }
 }
 
+/**
+ * @description Table schema for table to store various session activity of user
+ * @export class SessionActivitySchema
+ */
 export class SessionActivitySchema extends BaseTableSchema {
     defineTable() {
         const table = new ApplicationTable();
@@ -83,3 +119,5 @@ export class SessionActivitySchema extends BaseTableSchema {
         return table;
     }
 }
+
+// ----------------------------------------------------------------------------------------------------------------

@@ -2,9 +2,9 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AppRoutes, AppRoutesParams} from '../../constants/app-routes.enum';
 import { SsoService } from '../../services/sso.service';
 import { UserService } from '../../services/user.service';
-import { UserAccessType } from '../../models';
 import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
+import { UserAccessType } from 'src/app/models/Role';
 
 declare const location: any;
 
@@ -23,7 +23,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   /**
    * User access type
    */
-  public accessType: UserAccessType = UserAccessType.view
+  public accessType: UserAccessType = UserAccessType.DataViewer
 
   /**
    * Listener for route events
@@ -61,7 +61,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
    * call this.setAccessType(). 
    */
   public get isAdmin(): boolean {
-    return (this.accessType == UserAccessType.admin);
+    return (this.accessType == UserAccessType.Admin);
   }
 
   /**
@@ -76,18 +76,23 @@ export class NavBarComponent implements OnInit, OnDestroy {
    */
   public get hasDataEntryAccess(): boolean {
     return (
-      this.accessType == UserAccessType.admin ||
-      this.accessType == UserAccessType.dataEntry
+      this.accessType == UserAccessType.Admin ||
+      this.accessType == UserAccessType.DataEditor
       );
   }
 
   constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService) { }
 
   ngOnInit() {
+    
+  }
+
+  ngAfterViewInit(){
     this.setInitials();
     this.setAccessType();
     this.listenForRouteChanges();
   }
+
 
   ngOnDestroy() {
     this.endRouteEventsListener();
@@ -101,6 +106,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   private listenForRouteChanges() {
     this.routeEventsListener = this.routerService.events.subscribe((val) => {
       this.setInitials();
+      this.setAccessType();
     });
   }
 
