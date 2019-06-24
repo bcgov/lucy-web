@@ -1,15 +1,14 @@
-export enum UserAccessType {
-    admin,
-    view,
-    dataEntry,
-}
+import { Role } from './Role';
 
 export interface User {
-    first: string;
-    last: string;
+    accountStatus: number;
+    createdAt: string;
+    currentSessionId: number;
     email: string;
-    id: string;
-    access: any;
-    organization: string;
-    roleInOrganization: string;
+    firstName: string;
+    lastName: string;
+    preferredUsername: string;
+    roles: Role[];
+    updateAt: string;
+    user_id: number;
 }

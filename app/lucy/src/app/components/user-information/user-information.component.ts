@@ -87,7 +87,7 @@ export class UserInformationComponent implements OnInit {
 
   public onNext() {
     if (this.isValid) {
-      this.userService.setBasicUserInfo(this.firstName, this.lastName, this.email, this.organization).then((success) => {
+      this.userService.updateUserInfo(this.firstName, this.lastName).then((success) => {
         console.log("called set basic info: " + success)
         if (success) {
           this.router.navigateByUrl(AppRoutes.Profile);
