@@ -58,15 +58,24 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.authStatusIsLoading = true;
     const isAuthenticated = await this.ssoService.isAuthenticatedAsync();
     this.authStatusIsLoading = false;
+
+    // Load messages
+    if (isAuthenticated) {
+      // this.fetchMessages();
+    }
+
     return isAuthenticated;
   }
 
-  private async fetchMessages() {
-    this.messageService.fetchMessages().then(messages => {
+  private fetchMessages() {
+    this.messageService.fetchUnreadMessages().then(messages => {
+      console.log(messages);
+      this.userAccessUpdatedMessage = messages[0];
     });
   }
 
   userAccessUpdatedModalEmitted(event: boolean) {
-
+    console.log(`Messages was respoded to, re-fetching`);
+    this.fetchMessages();
   }
 }
