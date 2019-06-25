@@ -1,5 +1,4 @@
-
-<app-nav-bar></app-nav-bar>
+<app-nav-bar *ngIf="isReady && isAuthenticated"></app-nav-bar>
 <div *ngIf="!isAuthenticated" class="alert alert-warning" role="alert">
         <strong>Login!</strong> Please login to view Species list.
 </div>
