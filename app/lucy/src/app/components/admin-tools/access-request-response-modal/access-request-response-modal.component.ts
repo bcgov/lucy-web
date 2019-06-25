@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { AccessRequest } from 'src/app/models/AccessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
@@ -15,7 +15,7 @@ import { Role } from 'src/app/models/Role';
  *    if a response has been sent and
  * the listener may want to refresh its content
  *  * cancelled:
- *    if canceleld, no action has been taken and 
+ *    if canceleld, no action has been taken and
  * the listener may want to do something
  */
 export enum AccessRequestResponseModalEmitterResponse {
@@ -36,7 +36,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
     if (this.accessRequest === undefined) {
       return ``;
     } else {
-      return (this.accessRequest.requester.firstName + 
+      return (this.accessRequest.requester.firstName +
         ` ` + this.accessRequest.requester.lastName);
     }
   }
@@ -67,7 +67,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
 
   set requestedAccessCode(name: string) {
     if (this.accessRequest === undefined) {
-      return
+      return;
     }
     for (let role of this.activeRoles) {
       if (role.role == name) {
@@ -119,8 +119,8 @@ export class AccessRequestResponseModalComponent implements OnInit {
     this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.cancelled);
   }
 
-  private removeModal(){
-    $('#modal').modal('hide'); 
+  private removeModal() {
+    $('#modal').modal('hide');
     $('.modal-backdrop').remove();
   }
 

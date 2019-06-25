@@ -19,7 +19,7 @@ export class AdminService {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_DataEntryAccessRequest, null);
     if (response.success) {
       if ((Array.isArray(response.response) && this.objectValidator.isAccessRequestObject(response.response[0]))) {
-        return response.response
+        return response.response;
       } else {
         return [];
       }
@@ -30,7 +30,7 @@ export class AdminService {
 
   async respondToRequest(request: AccessRequest): Promise<boolean> {
     request.status = 1
-    console.log("responding to request")
+    console.log(`responding to request`);
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_AcessRequestResponse(request.request_id), request);
     console.dir(response)
     if (response.success) {
@@ -54,7 +54,7 @@ export class AdminService {
   }
 
   async changeUser(user: User, changes: any): Promise<UserChangeResult> {
-    console.log("Changing user info:")
+    console.log(`Changing user info:`);
     console.log(changes)
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_user(user.user_id), changes);
     if (response.success && this.objectValidator.isUserObject(response.response)) {
