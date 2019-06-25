@@ -12,19 +12,19 @@ export class UserInformationComponent implements OnInit {
 
   organizations: string[] = ['Private Citizen', 'Freshworks Studio', 'Ministry of Transportation'];
 
-  organization: string = ""
-  firstName: string = ""
-  lastName: string = ""
-  email: string = ""
+  organization = ``;
+  firstName = ``;
+  lastName = ``;
+  email = ``;
 
   get organizationIsValid(): boolean {
-    return (this.organization != "")
+    return (this.organization !== ``);
   }
   get firstNameIsValid(): boolean {
-    return (this.firstName != "")
+    return (this.firstName !== ``);
   }
   get lastNameIsValid(): boolean {
-    return (this.lastName != "")
+    return (this.lastName !== ``);
   }
   get emailIsValid(): boolean {
     // anystring@anystring.anystring
@@ -38,27 +38,27 @@ export class UserInformationComponent implements OnInit {
 
   public get invalidMessage(): string {
     if (this.isValid) {
-      return ""
+      return ``;
     }
 
-    var invalidFields = ""
+    let invalidFields = ``;
     if (!this.firstNameIsValid) {
-      invalidFields = invalidFields + "First Name, "
+      invalidFields = invalidFields + `First Name, `;
     }
 
     if (!this.lastNameIsValid) {
-      invalidFields = invalidFields + "Last Name, "
+      invalidFields = invalidFields + `Last Name, `;
     }
 
     if (!this.organizationIsValid) {
-      invalidFields = invalidFields + "Organization Name, "
+      invalidFields = invalidFields + `Organization Name, `;
     }
 
     if (!this.emailIsValid) {
-      invalidFields = invalidFields + "Email, "
+      invalidFields = invalidFields + `Email, `;
     }
 
-    return (invalidFields.substring(0, invalidFields.lastIndexOf(",")) + ".");
+    return (invalidFields.substring(0, invalidFields.lastIndexOf(`,`)) + `.`);
 
   }
 
@@ -68,39 +68,36 @@ export class UserInformationComponent implements OnInit {
     // Fetch organizations
     // fetch user info
     this.userService.getFirstName().then((value) => {
-      this.firstName = value
+      this.firstName = value;
     });
     this.userService.getLastName().then((value) => {
-      this.lastName = value
+      this.lastName = value;
     });
     this.userService.getOranization().then((value) => {
-      this.organization = value
+      this.organization = value;
     });
     this.userService.getEmail().then((value) => {
-      this.email = value
+      this.email = value;
     });
   }
 
   public chooseOrganization(organization: string) {
-    this.organization = organization
+    this.organization = organization;
   }
 
   public onNext() {
     if (this.isValid) {
       this.userService.updateUserInfo(this.firstName, this.lastName).then((success) => {
-        console.log("called set basic info: " + success)
+        console.log(`called set basic info: ` + success);
         if (success) {
           this.router.navigateByUrl(AppRoutes.Profile);
         } else {
           // TODO: Create a re-usable modal alert component.
-          console.log("Couldnt update user information");
+          console.log(`Couldnt update user information`);
         }
       });
     } else {
-      console.log("not valid")
+      console.log(`not valid`);
     }
   }
-
-
-
 }
