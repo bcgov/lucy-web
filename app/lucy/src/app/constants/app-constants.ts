@@ -21,7 +21,7 @@ export class AppConstants {
     static  API_me2 = `${AppConstants.API_baseURL}/account/me`;
     static get API_DataEntryAccessRequest(): string { return `${AppConstants.API_baseURL}/request-access`; }
     static get API_messages(): string  { return `${AppConstants.API_baseURL}/account/message`; }
-    static get API_allUsers(): string{ return `${AppConstants.API_baseURL}/account/users`; }
+    static get API_allUsers(): string { return `${AppConstants.API_baseURL}/account/users`; }
 
     static SSO_LoginEndpoint(): string {
         const baseAuthEndpoint = `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;
