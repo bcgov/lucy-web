@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { AccessRequest } from 'src/app/models/AccessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
@@ -119,8 +119,8 @@ export class AccessRequestResponseModalComponent implements OnInit {
     this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.cancelled);
   }
 
-  private removeModal(){
-    $('#modal').modal('hide'); 
+  private removeModal() {
+    $('#modal').modal('hide');
     $('.modal-backdrop').remove();
   }
 
