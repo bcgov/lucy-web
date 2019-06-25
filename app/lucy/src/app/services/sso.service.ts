@@ -46,6 +46,9 @@ export class SsoService {
       // User is not authenticated. wait for redirect.
       this.beginTokeRefreshTimer();
     }
+    console.log("Redirect");
+    console.log(AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI);
+    console.log(this.SSO_idirLoginEndpoint());
   }
 
   /***** Computed variables *****/
@@ -173,18 +176,19 @@ export class SsoService {
    * @param provider SSOLoginProvider
    */
   public login(provider: SSOLoginProvider) {
-    switch(provider) { 
-      case SSOLoginProvider.idir: { 
-         window.open(this.SSO_idirLoginEndpoint(), "_self");
-         break; 
+    switch(provider) {
+      case SSOLoginProvider.idir: {
+         window.open(this.SSO_idirLoginEndpoint(), `_self`);
+         break;
       } 
-      case SSOLoginProvider.BCeID: { 
-         window.open(this.SSO_BCeidLoginEndpoint(), "_self");
-         break; 
-      } 
-      default: { 
-         window.open(this.SSO_LoginEndpoint(), "_self");
-         break; 
+      case SSOLoginProvider.BCeID: {
+         window.open(this.SSO_BCeidLoginEndpoint(), `_self`);
+         break;
+      }
+      default: {
+        console.log(`where am i`);
+         window.open(this.SSO_LoginEndpoint(), `_self`);
+         break;
       } 
    } 
   }
