@@ -12,10 +12,9 @@ export class MessageService {
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
   public async fetchMessages(): Promise<Message[]> {
+    return this.getDummyMessages();
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_messages, null);
     return response.success ? response.response : [];
-
-
   }
 
   public async fetchUnreadMessages(): Promise<Message[]> {
@@ -36,9 +35,51 @@ export class MessageService {
     return response.success;
   }
 
-  private getDummyMessages() {
-    // const msg: Message = {
+  private getDummyMessages(): Message[] {
+    let messages: Message[] = [];
+    messages.push({
+      message_id: 1,
+      title: `hello`,
+      body: `world`,
+      type: 0,
+      status: 0
+    });
+    messages.push({
+      message_id: 2,
+      title: `hello 2`,
+      body: `world 2`,
+      type: 0,
+      status: 0
+    });
+    messages.push({
+      message_id: 3,
+      title: `hello 3`,
+      body: `world 3`,
+      type: 0,
+      status: 1
+    });
+    messages.push({
+      message_id: 4,
+      title: `hello 4`,
+      body: `world 4`,
+      type: 0,
+      status: 0
+    });
+    messages.push({
+      message_id: 5,
+      title: `hello 5`,
+      body: `world 5`,
+      type: 0,
+      status: 1
+    });
+    messages.push({
+      message_id: 6,
+      title: `hello 6`,
+      body: `world 6`,
+      type: 0,
+      status: 0
+    });
 
-    // }
+    return messages;
   }
 }
