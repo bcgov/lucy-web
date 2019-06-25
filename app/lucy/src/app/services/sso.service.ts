@@ -142,17 +142,16 @@ export class SsoService {
    * Check if access token OR exiery token exist
    */
   public isAuthenticated(): boolean {
+    // console.log("\nChcecking is authenticated.\n")
     return (this.cookieService.check('accessToken') || this.cookieService.check('refreshToken'));
   }
 
   /**
-   * NOTE: This one is currently not used.
-   * 
    * Check if access token exists
    * otherwise check if it can be refreshed
    * 
    */
-  private async isAuthenticated2(): Promise<boolean> {
+  public async isAuthenticatedAsync(): Promise<boolean> {
     if (!this.cookieService.check('accessToken')) {
       // If access token is expired, check if the refresh token is still valid
       if (!this.cookieService.check('refreshToken')) {

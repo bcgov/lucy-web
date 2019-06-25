@@ -54,9 +54,9 @@ export class ApiService {
    */
   private getHeaders(): HttpHeaders {
     const bearer = this.ssoService.getBearerAccessToken();
-    if (bearer != this.BearerToken) {
-      console.log("Token is different:" + bearer);
-    }
+    // if (bearer != this.BearerToken) {
+    //   console.log("Token is different:" + bearer);
+    // }
     this.BearerToken = bearer
     return new HttpHeaders({
       'Authorization': bearer,
