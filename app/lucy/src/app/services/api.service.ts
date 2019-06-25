@@ -10,8 +10,8 @@ export enum APIRequestMethod {
 }
 
 export interface APIRequestResult {
-  success: boolean
-  response: any
+  success: boolean;
+  response: any;
 }
 
 export enum APIErrorDescision {
@@ -20,17 +20,17 @@ export enum APIErrorDescision {
 }
 
 export interface APIError {
-  endpoint: string
-  body: any
-  method: APIRequestMethod
-  error: any
-  attempts: number
+  endpoint: string;
+  body: any;
+  method: APIRequestMethod;
+  error: any;
+  attempts: number;
 }
  /*------------------------------------------------------------------------*/
  export interface APIRequest {
-   URL: string
-   method: APIRequestMethod
-   promise: Promise<Object> | null
+   URL: string;
+   method: APIRequestMethod;
+   promise: Promise<Object> | null;
  }
 
 @Injectable({
@@ -40,12 +40,12 @@ export interface APIError {
 export class ApiService {
 
   /**
-   * Maximum number of Request retry calls 
+   * Maximum number of Request retry calls
    * After failures.
    */
-  private MAX_NUMBER_OF_API_RETRY: number = 3;
+  private MAX_NUMBER_OF_API_RETRY = 3;
   private APIRequests: APIRequest[] = [];
-  private BearerToken: string = ""
+  private BearerToken = ``;
 
   constructor(private httpClient: HttpClient, private ssoService: SsoService) { }
 
@@ -57,7 +57,7 @@ export class ApiService {
     // if (bearer != this.BearerToken) {
     //   console.log("Token is different:" + bearer);
     // }
-    this.BearerToken = bearer
+    this.BearerToken = bearer;
     return new HttpHeaders({
       'Authorization': bearer,
       'Content-Type': 'application/json'
@@ -67,27 +67,27 @@ export class ApiService {
   /*------------------------------------TRYING SOMETHING------------------------------------*/
 
   /**
-   * Check if a request at the specided Endpoint 
+   * Check if a request at the specided Endpoint
    * With the specified Method exists.
    * @param url endpoint
    * @param method GET | POST | PUT
    * @returns existing APIRequest | null
    */
   private requestExists(url: string, method: APIRequestMethod): APIRequest | null {
-    for (let apiRequest of this.APIRequests) {
-      if (apiRequest.URL == url && apiRequest.method == method && apiRequest.promise !== null) {
-        return apiRequest
+    for (const apiRequest of this.APIRequests) {
+      if (apiRequest.URL === url && apiRequest.method === method && apiRequest.promise !== null) {
+        return apiRequest;
       }
     }
-    return null
+    return null;
   }
 
   /**
    * Create an APIRequest object and add
    * to the APIRequests array.
-   * @param url 
-   * @param method 
-   * @param promise 
+   * @param url;
+   * @param method;
+   * @param promise;
    */
   private cacheRequstPromise(url: string, method: APIRequestMethod, promise:  Promise<Object>) {
     if (!this.requestExists(url, method)) {
@@ -96,7 +96,7 @@ export class ApiService {
         URL: url,
         method: method,
         promise: promise
-      })
+      });
     }
   }
 
@@ -105,11 +105,11 @@ export class ApiService {
    */
   private endRequest(request: APIRequest) {
     if (request === null || request === undefined || this.APIRequests.length < 1) {
-      return
+      return;
     }
     let index = -1
     this.APIRequests.forEach((item, i) => {
-      if (item.URL == request.URL && item.method == request.method) {
+      if (item.URL === request.URL && item.method === request.method) {
         index = i
       }
     });
@@ -117,20 +117,20 @@ export class ApiService {
       this.APIRequests.splice(index, 1);
    }
    if (this.APIRequests.length < 1) {
-     console.log("** No more requests in waiting **")
+     console.log(`** No more requests in waiting **`);
    }
   }
 
   /**
-   * Remove all requests in APIRequests 
+   * Remove all requests in APIRequests
    * where promise === null.
    */
   private removeEndedRequests() {
-    console.log("Removing nulled before")
+    console.log(`Removing nulled before`);
     console.dir(this.APIRequests)
     this.APIRequests = this.APIRequests.filter(item => item.promise !== null);
-    console.log("Removing nulled after")
-    console.dir(this.APIRequests)
+    console.log(`Removing nulled after`);
+    console.dir(this.APIRequests);
   }
   /*------------------------------------END OF TYING SOMETHING------------------------------------*/
   /*------------------------------------Requests------------------------------------*/
@@ -181,8 +181,8 @@ export class ApiService {
    * @returns Success | Fail & Response
    */
   private async postCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
-    const jsonBody = JSON.parse(JSON.stringify(body))
-    const headers = this.getHeaders()
+    const jsonBody = JSON.parse(JSON.stringify(body));
+    const headers = this.getHeaders();
     try {
       const promise = this.httpClient.post<any>(endpoint, jsonBody, { headers: headers }).toPromise();
       const result = await promise;
@@ -190,10 +190,10 @@ export class ApiService {
         success: true,
         response: result['data']
       }
-      return requestResult
+      return requestResult;
 
     } catch (error) {
-      console.log("API ERROR");
+      console.log(`API ERROR`);
       console.log();
       const apiError: APIError = {
         endpoint: endpoint,
@@ -215,8 +215,8 @@ export class ApiService {
   * @returns Success | Fail & Response
   */
   private async putCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
-    const jsonBody = JSON.parse(JSON.stringify(body))
-    const headers = this.getHeaders()
+    const jsonBody = JSON.parse(JSON.stringify(body));
+    const headers = this.getHeaders();
     try {
       const promise = this.httpClient.put<any>(endpoint, jsonBody, {headers: headers}).toPromise();
       const result = await promise;
@@ -224,7 +224,7 @@ export class ApiService {
         success: true,
         response: result['data']
       }
-      return requestResult
+      return requestResult;
 
     } catch (error) {
       const apiError: APIError = {
@@ -246,16 +246,14 @@ export class ApiService {
    * @returns Success | Fail & Response
    */
   private async getCall(endpoint: string, attempts: number): Promise<APIRequestResult> {
-    const headers = this.getHeaders()
+    const headers = this.getHeaders();
     try {
-      var promise: Promise<Object>;
+      let promise: Promise<Object>;
       // Check if a call to this endpoint has already been initiated and awaiting response
       const existingRequest = this.requestExists(endpoint, APIRequestMethod.GET)
       if (existingRequest !== null) {
-        promise = existingRequest.promise
+        promise = existingRequest.promise;
       } else {
-        console.log("Making new api call")
-        console.log(endpoint)
         promise = this.httpClient.get(endpoint, {headers: headers}).toPromise();
       }
       // Cache the promise to fullfill the top code block next time
@@ -271,7 +269,7 @@ export class ApiService {
         method: APIRequestMethod.GET,
         promise: null
       });
-      return requestResult
+      return requestResult;
 
     } catch (error) {
       const apiError: APIError = {
@@ -290,30 +288,30 @@ export class ApiService {
   /*------------------------------------ERROR Handling------------------------------------*/
   /**
    * Handle Erros based on status codes
-   * @param error 
+   * @param error APIError
    * @returns Result of hendleErrorDescision()
    */
   private async handleError(error: APIError): Promise<APIRequestResult> {
     switch (error.error.status) {
       case 401:
-        console.log("Error 401 received, refreshing");
+        console.log(`Error 401 received, refreshing`);
         return await this.hendleErrorDescision(error, await this.decideOn401(error));
+      case 404:
+          console.log(`Error 401 received: Resource is not Available`);
+          return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
       default:
           console.log(`ERRPR CASE NOT HANDLED.\n Error Code received: ${error.error.status}\nObject:`);
           console.dir(error);
-        return {
-          success: false,
-          response: null
-        }
+          return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
     }
   }
 
   /**
-   * Handle An API Error and descision: 
+   * Handle An API Error and descision:
    *  * if Retry, retry the request.
    *  * if Stop, Send fail responce to api caller
-   * @param error 
-   * @param descision 
+   * @param error APIError
+   * @param descision APIErrorDescision
    * @returns 
    *  Based on descision:
    *  * Retry: 
@@ -335,12 +333,12 @@ export class ApiService {
 
   /**
    * Decide how to handle a 401 error.
-   * @param error 
+   * @param error APIError
    * @returns APIErrorDescision Retry | Stop
    */
   private async decideOn401(error: APIError): Promise<APIErrorDescision> {
     if (error.attempts >= this.MAX_NUMBER_OF_API_RETRY) {
-      console.log("REQUEST REACHED MAX NUMBER OF ATTEMPTS:");
+      console.log(`REQUEST REACHED MAX NUMBER OF ATTEMPTS:`);
       console.dir(error);
       return APIErrorDescision.Stop;
     }
