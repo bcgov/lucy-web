@@ -18,12 +18,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
   /**
    * User initials
    */
-  public userInitials: string = ""
+  public userInitials = ``;
 
   /**
    * User access type
    */
-  public accessType: UserAccessType = UserAccessType.DataViewer
+  public accessType: UserAccessType = UserAccessType.DataViewer;
 
   /**
    * Listener for route events
@@ -42,7 +42,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
    * navigation bar when route is active
    */ 
   public get isAdminToolsActive(): boolean {
-    return this.routerService.current === AppRoutes.AdminTools
+    return this.routerService.current === AppRoutes.AdminTools;
   }
 
   /**
@@ -50,7 +50,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
    * navigation bar when route is active
    */
   public get isProfileActive(): boolean {
-    return this.routerService.current === AppRoutes.Profile
+    return this.routerService.current === AppRoutes.Profile;
   }
 
   /**

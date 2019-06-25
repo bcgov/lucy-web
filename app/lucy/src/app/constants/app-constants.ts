@@ -18,11 +18,11 @@ export class AppConstants {
 
     // API authenticated user endpoints
     static get API_me(): string { return `${AppConstants.API_baseURL}/account/me`; }
-    static  API_me2 = `${AppConstants.API_baseURL}/account/me`;
     static get API_DataEntryAccessRequest(): string { return `${AppConstants.API_baseURL}/request-access`; }
     static get API_messages(): string { return `${AppConstants.API_baseURL}/account/message`; }
     static get API_allUsers(): string { return `${AppConstants.API_baseURL}/account/users`; }
 
+    // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
         const baseAuthEndpoint = `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;
         return `${baseAuthEndpoint}/auth?response_type=code&client_id=${this.SSOConstants.SSO_CLIENT_ID}&redirect_uri=${this.SSOConstants.SSO_LOGIN_REDIRECT_URI}`;
@@ -31,8 +31,9 @@ export class AppConstants {
     static SSO_TokenEndpoint(): string {
         return `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect/token`;
     }
+
     // API Non static endpoints
-    static API_user(id: number) : string {
+    static API_user(id: number): string {
         return `${AppConstants.API_baseURL}/account/user/${id}`;
     }
 
