@@ -8,7 +8,7 @@ pipeline {
             agent { label 'build' }
             steps {
                 script {
-                    def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep '^api/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
+                    def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^api/|^/api' || echo -n ''", returnStatus: false, returnStdout: true).trim()
                     def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
                     echo "${filesInThisCommitAsString}"
                     if (!currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause') && !hasChangesInPath){
@@ -33,25 +33,31 @@ pipeline {
         }
         stage('Deploy (TEST)') {
             agent { label 'deploy' }
-            input {
+            steps {
+                echo "Skipping TEST Deploy ..."
+            }
+            /*input {
                 message "Should we continue with deployment to TEST?"
                 ok "Yes!"
             }
             steps {
                 echo "Deploying ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
-            }
+            }*/
         }
         stage('Deploy (PROD)') {
             agent { label 'deploy' }
-            input {
+            steps {
+                echo "Skipping PROD Deploy ..."
+            }
+            /*input {
                 message "Should we continue with deployment to TEST?"
                 ok "Yes!"
             }
             steps {
                 echo "Deploying ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
-            }
+            }*/
         }
     }
 }
