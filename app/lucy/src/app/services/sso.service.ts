@@ -46,9 +46,6 @@ export class SsoService {
       // User is not authenticated. wait for redirect.
       this.beginTokeRefreshTimer();
     }
-    console.log("Redirect");
-    console.log(AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI);
-    console.log(this.SSO_idirLoginEndpoint());
   }
 
   /***** Computed variables *****/
