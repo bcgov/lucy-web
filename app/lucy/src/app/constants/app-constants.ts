@@ -7,10 +7,10 @@ export class AppConstants {
 
     // SSO
     static SSOConstants = {
-        SSO_CLIENT_ID : 'lucy',
-        SSO_BASE_URL : 'https://sso.pathfinder.gov.bc.ca',
-        SSO_REALM_NAME : 'dfmlcg7z',
-        SSO_LOGIN_REDIRECT_URI : `${window.location.host}`,
+        SSO_CLIENT_ID : `lucy`,
+        SSO_BASE_URL : `https://sso.pathfinder.gov.bc.ca`,
+        SSO_REALM_NAME : `dfmlcg7z`,
+        SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
     };
 
     // API
@@ -20,7 +20,7 @@ export class AppConstants {
     static get API_me(): string { return `${AppConstants.API_baseURL}/account/me`; }
     static  API_me2 = `${AppConstants.API_baseURL}/account/me`;
     static get API_DataEntryAccessRequest(): string { return `${AppConstants.API_baseURL}/request-access`; }
-    static get API_messages(): string  { return `${AppConstants.API_baseURL}/account/message`; }
+    static get API_messages(): string { return `${AppConstants.API_baseURL}/account/message`; }
     static get API_allUsers(): string { return `${AppConstants.API_baseURL}/account/users`; }
 
     static SSO_LoginEndpoint(): string {
