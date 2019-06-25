@@ -1,6 +1,6 @@
 // Core
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 
 // Others
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,6 +34,14 @@ import { UserCellComponent } from './components/admin-tools/user-cell/user-cell.
 import { RequestCellComponent } from './components/admin-tools/request-cell/request-cell.component';
 import { AddPlantObservationBasicInformationComponent } from './components/add-plant-observation/add-plant-observation-basic-information/add-plant-observation-basic-information.component';
 import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species/add-plant-observation-invasive-plant-species.component';
+import { AppBootService } from './services/bootstrap.service';
+
+/**
+ * @description Bootstrapping initial service call of the application
+ */
+export const bootstrapFactory = (bootStrapper: AppBootService) => {
+  return () => bootStrapper.loadConfig();
+};
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,7 +71,18 @@ import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/a
     RouterModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [CookieService, SsoService, RouterService],
+  providers: [
+    CookieService,
+    SsoService,
+    RouterService,
+    AppBootService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: bootstrapFactory,
+      deps: [AppBootService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
