@@ -65,6 +65,8 @@ objects:
             value: "5432"
           - name: APP_CERTIFICATE_URL
             value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+          - name: CHANGE_VERSION
+            value: ${CHANGE_ID}
           image: " "
           imagePullPolicy: Always
           name: api
@@ -170,3 +172,5 @@ parameters:
 - name: VERSION
   value: "1.0.0"
 - name: HOST
+- name: CHANGE_ID
+  value: "0"
