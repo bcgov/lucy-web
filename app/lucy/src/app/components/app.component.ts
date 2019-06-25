@@ -40,26 +40,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.routerService.navigateTo(AppRoutes.Profile);
       }
     });
-    // console.log("\n\n*** AT APP COMPONENT AFTER VIEW INIT")
-    // if (this.ssoService.isAuthenticated()) {
-    //   console.log("\n\n*** USER IS AUTHENTICATED")
-    //   this.userService.basicInformationExists().then((exists) => {
-    //     if (!exists) {
-    //       this.routerService.navigateTo(AppRoutes.UserInfo)
-    //     } else {
-    //       if (this.routerService.current == AppRoutes.Root) {
-    //         this.routerService.navigateTo(AppRoutes.Profile)
-    //       }
-    //     }
-    //   });
-      
-    // }
   }
 
   private async checkAuthStatus(): Promise<boolean> {
-    this.authStatusIsLoading = true
-    const isAuthenticated = await this.ssoService.isAuthenticatedAsync()
-    this.authStatusIsLoading = false
-    return isAuthenticated
+    this.authStatusIsLoading = true;
+    const isAuthenticated = await this.ssoService.isAuthenticatedAsync();
+    this.authStatusIsLoading = false;
+    return isAuthenticated;
   }
 }
