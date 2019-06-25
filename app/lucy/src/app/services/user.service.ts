@@ -204,19 +204,23 @@ export class UserService {
    * @returns boolean
    */
   async submitDataEntryRequest(notes: string): Promise<boolean> {
-    let user = await this.getUser()
-    let dataEntryRole = await this.roles.getDataEntryRole()
+    let user = await this.getUser();
+    let dataEntryRole = await this.roles.getDataEntryRole();
+    if (dataEntryRole === null) {
+      console.log("Could not fetch data entry role");
+      return false;
+    }
     const body = {
-      "requestedAccessCode": dataEntryRole.role_code_id,
-      "requestNote": notes
+      requestedAccessCode: dataEntryRole.role_code_id,
+      requestNote: notes
     }
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_DataEntryAccessRequest, body);
     console.log("Response:")
     console.dir(response)
     if (!this.objectValidator.isUserObject(response)) {
-      return false
+      return false;
     } else {
-      return (response.firstName === user.firstName && response.lastName === user.lastName)
+      return (response.firstName === user.firstName && response.lastName === user.lastName);
     }
   }
   /*------------------------------------END OF SETs------------------------------------*/

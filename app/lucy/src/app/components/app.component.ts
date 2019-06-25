@@ -1,10 +1,11 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SsoService } from '../services/sso.service';
-import { UserService } from '../services/user.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
 import { Message } from '../models/Message';
 import { MessageService } from '../services/message.service';
+import * as bootstrap from 'bootstrap';
+import * as $AB from 'jquery';
 
 @Component({
   selector: 'app-root',
@@ -61,7 +62,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     // Load messages
     if (isAuthenticated) {
-      // this.fetchMessages();
+      this.fetchMessages();
     }
 
     return isAuthenticated;
@@ -69,13 +70,30 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
-      console.log(messages);
-      this.userAccessUpdatedMessage = messages[0];
+      console.dir(messages);
+      // this.showMessage(messages[0]);
     });
+  }
+
+  private showMessage(message: Message) {
+    this.userAccessUpdatedMessage = message;
+    this.delay(1).then( x => {
+      $(`#userAccessMessageModal`).modal('show');
+    });
+  }
+
+  /**
+   * Create a delay
+   * @param ms milliseconds
+   */
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
   userAccessUpdatedModalEmitted(event: boolean) {
     console.log(`Messages was respoded to, re-fetching`);
     this.fetchMessages();
   }
+
+  
 }
