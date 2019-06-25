@@ -33,6 +33,9 @@ pipeline {
         }
         stage('Deploy (TEST)') {
             agent { label 'deploy' }
+            steps {
+                echo "Skipping TEST Deploy ..."
+            }
             /*input {
                 message "Should we continue with deployment to TEST?"
                 ok "Yes!"
@@ -44,6 +47,9 @@ pipeline {
         }
         stage('Deploy (PROD)') {
             agent { label 'deploy' }
+            steps {
+                echo "Skipping PROD Deploy ..."
+            }
             /*input {
                 message "Should we continue with deployment to TEST?"
                 ok "Yes!"
