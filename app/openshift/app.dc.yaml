@@ -48,7 +48,7 @@ objects:
             value: ${CHANGE_ID}
           - name: API_HOST
             value: ${API_HOST}
-        - image: " "
+          image: " "
           imagePullPolicy: Always
           name: app
           ports:
