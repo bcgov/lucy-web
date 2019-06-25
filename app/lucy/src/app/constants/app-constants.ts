@@ -10,7 +10,8 @@ export class AppConstants {
         SSO_CLIENT_ID : `lucy`,
         SSO_BASE_URL : `https://sso.pathfinder.gov.bc.ca`,
         SSO_REALM_NAME : `dfmlcg7z`,
-        SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
+        // SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
+        SSO_LOGIN_REDIRECT_URI : `/`,
     };
 
     // API

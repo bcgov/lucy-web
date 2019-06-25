@@ -3,6 +3,8 @@ import { SsoService } from '../services/sso.service';
 import { UserService } from '../services/user.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
+import { Message } from '../models/Message';
+import { MessageService } from '../services/message.service';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +26,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     return this.authStatusIsLoading === false;
   }
 
-  constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService) {}
+  public userAccessUpdatedMessage: Message;
+
+  public get userAccessUpdated(): boolean {
+    return this.userAccessUpdatedMessage !== undefined;
+  }
+
+  constructor(private routerService: RouterService, private ssoService: SsoService, private messageService: MessageService) {}
 
   ngOnInit() {
 
   }
 
   ngAfterViewInit() {
+    this.reRouteIfNeeded();
+  }
+
+  private reRouteIfNeeded() {
     this.checkAuthStatus().then((isAuthenticated) => {
       console.log(`CheckAuthStatus returned:  ${isAuthenticated}`);
       console.log(`Route: ${this.routerService.current}`);
@@ -47,5 +59,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     const isAuthenticated = await this.ssoService.isAuthenticatedAsync();
     this.authStatusIsLoading = false;
     return isAuthenticated;
+  }
+
+  private async fetchMessages() {
+    this.messageService.fetchMessages().then(messages => {
+    });
+  }
+
+  userAccessUpdatedModalEmitted(event: boolean) {
+
   }
 }

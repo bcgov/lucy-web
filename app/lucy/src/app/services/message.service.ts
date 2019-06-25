@@ -14,6 +14,17 @@ export class MessageService {
   public async fetchMessages(): Promise<Message[]> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_messages, null);
     return response.success ? response.response : [];
+
+
+  }
+
+  public async fetchUnreadMessages(): Promise<Message[]> {
+    const messages = await this.fetchMessages();
+    return messages.filter(this.isUnread);
+  }
+
+  private isUnread(message: Message, index: number, messages: Message[]) {
+    return message.status === 0;
   }
 
   public async markAsRead(message: Message): Promise<boolean> {
@@ -23,5 +34,11 @@ export class MessageService {
     message.status = 1;
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_updateUserMessage(message.message_id), message);
     return response.success;
+  }
+
+  private getDummyMessages() {
+    // const msg: Message = {
+
+    // }
   }
 }

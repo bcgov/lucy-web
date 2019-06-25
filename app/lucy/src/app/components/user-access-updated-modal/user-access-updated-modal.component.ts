@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Message } from 'src/app/models/Message';
 import { MessageService } from 'src/app/services/message.service';
 import * as bootstrap from 'bootstrap';
@@ -30,6 +30,7 @@ export class UserAccessUpdatedModalComponent implements OnInit {
   constructor(private messageService: MessageService) { }
 
   @Input() message: Message;
+  @Output() userAccessUpdatedModalEventEmitter = new EventEmitter<boolean>();
 
   ngOnInit() {
   }
@@ -37,10 +38,13 @@ export class UserAccessUpdatedModalComponent implements OnInit {
   markAsRead() {
     this.messageService.markAsRead(this.message).then((success) => {
       if (success) {
-        console.log(`Message read`);
+        console.log(`Message Marked as read`);
         this.removeModal();
+        this.userAccessUpdatedModalEventEmitter.emit(true);
       } else {
-        // this.
+        console.log(`Message NOT Marked as read / FAILED`);
+        this.removeModal();
+        this.userAccessUpdatedModalEventEmitter.emit(true);
       }
     });
   }
