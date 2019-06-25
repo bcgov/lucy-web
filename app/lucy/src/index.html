@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- TODO: THIS META TAG MAY SECURITY ISSUES -->
+  <!-- READ THIS: https://stackoverflow.com/questions/30280370/how-does-content-security-policy-work -->
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'">
+  <!-- *** -->
   <meta name="theme-color" content="#002D72">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AngularApp</title>

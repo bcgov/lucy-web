@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { StringConstants } from 'src/app/constants/string-constants';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { UserAccessType } from 'src/app/models/Role';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
 
   private userAccessType: UserAccessType = UserAccessType.DataViewer
 
@@ -31,13 +31,13 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  public userRoleAndOrganization: string = "";
-  public accessTypeMessage: string = "";
-  public userFullName: string = "";
-  public userInitials: string = "";
+  public userRoleAndOrganization = ``;
+  public accessTypeMessage = ``;
+  public userFullName = ``;
+  public userInitials = ``;
 
   // Not yet used.. if loadingQue > 0, something is loading
-  public loadingQue: number = 0
+  public loadingQue = 0;
 
   constructor(private userService: UserService, private router: Router) { }
 
@@ -101,18 +101,15 @@ export class ProfileComponent implements OnInit {
 
   // TODO:
   public requestDataEntryAccess() {
-    const success = this.userService.submitDataEntryRequest("Let me in please.");
+    const success = this.userService.submitDataEntryRequest(`Let me in please.`);
     if (success) {
-      console.log("Request sent")
+      console.log(`Request sent`);
     } else {
-      console.log("Request failed")
+      console.log(`Request failed`);
     }
   }
 
-
   public navigateToUserInfo() {
-    this.router.navigate([AppRoutes.UserInfo])
+    this.router.navigate([AppRoutes.UserInfo]);
   }
-
-
 }

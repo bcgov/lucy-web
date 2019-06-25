@@ -11,7 +11,6 @@ export class LoginComponent implements OnInit {
   constructor(private ssoService: SsoService) { }
 
   ngOnInit() {
-    
   }
 
   loginWithBCeID() {

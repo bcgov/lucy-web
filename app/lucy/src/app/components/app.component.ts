@@ -3,6 +3,8 @@ import { SsoService } from '../services/sso.service';
 import { UserService } from '../services/user.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
+import { Message } from '../models/Message';
+import { MessageService } from '../services/message.service';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +26,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     return this.authStatusIsLoading === false;
   }
 
-  constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService) {}
+  public userAccessUpdatedMessage: Message;
+
+  public get userAccessUpdated(): boolean {
+    return this.userAccessUpdatedMessage !== undefined;
+  }
+
+  constructor(private routerService: RouterService, private ssoService: SsoService, private messageService: MessageService) {}
 
   ngOnInit() {
 
   }
 
   ngAfterViewInit() {
+    this.reRouteIfNeeded();
+  }
+
+  private reRouteIfNeeded() {
     this.checkAuthStatus().then((isAuthenticated) => {
       console.log(`CheckAuthStatus returned:  ${isAuthenticated}`);
       console.log(`Route: ${this.routerService.current}`);
@@ -40,26 +52,30 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.routerService.navigateTo(AppRoutes.Profile);
       }
     });
-    // console.log("\n\n*** AT APP COMPONENT AFTER VIEW INIT")
-    // if (this.ssoService.isAuthenticated()) {
-    //   console.log("\n\n*** USER IS AUTHENTICATED")
-    //   this.userService.basicInformationExists().then((exists) => {
-    //     if (!exists) {
-    //       this.routerService.navigateTo(AppRoutes.UserInfo)
-    //     } else {
-    //       if (this.routerService.current == AppRoutes.Root) {
-    //         this.routerService.navigateTo(AppRoutes.Profile)
-    //       }
-    //     }
-    //   });
-      
-    // }
   }
 
   private async checkAuthStatus(): Promise<boolean> {
-    this.authStatusIsLoading = true
-    const isAuthenticated = await this.ssoService.isAuthenticatedAsync()
-    this.authStatusIsLoading = false
-    return isAuthenticated
+    this.authStatusIsLoading = true;
+    const isAuthenticated = await this.ssoService.isAuthenticatedAsync();
+    this.authStatusIsLoading = false;
+
+    // Load messages
+    if (isAuthenticated) {
+      // this.fetchMessages();
+    }
+
+    return isAuthenticated;
+  }
+
+  private fetchMessages() {
+    this.messageService.fetchUnreadMessages().then(messages => {
+      console.log(messages);
+      this.userAccessUpdatedMessage = messages[0];
+    });
+  }
+
+  userAccessUpdatedModalEmitted(event: boolean) {
+    console.log(`Messages was respoded to, re-fetching`);
+    this.fetchMessages();
   }
 }
