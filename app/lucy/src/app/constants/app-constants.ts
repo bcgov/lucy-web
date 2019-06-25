@@ -46,11 +46,7 @@ export class AppConstants {
     }
 
     // API Reference data
-    static API_refrenceData = {
-        roles: `${AppConstants.API_baseURL}/account/roles`
-    }
-    
-
+    static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
 }
 
 

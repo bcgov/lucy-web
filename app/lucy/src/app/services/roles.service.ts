@@ -16,15 +16,15 @@ export class RolesService {
 
   async getRoles(): Promise<Role[] | null> {
     if (this.roles !== null) {
-      return this.roles
+      return this.roles;
     }
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_refrenceData.roles, null);
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Roles, null);
     if (response.success) {
       if ((Array.isArray(response.response) && this.objectValidator.isRoleObject(response.response[0]))) {
         this.roles = response.response;
-        return response.response
+        return response.response;
       } else {
-        return null
+        return null;
       }
     } else {
       return null;

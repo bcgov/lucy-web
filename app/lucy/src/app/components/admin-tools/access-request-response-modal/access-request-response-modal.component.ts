@@ -120,7 +120,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
   }
 
   private removeModal() {
-    $('#modal').modal('hide');
+    $('#requestResponseModal').modal('hide');
     $('.modal-backdrop').remove();
   }
 

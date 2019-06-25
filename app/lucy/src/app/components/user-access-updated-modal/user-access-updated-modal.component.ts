@@ -50,8 +50,13 @@ export class UserAccessUpdatedModalComponent implements OnInit {
   }
 
   private removeModal() {
-    $('#modal').modal('hide');
+    $('#userAccessMessageModal').modal('hide');
     $('.modal-backdrop').remove();
+  }
+
+  public showModal() {
+    console.log(`trying to show`);
+    $(`#userAccessMessageModal`).modal('show');
   }
 
 }
