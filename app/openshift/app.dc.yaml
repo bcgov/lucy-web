@@ -43,7 +43,12 @@ objects:
           deploymentConfig: ${NAME}${SUFFIX}
       spec:
         containers:
-        - image: " "
+        - env:
+          - name: CHANGE_VERSION
+            value: ${CHANGE_ID}
+          - name: API_HOST
+            value: ${API_HOST}
+          image: " "
           imagePullPolicy: Always
           name: app
           ports:
@@ -143,3 +148,7 @@ parameters:
 - name: VERSION
   value: "1.0"
 - name: HOST
+- name: CHANGE_ID
+  value: "0"
+- name: API_HOST
+  value: ""

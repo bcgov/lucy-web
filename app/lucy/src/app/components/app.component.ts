@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SsoService } from '../services/sso.service';
 import { UserService } from '../services/user.service';
 import { AppRoutes } from '../constants';
@@ -9,19 +9,19 @@ import { RouterService } from '../services/router.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewInit {
   private authStatusIsLoading: boolean | null = null;
 
-  public get isAuthenticated() : boolean {
+  public get isAuthenticated(): boolean {
     if (this.authStatusIsLoading === null || this.authStatusIsLoading) {
-      console.log("Auth status is loading")
-      return false
+      console.log('Auth status is loading');
+      return false;
     }
     return this.ssoService.isAuthenticated();
   }
 
   private get isReady(): boolean {
-    return this.authStatusIsLoading == false
+    return this.authStatusIsLoading === false;
   }
 
   constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService) {}
@@ -32,12 +32,12 @@ export class AppComponent {
 
   ngAfterViewInit() {
     this.checkAuthStatus().then((isAuthenticated) => {
-      console.log("checkAuthStatus returned: " + isAuthenticated)
-      console.log("Route is + " + this.routerService.current)
-      console.log("root is + " + AppRoutes.Root)
-      if (isAuthenticated && (this.routerService.current == AppRoutes.Root) || this.routerService.current == undefined) {
-        console.log("Redirecting to profile")
-        this.routerService.navigateTo(AppRoutes.Profile)
+      console.log(`CheckAuthStatus returned:  ${isAuthenticated}`);
+      console.log(`Route: ${this.routerService.current}`);
+      console.log(`Root:   ${AppRoutes.Root}`);
+      if (isAuthenticated && (this.routerService.current === AppRoutes.Root) || this.routerService.current === undefined) {
+        console.log(`Redirecting to profile`);
+        this.routerService.navigateTo(AppRoutes.Profile);
       }
     });
     // console.log("\n\n*** AT APP COMPONENT AFTER VIEW INIT")
