@@ -28,11 +28,15 @@ export class AdminService {
     }
   }
 
-  async respondToRequest(request: AccessRequest): Promise<boolean> {
-    request.status = 1
+  async respondToRequest(request: AccessRequest, approved: boolean): Promise<boolean> {
     console.log(`responding to request`);
-    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_AcessRequestResponse(request.request_id), request);
-    console.dir(response)
+    const body = {
+      requestedAccessCode: request.requestedAccessCode.role_code_id,
+      status: approved? 1: 2,
+      approverNote: request.approverNote
+    };
+    console.dir(body);
+    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_AcessRequestResponse(request.request_id), body);
     if (response.success) {
       return true;
     } else {
