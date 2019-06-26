@@ -88,8 +88,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
     if (this.accessRequest === undefined) {
       return;
     }
-    this.accesslucy
-    Request.approverNote = note;
+    this.accessRequest.approverNote = note;
   }
 
   @Input() accessRequest: AccessRequest;
