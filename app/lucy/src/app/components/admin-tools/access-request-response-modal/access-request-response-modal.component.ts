@@ -88,7 +88,8 @@ export class AccessRequestResponseModalComponent implements OnInit {
     if (this.accessRequest === undefined) {
       return;
     }
-    this.accessRequest.approverNote = note;
+    this.accesslucy
+    Request.approverNote = note;
   }
 
   @Input() accessRequest: AccessRequest;
@@ -103,13 +104,13 @@ export class AccessRequestResponseModalComponent implements OnInit {
   }
 
   public sumbitRequestResponse() {
-    this.admin.respondToRequest(this.accessRequest).then((success) => {
+    this.admin.respondToRequest(this.accessRequest, true).then((success) => {
      if (success) {
       this.removeModal();
       this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.responded);
      } else {
        // TODO: Handle with an alert or something
-       console.log("Could not respond");
+       console.log(`Could not respond`);
      }
     });
   }
