@@ -7,7 +7,7 @@ services:
   container_name: ${PROJECT_NAME}-${TAG}-api
   build:
    context: ./api_sources
-   dockerfile: Dockerfile.local
+   dockerfile: .build/Dockerfile.local
   ports:
    - ${API_PORT}:${API_PORT}
   environment:
@@ -67,7 +67,7 @@ services:
   container_name: ${PROJECT_NAME}-${TAG}-app
   build:
     context: ../app/lucy
-    dockerfile: Dockerfile.local
+    dockerfile: .build/Dockerfile.local
   ports:
     - ${APP_PORT}:${APP_PORT}
   volumes: 
