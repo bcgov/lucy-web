@@ -8,7 +8,8 @@ pipeline {
             agent { label 'build' }
             steps {
                 script {
-                    def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^api/|^/api' || echo -n ''", returnStatus: false, returnStdout: true).trim()
+                     echo "API Build Pipeline"
+                    def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^api/|^/api/|^app/|^/app/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
                     def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
                     echo "${filesInThisCommitAsString}"
                     if (!currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause') && !hasChangesInPath){
@@ -33,8 +34,12 @@ pipeline {
         }
         stage('Deploy (TEST)') {
             agent { label 'deploy' }
+            when {
+                branch 'staging'
+            }
             steps {
-                echo "Skipping TEST Deploy ..."
+                echo "Deploying in TEST ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
             }
             /*input {
                 message "Should we continue with deployment to TEST?"
@@ -47,8 +52,19 @@ pipeline {
         }
         stage('Deploy (PROD)') {
             agent { label 'deploy' }
+            when {
+                branch 'prod'
+            }
             steps {
-                echo "Skipping PROD Deploy ..."
+                script {
+                    def IS_APPROVED = input(message: "Deploy to PROD?", ok: "yes", parameters: [string(name: 'IS_APPROVED', defaultValue: 'yes', description: 'Deploy to PROD?')])
+                    if (IS_APPROVED != 'yes') {
+                        currentBuild.result = "ABORTED"
+                        error "User cancelled"
+                    }
+                    echo "Deploying in PROD ..."
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
+                } 
             }
             /*input {
                 message "Should we continue with deployment to TEST?"
