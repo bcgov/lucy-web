@@ -36,6 +36,7 @@ import { AddPlantObservationBasicInformationComponent } from './components/add-p
 import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species/add-plant-observation-invasive-plant-species.component';
 import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/user-access-updated-modal/user-access-updated-modal.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -60,7 +61,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     RequestCellComponent,
     AddPlantObservationBasicInformationComponent,
     AddPlantObservationInvasivePlantSpeciesComponent,
-    UserAccessUpdatedModalComponent
+    UserAccessUpdatedModalComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
