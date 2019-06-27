@@ -4,6 +4,7 @@ import { StringConstants } from 'src/app/constants/string-constants';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'src/app/constants';
 import { UserAccessType } from 'src/app/models/Role';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +13,7 @@ import { UserAccessType } from 'src/app/models/Role';
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
 
-  private userAccessType: UserAccessType = UserAccessType.DataViewer
+  private userAccessType: UserAccessType = UserAccessType.DataViewer;
 
   public get requestDataEntryAccessMessage(): string {
     return StringConstants.databaseAccess_requestDataEntryAccess_Message;
@@ -24,7 +25,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   public get showRequestDataEntryAccessMessage(): boolean {
     // TODO: Create access service: if accessService.hasDataEntryAccess
-    if (this.userAccessType == UserAccessType.DataEditor || this.userAccessType == UserAccessType.Admin) {
+    if (this.userAccessType === UserAccessType.DataEditor || this.userAccessType === UserAccessType.Admin) {
       return false;
     } else {
       return this.userService.showRequestDataEntryAccessMessage();
@@ -39,7 +40,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   // Not yet used.. if loadingQue > 0, something is loading
   public loadingQue = 0;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private alertService: AlertService) { }
 
   ngOnInit() {
     this.loadingQue = 0;

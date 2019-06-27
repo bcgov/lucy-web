@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SsoService } from '../services/sso.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
@@ -6,13 +6,15 @@ import { Message } from '../models/Message';
 import { MessageService } from '../services/message.service';
 import * as bootstrap from 'bootstrap';
 import * as $AB from 'jquery';
+import { AlertModel, AlertService } from '../services/alert.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private authStatusIsLoading: boolean | null = null;
 
   public get isAuthenticated(): boolean {
@@ -29,18 +31,41 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public userAccessUpdatedMessage: Message;
 
-  public get userAccessUpdated(): boolean {
-    return this.userAccessUpdatedMessage !== undefined;
+  // ALERTS
+  public alertMessage: AlertModel;
+  private alertsSubscription: Subscription;
+  ////////
+
+  constructor(private routerService: RouterService, private ssoService: SsoService, private messageService: MessageService, private alertService: AlertService) {
+    this.subscribeToAlertService();
   }
 
-  constructor(private routerService: RouterService, private ssoService: SsoService, private messageService: MessageService) {}
-
   ngOnInit() {
+  }
 
+  ngOnDestroy() {
+    this.unSubscribeFromAlertService();
   }
 
   ngAfterViewInit() {
     this.reRouteIfNeeded();
+    this.testAlerts();
+  }
+
+  private subscribeToAlertService() {
+    this.alertsSubscription = this.alertService.getObservable().subscribe(message => {
+      console.log(`GOT A MESSAGE`);
+      console.dir(message);
+      if (message) {
+        this.alertMessage = message;
+      } else {
+        this.alertMessage = undefined;
+      }
+    });
+  }
+
+  private unSubscribeFromAlertService() {
+    this.alertsSubscription.unsubscribe();
   }
 
   private reRouteIfNeeded() {
@@ -95,5 +120,25 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.fetchMessages();
   }
 
-  
+  private testAlerts() {
+    this.delay(100).then( () => {
+      this.alertService.show(`HELOO`, `one`, null);
+      this.delay(100).then( () => {
+        this.alertService.show(`HELOO`, `two`, null);
+        this.delay(1000).then( () => {
+          this.alertService.show(`HELOO`, `three`, null);
+        });
+      });
+      this.delay(1000).then( () => {
+        this.alertService.show(`HELOO`, `three?`, null);
+      });
+      this.delay(1000).then( () => {
+        this.alertService.show(`HELOO`, `three???`, null);
+      });
+    });
+    this.delay(1000).then( () => {
+      this.alertService.show(`Hola`, `one?`, null);
+    });
+  }
+
 }
