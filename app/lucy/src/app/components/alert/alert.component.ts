@@ -47,7 +47,7 @@ export class AlertComponent implements OnInit {
   @Input()
   set model(model: AlertModel) {
      this._model = model;
-     this.delay(1).then( () => {
+     this.delay(1).then(() => {
       this.showModal();
     });
   }

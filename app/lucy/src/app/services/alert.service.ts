@@ -36,9 +36,10 @@ export class AlertService {
    * Add Alert message to que.
    * @param body string
    * @param title string
+   * @param buttons AlertModalButton[] ! null. Array of custom buttons
    */
-  public show(body: string, title: string, buttons: AlertModalButton[] | null) {
-    let actionButtons: AlertModalButton[];
+  public show(title: string, body: string, buttons: AlertModalButton[] | null) {
+    let actionButtons: AlertModalButton[] = [];
 
     if (buttons === null || buttons.length < 1) {
       actionButtons.push({
@@ -80,6 +81,9 @@ export class AlertService {
 
   private isTheSameAlert(item1: AlertModel, item2:AlertModel) {
     // TODO: Convert to json and strigify and compare the strings instead.
+    const first = JSON.parse(JSON.stringify(item1));
+    const second = JSON.parse(JSON.stringify(item2));
+    return item1 === item2;
     return (item1.body === item2.body && item1.title === item2.title);
   }
 
