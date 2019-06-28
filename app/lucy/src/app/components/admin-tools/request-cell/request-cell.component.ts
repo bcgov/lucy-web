@@ -10,11 +10,11 @@ import { AccessRequestResponseModalEmitterResponse } from '../access-request-res
 })
 export class RequestCellComponent implements OnInit {
 
-  responding: boolean = false
+  responding = false;
 
   get userUserame(): string {
     if (this.request === undefined) {
-      return "";
+      return ``;
     } else {
       return this.request.requester.preferredUsername;
     }
@@ -22,16 +22,16 @@ export class RequestCellComponent implements OnInit {
 
   get userName(): string {
     if (this.request === undefined) {
-      return "";
+      return ``;
     } else {
-      return (this.request.requester.firstName + 
-        " " + this.request.requester.lastName);
+      return (this.request.requester.firstName +
+        ` ` + this.request.requester.lastName);
     }
   }
 
   get userRole(): string {
     if (this.request === undefined) {
-      return "";
+      return ``;
     } else {
       return this.userService.getUserAccessCode(this.request.requester).role;
     }
@@ -39,7 +39,7 @@ export class RequestCellComponent implements OnInit {
 
   get requestNote(): string {
     if (this.request === undefined) {
-      return "";
+      return ``;
     } else {
       return this.request.requestNote;
     }
@@ -47,7 +47,7 @@ export class RequestCellComponent implements OnInit {
 
   get requestedAccessCode(): string {
     if (this.request === undefined) {
-      return "";
+      return ``;
     } else {
       return this.request.requestedAccessCode.role;
     }
@@ -69,14 +69,14 @@ export class RequestCellComponent implements OnInit {
    * @param event AccessRequestResponseModalEmitterResponse
    */
   acessRequestModalEmitted(event: AccessRequestResponseModalEmitterResponse) {
-    console.log("Event heard");
+    console.log(`Event heard`);
     switch(event) {
       case AccessRequestResponseModalEmitterResponse.responded:
-          this.responding = false
+          this.responding = false;
           this.shouldRefresh.emit();
         break;
       case AccessRequestResponseModalEmitterResponse.cancelled:
-        this.responding = false
+        this.responding = false;
         break;
     }
   }

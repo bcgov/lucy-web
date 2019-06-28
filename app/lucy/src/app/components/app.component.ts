@@ -121,6 +121,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private testAlerts() {
+    return;
     this.delay(100).then( () => {
       this.alertService.show(`HELOO`, `one`, null);
       this.delay(100).then( () => {
