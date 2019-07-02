@@ -20,15 +20,16 @@
  * Imports
  */
  // Lib Import
-import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany} from 'typeorm';
+import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne} from 'typeorm';
 
 // Local Import
 import { BaseModel, LoadData } from './baseModel';
 import { UserSession, UserSessionDataController } from './user.session';
-import { RolesCode } from './appRolesCode';
+import { RolesCode, RolesCodeValue } from './appRolesCode';
 import { DataModelController } from '../data.model.controller';
 import { UserSchema, RolesCodeTableSchema} from '../database-schema';
 import { UserMessage } from './userMessage';
+import { RequestAccess } from './requestAccess';
 
 
 /**
@@ -119,11 +120,21 @@ export class User extends BaseModel implements LoadData<UserData> {
     @OneToMany(type => UserMessage, message => message.receiver)
     messages: Promise<UserMessage[]>;
 
+    @OneToOne(type => RequestAccess, requestAccess => requestAccess.requester)
+    requestAccess: Promise<RequestAccess>;
+
     loadMap(input: UserData) {
         this.firstName = input.firstName;
         this.lastName = input.lastName;
         this.email = input.email;
         //
+    }
+
+    /**
+     * @description Checking user is admin or not
+     */
+    get isAdmin(): boolean {
+        return this.roles.filter(item => item.code === RolesCodeValue.admin).length > 0;
     }
 }
 

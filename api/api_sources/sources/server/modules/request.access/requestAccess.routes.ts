@@ -44,7 +44,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
 
         // Configure route
         // Index for all request-access
-        this.router.get('/', [adminOnlyRoute()], this.index);
+        this.router.get('/', this.index);
 
         // Update request-access
         this.router.put('/:requestId', [adminOnlyRoute()], this.update);
@@ -66,11 +66,16 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
             try {
                 // Now fetch all request access and send it
                 assert(req.user, 'No user for request');
-                this.logger.info(`index | send all request access to user ${req.user.email}`);
-                return resp.status(200).json(this.successResp(await this.dataController.all({
-                    status: 0
-                })));
-
+                const user: User = req.user as User;
+                if (user.isAdmin) {
+                    this.logger.info(`index | send all request access to user ${req.user.email} (admin)`);
+                    return resp.status(200).json(this.successResp(await this.dataController.all({
+                        status: 0
+                    })));
+                } else {
+                    this.logger.info(`index | send own request access to user ${req.user.email} (admin)`);
+                    return resp.status(200).json(this.successResp(await user.requestAccess || null));
+                }
             } catch (excp) {
                 this.commonError(500, 'index', excp, resp);
                 return;
@@ -122,6 +127,15 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
         return async (req: Request, resp: Response) => {
             try {
                 assert(req.user, 'No User of the request');
+
+                // Checking request is exists or not
+                const user: User = req.user as User;
+                if (user.requestAccess) {
+                    this.logger.info(`Request Access Exists for user: ${user.email}`);
+                    resp.status(200).json(this.successResp(await user.requestAccess));
+                    return;
+                }
+
                 const input = req.body as CreateRequestAccess;
                 assert(input, 'No input to create access');
                 const requestAccess: RequestAccess = this.dataController.create();
