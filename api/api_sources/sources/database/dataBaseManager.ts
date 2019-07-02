@@ -67,6 +67,7 @@ export class DBManager extends LoggerBase {
             });
         }
         return new Promise<boolean>((resolve, reject) => {
+            DBManager.logger.info('Connecting DB ...');
             createConnection().then((connection: Connection) => {
                 this.connection = connection;
                 // DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
