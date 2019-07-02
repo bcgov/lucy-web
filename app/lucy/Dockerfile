@@ -1,40 +1,34 @@
-# Dockerfile for client application
-# Stage: 0 => Comipling and buildin g the app
-FROM node:9 
+FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 
-# Creating WORKDIR
-RUN mkdir -p /usr/app
-WORKDIR /usr/app
+# RUN mkdir -p /opt/app-root/app
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-# Copying package json to root
-COPY package*.json ./
+# Create app directory
 
-# Installing dependency
+WORKDIR /opt/app-root/src
+
+# Logging in Build Console
+RUN echo ' --- BUILD START --- '
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+# COPY PACKAGE JSON
+COPY ./package*.json ./
+
+# INSATLL NODE DEPENDENCIES
 RUN npm install
 
-# Copy all sources to root
+# Copy All the sources
 COPY ./ .
 
-# Configuration for prod
-#ARG configuration=production
-
-# Build App
+# BUILD APP
 RUN npm run build
 
-VOLUME /usr/app/dist/www
+# Logging in Build Console Build DONE
+RUN echo ' --- BUILD SUCCESS: [DONE] --- '
 
 EXPOSE 3030
 
-#ENTRYPOINT /usr/bin/tail -f /dev/null
-ENTRYPOINT ["npm", "start"]
-
-# Stage: 1 => Deploying in nginx
-#FROM nginx:1.13.3-alpine as production
-
-# Copy file from buid stage
-#COPY --from=build usr/app/dist/www/ /usr/share/nginx/html
-
-# Expose Port
-#EXPOSE 80
-
-#ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# RUN APP
+CMD ["npm", "run", "deploy_start"]

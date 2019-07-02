@@ -1,0 +1,38 @@
+FROM node:11.0.0
+
+RUN apt-get update
+RUN npm install -g npm
+
+# Create app directory
+RUN mkdir -p /home/nodejs/app
+WORKDIR /home/nodejs/app
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY ./package*.json ./
+
+# If you are building your code for production
+# RUN npm install --only=production
+RUN npm install
+
+# Bundle app source
+COPY ./ .
+
+# Cleaning any existing generated file
+RUN rm -rf ./dist-server
+
+# Building App
+RUN npm run build
+
+ENV NODE_PATH /home/nodejs/app/sources
+ENV PATH /home/nodejs/app/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+
+VOLUME /home/nodejs/app
+
+
+#ENTRYPOINT [ "npm", "run", "docker_start" ]
+
+CMD [ "npm", "run", "hotload" ]
+#ENTRYPOINT /usr/bin/tail -f /dev/null

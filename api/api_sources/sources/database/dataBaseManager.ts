@@ -1,11 +1,26 @@
+//
+// Typeorm Database connection manager class
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-05-10.
 /**
- * Database Manager
+ * Imports
  */
 import {createConnection, Connection} from 'typeorm';
 import { LoggerBase} from '../server/logger';
-import { RetryManager } from '../server/core/retry.manager';
-
-// import { User, UserRole } from './models/User';
 import { SeedManager } from './seed.manager';
 const dbConfig = require('../../ormconfig');
 
@@ -79,10 +94,8 @@ export class DBManager extends LoggerBase {
      * @method connect
      */
     async connect(): Promise<void> {
-        const retryManager = new RetryManager<void>();
         try {
-            await retryManager.tryAction(this, '_connect');
-            DBManager.logger.info('DB Connection DONE');
+            await this._connect();
             return;
         } catch (err) {
             throw Error(`Unable to connect DB, please check log`);
@@ -94,8 +107,8 @@ export class DBManager extends LoggerBase {
      * @method close
      */
     async close(): Promise<void> {
-        if (this.connection) {
-            return await this.connection.close();
+        if (this.connection && this.connection.isConnected) {
+            await this.connection.close();
         }
         return;
     }
