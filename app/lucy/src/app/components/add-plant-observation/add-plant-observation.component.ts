@@ -13,7 +13,7 @@ declare let L;
 export class AddPlantObservationComponent implements OnInit {
 
   /***** Location *****/
-  isLatLongMode: Boolean = false
+  isLatLongMode: Boolean = false;
   // * UTM
   eastings?: String;
   northings?: String;
@@ -24,11 +24,11 @@ export class AddPlantObservationComponent implements OnInit {
   long?: String;
 
   // * Validations
-  validLat: Boolean = true
-  validLong: Boolean= true
-  validEastings: Boolean = true
-  validNorthings: Boolean = true
-  validZone: Boolean = true
+  validLat: Boolean = true;
+  validLong: Boolean= true;
+  validEastings: Boolean = true;
+  validNorthings: Boolean = true;
+  validZone: Boolean = true;
 
   map?
   /******************/
