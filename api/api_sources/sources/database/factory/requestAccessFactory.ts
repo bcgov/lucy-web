@@ -21,7 +21,7 @@
  */
 import * as faker from 'faker';
 import { userFactory} from './userFactory';
-import { RequestAccess, RequestAccessController, RoleCodeController, User, RolesCodeValue, UserMessageController } from '../models';
+import { RequestAccess, RequestAccessController, RoleCodeController, User, RolesCodeValue, UserMessageController, UserMessageStatus } from '../models';
 import { UserMessage } from '../models';
 
 /**
@@ -59,7 +59,7 @@ export const userMessageFactory = async (receiverIp?: User, creatorIp?: User, no
     const message: UserMessage = UserMessageController.shared.create();
     message.body = faker.random.word();
     message.title = faker.random.word();
-    message.status = 0;
+    message.status = UserMessageStatus.unseen;
     message.type = 0;
     message.receiver = receiver;
     message.creator = creator;

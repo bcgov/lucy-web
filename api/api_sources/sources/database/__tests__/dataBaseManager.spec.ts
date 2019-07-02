@@ -18,13 +18,14 @@
 // Created by Pushan Mitra on 2019-06-10.
 
 // Unit test for database manger
+import { expect} from 'chai';
 import { SharedDBManager } from '../dataBaseManager';
 
 // Test
 describe('Database Manager and models', () => {
-    test('test shared database manager', () => {
+    it('test shared database manager', () => {
         const dbManager = SharedDBManager;
-        expect(dbManager).toBeDefined();
+        expect(dbManager).not.equal(undefined);
     });
 });
 
