@@ -1,3 +1,32 @@
-<p>
-  add-plant-observation-basic-information works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-12 subsection-title">
+      Location
+      <hr>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Easting</label>
+        <input type="text" [(ngModel)]="eastings" (change)="utmValuesChanged()"
+          class="form-control field-box"
+          [ngClass]="validEastings ? 'field-input' : 'field-input-invalid'" />
+      </div>
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Northings</label>
+        <input type="text" [(ngModel)]="northings" (change)="utmValuesChanged()"
+          class="form-control field-box"
+          [ngClass]="validNorthings ? 'field-input' : 'field-input-invalid'" />
+      </div>
+      <div class="col-sm-12 field">
+        <label for="name" class="field-header">Zone</label>
+        <input type="text" [(ngModel)]="zone" (change)="utmValuesChanged()"
+          class="form-control field-box"
+          [ngClass]="validZone ? 'field-input' : 'field-input-invalid'" />
+      </div>
+    </div>
+    <div class="col-12 col-md-8">
+        <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [center]="mapCenter" [markers]="markers">
+          </app-map-preview>
+    </div>
+  </div>
+</div>

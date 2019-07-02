@@ -99,15 +99,13 @@ export class AccessRequestResponseModalComponent implements OnInit {
     return this._model;
   }
 
-  @Input()
-  set accessRequest(model: AccessRequest) {
+  @Input() set accessRequest(model: AccessRequest) {
      this._model = model;
      this.delay(1).then(() => {
       this.showModal();
     });
   }
 
-  // @Input() accessRequest: AccessRequest;
   @Output() acessRequestModalEmitter = new EventEmitter<AccessRequestResponseModalEmitterResponse>();
   @ViewChild('requestResponseModal') private content;
 
