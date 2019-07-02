@@ -6,7 +6,7 @@ import { SsoService } from 'src/app/services/sso.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  public get isAuthenticated() : boolean {
+  public get isAuthenticated(): boolean {
     return this.ssoService.isAuthenticated();
   }
 
@@ -15,11 +15,9 @@ export class HomeComponent implements OnInit {
   }
 
   async update() {
-    
   }
 
   ngOnInit() {
-    
   }
 
 }

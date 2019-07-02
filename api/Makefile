@@ -1,6 +1,6 @@
 #!make
 # ------------------------------------------------------------------------------
-# Makefile -- HA Flight Ops
+# Makefile -- SEISM API
 # ------------------------------------------------------------------------------
 
 include .env
@@ -14,7 +14,7 @@ define deployTag
 endef
 
 #ifndef BUILD_TARGET
-#$(error The BUILD_TARGET variable is missing.)
+#$(error The BUILD_TARGET variable is missing.,)
 #endif
 
 DIR := ${CURDIR}
@@ -27,8 +27,8 @@ all 		: help
 # Task Aliases
 # ------------------------------------------------------------------------------
 
-local:      |  close-local build-local run-local         ## Task-Alias -- Run the steps for a local-build.
-local-debug: | close-local build-local run-debug
+local:      |  setup-local close-local build-local run-local         ## Task-Alias -- Run the steps for a local-build.
+local-debug: | setup-local close-local build-local run-debug
 
 schema-spy: | close-local build-local run-local wait-for-app schema-spy-run
 
@@ -55,17 +55,13 @@ print-status:
 # Development Commands
 # ------------------------------------------------------------------------------
 
-local-env:   ## -- Target : Sets up the local .env options
-	@echo "+\n++ Preparing project for local development ...\n+"
-	@cp env_config/.env.local app/.env
-
 build-local: ## -- Target : Builds the local development containers.
 	@echo "+\n++ Make: Building local Docker image ...\n+"
 	@docker-compose -f docker-compose.yml build 
 
 setup-local: ## -- Target : Prepares the environment variables for local development.
 	@echo "+\n++ Make: Preparing project for local development ...\n+"
-	@cp env_config/.env.dev .env
+	@cp env_config/env.local .env
 	@mkdir -p ./_app_data
 
 run-local: ## -- Target : Runs the local development containers.
@@ -110,6 +106,10 @@ workspace: ## <Helper> :: Executes into the workspace container.
 api: ## <Helper> :: Executes into the workspace container.
 	@echo "Shelling into local workspace ..."
 	@docker-compose exec app_api bash
+
+app: ## <Helper> :: Executes into the app container.
+	@echo "Shelling into local app workspace"
+	@docker-compose exec app bash
 
 help:  ## ** Display this help screen.
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

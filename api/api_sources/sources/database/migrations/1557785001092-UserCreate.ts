@@ -1,10 +1,40 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+//
+// Migration file for User table
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-05-20.
+/**
+ * Imports
+ */
+import {MigrationInterface, QueryRunner} from 'typeorm';
 import { DatabaseMigrationHelper} from '../migration.helpers';
-import { InitialAdmins } from '../initial-data'
-import { UserSchema, RolesCodeTableSchema } from '../database-schema'
+import { InitialUsers } from '../initial-data';
+import { UserSchema, RolesCodeTableSchema } from '../database-schema';
 
+/**
+ * @description Generated Migration file for creation of user tables and user_roles table
+ * @export class UserCreate1557785001092
+ */
 export class UserCreate1557785001092 extends UserSchema implements MigrationInterface {
 
+    /**
+     * @description Up method
+     * @param QueryRunner queryRunner
+     * @return Promise<any>
+     */
     public async up(queryRunner: QueryRunner): Promise<any> {
 
         // Creating table
@@ -15,7 +45,7 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
             ${this.table.columns.email} VARCHAR (100) NOT NULL UNIQUE,
             ${this.table.columns.preferredUsername} VARCHAR (100) NULL,
             ${this.table.columns.loginType} SMALLINT NULL,
-            ${this.table.columns.accountStatus} SMALLINT DEFAULT 0,
+            ${this.table.columns.accountStatus} SMALLINT DEFAULT 1,
             ${this.table.columns.expiryDate} DATE NULL,
             ${this.table.columns.activation} SMALLINT NULL,
             ${this.table.columns.refCurrentSession} INT NULL
@@ -36,7 +66,7 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
 
 
         // Create Initial Admins
-        for (const admin of InitialAdmins) {
+        for (const admin of InitialUsers) {
             await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB(this.table.name, admin));
             if (admin.additionalInitDataInfo) {
                 const roles = admin.additionalInitDataInfo.roles;
@@ -53,11 +83,16 @@ export class UserCreate1557785001092 extends UserSchema implements MigrationInte
         }
     }
 
+    /**
+     * @description  down method
+     * @param QueryRunner queryRunner
+     * @return Promise<any>
+     */
     public async down(queryRunner: QueryRunner): Promise<any> {
         // await queryRunner.query(``);
-        await queryRunner.query('DROP TABLE IF EXISTS user_role')
+        await queryRunner.query('DROP TABLE IF EXISTS user_role');
         await queryRunner.query(this.dropTable());
-        
     }
 
 }
+// ----------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 
-export * from './user';
+export * from './User';
 
 export * from './category';
 

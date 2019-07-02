@@ -16,10 +16,11 @@
     "noUnusedLocals": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": [
-    "./sources/**/*.ts", "sources/test-resources/globalTearDown.js", "sources/test-resources/globalTearDown.js", "sources/test-resources/globalSetup.js"
+    "./sources/**/*.ts"
   ],
   "exclude": [
     "**/node_modules",
@@ -32,8 +33,7 @@
     "src/setupTests.ts",
     "client",
     "config",
-    "dist-server",
-    "**/*.spec.ts"
+    "dist-server"
   ],
   "files": [
     "./node_modules/@types/mocha/index.d.ts",
