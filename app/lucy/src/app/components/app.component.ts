@@ -30,6 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public userAccessUpdatedMessage: Message;
+  public userAccessUpdatedMessages: Message[];
 
   // ALERTS
   public alertMessage: AlertModel;
@@ -96,13 +97,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
       console.dir(messages);
-      // this.showMessage(messages[0]);
+      const msg = {
+        body: null,
+        message_id: 2,
+        status: 0,
+        title: `Request Access rejected`,
+        type: 0
+      };
+      this.showMessage(messages[0]);
     });
   }
 
   private showMessage(message: Message) {
     this.userAccessUpdatedMessage = message;
-    this.delay(1).then( x => {
+    this.delay(1).then(x => {
       $(`#userAccessMessageModal`).modal('show');
     });
   }
@@ -112,7 +120,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param ms milliseconds
    */
   delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   userAccessUpdatedModalEmitted(event: boolean) {
@@ -122,22 +130,22 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private testAlerts() {
     return;
-    this.delay(100).then( () => {
+    this.delay(100).then(() => {
       this.alertService.show(`HELOO`, `one`, null);
-      this.delay(100).then( () => {
+      this.delay(100).then(() => {
         this.alertService.show(`HELOO`, `two`, null);
-        this.delay(1000).then( () => {
+        this.delay(1000).then(() => {
           this.alertService.show(`HELOO`, `three`, null);
         });
       });
-      this.delay(1000).then( () => {
+      this.delay(1000).then(() => {
         this.alertService.show(`HELOO`, `three?`, null);
       });
-      this.delay(1000).then( () => {
+      this.delay(1000).then(() => {
         this.alertService.show(`HELOO`, `three???`, null);
       });
     });
-    this.delay(1000).then( () => {
+    this.delay(1000).then(() => {
       this.alertService.show(`Hola`, `one?`, null);
     });
   }
