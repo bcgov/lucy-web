@@ -34,14 +34,14 @@ export class AddPlantObservationComponent implements OnInit {
   /******************/
 
   /* Survey */
-  surveyDate?: Date
-  surveyAgency?: String
-  surveyors?: String
+  surveyDate?: Date;
+  surveyAgency?: String;
+  surveyors?: String;
 
   constructor(private converterService: ConverterService) { }
 
   ngOnInit() {
-    this.initMapAt(52.068508, -123.288152, 4)
+    // this.initMapAt(52.068508, -123.288152, 4);
   }
 
   initMapAt(lat, long, zoom) {
