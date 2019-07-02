@@ -22,6 +22,7 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as cross from 'cors';
+import * as path from 'path';
 
 import {Logger} from '../logger';
 import AppConfig from '../../AppConfig';
@@ -73,6 +74,15 @@ class ExpressApp {
 
         // Cross origin
         this.app.use(cross());
+
+        // Schema-spy local url
+        const schemaSpy = path.resolve(__dirname, '../../../schemaspy');
+        this.app.use('/api/dev/schemaspy', express.static(schemaSpy));
+
+        // Code coverage 
+        const coverage = path.resolve(__dirname, '../../../coverage');
+        this.app.use('/api/dev/coverage', express.static(coverage));
+
 
         // Auth middleware
         this.app.use(await authenticationMiddleWare());
