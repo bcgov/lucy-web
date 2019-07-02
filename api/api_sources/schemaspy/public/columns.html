@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>lucy Database</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+  <!-- Bootstrap 3.3.5 -->
+  <link rel="stylesheet" href="bower/admin-lte/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="bower/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="bower/ionicons/css/ionicons.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="bower/datatables.net-bs/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="bower/datatables.net-buttons-bs/css/buttons.bootstrap.min.css">
+  <!-- Code Mirror -->
+  <link rel="stylesheet" href="bower/codemirror/codemirror.css">
+  <!-- Fonts -->
+  <link href='fonts/indieflower/indie-flower.css' rel='stylesheet' type='text/css'>
+  <link href='fonts/source-sans-pro/source-sans-pro.css' rel='stylesheet' type='text/css'>
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="bower/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- Salvattore -->
+  <link rel="stylesheet" href="bower/salvattore/salvattore.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="bower/admin-lte/dist/css/skins/_all-skins.min.css">
+  <!-- SchemaSpy -->
+  <link rel="stylesheet" href="schemaSpy.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="bower/html5shiv/html5shiv.min.js"></script>
+  <script src="bower/respond/respond.min.js"></script>
+  <![endif]-->
+</head>
+<!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+<body class="hold-transition skin-blue layout-top-nav">
+<div class="wrapper">
+  <header class="main-header">
+    <nav class="navbar navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="../index.html" class="navbar-brand"><b>lucy</b> Database</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="index.html">Tables <span class="sr-only">(current)</span></a></li>
+			<li><a href="columns.html" title="All of the columns in the schema">Columns</a></li>
+			<li><a href="constraints.html" title="Useful for diagnosing error messages that just give constraint name or number">Constraints</a></li>
+			<li><a href="relationships.html" title="Diagram of table relationships">Relationships</a></li>
+			<li><a href="orphans.html" title="View of tables with neither parents nor children">Orphan&nbsp;Tables</a></li>				
+			<li><a href="anomalies.html" title="Things that might not be quite right">Anomalies</a></li>
+			<li><a href="routines.html" title="Procedures and functions">Routines</a></li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+        <!-- Navbar Right Menu -->
+
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+  </header>
+  <!-- Main content -->
+  <!-- Full Width Column -->
+  <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <h1>Columns</h1>
+      </section>
+      <!-- Main content -->
+      <section class="content">
+		<div class="box box-primary">
+			<div class="box-header with-border">
+			  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+              <h3 class="box-title">Columns</h3>
+            </div>	
+            <div class="box-body">
+				<div class="row">
+					<div id="button_group_one" class="col-md-3 col-sm-6"></div>
+					<div id="button_group_two" class="col-md-2 col-sm-4 pull-right text-right"></div>
+				</div>
+				<table id="column_table" class="table table-bordered table-striped dataTable" role="grid">
+				<thead align='left'>
+					<tr>
+					  <th>Table</th>
+					  <th>Type</th>
+					  <th>Column</th>
+					  <th>Type</th>
+					  <th>Size</th>
+					  <th title='Are nulls allowed?'>Nulls</th>
+					  <th title='Is column automatically updated?'>Auto</th>
+					  <th title='Default value'>Default</th>
+					  <th title='Comments' class="toggle"><span>Comments</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+					 <td>user_session_activity</td>
+					 <td>Table</td>
+					 <td>updated_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row update timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>application_event</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_session_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>FOREIGN KEY reference to session table</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>r_table_name</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td>updated_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row update timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i>email</td>
+					 <td>varchar</td>
+					 <td>100</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>User email</p></td>
+					</tr>
+					<tr>
+					 <td>app_roles_code</td>
+					 <td>Table</td>
+					 <td>description</td>
+					 <td>varchar</td>
+					 <td>500</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Description of each access level item</p></td>
+					</tr>
+					<tr>
+					 <td>geometry_columns</td>
+					 <td>View</td>
+					 <td>f_table_catalog</td>
+					 <td>varchar</td>
+					 <td>256</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>o_table_schema</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>o_table_name</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>session_activity_code</td>
+					 <td>Table</td>
+					 <td>updated_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row update timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>user_message</td>
+					 <td>Table</td>
+					 <td>type</td>
+					 <td>int2</td>
+					 <td>5</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>0</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_requester_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Requester id. FOREIGN KEY reference to user table.</p></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_current_session_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>FOREIGN KEY reference to session table to track current sessions of users</p></td>
+					</tr>
+					<tr>
+					 <td>application_event</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>event_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;application_event_event_id_seq&#39;::regclass)</td>
+					 <td><p>Auto generated incremental primary key column</p></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>o_table_catalog</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session_activity</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>activity_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;user_session_activity_activity_id_seq&#39;::regclass)</td>
+					 <td><p>Activity id auto generated incremental primary key column</p></td>
+					</tr>
+					<tr>
+					 <td>geography_columns</td>
+					 <td>View</td>
+					 <td>f_table_catalog</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>last_name</td>
+					 <td>varchar</td>
+					 <td>100</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Last name of user</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>blocksize_y</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>srid</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>pixel_types</td>
+					 <td>_text</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_message</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_receiver_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td>last_active_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Timestamp to check last activity of user</p></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td>updated_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row update timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>preferred_username</td>
+					 <td>varchar</td>
+					 <td>100</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>User name provided by KeyClock</p></td>
+					</tr>
+					<tr>
+					 <td>user_role</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_access_role_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_roles_code</td>
+					 <td>Table</td>
+					 <td>role</td>
+					 <td>varchar</td>
+					 <td>100</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>User role as per access</p></td>
+					</tr>
+					<tr>
+					 <td>us_gaz</td>
+					 <td>Table</td>
+					 <td>token</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>created_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row create timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>expiry_date</td>
+					 <td>date</td>
+					 <td>13</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Expiry date of account</p></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td>created_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row create timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>user_session_activity</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_activity_code</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>FOREIGN KEY reference to session_activity_code table</p></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>session_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;user_session_session_id_seq&#39;::regclass)</td>
+					 <td><p>Session id auto generated incremental primary key column</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>num_bands</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>extent</td>
+					 <td>geometry</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_roles_code</td>
+					 <td>Table</td>
+					 <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i>code</td>
+					 <td>varchar</td>
+					 <td>100</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Application level identifier code</p></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>r_table_schema</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_event</td>
+					 <td>Table</td>
+					 <td>type</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Event type {Like info, warning, error}</p></td>
+					</tr>
+					<tr>
+					 <td>user_message</td>
+					 <td>Table</td>
+					 <td>viewed</td>
+					 <td>int2</td>
+					 <td>5</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>0</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>session_activity_code</td>
+					 <td>Table</td>
+					 <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i>code</td>
+					 <td>varchar</td>
+					 <td>100</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Unique code for activity</p></td>
+					</tr>
+					<tr>
+					 <td>user_session_activity</td>
+					 <td>Table</td>
+					 <td>created_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row create timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>geometry_columns</td>
+					 <td>View</td>
+					 <td>type</td>
+					 <td>varchar</td>
+					 <td>30</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td>token</td>
+					 <td>varchar</td>
+					 <td>5000</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Keyclock token</p></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td>created_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row create timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>scale_x</td>
+					 <td>float8</td>
+					 <td>17</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_roles_code</td>
+					 <td>Table</td>
+					 <td>updated_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row update timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>o_raster_column</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td>token_lifetime</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Token lifetime</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>spatial_index</td>
+					 <td>bool</td>
+					 <td>1</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>session_activity_code</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>session_activity_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;session_activity_code_session_activity_id_seq&#39;::regclass)</td>
+					 <td><p>Auto generated incremental primary key column</p></td>
+					</tr>
+					<tr>
+					 <td>us_rules</td>
+					 <td>Table</td>
+					 <td>is_custom</td>
+					 <td>bool</td>
+					 <td>1</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>true</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>activation</td>
+					 <td>int2</td>
+					 <td>5</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Activation status of account</p></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td>status</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Status of the request. Integer value</p></td>
+					</tr>
+					<tr>
+					 <td>geometry_columns</td>
+					 <td>View</td>
+					 <td>srid</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>spatial_ref_sys</td>
+					 <td>Table</td>
+					 <td>srtext</td>
+					 <td>varchar</td>
+					 <td>2048</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>login_type</td>
+					 <td>int2</td>
+					 <td>5</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Login type BCeID or IDR</p></td>
+					</tr>
+					<tr>
+					 <td>us_rules</td>
+					 <td>Table</td>
+					 <td>rule</td>
+					 <td>text</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_lex</td>
+					 <td>Table</td>
+					 <td>stdword</td>
+					 <td>text</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>geometry_columns</td>
+					 <td>View</td>
+					 <td>coord_dimension</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>spatial_ref_sys</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>srid</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>r_table_catalog</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_lex</td>
+					 <td>Table</td>
+					 <td>seq</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session_activity</td>
+					 <td>Table</td>
+					 <td>info</td>
+					 <td>varchar</td>
+					 <td>500</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Information of activity</p></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td>approver_note</td>
+					 <td>varchar</td>
+					 <td>500</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Note from approver</p></td>
+					</tr>
+					<tr>
+					 <td>geography_columns</td>
+					 <td>View</td>
+					 <td>coord_dimension</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_event</td>
+					 <td>Table</td>
+					 <td>note</td>
+					 <td>varchar</td>
+					 <td>500</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Note associated with event</p></td>
+					</tr>
+					<tr>
+					 <td>user_role</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_user_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_gaz</td>
+					 <td>Table</td>
+					 <td>stdword</td>
+					 <td>text</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>r_table_catalog</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td>token_expiry</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Token expiry timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>user_message</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>message_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;user_message_message_id_seq&#39;::regclass)</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session_activity</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_session_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>FOREIGN KEY reference to user_session table</p></td>
+					</tr>
+					<tr>
+					 <td>session_activity_code</td>
+					 <td>Table</td>
+					 <td>description</td>
+					 <td>varchar</td>
+					 <td>500</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Description of activity</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>scale_y</td>
+					 <td>float8</td>
+					 <td>17</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>geometry_columns</td>
+					 <td>View</td>
+					 <td>f_table_name</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>geography_columns</td>
+					 <td>View</td>
+					 <td>srid</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>r_raster_column</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>requested_access_code</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>FOREIGN KEY reference to login_access_code table. Requested access code id</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>r_table_schema</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>first_name</td>
+					 <td>varchar</td>
+					 <td>100</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>First name of user</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>regular_blocking</td>
+					 <td>bool</td>
+					 <td>1</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>same_alignment</td>
+					 <td>bool</td>
+					 <td>1</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>session_activity_code</td>
+					 <td>Table</td>
+					 <td>created_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row create timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>updated_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row update timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>geography_columns</td>
+					 <td>View</td>
+					 <td>f_table_name</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_roles_code</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>role_code_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;app_roles_code_role_code_id_seq&#39;::regclass)</td>
+					 <td><p>Auto generated incremental primary key column</p></td>
+					</tr>
+					<tr>
+					 <td>spatial_ref_sys</td>
+					 <td>Table</td>
+					 <td>auth_srid</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td>account_status</td>
+					 <td>int2</td>
+					 <td>5</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>1</td>
+					 <td><p>Status of account</p></td>
+					</tr>
+					<tr>
+					 <td>user_message</td>
+					 <td>Table</td>
+					 <td>body</td>
+					 <td>varchar</td>
+					 <td>500</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>spatial_ref_sys</td>
+					 <td>Table</td>
+					 <td>auth_name</td>
+					 <td>varchar</td>
+					 <td>256</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_migration_table</td>
+					 <td>Table</td>
+					 <td>timestamp</td>
+					 <td>int8</td>
+					 <td>19</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>application_event</td>
+					 <td>Table</td>
+					 <td>created_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row create timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>blocksize_x</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_lex</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;us_lex_id_seq&#39;::regclass)</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_lex</td>
+					 <td>Table</td>
+					 <td>word</td>
+					 <td>text</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_message</td>
+					 <td>Table</td>
+					 <td>title</td>
+					 <td>varchar</td>
+					 <td>200</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_message</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_created_by</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>overview_factor</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td>request_note</td>
+					 <td>varchar</td>
+					 <td>500</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Note with request</p></td>
+					</tr>
+					<tr>
+					 <td>application_user</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>user_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;application_user_user_id_seq&#39;::regclass)</td>
+					 <td><p>Auto generated incremental primary key column</p></td>
+					</tr>
+					<tr>
+					 <td>application_event</td>
+					 <td>Table</td>
+					 <td>updated_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row update timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>nodata_values</td>
+					 <td>_float8</td>
+					 <td>17</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_migration_table</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;app_migration_table_id_seq&#39;::regclass)</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_migration_table</td>
+					 <td>Table</td>
+					 <td>name</td>
+					 <td>varchar</td>
+					 <td>2147483647</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>request_id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;access_request_request_id_seq&#39;::regclass)</td>
+					 <td><p>Auto generated incremental primary key column</p></td>
+					</tr>
+					<tr>
+					 <td>application_event</td>
+					 <td>Table</td>
+					 <td>source</td>
+					 <td>varchar</td>
+					 <td>200</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Event source information</p></td>
+					</tr>
+					<tr>
+					 <td>raster_columns</td>
+					 <td>View</td>
+					 <td>out_db</td>
+					 <td>_bool</td>
+					 <td>1</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_lex</td>
+					 <td>Table</td>
+					 <td>is_custom</td>
+					 <td>bool</td>
+					 <td>1</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>true</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>geometry_columns</td>
+					 <td>View</td>
+					 <td>f_geometry_column</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>r_raster_column</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_rules</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;us_rules_id_seq&#39;::regclass)</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_gaz</td>
+					 <td>Table</td>
+					 <td>seq</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>app_roles_code</td>
+					 <td>Table</td>
+					 <td>created_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>now()</td>
+					 <td><p>Row create timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>spatial_ref_sys</td>
+					 <td>Table</td>
+					 <td>proj4text</td>
+					 <td>varchar</td>
+					 <td>2048</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>access_request</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_approver_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Approver id. FOREIGN KEY reference to user table.</p></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td>last_login_at</td>
+					 <td>timestamp</td>
+					 <td>29</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>Last login timestamp</p></td>
+					</tr>
+					<tr>
+					 <td>geometry_columns</td>
+					 <td>View</td>
+					 <td>f_table_schema</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>geography_columns</td>
+					 <td>View</td>
+					 <td>type</td>
+					 <td>text</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>user_session</td>
+					 <td>Table</td>
+					 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>ref_user_id</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td><p>FOREIGN KEY reference to user table</p></td>
+					</tr>
+					<tr>
+					 <td>geography_columns</td>
+					 <td>View</td>
+					 <td>f_table_schema</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_gaz</td>
+					 <td>Table</td>
+					 <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i>id</td>
+					 <td>serial</td>
+					 <td>10</td>
+					 <td title=''></td>
+					 <td title='Automatically updated by the database'>√</td>
+					 <td>nextval(&#39;us_gaz_id_seq&#39;::regclass)</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>raster_overviews</td>
+					 <td>View</td>
+					 <td>r_table_name</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_gaz</td>
+					 <td>Table</td>
+					 <td>is_custom</td>
+					 <td>bool</td>
+					 <td>1</td>
+					 <td title=''></td>
+					 <td title=''></td>
+					 <td>true</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_lex</td>
+					 <td>Table</td>
+					 <td>token</td>
+					 <td>int4</td>
+					 <td>10</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>geography_columns</td>
+					 <td>View</td>
+					 <td>f_geography_column</td>
+					 <td>name</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+					<tr>
+					 <td>us_gaz</td>
+					 <td>Table</td>
+					 <td>word</td>
+					 <td>text</td>
+					 <td>2147483647</td>
+					 <td title='nullable'>√</td>
+					 <td title=''></td>
+					 <td>null</td>
+					 <td></td>
+					</tr>
+								</tbody>
+				</table>				
+			</div>
+		</div>	
+      </section>
+	  <script>
+          var config = {
+	          pagination: false
+          }
+	  </script>    
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <div>
+      <div class="pull-right hidden-xs">
+        <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
+        <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
+      </div>
+      <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.0.0-SNAPSHOT</a></strong>
+    </div>
+    <!-- /.container -->
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="bower/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="bower/admin-lte/plugins/jQueryUI/jquery-ui.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="bower/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="bower/datatables.net/jquery.dataTables.min.js"></script>
+<script src="bower/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="bower/datatables.net-buttons/dataTables.buttons.min.js"></script>
+<script src="bower/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="bower/datatables.net-buttons/buttons.html5.min.js"></script>
+<script src="bower/datatables.net-buttons/buttons.print.min.js"></script>
+<script src="bower/datatables.net-buttons/buttons.colVis.min.js"></script>
+<!-- SheetJS -->
+<script src="bower/js-xlsx/xlsx.full.min.js"></script>
+<!-- pdfmake -->
+<script src="bower/pdfmake/pdfmake.min.js"></script>
+<script src="bower/pdfmake/vfs_fonts.js"></script>
+<!-- SlimScroll -->
+<script src="bower/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="bower/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- Salvattore -->
+<script src="bower/salvattore/salvattore.min.js"></script>
+<!-- AnchorJS -->
+<script src="bower/anchor-js/anchor.min.js"></script>
+<!-- CodeMirror -->
+<script src="bower/codemirror/codemirror.js"></script>
+<script src="bower/codemirror/sql.js"></script>
+<!-- AdminLTE App -->
+<script src="bower/admin-lte/dist/js/app.min.js"></script>
+<script src="column.js"></script>
+<script src="schemaSpy.js"></script>
+</body>
+</html>

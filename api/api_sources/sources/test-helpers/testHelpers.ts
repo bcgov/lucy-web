@@ -20,7 +20,7 @@
  * Imports
  */
 import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
-import {expect, should} from 'chai';
+import { should } from 'chai';
 
 import { action } from '../libs/utilities';
 import { SharedDBManager } from '../database/dataBaseManager';
