@@ -80,11 +80,9 @@ export class AlertService {
   }
 
   private isTheSameAlert(item1: AlertModel, item2:AlertModel) {
-    // TODO: Convert to json and strigify and compare the strings instead.
     const first = JSON.parse(JSON.stringify(item1));
     const second = JSON.parse(JSON.stringify(item2));
-    return item1 === item2;
-    return (item1.body === item2.body && item1.title === item2.title);
+    return first === second;
   }
 
   /**
