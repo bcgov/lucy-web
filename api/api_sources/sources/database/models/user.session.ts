@@ -24,7 +24,7 @@ import { BaseModel } from './baseModel';
 import { User } from './user';
 import { SessionActivity } from './userSessionActivity';
 import { DataModelController } from '../data.model.controller';
-import { UserSchema, UserSessionSchema} from '../database-schema'
+import { UserSchema, UserSessionSchema} from '../database-schema';
 
 /**
  * @description Model class to hold and handle user session data

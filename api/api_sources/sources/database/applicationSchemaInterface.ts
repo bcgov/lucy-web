@@ -121,8 +121,13 @@ export class  BaseTableSchema {
      * @return string
      */
     createTimestampsColumn(): string {
-        return `ALTER TABLE ${this.table.name} ADD COLUMN ${BaseTableSchema.timestampColumns.createdAt} TIMESTAMP DEFAULT NOW();
-        ALTER TABLE ${this.table.name} ADD COLUMN ${BaseTableSchema.timestampColumns.updatedAt} TIMESTAMP DEFAULT NOW();`;
+        const createAtColumnName = BaseTableSchema.timestampColumns.createdAt;
+        const updateAtColumnName = BaseTableSchema.timestampColumns.updatedAt;
+        const tableName = this.table.name;
+        return `ALTER TABLE ${tableName} ADD COLUMN ${createAtColumnName} TIMESTAMP DEFAULT NOW();
+        ALTER TABLE ${tableName} ADD COLUMN ${updateAtColumnName} TIMESTAMP DEFAULT NOW();
+        COMMENT ON COLUMN ${tableName}.${createAtColumnName} IS 'Timestamp column to check creation time of record';
+        COMMENT ON COLUMN ${tableName}.${updateAtColumnName} IS 'Timestamp column to check modify time of record';`;
     }
 
     /**

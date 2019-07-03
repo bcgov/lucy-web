@@ -13,6 +13,6 @@ module.exports = {
     },
     migrationsTableName: "app_migration_table",
     synchronize: false,
-    logging: false,//(process.env.NODE_ENV === 'unit_test') ? false : true,
+    logging: (process.env.DB_LOG === 'yes') ? true : false,
     dirname: __dirname
  }
