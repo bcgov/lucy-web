@@ -103,14 +103,14 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   }
 
   private initWithOpenStreet() {
-    // UserOpen street tiles
+    // Use Open street tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
   }
 
   private initMapWithGoogleSatellite() {
-    // USer Google tiles
+    // Use Google tiles
     L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
