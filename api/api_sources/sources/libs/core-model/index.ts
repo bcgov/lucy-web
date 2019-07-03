@@ -1,5 +1,5 @@
 //
-// Migration run script
+// Core Data Model Functionality
 //
 // Copyright © 2019 Province of British Columbia
 //
@@ -16,24 +16,8 @@
 // limitations under the License.
 //
 // Created by Pushan Mitra on 2019-06-10.
-//
-
 /**
- * Imports
+ * Exports
  */
-import 'reflect-metadata';
-
-/**
- * Application Migration task
- */
-import { AppDatabaseMigrationManager } from '../sources/database/migration.helpers';
-/**
- * Script
- */
-(() => {
-    // Refreshing database: Drop all existing migration and re
-    AppDatabaseMigrationManager.shared.refresh();
-    // AppDatabaseMigrationManager.shared.migrate();
-})();
-
-// -----
+export * from './prop.des';
+// ---------------------------------------------

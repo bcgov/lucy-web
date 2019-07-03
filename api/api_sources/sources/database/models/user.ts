@@ -20,7 +20,7 @@
  * Imports
  */
  // Lib Import
-import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne} from 'typeorm';
+import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn} from 'typeorm';
 
 // Local Import
 import { BaseModel, LoadData } from './baseModel';
@@ -30,6 +30,8 @@ import { DataModelController } from '../data.model.controller';
 import { UserSchema, RolesCodeTableSchema} from '../database-schema';
 import { UserMessage } from './userMessage';
 import { RequestAccess } from './requestAccess';
+import {  ModelProperty, PropertyType } from '../../libs/core-model';
+import { RecordTableSchema } from '../database-schema/base.record.schema';
 
 
 /**
@@ -63,38 +65,45 @@ export interface UserData {
 export class User extends BaseModel implements LoadData<UserData> {
     // Props
     @PrimaryGeneratedColumn()
+    @ModelProperty({type: PropertyType.number})
     user_id: number;
 
     @Column()
+    @ModelProperty({type: PropertyType.string})
     email: string;
 
     @Column({
         name: UserSchema.schema.columns.firstName,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string})
     firstName: string;
 
     @Column({
         name: UserSchema.schema.columns.lastName,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string})
     lastName: string;
 
     @Column({
         name: UserSchema.schema.columns.preferredUsername,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string})
     preferredUsername: string;
 
     @Column({
         name: UserSchema.schema.columns.refCurrentSession,
         nullable: true,
     })
+    @ModelProperty({type: PropertyType.number})
     currentSessionId?: number;
 
     @Column({
         name: UserSchema.schema.columns.accountStatus
     })
+    @ModelProperty({type: PropertyType.number})
     accountStatus: number;
 
 
@@ -110,6 +119,7 @@ export class User extends BaseModel implements LoadData<UserData> {
             referencedColumnName: RolesCodeTableSchema.schema.columns.id
         }
     })
+    @ModelProperty({type: PropertyType.object})
     roles: RolesCode[];
 
 
@@ -133,9 +143,29 @@ export class User extends BaseModel implements LoadData<UserData> {
     /**
      * @description Checking user is admin or not
      */
+    @ModelProperty({type: PropertyType.boolean})
     get isAdmin(): boolean {
         return this.roles.filter(item => item.code === RolesCodeValue.admin).length > 0;
     }
+}
+
+/**
+ * @description Base class for record
+ */
+export abstract class Record {
+    @ManyToOne( type => User)
+    @JoinColumn({
+        name: RecordTableSchema.auditColumns.createdBy,
+        referencedColumnName: UserSchema.schema.columns.id
+    })
+    createdBy: Promise<User>;
+
+    @ManyToOne( type => User)
+    @JoinColumn({
+        name: RecordTableSchema.auditColumns.updatedBy,
+        referencedColumnName: UserSchema.schema.columns.id
+    })
+    updatedBy: User;
 }
 
 /**

@@ -26,4 +26,5 @@ export * from './appRolesCode';
 export * from './userSessionActivity';
 export * from './requestAccess';
 export * from './userMessage';
+export * from './species';
 // ----------------------------------------------------------------------------------------------------------------

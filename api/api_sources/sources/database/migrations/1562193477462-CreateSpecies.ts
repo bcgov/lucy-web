@@ -1,5 +1,5 @@
 //
-// Migration file for User message table
+// Migration file for Species table
 //
 // Copyright © 2019 Province of British Columbia
 //
@@ -20,13 +20,12 @@
  * Imports
  */
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { UserMessagesSchema, UserSchema } from '../database-schema';
+import { SpeciesSchema } from '../database-schema';
 
 /**
- * @description Generated Migration file for creation of user message table
- * @export class UserMessageCreate1560098448360
+ * @description Migration class to create Species table
  */
-export class UserMessageCreate1560098448360 extends UserMessagesSchema implements MigrationInterface {
+export class CreateSpecies1562193477462 extends SpeciesSchema implements MigrationInterface {
 
     /**
      * @description Up method
@@ -34,24 +33,30 @@ export class UserMessageCreate1560098448360 extends UserMessagesSchema implement
      * @return Promise<any>
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
+        // Create Table
         await queryRunner.query(`CREATE TABLE ${this.table.name} (
             ${this.table.columns.id} SERIAL PRIMARY KEY,
-            ${this.table.columns.title} VARCHAR(200) NULL,
-            ${this.table.columns.body} VARCHAR(500) NULL,
-            ${this.table.columns.type} SMALLINT NOT NULL DEFAULT 0,
-            ${this.table.columns.status} SMALLINT NOT NULL DEFAULT 0,
-            ${this.table.columns.refReceiverId} INT NULL REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id}) ON DELETE CASCADE,
-            ${this.table.columns.refCreatorId} INT NULL REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id}) ON DELETE SET NULL
-        );`);
+            ${this.table.columns.mapCode} VARCHAR(4) NULL,
+            ${this.table.columns.earlyDetection} SMALLINT NULL,
+            ${this.table.columns.cmt} SMALLINT NULL,
+            ${this.table.columns.shp} SMALLINT NULL,
+            ${this.table.columns.species} VARCHAR(4) NULL,
+            ${this.table.columns.genus} VARCHAR(4) NULL,
+            ${this.table.columns.commonName} VARCHAR(50) NULL,
+            ${this.table.columns.latinName} VARCHAR(50) NULL
+        )`);
 
-        // Create timestamp
+        // Create Timestamp Column
         await queryRunner.query(this.createTimestampsColumn());
 
-        // Create comments
+        // Create Audit column
+        await queryRunner.query(this.createAuditColumns());
+
+        // Create Comments
         await queryRunner.query(this.createComments());
     }
 
-     /**
+    /**
      * @description  down method
      * @param QueryRunner queryRunner
      * @return Promise<any>
@@ -59,6 +64,5 @@ export class UserMessageCreate1560098448360 extends UserMessagesSchema implement
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(this.dropTable());
     }
-}
-// ----------------------------------------------------------------------------------------------------------------
 
+}
