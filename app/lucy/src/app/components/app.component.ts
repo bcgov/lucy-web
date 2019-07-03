@@ -97,6 +97,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
       console.dir(messages);
+      /// For testing
       const msg = {
         body: null,
         message_id: 2,
@@ -104,13 +105,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         title: `Request Access rejected`,
         type: 0
       };
+      /////
       this.showMessage(messages[0]);
     });
   }
 
   private showMessage(message: Message) {
     this.userAccessUpdatedMessage = message;
-    this.delay(1).then(x => {
+    this.delay(1).then(() => {
       $(`#userAccessMessageModal`).modal('show');
     });
   }
