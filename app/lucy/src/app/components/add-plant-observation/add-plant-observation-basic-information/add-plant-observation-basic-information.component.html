@@ -24,7 +24,7 @@
           [ngClass]="validZone ? 'field-input' : 'field-input-invalid'" />
       </div>
     </div>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-8"> 
         <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [center]="mapCenter" [markers]="markers">
           </app-map-preview>
     </div>
