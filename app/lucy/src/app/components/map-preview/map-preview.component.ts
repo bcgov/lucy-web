@@ -152,6 +152,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   //////////////////////////////////////////////
 
   ////////////// Markers //////////////
+  /**
+   * Remove all existing markers
+   * and add all markers in this.markers.
+   */
   private addMarkers() {
     this.clearMarkers();
     this.markers.forEach((element) => {
@@ -159,6 +163,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     });
   }
 
+  /**
+   * Remove All Markers
+   */
   private clearMarkers() {
     if (!this.markerGroup) { return; }
     this.markerGroup.clearLayers();
