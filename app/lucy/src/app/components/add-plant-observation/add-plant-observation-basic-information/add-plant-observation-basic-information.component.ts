@@ -100,4 +100,30 @@ export class AddPlantObservationBasicInformationComponent implements OnInit {
 
   }
 
+  // testWithLatLon() {
+  //   this.lat = "48.430562"
+  //   this.long = "-123.365831"
+  //   this.latLongValuesChanged()
+  // }
+
+  // testWithUTM() {
+  //   this.eastings = "472938.52"
+  //   this.northings = "5364221.84"
+  //   this.zone = "10"
+  //   this.utmValuesChanged()
+  // }
+
+  // testWithKewloanaLatLong() {
+  //   this.lat = "49.9055772"
+  //   this.long = "-119.472584"
+  //   this.latLongValuesChanged()
+  // }
+
+  // testWithKewloanaUTM() {
+  //   this.eastings = "322462.246733"
+  //   this.northings = "5531063.683699"
+  //   this.zone = "11"
+  //   this.utmValuesChanged()
+  // }
+
 }

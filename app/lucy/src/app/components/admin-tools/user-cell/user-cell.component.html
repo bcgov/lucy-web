@@ -11,7 +11,7 @@
       <div class="col-sm-12 field d-inline-block" ngbDropdown #roleDropdown="ngbDropdown">
         <label for="UserRole" class="field-header">Role</label>
         <input type="text" class="form-control field-box field-input" id="rolesDropdown" ngbDropdownAnchor
-          (focus)="roleDropdown.open()" readonly [(ngModel)]="user.roles[user.roles.length-1].role" (change)="setUserRole(role)" />
+          (focus)="roleDropdown.open()" readonly [(ngModel)]="user.roles[user.roles.length-1].role" (change)="setUserRole(role)"/>
         <div ngbDropdownMenu aria-labelledby="rolesDropdown">
           <div class="col-12" *ngFor="let role of activeRoles; let i = index">
             <button class="btn" ngbDropdownItem (click)='setUserRole(role)'>

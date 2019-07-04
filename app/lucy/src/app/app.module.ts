@@ -38,6 +38,8 @@ import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/user-access-updated-modal/user-access-updated-modal.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { MapPreviewComponent } from './components/map-preview/map-preview.component';
+import { AddPlantObservationInvasivePlantSpeciesCellComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species-cell/add-plant-observation-invasive-plant-species-cell.component';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -64,7 +66,9 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AddPlantObservationInvasivePlantSpeciesComponent,
     UserAccessUpdatedModalComponent,
     AlertComponent,
-    MapPreviewComponent
+    MapPreviewComponent,
+    AddPlantObservationInvasivePlantSpeciesCellComponent,
+    DropdownComponent
   ],
   imports: [
     BrowserModule,
