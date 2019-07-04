@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormMode } from 'src/app/models';
+import { ValidationService } from 'src/app/services/validation.service';
 
 @Component({
   selector: 'app-add-plant-observation-invasive-plant-species-cell',
@@ -7,15 +9,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnInit {
 
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  // Get
+  get mode(): FormMode {
+    return this._mode;
+  }
+  // Set
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+  }
+  ////////////////////
+
   items: string[] = [`one`, `two`];
 
-  constructor() { }
+  constructor(private validation: ValidationService) { }
 
   ngOnInit() {
   }
 
-  dropdownSelectionChanged(value: string) {
-    console.log(value)
+  fieldValueChanged(value: string) {
+    console.log(value);
   }
 
   invasivePlantSpeciesChanged(value: string) {

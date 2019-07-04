@@ -118,9 +118,9 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * For refreshing navbar content that
-   * may change based on user's 
+   * may change based on user's
    * interactions with the app
-   */ 
+   */
   private listenForRouteChanges() {
     this.routeEventsListener = this.routerService.events.subscribe((val) => {
       this.setInitials();
@@ -136,7 +136,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Setting User's initials in 
+   * Setting User's initials in
    * userInitials to be consumed by HTML
    */
   private setInitials() {
@@ -147,7 +147,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Setting User's initials in 
+   * Setting User's initials in
    * userInitials to be consumed by HTML
    */
   private setAccessType() {
@@ -158,9 +158,9 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * SSO's logout function will 
-   * Remove cookies, 
-   * end refresh timer, 
+   * SSO's logout function will
+   * Remove cookies,
+   * end refresh timer,
    * and end keycloak session
    * by redirecting to an external
    * and redirecting back.

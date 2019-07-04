@@ -1,0 +1,6 @@
+<div class="col-sm-12 field">
+    <label class="field-header">{{header}}</label>
+    <input type="text" [(ngModel)]="value"
+      class="form-control field-box"
+      [ngClass]="isValid ? 'field-input' : 'field-input-invalid'" />
+  </div>
