@@ -8,32 +8,36 @@
   <div class="col-12">
     <div class="row">
       <div class="col-12 col-md-4">
-        <app-dropdown [items]="items" [fieldHeader]="'Jurisdiction'"
+        <app-dropdown [mode]="mode" [items]="items" [fieldHeader]="'Jurisdiction'"
           (selectionChanged)='jurisdictionChanged($event)'></app-dropdown>
       </div>
       <div class="col-12 col-md-4">
-        <app-dropdown [items]="items" [fieldHeader]="'Density'"
+        <app-dropdown [mode]="mode" [items]="items" [fieldHeader]="'Density'"
           (selectionChanged)='densityChanged($event)'></app-dropdown>
       </div>
       <div class="col-12 col-md-4">
-        <app-dropdown [items]="items" [fieldHeader]="'Distribution'"
+        <app-dropdown [mode]="mode" [items]="items" [fieldHeader]="'Distribution'"
           (selectionChanged)='distributionChanged($event)'></app-dropdown>
       </div>
     </div>
+  </div>
+  <!-- Plot Dimention -->
+  <div class="col-12">
+    <app-field [mode]="mode" [header]="'test'" [value]="'hi'" [validationFunc]="validation.isValidLatitude" (valueChanged)='fieldValueChanged($event)'></app-field>
   </div>
   <!-- Survey Mode, Soil Texture Code, Specific Use Code -->
   <div class="col-12">
       <div class="row">
         <div class="col-12 col-md-4">
-          <app-dropdown [items]="items" [fieldHeader]="'Survey Mode'"
+          <app-dropdown [mode]="mode" [items]="items" [fieldHeader]="'Survey Mode'"
             (selectionChanged)='surveyModeChanged($event)'></app-dropdown>
         </div>
         <div class="col-12 col-md-4">
-          <app-dropdown [items]="items" [fieldHeader]="'Soil Texture Code'"
+          <app-dropdown [mode]="mode" [items]="items" [fieldHeader]="'Soil Texture Code'"
             (selectionChanged)='soilTextureCodeChanged($event)'></app-dropdown>
         </div>
         <div class="col-12 col-md-4">
-          <app-dropdown [items]="items" [fieldHeader]="'Specific Use Code'"
+          <app-dropdown [mode]="mode" [items]="items" [fieldHeader]="'Specific Use Code'"
             (selectionChanged)='specificUseCodeChanged($event)'></app-dropdown>
         </div>
       </div>

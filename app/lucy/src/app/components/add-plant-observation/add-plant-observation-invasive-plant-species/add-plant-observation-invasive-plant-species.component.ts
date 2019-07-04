@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { FormMode } from 'src/app/models';
 
 export interface AddPlantObservationInvasivePlantSpeciesEmitter {
   object: any
@@ -11,9 +12,22 @@ export interface AddPlantObservationInvasivePlantSpeciesEmitter {
 })
 export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit {
 
-  constructor() { }
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  // Get
+  get mode(): FormMode {
+    return this._mode;
+  }
+  // Set
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+  }
+  ////////////////////
 
   @Output() addPlantObservationInvasivePlantSpeciesEmitter = new EventEmitter<AddPlantObservationInvasivePlantSpeciesEmitter>();
+
+  constructor() { }
+
   ngOnInit() {
   }
 

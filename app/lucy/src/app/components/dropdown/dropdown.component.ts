@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormMode } from 'src/app/models';
 
 @Component({
   selector: 'app-dropdown',
@@ -6,6 +7,18 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./dropdown.component.css']
 })
 export class DropdownComponent implements OnInit {
+
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  // Get
+  get mode(): FormMode {
+    return this._mode;
+  }
+  // Set
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+  }
+  ////////////////////
 
   @Input() fieldHeader = ``;
 

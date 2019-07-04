@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
+import { FormMode } from 'src/app/models';
 
 @Component({
   selector: 'app-add-plant-observation-basic-information',
@@ -29,17 +30,29 @@ export class AddPlantObservationBasicInformationComponent implements OnInit {
 
   get validEastings(): boolean {
     return this.validation.isValidNumber(this.eastings)
-       && this.validation.hasMinDecimalPlaces(this.eastings, this.minUTMDecimals);
+      && this.validation.hasMinDecimalPlaces(this.eastings, this.minUTMDecimals);
   }
 
   get validNorthings(): boolean {
     return this.validation.isValidNumber(this.northings)
-       && this.validation.hasMinDecimalPlaces(this.northings, this.minUTMDecimals);
+      && this.validation.hasMinDecimalPlaces(this.northings, this.minUTMDecimals);
   }
 
   get validZone(): boolean {
     return this.validation.isValidNumber(this.zone);
   }
+
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  // Get
+  get mode(): FormMode {
+    return this._mode;
+  }
+  // Set
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+  }
+  ////////////////////
 
   constructor(private converterService: ConverterService, private validation: ValidationService) { }
 
@@ -52,7 +65,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit {
   }
 
   private utmCoordinatesAreValid(): boolean {
-    console.log(this.validNorthings );
+    console.log(this.validNorthings);
     console.log(this.validEastings);
     console.log(this.validZone);
     return (this.validNorthings && this.validEastings && this.validZone);
