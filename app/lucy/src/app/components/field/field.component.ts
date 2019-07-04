@@ -7,21 +7,12 @@ import { ValidationService } from 'src/app/services/validation.service';
   templateUrl: './field.component.html',
   styleUrls: ['./field.component.css']
 })
-export class FieldComponent implements OnInit {
 
-  // Response
+export class FieldComponent implements OnInit {
   @Output() valueChanged = new EventEmitter<string>();
 
   @Input() header = '';
-
-  get isValid(): boolean {
-    if (this.validationFunc) {
-      const result = this.validationFunc(this.value);
-      return result;
-    } else {
-      return true;
-    }
-  }
+  @Input() validationFunc: any;
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -47,8 +38,21 @@ export class FieldComponent implements OnInit {
     this.valueChanged.emit(value);
   }
   ////////////////////
-
-  @Input() validationFunc: any;
+ 
+  /**
+   * If a validation function has been
+   * passed to @Input validationFunc, the result
+   * will be used.
+   * Otherwise returns true.
+   */
+  get isValid(): boolean {
+    if (this.validationFunc) {
+      const result = this.validationFunc(this.value);
+      return result;
+    } else {
+      return true;
+    }
+  }
 
   constructor(private validation: ValidationService) { }
 
