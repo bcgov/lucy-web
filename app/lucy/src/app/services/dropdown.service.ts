@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Juristiction, InvasivePlantSpecies } from '../models';
+import { Jurisdiction, InvasivePlantSpecies } from '../models';
 
 export interface DropdownObject {
   name: string;
@@ -15,7 +15,7 @@ export class DropdownService {
   /**
    * TODO: Everything is Incomplete
    */
-  private juristictions: Juristiction[];
+  private juristictions: Jurisdiction[];
   private invasivePlantSpecies: InvasivePlantSpecies[];
   private surveyModes: string[];
   private soilTextureCodes: string[];
@@ -26,7 +26,7 @@ export class DropdownService {
 
   constructor() { }
 
-  private createDropdownObjectsFrom(objects: any[], displayValue: string): DropdownObject[] {
+  public createDropdownObjectsFrom(objects: any[], displayValue: string): DropdownObject[] {
     const dropdownObjects: DropdownObject[] = [];
     for (const object of objects) {
       dropdownObjects.push( {
@@ -91,17 +91,17 @@ export class DropdownService {
     // return ['Low', 'Medium', 'High'];
   }
 
-  private getDummyJuristictions(): Juristiction[] {
+  private getDummyJuristictions(): Jurisdiction[] {
     return ([
       {
         juristiction_id: 1,
         Code: `FLNRO`,
-        decsciption: `describing`,
+        description: `describing`,
       },
       {
         juristiction_id: 2,
         Code: `NRS`,
-        decsciption: `describing`,
+        description: `describing`,
       }
     ])
 
