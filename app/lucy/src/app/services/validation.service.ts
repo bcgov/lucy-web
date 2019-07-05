@@ -48,7 +48,7 @@ export class ValidationService {
   public isValidLatitude(latitude: string) {
     const regexpOne = new RegExp('^[+-]?((90\\.?0*$)|(([0-8]?[0-9])\\.?[0-9]*$))');
     const regexpOneResult = regexpOne.test(latitude);
-    console.log(regexpOneResult);
+    // console.log(regexpOneResult);
     return regexpOneResult;
 
     const regexpTwo = new RegExp('^(\\+|-)?(\\d\.\\d{1,6}|[1-8]\\d\\.\\d{1,6}|90\\.0{1,6})$');
