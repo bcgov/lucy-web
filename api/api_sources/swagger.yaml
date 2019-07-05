@@ -102,6 +102,22 @@ definitions:
         type: string
       createdAt:
         type: string
+  ApplicationCode:
+    type: object
+    required:
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
   UserSession:
     type: object
     required:
@@ -179,6 +195,122 @@ definitions:
       creator:
         type: object
         $ref: '#/definitions/User'
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Species:
+    type: object
+    required:
+      - species_id
+      - mapCode
+      - earlyDetection
+      - containmentSpecies
+      - containmentSpacialRef
+      - species
+      - genus
+      - commonName
+      - latinName
+      - updateAt
+      - createdAt
+    properties:
+      species_id:
+        type: number
+      mapCode:
+        type: string
+      earlyDetection:
+        type: boolean
+      containmentSpecies:
+        type: number
+      containmentSpacialRef:
+        type: number
+      species:
+        type: string
+      genus:
+        type: string
+      commonName:
+        type: string
+      latinName:
+        type: string
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  JurisdictionCode:
+    type: object
+    required:
+      - jurisdiction_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      jurisdiction_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Observation:
+    type: object
+    required:
+      - observation_id
+      - date
+      - lat
+      - long
+      - speciesObservations
+      - updateAt
+      - createdAt
+    properties:
+      observation_id:
+        type: number
+      date:
+        type: string
+      lat:
+        type: number
+      long:
+        type: number
+      speciesObservations:
+        type: object
+        $ref: '#/definitions/ObservationSpecies'
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationSpecies:
+    type: object
+    required:
+      - observation_species_id
+      - width
+      - length
+      - accessDescription
+      - species
+      - jurisdiction
+      - observation
+      - updateAt
+      - createdAt
+    properties:
+      observation_species_id:
+        type: number
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      species:
+        type: object
+      jurisdiction:
+        type: object
+      observation:
+        type: object
       updateAt:
         type: string
       createdAt:

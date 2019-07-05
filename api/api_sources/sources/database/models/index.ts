@@ -29,4 +29,5 @@ export * from './userMessage';
 export * from './species';
 export * from './observation.codes';
 export * from './observation';
+export * from './observation.species';
 // ----------------------------------------------------------------------------------------------------------------
