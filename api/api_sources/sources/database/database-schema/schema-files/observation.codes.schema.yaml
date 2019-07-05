@@ -1,0 +1,81 @@
+version: '1.0'
+schemas: 
+  JurisdictionCodeSchema:
+    name: jurisdiction_code_table
+    description: Jurisdiction code of observation area
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: 'jurisdiction_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: jurisdiction_code
+        comment: Unique code value for jurisdiction area
+        definition: VARCHAR(10) NOT NULL UNIQUE
+  # -- End JurisdictionCode
+  # -- Observation
+  ObservationSchema:
+    name: observation
+    description: Observation table
+    baseSchema: Record
+    columns:
+      id: 
+        name: 'observation_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      date:
+        name: 'observation_date'
+        comment: 'Date of observation'
+        definition: DATE NULL
+      lat:
+        name: 'observation_location_lat'
+        comment: 'Date of observation'
+        definition: NUMERIC(3, 3) NOT NULL
+      long:
+        name: 'observation_location_long'
+        comment: 'Date of observation'
+        definition: NUMERIC(3, 3) NOT NULL
+  # -- Observation Species schema
+  ObservationSpeciesSchema:
+    name: observation_species
+    description: This table store observation data for particular species
+    baseSchema: Record
+    columns: 
+      id: 
+        name: 'observation_species_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      width:
+        name: 'area_width'
+        comment: 'Width of the area observed'
+        definition: NUMERIC(4, 3) NULL DEFAULT 0.0
+      length:
+        name: 'area_length'
+        comment: 'Length of the area observed'
+        definition: NUMERIC(4, 3) NULL DEFAULT 0.0
+      accessDescription:
+        name: 'access_description'
+        comment: Note to specify how to access the location
+        definition: VARCHAR(500) NULL
+      species:
+        name: 'species_id'
+        comment: Foreign key reference to species table 
+        definition: INT NULL
+        foreignTable: 'species'
+        refColumn: species_id
+        deleteCascade: true
+      jurisdiction:
+        name: 'jurisdiction_code_id'
+        comment: Foreign key reference to Jurisdiction code table 
+        definition: INT NULL
+        foreignTable: 'jurisdiction_code_table'
+        refColumn: jurisdiction_code_id
+        deleteCascade: true
+      observation:
+        name: 'observation_id'
+        comment: Foreign key reference to observation table 
+        definition: INT NULL
+        foreignTable: observation
+        refColumn: observation_id
+        deleteCascade: true

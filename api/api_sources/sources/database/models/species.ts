@@ -53,14 +53,14 @@ export class Species extends Record {
         nullable: true
     })
     @ModelProperty({type: PropertyType.number})
-    cmt: number;
+    containmentSpecies: number;
 
     @Column({
         name: SpeciesSchema.schema.columns.shp,
         nullable: true
     })
     @ModelProperty({type: PropertyType.number})
-    shp: number;
+    containmentSpacialRef: number;
 
     @Column({
         name: SpeciesSchema.schema.columns.species,
