@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormMode } from 'src/app/models';
+import { DropdownObject } from 'src/app/services/dropdown.service';
 
 @Component({
   selector: 'app-dropdown',
@@ -23,38 +24,46 @@ export class DropdownComponent implements OnInit {
   @Input() fieldHeader = ``;
 
   ///// Selected item
-  private _selectedItem = ``;
+  private _selectedItem: DropdownObject;
   // Get selected item
-  get selectedItem(): string {
+  get selectedItem(): DropdownObject {
     return this._selectedItem;
   }
   // Set selected item
-  @Input() set selectedItem(item: string) {
+  @Input() set selectedItem(item: DropdownObject) {
     this._selectedItem = item;
   }
   ////////////////////
 
+  get selectedItemName(): string {
+    if (this.selectedItem) {
+      return this.selectedItem.name;
+    } else {
+      return ``;
+    }
+  }
+
   ///// Items list
-  private _items: string[] = [];
+  private _items: DropdownObject[] = [];
   // Get items
-  get items(): string[] {
+  get items(): DropdownObject[] {
     return this._items;
   }
   // Set items
-  @Input() set items(array: string[]) {
+  @Input() set items(array: DropdownObject[]) {
     this._items = array;
   }
   ////////////////////
 
   // Response
-  @Output() selectionChanged = new EventEmitter<string>();
+  @Output() selectionChanged = new EventEmitter<DropdownObject>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  selected(item: string) {
+  selected(item: DropdownObject) {
     this.selectedItem = item;
     this.selectionChanged.emit(this.selectedItem);
   }

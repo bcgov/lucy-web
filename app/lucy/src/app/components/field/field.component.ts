@@ -9,10 +9,15 @@ import { ValidationService } from 'src/app/services/validation.service';
 })
 
 export class FieldComponent implements OnInit {
+  // Output
   @Output() valueChanged = new EventEmitter<string>();
 
-  @Input() header = '';
+  // Optional Input
   @Input() validationFunc: any;
+  // Optional Input
+  @Input() multiline = false;
+
+  @Input() header = '';
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -26,7 +31,15 @@ export class FieldComponent implements OnInit {
   }
   ////////////////////
 
-  ///// Form Mode
+  get readonly(): boolean {
+    // console.log('***');
+    if (this.mode === FormMode.View) {
+      // console.log(`${this.header} is Readonly`);
+    }
+    return this.mode === FormMode.View;
+  }
+
+  ///// Value
   private _value = ``;
   // Get
   get value(): string {
@@ -38,7 +51,7 @@ export class FieldComponent implements OnInit {
     this.valueChanged.emit(value);
   }
   ////////////////////
- 
+
   /**
    * If a validation function has been
    * passed to @Input validationFunc, the result

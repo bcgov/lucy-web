@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
@@ -9,7 +9,7 @@ import { FormMode } from 'src/app/models';
   templateUrl: './add-plant-observation-basic-information.component.html',
   styleUrls: ['./add-plant-observation-basic-information.component.css']
 })
-export class AddPlantObservationBasicInformationComponent implements OnInit {
+export class AddPlantObservationBasicInformationComponent implements OnInit, AfterViewChecked {
 
   private mapCenter: MapPreviewPoint;
   private markers: LatLong[] = [];
@@ -42,17 +42,19 @@ export class AddPlantObservationBasicInformationComponent implements OnInit {
     return this.validation.isValidNumber(this.zone);
   }
 
-  ///// Form Mode
-  private _mode: FormMode = FormMode.View;
-  // Get
-  get mode(): FormMode {
-    return this._mode;
-  }
-  // Set
-  @Input() set mode(mode: FormMode) {
-    this._mode = mode;
-  }
-  ////////////////////
+
+   ///// Form Mode
+   private _mode: FormMode = FormMode.View;
+   // Get
+   get mode(): FormMode {
+     return this._mode;
+   }
+   // Set
+   @Input() set mode(mode: FormMode) {
+     console.log(`Form - basic info mode is ${mode}`);
+     this._mode = mode;
+   }
+   ////////////////////
 
   constructor(private converterService: ConverterService, private validation: ValidationService) { }
 
@@ -63,6 +65,11 @@ export class AddPlantObservationBasicInformationComponent implements OnInit {
       zoom: 4
     };
   }
+
+  ngAfterViewChecked(): void {
+    // console.log(`Form - Basic info mode is ${this.mode} -ngAfterViewChecked`);
+  }
+
 
   private utmCoordinatesAreValid(): boolean {
     console.log(this.validNorthings);

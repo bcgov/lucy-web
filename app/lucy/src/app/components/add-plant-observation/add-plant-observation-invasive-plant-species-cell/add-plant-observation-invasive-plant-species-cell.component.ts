@@ -1,13 +1,33 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormMode } from 'src/app/models';
+import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
+import { FormMode, Jurisdiction, InvasivePlantSpecies } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
+import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
 
 @Component({
   selector: 'app-add-plant-observation-invasive-plant-species-cell',
   templateUrl: './add-plant-observation-invasive-plant-species-cell.component.html',
   styleUrls: ['./add-plant-observation-invasive-plant-species-cell.component.css']
 })
-export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnInit {
+export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnInit, AfterViewChecked {
+
+  ViewMode = FormMode.View;
+
+  ////// TODO: temporary
+  plotDimentionWidth: number;
+  plotDimentionLength: number;
+  ////////////////////
+
+  get calculatedArea(): string {
+    return `Total Calculated Area: ${this.plotDimentionWidth * this.plotDimentionLength}`;
+  }
+
+  juristictions: DropdownObject[];
+  invasivePlantSpecies: DropdownObject[];
+  surveyModes: DropdownObject[];
+  soilTextureCodes: DropdownObject[];
+  specificUseCodes: DropdownObject[];
+  distributions: DropdownObject[];
+  densities: DropdownObject[];
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -17,47 +37,92 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
   // Set
   @Input() set mode(mode: FormMode) {
+    console.log(`Form - plant info mode is ${mode}`);
     this._mode = mode;
   }
   ////////////////////
 
-  items: string[] = [`one`, `two`];
-
-  constructor(private validation: ValidationService) { }
+  constructor(private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {
+    this.getDropdownData();
   }
 
-  fieldValueChanged(value: string) {
+  ngAfterViewChecked(): void {
+    // console.log(`Form - plant info mode is ${this.mode} -ngAfterViewChecked`);
+  }
+
+  getDropdownData() {
+    this.dropdownService.getInvasivePlantSpecies().then((result) => {
+      this.invasivePlantSpecies = result;
+    });
+
+    this.dropdownService.getJuristictions().then((result) => {
+      this.juristictions = result;
+    });
+
+    this.dropdownService.getSurveyModes().then((result) => {
+      this.surveyModes = result;
+    });
+
+    this.dropdownService.getSoilTextureCodes().then((result) => {
+      this.soilTextureCodes = result;
+    });
+
+    this.dropdownService.getSpecificUseCodes().then((result) => {
+      this.specificUseCodes = result;
+    });
+
+    this.dropdownService.getDistributions().then((result) => {
+      this.distributions = result;
+    });
+
+    this.dropdownService.getDensities().then((result) => {
+      this.densities = result;
+    });
+
+  }
+
+
+  fieldValueChanged(value: DropdownObject) {
     console.log(value);
   }
 
-  invasivePlantSpeciesChanged(value: string) {
+  invasivePlantSpeciesChanged(value: DropdownObject) {
     console.log(value);
   }
 
-  jurisdictionChanged(value: string) {
+  jurisdictionChanged(value: DropdownObject) {
     console.log(value);
   }
 
-  densityChanged(value: string) {
+  densityChanged(value: DropdownObject) {
     console.log(value);
   }
 
-  distributionChanged(value: string) {
+  distributionChanged(value: DropdownObject) {
     console.log(value);
   }
 
-  surveyModeChanged(value: string) {
+  surveyModeChanged(value: DropdownObject) {
     console.log(value);
   }
 
-  soilTextureCodeChanged(value: string) {
+  soilTextureCodeChanged(value: DropdownObject) {
     console.log(value);
   }
 
-  specificUseCodeChanged(value: string) {
+  specificUseCodeChanged(value: DropdownObject) {
     console.log(value);
   }
+
+  plotDimentionWidthChanged(value: number) {
+    this.plotDimentionWidth = value;
+  }
+
+  plotDimentionLengthChanged(value: number) {
+    this.plotDimentionLength = value;
+  }
+
 
 }

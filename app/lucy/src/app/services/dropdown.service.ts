@@ -48,7 +48,7 @@ export class DropdownService {
    * TODO: Incomplete
    */
   public async getInvasivePlantSpecies(): Promise<DropdownObject[]> {
-    return [];
+    return this.createDropdownObjectsFrom(this.getDummyInvasivePlantSpecies(), 'species');
   }
 
   /**
@@ -103,8 +103,44 @@ export class DropdownService {
         Code: `NRS`,
         description: `describing`,
       }
-    ])
-
+    ]);
   }
 
+  private getDummyInvasivePlantSpecies(): InvasivePlantSpecies[] {
+    return ([
+      {
+        species_id: 1,
+        mapCode: `code`,
+        earlyDetection: 2,
+        containmentSpecies: 2,
+        containmentSpacialRef: 2,
+        species: `Green Flower`,
+        genus: `floraris`,
+        commonName: `flower`,
+        latinName: `florarum`,
+      },
+      {
+        species_id: 2,
+        mapCode: `code`,
+        earlyDetection: 2,
+        containmentSpecies: 2,
+        containmentSpacialRef: 2,
+        species: `Red Flower`,
+        genus: `floraris`,
+        commonName: `flower`,
+        latinName: `florarum`,
+      },
+      {
+        species_id: 3,
+        mapCode: `code`,
+        earlyDetection: 2,
+        containmentSpecies: 2,
+        containmentSpacialRef: 2,
+        species: `Purple Flower`,
+        genus: `floraris`,
+        commonName: `flower`,
+        latinName: `florarum`,
+      },
+    ]);
+  }
 }

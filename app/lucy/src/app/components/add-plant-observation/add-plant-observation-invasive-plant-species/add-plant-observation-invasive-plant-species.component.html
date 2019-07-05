@@ -4,8 +4,12 @@
         Invasive Plant Species
         <hr>
       </div>
-      <div class="col-12">
-        <app-add-plant-observation-invasive-plant-species-cell></app-add-plant-observation-invasive-plant-species-cell>
+      <div class="col-12 card" *ngFor="let object of objects; let i = index">
+        <app-add-plant-observation-invasive-plant-species-cell [mode]="mode" [object]="object">
+        </app-add-plant-observation-invasive-plant-species-cell>
+      </div>
+      <div class="col-12 topPadding">
+        <button type="button" class="btn btn-secondary submit-button addButton" (click)="addSpecies()">+  Add Another Species To Location</button>
       </div>
     </div>
   </div>
