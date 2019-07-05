@@ -1,0 +1,13 @@
+.card {
+	border: 1px solid #CCCCCC;
+    background-color: #F7F7F7;
+    padding: 1%;
+}
+
+.topPadding {
+    padding-top: 1%;
+}
+
+.addButton {
+    width: 100%;
+}

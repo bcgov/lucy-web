@@ -1,6 +1,9 @@
 <div class="col-sm-12 field">
-    <label class="field-header">{{header}}</label>
-    <input type="text" [(ngModel)]="value"
-      class="form-control field-box"
-      [ngClass]="isValid ? 'field-input' : 'field-input-invalid'" />
-  </div>
+  <label class="field-header">{{header}}</label>
+  <input *ngIf="!multiline" type="text" [(ngModel)]="value" class="form-control field-box"
+    [ngClass]="isValid ? 'field-input' : 'field-input-invalid'"
+    [readonly]="readonly"/>
+  <!-- multiLine -->
+  <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control"
+    [ngClass]="isValid ? 'field-input' : 'field-input-invalid'"></textarea>
+</div>

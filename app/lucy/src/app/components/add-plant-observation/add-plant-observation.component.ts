@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, NgZone } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
 // import { Observation} from '../../models';
 import 'node_modules/leaflet/';
@@ -11,7 +11,8 @@ declare let L;
   styleUrls: ['./add-plant-observation.component.css']
 })
 
-export class AddPlantObservationComponent implements OnInit {
+export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
+  
 
     ///// Form Mode
     private _mode: FormMode = FormMode.View;
@@ -21,13 +22,25 @@ export class AddPlantObservationComponent implements OnInit {
     }
     // Set
     @Input() set mode(mode: FormMode) {
+      console.log(`Form mode is ${mode}`);
       this._mode = mode;
     }
     ////////////////////
 
-  constructor() { }
+  constructor(private zone: NgZone ) { }
 
   ngOnInit() {
+    // this.mode = FormMode.Edit;
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.mode = FormMode.Edit;
+      });
+    }, 1000);
+  }
+
+  ngAfterViewChecked(): void {
+    // this.mode = FormMode.Edit;
+
   }
 
 }
