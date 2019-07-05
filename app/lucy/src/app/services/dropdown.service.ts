@@ -26,7 +26,7 @@ export class DropdownService {
 
   constructor() { }
 
-  private createDropdownObjectsFrom(objects: any[], displayValue: string) {
+  private createDropdownObjectsFrom(objects: any[], displayValue: string): DropdownObject[] {
     const dropdownObjects: DropdownObject[] = [];
     for (const object of objects) {
       dropdownObjects.push( {
@@ -34,55 +34,77 @@ export class DropdownService {
         object: object,
       });
     }
+    return dropdownObjects;
   }
 
   /**
    * TODO: Incomplete
    */
-  public async getJuristictions(): Promise<Juristiction[]> {
+  public async getJuristictions(): Promise<DropdownObject[]> {
+    return this.createDropdownObjectsFrom(this.getDummyJuristictions(), 'Code');
+  }
+
+  /**
+   * TODO: Incomplete
+   */
+  public async getInvasivePlantSpecies(): Promise<DropdownObject[]> {
     return [];
   }
 
   /**
    * TODO: Incomplete
    */
-  public async getInvasivePlantSpecies(): Promise<InvasivePlantSpecies[]> {
+  public async getSurveyModes(): Promise<DropdownObject[]> {
     return [];
+    // return ['Operational', 'Non Operational'];
+  }
+
+   /**
+   * TODO: Incomplete
+   */
+  public async getSoilTextureCodes(): Promise<DropdownObject[]> {
+    return [];
+    // return ['01-Quick Description', '02-Slow Description', '03-Regular Description'];
+  }
+
+   /**
+   * TODO: Incomplete
+   */
+  public async getSpecificUseCodes(): Promise<DropdownObject[]> {
+    return [];
+    // return ['Gravel Pit', 'Grass', 'Corn Field'];
+  }
+
+   /**
+   * TODO: Incomplete
+   */
+  public async getDistributions(): Promise<DropdownObject[]> {
+    return [];
+    // return ['Low', 'Medium', 'High'];
   }
 
   /**
    * TODO: Incomplete
    */
-  public async getSurveyModes(): Promise<string[]> {
-    return ['Operational', 'Non Operational'];
+  public async getDensities(): Promise<DropdownObject[]> {
+    return [];
+    // return ['Low', 'Medium', 'High'];
   }
 
-   /**
-   * TODO: Incomplete
-   */
-  public async getSoilTextureCodes(): Promise<string[]> {
-    return ['01-Quick Description', '02-Slow Description', '03-Regular Description'];
-  }
+  private getDummyJuristictions(): Juristiction[] {
+    return ([
+      {
+        juristiction_id: 1,
+        Code: `FLNRO`,
+        decsciption: `describing`,
+      },
+      {
+        juristiction_id: 2,
+        Code: `NRS`,
+        decsciption: `describing`,
+      }
+    ])
 
-   /**
-   * TODO: Incomplete
-   */
-  public async getSpecificUseCodes(): Promise<string[]> {
-    return ['Gravel Pit', 'Grass', 'Corn Field'];
-  }
-
-   /**
-   * TODO: Incomplete
-   */
-  public async getDistributions(): Promise<string[]> {
-    return ['Low', 'Medium', 'High'];
-  }
-
-  /**
-   * TODO: Incomplete
-   */
-  public async getDensities(): Promise<string[]> {
-    return ['Low', 'Medium', 'High'];
   }
 
 }
