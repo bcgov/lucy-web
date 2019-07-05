@@ -20,7 +20,8 @@
  * Imports
  */
 import { ApplicationTable, defineColumn} from '../applicationSchemaInterface';
-import { RecordTableSchema} from './base.record.schema';
+import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
+import { getYAMLFilePath } from './schema-files';
 
 export class SpeciesSchema extends RecordTableSchema {
     defineTable() {
@@ -31,14 +32,32 @@ export class SpeciesSchema extends RecordTableSchema {
             id: defineColumn('species_id', 'Auto generated incremental primary key column'),
             mapCode: defineColumn('map_code', 'Code associated with species'),
             earlyDetection: defineColumn('edrr', 'Early detection species'),
-            cmt: defineColumn('cmt', 'Containment species'),
-            shp: defineColumn('shp', 'Containment spatial reference'),
+            cmt: defineColumn('containment_species', 'Containment species'),
+            shp: defineColumn('containment_species_spatial_ref', 'Containment spatial reference'),
             species: defineColumn('species', 'Latin species first 4 characters'),
             genus: defineColumn('genus', 'Latin Genus first 3 characters'),
             commonName: defineColumn('commonName', 'Common name text'),
             latinName: defineColumn('latin_name', 'Latin name text')
         };
         return table;
+    }
+}
+
+export class JurisdictionCodeSchema extends CodeTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('observation.codes.schema.yaml');
+    }
+}
+
+export class ObservationSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('observation.codes.schema.yaml');
+    }
+}
+
+export class ObservationSpeciesSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('observation.codes.schema.yaml');
     }
 }
 // -----------------------------------------------------------------------------------------

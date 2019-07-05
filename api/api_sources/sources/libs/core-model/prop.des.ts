@@ -21,7 +21,7 @@
  * Imports
  */
 import 'reflect-metadata';
-import { BaseModel } from '../../database/models';
+import { BaseModel, ApplicationCode } from '../../database/models';
 
 export class PropertyType {
     static get string(): string {
@@ -47,6 +47,10 @@ export class PropertyType {
     static get date(): string {
         return 'string';
     }
+
+    static get array(): string {
+        return 'array';
+    }
 }
 
 /**
@@ -61,13 +65,40 @@ const propMap: any = {
         createdAt: {
             info: { type: PropertyType.string}
         }
+    },
+    ApplicationCode: {
+        description: {
+            info: { type: PropertyType.string }
+        },
+        activeIndicator: {
+            info: { type: PropertyType.string }
+        }
     }
 };
-export const propertyMap = (obj: Object) => (Object.keys(propMap[obj.constructor.name] || {}))
+
+/**
+ * @description Get property info of any object
+ * @param object obj
+ */
+export const propertyMap = (obj: object) => (Object.keys(propMap[obj.constructor.name] || {}))
                                                 .concat(Object.keys(propMap[BaseModel.name]));
+/**
+ * @description Getting class info of any class with name
+ * @param any typeObject
+ */
+// export const classInfo = (className: string) => ({ ...propMap[className], ...propMap[BaseModel.name]});
+export const classInfo = (typeValue: any) => {
+    let result: any = {};
+    if (typeValue.prototype instanceof ApplicationCode) {
+        result = { ...propMap[ApplicationCode.name]};
+    }
+    return { ...propMap[typeValue.name], ...result, ...propMap[BaseModel.name]};
+};
 
-export const classInfo = (className: string) => ({ ...propMap[className], ...propMap[BaseModel.name]});
-
+/**
+ * @description Decorator to collect defined property of class
+ * @param any info
+ */
 export function ModelProperty (info?: any) {
     return function (obj: Object, prop: string, propDes?: PropertyDescriptor) {
         try {

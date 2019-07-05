@@ -31,7 +31,7 @@ import { UserSchema, RolesCodeTableSchema} from '../database-schema';
 import { UserMessage } from './userMessage';
 import { RequestAccess } from './requestAccess';
 import {  ModelProperty, PropertyType } from '../../libs/core-model';
-import { RecordTableSchema } from '../database-schema/base.record.schema';
+import { RecordTableSchema, CodeTableSchema } from '../database-schema/base.record.schema';
 
 
 /**
@@ -166,6 +166,16 @@ export abstract class Record {
         referencedColumnName: UserSchema.schema.columns.id
     })
     updatedBy: User;
+}
+
+export abstract class ApplicationCode extends Record {
+    @Column({ name: CodeTableSchema.codeColumns.description, nullable: true })
+    @ModelProperty({type: PropertyType.string})
+    description: string;
+
+    @Column({ name: CodeTableSchema.codeColumns.activeIndicator, nullable: false})
+    @ModelProperty({type: PropertyType.boolean})
+    activeIndicator: boolean;
 }
 
 /**

@@ -1,5 +1,5 @@
 //
-// Index file for model module
+// Index to get sql string under this folder
 //
 // Copyright © 2019 Province of British Columbia
 //
@@ -15,18 +15,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Created by Pushan Mitra on 2019-05-7.
-/**
- * Exports
- */
-export * from './user';
-export * from './user.session';
-export * from './baseModel';
-export * from './appRolesCode';
-export * from './userSessionActivity';
-export * from './requestAccess';
-export * from './userMessage';
-export * from './species';
-export * from './observation.codes';
-export * from './observation';
-// ----------------------------------------------------------------------------------------------------------------
+// Created by Pushan Mitra on 2019-07-5.
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+export const getSQLFilePath = (fileName: string) => path.resolve(__dirname, `./${fileName}`);
+
+export const getSQLFileData = (fileName: string) => fs.readFileSync(getSQLFilePath(fileName), 'utf8')
+;
+export const sampleSql = (): string => {
+    const fileName = 'sample.sql';
+    return fs.readFileSync(getSQLFilePath(fileName), 'utf8');
+};
+
+// ---------------------------------------------------------------------------------------------------

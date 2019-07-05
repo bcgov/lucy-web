@@ -16,19 +16,71 @@
 // limitations under the License.
 //
 // Created by Pushan Mitra on 2019-05-17.
+import * as _ from 'underscore';
+import * as assert from 'assert';
+import * as fs from 'fs';
+import { unWrap, yaml, saveYaml } from '../libs/utilities';
+import { getSQLFileData, getSQLFilePath } from './database-schema/schema-sqls';
+
+export type TableColumnRef = [string, string, boolean];
+export interface TableColumnStruct {
+    reference?: TableColumnRef;
+    definition?: string;
+}
+
+
+export interface TableColumnDefinition {
+    name: string;
+    comment: string;
+    definition?: string;
+    foreignTable?: string;
+    refColumn?: string;
+    deleteCascade?: boolean;
+}
+
 
 /**
  * @description Column definition descriptor class
  * @export class ApplicationTableColumn
  */
-export class ApplicationTableColumn {
+export class ApplicationTableColumn implements TableColumnDefinition {
     name: string;
     comment = 'Application table column';
-    struct = '';
-    constructor(name: string, comment: string, struct?: string) {
+    definition?: string;
+    foreignTable?: string;
+    refColumn?: string;
+    deleteCascade?: boolean;
+    constructor(name: string, comment: string, definition?: string, foreignTable?: string, refColumn?: string, deleteCascade?: boolean) {
         this.name = name;
         this.comment = comment;
+        this.definition = definition;
+        this.foreignTable = foreignTable;
+        this.refColumn = refColumn;
+        this.deleteCascade = deleteCascade;
     }
+
+    ref(reference?: string, refColumn?: string, deleteCascade?: boolean): string {
+        const ref = reference || this.foreignTable;
+        const refCol = refColumn || this.refColumn;
+        const delCascade = deleteCascade || this.deleteCascade;
+        if (ref && refCol) {
+            const str = `REFERENCES ${ref}(${refCol}) ON DELETE`;
+            return delCascade ? `${str} CASCADE` : `${str} SET NULL`;
+        } else {
+            return '';
+        }
+    }
+
+    public sql(definition?: string, reference?: string, refColumn?: string, deleteCascade?: boolean): string {
+        const def =  definition || this.definition || 'VARCHAR(10) NULL';
+        const ref = this.ref(reference, refColumn, deleteCascade);
+        return ref ? `${this.name} ${def} ${ref}` : `${this.name} ${def}`;
+    }
+
+    public createColumnSql(tableName: string, definition?: string, reference?: string, refColumn?: string, deleteCascade?: boolean): string {
+        return `ALTER TABLE ${tableName} ADD COLUMN ${this.sql(definition, reference, refColumn, deleteCascade)};`;
+    }
+
 }
 
 /**
@@ -41,7 +93,7 @@ export class ApplicationTable {
     description = 'Application table';
     private _columnNames: {[key: string]: string};
 
-    get columns(): {[key: string] : string} {
+    get columns(): {[key: string]: string} {
         if (this._columnNames) {
             return this._columnNames;
         }
@@ -54,6 +106,29 @@ export class ApplicationTable {
         }
         this._columnNames = names;
         return this._columnNames;
+    }
+
+    get id(): string {
+        return this.columns.id;
+    }
+
+    public createTableSql(): string {
+        let sql = '';
+        const createTable = `CREATE TABLE ${this.name} ();`;
+        const allColumns: string[] = _.map(this.columnsDefinition, (column: ApplicationTableColumn) => column.createColumnSql(this.name));
+        _.each(allColumns, (sqlString: string) => (sql = sql + `${sqlString}\n`));
+        return `${createTable}\n${sql}`;
+    }
+
+    public createCommentsForTable(): string {
+        let commentForColumns = ``;
+        for (const key in this.columnsDefinition) {
+            if (this.columnsDefinition.hasOwnProperty(key)) {
+                const column: ApplicationTableColumn = this.columnsDefinition[key];
+                commentForColumns = commentForColumns + `COMMENT ON COLUMN ${this.name}.${column.name} IS '${column.comment}';\n`;
+            }
+        }
+        return `COMMENT ON TABLE ${this.name} IS '${this.description}';\n${commentForColumns}`;
     }
 }
 
@@ -92,12 +167,89 @@ export class  BaseTableSchema {
         return this.shareInstance || (this.shareInstance = new this());
     }
 
+    public get schemaFilePath(): string {
+        return '';
+    }
+
+    public get className(): string {
+        return this.constructor.name;
+    }
+
     /**
      * @description Constructor
      */
     constructor() {
-        this.table = this.defineTable();
-        this.joinTables = this.defineJoinTable();
+        if (this.schemaFilePath && this.schemaFilePath !== '') {
+            this.loadSchema();
+        } else {
+            this.table = this.defineTable();
+            this.joinTables = this.defineJoinTable();
+        }
+        assert(this.table.id, `No {id} column for schema ${this.table.name}`);
+        // Check table name
+
+    }
+
+    loadSchema() {
+        assert(yaml);
+        const yamlObject: any = yaml(this.schemaFilePath);
+        // Get schema
+        const def = (yamlObject.schemas || {})[this.constructor.name];
+        assert(def, `No Schema definition found on file ${this.schemaFilePath} for class ${this.constructor.name}`);
+        const table = new ApplicationTable();
+        table.name = def.name;
+        table.description = def.description;
+        table.columnsDefinition = {};
+        _.each(def.columns, (value: TableColumnOption, key) => {
+            const result = {};
+            result[key] = new ApplicationTableColumn(value.name, value.comment, value.definition, value.foreignTable, value.refColumn, value.deleteCascade);
+            table.columnsDefinition = {...table.columnsDefinition, ...result};
+        });
+        assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
+        this.table = table;
+    }
+
+    saveSchema(newFilePath?: string) {
+        const actual: string = newFilePath || this.schemaFilePath;
+        assert(actual && actual !== '', `No File Path to save: ${this.className}`);
+        const yamlObject: any = yaml(actual) || {version: '1.0', schemas: {}};
+        let columns: any = {};
+        _.each(this.table.columnsDefinition, (col: ApplicationTableColumn, key: string) => {
+            const newObj: any = {};
+            newObj[key] = col as TableColumnDefinition;
+            columns = {...columns, ...newObj};
+        });
+        // Get schema
+        yamlObject.schemas[this.className] = {
+            name: this.table.name,
+            description: this.table.description,
+            columns: columns
+        };
+
+        saveYaml(yamlObject, actual, { skipInvalid: true});
+    }
+
+    createMigrationFile(inputFileToSave?: string) {
+        const fileToSave = inputFileToSave || getSQLFilePath(`${this.className}.sql`);
+        const create = this.createTable();
+        const timestamp = this.createTimestampsColumn();
+        const comments = this.createComments();
+        const auditColumns = this.createAuditColumns();
+
+        const final = `-- ### Creating Table ### --\n
+        \n${create}\n
+        \n-- ### Creating Comments on table ### --\n
+        \n${comments}\n
+        \n-- ### Creating Timestamp column ### --\n
+        \n${timestamp}\n
+        \n-- ### Creating User Audit Columns ### --\n
+        \n${auditColumns}\n`;
+        // console.log(`${final}`);
+        fs.writeFileSync(fileToSave, final, { flag: 'w+', encoding: 'utf8'});
+    }
+
+    get migrationSQL(): string {
+        return getSQLFileData(`${this.className}.sql`);
     }
 
     /**
@@ -124,26 +276,26 @@ export class  BaseTableSchema {
         const createAtColumnName = BaseTableSchema.timestampColumns.createdAt;
         const updateAtColumnName = BaseTableSchema.timestampColumns.updatedAt;
         const tableName = this.table.name;
-        return `ALTER TABLE ${tableName} ADD COLUMN ${createAtColumnName} TIMESTAMP DEFAULT NOW();
-        ALTER TABLE ${tableName} ADD COLUMN ${updateAtColumnName} TIMESTAMP DEFAULT NOW();
-        COMMENT ON COLUMN ${tableName}.${createAtColumnName} IS 'Timestamp column to check creation time of record';
-        COMMENT ON COLUMN ${tableName}.${updateAtColumnName} IS 'Timestamp column to check modify time of record';`;
+        const createCol = `ALTER TABLE ${tableName} ADD COLUMN ${createAtColumnName} TIMESTAMP DEFAULT NOW();`;
+        const updateCol = `ALTER TABLE ${tableName} ADD COLUMN ${updateAtColumnName} TIMESTAMP DEFAULT NOW();`;
+        const createColCmt = `COMMENT ON COLUMN ${tableName}.${createAtColumnName} IS 'Timestamp column to check creation time of record';`;
+        const updateColCmt = `COMMENT ON COLUMN ${tableName}.${updateAtColumnName} IS 'Timestamp column to check modify time of record';`;
+        return `${createCol}\n${updateCol}\n${createColCmt}\n${updateColCmt}`;
     }
 
     /**
-     * @description Create SQL query string to add columns and table in schema 
+     * @description Create SQL query string to add columns and table in schema
      * @return string
      */
     createComments(): string {
-        let commentForColumns = ``;
-        for (const key in this.table.columnsDefinition) {
-            if (this.table.columnsDefinition.hasOwnProperty(key)) {
-                const column: ApplicationTableColumn = this.table.columnsDefinition[key];
-                commentForColumns = commentForColumns + `COMMENT ON COLUMN ${this.table.name}.${column.name} IS '${column.comment}';\n`;
-            }
-        }
-        return `COMMENT ON TABLE ${this.table.name} IS '${this.table.description}';\n${commentForColumns}`;
+        return this.table.createCommentsForTable();
     }
+
+    createTable(): string {
+        return this.table.createTableSql();
+    }
+
+    createAuditColumns(): string { return ''; }
 
     /**
      * @description Create SQL query string to drop table in schema
@@ -161,10 +313,46 @@ export class  BaseTableSchema {
         return this.shared.table;
     }
 
+    /**
+     * @description Get table name associated with schema
+     */
+    public static get dbTable(): string {
+        return this.shared.table.name;
+    }
+
+     /**
+     * @description Get table columns associated with schema
+     */
+    public static get columns(): {[key: string]: string} {
+        return this.shared.table.columns;
+    }
+
+    /**
+     * primaryKey
+     * @description Get Primary key of schema
+     */
+    public static get pk(): string {
+        return this.shared.table.columns.id;
+    }
+
+
+
 }
 
-export const defineColumn = (name: string, comment: string, struct?: string): ApplicationTableColumn => {
-    return new ApplicationTableColumn(name, comment, struct);
+export const defineColumn = (name: string, comment: string, definition?: string, foreignTable?: string, refColumn?: string, deleteCascade?: boolean): ApplicationTableColumn => {
+    return new ApplicationTableColumn(name, comment, definition, foreignTable, refColumn, deleteCascade);
+};
+
+export interface TableColumnOption extends TableColumnDefinition {
+    refSchema?: BaseTableSchema;
+}
+
+export const createColumn = (option: TableColumnOption): ApplicationTableColumn => {
+    const schema = option.refSchema;
+    const refTable = option.foreignTable || unWrap(schema, { table: {}}).table.name ;
+    const refColumn = option.refColumn || unWrap(schema, { table: {}}).table.id;
+    const def = option.definition;
+    return defineColumn(option.name, option.comment, def, refTable, refColumn, option.deleteCascade);
 };
 
 // ---------------------------------------------------------------------------------

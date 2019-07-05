@@ -27,7 +27,15 @@ import * as _ from 'underscore';
 import * as yaml from 'js-yaml';
 import * as models from '../sources/database/models';
 import { classInfo, PropertyType } from '../sources/libs/core-model';
-import { BaseModel } from '../sources/database/models';
+import { BaseModel, Record, ApplicationCode } from '../sources/database/models';
+
+const isModelClass = (typeValue: any) => {
+    return (
+        typeValue.prototype instanceof BaseModel ||
+        typeValue.prototype instanceof Record ||
+        typeValue.prototype instanceof ApplicationCode
+        );
+};
 
 (() => {
     // console.dir(models);
@@ -35,10 +43,11 @@ import { BaseModel } from '../sources/database/models';
     for (const key in models) {
         if (models.hasOwnProperty(key) && key !== 'BaseModel') {
             const typeValue = models[key];
-            if (typeof typeValue === 'function' && typeValue.prototype instanceof BaseModel) {
-                let meta: any = {};
+            if (typeof typeValue === 'function' && isModelClass(typeValue)) {
+
+                    let meta: any = {};
                 const yml: any = { type: PropertyType.object, required: [], properties: {}};
-                if ( (meta = classInfo(typeValue.name))) {
+                if ( (meta = classInfo(typeValue))) {
                     // console.log(`${typeValue.name}`);
                     // console.dir(meta);
                     _.each(meta, (val: any, k: string) => {

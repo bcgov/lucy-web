@@ -17,7 +17,7 @@
 //
 // Created by Pushan Mitra on 2019-06-2.
 
-import { BaseTableSchema } from '../applicationSchemaInterface';
+import { BaseTableSchema, createColumn } from '../applicationSchemaInterface';
 import { UserSchema } from './login.schema';
 
 export class RecordTableSchema extends BaseTableSchema {
@@ -35,12 +35,44 @@ export class RecordTableSchema extends BaseTableSchema {
         const updatedByColumnName = RecordTableSchema.auditColumns.updatedBy;
         const userTable = UserSchema.schema.name;
         const userTablePK = UserSchema.schema.columns.id;
+
+        // Creating SQL Strings
+        const creatorColumn = `ALTER TABLE ${this.table.name} ADD COLUMN ${createdByColumnName} INT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;`;
+        const modifierColumn = `ALTER TABLE ${this.table.name} ADD COLUMN ${updatedByColumnName} INT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;`;
+        const commentCreatorCol = `COMMENT ON COLUMN ${this.table.name}.${createdByColumnName} IS 'Audit column to track creator';`;
+        const commentModifierCol = `COMMENT ON COLUMN ${this.table.name}.${updatedByColumnName} IS 'Audit column to track modifier';`;
         // Returning SQL string
-        return `ALTER TABLE ${this.table.name} ADD COLUMN ${createdByColumnName} INT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;
-        ALTER TABLE ${this.table.name} ADD COLUMN ${updatedByColumnName} INT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;
-        COMMENT ON COLUMN ${this.table.name}.${createdByColumnName} IS 'Audit column to track creator';
-        COMMENT ON COLUMN ${this.table.name}.${updatedByColumnName} IS 'Audit column to track modifier';
-        `;
+        return `${creatorColumn}\n${modifierColumn}\n${commentCreatorCol}\n${commentModifierCol}`;
     }
 }
+
+export class CodeTableSchema extends RecordTableSchema {
+    static get codeColumns(): {[key: string]: string} {
+        return {
+            description: 'description',
+            activeIndicator: 'active_ind'
+        };
+    }
+
+    constructor() {
+        super();
+        // Creating Code description
+        if (!this.table.columnsDefinition.description) {
+            this.table.columnsDefinition.description = createColumn(
+                {name: CodeTableSchema.codeColumns.description,
+                    comment: 'Description of code',
+                    definition: 'VARCHAR(50) NULL'
+                });
+        }
+        // Creating Code active indicator
+        if (!this.table.columnsDefinition.activeIndicator) {
+            this.table.columnsDefinition.activeIndicator = createColumn(
+                {name: CodeTableSchema.codeColumns.activeIndicator,
+                    comment: 'Indicator to check active status of code',
+                    definition: 'BOOLEAN NOT NULL DEFAULT TRUE'
+                });
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------------------------------
