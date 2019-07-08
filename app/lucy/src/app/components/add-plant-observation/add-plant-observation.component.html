@@ -1,6 +1,6 @@
-<div class="view-title-section">
+
   <div class="container">
-    <div class="row">
+    <div class="row view-title-section">
       <div class="col-12 col-md-9 view-title">
         Add Observation <span class="view-title-detail">- Plant</span>
       </div>
@@ -8,11 +8,18 @@
         <button type="button" class="btn btn-secondary submit-button">Submit Observation</button>
       </div>
     </div>
+    <br />
+    <div class="row">
+      <div class="col-3 nav-bar">
+        <app-side-nav></app-side-nav>
+      </div>
+      <div class="col">
+        <!-- Basic Information -->
+        <app-add-plant-observation-basic-information [mode]="mode">
+        </app-add-plant-observation-basic-information>
+        <!-- Invasive Species -->
+        <app-add-plant-observation-invasive-plant-species [mode]="mode">
+        </app-add-plant-observation-invasive-plant-species>
+      </div>
+    </div>
   </div>
-</div>
-<!-- Basic Information -->
-<app-add-plant-observation-basic-information [mode]="mode">
-</app-add-plant-observation-basic-information>
-<!-- Invasive Species -->
-<app-add-plant-observation-invasive-plant-species [mode]="mode">
-</app-add-plant-observation-invasive-plant-species>

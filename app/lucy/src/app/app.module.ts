@@ -41,6 +41,7 @@ import { MapPreviewComponent } from './components/map-preview/map-preview.compon
 import { AddPlantObservationInvasivePlantSpeciesCellComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species-cell/add-plant-observation-invasive-plant-species-cell.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { FieldComponent } from './components/field/field.component';
+import { SideNavComponent } from './components/add-plant-observation/side-nav/side-nav.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -70,7 +71,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MapPreviewComponent,
     AddPlantObservationInvasivePlantSpeciesCellComponent,
     DropdownComponent,
-    FieldComponent
+    FieldComponent,
+    SideNavComponent
   ],
   imports: [
     BrowserModule,

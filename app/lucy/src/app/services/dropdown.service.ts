@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Jurisdiction, InvasivePlantSpecies } from '../models';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 export interface DropdownObject {
   name: string;
@@ -55,40 +56,35 @@ export class DropdownService {
    * TODO: Incomplete
    */
   public async getSurveyModes(): Promise<DropdownObject[]> {
-    return [];
-    // return ['Operational', 'Non Operational'];
+    return this.getDummyDropdownObjects();
   }
 
    /**
    * TODO: Incomplete
    */
   public async getSoilTextureCodes(): Promise<DropdownObject[]> {
-    return [];
-    // return ['01-Quick Description', '02-Slow Description', '03-Regular Description'];
+    return this.getDummyDropdownObjects();
   }
 
    /**
    * TODO: Incomplete
    */
   public async getSpecificUseCodes(): Promise<DropdownObject[]> {
-    return [];
-    // return ['Gravel Pit', 'Grass', 'Corn Field'];
+    return this.getDummyDropdownObjects();
   }
 
    /**
    * TODO: Incomplete
    */
   public async getDistributions(): Promise<DropdownObject[]> {
-    return [];
-    // return ['Low', 'Medium', 'High'];
+    return this.getDummyDropdownObjects();
   }
 
   /**
    * TODO: Incomplete
    */
   public async getDensities(): Promise<DropdownObject[]> {
-    return [];
-    // return ['Low', 'Medium', 'High'];
+    return this.getDummyDropdownObjects();
   }
 
   /**
@@ -96,6 +92,10 @@ export class DropdownService {
    */
   public async getDummyDropdownObjects(): Promise<DropdownObject[]> {
     const dropdownObjects: DropdownObject[] = [];
+    dropdownObjects.push( {
+      name: `NOT YET IMPLEMENTED.`,
+      object: 'item Zero',
+    });
     dropdownObjects.push( {
       name: `Item One`,
       object: 'item One',

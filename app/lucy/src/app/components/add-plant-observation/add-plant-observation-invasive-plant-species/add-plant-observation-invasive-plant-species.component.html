@@ -1,15 +1,18 @@
 <div class="container">
-    <div class="row">
-      <div class="col-12 section-title">
-        Invasive Plant Species
-        <hr>
-      </div>
-      <div class="col-12 card" *ngFor="let object of objects; let i = index">
-        <app-add-plant-observation-invasive-plant-species-cell [mode]="mode" [object]="object">
-        </app-add-plant-observation-invasive-plant-species-cell>
-      </div>
-      <div class="col-12 topPadding">
-        <button type="button" class="btn btn-secondary submit-button addButton" (click)="addSpecies()">{{buttonTitle}}</button>
-      </div>
+  <div class="row">
+    <div class="col-12 section-title">
+      Invasive Plant Species
     </div>
   </div>
+  <br />
+  <div class="row">
+    <div class="col-12" *ngFor="let object of objects; let i = index">
+      <app-add-plant-observation-invasive-plant-species-cell [mode]="mode" [object]="object">
+      </app-add-plant-observation-invasive-plant-species-cell>
+    </div>
+    <div class="col-12 topPadding">
+      <button type="button" class="btn btn-secondary submit-button addButton"
+        (click)="addSpecies()">{{buttonTitle}}</button>
+    </div>
+  </div>
+</div>
