@@ -64,6 +64,8 @@ export interface ValidationKeys {
  * @export class BaseRoutController<DataController>
  */
 export class BaseRoutController<DataController>  {
+    // Generic share instance
+    private static _sharedInstance: any;
     // Express route
     router: express.Router = express.Router();
     // Logger
@@ -72,6 +74,13 @@ export class BaseRoutController<DataController>  {
     dataController: DataController;
     // User Data Controller
     userController: UserDataController = UserDataController.shared;
+
+    /**
+     * @description Getter for share instance 
+     */
+    static sharedInstance<DataController>(): BaseRoutController<DataController> {
+        return (this._sharedInstance || (this._sharedInstance = new this()));
+    }
 
     /**
      * @description Constructor, create logger and other instances

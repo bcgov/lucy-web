@@ -56,7 +56,7 @@ describe('Test User Messages', () => {
         }, true);
         // 2. Route
         await request(SharedExpressApp.app)
-        .get('/api/v1/account/message')
+        .get('/api/account/message')
         .set('Authorization', `Bearer ${adminToken()}`)
         .expect(200)
         .then(async (resp) => {
@@ -81,7 +81,7 @@ describe('Test User Messages', () => {
 
         // 2. Route
         await request(SharedExpressApp.app)
-        .put(`/api/v1/account/message/${message.message_id}`)
+        .put(`/api/account/message/${message.message_id}`)
         .set('Authorization', `Bearer ${adminToken()}`)
         .send(update)
         .expect(200)
@@ -107,7 +107,7 @@ describe('Test User Messages', () => {
             type: 0
         };
         await request(SharedExpressApp.app)
-        .post(`/api/v1/account/message/`)
+        .post(`/api/account/message/`)
         .set('Authorization', `Bearer ${adminToken()}`)
         .send(createBody)
         .expect(200)
@@ -135,7 +135,7 @@ describe('Test User Messages', () => {
             type: 0
         };
         await request(SharedExpressApp.app)
-        .post(`/api/v1/account/message/`)
+        .post(`/api/account/message/`)
         .set('Authorization', `Bearer ${viewerToken()}`)
         .send(createBody)
         .expect(401)

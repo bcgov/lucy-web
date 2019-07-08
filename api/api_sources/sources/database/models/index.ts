@@ -30,4 +30,5 @@ export * from './species';
 export * from './observation.codes';
 export * from './observation';
 export * from './observation.species';
+export * from '../data-controllers';
 // ----------------------------------------------------------------------------------------------------------------

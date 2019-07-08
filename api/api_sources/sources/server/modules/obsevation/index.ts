@@ -1,5 +1,5 @@
 //
-// Main express route configuration class
+// Index for observation routes
 //
 // Copyright © 2019 Province of British Columbia
 //
@@ -15,30 +15,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Created by Pushan Mitra on 2019-05-10.
-/**
- * Imports
- */
-import { Application} from 'express';
-import { accountRoute, requestAccessRoutes, observationRoute} from '../modules';
-import { defaultRoute} from '../modules';
+// Created by Pushan Mitra on 2019-07-08.
 
-/**
- * @description Configuring main app routes
- * @param express.Application app
- */
-export const routes = (app: Application) => {
-    // Add account
-    app.use('/api/account', accountRoute());
+export * from './observation.route';
 
-    // Request Access routes
-    app.use('/api/request-access', requestAccessRoutes());
-
-    // Observation
-    app.use('/api/observation', observationRoute());
-
-    // Default Route
-    app.use('*', defaultRoute());
-};
 // -----------------------------------------------------------------------------------------------------------
-
