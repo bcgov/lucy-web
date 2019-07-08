@@ -51,6 +51,12 @@ paths:
             $ref: '#/definitions/Error'
   /api/observation/codes:
     get:
+      parameters:
+          - in: header
+            name: token
+            type: string
+            description: JWT Token
+            required: true
       responses:
         '200':
           description: Success
@@ -65,10 +71,58 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   /api/observation:
+    parameters:
+        - in: header
+          name: token
+          type: string
+          description: JWT Token
+          required: true
+        - in: body
+          name: Create Body
+          schema:
+            $ref: '#/definitions/ObservationCreateRequestBody'
     post:
+      summary: Create Observation
+      description: API to create observation model and return newly created model with database id (observation id)
+      operationId: observation
+      produces:
+        - application/json
+      consumes:
+        - application/json
       responses:
         '201':
           description: Created
+          schema:
+            $ref: '#/definitions/Observation'
+        '401':
+          description: Unauthorize user
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation/species:
+    parameters:
+      - in: header
+        name: token
+        type: string
+        description: JWT Token
+        required: true
+    post:
+      summary: Create Observation for particular species
+      description: API to create observation for species return newly created model with database id (observation id)
+      operationId: observation
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - in: body
+        name: Create Body
+        schema:
+          $ref: '#/definitions/ObservationSpeciesCreateRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/ObservationSpecies'
         '401':
           description: Unauthorize user
           schema:
@@ -364,3 +418,42 @@ definitions:
       data:
         type: object
         $ref: '#/definitions/ObservationCodes'
+  ObservationCreateRequestBody:
+    type: object
+    required:
+      - date
+      - lat
+      - long
+    properties:
+      date:
+        type: string
+        description: Date string in YYYY-MM-DD format
+      lat:
+        type: number
+      long:
+        type: number
+  ObservationSpeciesCreateRequest:
+    type: object
+    required:
+      - width
+      - length
+      - accessDescription
+      - species
+      - jurisdiction
+      - observation
+    properties:
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      species:
+        type: number
+        description: Species id
+      jurisdiction:
+        type: number 
+        description: Jurisdiction code id
+      observation:
+        type: number
+        description: Parent observation
