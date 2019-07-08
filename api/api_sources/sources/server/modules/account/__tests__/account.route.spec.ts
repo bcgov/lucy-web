@@ -50,7 +50,7 @@ describe('Test account routes', () => {
 
     it('should fail to fetch me', async () => {
         await request(SharedExpressApp.app)
-        .get('/api/v1/account/me')
+        .get('/api/account/me')
         .expect(401)
         .then(async (resp) => {
             await verifyErrorBody(resp.body);
@@ -60,7 +60,7 @@ describe('Test account routes', () => {
 
     it('should fetch me', async () => {
         await request(SharedExpressApp.app)
-        .get('/api/v1/account/me')
+        .get('/api/account/me')
         .set('Authorization', `Bearer ${adminToken()}`)
         .expect(200)
         .then(async (resp) => {
@@ -78,7 +78,7 @@ describe('Test account routes', () => {
         const user = await UserDataController.shared.fetchOne({email : 'amir@freshworks.io'});
         expect(user).not.to.equal(undefined);
         await request(SharedExpressApp.app)
-        .put('/api/v1/account/me')
+        .put('/api/account/me')
         .set('Authorization', `Bearer ${adminToken()}`)
         .send({
             firstName: fname,
@@ -99,7 +99,7 @@ describe('Test account routes', () => {
 
     it('should fail to update me', async () => {
         await request(SharedExpressApp.app)
-        .put('/api/v1/account/me')
+        .put('/api/account/me')
         .send({
             firstName: 'XYZ',
             lastName: 'ABC'
@@ -114,7 +114,7 @@ describe('Test account routes', () => {
     it('should not update my role', async () => {
         const user = await UserDataController.shared.fetchOne({email : 'amir@freshworks.io'});
         await request(SharedExpressApp.app)
-        .put('/api/v1/account/me')
+        .put('/api/account/me')
         .set('Authorization', `Bearer ${adminToken()}`)
         .send({
             roles: [1, 2, 3]
@@ -133,7 +133,7 @@ describe('Test account routes', () => {
     it('should fetch user with {id}', async () => {
         const newUser = await userFactory(RolesCodeValue.viewer);
         await request(SharedExpressApp.app)
-        .get(`/api/v1/account/user/${newUser.user_id}`)
+        .get(`/api/account/user/${newUser.user_id}`)
         .set('Authorization', `Bearer ${adminToken()}`)
         .expect(200)
         .then(async (resp) => {
@@ -151,7 +151,7 @@ describe('Test account routes', () => {
     it('should not fetch user with {id}', async () => {
         const newUser = await userFactory(RolesCodeValue.viewer);
         await request(SharedExpressApp.app)
-        .get(`/api/v1/account/user/${newUser.user_id}`)
+        .get(`/api/account/user/${newUser.user_id}`)
         .expect(401)
         .then(async (resp) => {
             // Very resp body
@@ -173,7 +173,7 @@ describe('Test account routes', () => {
             roles: [1]
         };
         await request(SharedExpressApp.app)
-        .put(`/api/v1/account/user/${newUser.user_id}`)
+        .put(`/api/account/user/${newUser.user_id}`)
         .set('Authorization', `Bearer ${adminToken()}`)
         .send(updateUserData)
         .expect(200)
@@ -209,7 +209,7 @@ describe('Test account routes', () => {
             roles: [1]
         };
         await request(SharedExpressApp.app)
-        .put(`/api/v1/account/user/${newUser.user_id}`)
+        .put(`/api/account/user/${newUser.user_id}`)
         .send(updateUserData)
         .expect(401)
         .then(async (resp) => {
@@ -224,7 +224,7 @@ describe('Test account routes', () => {
 
     it('should fetch roles', async () => {
         await request(SharedExpressApp.app)
-        .get('/api/v1/account/roles')
+        .get('/api/account/roles')
         .set('Authorization', `Bearer ${adminToken()}`)
         .expect(200)
         .then((resp) => {
