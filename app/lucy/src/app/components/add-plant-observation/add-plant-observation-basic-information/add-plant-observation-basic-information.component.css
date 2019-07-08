@@ -17,3 +17,17 @@
     border: 1px solid #ff0000;
     box-sizing: border-box;
 }
+
+.divider {
+    border: none;
+    height: 1px;
+    color: #000000;
+    background-color: #000000;
+}
+
+.section-title {
+    color: #000000;
+    font-size: 17px;
+	font-weight: bold;
+	line-height: 22px;
+}

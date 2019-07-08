@@ -91,6 +91,30 @@ export class DropdownService {
     // return ['Low', 'Medium', 'High'];
   }
 
+  /**
+   * Return array of dropdowns to use for testing.
+   */
+  public async getDummyDropdownObjects(): Promise<DropdownObject[]> {
+    const dropdownObjects: DropdownObject[] = [];
+    dropdownObjects.push( {
+      name: `Item One`,
+      object: 'item One',
+    });
+    dropdownObjects.push( {
+      name: `Item Two`,
+      object: 'item Two',
+    });
+    dropdownObjects.push( {
+      name: `Item Three`,
+      object: 'item Three',
+    });
+    dropdownObjects.push( {
+      name: `Item Four`,
+      object: 'item Four',
+    });
+    return dropdownObjects;
+  }
+
   private getDummyJuristictions(): Jurisdiction[] {
     return ([
       {
