@@ -1,4 +1,4 @@
--- ### Creating Table ### --
+-- ### Creating Table: jurisdiction_code_table ### --
 
         
 CREATE TABLE jurisdiction_code_table ();
@@ -32,7 +32,8 @@ COMMENT ON COLUMN jurisdiction_code_table.updated_at IS 'Timestamp column to che
 -- ### Creating User Audit Columns ### --
 
         
-ALTER TABLE jurisdiction_code_table ADD COLUMN updated_by_user_id INT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
-ALTER TABLE jurisdiction_code_table ADD COLUMN created_by_user_id INT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
+ALTER TABLE jurisdiction_code_table ADD COLUMN updated_by_user_id INT NULL DEFAULT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
+ALTER TABLE jurisdiction_code_table ADD COLUMN created_by_user_id INT NULL DEFAULT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
 COMMENT ON COLUMN jurisdiction_code_table.updated_by_user_id IS 'Audit column to track creator';
 COMMENT ON COLUMN jurisdiction_code_table.created_by_user_id IS 'Audit column to track modifier';
+ -- ### End: jurisdiction_code_table ### --

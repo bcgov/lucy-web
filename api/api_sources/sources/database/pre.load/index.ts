@@ -1,5 +1,5 @@
 //
-// Index file of module
+// Index to csv and other static preload data tables
 //
 // Copyright © 2019 Province of British Columbia
 //
@@ -15,12 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Created by Pushan Mitra on 2019-05-10.
-/**
- * Exports
- */
-export * from './helpers.utilities';
-export * from './bc.helpers';
-export * from './csv';
+// Created by Pushan Mitra on 2019-07-08.
+export * from './csv.data';
 
-// ---------------------------
+// ---------------------------------------------------------------------------------------------------

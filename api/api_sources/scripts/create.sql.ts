@@ -21,15 +21,20 @@
  * Imports
  */
 import { JurisdictionCodeSchema, getSQLFilePath, ObservationSchema, ObservationSpeciesSchema } from '../sources/database/database-schema';
+import { SpeciesSchema } from '../sources/database/database-schema';
 
 (() => {
     const jurisdictionSchema = new JurisdictionCodeSchema();
     const path = getSQLFilePath(`${jurisdictionSchema.className}.sql`);
     jurisdictionSchema.createMigrationFile(path);
+    jurisdictionSchema.createDataEntry();
 
     const observation = new ObservationSchema();
     observation.createMigrationFile();
 
     const observationSpecies = new ObservationSpeciesSchema();
     observationSpecies.createMigrationFile();
+
+    const species = new SpeciesSchema();
+    species.createDataEntry();
 })();

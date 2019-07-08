@@ -18,8 +18,7 @@
 // Created by Pushan Mitra on 2019-07-05.
 
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { JurisdictionCodeSchema } from '../database-schema';
-
+import { JurisdictionCodeSchema, getSQLFileData } from '../database-schema';
 /**
  * @description Migration File create JurisdictionCode table
  */
@@ -31,7 +30,10 @@ export class CreateJurisdictionCode1562358560315 implements MigrationInterface {
      * @return Promise<any>
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
+        // Creating Table
         await queryRunner.query(this.schema.migrationSQL);
+        // Pre-load species
+        await queryRunner.query(getSQLFileData(this.schema.dataSQLPath()));
     }
 
     /**

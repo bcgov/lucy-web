@@ -20,7 +20,7 @@
  * Imports
  */
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { SpeciesSchema } from '../database-schema';
+import { SpeciesSchema, getSQLFileData } from '../database-schema';
 
 /**
  * @description Migration class to create Species table
@@ -37,7 +37,7 @@ export class CreateSpecies1562193477462 extends SpeciesSchema implements Migrati
         await queryRunner.query(`CREATE TABLE ${this.table.name} (
             ${this.table.columns.id} SERIAL PRIMARY KEY,
             ${this.table.columns.mapCode} VARCHAR(4) NULL,
-            ${this.table.columns.earlyDetection} SMALLINT NULL,
+            ${this.table.columns.earlyDetection} BOOLEAN NULL,
             ${this.table.columns.cmt} SMALLINT NULL,
             ${this.table.columns.shp} SMALLINT NULL,
             ${this.table.columns.species} VARCHAR(4) NULL,
@@ -54,6 +54,9 @@ export class CreateSpecies1562193477462 extends SpeciesSchema implements Migrati
 
         // Create Comments
         await queryRunner.query(this.createComments());
+
+        // Pre-load species
+        await queryRunner.query(getSQLFileData(this.dataSQLPath()));
     }
 
     /**

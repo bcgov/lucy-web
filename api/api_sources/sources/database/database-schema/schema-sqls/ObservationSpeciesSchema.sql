@@ -1,4 +1,4 @@
--- ### Creating Table ### --
+-- ### Creating Table: observation_species ### --
 
         
 CREATE TABLE observation_species ();
@@ -38,7 +38,8 @@ COMMENT ON COLUMN observation_species.updated_at IS 'Timestamp column to check m
 -- ### Creating User Audit Columns ### --
 
         
-ALTER TABLE observation_species ADD COLUMN updated_by_user_id INT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
-ALTER TABLE observation_species ADD COLUMN created_by_user_id INT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
+ALTER TABLE observation_species ADD COLUMN updated_by_user_id INT NULL DEFAULT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
+ALTER TABLE observation_species ADD COLUMN created_by_user_id INT NULL DEFAULT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
 COMMENT ON COLUMN observation_species.updated_by_user_id IS 'Audit column to track creator';
 COMMENT ON COLUMN observation_species.created_by_user_id IS 'Audit column to track modifier';
+ -- ### End: observation_species ### --
