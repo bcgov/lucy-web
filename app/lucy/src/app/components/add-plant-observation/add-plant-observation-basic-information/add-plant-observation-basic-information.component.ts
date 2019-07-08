@@ -25,23 +25,24 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   long: string;
 
   // * Validations
-  validLat: Boolean = true;
-  validLong: Boolean = true;
+  get validLat(): Boolean {
+    return this.validation.isValidLatitude(this.lat);
+  }
+  get validLong(): Boolean {
+    return this.validation.isValidLongitude(this.long);
+  }
 
   get validEastings(): boolean {
-    return this.validation.isValidNumber(this.eastings)
-      && this.validation.hasMinDecimalPlaces(this.eastings, this.minUTMDecimals);
+    return this.validation.isValidUTM(this.eastings);
   }
 
   get validNorthings(): boolean {
-    return this.validation.isValidNumber(this.northings)
-      && this.validation.hasMinDecimalPlaces(this.northings, this.minUTMDecimals);
+    return this.validation.isValidUTM(this.northings);
   }
 
   get validZone(): boolean {
-    return this.validation.isValidNumber(this.zone);
+    return this.validation.isValidInteger(this.zone);
   }
-
 
    ///// Form Mode
    private _mode: FormMode = FormMode.View;
@@ -70,12 +71,23 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     // console.log(`Form - Basic info mode is ${this.mode} -ngAfterViewChecked`);
   }
 
-
   private utmCoordinatesAreValid(): boolean {
-    console.log(this.validNorthings);
-    console.log(this.validEastings);
-    console.log(this.validZone);
     return (this.validNorthings && this.validEastings && this.validZone);
+  }
+
+  eastingChanged(value: string) {
+    this.eastings = value;
+    this.utmValuesChanged();
+  }
+
+  northingsChanged(value: string) {
+    this.northings = value;
+    this.utmValuesChanged();
+  }
+
+  zoneChanged(value: string) {
+    this.zone = value;
+    this.utmValuesChanged();
   }
 
   utmValuesChanged() {

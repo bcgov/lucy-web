@@ -1,33 +1,23 @@
 <div class="container">
   <div class="row">
-    <div class="col-12 subsection-title">
+    <div class="col-12 section-title">
       Location
-      <hr>
     </div>
-    
+  </div>
+   <div class="row">
     <div class="col-12 col-md-3">
-      <div class="col-sm-12 field">
-        <label for="name" class="field-header">Easting</label>
-        <input type="text" [(ngModel)]="eastings" (change)="utmValuesChanged()"
-          class="form-control field-box"
-          [ngClass]="validEastings ? 'field-input' : 'field-input-invalid'" />
-      </div>
-      <div class="col-sm-12 field">
-        <label for="name" class="field-header">Northings</label>
-        <input type="text" [(ngModel)]="northings" (change)="utmValuesChanged()"
-          class="form-control field-box"
-          [ngClass]="validNorthings ? 'field-input' : 'field-input-invalid'" />
-      </div>
-      <div class="col-sm-12 field">
-        <label for="name" class="field-header">Zone</label>
-        <input type="text" [(ngModel)]="zone" (change)="utmValuesChanged()"
-          class="form-control field-box"
-          [ngClass]="validZone ? 'field-input' : 'field-input-invalid'" />
-      </div>
+      <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings" [validationFunc]="validation.isValidUTM"
+        (valueChanged)='eastingChanged($event)'></app-field>
+        <app-field [mode]="mode" [header]="'Northings'" [value]="northings" [validationFunc]="validation.isValidUTM"
+        (valueChanged)='northingsChanged($event)'></app-field>
+        <app-field [mode]="mode" [header]="'Zone'" [value]="zone" [validationFunc]="validation.isValidInteger"
+        (valueChanged)='zoneChanged($event)'></app-field>
     </div>
     <div class="col-12 col-md-8"> 
         <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [center]="mapCenter" [markers]="markers">
           </app-map-preview>
     </div>
   </div>
+  <hr class="divider">
 </div>
+

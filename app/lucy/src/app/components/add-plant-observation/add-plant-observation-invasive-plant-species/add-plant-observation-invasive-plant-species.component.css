@@ -11,3 +11,10 @@
 .addButton {
     width: 100%;
 }
+
+.section-title {
+    color: #000000;
+    font-size: 17px;
+	font-weight: bold;
+	line-height: 22px;
+}

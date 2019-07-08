@@ -2,8 +2,8 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { InvasivePlantSpecies } from 'src/app/models/observation';
 
-export interface AddPlantObservationInvasivePlantSpeciesEmitter {
-  object: any
+export interface AddedSpecies {
+  object: InvasivePlantSpecies;
 }
 
 @Component({
@@ -12,6 +12,14 @@ export interface AddPlantObservationInvasivePlantSpeciesEmitter {
   styleUrls: ['./add-plant-observation-invasive-plant-species.component.css']
 })
 export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit {
+
+  get buttonTitle(): string {
+    if (this.objects.length < 1) {
+      return `+ Add a species to location`;
+    } else {
+      return `+ Add another species to location`;
+    }
+  }
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -38,7 +46,7 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   }
   ////////////////////
 
-  @Output() addPlantObservationInvasivePlantSpeciesEmitter = new EventEmitter<AddPlantObservationInvasivePlantSpeciesEmitter>();
+  @Output() addedSpecies = new EventEmitter<AddedSpecies>();
 
   constructor() { }
 
@@ -47,19 +55,15 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
 
   addSpecies() {
     this.objects.push ({
-      observationSpecies_Id: 1,
-      plantSpecies: 2,
-      juristiction: 2,
-      density: 2,
-      distribution: 2,
-      dimentions: {
-        width: 2,
-        length: 3,
-      },
-      surveyMode: 9,
-      soilTextureCode: 9,
-      useCode: 9,
-      accessDescription: 9,
+      species_id: 1,
+      mapCode: `TEST`,
+      earlyDetection: 1,
+      containmentSpecies: 1,
+      containmentSpacialRef: 1,
+      species: `TEST`,
+      genus: `TEST`,
+      commonName: `TEST`,
+      latinName: `TEST`,
     });
   }
 

@@ -12,8 +12,19 @@ export class ValidationService {
     return toNumber ? true : false;
   }
 
+  public isValidInteger(string: string): boolean {
+    const service = new ValidationService();
+    return (service.isValidNumber(string) && service.decimalPlaces(string) === 0);
+  }
+
+  public isValidUTM(string: string): boolean {
+    const service = new ValidationService();
+    return (service.isValidNumber(string) && service.hasMinDecimalPlaces(string, 2));
+  }
+
   public hasMinDecimalPlaces(number: any, minDecimals: number): boolean {
-    const numberOfDecimals = this.decimalPlaces(number);
+    const service = new ValidationService();
+    const numberOfDecimals = service.decimalPlaces(number);
     return numberOfDecimals >= minDecimals;
   }
 
@@ -21,24 +32,15 @@ export class ValidationService {
    * TODO: Refactor
    * From:
    * https://stackoverflow.com/questions/9539513/is-there-a-reliable-way-in-javascript-to-obtain-the-number-of-decimal-places-of
-   * @param n
+   * @param n number of decimals
    */
-  private decimalPlaces(n) {
-    // Make sure it is a number and use the builtin number -> string.
-    let s = `` + (+n);
-    // Pull out the fraction and the exponent.
+  private decimalPlaces(n: any) {
+    const s = `` + (+n);
     const match = /(?:\.(\d+))?(?:[eE]([+\-]?\d+))?$/.exec(s);
-    // NaN or Infinity or integer.
-    // We arbitrarily decide that Infinity is integral.
     if (!match) { return 0; }
-    // Count the number of digits in the fraction and subtract the
-    // exponent to simulate moving the decimal point left by exponent places.
-    // 1.234e+2 has 1 fraction digit and '234'.length -  2 == 1
-    // 1.234e-2 has 5 fraction digit and '234'.length - -2 == 5
-    return Math.max(
-      0,  // lower limit.
-      (match[1] === '0' ? 0 : (match[1] || '').length)  // fraction length
-      - (+match[2] || 0));  // exponent
+    return Math.max(0,
+      (match[1] === '0' ? 0 : (match[1] || '').length)
+      - (+match[2] || 0));
   }
 
   /**
