@@ -21,7 +21,6 @@
  */
 import * as assert from 'assert';
 import * as csv from 'csvtojson';
-import * as _ from 'underscore';
 import { ObjectLiteral } from 'typeorm';
 
 

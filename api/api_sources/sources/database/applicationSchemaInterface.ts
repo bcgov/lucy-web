@@ -236,20 +236,70 @@ export class  BaseTableSchema {
         const comments = this.createComments();
         const auditColumns = this.createAuditColumns();
 
-        const final = `-- ### Creating Table ### --\n
+        const final = `-- ### Creating Table: ${this.table.name} ### --\n
         \n${create}\n
         \n-- ### Creating Comments on table ### --\n
         \n${comments}\n
         \n-- ### Creating Timestamp column ### --\n
         \n${timestamp}\n
         \n-- ### Creating User Audit Columns ### --\n
-        \n${auditColumns}\n`;
+        \n${auditColumns}\n -- ### End: ${this.table.name} ### --\n`;
         // console.log(`${final}`);
         fs.writeFileSync(fileToSave, final, { flag: 'w+', encoding: 'utf8'});
     }
 
     get migrationSQL(): string {
         return getSQLFileData(`${this.className}.sql`);
+    }
+
+    createDataEntrySql(columns: string, values: any[]): string {
+        let base = `-- ## Inserting into table: ${this.table.name} ## --\n`;
+        _.each(values, (row, index) => {
+            base = `${base}-- ## Inserting Item: ${index}  ## --\n`;
+            base = `${base}INSERT INTO ${this.table.name}(${columns})\nVALUES\n`;
+            let rowStr = ``;
+            _.each(row, (col) => {
+                if (typeof col === 'string') {
+                    let strCol: string = col as string;
+                    strCol = strCol.trim();
+                    if (strCol === 'Y' || strCol === 'y' || strCol === 'YES' || strCol === 'N' || strCol === 'NO') {
+                        rowStr = `${rowStr}'${strCol}',`;
+                    } else if (strCol.includes(`'`)) {
+                        strCol = strCol.replace(/'/gi, `''`);
+                        rowStr = `${rowStr}'${strCol}',`;
+                    }  else if (strCol.includes(`"`)) {
+                        strCol = strCol.replace(/"/gi, `""`);
+                        rowStr = `${rowStr}'${strCol}',`;
+                    } else {
+                        rowStr = `${rowStr}'${strCol}',`;
+                    }
+                } else {
+                    rowStr = `${rowStr}${col}`;
+                }
+            });
+            rowStr = rowStr.replace(/.$/, '');
+            base = `${base}(${rowStr});\n-- ## End of item: ${index} ## --\n`;
+        });
+        return base;
+    }
+
+    public dataSQLPath(context: string): string {
+        throw new Error('Subclass must override');
+    }
+    entryString(context?: any): string {
+        throw new Error('Subclass must override');
+    }
+
+    async csvData(context?: any): Promise<any> {
+        throw new Error('Subclass must override');
+    }
+
+    async createDataEntry(context?: any) {
+        const data = await this.csvData(context);
+        const entryString = this.entryString(context);
+        const sqlString = this.createDataEntrySql(entryString, data);
+        const saveFilePath = getSQLFilePath(this.dataSQLPath(context));
+        fs.writeFileSync(saveFilePath, sqlString, { flag: 'w+', encoding: 'utf8'});
     }
 
     /**

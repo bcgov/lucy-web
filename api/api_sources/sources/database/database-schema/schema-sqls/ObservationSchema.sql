@@ -1,4 +1,4 @@
--- ### Creating Table ### --
+-- ### Creating Table: observation ### --
 
         
 CREATE TABLE observation ();
@@ -32,7 +32,8 @@ COMMENT ON COLUMN observation.updated_at IS 'Timestamp column to check modify ti
 -- ### Creating User Audit Columns ### --
 
         
-ALTER TABLE observation ADD COLUMN updated_by_user_id INT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
-ALTER TABLE observation ADD COLUMN created_by_user_id INT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
+ALTER TABLE observation ADD COLUMN updated_by_user_id INT NULL DEFAULT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
+ALTER TABLE observation ADD COLUMN created_by_user_id INT NULL DEFAULT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
 COMMENT ON COLUMN observation.updated_by_user_id IS 'Audit column to track creator';
 COMMENT ON COLUMN observation.created_by_user_id IS 'Audit column to track modifier';
+ -- ### End: observation ### --

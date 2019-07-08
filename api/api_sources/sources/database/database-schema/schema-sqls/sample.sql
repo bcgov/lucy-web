@@ -1,4 +1,4 @@
--- ### Creating Table ### --
+-- ### Creating Table: sample2_table ### --
 
         
 CREATE TABLE sample2_table ();
@@ -29,3 +29,4 @@ COMMENT ON COLUMN sample2_table.updated_at IS 'Timestamp column to check modify 
 
         
 
+ -- ### End: sample2_table ### --

@@ -37,8 +37,8 @@ export class RecordTableSchema extends BaseTableSchema {
         const userTablePK = UserSchema.schema.columns.id;
 
         // Creating SQL Strings
-        const creatorColumn = `ALTER TABLE ${this.table.name} ADD COLUMN ${createdByColumnName} INT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;`;
-        const modifierColumn = `ALTER TABLE ${this.table.name} ADD COLUMN ${updatedByColumnName} INT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;`;
+        const creatorColumn = `ALTER TABLE ${this.table.name} ADD COLUMN ${createdByColumnName} INT NULL DEFAULT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;`;
+        const modifierColumn = `ALTER TABLE ${this.table.name} ADD COLUMN ${updatedByColumnName} INT NULL DEFAULT NULL REFERENCES ${userTable}(${userTablePK}) ON DELETE SET NULL;`;
         const commentCreatorCol = `COMMENT ON COLUMN ${this.table.name}.${createdByColumnName} IS 'Audit column to track creator';`;
         const commentModifierCol = `COMMENT ON COLUMN ${this.table.name}.${updatedByColumnName} IS 'Audit column to track modifier';`;
         // Returning SQL string

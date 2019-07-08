@@ -116,7 +116,7 @@ help:  ## ** Display this help screen.
 
 schema-spy-run:
 	@echo "Running Schema Spy on local env"
-	cd ./.docker/schemaSpy/local && sh local-run.sh && open output/index.html
+	cd ./.docker/schemaSpy/local && sh local-run.sh
 
 wait-for-app:
 	@echo "Waiting 30 sec for app to start"
