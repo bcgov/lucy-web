@@ -29,9 +29,6 @@ schemes:
 paths:
   /api/me:
     get:
-      tags:
-        - api
-        - users
       summary: User information
       description: API to get user profile information
       operationId: me
@@ -52,11 +49,23 @@ paths:
           description: Unauthorize user
           schema:
             $ref: '#/definitions/Error'
+  /api/observation/codes:
+    get:
+      responses:
+        '200':
+          description: Success
+          schema: 
+            $ref: '#/definitions/ObservationCodesResp'
+        '401':
+          description: Unauthorize user
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
   /api/observation:
     post:
-      tags:
-        - observation
-        - sme
       responses:
         '201':
           description: Created
@@ -334,3 +343,24 @@ definitions:
       data:
         type: object
         $ref: '#/definitions/User'
+  ObservationCodes:
+    required:
+      - jurisdictionCode
+      - speciesList
+    properties:
+      jurisdictionCode:
+        type: object
+        $ref: '#/definitions/JurisdictionCode'
+      speciesList:
+        type: array
+        $ref: '#/definitions/Species'
+  ObservationCodesResp:
+    required:
+      - message
+      - data
+    properties: 
+      message:
+        type: string
+      data:
+        type: object
+        $ref: '#/definitions/ObservationCodes'
