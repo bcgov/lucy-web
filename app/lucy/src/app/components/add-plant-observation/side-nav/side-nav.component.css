@@ -1,0 +1,12 @@
+.side-nav {
+    background: #333333;
+    height: 100%;
+    width: 100%;
+}
+
+.item  {
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 16px;
+}
