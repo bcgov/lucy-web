@@ -2,10 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { InvasivePlantSpecies, ObservationInvasivePlantSpecies } from 'src/app/models/observation';
 
-export interface AddedSpecies {
-  object: InvasivePlantSpecies;
-}
-
 @Component({
   selector: 'app-add-plant-observation-invasive-plant-species',
   templateUrl: './add-plant-observation-invasive-plant-species.component.html',
@@ -45,8 +41,7 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   }
   ////////////////////
 
-  @Output() addedSpecies = new EventEmitter<AddedSpecies>();
-
+  @Output() invasivePlantSpeciesChanged = new EventEmitter<ObservationInvasivePlantSpecies[]>();
   constructor() { }
 
   ngOnInit() {
@@ -54,12 +49,42 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
 
   addSpecies() {
     this.objects.push({
-      observationSpecies_Id: undefined,
+      observationSpecies_Id: this.getUniqueId(),
       species: undefined,
       jurisdiction: undefined,
       width: 0,
       length: 0,
       accessDescription: undefined,
     });
+  }
+
+  private getUniqueId(): number {
+    if (this.objects.length < 1) {
+      return 0;
+    }
+    const usedIds: number[] = [];
+    for (const object of this.objects) {
+      usedIds.push(object.observationSpecies_Id);
+    }
+
+    const sortedUsedIds = usedIds.sort((n1, n2) => n1 - n2);
+    return sortedUsedIds.pop() + 1;
+  }
+
+  speciesCellInfoChanged(event: ObservationInvasivePlantSpecies) {
+    console.log(`change received`);
+    for (const i in this.objects) {
+      if (this.objects[i].observationSpecies_Id === event.observationSpecies_Id) {
+        this.objects[i] = event;
+        console.log(`change saved`);
+        this.notifyChangeEvent();
+      }
+    }
+  }
+
+  private notifyChangeEvent() {
+    if (this.objects) {
+      this.invasivePlantSpeciesChanged.emit(this.objects);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observation } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -82,5 +83,32 @@ export class ValidationService {
     } else {
       return true;
     }
+  }
+
+  public isValidObservationMessage(observation: Observation): string | null {
+    if (!observation) { return `Object does not exist`; }
+    const service = new ValidationService();
+    if (!service.hasMinDecimalPlaces(observation.lat, 6) || !service.hasMinDecimalPlaces(observation.long, 6)) {
+      return `Location is invalid`;
+    }
+
+    if (observation.invasivePlantSpecies.length < 1) {
+      return `You must add an invasive plant species`;
+    }
+
+    for (const species of observation.invasivePlantSpecies) {
+      if (!species.width || !species.length) {
+        return `You must specify Plot for invasive plant species`;
+      }
+
+      if (!species.jurisdiction) {
+        return `You must add a jurisdiction for invasive plant species`;
+      }
+
+      if (!species.species) {
+        return `You must add a plant species for invasive plant species`;
+      }
+    }
+    return null;
   }
 }
