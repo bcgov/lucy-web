@@ -25,7 +25,7 @@ import { ObservationSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { ObservationSpecies } from './observation.species';
 
-@Entity({ name: ObservationSchema.name})
+@Entity({ name: ObservationSchema.dbTable})
 export class Observation extends Record {
     @PrimaryGeneratedColumn()
     @ModelProperty({ type: PropertyType.number})

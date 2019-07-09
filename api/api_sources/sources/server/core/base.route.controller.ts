@@ -19,8 +19,10 @@
 
 // @IMPORT
 // LIB
+import * as assert from 'assert';
 import * as express from 'express';
 import * as passport from 'passport';
+import { validationResult } from 'express-validator';
 // SOURCE
 import { Logger } from '../logger';
 import { errorBody } from '../core';
@@ -125,6 +127,38 @@ export class BaseRoutController<DataController>  {
         this.logger.error(`[API-${tag}] | Call Error => ${error}`);
         const errMsg = message || `${error}`;
         resp.status(status).json(errorBody(errMsg, [error]));
+    }
+
+
+    /**
+     *
+     * @param string tag Tag handler for debugging
+     * @param (req: express.Request, data: T) handler closure to handle req
+     */
+    routeConfig<T>(tag: string, handler: (data: T, req: express.Request, resp: express.Response) => Promise<[number, any]>): RouteHandler {
+        return async (req: express.Request, resp: express.Response) => {
+            try {
+                // Check for error
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                    return resp.status(422).json({
+                        message: 'Input validation error',
+                        errors: errors.array()
+                    });
+                }
+                // Get data
+                const data = req.body as T;
+                assert(data, `Unexpected request body: tag:${tag}`);
+                const [status, body]  = await handler(data, req, resp);
+                if (status > 0) {
+                    return resp.status(status).json(this.successResp(body));
+                } else {
+                    return;
+                }
+            } catch (excp) {
+                return this.commonError(500, `routeConfig:${tag}`, excp, resp);
+            }
+        };
     }
 }
 

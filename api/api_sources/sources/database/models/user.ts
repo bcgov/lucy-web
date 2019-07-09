@@ -153,14 +153,14 @@ export class User extends BaseModel implements LoadData<UserData> {
  * @description Base class for record
  */
 export abstract class Record {
-    @ManyToOne( type => User)
+    @ManyToOne( type => User, {eager : true})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.createdBy,
         referencedColumnName: UserSchema.schema.columns.id
     })
-    createdBy: Promise<User>;
+    createdBy: User;
 
-    @ManyToOne( type => User)
+    @ManyToOne( type => User, { eager: true})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.updatedBy,
         referencedColumnName: UserSchema.schema.columns.id

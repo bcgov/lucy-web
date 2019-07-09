@@ -27,8 +27,16 @@ import { Species } from './species';
 import { JurisdictionCode } from './observation.codes';
 import { Observation } from './observation';
 
-@Entity({ name: ObservationSpeciesSchema.name})
-export class ObservationSpecies extends Record {
+export interface ObservationSpeciesCreateModel {
+    width: number;
+    length: number;
+    accessDescription: string;
+    species: Species;
+    jurisdiction: JurisdictionCode;
+    observation: Observation;
+}
+@Entity({ name: ObservationSpeciesSchema.dbTable})
+export class ObservationSpecies extends Record implements ObservationSpeciesCreateModel {
     @PrimaryGeneratedColumn()
     @ModelProperty({ type: PropertyType.number})
     observation_species_id: number;
