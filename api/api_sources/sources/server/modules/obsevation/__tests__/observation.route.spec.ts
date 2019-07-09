@@ -20,10 +20,11 @@
  * Imports
  */
 import * as request from 'supertest';
-import { should } from 'chai';
+import { should, expect } from 'chai';
 import { SharedExpressApp } from '../../../initializers';
 import { adminToken } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction} from '../../../../test-helpers/testHelpers';
+import { ObservationCreateModel, ObservationSpeciesCreateModel } from '../../../../database/models';
 
 describe('Test for observation routes', () => {
     before(async () => {
@@ -59,6 +60,39 @@ describe('Test for observation routes', () => {
         });
     });
 
+    it('should create observation', async () => {
+        const create: ObservationCreateModel = {
+            lat: 76.98,
+            long: 67.76,
+            date: '2019-05-01'
+        };
+        await request(SharedExpressApp.app)
+        .post('/api/observation')
+        .set('Authorization', `Bearer ${adminToken()}`)
+        .send(create)
+        .expect(201)
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body, async (body) => {
+                should().exist(body.observation_id);
+                expect(body.lat).to.be.equal(create.lat);
+            });
+            // done();
+        });
+    });
+
+    it('should not create observation', async () => {
+        const create = {
+        };
+        await request(SharedExpressApp.app)
+        .post('/api/observation')
+        .set('Authorization', `Bearer ${adminToken()}`)
+        .send(create)
+        .expect(422)
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+            // done();
+        });
+    });
 });
 
 // -----------------------------------------------------------------------------------------------------------
