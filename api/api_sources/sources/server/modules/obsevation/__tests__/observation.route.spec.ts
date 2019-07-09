@@ -24,7 +24,7 @@ import { should, expect } from 'chai';
 import { SharedExpressApp } from '../../../initializers';
 import { adminToken } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction} from '../../../../test-helpers/testHelpers';
-import { ObservationCreateModel, ObservationSpeciesCreateModel } from '../../../../database/models';
+import { ObservationCreateModel } from '../../../../database/models';
 
 describe('Test for observation routes', () => {
     before(async () => {
