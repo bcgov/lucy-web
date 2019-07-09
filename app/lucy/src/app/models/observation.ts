@@ -5,21 +5,22 @@ export interface Observation {
 	invasivePlantSpecies: ObservationInvasivePlantSpecies[];
 }
 export interface InvasivePlantSpecies {
-    species_id: number;
-    mapCode: string;
-    earlyDetection: number;
-    containmentSpecies: number;
-    containmentSpacialRef: number;
-    species: string;
-    genus: string;
     commonName: string;
+    containmentSpacialRef: number;
+    containmentSpecies: number;
+    earlyDetection: boolean;
+    genus: string;
     latinName: string;
+    mapCode: string;
+    species: string;
+    species_id: number;
 }
 
 export interface Jurisdiction {
-	juristiction_id: number;
-	Code: string;
-	description: string;
+    juristiction_id: number;
+    code: string;
+    description: string;
+    activeIndicator: true;
 }
 
 export interface ObservationInvasivePlantSpecies {

@@ -10,8 +10,8 @@ import { ObjectValidatorService } from './object-validator.service';
 import { Role, UserAccessType } from '../models/Role';
 
 export interface UserChangeResult {
-  success: boolean
-  response: User | null
+  success: boolean;
+  response: User | null;
 }
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export interface UserChangeResult {
 export class UserService {
 
   private current: User | null = null;
-  public shouldRefresh: boolean = false;
+  public shouldRefresh = false;
 
   constructor(private http: HttpClient,
     private cookieService: CookieService,
@@ -52,14 +52,14 @@ export class UserService {
 
   /*------------------------------------API CALL------------------------------------*/
   /**
-   * Make an API Call through 
-   * getUserRequestPromise() 
+   * Make an API Call through
+   * getUserRequestPromise()
    * to get the current users informartion.
    * 
    * @returns User | null
    */
   private async requestUserInfo(): Promise<User | null> {
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, ``);
     if (this.objectValidator.isUserObject(response.response)) {
       this.current = response.response;
       return response.response;

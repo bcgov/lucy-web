@@ -91,8 +91,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   utmValuesChanged() {
-    console.log(`from utm`);
-
     // 1) Check if fields are valid
     if (!this.utmCoordinatesAreValid()) {
       return;

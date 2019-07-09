@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Jurisdiction, InvasivePlantSpecies } from '../models';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { AppConstants } from '../constants';
+import { ApiService, APIRequestMethod } from './api.service';
+import { ObjectValidatorService } from './object-validator.service';
 
 export interface DropdownObject {
   name: string;
@@ -25,7 +27,24 @@ export class DropdownService {
   private densities: string[];
   private test: DropdownObject[];
 
-  constructor() { }
+  private codeTables: any| null = null;
+
+  constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
+
+  async getCodes(): Promise<any | null> {
+    if (this.codeTables !== null) {
+      return this.codeTables;
+    }
+
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observationCodes, null);
+    if (response.success) {
+      console.log(response.response)
+      this.codeTables = response.response;
+      return response.response;
+    } else {
+      return null;
+    }
+  }
 
   public createDropdownObjectsFrom(objects: any[], displayValue: string): DropdownObject[] {
     const dropdownObjects: DropdownObject[] = [];
@@ -39,17 +58,35 @@ export class DropdownService {
   }
 
   /**
-   * TODO: Incomplete
+   * 
    */
   public async getJuristictions(): Promise<DropdownObject[]> {
-    return this.createDropdownObjectsFrom(this.getDummyJuristictions(), 'Code');
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+    const juristictionCodes = codes['jurisdictionCodes'];
+    if ( juristictionCodes && (Array.isArray(juristictionCodes) && this.objectValidator.isJurisdictionObject(juristictionCodes[0]))) {
+      return this.createDropdownObjectsFrom(juristictionCodes, 'code');
+    }
+
+    console.log(`\n\n\n\n`);
+    console.dir(codes);
   }
 
   /**
-   * TODO: Incomplete
+   * 
    */
   public async getInvasivePlantSpecies(): Promise<DropdownObject[]> {
-    return this.createDropdownObjectsFrom(this.getDummyInvasivePlantSpecies(), 'species');
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+
+    const speciesCodes = codes['speciesList'];
+    if ( speciesCodes && (Array.isArray(speciesCodes) && this.objectValidator.isInvasivePlantSpeciesObject(speciesCodes[0]))) {
+      return this.createDropdownObjectsFrom(speciesCodes, 'latinName');
+    }
   }
 
   /**
@@ -113,58 +150,5 @@ export class DropdownService {
       object: 'item Four',
     });
     return dropdownObjects;
-  }
-
-  private getDummyJuristictions(): Jurisdiction[] {
-    return ([
-      {
-        juristiction_id: 1,
-        Code: `FLNRO`,
-        description: `describing`,
-      },
-      {
-        juristiction_id: 2,
-        Code: `NRS`,
-        description: `describing`,
-      }
-    ]);
-  }
-
-  private getDummyInvasivePlantSpecies(): InvasivePlantSpecies[] {
-    return ([
-      {
-        species_id: 1,
-        mapCode: `code`,
-        earlyDetection: 2,
-        containmentSpecies: 2,
-        containmentSpacialRef: 2,
-        species: `Green Flower`,
-        genus: `floraris`,
-        commonName: `flower`,
-        latinName: `florarum`,
-      },
-      {
-        species_id: 2,
-        mapCode: `code`,
-        earlyDetection: 2,
-        containmentSpecies: 2,
-        containmentSpacialRef: 2,
-        species: `Red Flower`,
-        genus: `floraris`,
-        commonName: `flower`,
-        latinName: `florarum`,
-      },
-      {
-        species_id: 3,
-        mapCode: `code`,
-        earlyDetection: 2,
-        containmentSpecies: 2,
-        containmentSpacialRef: 2,
-        species: `Purple Flower`,
-        genus: `floraris`,
-        commonName: `flower`,
-        latinName: `florarum`,
-      },
-    ]);
   }
 }
