@@ -31,6 +31,7 @@ export class DropdownComponent implements OnInit {
   }
   // Set selected item
   @Input() set selectedItem(item: DropdownObject) {
+    if (!item) { return; }
     this._selectedItem = item;
   }
   ////////////////////

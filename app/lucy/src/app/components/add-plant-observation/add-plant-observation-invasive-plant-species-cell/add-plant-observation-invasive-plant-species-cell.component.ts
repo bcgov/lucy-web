@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
-import { FormMode, Jurisdiction, InvasivePlantSpecies } from 'src/app/models';
+import { FormMode, Jurisdiction, InvasivePlantSpecies, ObservationInvasivePlantSpecies } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
 
@@ -12,16 +12,49 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
 
   ViewMode = FormMode.View;
 
-  ////// TODO: temporary
-  plotDimentionWidth: number;
-  plotDimentionLength: number;
-  ////////////////////
+  get width(): string {
+    if (!this.object || !this.object.width) {
+      return '';
+    }
+    return String(this.object.width);
+  }
+
+  get length(): string {
+    if (!this.object || !this.object.length) {
+      return '';
+    }
+    return String(this.object.length);
+  }
+
+  get selectedInviasiveSpecies(): DropdownObject | undefined {
+    if (!this.object || !this.object.species) {
+      return undefined;
+    }
+    return {
+      name: this.object.species[this.dropdownService.displayedInvasivePlantspeciesField],
+      object: this.object.species,
+    };
+  }
+
+  get selectedJurisdiction(): DropdownObject | undefined {
+    if (!this.object || !this.object.jurisdiction) {
+      return undefined;
+    }
+    return {
+      name: this.object.jurisdiction[this.dropdownService.displayedJuristictionsField],
+      object: this.object.jurisdiction,
+    };
+  }
 
   get calculatedArea(): string {
-    if (!this.plotDimentionLength || ! this.plotDimentionWidth) {
-      return `0`;
+    return `${this.object.width * this.object.length} m²`;
+  }
+
+  get accessDescription(): string {
+    if (!this.object || !this.object.accessDescription) {
+      return '';
     }
-    return `${this.plotDimentionWidth * this.plotDimentionLength} m²`;
+    return this.object.accessDescription;
   }
 
   juristictions: DropdownObject[];
@@ -42,6 +75,18 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   @Input() set mode(mode: FormMode) {
     console.log(`Form - plant info mode is ${mode}`);
     this._mode = mode;
+  }
+  ////////////////////
+
+  ///// Invasive plant objects
+  private _object: ObservationInvasivePlantSpecies;
+  // Get
+  get object(): ObservationInvasivePlantSpecies {
+    return this._object;
+  }
+  // Set
+  @Input() set object(object: ObservationInvasivePlantSpecies) {
+    this._object = object;
   }
   ////////////////////
 
@@ -83,20 +128,22 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
     this.dropdownService.getDensities().then((result) => {
       this.densities = result;
     });
-
   }
-
 
   fieldValueChanged(value: DropdownObject) {
     console.log(value);
   }
 
   invasivePlantSpeciesChanged(value: DropdownObject) {
-    console.log(value);
+    if (this.object && value.object) {
+      this.object.species = value.object;
+    }
   }
 
   jurisdictionChanged(value: DropdownObject) {
-    console.log(value);
+    if (this.object && value.object) {
+      this.object.jurisdiction = value.object;
+    }
   }
 
   densityChanged(value: DropdownObject) {
@@ -120,12 +167,20 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
 
   plotDimentionWidthChanged(value: number) {
-    this.plotDimentionWidth = value;
+    if (this.object) {
+      this.object.width = value;
+    }
   }
 
   plotDimentionLengthChanged(value: number) {
-    this.plotDimentionLength = value;
+    if (this.object) {
+      this.object.length = value;
+    }
   }
 
-
+  accessDescriptionChanged(value: string) {
+    if (this.object) {
+      this.object.accessDescription = value;
+    }
+  }
 }

@@ -15,6 +15,9 @@ export interface DropdownObject {
 
 export class DropdownService {
 
+  public displayedJuristictionsField = `code`;
+  public displayedInvasivePlantspeciesField = `latinName`;
+
   /**
    * TODO: Everything is Incomplete
    */
@@ -31,14 +34,13 @@ export class DropdownService {
 
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
-  async getCodes(): Promise<any | null> {
+  private async getCodes(): Promise<any | null> {
     if (this.codeTables !== null) {
       return this.codeTables;
     }
 
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observationCodes, null);
     if (response.success) {
-      console.log(response.response)
       this.codeTables = response.response;
       return response.response;
     } else {
@@ -61,23 +63,30 @@ export class DropdownService {
    * 
    */
   public async getJuristictions(): Promise<DropdownObject[]> {
+    if (this.juristictions && this.juristictions.length > 0 ) {
+      return this.createDropdownObjectsFrom(this.juristictions, this.displayedJuristictionsField);
+    }
+
     const codes = await this.getCodes();
     if (codes === null) {
        return [];
     }
+
     const juristictionCodes = codes['jurisdictionCodes'];
     if ( juristictionCodes && (Array.isArray(juristictionCodes) && this.objectValidator.isJurisdictionObject(juristictionCodes[0]))) {
-      return this.createDropdownObjectsFrom(juristictionCodes, 'code');
+      this.juristictions = juristictionCodes;
+      return this.createDropdownObjectsFrom(juristictionCodes, this.displayedJuristictionsField);
     }
-
-    console.log(`\n\n\n\n`);
-    console.dir(codes);
   }
 
   /**
    * 
    */
   public async getInvasivePlantSpecies(): Promise<DropdownObject[]> {
+    if (this.invasivePlantSpecies && this.invasivePlantSpecies.length > 0 ) {
+      return this.createDropdownObjectsFrom(this.invasivePlantSpecies, this.displayedInvasivePlantspeciesField);
+    }
+
     const codes = await this.getCodes();
     if (codes === null) {
        return [];
@@ -85,7 +94,8 @@ export class DropdownService {
 
     const speciesCodes = codes['speciesList'];
     if ( speciesCodes && (Array.isArray(speciesCodes) && this.objectValidator.isInvasivePlantSpeciesObject(speciesCodes[0]))) {
-      return this.createDropdownObjectsFrom(speciesCodes, 'latinName');
+      this.invasivePlantSpecies = speciesCodes;
+      return this.createDropdownObjectsFrom(speciesCodes, this.displayedInvasivePlantspeciesField);
     }
   }
 
