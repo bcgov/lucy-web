@@ -42,6 +42,7 @@ export class ObservationRouteController extends SecureRouteController<Observatio
 
     constructor() {
         super();
+        // Data controller
         this.dataController = ObservationController.shared;
 
         // Observation species route
