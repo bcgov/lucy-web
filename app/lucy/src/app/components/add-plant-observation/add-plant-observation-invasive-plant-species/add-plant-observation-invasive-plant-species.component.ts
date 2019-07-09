@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormMode } from 'src/app/models';
-import { InvasivePlantSpecies } from 'src/app/models/observation';
+import { InvasivePlantSpecies, ObservationInvasivePlantSpecies } from 'src/app/models/observation';
 
 export interface AddedSpecies {
   object: InvasivePlantSpecies;
@@ -34,13 +34,13 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   ////////////////////
 
   ///// Invasive plant objects
-  private _objects: InvasivePlantSpecies[] = [];
+  private _objects: ObservationInvasivePlantSpecies[] = [];
   // Get
-  get objects(): InvasivePlantSpecies[] {
+  get objects(): ObservationInvasivePlantSpecies[] {
     return this._objects;
   }
   // Set
-  @Input() set objects(objects: InvasivePlantSpecies[]) {
+  @Input() set objects(objects: ObservationInvasivePlantSpecies[]) {
     this._objects = objects;
   }
   ////////////////////
@@ -53,18 +53,13 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   }
 
   addSpecies() {
-    this.objects.push ({
-      species_id: 1,
-      mapCode: `TEST`,
-      earlyDetection: 1,
-      containmentSpecies: 1,
-      containmentSpacialRef: 1,
-      species: `TEST`,
-      genus: `TEST`,
-      commonName: `TEST`,
-      latinName: `TEST`,
+    this.objects.push({
+      observationSpecies_Id: undefined,
+      species: undefined,
+      jurisdiction: undefined,
+      width: 0,
+      length: 0,
+      accessDescription: undefined,
     });
   }
-
-
 }

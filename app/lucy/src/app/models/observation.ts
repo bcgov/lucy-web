@@ -25,9 +25,9 @@ export interface Jurisdiction {
 
 export interface ObservationInvasivePlantSpecies {
     observationSpecies_Id: number;
-    species: InvasivePlantSpecies[];
+    species: InvasivePlantSpecies;
     jurisdiction: Jurisdiction;
 	width: number;
 	length: number;
-	accessDescription: number;
+	accessDescription: string;
 }

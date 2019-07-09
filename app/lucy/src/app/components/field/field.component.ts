@@ -11,12 +11,11 @@ import { ValidationService } from 'src/app/services/validation.service';
 export class FieldComponent implements OnInit {
   // Output
   @Output() valueChanged = new EventEmitter<string>();
-
   // Optional Input
   @Input() validationFunc: any;
   // Optional Input
   @Input() multiline = false;
-
+  // Field header
   @Input() header = '';
 
   ///// Form Mode
@@ -32,10 +31,6 @@ export class FieldComponent implements OnInit {
   ////////////////////
 
   get readonly(): boolean {
-    // console.log('***');
-    if (this.mode === FormMode.View) {
-      // console.log(`${this.header} is Readonly`);
-    }
     return this.mode === FormMode.View;
   }
 
@@ -47,6 +42,7 @@ export class FieldComponent implements OnInit {
   }
   // Set
   @Input() set value(value: string) {
+    console.log(value);
     this._value = value;
     this.valueChanged.emit(value);
   }
