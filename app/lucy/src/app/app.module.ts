@@ -11,6 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
 // ng-bootstrap
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
+// InViewportModule
+import { InViewportModule } from 'ng-in-viewport';
+
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 
@@ -83,6 +86,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     HttpClientModule,
     NgbModule,
     RouterModule,
+    InViewportModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

@@ -51,7 +51,20 @@ export class DropdownComponent implements OnInit {
   }
   // Set items
   @Input() set items(array: DropdownObject[]) {
+    this.filteredItems = array;
     this._items = array;
+  }
+  ////////////////////
+
+  ///// Items list
+  private _filteredItems: DropdownObject[] = [];
+  // Get filtered items
+  get filteredItems(): DropdownObject[] {
+    return this._filteredItems;
+  }
+  // Set filtered
+  set filteredItems(items: DropdownObject[]) {
+    this._filteredItems = items;
   }
   ////////////////////
 
@@ -66,6 +79,21 @@ export class DropdownComponent implements OnInit {
   selected(item: DropdownObject) {
     this.selectedItem = item;
     this.selectionChanged.emit(this.selectedItem);
+  }
+
+  filer(string: string) {
+    console.log(string);
+    if (string === ``) {
+      this.filteredItems = this.items;
+    } else {
+      this.filteredItems = [];
+      console.log(`searching`);
+      for (const item of this.items) {
+        if (item.name.toLowerCase().includes(string.toLowerCase())) {
+          this.filteredItems.push(item);
+        }
+      }
+    }
   }
 
 }

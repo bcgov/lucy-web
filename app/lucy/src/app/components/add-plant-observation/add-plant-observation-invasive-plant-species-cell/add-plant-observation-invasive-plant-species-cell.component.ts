@@ -18,7 +18,10 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   ////////////////////
 
   get calculatedArea(): string {
-    return `Total Calculated Area: ${this.plotDimentionWidth * this.plotDimentionLength}`;
+    if (!this.plotDimentionLength || ! this.plotDimentionWidth) {
+      return `0`;
+    }
+    return `${this.plotDimentionWidth * this.plotDimentionLength} m²`;
   }
 
   juristictions: DropdownObject[];

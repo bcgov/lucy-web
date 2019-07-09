@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewChecked, NgZone } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
-// import { Observation} from '../../models';
+
 import 'node_modules/leaflet/';
 import { FormMode } from 'src/app/models';
 declare let L;
@@ -12,22 +12,28 @@ declare let L;
 })
 
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
-  
 
-    ///// Form Mode
-    private _mode: FormMode = FormMode.View;
-    // Get
-    get mode(): FormMode {
-      return this._mode;
-    }
-    // Set
-    @Input() set mode(mode: FormMode) {
-      console.log(`Form mode is ${mode}`);
-      this._mode = mode;
-    }
-    ////////////////////
+  private _visibleClasses = [];
+  get visibleClasses(): string[] {
+    return this._visibleClasses;
+  }
+  set visibleClasses(classNames: string[]) {
+    this._visibleClasses = classNames;
+  }
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  // Get
+  get mode(): FormMode {
+    return this._mode;
+  }
+  // Set
+  @Input() set mode(mode: FormMode) {
+    console.log(`Form mode is ${mode}`);
+    this._mode = mode;
+  }
+  ////////////////////
 
-  constructor(private zone: NgZone ) { }
+  constructor(private zone: NgZone) { }
 
   ngOnInit() {
     // this.mode = FormMode.Edit;
@@ -43,4 +49,16 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   }
 
+  public onIntersection({ target, visible }: { target: Element; visible: boolean }): void {
+    const visibleClasses = [];
+    this.visibleClasses.push(target.className);
+    this.visibleClasses.forEach(element => {
+      if (element !== target.className) {
+        visibleClasses.push(element);
+      } else if (element === target.className && visible) {
+        visibleClasses.push(element);
+      }
+    });
+    this.visibleClasses = visibleClasses;
+  }
 }

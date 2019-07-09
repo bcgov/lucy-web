@@ -10,3 +10,17 @@
 	font-weight: bold;
 	line-height: 16px;
 }
+
+.on {
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 16px;
+}
+
+.off {
+	opacity: 0.5;
+	color: #FFFFFF;
+	font-size: 14px;
+	line-height: 16px;
+}
