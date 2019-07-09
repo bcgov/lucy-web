@@ -4,8 +4,8 @@
 CREATE TABLE observation ();
 ALTER TABLE observation ADD COLUMN observation_id SERIAL PRIMARY KEY;
 ALTER TABLE observation ADD COLUMN observation_date DATE NULL;
-ALTER TABLE observation ADD COLUMN observation_location_lat NUMERIC(3, 3) NOT NULL;
-ALTER TABLE observation ADD COLUMN observation_location_long NUMERIC(3, 3) NOT NULL;
+ALTER TABLE observation ADD COLUMN observation_location_lat NUMERIC(8, 6) NOT NULL;
+ALTER TABLE observation ADD COLUMN observation_location_long NUMERIC(9, 6) NOT NULL;
 
 
         

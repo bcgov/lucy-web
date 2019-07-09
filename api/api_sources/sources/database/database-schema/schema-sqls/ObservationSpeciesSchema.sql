@@ -3,8 +3,8 @@
         
 CREATE TABLE observation_species ();
 ALTER TABLE observation_species ADD COLUMN observation_species_id SERIAL PRIMARY KEY;
-ALTER TABLE observation_species ADD COLUMN area_width NUMERIC(4, 3) NULL DEFAULT 0.0;
-ALTER TABLE observation_species ADD COLUMN area_length NUMERIC(4, 3) NULL DEFAULT 0.0;
+ALTER TABLE observation_species ADD COLUMN area_width NUMERIC(7, 2) NULL DEFAULT 0.0;
+ALTER TABLE observation_species ADD COLUMN area_length NUMERIC(7, 2) NULL DEFAULT 0.0;
 ALTER TABLE observation_species ADD COLUMN access_description VARCHAR(500) NULL;
 ALTER TABLE observation_species ADD COLUMN species_id INT NULL REFERENCES species(species_id) ON DELETE CASCADE;
 ALTER TABLE observation_species ADD COLUMN jurisdiction_code_id INT NULL REFERENCES jurisdiction_code_table(jurisdiction_code_id) ON DELETE CASCADE;

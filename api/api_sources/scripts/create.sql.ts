@@ -20,6 +20,7 @@
 /**
  * Imports
  */
+import 'reflect-metadata';
 import { JurisdictionCodeSchema, getSQLFilePath, ObservationSchema, ObservationSpeciesSchema } from '../sources/database/database-schema';
 import { SpeciesSchema } from '../sources/database/database-schema';
 

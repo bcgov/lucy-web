@@ -21,8 +21,18 @@
  */
 import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
+import { check } from 'express-validator';
 import { SecureRouteController, RouteHandler } from '../../core';
-import { ObservationController, JurisdictionCodeController, SpeciesController} from '../../../database/models';
+import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel} from '../../../database/models';
+import { observationSpeciesRoute } from './observation.species.route';
+
+const createValidator = (): any[] =>  {
+    return [
+        check('lat').isNumeric().withMessage('lat: should be number'),
+        check('long').isNumeric().withMessage('long: should be number'),
+        check('date').isString().withMessage('accessDescription: should be string')
+    ];
+};
 
 export class ObservationRouteController extends SecureRouteController<ObservationController> {
 
@@ -34,9 +44,19 @@ export class ObservationRouteController extends SecureRouteController<Observatio
         super();
         this.dataController = ObservationController.shared;
 
+        // Observation species route
+        this.router.use('/species', observationSpeciesRoute());
+
+        // Get all codes
         this.router.get('/codes', this.indexCodes);
+
+        // Create observation
+        this.router.post('/', createValidator(), this.create);
     }
 
+    /**
+     * @description Route Handler to load all codes for observation
+     */
     get indexCodes(): RouteHandler {
         return async (req: Request, resp: Response) => {
             try {
@@ -53,6 +73,15 @@ export class ObservationRouteController extends SecureRouteController<Observatio
                 return;
             }
         };
+    }
+
+    /**
+     * @description Route handle for creating new observation
+     */
+    get create(): RouteHandler {
+        return this.routeConfig<ObservationCreateModel>('observation-create',
+        async (data: ObservationCreateModel, req: Request) => [201, await this.dataController.createObservation(data, req.user)]
+        );
     }
 }
 
