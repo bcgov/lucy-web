@@ -6,7 +6,11 @@
   </div>
   <div class="row">
     <div class="col-12" *ngFor="let object of objects; let i = index">
-      <app-add-plant-observation-invasive-plant-species-cell [mode]="mode" [object]="object">
+      <app-add-plant-observation-invasive-plant-species-cell
+      [mode]="mode"
+      [object]="object"
+      (speciesCellInfoChanged)='speciesCellInfoChanged($event)'
+      >
       </app-add-plant-observation-invasive-plant-species-cell>
     </div>
 

@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, Output, EventEmitter } from '@angular/core';
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { FormMode } from 'src/app/models';
+import { FormMode, Observation } from 'src/app/models';
 
 @Component({
   selector: 'app-add-plant-observation-basic-information',
@@ -57,6 +57,19 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
    }
    ////////////////////
 
+  ///// Invasive plant objects
+  private _object: Observation;
+  // Get
+  get observationObject(): Observation {
+    return this._object;
+  }
+  // Set
+  @Input() set observationObject(object: Observation) {
+    this._object = object;
+  }
+  ////////////////////
+
+  @Output() basicInfoChanged = new EventEmitter<Observation>();
   constructor(private converterService: ConverterService, private validation: ValidationService) { }
 
   ngOnInit() {
@@ -65,6 +78,12 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       longitude: -123.288152,
       zoom: 4
     };
+  }
+
+  private notifyChangeEvent() {
+    if (this.observationObject) {
+      this.basicInfoChanged.emit(this.observationObject);
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -78,16 +97,19 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   eastingChanged(value: string) {
     this.eastings = value;
     this.utmValuesChanged();
+    this.notifyChangeEvent();
   }
 
   northingsChanged(value: string) {
     this.northings = value;
     this.utmValuesChanged();
+    this.notifyChangeEvent();
   }
 
   zoneChanged(value: string) {
     this.zone = value;
     this.utmValuesChanged();
+    this.notifyChangeEvent();
   }
 
   utmValuesChanged() {
@@ -119,6 +141,9 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       latitude: converted.latitude,
       longitude: converted.longitude
     });
+
+    this.observationObject.lat = parseFloat(converted.latitude.toFixed(6));
+    this.observationObject.long = parseFloat(converted.longitude.toFixed(6));
   }
 
   /**
