@@ -67,7 +67,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     setTimeout(() => {
       this.zone.run(() => {
-        this.mode = FormMode.Edit;
+        // this.mode = FormMode.Edit;
+        this.mode = FormMode.Create;
       });
     }, 1000);
   }
