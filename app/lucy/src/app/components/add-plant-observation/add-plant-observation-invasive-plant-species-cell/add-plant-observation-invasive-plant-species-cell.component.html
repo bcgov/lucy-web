@@ -1,0 +1,113 @@
+<br />
+<div class="container card">
+  <div class="row">
+    <!-- Invasive Plant Species -->
+    <div class="col-12">
+      <app-dropdown 
+      [mode]="mode"
+      [items]="invasivePlantSpecies" 
+      [fieldHeader]="'Invasive Plant Species'"
+      [selectedItem]="selectedInviasiveSpecies"
+      (selectionChanged)='invasivePlantSpeciesChanged($event)'>
+    </app-dropdown>
+    </div>
+    <!-- Jurisdiction, Density, Distribution -->
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 col-md-4">
+          <app-dropdown 
+          [mode]="mode"
+          [items]="juristictions"
+          [fieldHeader]="'Jurisdiction'"
+          [selectedItem]="selectedJurisdiction"
+          (selectionChanged)='jurisdictionChanged($event)'>
+        </app-dropdown>
+        </div>
+        <div class="col-12 col-md-4">
+          <app-dropdown
+          [mode]="mode"
+          [items]="densities"
+          [fieldHeader]="'Density'"
+          (selectionChanged)='densityChanged($event)'>
+        </app-dropdown>
+        </div>
+        <div class="col-12 col-md-4">
+          <app-dropdown
+          [mode]="mode"
+          [items]="distributions"
+          [fieldHeader]="'Distribution'"
+          (selectionChanged)='distributionChanged($event)'>
+        </app-dropdown>
+        </div>
+      </div>
+    </div>
+    <!-- Plot Dimention -->
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 col-md-4">
+          <app-field
+          [mode]="mode"
+          [header]="'Plot Dimention Width'"
+          [value]="width"
+          [validationFunc]="validation.isValidNumber"
+          (valueChanged)='plotDimentionWidthChanged($event)'>
+        </app-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <app-field
+          [mode]="mode"
+          [header]="'Plot Dimention Length'"
+          [value]="length"
+          [validationFunc]="validation.isValidNumber"
+          (valueChanged)='plotDimentionLengthChanged($event)'>
+        </app-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <app-field
+          [mode]="ViewMode"
+          [header]="'Total Calculated Area'" 
+          [value]="calculatedArea">
+        </app-field>
+        </div>
+      </div>
+    </div>
+    <!-- Survey Mode, Soil Texture Code, Specific Use Code -->
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 col-md-4">
+          <app-dropdown
+          [mode]="mode" 
+          [items]="surveyModes" 
+          [fieldHeader]="'Survey Mode'"
+          (selectionChanged)='surveyModeChanged($event)'>
+        </app-dropdown>
+        </div>
+        <div class="col-12 col-md-4">
+          <app-dropdown 
+          [mode]="mode" 
+          [items]="soilTextureCodes" 
+          [fieldHeader]="'Soil Texture Code'"
+          (selectionChanged)='soilTextureCodeChanged($event)'>
+        </app-dropdown>
+        </div>
+        <div class="col-12 col-md-4">
+          <app-dropdown 
+          [mode]="mode" 
+          [items]="specificUseCodes" 
+          [fieldHeader]="'Specific Use Code'"
+          (selectionChanged)='specificUseCodeChanged($event)'>
+        </app-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+        <app-field
+        [mode]="mode"
+        [multiline]="true"
+        [header]="'Access Description'"
+        [value]="accessDescription"
+        (valueChanged)='accessDescriptionChanged($event)'>
+      </app-field>
+    </div>
+  </div>
+</div>

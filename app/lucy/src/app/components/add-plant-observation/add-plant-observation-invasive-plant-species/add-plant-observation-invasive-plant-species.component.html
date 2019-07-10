@@ -1,3 +1,19 @@
-<p>
-  add-plant-observation-invasive-plant-species works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-12 section-title">
+      Invasive Plant Species
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12" *ngFor="let object of objects; let i = index">
+      <app-add-plant-observation-invasive-plant-species-cell [mode]="mode" [object]="object">
+      </app-add-plant-observation-invasive-plant-species-cell>
+    </div>
+
+    <div class="col-12 topPadding">
+      <br />
+      <button type="button" class="btn btn-secondary submit-button addButton"
+        (click)="addSpecies()">{{buttonTitle}}</button>
+    </div>
+  </div>
+</div>

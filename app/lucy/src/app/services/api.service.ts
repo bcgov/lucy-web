@@ -101,7 +101,7 @@ export class ApiService {
   }
 
   /**
-   * @param request 
+   * @param request
    */
   private endRequest(request: APIRequest) {
     if (request === null || request === undefined || this.APIRequests.length < 1) {
@@ -178,6 +178,7 @@ export class ApiService {
    * If an Error occurs, try to handle it with handleError()
    * @param endpoint string
    * @param body JSON
+   * @param attempts #of attempts (there is cap set in api service);
    * @returns Success | Fail & Response
    */
   private async postCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
@@ -212,6 +213,7 @@ export class ApiService {
   * If an Error occurs, try to handle it with handleError()
   * @param endpoint string
   * @param body JSON
+  * @param attempts #of attempts (there is cap set in api service);
   * @returns Success | Fail & Response
   */
   private async putCall(endpoint: string, body: any, attempts: number): Promise<APIRequestResult> {
@@ -241,8 +243,8 @@ export class ApiService {
   /**
    * Make a GET call to specified endpoint and return result.
    * If an Error occurs, try to handle it with handleError()
-   * @param endpoint 
-   * @param body 
+   * @param endpoint url
+   * @param attempts #of attempts (there is cap set in api service);
    * @returns Success | Fail & Response
    */
   private async getCall(endpoint: string, attempts: number): Promise<APIRequestResult> {
@@ -262,7 +264,7 @@ export class ApiService {
       const requestResult: APIRequestResult = {
         success: true,
         response: result['data']
-      }
+      };
       // remove cached request
       this.endRequest({
         URL: endpoint,

@@ -61,7 +61,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
     this.loadingQue++;
     this.userService.getAccess().then((value) => {
-      this.userAccessType = value
+      this.userAccessType = value;
       switch (value) {
         case UserAccessType.DataEditor:
           this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
@@ -104,8 +104,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public requestDataEntryAccess() {
     const success = this.userService.submitDataEntryRequest(`Let me in please.`);
     if (success) {
+      this.alertService.show( `Success`, `Your Data Entry Access request has been sent.`, null);
       console.log(`Request sent`);
     } else {
+      this.alertService.show(`Failed`, `Could not create request.`, null);
       console.log(`Request failed`);
     }
   }

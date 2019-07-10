@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
 import { FormsModule } from '@angular/forms';
 import { AccessRequest } from 'src/app/models/AccessRequest';
@@ -8,6 +8,7 @@ import { AdminService } from 'src/app/services/admin.service';
 import * as bootstrap from 'bootstrap';
 import * as $AB from 'jquery';
 import { Role } from 'src/app/models/Role';
+import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * Output of Access request modal
@@ -91,10 +92,24 @@ export class AccessRequestResponseModalComponent implements OnInit {
     this.accessRequest.approverNote = note;
   }
 
-  @Input() accessRequest: AccessRequest;
-  @Output() acessRequestModalEmitter = new EventEmitter<AccessRequestResponseModalEmitterResponse>();
+  private modalReference: NgbModalRef;
+  private _model: AccessRequest;
 
-  constructor(private admin: AdminService ,private roles: RolesService, private formsModule: FormsModule, private userService: UserService) { }
+  get accessRequest(): AccessRequest {
+    return this._model;
+  }
+
+  @Input() set accessRequest(model: AccessRequest) {
+     this._model = model;
+     this.delay(1).then(() => {
+      this.showModal();
+    });
+  }
+
+  @Output() acessRequestModalEmitter = new EventEmitter<AccessRequestResponseModalEmitterResponse>();
+  @ViewChild('requestResponseModal') private content;
+
+  constructor(private admin: AdminService, private roles: RolesService, private formsModule: FormsModule, private userService: UserService, private modalService: NgbModal) { }
 
   ngOnInit() {
     this.roles.getRoles().then((value) => {
@@ -119,9 +134,39 @@ export class AccessRequestResponseModalComponent implements OnInit {
     this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.cancelled);
   }
 
+  // private removeModal() {
+  //   $('#requestResponseModal').modal('hide');
+  //   $('.modal-backdrop').remove();
+  // }
+
   private removeModal() {
-    $('#requestResponseModal').modal('hide');
-    $('.modal-backdrop').remove();
+    if (this.modalReference) {
+      console.log(`XX closing Modal`);
+      this.modalReference.close();
+      this.modalReference = undefined;
+    } else {
+      console.log(`ERROR: Modal reference does not exist`);
+    }
+  }
+
+  private async showModal() {
+    const ngbModalOptions: NgbModalOptions = {
+      backdrop : 'static',
+      keyboard : false,
+      ariaLabelledBy: 'alertModalTitle'
+    };
+
+    if (!this.modalReference) {
+      this.modalReference = this.modalService.open(this.content, ngbModalOptions);
+    }
+  }
+
+  /**
+   * Create a delay
+   * @param ms milliseconds
+   */
+  private delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
 }
