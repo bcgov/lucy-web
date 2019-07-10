@@ -20,7 +20,7 @@
  * Imports
  */
 import { Application} from 'express';
-import { accountRoute, requestAccessRoutes} from '../modules';
+import { accountRoute, requestAccessRoutes, observationRoute} from '../modules';
 import { defaultRoute} from '../modules';
 
 /**
@@ -29,10 +29,13 @@ import { defaultRoute} from '../modules';
  */
 export const routes = (app: Application) => {
     // Add account
-    app.use('/api/v1/account', accountRoute());
+    app.use('/api/account', accountRoute());
 
     // Request Access routes
-    app.use('/api/v1/request-access', requestAccessRoutes());
+    app.use('/api/request-access', requestAccessRoutes());
+
+    // Observation
+    app.use('/api/observation', observationRoute());
 
     // Default Route
     app.use('*', defaultRoute());

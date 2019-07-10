@@ -93,7 +93,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              assert(email, 'JWT payload email is missing');
              assert(family_name, 'JWT payload family_name is missing');
              assert(given_name, 'JWT payload given_name is missing');
-             const api = request.originalUrl;
+             const api = `${request.originalUrl}[${request.method}]`;
              ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
 
              // Check token expiry

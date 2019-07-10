@@ -20,15 +20,18 @@
  * Imports
  */
  // Lib Import
-import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany} from 'typeorm';
+import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn} from 'typeorm';
 
 // Local Import
 import { BaseModel, LoadData } from './baseModel';
 import { UserSession, UserSessionDataController } from './user.session';
-import { RolesCode } from './appRolesCode';
+import { RolesCode, RolesCodeValue } from './appRolesCode';
 import { DataModelController } from '../data.model.controller';
 import { UserSchema, RolesCodeTableSchema} from '../database-schema';
 import { UserMessage } from './userMessage';
+import { RequestAccess } from './requestAccess';
+import {  ModelProperty, PropertyType } from '../../libs/core-model';
+import { RecordTableSchema, CodeTableSchema } from '../database-schema/base.record.schema';
 
 
 /**
@@ -62,38 +65,45 @@ export interface UserData {
 export class User extends BaseModel implements LoadData<UserData> {
     // Props
     @PrimaryGeneratedColumn()
+    @ModelProperty({type: PropertyType.number})
     user_id: number;
 
     @Column()
+    @ModelProperty({type: PropertyType.string})
     email: string;
 
     @Column({
         name: UserSchema.schema.columns.firstName,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string})
     firstName: string;
 
     @Column({
         name: UserSchema.schema.columns.lastName,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string})
     lastName: string;
 
     @Column({
         name: UserSchema.schema.columns.preferredUsername,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string})
     preferredUsername: string;
 
     @Column({
         name: UserSchema.schema.columns.refCurrentSession,
         nullable: true,
     })
+    @ModelProperty({type: PropertyType.number})
     currentSessionId?: number;
 
     @Column({
         name: UserSchema.schema.columns.accountStatus
     })
+    @ModelProperty({type: PropertyType.number})
     accountStatus: number;
 
 
@@ -109,6 +119,7 @@ export class User extends BaseModel implements LoadData<UserData> {
             referencedColumnName: RolesCodeTableSchema.schema.columns.id
         }
     })
+    @ModelProperty({type: PropertyType.object})
     roles: RolesCode[];
 
 
@@ -119,12 +130,52 @@ export class User extends BaseModel implements LoadData<UserData> {
     @OneToMany(type => UserMessage, message => message.receiver)
     messages: Promise<UserMessage[]>;
 
+    @OneToOne(type => RequestAccess, requestAccess => requestAccess.requester)
+    requestAccess: Promise<RequestAccess>;
+
     loadMap(input: UserData) {
         this.firstName = input.firstName;
         this.lastName = input.lastName;
         this.email = input.email;
         //
     }
+
+    /**
+     * @description Checking user is admin or not
+     */
+    @ModelProperty({type: PropertyType.boolean})
+    get isAdmin(): boolean {
+        return this.roles.filter(item => item.code === RolesCodeValue.admin).length > 0;
+    }
+}
+
+/**
+ * @description Base class for record
+ */
+export abstract class Record {
+    @ManyToOne( type => User, {eager : true})
+    @JoinColumn({
+        name: RecordTableSchema.auditColumns.createdBy,
+        referencedColumnName: UserSchema.schema.columns.id
+    })
+    createdBy: User;
+
+    @ManyToOne( type => User, { eager: true})
+    @JoinColumn({
+        name: RecordTableSchema.auditColumns.updatedBy,
+        referencedColumnName: UserSchema.schema.columns.id
+    })
+    updatedBy: User;
+}
+
+export abstract class ApplicationCode extends Record {
+    @Column({ name: CodeTableSchema.codeColumns.description, nullable: true })
+    @ModelProperty({type: PropertyType.string})
+    description: string;
+
+    @Column({ name: CodeTableSchema.codeColumns.activeIndicator, nullable: false})
+    @ModelProperty({type: PropertyType.boolean})
+    activeIndicator: boolean;
 }
 
 /**
