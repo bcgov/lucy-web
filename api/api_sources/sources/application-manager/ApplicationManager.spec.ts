@@ -17,14 +17,14 @@
 //
 // Created by Pushan Mitra on 2019-05-10.
 //
-
+import { expect} from 'chai';
 import { ApplicationManager } from './ApplicationManager';
 
 
 // Test
 describe('application manager', () => {
-    test('test shared application manager', () => {
+    it('test shared application manager', () => {
         const appManager = ApplicationManager.shared;
-        expect(appManager).toBeDefined();
+        expect(appManager).not.equal(undefined);
     });
 });
