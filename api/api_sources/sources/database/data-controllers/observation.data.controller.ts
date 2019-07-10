@@ -79,7 +79,7 @@ export class ObservationSpeciesController extends DataModelController<Observatio
         const obj: ObservationSpecies = data as ObservationSpecies;
         obj.createdBy = user;
         obj.updatedBy = user;
-        this.saveInDB(obj);
+        await this.saveInDB(obj);
         return obj;
     }
 }
