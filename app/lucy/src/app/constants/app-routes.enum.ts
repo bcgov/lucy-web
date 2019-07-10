@@ -3,7 +3,8 @@ export enum AppRoutes {
     Login = 'Login',
     UserInfo = 'UserInfo',
     Profile = 'Profile',
-    AdminTools = 'AdminTools'
+    AdminTools = 'AdminTools',
+    AddObservation = 'AddObservation'
 }
 
 export enum AppRoutesParams {

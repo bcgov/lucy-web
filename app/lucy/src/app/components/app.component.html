@@ -6,7 +6,11 @@
 <router-outlet *ngIf="isAuthenticated"></router-outlet>
 <!-- <router-outlet *ngIf="!isAuthenticated"></router-outlet> -->
 
-<!-- Access Request Modal -->
-<app-user-access-updated-modal *ngIf="userAccessUpdated" (userAccessUpdatedModalEventEmitter)='userAccessUpdatedModalEmitted($event)' [message]="userAccessUpdatedMessage">
+<!-- USER ACCESS CHANGED MESSAHE Modal -->
+<app-user-access-updated-modal *ngIf="userAccessUpdatedMessage" (userAccessUpdatedModalEventEmitter)='userAccessUpdatedModalEmitted($event)' [message]="userAccessUpdatedMessage">
 </app-user-access-updated-modal>
-<!-- END Access Request Modal -->
+<!-- ----- -->
+
+<!-- ALERT MODAL -->
+<app-alert *ngIf="alertMessage" [model]="alertMessage"></app-alert>
+<!-- ----- -->

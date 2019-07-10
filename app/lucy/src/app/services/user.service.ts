@@ -10,8 +10,8 @@ import { ObjectValidatorService } from './object-validator.service';
 import { Role, UserAccessType } from '../models/Role';
 
 export interface UserChangeResult {
-  success: boolean
-  response: User | null
+  success: boolean;
+  response: User | null;
 }
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export interface UserChangeResult {
 export class UserService {
 
   private current: User | null = null;
-  public shouldRefresh: boolean = false;
+  public shouldRefresh = false;
 
   constructor(private http: HttpClient,
     private cookieService: CookieService,
@@ -52,14 +52,14 @@ export class UserService {
 
   /*------------------------------------API CALL------------------------------------*/
   /**
-   * Make an API Call through 
-   * getUserRequestPromise() 
+   * Make an API Call through
+   * getUserRequestPromise()
    * to get the current users informartion.
    * 
    * @returns User | null
    */
   private async requestUserInfo(): Promise<User | null> {
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, ``);
     if (this.objectValidator.isUserObject(response.response)) {
       this.current = response.response;
       return response.response;
@@ -142,7 +142,7 @@ export class UserService {
    * @returns accessCode
    */
   public getUserAccessCode(user: User): Role {
-    return user.roles[user.roles.length-1];
+    return user.roles[user.roles.length - 1];
   }
 
   // TODO: Does not exist in api yet
@@ -204,19 +204,23 @@ export class UserService {
    * @returns boolean
    */
   async submitDataEntryRequest(notes: string): Promise<boolean> {
-    let user = await this.getUser()
-    let dataEntryRole = await this.roles.getDataEntryRole()
+    let user = await this.getUser();
+    let dataEntryRole = await this.roles.getDataEntryRole();
+    if (dataEntryRole === null) {
+      console.log("Could not fetch data entry role");
+      return false;
+    }
     const body = {
-      "requestedAccessCode": dataEntryRole.role_code_id,
-      "requestNote": notes
+      requestedAccessCode: dataEntryRole.role_code_id,
+      requestNote: notes
     }
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_DataEntryAccessRequest, body);
     console.log("Response:")
     console.dir(response)
     if (!this.objectValidator.isUserObject(response)) {
-      return false
+      return false;
     } else {
-      return (response.firstName === user.firstName && response.lastName === user.lastName)
+      return (response.firstName === user.firstName && response.lastName === user.lastName);
     }
   }
   /*------------------------------------END OF SETs------------------------------------*/

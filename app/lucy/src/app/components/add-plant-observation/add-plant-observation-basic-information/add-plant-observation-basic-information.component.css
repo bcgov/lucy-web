@@ -1,0 +1,33 @@
+.field-input {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    font-size: 15px;
+    color: #333333;
+    border: 1px solid #333333;
+    box-sizing: border-box;
+}
+
+.field-input-invalid {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    font-size: 15px;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+    box-sizing: border-box;
+}
+
+.divider {
+    border: none;
+    height: 1px;
+    color: #000000;
+    background-color: #000000;
+}
+
+.section-title {
+    color: #000000;
+    font-size: 17px;
+	font-weight: bold;
+	line-height: 22px;
+}

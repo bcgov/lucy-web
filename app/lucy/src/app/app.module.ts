@@ -11,6 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
 // ng-bootstrap
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
+// InViewportModule
+import { InViewportModule } from 'ng-in-viewport';
+
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 
@@ -36,6 +39,12 @@ import { AddPlantObservationBasicInformationComponent } from './components/add-p
 import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species/add-plant-observation-invasive-plant-species.component';
 import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/user-access-updated-modal/user-access-updated-modal.component';
+import { AlertComponent } from './components/alert/alert.component';
+import { MapPreviewComponent } from './components/map-preview/map-preview.component';
+import { AddPlantObservationInvasivePlantSpeciesCellComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species-cell/add-plant-observation-invasive-plant-species-cell.component';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { FieldComponent } from './components/field/field.component';
+import { SideNavComponent } from './components/add-plant-observation/side-nav/side-nav.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -60,7 +69,13 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     RequestCellComponent,
     AddPlantObservationBasicInformationComponent,
     AddPlantObservationInvasivePlantSpeciesComponent,
-    UserAccessUpdatedModalComponent
+    UserAccessUpdatedModalComponent,
+    AlertComponent,
+    MapPreviewComponent,
+    AddPlantObservationInvasivePlantSpeciesCellComponent,
+    DropdownComponent,
+    FieldComponent,
+    SideNavComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +86,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     HttpClientModule,
     NgbModule,
     RouterModule,
+    InViewportModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

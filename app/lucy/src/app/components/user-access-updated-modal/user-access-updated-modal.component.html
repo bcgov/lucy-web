@@ -1,3 +1,23 @@
-<p>
-  user-access-updated-modal works!
-</p>
+  <ng-template #userAccessMessageModal let-modal>
+    <!-- Modal Title -->
+    <div class="modal-header">
+        <h5 class="modal-title" id="userAccessMessageModalTitle">{{messageTitle}}</h5>
+        <button type="button" class="close" (click)="cancelAction()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="container">
+          <h5 class="modal-title" id="userAccessMessageModalTitle">{{messageBody}}</h5>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn button-hollow" (click)="removeModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn button-fill" (click)="markAsRead()">
+          Okay
+        </button>
+      </div>
+  </ng-template>

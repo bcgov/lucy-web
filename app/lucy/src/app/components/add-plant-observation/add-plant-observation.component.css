@@ -14,7 +14,6 @@
     height: 34px;
 	width: 304px;
 	color: #000000;
-	font-family: "SF Pro Display";
 	font-size: 28px;
 	font-weight: bold;
     line-height: 34px;
@@ -27,7 +26,6 @@
 .submit-button {
 	width: 250px;
 	color: #FFFFFF;
-	font-family: "SF Pro Text";
 	font-size: 16px;
 	font-weight: bold;
 	letter-spacing: -0.32px;
@@ -38,7 +36,6 @@
 
 .subsection-title {
     color: #000000;
-	font-family: "SF Pro Display";
 	font-size: 22px;
 	font-weight: bold;
     line-height: 26px;
@@ -62,6 +59,6 @@
     padding-bottom: 16px;
 }
 
-#map {
-    height: 180px;
+.nav-bar {
+    display: flex;
 }

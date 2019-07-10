@@ -16,15 +16,15 @@ export class RolesService {
 
   async getRoles(): Promise<Role[] | null> {
     if (this.roles !== null) {
-      return this.roles
+      return this.roles;
     }
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_refrenceData.roles, null);
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Roles, null);
     if (response.success) {
       if ((Array.isArray(response.response) && this.objectValidator.isRoleObject(response.response[0]))) {
         this.roles = response.response;
-        return response.response
+        return response.response;
       } else {
-        return null
+        return null;
       }
     } else {
       return null;
@@ -33,20 +33,25 @@ export class RolesService {
 
   async getDataEntryRole(): Promise<Role | null> {
     const allRoles = await this.getRoles();
-    return allRoles !== null ? allRoles.find(i => i.code === "DAE") : null;
+    return allRoles !== null ? allRoles.find(i => i.code === `DAE`) : null;
   }
 
   public roleToAccessType(role: Role): UserAccessType {
     switch (role.code) {
-      case "ADM":
+      case `ADM`:
         return UserAccessType.Admin;
-      case "DAV":
+      case `DAV`:
         return UserAccessType.DataViewer;
-      case "DAE":
+      case `DAE`:
         return UserAccessType.DataEditor;
-      case "SUP":
+      case `SUP`:
         return UserAccessType.SuperUser;
     }
+  }
+
+  public accessTypeCanCreateObservation(accessType: UserAccessType) {
+    return (accessType === UserAccessType.Admin ||
+      accessType === UserAccessType.DataViewer);
   }
 
   private getDummyRoles(): Role[] {
