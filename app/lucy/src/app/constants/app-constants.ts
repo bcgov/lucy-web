@@ -14,13 +14,15 @@ export class AppConstants {
     };
 
     // API
-    static API_baseURL = 'http://localhost:80/api/v1';
+    static API_baseURL = 'http://localhost:80/api';
 
     // API authenticated user endpoints
     static get API_me(): string { return `${AppConstants.API_baseURL}/account/me`; }
     static get API_DataEntryAccessRequest(): string { return `${AppConstants.API_baseURL}/request-access`; }
     static get API_messages(): string { return `${AppConstants.API_baseURL}/account/message`; }
     static get API_allUsers(): string { return `${AppConstants.API_baseURL}/account/users`; }
+
+    static get API_observationCodes(): string { return `${AppConstants.API_baseURL}/observation/codes`; }
 
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
@@ -46,11 +48,7 @@ export class AppConstants {
     }
 
     // API Reference data
-    static API_refrenceData = {
-        roles: `${AppConstants.API_baseURL}/account/roles`
-    }
-    
-
+    static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
 }
 
 
