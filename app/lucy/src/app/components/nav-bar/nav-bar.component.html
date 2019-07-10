@@ -27,6 +27,9 @@
       <li *ngIf="isAdmin" class="nav-item"  [class.active]="isAdminToolsActive">
         <a class="nav-link" (click)="navigateToAdminTools()">Admin Tools</a>
       </li>
+      <li *ngIf="isDataEditor" class="nav-item"  [class.active]="isAddObservationActive">
+          <a class="nav-link" (click)="navigateToAddObservation()">Add Observation</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#">Disabled</a>
       </li>

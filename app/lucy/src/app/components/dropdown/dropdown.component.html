@@ -1,0 +1,17 @@
+<div class="col-12 field d-inline-block" ngbDropdown #itemsDropdown="ngbDropdown">
+
+  <label for="UserRole" class="field-header">{{fieldHeader}}</label>
+  <input type="text" class="form-control field-box field-input" id="dropdownComp" ngbDropdownAnchor
+    (focus)="itemsDropdown.open()" [(ngModel)]="selectedItemName" (input)="filer($event.target.value)"/>
+
+  <div ngbDropdownMenu aria-labelledby="itemsDropdown">
+
+    <div class="col-12" *ngFor="let item of filteredItems; let i = index">
+      <button ngbDropdownItem class="btn" (click)="selected(item)">
+        {{item.name}}
+      </button>
+    </div>
+
+  </div>
+
+</div>

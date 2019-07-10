@@ -5,6 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { Role } from 'src/app/models/Role';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'tr[app-user-cell]',
@@ -45,18 +46,18 @@ export class UserCellComponent implements OnInit {
 
   @Input() user: User = {
     accountStatus: 0,
-    createdAt: "",
+    createdAt: ``,
     currentSessionId: 0,
-    email: "",
-    firstName: "",
-    lastName: "",
-    preferredUsername: "",
+    email: ``,
+    firstName: ``,
+    lastName: ``,
+    preferredUsername: ``,
     roles: [],
-    updateAt: "",
+    updateAt: ``,
     user_id: -1,
   }
 
-  constructor(private roles: RolesService, private userService: UserService, private admin: AdminService, private formsModule: FormsModule) { }
+  constructor(private roles: RolesService, private userService: UserService, private admin: AdminService, private formsModule: FormsModule, private alertService: AlertService) { }
 
   ngOnInit() {
     this.getAllRoles();
@@ -69,36 +70,33 @@ export class UserCellComponent implements OnInit {
   }
 
   public removeUser(user: User) {
-    console.log("******")
-    console.log("TODO: Make api call to Remove User user:")
-    console.log(user)
-    console.log("******")
+    this.alertService.show(`Not implemented`,
+         `Feature has not been implemented.`, null);
   }
 
   public setUserRole(role: Role) {
     this.admin.changeUserRole(this.user, role).then((response) => {
       if (response.success) {
-        console.log("Role change success")
-        this.user = response.response
-        console.dir(response.response)
+        this.user = response.response;
+        this.alertService.show(`Success`,
+         `${this.user.firstName}'s role change to ${this.userService.getUserAccessCode(this.user).role}.`, null);
       } else {
-        console.log("Role change failed")
+        this.alertService.show(`Failed`, `Could not change user role.`, null);
       }
     })
   }
 
   private setUserStatus(active: boolean) {
-    let newStatus = active ? 1 : 0
-    console.log("SETTING STATUS TO " + newStatus)
+    const newStatus = active ? 1 : 0
     this.admin.changeUserAccountStatus(this.user, newStatus).then((response) => {
       if(response.success) {
-        console.log("Status change success")
-        this.user = response.response
-        console.dir(response.response)
+        this.user = response.response;
+        this.alertService.show(`Success`,
+         `${this.user.firstName}'s account status had been changed.`, null);
       } else {
-        console.log("Status change failed")
+        this.alertService.show(`Failed`, `Could not change the status of ${this.user.firstName}'s account.`, null);
       }
-      console.log(this.user.accountStatus)
+      console.log(this.user.accountStatus);
     });
   }
 

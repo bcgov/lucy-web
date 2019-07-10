@@ -1,44 +1,33 @@
 export interface Observation {
-    location: ObservationLocation
-    invasivePlantSpecies: InvasivePlantSpecies[]
-    surveyDetails: ObservationSurvey[]
+	observation_Id: number;
+	lat: number;
+	long: number;
+	invasivePlantSpecies: ObservationInvasivePlantSpecies[];
 }
-
-export interface ObservationLocation {
-    location_id: number
-    eastings: number
-    northings: number
-    zone: number
-}
-
-export interface ObservationSurvey {
-    survey_id: number
-	date: string
-	companyName: string
-	companyLicence: string
-	
-	primary_surveyor: {
-		firstName: string
-		lastName: string
-	}
-	secondary_surveyor: {
-		firstName: string
-		lastName: string
-	}
-}
-
 export interface InvasivePlantSpecies {
-    observationSpecies_Id: number
-	plantSpecies: number
-	juristiction: number
-	density: number
-	distribution: number
-	dimentions: {
-		width: number
-		length: number
-	}
-	surveyMode: number
-	soilTextureCode: number
-	useCode: number
-	accessDescription: number
+    commonName: string;
+    containmentSpacialRef: number;
+    containmentSpecies: number;
+    earlyDetection: boolean;
+    genus: string;
+    latinName: string;
+    mapCode: string;
+    species: string;
+    species_id: number;
+}
+
+export interface Jurisdiction {
+    juristiction_id: number;
+    code: string;
+    description: string;
+    activeIndicator: true;
+}
+
+export interface ObservationInvasivePlantSpecies {
+    observationSpecies_Id: number;
+    species: InvasivePlantSpecies;
+    jurisdiction: Jurisdiction;
+	width: number;
+	length: number;
+	accessDescription: string;
 }
