@@ -3,6 +3,9 @@
     <div class="col-12 section-title">
       Invasive Plant Species
     </div>
+    <div class="col-12">
+      <button class="btn btn-test" (click)="autofillForTesting()">Auto-Create One For Testing</button>
+    </div>
   </div>
   <div class="row">
     <div class="col-12" *ngFor="let object of objects; let i = index">
@@ -16,8 +19,8 @@
 
     <div class="col-12 topPadding">
       <br />
-      <button type="button" class="btn btn-secondary submit-button addButton"
-        (click)="addSpecies()">{{buttonTitle}}</button>
+      <button type="button" class="btn btn-secondary addButton button-fill"
+        (click)="addNewSpecies()">{{buttonTitle}}</button>
     </div>
   </div>
 </div>

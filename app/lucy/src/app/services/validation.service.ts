@@ -19,7 +19,7 @@ export class ValidationService {
   }
 
   public isValidUTM(string: string): boolean {
-    const service = new ValidationService();
+    const service = this;
     return (service.isValidNumber(string) && service.hasMinDecimalPlaces(string, 2));
   }
 

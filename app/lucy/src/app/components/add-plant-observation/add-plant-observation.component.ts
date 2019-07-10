@@ -16,7 +16,16 @@ declare let L;
 
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
+  /**
+   * TODO: REMOVE - Its For testing
+   */
+  get testBtnName(): string {
+    return this.readonly ? `Switch To Edit Mode` : `Switch To View Mode`;
+  }
+   /* ***** */
+
   private _visibleClasses = [];
+
   get visibleClasses(): string[] {
     return this._visibleClasses;
   }
@@ -36,6 +45,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
+  get readonly(): boolean {
+    return this.mode === FormMode.View;
+  }
+
   ///// Invasive plant objects
   private _object: Observation;
   // Get
@@ -52,7 +65,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService) { }
 
   ngOnInit() {
-    // this.mode = FormMode.Edit;
     setTimeout(() => {
       this.zone.run(() => {
         this.mode = FormMode.Edit;
@@ -61,8 +73,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    // this.mode = FormMode.Edit;
-
   }
 
   initializeObjectIfDoesntExist() {
@@ -117,4 +127,16 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       this.alert.show(`Incomplete data`, validationMessage, null);
     }
   }
+
+   /**
+   * TODO: REMOVE - Its For testing
+   */
+  testBtnClicked() {
+    if (this.mode === FormMode.View) {
+      this.mode = FormMode.Edit;
+    } else {
+      this.mode = FormMode.View;
+    }
+  }
+   /* ***** */
 }

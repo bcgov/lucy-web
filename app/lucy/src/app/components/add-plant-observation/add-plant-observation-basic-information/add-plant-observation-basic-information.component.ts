@@ -21,8 +21,12 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   minUTMDecimals = 2;
 
   // * Lat Long
-  lat: string;
-  long: string;
+  get lat(): string {
+    return String(this.observationObject.lat);
+  }
+  get long(): string {
+    return String(this.observationObject.long);
+  }
 
   // * Validations
   get validLat(): Boolean {
@@ -128,6 +132,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       return;
     }
 
+    // 4) Store lat / long
+    this.observationObject.lat = parseFloat(converted.latitude.toFixed(6));
+    this.observationObject.long = parseFloat(converted.longitude.toFixed(6));
+
     // 4) Change map center
     this.mapCenter = {
       latitude: converted.latitude,
@@ -141,9 +149,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       latitude: converted.latitude,
       longitude: converted.longitude
     });
-
-    this.observationObject.lat = parseFloat(converted.latitude.toFixed(6));
-    this.observationObject.long = parseFloat(converted.longitude.toFixed(6));
   }
 
   /**
@@ -155,6 +160,11 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   }
 
+  autofillForTesting() {
+    this.eastingChanged(`472938.52`);
+    this.northingsChanged(`5364221.84`);
+    this.zoneChanged(`10`);
+  }
   // testWithLatLon() {
   //   this.lat = "48.430562"
   //   this.long = "-123.365831"

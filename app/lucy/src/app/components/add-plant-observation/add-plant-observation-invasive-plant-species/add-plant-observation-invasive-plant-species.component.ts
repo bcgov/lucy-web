@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormMode } from 'src/app/models';
-import { InvasivePlantSpecies, ObservationInvasivePlantSpecies } from 'src/app/models/observation';
+import { InvasivePlantSpecies, ObservationInvasivePlantSpecies, Jurisdiction } from 'src/app/models/observation';
+import { CodeTableService } from 'src/app/services/code-table.service';
 
 @Component({
   selector: 'app-add-plant-observation-invasive-plant-species',
@@ -42,20 +43,27 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   ////////////////////
 
   @Output() invasivePlantSpeciesChanged = new EventEmitter<ObservationInvasivePlantSpecies[]>();
-  constructor() { }
+
+  constructor(private codeTableService: CodeTableService) { }
 
   ngOnInit() {
   }
 
-  addSpecies() {
-    this.objects.push({
-      observationSpecies_Id: this.getUniqueId(),
-      species: undefined,
-      jurisdiction: undefined,
-      width: 0,
-      length: 0,
-      accessDescription: undefined,
-    });
+  addNewSpecies(): ObservationInvasivePlantSpecies {
+    return this.addSpecies(undefined, undefined, undefined, 0, 0, undefined);
+  }
+
+  addSpecies(id: number, species: InvasivePlantSpecies, jurisdiction: Jurisdiction, width: number, length: number, accessDescription: string): ObservationInvasivePlantSpecies {
+    const newSpecies = {
+      observationSpecies_Id: id ? id : this.getUniqueId(),
+      species: species,
+      jurisdiction: jurisdiction,
+      width: width,
+      length: length,
+      accessDescription: accessDescription,
+    };
+    this.objects.push(newSpecies);
+    return(newSpecies);
   }
 
   private getUniqueId(): number {
@@ -86,5 +94,13 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
     if (this.objects) {
       this.invasivePlantSpeciesChanged.emit(this.objects);
     }
+  }
+
+  autofillForTesting() {
+    this.codeTableService.getInvasivePlantSpecies().then((plantSpecies) => {
+      this.codeTableService.getJuristictions().then((jurisdiction) => {
+        const species = this.addSpecies(undefined, plantSpecies[0], jurisdiction[0], 5, 5, `go left`);
+      });
+    });
   }
 }
