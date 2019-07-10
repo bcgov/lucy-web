@@ -21,6 +21,10 @@ export class DropdownComponent implements OnInit {
   }
   ////////////////////
 
+  get readonly(): boolean {
+    return this.mode === FormMode.View;
+  }
+
   @Input() fieldHeader = ``;
 
   ///// Selected item
