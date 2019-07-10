@@ -15,7 +15,9 @@
     "migration": "ts-node scripts/run.migrations.ts",
     "typeorm": "ts-node -r ./tsconfig.json/register ./node_modules/typeorm/cli.js",
     "test": "ts-mocha",
-    "ts-run": "ts-node"
+    "ts-run": "ts-node",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Pushan Mitra",
   "license": "MIT",
@@ -85,6 +87,8 @@
     "rxjs": "^6.5.2",
     "source-map-loader": "^0.2.4",
     "typeorm": "^0.2.18",
-    "underscore": "^1.9.1"
-  }
+    "underscore": "^1.9.1",
+    "snyk": "^1.192.5"
+  },
+  "snyk": true
 }
