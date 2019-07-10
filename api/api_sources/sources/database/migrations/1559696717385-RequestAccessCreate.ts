@@ -61,7 +61,7 @@ export class RequestAccessCreate1559696717385 extends RequestAccessTableSchema i
         ADD CONSTRAINT FK_201906056h28m FOREIGN KEY (${this.table.columns.refRequester})
         REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id})
         ON DELETE CASCADE;`);
-        // 3. Approver 
+        // 3. Approver
         await queryRunner.query(`ALTER TABLE ${this.table.name}
         ADD CONSTRAINT FK_201906056h30m FOREIGN KEY (${this.table.columns.refApprover})
         REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id})

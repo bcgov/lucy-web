@@ -49,7 +49,7 @@ export class UserSessionActivity1559071433925 extends SessionActivitySchema impl
 
         // Put default values
         for (const code of DefaultSessionActivityCodes) {
-            await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB('session_activity_code',code));
+            await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB('session_activity_code', code));
         }
 
         // Create table Session activity

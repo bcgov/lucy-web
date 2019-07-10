@@ -78,7 +78,7 @@ export class BaseRoutController<DataController>  {
     userController: UserDataController = UserDataController.shared;
 
     /**
-     * @description Getter for share instance 
+     * @description Getter for share instance
      */
     static sharedInstance<DataController>(): BaseRoutController<DataController> {
         return (this._sharedInstance || (this._sharedInstance = new this()));

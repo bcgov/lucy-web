@@ -79,7 +79,7 @@ class ExpressApp {
         const schemaSpy = path.resolve(__dirname, '../../../schemaspy');
         this.app.use('/api/dev/schemaspy', express.static(schemaSpy));
 
-        // Code coverage 
+        // Code coverage
         const coverage = path.resolve(__dirname, '../../../coverage');
         this.app.use('/api/dev/coverage', express.static(coverage));
 
