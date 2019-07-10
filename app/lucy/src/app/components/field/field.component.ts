@@ -12,6 +12,8 @@ export class FieldComponent implements OnInit {
   // Output
   @Output() valueChanged = new EventEmitter<string>();
   // Optional Input
+  @Input() editable = true;
+  // Optional Input
   @Input() validationFunc: any;
   // Optional Input
   @Input() multiline = false;
@@ -31,7 +33,11 @@ export class FieldComponent implements OnInit {
   ////////////////////
 
   get readonly(): boolean {
-    return this.mode === FormMode.View;
+    if (this.mode === FormMode.View) {
+      return true;
+    } else {
+      return !this.editable;
+    }
   }
 
   ///// Value

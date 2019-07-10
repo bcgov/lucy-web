@@ -9,6 +9,10 @@ import { DropdownObject } from 'src/app/services/dropdown.service';
 })
 export class DropdownComponent implements OnInit {
 
+  @Input() fieldHeader = ``;
+  // Optional Input
+  @Input() editable = true;
+
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
   // Get
@@ -22,10 +26,12 @@ export class DropdownComponent implements OnInit {
   ////////////////////
 
   get readonly(): boolean {
-    return this.mode === FormMode.View;
+    if (this.mode === FormMode.View) {
+      return true;
+    } else {
+      return !this.editable;
+    }
   }
-
-  @Input() fieldHeader = ``;
 
   ///// Selected item
   private _selectedItem: DropdownObject;
