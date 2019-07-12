@@ -54,7 +54,7 @@ export class ObservationSpecies extends Record implements ObservationSpeciesCrea
     @ModelProperty({ type: PropertyType.string})
     accessDescription: string;
 
-    @ManyToOne( type => Species)
+    @ManyToOne( type => Species, {eager: true})
     @JoinColumn({
         name: ObservationSpeciesSchema.columns.species,
         referencedColumnName: SpeciesSchema.columns.id
@@ -62,7 +62,7 @@ export class ObservationSpecies extends Record implements ObservationSpeciesCrea
     @ModelProperty({ type: PropertyType.object})
     species: Species;
 
-    @ManyToOne( type => JurisdictionCode)
+    @ManyToOne( type => JurisdictionCode, {eager: true})
     @JoinColumn({
         name: ObservationSpeciesSchema.columns.jurisdiction,
         referencedColumnName: JurisdictionCodeSchema.columns.id

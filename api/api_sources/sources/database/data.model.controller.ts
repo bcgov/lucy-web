@@ -27,6 +27,10 @@ import { ApplicationTable } from './applicationSchemaInterface';
 
 export interface DataController {
     findById(id: number): Promise<any>;
+    remove(object: any): Promise<void>;
+    all(filter: any): Promise<any>;
+    create(): any;
+    saveInDB(obj: any): Promise<any>;
 }
 
 /**
