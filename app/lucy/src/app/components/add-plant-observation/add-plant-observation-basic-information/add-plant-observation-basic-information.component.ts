@@ -94,7 +94,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
    }
    // Set
    @Input() set mode(mode: FormMode) {
-     console.log(`Form - basic info mode is ${mode}`);
      this._mode = mode;
    }
    ////////////////////
@@ -133,7 +132,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   ngAfterViewChecked(): void {
-    // console.log(`Form - Basic info mode is ${this.mode} -ngAfterViewChecked`);
   }
 
   observerLastNameChanged(value: string) {
@@ -169,6 +167,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.locationEntryModeLatLong = true;
   }
 
+  /**
+   * Validate and show on map
+   * @param value latitude
+   */
   latChanged(value: string) {
     if (this.observationObject && this.validation.isValidLatitude(value)) {
       this.observationObject.lat = +value;
@@ -176,6 +178,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.latLongChanged();
   }
 
+  /**
+   * Validate and show on map
+   * @param value longitude
+   */
   longChanged(value: string) {
     if (this.observationObject && this.validation.isValidLongitude(value)) {
       this.observationObject.long = +value;
@@ -201,14 +207,16 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.notifyChangeEvent();
   }
 
+  /**
+   * Validate, convert to UTM and show location on map
+   */
   latLongChanged() {
+    // If its NOT in lat long entry mode, dont run this function.
     if (!this.locationEntryModeLatLong || !this.observationObject) {
       return;
     }
 
-    // 1) Check if lat long are valid
     if (!this.validation.isValidLatitude(String(this.observationObject.lat)) || !this.validation.isValidLongitude(String(this.observationObject.long))) {
-      console.log(`Invalid lat long`);
       return;
     }
 
@@ -220,6 +228,9 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.setMapToObservationLocation();
   }
 
+  /**
+   * Validate, convert to Lat/Long, store and show location on map
+   */
   utmValuesChanged() {
     // If its in lat long entry mode, dont run this function.
     if (this.locationEntryModeLatLong || !this.observationObject) {
@@ -236,7 +247,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
     // 3) Check if converted lat long are valid
     if (!this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {
-      console.log(`Invalid lat long`);
       console.dir(converted);
       return;
     }
@@ -249,10 +259,18 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.setMapToObservationLocation();
   }
 
+  /**
+   * Show map and add pin at the current observation lat/long
+   */
   private setMapToObservationLocation() {
     this.setMapTo(this.observationObject.lat, this.observationObject.long);
   }
 
+  /**
+   * Show map and add pin at specified lat long
+   * @param latitude number
+   * @param longitude number
+   */
   private setMapTo(latitude: number, longitude: number) {
     this.mapCenter = {
       latitude: latitude,
@@ -275,6 +293,9 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   }
 
+  /**
+   * For testing
+   */
   autofillForTesting() {
     if (this.locationEntryModeLatLong) {
       this.latChanged( `48.430562`);
@@ -292,30 +313,5 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.observerLastNameChanged(`Gates`);
     this.observerFirstNameChanged(`Bill`);
   }
-  // testWithLatLon() {
-  //   this.lat = "48.430562"
-  //   this.long = "-123.365831"
-  //   this.latLongValuesChanged()
-  // }
-
-  // testWithUTM() {
-  //   this.eastings = "472938.52"
-  //   this.northings = "5364221.84"
-  //   this.zone = "10"
-  //   this.utmValuesChanged()
-  // }
-
-  // testWithKewloanaLatLong() {
-  //   this.lat = "49.9055772"
-  //   this.long = "-119.472584"
-  //   this.latLongValuesChanged()
-  // }
-
-  // testWithKewloanaUTM() {
-  //   this.eastings = "322462.246733"
-  //   this.northings = "5531063.683699"
-  //   this.zone = "11"
-  //   this.utmValuesChanged()
-  // }
 
 }
