@@ -45,6 +45,7 @@ import { AddPlantObservationInvasivePlantSpeciesCellComponent } from './componen
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { FieldComponent } from './components/field/field.component';
 import { SideNavComponent } from './components/add-plant-observation/side-nav/side-nav.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -75,7 +76,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AddPlantObservationInvasivePlantSpeciesCellComponent,
     DropdownComponent,
     FieldComponent,
-    SideNavComponent
+    SideNavComponent,
+    InventoryComponent
   ],
   imports: [
     BrowserModule,

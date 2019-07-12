@@ -4,7 +4,8 @@ export enum AppRoutes {
     UserInfo = 'UserInfo',
     Profile = 'Profile',
     AdminTools = 'AdminTools',
-    AddObservation = 'AddObservation'
+    AddObservation = 'AddObservation',
+    Inventory = 'Inventory'
 }
 
 export enum AppRoutesParams {
