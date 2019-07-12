@@ -18,8 +18,7 @@
     "ts-run": "ts-node",
     "tslint": "tslint",
     "test:lint": "tslint --project .",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "snyk-protect": "snyk protect"
   },
   "author": "Pushan Mitra",
   "license": "MIT",
