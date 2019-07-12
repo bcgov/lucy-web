@@ -65,7 +65,7 @@ export class FieldComponent implements OnInit {
    * Otherwise returns true.
    */
   get isValid(): boolean {
-    if (this.value === undefined) {
+    if (this.value === undefined || this.value === ``) {
       return true;
     }
     if (this.validationFunc) {
