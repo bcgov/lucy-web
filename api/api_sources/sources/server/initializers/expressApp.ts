@@ -76,8 +76,11 @@ class ExpressApp {
         this.app.use(cross());
 
         // Schema-spy local url
-        const schemaSpy = path.resolve(__dirname, '../../../schemaspy');
-        this.app.use('/api/dev/schemaspy', express.static(schemaSpy));
+        const schemaSpy = process.env.SCHEMASPY_PATH;
+        if (schemaSpy) {
+            this.logger.info(`Schemaspy analysis result path: ${schemaSpy}`);
+            this.app.use('/api/dev/schemaspy', express.static(schemaSpy));
+        }
 
         // Code coverage
         const coverage = path.resolve(__dirname, '../../../coverage');
