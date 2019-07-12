@@ -94,14 +94,12 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   invasivePlantSpeciesChanged(event: ObservationInvasivePlantSpecies[]) {
     this.observationObject.invasivePlantSpecies = event;
-    console.dir(this.observationObject);
   }
 
   basicInfoChanged(event: Observation) {
     this.observationObject.lat = event.lat;
     this.observationObject.long = event.long;
     this.observationObject.observation_Id = event.observation_Id;
-    console.dir(this.observationObject);
   }
 
   public onIntersection({ target, visible }: { target: Element; visible: boolean }): void {

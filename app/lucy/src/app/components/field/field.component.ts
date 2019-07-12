@@ -52,7 +52,6 @@ export class FieldComponent implements OnInit {
   }
   // Set
   @Input() set value(value: string) {
-    console.log(value);
     this._value = value;
     this.valueChanged.emit(value);
   }
