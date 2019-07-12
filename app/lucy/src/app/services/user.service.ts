@@ -216,7 +216,7 @@ export class UserService {
     }
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_DataEntryAccessRequest, body);
     console.log("Response:")
-    console.dir(response)
+    console.dir(response);
     if (!this.objectValidator.isUserObject(response)) {
       return false;
     } else {

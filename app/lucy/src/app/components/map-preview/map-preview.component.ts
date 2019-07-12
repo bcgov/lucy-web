@@ -26,6 +26,15 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private markerGroup?;
   private ready = false;
 
+  private _mapId: string;
+  get mapId(): string {
+    if (!this._mapId) {
+      this._mapId = this.makeid(5);
+    }
+    console.log(this._mapId);
+    return this._mapId;
+  }
+
   ////////////// CENTER POINT //////////////
   private _center: MapPreviewPoint;
   // get
@@ -95,26 +104,38 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * @param center MapPreviewPoint
    */
   private initMapAt(center: MapPreviewPoint) {
-    if(this.map) { return; }
-    this.map = L.map('map').setView([center.latitude, center.latitude], center.zoom);
+    if (this.map) { return; }
+    this.map = L.map(this.mapId).setView([center.latitude, center.latitude], center.zoom);
     this.markerGroup = L.layerGroup().addTo(this.map);
-    // this.initMapWithGoogleSatellite();
-    this.initWithOpenStreet();
+    this.initMapWithGoogleSatellite();
+    // this.initWithOpenStreet();
   }
 
   private initWithOpenStreet() {
     // Use Open street tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      key: this.makeid(10)
     }).addTo(this.map);
   }
 
   private initMapWithGoogleSatellite() {
     // Use Google tiles
     L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      // attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'.
+      key: this.makeid(10)
     }).addTo(this.map);
   }
+
+  private makeid(length: number) {
+    let result           = '';
+    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
 
   private defaultPoint(): MapPreviewPoint {
     return {

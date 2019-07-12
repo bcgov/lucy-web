@@ -15,6 +15,19 @@ export const StringConstants = {
         return 'Admin Access';
     })(),
     ////////////////////////////////////////////
+    // Badges for access types
+    databaseAccess_View_Desc: (() => {
+        return 'View Only Database Access';
+    })(),
+
+    databaseAccess_DataEntry_Desc: (() => {
+        return 'You are now have Data Editor database access. You are now able to add observations.';
+    })(),
+
+    databaseAccess_Admin_Desc: (() => {
+        return 'Admin Access';
+    })(),
+    ////////////////////////////////////////////
 
     // Request Data entry access dialog
     databaseAccess_requestDataEntryAccess_Message: (() => {

@@ -1,16 +1,24 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { Message } from 'src/app/models/Message';
 import { MessageService } from 'src/app/services/message.service';
 import * as bootstrap from 'bootstrap';
 import * as $AB from 'jquery';
 import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { UserService } from 'src/app/services/user.service';
+import { StringConstants } from 'src/app/constants/string-constants';
+import { UserAccessType } from 'src/app/models/Role';
 
 @Component({
   selector: 'app-user-access-updated-modal',
   templateUrl: './user-access-updated-modal.component.html',
   styleUrls: ['./user-access-updated-modal.component.css']
 })
-export class UserAccessUpdatedModalComponent implements OnInit {
+export class UserAccessUpdatedModalComponent implements OnInit, AfterViewInit {
+
+  public userRoleAndOrganization = ``;
+  public accessTypeMessage = ``;
+  public userFullName = ``;
+  public roleMessage = ``;
 
   get messageTitle(): string {
     if (this.message === undefined) {
@@ -30,7 +38,6 @@ export class UserAccessUpdatedModalComponent implements OnInit {
 
   private modalReference: NgbModalRef;
 
-
   private _message: Message;
 
   get message(): Message {
@@ -48,9 +55,36 @@ export class UserAccessUpdatedModalComponent implements OnInit {
   @Output() userAccessUpdatedModalEventEmitter = new EventEmitter<boolean>();
   @ViewChild('userAccessMessageModal') private content;
 
-  constructor(private messageService: MessageService, private modalService: NgbModal) { }
+  constructor(private messageService: MessageService, private modalService: NgbModal, private userService: UserService) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit(): void {
+    this.userService.getFullName().then((value) => {
+      this.userFullName = value;
+    });
+
+    this.userService.getAccess().then((value) => {
+      switch (value) {
+        case UserAccessType.DataEditor:
+          this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
+          this.roleMessage = StringConstants.databaseAccess_DataEntry_Desc;
+          break;
+        case UserAccessType.DataViewer:
+          this.accessTypeMessage = StringConstants.databaseAccess_View_Badge;
+          this.roleMessage = StringConstants.databaseAccess_View_Desc;
+          break;
+        case UserAccessType.Admin:
+          this.accessTypeMessage = StringConstants.databaseAccess_Admin_Badge;
+          this.roleMessage = StringConstants.databaseAccess_Admin_Desc;
+          break;
+      }
+    });
+
+    this.userService.getOranizarionAndRole().then((value) => {
+      this.userRoleAndOrganization = value;
+    });
   }
 
   markAsRead() {
