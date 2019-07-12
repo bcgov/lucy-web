@@ -32,7 +32,7 @@ export const defaultRoute = () => {
     const route = express.Router();
     route.all('*', (_req, _res) => {
         assert(_req);
-        _res.status(404).json(errorBody('Route Not Found', []))
+        _res.status(404).json(errorBody('Route Not Found', []));
     });
     return route;
 };

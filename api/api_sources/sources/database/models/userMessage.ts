@@ -23,6 +23,8 @@ import {Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typ
 import { UserMessagesSchema, UserSchema } from '../database-schema';
 import { User } from './user';
 import { DataModelController } from '../data.model.controller';
+import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { BaseModel } from './baseModel';
 
 /**
  * @description Status of message
@@ -40,29 +42,38 @@ export enum UserMessageStatus {
 @Entity({
     name: UserMessagesSchema.schema.name
 })
-export class UserMessage {
+export class UserMessage extends BaseModel {
     /**
      * Columns
      */
     @PrimaryGeneratedColumn()
+    @ModelProperty({type: PropertyType.number})
     message_id: number;
+
     @Column({
         name: UserMessagesSchema.schema.columns.title,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string, optional: true})
     title?: string;
+
     @Column({
         name: UserMessagesSchema.schema.columns.body,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string, optional: true})
     body?: string;
+
     @Column({
         name: UserMessagesSchema.schema.columns.type
     })
+    @ModelProperty({type: PropertyType.number})
     type: number;
+
     @Column({
         name: UserMessagesSchema.schema.columns.status
     })
+    @ModelProperty({type: PropertyType.number})
     status: number;
 
     // Relationship
@@ -72,6 +83,7 @@ export class UserMessage {
         name: UserMessagesSchema.schema.columns.refReceiverId,
         referencedColumnName: UserSchema.schema.columns.id
     })
+    @ModelProperty({type: PropertyType.object, ref: `User`})
     receiver: User;
 
     // Creator
@@ -80,6 +92,7 @@ export class UserMessage {
         name: UserMessagesSchema.schema.columns.refCreatorId,
         referencedColumnName: UserSchema.schema.columns.id
     })
+    @ModelProperty({type: PropertyType.object,  ref: `User`})
     creator: User;
 
 }

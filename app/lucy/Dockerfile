@@ -26,7 +26,7 @@ COPY ./ .
 RUN npm run build
 
 # Logging in Build Console Build DONE
-RUN echo ' --- BUILD SUCCESS: DONE --- '
+RUN echo ' --- BUILD SUCCESS: [DONE] --- '
 
 EXPOSE 3030
 

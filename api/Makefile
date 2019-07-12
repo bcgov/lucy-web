@@ -30,6 +30,8 @@ all 		: help
 local:      |  setup-local close-local build-local run-local         ## Task-Alias -- Run the steps for a local-build.
 local-debug: | setup-local close-local build-local run-debug
 
+schema-spy: | close-local build-local run-local wait-for-app schema-spy-run
+
 
 # ------------------------------------------------------------------------------
 # Status Output
@@ -111,3 +113,11 @@ app: ## <Helper> :: Executes into the app container.
 
 help:  ## ** Display this help screen.
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+schema-spy-run:
+	@echo "Running Schema Spy on local env"
+	cd ./.docker/schemaSpy/local && sh local-run.sh
+
+wait-for-app:
+	@echo "Waiting 30 sec for app to start"
+	sleep 30

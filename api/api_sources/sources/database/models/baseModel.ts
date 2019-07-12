@@ -21,6 +21,7 @@
  */
 import { CreateDateColumn, UpdateDateColumn} from 'typeorm';
 import { BaseTableSchema } from '../applicationSchemaInterface';
+// import {  ModelProperty, PropertyType } from '../../libs/core-model';
 
 /**
  * @description BaseModel class for all application data models. This class provides column definition of timestamps columns
@@ -33,15 +34,12 @@ export abstract class BaseModel  {
         comment: 'Create Timestamp'
     })
     createdAt: Date;
-
     @UpdateDateColumn({
         name: BaseTableSchema.timestampColumns.updatedAt,
         comment: 'Update Timestamp',
         nullable: true
     })
-    updateAt: Date;
-
-    loadData<T>(data: T) {}
+    updatedAt: Date;
 }
 
 /**
