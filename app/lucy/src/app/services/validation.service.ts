@@ -21,7 +21,7 @@ export class ValidationService {
   public isValidUTM(string: string): boolean {
     const service = this;
     // TODO: only allow 7 digits for northings, 6 digits for eastings
-    return (service.isValidNumber(string));
+    return (this.isValidNumber(string));
   }
 
   public hasMinDecimalPlaces(number: any, minDecimals: number): boolean {
