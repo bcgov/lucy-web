@@ -26,7 +26,6 @@ RUN echo ' --- BUILD START --- '
 COPY ./package*.json ./
 
 RUN npm install
-RUN npm audit fix
 
 # If you are building your code for production, copy all files
 COPY ./ .
