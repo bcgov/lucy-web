@@ -43,6 +43,12 @@ export class UserMessageCreate1560098448360 extends UserMessagesSchema implement
             ${this.table.columns.refReceiverId} INT NULL REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id}) ON DELETE CASCADE,
             ${this.table.columns.refCreatorId} INT NULL REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id}) ON DELETE SET NULL
         );`);
+
+        // Create timestamp
+        await queryRunner.query(this.createTimestampsColumn());
+
+        // Create comments
+        await queryRunner.query(this.createComments());
     }
 
      /**

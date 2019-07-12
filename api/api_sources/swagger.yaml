@@ -1,0 +1,459 @@
+swagger: '2.0'
+info:
+  description: API server for Lucy-
+  version: 1.0.0-oas3
+  title: Lucy-API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: pathfinder.bc.gov
+basePath: /pathfinder.bc.gov/api/1.0.0
+tags:
+  - name: api
+    description: Secure API description for Lucy
+  - name: developers
+    description: Operations available to regular developers
+  - name: users
+    description: Users of lucy
+  - name: admin
+    description: Admin of Lucy
+  - name: observation
+    description: Observation endpoints
+  - name: sme
+    description: Subject matter expert
+schemes:
+  - https
+  - http
+paths:
+  /api/me:
+    get:
+      summary: User information
+      description: API to get user profile information
+      operationId: me
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          type: string
+          description: JWT Token
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '401':
+          description: Unauthorize user
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation/codes:
+    get:
+      parameters:
+          - in: header
+            name: token
+            type: string
+            description: JWT Token
+            required: true
+      responses:
+        '200':
+          description: Success
+          schema: 
+            $ref: '#/definitions/ObservationCodesResp'
+        '401':
+          description: Unauthorize user
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation:
+    parameters:
+        - in: header
+          name: token
+          type: string
+          description: JWT Token
+          required: true
+        - in: body
+          name: Create Body
+          schema:
+            $ref: '#/definitions/ObservationCreateRequestBody'
+    post:
+      summary: Create Observation
+      description: API to create observation model and return newly created model with database id (observation id)
+      operationId: observation
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Observation'
+        '401':
+          description: Unauthorize user
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation/species:
+    parameters:
+      - in: header
+        name: token
+        type: string
+        description: JWT Token
+        required: true
+    post:
+      summary: Create Observation for particular species
+      description: API to create observation for species return newly created model with database id (observation id)
+      operationId: observation
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - in: body
+        name: Create Body
+        schema:
+          $ref: '#/definitions/ObservationSpeciesCreateRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/ObservationSpecies'
+        '401':
+          description: Unauthorize user
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  User:
+    type: object
+    required:
+      - user_id
+      - email
+      - firstName
+      - lastName
+      - preferredUsername
+      - currentSessionId
+      - accountStatus
+      - roles
+      - isAdmin
+      - updateAt
+      - createdAt
+    properties:
+      user_id:
+        type: number
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      preferredUsername:
+        type: string
+      currentSessionId:
+        type: number
+      accountStatus:
+        type: number
+      roles:
+        type: object
+      isAdmin:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ApplicationCode:
+    type: object
+    required:
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  UserSession:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  RolesCode:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SessionActivityCode:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SessionActivity:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  RequestAccess:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  UserMessage:
+    type: object
+    required:
+      - message_id
+      - type
+      - status
+      - receiver
+      - creator
+      - updateAt
+      - createdAt
+    properties:
+      message_id:
+        type: number
+      title:
+        type: string
+      body:
+        type: string
+      type:
+        type: number
+      status:
+        type: number
+      receiver:
+        type: object
+        $ref: '#/definitions/User'
+      creator:
+        type: object
+        $ref: '#/definitions/User'
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Species:
+    type: object
+    required:
+      - species_id
+      - mapCode
+      - earlyDetection
+      - containmentSpecies
+      - containmentSpacialRef
+      - species
+      - genus
+      - commonName
+      - latinName
+      - updateAt
+      - createdAt
+    properties:
+      species_id:
+        type: number
+      mapCode:
+        type: string
+      earlyDetection:
+        type: boolean
+      containmentSpecies:
+        type: number
+      containmentSpacialRef:
+        type: number
+      species:
+        type: string
+      genus:
+        type: string
+      commonName:
+        type: string
+      latinName:
+        type: string
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  JurisdictionCode:
+    type: object
+    required:
+      - jurisdiction_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      jurisdiction_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Observation:
+    type: object
+    required:
+      - observation_id
+      - date
+      - lat
+      - long
+      - speciesObservations
+      - updateAt
+      - createdAt
+    properties:
+      observation_id:
+        type: number
+      date:
+        type: string
+      lat:
+        type: number
+      long:
+        type: number
+      speciesObservations:
+        type: object
+        $ref: '#/definitions/ObservationSpecies'
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationSpecies:
+    type: object
+    required:
+      - observation_species_id
+      - width
+      - length
+      - accessDescription
+      - species
+      - jurisdiction
+      - observation
+      - updateAt
+      - createdAt
+    properties:
+      observation_species_id:
+        type: number
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      species:
+        type: object
+      jurisdiction:
+        type: object
+      observation:
+        type: object
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Error:
+    required:
+      - message
+      - errors
+    properties:
+      message:
+        type: string
+      errors:
+        type: array
+  UserInfo:
+    required:
+      - message
+      - data
+    properties:
+      message:
+        type: string
+      data:
+        type: object
+        $ref: '#/definitions/User'
+  ObservationCodes:
+    required:
+      - jurisdictionCodes
+      - speciesList
+    properties:
+      jurisdictionCode:
+        type: object
+        $ref: '#/definitions/JurisdictionCode'
+      speciesList:
+        type: array
+        $ref: '#/definitions/Species'
+  ObservationCodesResp:
+    required:
+      - message
+      - data
+    properties: 
+      message:
+        type: string
+      data:
+        type: object
+        $ref: '#/definitions/ObservationCodes'
+  ObservationCreateRequestBody:
+    type: object
+    required:
+      - date
+      - lat
+      - long
+    properties:
+      date:
+        type: string
+        description: Date string in YYYY-MM-DD format
+      lat:
+        type: number
+      long:
+        type: number
+  ObservationSpeciesCreateRequest:
+    type: object
+    required:
+      - width
+      - length
+      - accessDescription
+      - species
+      - jurisdiction
+      - observation
+    properties:
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      species:
+        type: number
+        description: Species id
+      jurisdiction:
+        type: number 
+        description: Jurisdiction code id
+      observation:
+        type: number
+        description: Parent observation

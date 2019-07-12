@@ -1,8 +1,9 @@
 'use strict';
-const options= require('pipeline-cli').Util.parseArguments()
+const options= require('pipeline-cli').Util.parseArguments();
+const config = require('../../../.config/config.json');
 const changeId = options.pr //aka pull-request
-const version = '1.0.0'
-const name = 'lucy-api'
+const version = config.version || '1.0.0';
+const name = (config.module || {}).api || 'lucy-api';
 
 const phases = {
   build: {namespace:'8ecbmv-tools'    , name: `${name}`, phase: 'build'  , changeId:changeId, suffix: `-build-${changeId}`  , instance: `${name}-build-${changeId}`  , version:`${version}-${changeId}`, tag:`build-${version}-${changeId}`},

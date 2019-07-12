@@ -16,6 +16,13 @@
 // limitations under the License.
 //
 // Created by Pushan Mitra on 2019-05-21.
+
+/**
+ * Imports
+ */
+import * as fs from 'fs';
+import * as yml from 'js-yaml';
+
 /**
  * @description AsyncFor
  * @param number count
@@ -53,6 +60,23 @@ export type action = () => any;
  */
 export const unWrap = (value?: any, defaultValue?: any): any => {
     return value !== undefined ? value : defaultValue;
+};
+
+/**
+ * @description Load json from yaml file
+ * @param string yamlPath Path of yml file
+ * @returns any
+ */
+export const yaml = (yamlPath: string): any => {
+    return yml.safeLoad(fs.readFileSync(yamlPath, 'utf8'));
+};
+
+export const saveYaml = (data: any, savePath: string, options?: yml.DumpOptions): any => {
+    const result = yml.safeDump(data, options);
+    fs.writeFileSync(savePath, result, {
+        flag: 'w',
+        encoding: 'utf8'
+    });
 };
 
 // -------------------------------

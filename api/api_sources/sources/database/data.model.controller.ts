@@ -24,6 +24,11 @@ import { LoggerBase} from '../server/logger';
 import { SharedDBManager} from './dataBaseManager';
 import { ApplicationTable } from './applicationSchemaInterface';
 
+
+export interface DataController {
+    findById(id: number): Promise<any>;
+}
+
 /**
  * @description Base DataModelController. This class provides -
  *  1. Creation of generic share instance of each subclass
@@ -31,7 +36,7 @@ import { ApplicationTable } from './applicationSchemaInterface';
  *  3. Generic in nature associated with model and schema
  * @export class DataModelController<T>
  */
-export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
+export class DataModelController<T extends ObjectLiteral> extends LoggerBase implements DataController {
     // Shared instance: Managed by subclasses
     protected static shareInstance: any;
 

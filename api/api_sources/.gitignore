@@ -1,3 +1,7 @@
+# Generated Swagger file
+**/swagger.raw.yaml
+swagger.raw.yaml
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Dist
 .DS_Store
@@ -13,6 +17,8 @@ _app_data/
 coverage/
 **/coverage
 /www
+.nyc_output
+**/.nyc_output
 ### Windows template
 # Windows thumbnail cache files
 Thumbs.db
