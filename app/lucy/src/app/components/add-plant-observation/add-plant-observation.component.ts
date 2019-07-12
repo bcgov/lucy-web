@@ -82,6 +82,9 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         observation_Id: -1,
         lat: undefined,
         long: undefined,
+        observerFirstName: undefined,
+        observerLastName: undefined,
+        observerOrganization: undefined,
         date: `2019-05-30`,
         invasivePlantSpecies: []
       };

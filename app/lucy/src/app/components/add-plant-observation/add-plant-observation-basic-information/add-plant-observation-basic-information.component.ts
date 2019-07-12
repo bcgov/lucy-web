@@ -2,7 +2,8 @@ import { Component, OnInit, Input, AfterViewChecked, Output, EventEmitter } from
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { FormMode, Observation } from 'src/app/models';
+import { FormMode, Observation, Organization } from 'src/app/models';
+import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 
 @Component({
   selector: 'app-add-plant-observation-basic-information',
@@ -13,6 +14,32 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   private mapCenter: MapPreviewPoint;
   private markers: LatLong[] = [];
+
+  organizations: Organization[] = [];
+
+  get observerFirstName(): string {
+    if (this.observationObject) {
+      return this.observationObject.observerFirstName;
+    }
+    return ``;
+  }
+
+  get observerLastName(): string {
+    if (this.observationObject) {
+      return this.observationObject.observerLastName;
+    }
+    return ``;
+  }
+
+  get organization(): DropdownObject | undefined  {
+    if (this.observationObject && this.observationObject.observerOrganization) {
+      return {
+        name: this.observationObject.observerOrganization[this.dropdownService.displayedOrganizationField],
+        object: this.observationObject.observerOrganization,
+      };
+    }
+    return undefined;
+  }
 
   // * UTM
   eastings: string;
@@ -74,7 +101,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   ////////////////////
 
   @Output() basicInfoChanged = new EventEmitter<Observation>();
-  constructor(private converterService: ConverterService, private validation: ValidationService) { }
+  constructor(private converterService: ConverterService, private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {
     this.mapCenter = {
@@ -82,6 +109,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       longitude: -123.288152,
       zoom: 4
     };
+
+    this.dropdownService.getOrganizations().then((result) => {
+      this.organizations = result;
+    });
   }
 
   private notifyChangeEvent() {
@@ -92,6 +123,27 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   ngAfterViewChecked(): void {
     // console.log(`Form - Basic info mode is ${this.mode} -ngAfterViewChecked`);
+  }
+
+  observerLastNameChanged(value: string) {
+    if (this.observationObject) {
+      this.observationObject.observerLastName = value;
+    }
+    this.notifyChangeEvent();
+  }
+
+  observerFirstNameChanged(value: string) {
+    if (this.observationObject) {
+      this.observationObject.observerFirstName = value;
+    }
+    this.notifyChangeEvent();
+  }
+
+  organizationChanged(value: DropdownObject) {
+    if (this.observationObject) {
+      this.observationObject.observerOrganization = value.object;
+    }
+    this.notifyChangeEvent();
   }
 
   private utmCoordinatesAreValid(): boolean {
@@ -164,6 +216,12 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.eastingChanged(`472938.52`);
     this.northingsChanged(`5364221.84`);
     this.zoneChanged(`10`);
+    this.organizationChanged( {
+      name: this.organizations[1][this.dropdownService.displayedOrganizationField],
+      object: this.organizations[1],
+    });
+    this.observerLastNameChanged(`Gates`);
+    this.observerFirstNameChanged(`Bill`);
   }
   // testWithLatLon() {
   //   this.lat = "48.430562"

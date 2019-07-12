@@ -3,7 +3,14 @@ export interface Observation {
 	lat: number;
     long: number;
     date: `2019-05-30`;
+    observerFirstName: string;
+    observerLastName: string;
+    observerOrganization: Organization;
 	invasivePlantSpecies: ObservationInvasivePlantSpecies[];
+}
+
+export interface Organization {
+    name: string;
 }
 export interface InvasivePlantSpecies {
     commonName: string;
