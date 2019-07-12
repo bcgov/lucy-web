@@ -7,6 +7,14 @@
   <div class="row">
     <div class="col-12 col-md-4">
       <div class="row">
+        <div class="col-12 input-mode">
+          <div class="input-mode-container">
+            <button class="btn switch-btn" [ngClass]="!locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'" (click)="switchInputUTM()">UTM</button>
+            <button class="btn switch-btn" [ngClass]="locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'" (click)="switchInputLatLong()">Lat / Long</button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings"
           [validationFunc]="validation.isValidUTM.bind(validation)" (valueChanged)='eastingChanged($event)'>
         </app-field>
@@ -54,6 +62,7 @@
     </div>
   </div>
   <div class="col-12">
+    <br/>
     <button class="btn btn-test" (click)="autofillForTesting()">Auto-fill For Testing</button>
   </div>
   <hr class="divider">

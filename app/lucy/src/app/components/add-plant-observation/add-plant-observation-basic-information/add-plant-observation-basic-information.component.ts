@@ -12,6 +12,8 @@ import { DropdownObject, DropdownService } from 'src/app/services/dropdown.servi
 })
 export class AddPlantObservationBasicInformationComponent implements OnInit, AfterViewChecked {
 
+  locationEntryModeLatLong = false;
+
   private mapCenter: MapPreviewPoint;
   private markers: LatLong[] = [];
 
@@ -148,6 +150,14 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   private utmCoordinatesAreValid(): boolean {
     return (this.validNorthings && this.validEastings && this.validZone);
+  }
+
+  switchInputUTM() {
+    this.locationEntryModeLatLong = false;
+  }
+
+  switchInputLatLong() {
+    this.locationEntryModeLatLong = true;
   }
 
   eastingChanged(value: string) {
