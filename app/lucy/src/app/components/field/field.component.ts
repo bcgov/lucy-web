@@ -20,6 +20,10 @@ export class FieldComponent implements OnInit {
   // Field header
   @Input() header = '';
 
+  get fieldId(): string {
+    return this.header;
+  }
+
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
   // Get

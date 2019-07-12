@@ -31,7 +31,6 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     if (!this._mapId) {
       this._mapId = this.makeid(5);
     }
-    console.log(this._mapId);
     return this._mapId;
   }
 

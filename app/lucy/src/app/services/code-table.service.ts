@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { ObjectValidatorService } from './object-validator.service';
 import { AppConstants } from '../constants';
-import { Jurisdiction, InvasivePlantSpecies } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, Organization } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,7 @@ export class CodeTableService {
 
   private juristictions: Jurisdiction[];
   private invasivePlantSpecies: InvasivePlantSpecies[];
+  private organizations: Organization[];
 
   private codeTables: any| null = null;
 
@@ -79,5 +80,32 @@ export class CodeTableService {
       this.invasivePlantSpecies = speciesCodes;
       return speciesCodes;
     }
+  }
+
+  public async getOrganizations(): Promise<Organization[]> {
+    if (this.organizations && this.organizations.length > 0 ) {
+      return this.organizations;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+
+    // Yes did ^ for no reason right now.
+    // change code below to get orgs from codes
+    this.organizations = [
+        {
+          name: `Freshworks Studio`
+        },
+        {
+          name: `Not Freshworks Studio`
+        },
+        {
+          name: `Somwehere else`
+        },
+    ];
+
+    return this.organizations;
   }
 }
