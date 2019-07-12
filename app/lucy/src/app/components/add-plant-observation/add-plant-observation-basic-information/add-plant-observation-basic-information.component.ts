@@ -140,7 +140,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.mapCenter = {
       latitude: converted.latitude,
       longitude: converted.longitude,
-      zoom: 15
+      zoom: 18
     };
 
     // 5) Add pin

@@ -20,7 +20,8 @@ export class ValidationService {
 
   public isValidUTM(string: string): boolean {
     const service = this;
-    return (service.isValidNumber(string) && service.hasMinDecimalPlaces(string, 2));
+    // TODO: only allow 7 digits for northings, 6 digits for eastings
+    return (service.isValidNumber(string));
   }
 
   public hasMinDecimalPlaces(number: any, minDecimals: number): boolean {
@@ -46,6 +47,7 @@ export class ValidationService {
 
   /**
    * TODO: Refactor/ find better validation
+   * Allow 5 or more decimal place
    * @param latitude string - * use String(number) if needed.
    */
   public isValidLatitude(latitude: string) {
@@ -67,6 +69,7 @@ export class ValidationService {
 
   /**
    * TODO: Refactor/ find better validation
+   * Allow 5 or more decimal places
    * @param longitude string - * use String(number) if needed.
    */
   public isValidLongitude(longitude: string) {
