@@ -46,7 +46,7 @@ paths:
           schema:
             $ref: '#/definitions/UserInfo'
         '401':
-          description: Unauthorize user
+          description: Unauthorized user
           schema:
             $ref: '#/definitions/Error'
   /api/observation/codes:
@@ -63,7 +63,7 @@ paths:
           schema:
             $ref: '#/definitions/ObservationCodesResp'
         '401':
-          description: Unauthorize user
+          description: Unauthorized user
           schema:
             $ref: '#/definitions/Error'
         '500':
@@ -77,10 +77,6 @@ paths:
         type: string
         description: JWT Token
         required: true
-      - in: body
-        name: Create Body
-        schema:
-          $ref: '#/definitions/ObservationCreateRequestBody'
     post:
       summary: Create Observation
       description: >-
@@ -91,14 +87,55 @@ paths:
         - application/json
       consumes:
         - application/json
+      parameters:
+        - in: body
+          name: Create Body
+          schema:
+            $ref: '#/definitions/ObservationCreateRequestBody'
       responses:
         '201':
           description: Created
           schema:
             $ref: '#/definitions/Observation'
         '401':
-          description: Unauthorize user
+          description: Unauthorized user
           schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: 'Validation error - no observation with id'
+          schema:
+            type: object
+            $ref: '#/definitions/Error'
+    get:
+      summary: Get all observation
+      responses:
+        '200':
+          description: Fetched
+          schema:
+            type: array
+            $ref: '#/definitions/Observation'
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation/:observationId:
+    get:
+      summary: Get single observation
+      parameters:
+        - in: path
+          required: true
+          name: ObservationId
+          type: number
+      responses:
+        '200':
+          description: 'Fetch observation with id'
+          schema:
+            type: object
+            $ref: '#/definitions/Observation'
+        '422':
+          description: 'Validation error - no observation with id'
+          schema:
+            type: object
             $ref: '#/definitions/Error'
   /api/observation/species:
     parameters:
@@ -130,6 +167,11 @@ paths:
         '401':
           description: Unauthorize user
           schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: 'Validation error - no observation with id'
+          schema:
+            type: object
             $ref: '#/definitions/Error'
 definitions:
   User:

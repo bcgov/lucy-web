@@ -20,7 +20,7 @@
  * Imports
  */
 import * as assert from 'assert';
-import { Request, Response, Router} from 'express';
+import { Request, Router} from 'express';
 import { check } from 'express-validator';
 import { SecureRouteController, RouteHandler } from '../../core';
 import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel} from '../../../database/models';
@@ -33,6 +33,13 @@ const createValidator = (): any[] =>  {
         check('date').isString().withMessage('accessDescription: should be string')
     ];
 };
+
+const getObservationValidator = (): any[] => [
+    check('observationId').isInt().custom(async (value: number, {req}) => {
+    const obs = await ObservationController.shared.findById(value);
+    assert(obs, `observation: No observation exists with id ${value}`);
+    req.observation = obs;
+})];
 
 export class ObservationRouteController extends SecureRouteController<ObservationController> {
 
@@ -53,13 +60,26 @@ export class ObservationRouteController extends SecureRouteController<Observatio
 
         // Create observation
         this.router.post('/', createValidator(), this.create);
+
+        // Get all observation
+        this.router.get('/', this.index);
+
+        // Get single observation
+        this.router.get('/:observationId', getObservationValidator(), this.index);
     }
 
     /**
      * @description Route Handler to load all codes for observation
      */
     get indexCodes(): RouteHandler {
-        return async (req: Request, resp: Response) => {
+        return this.routeConfig<any>('indexCodes', async () => {
+            // Get all jurisdiction code
+            const jurisdictionCodes = await JurisdictionCodeController.shared.all();
+            // Get all species
+            const speciesList = await SpeciesController.shared.all();
+            return [200, {jurisdictionCodes, speciesList}];
+        });
+        /*return async (req: Request, resp: Response) => {
             try {
                 assert(req.user, 'No User for request');
                 // Get all jurisdiction code
@@ -73,7 +93,7 @@ export class ObservationRouteController extends SecureRouteController<Observatio
                 this.commonError(500, 'indexCodes', excp, resp);
                 return;
             }
-        };
+        };*/
     }
 
     /**
@@ -83,6 +103,13 @@ export class ObservationRouteController extends SecureRouteController<Observatio
         return this.routeConfig<ObservationCreateModel>('observation-create',
         async (data: ObservationCreateModel, req: Request) => [201, await this.dataController.createObservation(data, req.user)]
         );
+    }
+
+    /**
+     * @description Route handler to fetch all observation
+     */
+    get index(): RouteHandler {
+        return this.routeConfig<any>('observation-index', async (_: any, req: Request) => [200, (req['observation'] ? req['observation'] : await this.dataController.all())]);
     }
 }
 
