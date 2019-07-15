@@ -179,9 +179,12 @@ export class  BaseTableSchema {
      * @description Constructor
      */
     constructor() {
-        if (this.schemaFilePath && this.schemaFilePath !== '') {
-            this.loadSchema();
-        } else {
+        let loadedFromFile = false;
+        if (this.schemaFilePath && this.schemaFilePath !== '' && fs.existsSync(this.schemaFilePath)) {
+            loadedFromFile = this.loadSchema();
+        }
+
+        if (!loadedFromFile) {
             this.table = this.defineTable();
             this.joinTables = this.defineJoinTable();
         }
@@ -190,12 +193,14 @@ export class  BaseTableSchema {
 
     }
 
-    loadSchema() {
+    loadSchema(): boolean {
         assert(yaml);
         const yamlObject: any = yaml(this.schemaFilePath);
         // Get schema
         const def = (yamlObject.schemas || {})[this.constructor.name];
-        assert(def, `No Schema definition found on file ${this.schemaFilePath} for class ${this.constructor.name}`);
+        if (!def) {
+            return false;
+        }
         const table = new ApplicationTable();
         table.name = def.name;
         table.description = def.description;
@@ -207,6 +212,7 @@ export class  BaseTableSchema {
         });
         assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
         this.table = table;
+        return true;
     }
 
     saveSchema(newFilePath?: string) {

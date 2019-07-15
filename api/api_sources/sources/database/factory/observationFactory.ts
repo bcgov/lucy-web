@@ -27,7 +27,7 @@ import * as faker from 'faker';
 import { Observation, ObservationController, User, UserDataController} from '../models';
 import { ObservationSpecies, ObservationSpeciesController} from '../models';
 import { userFactory } from './userFactory';
-import { jurisdictionCodeFactory, speciesFactory, destroyJurisdictionCode, destroySpecies } from './observationCodesFactory';
+import { jurisdictionCodeFactory, speciesFactory} from './observationCodesFactory';
 import { Create, Destroy } from './helper';
 
 /**
