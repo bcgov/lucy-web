@@ -107,7 +107,7 @@ paths:
             type: object
             $ref: '#/definitions/Error'
     get:
-      summary: Get all observation
+      summary: Fetch all observation
       responses:
         '200':
           description: Fetched
