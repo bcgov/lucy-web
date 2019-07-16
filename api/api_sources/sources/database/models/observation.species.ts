@@ -35,6 +35,15 @@ export interface ObservationSpeciesCreateModel {
     jurisdiction: JurisdictionCode;
     observation: Observation;
 }
+
+export interface ObservationSpeciesUpdateModel {
+    width?: number;
+    length?: number;
+    accessDescription?: string;
+    species?: Species;
+    jurisdiction?: JurisdictionCode;
+    observation?: Observation;
+}
 @Entity({ name: ObservationSpeciesSchema.dbTable})
 export class ObservationSpecies extends Record implements ObservationSpeciesCreateModel {
     @PrimaryGeneratedColumn()
