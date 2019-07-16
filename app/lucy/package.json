@@ -37,6 +37,7 @@
     "popper.js": "^1.15.0",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
+    "yarn": "^1.17.3",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -46,6 +47,8 @@
     "@angular/language-service": "~7.2.0",
     "@babel/core": "^7.5.4",
     "@storybook/addon-actions": "^5.1.9",
+    "@storybook/addon-cssresources": "^5.1.9",
+    "@storybook/addon-knobs": "^5.1.9",
     "@storybook/addon-links": "^5.1.9",
     "@storybook/addon-notes": "^5.1.9",
     "@storybook/addons": "^5.1.9",

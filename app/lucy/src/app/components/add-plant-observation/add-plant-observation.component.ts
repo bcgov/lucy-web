@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, AfterViewChecked, NgZone } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+
 
 import 'node_modules/leaflet/';
 import { FormMode } from 'src/app/models';
@@ -11,6 +13,8 @@ declare let L;
   styleUrls: ['./add-plant-observation.component.css']
 })
 
+
+@NgModule({schemas: [CUSTOM_ELEMENTS_SCHEMA]})
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   private _visibleClasses = [];
