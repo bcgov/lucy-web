@@ -18,7 +18,7 @@
 // Created by Pushan Mitra on 2019-07-08.
 import * as moment from 'moment';
 import { DataModelController } from '../data.model.controller';
-import { Observation, ObservationSpecies, Species, JurisdictionCode, User, ObservationSpeciesCreateModel } from '../models';
+import { Observation, ObservationSpecies, Species, JurisdictionCode, User, ObservationSpeciesCreateModel, ObservationSpeciesUpdateModel } from '../models';
 import { ObservationSchema, ObservationSpeciesSchema, SpeciesSchema, JurisdictionCodeSchema } from '../database-schema';
 
 /**
@@ -28,6 +28,15 @@ export interface ObservationCreateModel {
     lat: number;
     long: number;
     date: string;
+}
+
+/**
+ * @description Request body to update observation
+ */
+export interface ObservationUpdateModel {
+    lat?: number;
+    long?: number;
+    date?: string;
 }
 
 /**
@@ -62,6 +71,21 @@ export class ObservationController extends DataModelController<Observation> {
         await this.saveInDB(observation);
         return observation;
     }
+
+    /**
+     * @description Update observation
+     * @param Observation observation:  Input observation
+     * @param ObservationUpdateModel update: Input values
+     * @param  User user : Update by
+     */
+    async update(observation: Observation, update: ObservationUpdateModel, user: User) {
+        observation.lat = update.lat || observation.lat;
+        observation.long = update.long || observation.long;
+        observation.date = update.date ? moment(update.date).toDate() : observation.date;
+        observation.updatedBy = user;
+        await this.saveInDB(observation);
+        return observation;
+    }
 }
 
 /**
@@ -75,9 +99,31 @@ export class ObservationSpeciesController extends DataModelController<Observatio
         return this.sharedInstance<ObservationSpecies>(ObservationSpecies, ObservationSpeciesSchema) as ObservationSpeciesController;
     }
 
+    /**
+     * @description Create new observation species
+     * @param ObservationSpeciesCreateModel data
+     * @param User user
+     */
     async createObservationOfSpecies(data: ObservationSpeciesCreateModel, user: User) {
         const obj: ObservationSpecies = data as ObservationSpecies;
         obj.createdBy = user;
+        obj.updatedBy = user;
+        await this.saveInDB(obj);
+        return obj;
+    }
+
+    /**
+     * @description Create new observation species
+     * @param ObservationSpeciesCreateModel data
+     * @param User user
+     */
+    async updateObservationOfSpecies(obj: ObservationSpecies, data: ObservationSpeciesUpdateModel, user: User) {
+        obj.length = data.length || obj.length;
+        obj.width = data.width || obj.width;
+        obj.accessDescription = data.accessDescription || obj.accessDescription;
+        obj.species = data.species || obj.species;
+        obj.jurisdiction = data.jurisdiction || obj.jurisdiction;
+        obj.observation = data.observation || obj.observation;
         obj.updatedBy = user;
         await this.saveInDB(obj);
         return obj;
