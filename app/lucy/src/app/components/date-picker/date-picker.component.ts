@@ -49,7 +49,7 @@ export class DatePickerComponent implements OnInit {
   ///// Date
   private _date: Date;
   get date(): string {
-    return String(this._date);
+    return `${this._date.getFullYear()}-${this._date.getMonth()}-${this._date.getDay()}`;
   }
   // Set
   @Input() set date(date: string) {
