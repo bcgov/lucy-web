@@ -49,3 +49,17 @@
     border-top-right-radius: 20%;
     border-bottom-right-radius: 20%;
 }
+
+.action-btn {
+	height: 29px;
+	color: #000000;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16px;
+    text-align: center;
+    border: 1px solid #000000;
+}
+
+.table-header {
+    background-color: #F7F7F7;
+}

@@ -27,7 +27,49 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
    * TODO: REMOVE - Its For testing
    */
   get testBtnName(): string {
-    return this.readonly ? `Switch To Edit Mode` : `Switch To View Mode`;
+    switch (this.mode) {
+      case FormMode.Create: {
+        return `Switch To View Mode`;
+        break;
+      }
+      case FormMode.Edit: {
+        return `Switch To View Mode`;
+        break;
+      }
+      case FormMode.View: {
+        if (this.creating()) {
+          return `Switch To Create Mode`;
+        } else {
+          return `Switch To Edit Mode`;
+        }
+        break;
+      }
+      default:
+        return `How are you here?`;
+    }
+  }
+   /* ***** */
+
+   /**
+   * TODO: REMOVE - Its For testing
+   */
+  get submitBtnName(): string {
+    switch (this.mode) {
+      case FormMode.Create: {
+        return `Submit Observation`;
+        break;
+      }
+      case FormMode.Edit: {
+        return `Submit Edits To Observation`;
+        break;
+      }
+      case FormMode.View: {
+        return ``;
+        break;
+      }
+      default:
+        return `How are you here?`;
+    }
   }
    /* ***** */
 
@@ -181,6 +223,9 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   async submitAction() {
+    if (this.viewing) {
+      this.alert.show(`Not Yet`, `Feature is not yet implemented`, null);
+    }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
       console.log(` ***** can submit *****`);
@@ -199,10 +244,25 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
    * TODO: REMOVE - Its For testing
    */
   testBtnClicked() {
-    if (this.mode === FormMode.View) {
-      this.mode = FormMode.Edit;
-    } else {
-      this.mode = FormMode.View;
+    switch (this.mode) {
+      case FormMode.Create: {
+        this.mode = FormMode.View;
+        break;
+      }
+      case FormMode.Edit: {
+        this.mode = FormMode.View;
+        break;
+      }
+      case FormMode.View: {
+        if (this.creating()) {
+          this.mode = FormMode.Create;
+        } else {
+          this.mode = FormMode.Edit;
+        }
+        break;
+      }
+      default:
+        return `How are you here?`;
     }
   }
    /* ***** */
