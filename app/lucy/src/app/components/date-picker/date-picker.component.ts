@@ -9,8 +9,17 @@ import { FormMode } from 'src/app/models';
 })
 export class DatePickerComponent implements OnInit {
 
-  get isViewMode(): boolean {
-    return this.mode === FormMode.View;
+  // Field header
+  @Input() header = '';
+  // Optional Input
+  @Input() editable = true;
+
+  get readonly(): boolean {
+    if (this.mode === FormMode.View) {
+      return true;
+    } else {
+      return !this.editable;
+    }
   }
 
   ///// Form Mode
@@ -39,18 +48,18 @@ export class DatePickerComponent implements OnInit {
 
   ///// Date
   private _date: Date;
-  // Get
-  get date(): Date {
-    return this._date;
+  get date(): string {
+    return String(this._date);
   }
   // Set
-  @Input() set date(date: Date) {
+  @Input() set date(date: string) {
     if (!date) {
       this._date = new Date();
     } else {
-      this._date = date;
+      this._date = new Date(date);
     }
-    this.ngDate = new NgbDate(this._date.getFullYear(), this._date.getMonth(), this._date.getDay());
+    console.log(this._date);
+    // this.ngDate = new NgbDate(this._date.getFullYear(), this._date.getMonth(), this._date.getDay());
   }
   ////////////////////
 
@@ -63,12 +72,15 @@ export class DatePickerComponent implements OnInit {
 
   dateChanged(value: NgbDate) {
     console.dir(value);
-    this.date = new Date(`${value.year}-${value.month}-${value.day}`);
-    this.emitSelection();
+    const newDate = new Date(`${value.year}-${value.month}-${value.day}`);
+    if (this._date !== newDate) {
+      this._date = new Date(`${value.year}-${value.month}-${value.day}`);
+      this.emitSelection();
+    }
   }
 
   emitSelection() {
-    this.selected.emit(this.date);
+    this.selected.emit(this._date);
   }
 
 }

@@ -1,0 +1,31 @@
+.edit {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    font-size: 15px; 
+}
+
+.valid {
+    color: #333333;
+    border: 1px solid #333333;
+    box-sizing: border-box;
+}
+
+.invalid {
+    color: #ff0000;
+    border: 1px solid rgba(233, 23, 23, 0.4);
+    box-sizing: border-box;
+}
+
+.view {
+    background: rgba(255, 255, 255, 0.0);
+    color: #333333;
+	font-size: 15px;
+	font-weight: 500;
+    line-height: 18px;
+    border: 0;
+}
+
+.field {
+    width: 100% !important;
+}
