@@ -52,5 +52,17 @@ export class JurisdictionCodeCSVData extends CSV<Code> {
     }
 }
 
+export class SpeciesDistributionCodeCSVData extends CSV<Code> {
+    constructor() {
+        super(getDataFilePath('SpeciesDistributionCode.csv'));
+    }
+}
+
+export class SpeciesDensityCodeCSVData extends CSV<Code> {
+    constructor() {
+        super(getDataFilePath('SpeciesDensityCode.csv'));
+    }
+}
+
 
 // ---------------------------------------------------------------------------------------------------

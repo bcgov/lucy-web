@@ -61,7 +61,7 @@ export class CodeTableSchema extends RecordTableSchema {
             this.table.columnsDefinition.description = createColumn(
                 {name: CodeTableSchema.codeColumns.description,
                     comment: 'Description of code',
-                    definition: 'VARCHAR(50) NULL'
+                    definition: 'VARCHAR(100) NULL'
                 });
         }
         // Creating Code active indicator

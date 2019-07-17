@@ -81,6 +81,20 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         return `ALTER TABLE ${tableName} ADD COLUMN ${this.sql(definition, reference, refColumn, deleteCascade)};`;
     }
 
+    get type(): string {
+        let def = this.definition || '';
+        def = def.toLowerCase();
+        if (def.includes('varchar')) {
+            return 'string';
+        } else if (def.includes('serial') || def.includes('numeric')) {
+            return 'number';
+        } else if (def.includes('boolean')) {
+            return 'boolean';
+        } else {
+            return 'object';
+        }
+    }
+
 }
 
 /**
@@ -94,7 +108,7 @@ export class ApplicationTable {
     private _columnNames: {[key: string]: string};
 
     get columns(): {[key: string]: string} {
-        if (this._columnNames) {
+        if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
             return this._columnNames;
         }
         const names: {[key: string]: string} = {};
@@ -109,7 +123,7 @@ export class ApplicationTable {
     }
 
     get id(): string {
-        return this.columns.id;
+        return this.columnsDefinition.id.name;
     }
 
     public createTableSql(): string {
@@ -129,6 +143,10 @@ export class ApplicationTable {
             }
         }
         return `COMMENT ON TABLE ${this.name} IS '${this.description}';\n${commentForColumns}`;
+    }
+
+    public isValidColumnName(columnName: string): boolean {
+        return _.contains(this.columns, columnName);
     }
 }
 
@@ -292,17 +310,28 @@ export class  BaseTableSchema {
     public dataSQLPath(context: string): string {
         throw new Error('Subclass must override');
     }
-    entryString(context?: any): string {
-        throw new Error('Subclass must override');
+    entryString(context?: any, inputColumns?: string): string {
+        const input = inputColumns || '';
+        if (input !== '') {
+            const columns = input.split(',');
+            _.each(columns, (col) => {
+                if (!this.table.isValidColumnName(col)) {
+                    throw new Error(`Invalid column name ${col} for table ${this.table.name}`);
+                }
+            });
+            return input;
+        } else {
+            throw new Error('Subclass must override');
+        }
     }
 
     async csvData(context?: any): Promise<any> {
         throw new Error('Subclass must override');
     }
 
-    async createDataEntry(context?: any) {
+    async createDataEntry(inputColumns?: string, context?: any) {
         const data = await this.csvData(context);
-        const entryString = this.entryString(context);
+        const entryString = this.entryString(context, inputColumns);
         const sqlString = this.createDataEntrySql(entryString, data);
         const saveFilePath = getSQLFilePath(this.dataSQLPath(context));
         fs.writeFileSync(saveFilePath, sqlString, { flag: 'w+', encoding: 'utf8'});

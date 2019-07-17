@@ -22,7 +22,7 @@
 import { ApplicationTable, defineColumn} from '../applicationSchemaInterface';
 import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
 import { getYAMLFilePath } from './schema-files';
-import { SpeciesCSVData, JurisdictionCodeCSVData } from '../pre.load';
+import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData, SpeciesDensityCodeCSVData } from '../pre.load';
 
 export class SpeciesSchema extends RecordTableSchema {
     private _dataSqlPath = 'SpeciesData.sql';
@@ -49,12 +49,12 @@ export class SpeciesSchema extends RecordTableSchema {
         return csvData.load();
     }
 
-    entryString(): string {
+    entryString(input?: string, context?: string): string {
         return 'map_code, early_detection_ind, containment_species,containment_species_spatial_ref,species_code, genus_code,common_name,latin_name';
     }
 
     async createDataEntry() {
-        super.createDataEntry();
+        await super.createDataEntry();
     }
 
     dataSQLPath(): string {
@@ -69,10 +69,10 @@ export class JurisdictionCodeSchema extends CodeTableSchema {
     }
 
     async createDataEntry() {
-        super.createDataEntry();
+        await super.createDataEntry();
     }
 
-    entryString(): string {
+    entryString(input?: string, context?: string): string {
         return 'jurisdiction_code,description';
     }
 
@@ -95,6 +95,44 @@ export class ObservationSchema extends RecordTableSchema {
 export class ObservationSpeciesSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
+    }
+}
+
+export class SpeciesDistributionCodeSchema extends CodeTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('observation.codes.schema.yaml');
+    }
+
+    csvData(): Promise<any> {
+        const csvData = new SpeciesDistributionCodeCSVData();
+        return csvData.load();
+    }
+
+    entryString(input?: string, context?: string): string {
+        return `${this.table.columns.id}, ${this.table.columns.description}`;
+    }
+
+    dataSQLPath(context?: any): string {
+        return 'SpeciesDistributionCodeData.sql';
+    }
+}
+
+export class SpeciesDensityCodeSchema extends CodeTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('observation.codes.schema.yaml');
+    }
+
+    csvData(): Promise<any> {
+        const csvData = new SpeciesDensityCodeCSVData();
+        return csvData.load();
+    }
+
+    entryString(input?: string, context?: string): string {
+        return `${this.table.columns.code}, ${this.table.columns.description}`;
+    }
+
+    dataSQLPath(context?: any): string {
+        return 'SpeciesDensityCodeData.sql';
     }
 }
 // -----------------------------------------------------------------------------------------

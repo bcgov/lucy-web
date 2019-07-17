@@ -15,8 +15,8 @@ ALTER TABLE observation ADD COLUMN observation_location_long NUMERIC(9, 6) NOT N
 COMMENT ON TABLE observation IS 'Observation table';
 COMMENT ON COLUMN observation.observation_id IS 'Auto generated primary key';
 COMMENT ON COLUMN observation.observation_date IS 'Date of observation';
-COMMENT ON COLUMN observation.observation_location_lat IS 'Date of observation';
-COMMENT ON COLUMN observation.observation_location_long IS 'Date of observation';
+COMMENT ON COLUMN observation.observation_location_lat IS 'Latitude of observation location';
+COMMENT ON COLUMN observation.observation_location_long IS 'Longitude of observation location';
 
 
         
