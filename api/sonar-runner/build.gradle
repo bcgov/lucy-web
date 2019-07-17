@@ -8,8 +8,8 @@ plugins {
 sonarqube {
     properties {
         //property "sonar.host.url", "https://sonarqube<your project>.pathfinder.gov.bc.ca"        
-        property "sonar.projectName", "range-web"
-        property "sonar.projectKey", "org.sonarqube:bcgov-range-myra-web"
+        property "sonar.projectName", "lucy-web-api"
+        property "sonar.projectKey", "org.sonarqube:bcgov-lucy-web-api"
         property "sonar.projectBaseDir", "../"
         property "sonar.sources", "./"
         property "sonar.exclusions", "node_modules/**, src/**, semantic/**"
