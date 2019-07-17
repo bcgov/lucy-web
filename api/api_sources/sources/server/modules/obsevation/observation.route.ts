@@ -20,18 +20,45 @@
  * Imports
  */
 import * as assert from 'assert';
-import { Request, Response, Router} from 'express';
+import * as _ from 'underscore';
+import { Request, Router} from 'express';
 import { check } from 'express-validator';
 import { SecureRouteController, RouteHandler } from '../../core';
-import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel} from '../../../database/models';
+import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel, Observation, ObservationUpdateModel} from '../../../database/models';
 import { observationSpeciesRoute } from './observation.species.route';
+import { unWrap } from '../../../libs/utilities';
 
-const createValidator = (): any[] =>  {
+/**
+ * @description Validation of create object for observation
+ */
+const CreateValidator = (): any[] =>  {
     return [
         check('lat').isNumeric().withMessage('lat: should be number'),
         check('long').isNumeric().withMessage('long: should be number'),
-        check('date').isString().withMessage('accessDescription: should be string')
+        check('date').isString().withMessage('date: should be string')
     ];
+};
+
+/**
+ * @description Validation of observationId in req param
+ */
+const ObservationIdValidator = (): any[] => [
+    check('observationId').isInt().custom(async (value: number, {req}) => {
+    const obs = await ObservationController.shared.findById(value);
+    assert(obs, `observation: No observation exists with id ${value}`);
+    req.validation = {
+        observation: obs
+    };
+})];
+/**
+ * @description Validation response object in request
+ */
+interface ObservationIdValidation {
+    observation: Observation;
+}
+
+const UpdateValidator = (): any[] => {
+    return _.map(CreateValidator(), checkVal => checkVal.optional());
 };
 
 export class ObservationRouteController extends SecureRouteController<ObservationController> {
@@ -52,28 +79,25 @@ export class ObservationRouteController extends SecureRouteController<Observatio
         this.router.get('/codes', this.indexCodes);
 
         // Create observation
-        this.router.post('/', createValidator(), this.create);
+        this.router.post('/', CreateValidator(), this.create);
+
+        // Get all observation
+        this.router.get('/', this.index);
+
+        // Get single observation
+        this.router.get('/:observationId', ObservationIdValidator(), this.index);
+
+        // Update single observation
+        this.router.put('/:observationId', UpdateValidator().concat(ObservationIdValidator()), this.update);
     }
 
     /**
      * @description Route Handler to load all codes for observation
      */
     get indexCodes(): RouteHandler {
-        return async (req: Request, resp: Response) => {
-            try {
-                assert(req.user, 'No User for request');
-                // Get all jurisdiction code
-                const jurisdictionCodes = await JurisdictionCodeController.shared.all();
-                // Get all species
-                const speciesList = await SpeciesController.shared.all();
-
-                // Sending resp
-                return resp.status(200).json(this.successResp({jurisdictionCodes, speciesList}));
-            } catch (excp) {
-                this.commonError(500, 'indexCodes', excp, resp);
-                return;
-            }
-        };
+        return this.routeConfig<any>('indexCodes', async () => [200, {
+            jurisdictionCodes : await JurisdictionCodeController.shared.all(),
+            speciesList: await SpeciesController.shared.all()}]);
     }
 
     /**
@@ -83,6 +107,22 @@ export class ObservationRouteController extends SecureRouteController<Observatio
         return this.routeConfig<ObservationCreateModel>('observation-create',
         async (data: ObservationCreateModel, req: Request) => [201, await this.dataController.createObservation(data, req.user)]
         );
+    }
+
+    /**
+     * @description Route handler to fetch all observation
+     */
+    get index(): RouteHandler {
+        return this.routeConfig<any>('observation-index', async (d: any, req: Request) => [
+            200,
+            unWrap(this.validation<ObservationIdValidation>(req, 'obs-index'), {}).observation || await this.dataController.all()
+        ]);
+    }
+
+    get update(): RouteHandler {
+        return this.routeConfig<ObservationUpdateModel>('observation-update', async (data: ObservationUpdateModel, req: Request) => [
+            200,
+            await this.dataController.update(this.validation<ObservationIdValidation>(req, 'obs-update').observation, data, req.user)]);
     }
 }
 

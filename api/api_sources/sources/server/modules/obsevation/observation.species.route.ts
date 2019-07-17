@@ -22,11 +22,12 @@
 import * as assert from 'assert';
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { SecureRouteController, RouteHandler } from '../../core';
-import { ObservationSpeciesController, SpeciesController, JurisdictionCodeController, ObservationController, ObservationSpeciesCreateModel } from '../../../database/models';
+import { SecureRouteController, RouteHandler, MakeOptionalValidator } from '../../core';
+import { ObservationSpeciesController, SpeciesController, JurisdictionCodeController, ObservationController } from '../../../database/models';
+import { ObservationSpeciesCreateModel, ObservationSpeciesUpdateModel, ObservationSpecies } from '../../../database/models';
 // import { DataController } from '../../../database/data.model.controller';
 
-const createValidator = (): any[] =>  {
+const CreateValidator = (): any[] =>  {
     return [
         check('width').isNumeric().withMessage('width: should be number'),
         check('length').isNumeric().withMessage('length: should be number'),
@@ -58,12 +59,13 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
     constructor() {
         super();
         this.dataController = ObservationSpeciesController.shared;
-        this.router.post('/', createValidator(), this.create);
+        this.router.post('/', CreateValidator(), this.create);
+        this.router.put('/:id', this.combineValidator(MakeOptionalValidator(CreateValidator), this.idValidation()), this.update);
     }
 
     // Create Observation - species entry
     get create(): RouteHandler {
-        return this.routeConfig<any>('observation:species-create', async (data: any, req: any) => {
+        return this.routeConfig<any>('obs:species-create', async (data: any, req: any) => {
             const model: ObservationSpeciesCreateModel = {
                 length: data.length,
                 width: data.width,
@@ -72,8 +74,25 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
                 species: req.species,
                 observation: req.observation
             };
-
             return [201, await this.dataController.createObservationOfSpecies(model, req.user)];
+        });
+    }
+
+    /**
+     * @description Route handle to update observation species
+     */
+    get update(): RouteHandler {
+        return this.routeConfig<any>('obs:species-update', async (data: any, req: any) => {
+            const model: ObservationSpeciesUpdateModel = {
+                length: data.length,
+                width: data.width,
+                accessDescription: data.accessDescription,
+                jurisdiction: req.jurisdictionCode,
+                species: req.species,
+                observation: req.observation
+            };
+            const observationSpecies: ObservationSpecies = this.validation<any>(req).id as ObservationSpecies;
+            return [200, await this.dataController.updateObservationOfSpecies(observationSpecies, model, req.user)];
         });
     }
 }

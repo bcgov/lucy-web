@@ -20,14 +20,16 @@
 // @IMPORT
 // LIB
 import * as assert from 'assert';
+import * as _ from 'underscore';
 import * as express from 'express';
 import * as passport from 'passport';
-import { validationResult } from 'express-validator';
+import { validationResult, check } from 'express-validator';
 // SOURCE
 import { Logger } from '../logger';
 import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { RolesCodeValue, UserDataController } from '../../database/models';
+import { DataController} from '../../database/data.model.controller';
 
 /**
  * Common Message for API success
@@ -57,6 +59,22 @@ export interface ValidationKeys {
 }
 
 /**
+ * @description Update request object with validation keys
+ * @param any req : Express req
+ * @param object obj : update object
+ */
+export const UpdateRequest = (req: any, obj: object) => {
+    const existing = req.validation || {};
+    req.validation = { ...existing, ...obj};
+};
+
+/**
+ * @description Convert any validator chain to optional one
+ * @param closure validators : Closure which return array of validator
+ */
+export const MakeOptionalValidator = (validators: (() => any[])) => _.map(validators(), checkVal => checkVal.optional());
+
+/**
  * @description Base express route controller. Provides
  * 1. Common functionality for all routes
  * 2. Provide logger support
@@ -65,7 +83,7 @@ export interface ValidationKeys {
  * 5. Created for sub classing only
  * @export class BaseRoutController<DataController>
  */
-export class BaseRoutController<DataController>  {
+export class BaseRoutController<Controller extends DataController>  {
     // Generic share instance
     private static _sharedInstance: any;
     // Express route
@@ -73,14 +91,14 @@ export class BaseRoutController<DataController>  {
     // Logger
     logger: Logger;
     // DataController associated with route
-    dataController: DataController;
+    dataController: Controller;
     // User Data Controller
     userController: UserDataController = UserDataController.shared;
 
     /**
-     * @description Getter for share instance 
+     * @description Getter for share instance
      */
-    static sharedInstance<DataController>(): BaseRoutController<DataController> {
+    static sharedInstance<Controller>(): BaseRoutController<DataController> {
         return (this._sharedInstance || (this._sharedInstance = new this()));
     }
 
@@ -129,6 +147,41 @@ export class BaseRoutController<DataController>  {
         resp.status(status).json(errorBody(errMsg, [error]));
     }
 
+    /**
+     * @description Get validation result from req
+     * @param any req Express Req
+     * @param string tag Debug string
+     * @param boolean optional fail  Fail processing
+     */
+    public validation<T>(req: any, tag?: string, fail?: boolean): T {
+        const value: T = req['validation'] as T;
+        if (fail) {
+            assert(value, `[${tag || 'req'}]:Unable to get validation value`);
+        }
+        return value;
+    }
+
+    public idValidation(paramKey: string = 'id') {
+        return [
+            check(paramKey).isInt().custom(async (value: number, {req}) => {
+                const item = await this.dataController.findById(value);
+                UpdateRequest(req, { id: item});
+            })
+        ];
+    }
+
+    /**
+     * @description Combine validators
+     * @param args variable length arg
+     */
+    public combineValidator(...args: any[][]): any[] {
+        let result: any[] = [];
+        for (const item of args) {
+            result = result.concat(item);
+        }
+        return result;
+    }
+
 
     /**
      *
@@ -166,7 +219,7 @@ export class BaseRoutController<DataController>  {
  * @description This is generic route controller to handle secure routes. Created for sub classing.
  * @export class SecureRouteController
  */
-export class SecureRouteController<T> extends BaseRoutController<T> {
+export class SecureRouteController<T extends DataController> extends BaseRoutController<T> {
     constructor() {
         super();
         // Register auth middleware
@@ -202,7 +255,7 @@ export class SecureRouteController<T> extends BaseRoutController<T> {
 /**
  * @description Generic route controller for admin only routes. Created for sub classing.
  */
-export class BaseAdminRouteController<T> extends SecureRouteController<T> {
+export class BaseAdminRouteController<T extends DataController> extends SecureRouteController<T> {
     constructor() {
         super();
 

@@ -19,11 +19,12 @@
 /**
  * Imports
  */
-import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
+import * as request from 'supertest';
 import { should } from 'chai';
-
+import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
 import { action } from '../libs/utilities';
 import { SharedDBManager } from '../database/dataBaseManager';
+import { adminToken, editorToken, viewerToken } from './token';
 
 /**
  * @description Closure type to verify any data
@@ -125,6 +126,69 @@ export const commonTestSetupAction = async (): Promise<any> => {
 export const commonTestTearDownAction = async (): Promise<void> => {
     if (!process.env.DB_MOCK) {
         await SharedDBManager.close();
+    }
+};
+
+/**
+ * @description AuthType of request
+ */
+export const enum AuthType {
+    admin = 1,
+    viewer = 2,
+    sme = 3,
+    noAuth = 0
+}
+
+export const enum HttpMethodType {
+    get = 'get',
+    post = 'post',
+    put = 'put',
+    delete = 'delete'
+}
+
+export interface TestSetup {
+    type: HttpMethodType;
+    url: string;
+    expect: number;
+    auth?: AuthType;
+    send?: any;
+}
+
+/**
+ * @description Generic test request creation
+ * @param app Express App
+ * @param callback Callback to customize request
+ * @param except Expected status
+ * @param auth  auth type
+ * @param send send data
+ */
+export const testRequest = (app: any, setup: TestSetup) => {
+    const actualAuth: number = (setup.auth || AuthType.noAuth) as number;
+    let token: string;
+    switch (actualAuth) {
+        case 0:
+            console.log('here....');
+            token = adminToken();
+            break;
+        case 2:
+            token = editorToken();
+            break;
+        case 1:
+            token = viewerToken();
+            break;
+        default:
+            token = '';
+            break;
+    }
+    if (token && token !== '') {
+        return request(app)[setup.type](setup.url)
+        .set('Authorization', `Bearer ${token}`)
+        .send(setup.send)
+        .expect(setup.expect);
+    } else {
+        return request(app)[setup.type](setup.url)
+        .send(setup.send)
+        .expect(setup.expect);
     }
 };
 

@@ -4,10 +4,15 @@ swagger.raw.yaml
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Dist
+**/.DS_Store
+.config
 .DS_Store
 dist-server/
 dist/
 _app_data/
+.temp/
+**/.temp/
+**/schemaspy
 
 
 **/dits-server

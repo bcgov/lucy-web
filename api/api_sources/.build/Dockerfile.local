@@ -4,8 +4,21 @@ RUN apt-get update
 RUN npm install -g npm
 
 # Create app directory
-RUN mkdir -p /home/nodejs/app
-WORKDIR /home/nodejs/app
+
+ENV HOME_ROOT=/opt/app-root
+ENV HOME=/opt/app-root/src
+
+RUN mkdir -p $HOME
+
+WORKDIR $HOME_ROOT
+
+# Creating Schema spy analysis report resources
+RUN mkdir ./schemaspy
+COPY ./resources/archives/schemaspy.tar.gz ./schemaspy.tar.gz
+RUN tar -zxf ./schemaspy.tar.gz -C ./schemaspy
+ENV SCHEMASPY_PATH=${HOME_ROOT}/schemaspy
+
+WORKDIR $HOME
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -15,6 +28,7 @@ COPY ./package*.json ./
 # If you are building your code for production
 # RUN npm install --only=production
 RUN npm install
+RUN npm audit fix
 
 # Bundle app source
 COPY ./ .
@@ -25,11 +39,11 @@ RUN rm -rf ./dist-server
 # Building App
 RUN npm run build
 
-ENV NODE_PATH /home/nodejs/app/sources
-ENV PATH /home/nodejs/app/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV NODE_PATH ${HOME}/sources
+ENV PATH ${HOME}/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 
-VOLUME /home/nodejs/app
+VOLUME ${HOME}
 
 
 #ENTRYPOINT [ "npm", "run", "docker_start" ]

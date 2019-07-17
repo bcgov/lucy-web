@@ -22,7 +22,7 @@
 export const InitialUsers = [
     {
         email: 'amir@freshworks.io',
-        preferred_username:'###',
+        preferred_username: '###',
         first_name: 'Amir',
         last_name: 'Shayegh',
         additionalInitDataInfo: {
@@ -31,7 +31,7 @@ export const InitialUsers = [
     },
     {
         email: 'pushan@freshworks.io',
-        preferred_username:'#',
+        preferred_username: '#',
         first_name: 'Pushan',
         last_name: 'Mitra',
         additionalInitDataInfo: {
