@@ -20,6 +20,10 @@ export class FieldComponent implements OnInit {
   // Field header
   @Input() header = '';
 
+  get fieldId(): string {
+    return this.header;
+  }
+
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
   // Get
@@ -61,6 +65,9 @@ export class FieldComponent implements OnInit {
    * Otherwise returns true.
    */
   get isValid(): boolean {
+    if (this.value === undefined || this.value === ``) {
+      return true;
+    }
     if (this.validationFunc) {
       const result = this.validationFunc(this.value);
       return result;
