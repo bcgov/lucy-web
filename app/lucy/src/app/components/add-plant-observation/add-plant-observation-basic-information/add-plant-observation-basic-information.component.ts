@@ -20,8 +20,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   organizations: Organization[] = [];
 
-  observationDate: NgbDate;
-
   get observerFirstName(): string {
     if (this.observationObject) {
       return this.observationObject.observerFirstName;
@@ -164,7 +162,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.notifyChangeEvent();
   }
 
-  observationDateChanged(value: NgbDate) {
+  observationDateChanged(value: any) {
     console.dir(value);
   }
 

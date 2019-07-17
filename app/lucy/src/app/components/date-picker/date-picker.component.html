@@ -1,0 +1,7 @@
+<div class="col-12">
+  <input type="text"
+  ngbDatepicker #customDatePicker="ngbDatepicker" 
+  [(ngModel)]="ngDate"
+  (click)="customDatePicker.toggle()" 
+  (dateSelect)="dateChanged($event)"/>
+</div>
