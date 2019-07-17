@@ -119,8 +119,36 @@ export class InventoryComponent implements OnInit {
   }
 
   sortBySpecies() {
+    // If aready sorting by this criteria,
+    // Flip between ascending and descending
+    if (this.sortingBySpecies) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortAscending = false;
+    }
+
+    // Set sort flags
     this.resetSortFields();
     this.sortingBySpecies = true;
+
+    // Sort objects
+    this.observations.sort((left, right): number => {
+      if (left.speciesObservations[0].species.commonName < right.speciesObservations[0].species.commonName) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      if (left.speciesObservations[0].species.commonName > right.speciesObservations[0].species.commonName) {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      return 0;
+    });
   }
 
   sortByLocation() {
@@ -129,8 +157,36 @@ export class InventoryComponent implements OnInit {
   }
 
   sortBySurveyor() {
+    // If aready sorting by this criteria,
+    // Flip between ascending and descending
+    if (this.sortingBySurveyor) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortAscending = false;
+    }
+
+    // Set sort flags
     this.resetSortFields();
     this.sortingBySurveyor = true;
+
+    // Sort objects
+    this.observations.sort((left, right): number => {
+      if (left.observerLastName < right.observerLastName) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      if (left.observerLastName > right.observerLastName) {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      return 0;
+    });
   }
 
   sortByObservationId() {
