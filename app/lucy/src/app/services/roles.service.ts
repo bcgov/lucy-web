@@ -51,7 +51,7 @@ export class RolesService {
 
   public accessTypeCanCreateObservation(accessType: UserAccessType) {
     return (accessType === UserAccessType.Admin ||
-      accessType === UserAccessType.DataViewer);
+      accessType === UserAccessType.DataEditor);
   }
 
   private getDummyRoles(): Role[] {
