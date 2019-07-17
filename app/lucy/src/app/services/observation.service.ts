@@ -15,7 +15,7 @@ export class ObservationService {
     const observationBody = {
       lat: observation.lat,
       long: observation.long,
-      date: `2019-05-30`
+      date: observation.date
     };
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_observation, observationBody);
     console.dir(response);

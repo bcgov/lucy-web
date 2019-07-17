@@ -2,7 +2,7 @@ export interface Observation {
     observation_id: number;
     lat: number;
     long: number;
-    date: `2019-05-30`;
+    date: string;
     observerFirstName: string;
     observerLastName: string;
     observerOrganization: Organization;

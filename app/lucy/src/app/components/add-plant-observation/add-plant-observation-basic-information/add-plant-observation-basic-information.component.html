@@ -101,7 +101,8 @@
           </div> -->
           <app-date-picker
           [mode]="mode"
-          [date]=""
+          [date]="observationDate"
+          [header]="'Observation Date'"
           (selected)='observationDateChanged($event)'
           ></app-date-picker>
         </div>
