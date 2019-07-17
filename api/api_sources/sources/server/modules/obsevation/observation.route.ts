@@ -25,6 +25,7 @@ import { Request, Router} from 'express';
 import { check } from 'express-validator';
 import { SecureRouteController, RouteHandler } from '../../core';
 import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel, Observation, ObservationUpdateModel} from '../../../database/models';
+import { SpeciesDensityCodeController, SpeciesDistributionCodeController } from '../../../database/models';
 import { observationSpeciesRoute } from './observation.species.route';
 import { unWrap } from '../../../libs/utilities';
 
@@ -97,7 +98,10 @@ export class ObservationRouteController extends SecureRouteController<Observatio
     get indexCodes(): RouteHandler {
         return this.routeConfig<any>('indexCodes', async () => [200, {
             jurisdictionCodes : await JurisdictionCodeController.shared.all(),
-            speciesList: await SpeciesController.shared.all()}]);
+            speciesList: await SpeciesController.shared.all(),
+            speciesDensityCodes: await SpeciesDensityCodeController.shared.all(),
+            speciesDistributionCodes: await SpeciesDistributionCodeController.shared.all()
+        }]);
     }
 
     /**

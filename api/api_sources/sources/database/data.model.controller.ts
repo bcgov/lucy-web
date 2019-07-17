@@ -32,6 +32,7 @@ export interface DataController {
     all(filter: any): Promise<any>;
     create(): any;
     saveInDB(obj: any): Promise<any>;
+    random(): Promise<any>;
 }
 
 /**
@@ -120,6 +121,10 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase imp
      */
     async findById(id: number): Promise<T> {
         return await this.repo.findOne(this.idQuery(id)) as T;
+    }
+
+    async random(): Promise<T> {
+        return this.findById(1);
     }
 
     /**

@@ -48,6 +48,8 @@ describe('Test for observation routes', () => {
             await verifySuccessBody(body, (data: any) => {
                 should().exist(data.jurisdictionCodes);
                 should().exist(data.speciesList);
+                should().exist(data.speciesDensityCodes);
+                should().exist(data.speciesDistributionCodes);
             });
             // done();
         });
@@ -201,7 +203,7 @@ describe('Test for observation routes', () => {
         });
     });
 
-    it('should update observation-species', async () => {
+    it('should update observation-species with {id}', async () => {
         const obsSpecies = await observationSpeciesFactory();
         const obs = await observationFactory();
         const jurisdictionCode = await jurisdictionCodeFactory(2);

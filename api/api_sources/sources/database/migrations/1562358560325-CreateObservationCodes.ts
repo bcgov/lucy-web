@@ -18,22 +18,25 @@
 // Created by Pushan Mitra on 2019-07-05.
 
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { JurisdictionCodeSchema, getSQLFileData } from '../database-schema';
+import { SpeciesDensityCodeSchema, SpeciesDistributionCodeSchema, getSQLFileData } from '../database-schema';
 /**
  * @description Migration File create JurisdictionCode table
  */
-export class CreateJurisdictionCode1562358560315 implements MigrationInterface {
-    schema: JurisdictionCodeSchema = new JurisdictionCodeSchema();
+export class CreateObservationCode1562358560325 implements MigrationInterface {
+    densitySchema: SpeciesDensityCodeSchema = new SpeciesDensityCodeSchema();
+    distributionSchema: SpeciesDistributionCodeSchema = new SpeciesDistributionCodeSchema();
     /**
      * @description Up method
      * @param QueryRunner queryRunner
      * @return Promise<any>
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
-        // Creating Table
-        await queryRunner.query(this.schema.migrationSQL);
-        // Pre-load species
-        await queryRunner.query(getSQLFileData(this.schema.dataSQLPath()));
+        // Creating Tables
+        await queryRunner.query(this.densitySchema.migrationSQL);
+        await queryRunner.query(this.distributionSchema.migrationSQL);
+        // Pre-load codes
+        await queryRunner.query(getSQLFileData(this.densitySchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.distributionSchema.dataSQLPath()));
     }
 
     /**
@@ -42,8 +45,8 @@ export class CreateJurisdictionCode1562358560315 implements MigrationInterface {
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(this.schema.dropTable());
-        await queryRunner.query(`DROP TABLE IF EXISTS jurisdiction_code_table`);
+        await queryRunner.query(this.densitySchema.dropTable());
+        await queryRunner.query(this.distributionSchema.dropTable());
     }
 
 }
