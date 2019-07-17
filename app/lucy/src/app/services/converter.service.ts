@@ -184,6 +184,7 @@ export class ConverterService {
     let k1 = 0.9992
     let e = 4
     // HERE
+    return this.fromLatLon(latitude, longitude, utmZone);
   }
 
   latitudeToZoneLetter(latitude) {

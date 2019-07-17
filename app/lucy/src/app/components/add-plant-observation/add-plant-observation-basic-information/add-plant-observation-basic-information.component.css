@@ -31,3 +31,30 @@
 	font-weight: bold;
 	line-height: 22px;
 }
+
+.input-mode {
+    text-align: center;
+}
+
+.input-mode-container {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #333333;
+    border-radius: 4px;
+}
+
+.input-mode-on {
+    background-color: #333333;
+    color: white;
+}
+
+.input-mode-off {
+    background-color: transparent;
+    color: 333333;
+}
+
+.switch-btn {
+    border: none;
+    border-radius: 0;
+    width: 50%;
+}
