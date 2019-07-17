@@ -9,8 +9,6 @@ import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
-// declare let L;
-
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -19,8 +17,6 @@ import { AppRoutes } from 'src/app/constants';
 })
 
 @NgModule({schemas: [CUSTOM_ELEMENTS_SCHEMA]})
-
-
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   /**
