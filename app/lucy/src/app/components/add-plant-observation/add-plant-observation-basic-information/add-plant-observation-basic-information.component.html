@@ -92,13 +92,18 @@
       <!-- Date -->
       <div class="row">
         <div class="full-width">
-          <div class="col-12">
+          <!-- <div class="col-12">
             <input type="text"
             ngbDatepicker #observationDatePicker="ngbDatepicker" 
             [(ngModel)]="observationDate"
             (click)="observationDatePicker.toggle()" 
             (dateSelect)="observationDateChanged($event)"/>
-          </div>
+          </div> -->
+          <app-date-picker
+          [mode]="mode"
+          [date]=""
+          (selected)='observationDateChanged($event)'
+          ></app-date-picker>
         </div>
       </div>
     </div>
