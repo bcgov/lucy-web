@@ -20,10 +20,10 @@
  * Imports
  */
  // Lib Import
-import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn} from 'typeorm';
+import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn, AfterLoad} from 'typeorm';
 
 // Local Import
-import { BaseModel, LoadData } from './baseModel';
+import { BaseModel } from './baseModel';
 import { UserSession, UserSessionDataController } from './user.session';
 import { RolesCode, RolesCodeValue } from './appRolesCode';
 import { DataModelController } from '../data.model.controller';
@@ -62,8 +62,17 @@ export interface UserData {
 @Entity({
     name: UserSchema.schema.name
 })
-export class User extends BaseModel implements LoadData<UserData> {
-    // Props
+export class User extends BaseModel  {
+
+    /**
+     * Private members
+     */
+    @ModelProperty({ type: PropertyType.object, ref: 'RequestAccess', optional: true})
+    existingRequestAccess?: RequestAccess;
+
+    /**
+     * Database column attributes
+     */
     @PrimaryGeneratedColumn()
     @ModelProperty({type: PropertyType.number})
     user_id: number;
@@ -133,19 +142,20 @@ export class User extends BaseModel implements LoadData<UserData> {
     @OneToOne(type => RequestAccess, requestAccess => requestAccess.requester)
     requestAccess: Promise<RequestAccess>;
 
-    loadMap(input: UserData) {
-        this.firstName = input.firstName;
-        this.lastName = input.lastName;
-        this.email = input.email;
-        //
-    }
-
     /**
      * @description Checking user is admin or not
      */
     @ModelProperty({type: PropertyType.boolean})
     get isAdmin(): boolean {
         return this.roles.filter(item => item.code === RolesCodeValue.admin).length > 0;
+    }
+
+    /**
+     * DB Hook/listener
+     */
+    @AfterLoad()
+    async entityDidLoad() {
+        this.existingRequestAccess = await this.requestAccess;
     }
 }
 

@@ -35,6 +35,15 @@ export interface ObservationSpeciesCreateModel {
     jurisdiction: JurisdictionCode;
     observation: Observation;
 }
+
+export interface ObservationSpeciesUpdateModel {
+    width?: number;
+    length?: number;
+    accessDescription?: string;
+    species?: Species;
+    jurisdiction?: JurisdictionCode;
+    observation?: Observation;
+}
 @Entity({ name: ObservationSpeciesSchema.dbTable})
 export class ObservationSpecies extends Record implements ObservationSpeciesCreateModel {
     @PrimaryGeneratedColumn()
@@ -54,7 +63,7 @@ export class ObservationSpecies extends Record implements ObservationSpeciesCrea
     @ModelProperty({ type: PropertyType.string})
     accessDescription: string;
 
-    @ManyToOne( type => Species)
+    @ManyToOne( type => Species, {eager: true})
     @JoinColumn({
         name: ObservationSpeciesSchema.columns.species,
         referencedColumnName: SpeciesSchema.columns.id
@@ -62,7 +71,7 @@ export class ObservationSpecies extends Record implements ObservationSpeciesCrea
     @ModelProperty({ type: PropertyType.object})
     species: Species;
 
-    @ManyToOne( type => JurisdictionCode)
+    @ManyToOne( type => JurisdictionCode, {eager: true})
     @JoinColumn({
         name: ObservationSpeciesSchema.columns.jurisdiction,
         referencedColumnName: JurisdictionCodeSchema.columns.id

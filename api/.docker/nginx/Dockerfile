@@ -1,4 +1,9 @@
-FROM nginx:1.15.0-alpine
+FROM nginx:stable-alpine
+
+RUN apk update \
+    && apk upgrade \
+    && apk add --no-cache bash \
+    && adduser -D -H -u 1000 -s /bin/bash www-data -G www-data
 
 RUN mkdir -p /usr/app
 WORKDIR /usr/app
