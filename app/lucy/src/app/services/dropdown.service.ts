@@ -15,6 +15,7 @@ export class DropdownService {
 
   public displayedJuristictionsField = `code`;
   public displayedInvasivePlantspeciesField = `latinName`;
+  public displayedOrganizationField = `name`;
 
   constructor(private codeTableService: CodeTableService) { }
 
@@ -32,6 +33,11 @@ export class DropdownService {
       });
     }
     return dropdownObjects;
+  }
+
+  public async getOrganizations(): Promise<DropdownObject[]> {
+    const organizations = await this.codeTableService.getOrganizations();
+    return this.createDropdownObjectsFrom(organizations, this.displayedOrganizationField);
   }
 
   /**

@@ -26,3 +26,7 @@
     line-height: 18px;
     border: 0;
 }
+
+.field {
+    width: 100%;
+}

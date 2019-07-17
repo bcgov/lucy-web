@@ -2,7 +2,8 @@ import { Component, OnInit, Input, AfterViewChecked, Output, EventEmitter } from
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { FormMode, Observation } from 'src/app/models';
+import { FormMode, Observation, Organization } from 'src/app/models';
+import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 
 @Component({
   selector: 'app-add-plant-observation-basic-information',
@@ -11,8 +12,36 @@ import { FormMode, Observation } from 'src/app/models';
 })
 export class AddPlantObservationBasicInformationComponent implements OnInit, AfterViewChecked {
 
+  locationEntryModeLatLong = false;
+
   private mapCenter: MapPreviewPoint;
   private markers: LatLong[] = [];
+
+  organizations: Organization[] = [];
+
+  get observerFirstName(): string {
+    if (this.observationObject) {
+      return this.observationObject.observerFirstName;
+    }
+    return ``;
+  }
+
+  get observerLastName(): string {
+    if (this.observationObject) {
+      return this.observationObject.observerLastName;
+    }
+    return ``;
+  }
+
+  get organization(): DropdownObject | undefined  {
+    if (this.observationObject && this.observationObject.observerOrganization) {
+      return {
+        name: this.observationObject.observerOrganization[this.dropdownService.displayedOrganizationField],
+        object: this.observationObject.observerOrganization,
+      };
+    }
+    return undefined;
+  }
 
   // * UTM
   eastings: string;
@@ -22,10 +51,19 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   // * Lat Long
   get lat(): string {
-    return String(this.observationObject.lat);
+    if (this.observationObject.lat) {
+      return String(this.observationObject.lat);
+    } else {
+      return ``;
+    }
   }
+
   get long(): string {
-    return String(this.observationObject.long);
+    if (this.observationObject.long) {
+      return String(this.observationObject.long);
+    } else {
+      return ``;
+    }
   }
 
   // * Validations
@@ -56,7 +94,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
    }
    // Set
    @Input() set mode(mode: FormMode) {
-     console.log(`Form - basic info mode is ${mode}`);
      this._mode = mode;
    }
    ////////////////////
@@ -74,7 +111,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   ////////////////////
 
   @Output() basicInfoChanged = new EventEmitter<Observation>();
-  constructor(private converterService: ConverterService, private validation: ValidationService) { }
+  constructor(private converterService: ConverterService, private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {
     this.mapCenter = {
@@ -82,6 +119,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       longitude: -123.288152,
       zoom: 4
     };
+
+    this.dropdownService.getOrganizations().then((result) => {
+      this.organizations = result;
+    });
   }
 
   private notifyChangeEvent() {
@@ -91,11 +132,61 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   ngAfterViewChecked(): void {
-    // console.log(`Form - Basic info mode is ${this.mode} -ngAfterViewChecked`);
+  }
+
+  observerLastNameChanged(value: string) {
+    if (this.observationObject) {
+      this.observationObject.observerLastName = value;
+    }
+    this.notifyChangeEvent();
+  }
+
+  observerFirstNameChanged(value: string) {
+    if (this.observationObject) {
+      this.observationObject.observerFirstName = value;
+    }
+    this.notifyChangeEvent();
+  }
+
+  organizationChanged(value: DropdownObject) {
+    if (this.observationObject) {
+      this.observationObject.observerOrganization = value.object;
+    }
+    this.notifyChangeEvent();
   }
 
   private utmCoordinatesAreValid(): boolean {
     return (this.validNorthings && this.validEastings && this.validZone);
+  }
+
+  switchInputUTM() {
+    this.locationEntryModeLatLong = false;
+  }
+
+  switchInputLatLong() {
+    this.locationEntryModeLatLong = true;
+  }
+
+  /**
+   * Validate and show on map
+   * @param value latitude
+   */
+  latChanged(value: string) {
+    if (this.observationObject && this.validation.isValidLatitude(value)) {
+      this.observationObject.lat = +value;
+    }
+    this.latLongChanged();
+  }
+
+  /**
+   * Validate and show on map
+   * @param value longitude
+   */
+  longChanged(value: string) {
+    if (this.observationObject && this.validation.isValidLongitude(value)) {
+      this.observationObject.long = +value;
+    }
+    this.latLongChanged();
   }
 
   eastingChanged(value: string) {
@@ -116,7 +207,36 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.notifyChangeEvent();
   }
 
+  /**
+   * Validate, convert to UTM and show location on map
+   */
+  latLongChanged() {
+    // If its NOT in lat long entry mode, dont run this function.
+    if (!this.locationEntryModeLatLong || !this.observationObject) {
+      return;
+    }
+
+    if (!this.validation.isValidLatitude(String(this.observationObject.lat)) || !this.validation.isValidLongitude(String(this.observationObject.long))) {
+      return;
+    }
+
+    const converted = this.converterService.toUTM(this.observationObject.lat, this.observationObject.long);
+    this.zoneChanged(converted.zoneNum);
+    this.northingsChanged(String(converted.northing.toFixed(2)));
+    this.eastingChanged(String(converted.easting.toFixed(2)));
+
+    this.setMapToObservationLocation();
+  }
+
+  /**
+   * Validate, convert to Lat/Long, store and show location on map
+   */
   utmValuesChanged() {
+    // If its in lat long entry mode, dont run this function.
+    if (this.locationEntryModeLatLong || !this.observationObject) {
+      return;
+    }
+
     // 1) Check if fields are valid
     if (!this.utmCoordinatesAreValid()) {
       return;
@@ -127,7 +247,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
     // 3) Check if converted lat long are valid
     if (!this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {
-      console.log(`Invalid lat long`);
       console.dir(converted);
       return;
     }
@@ -136,18 +255,32 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.observationObject.lat = parseFloat(converted.latitude.toFixed(6));
     this.observationObject.long = parseFloat(converted.longitude.toFixed(6));
 
-    // 4) Change map center
+    // 5) Set Map
+    this.setMapToObservationLocation();
+  }
+
+  /**
+   * Show map and add pin at the current observation lat/long
+   */
+  private setMapToObservationLocation() {
+    this.setMapTo(this.observationObject.lat, this.observationObject.long);
+  }
+
+  /**
+   * Show map and add pin at specified lat long
+   * @param latitude number
+   * @param longitude number
+   */
+  private setMapTo(latitude: number, longitude: number) {
     this.mapCenter = {
-      latitude: converted.latitude,
-      longitude: converted.longitude,
+      latitude: latitude,
+      longitude: longitude,
       zoom: 18
     };
-
-    // 5) Add pin
     this.markers = [];
     this.markers.push({
-      latitude: converted.latitude,
-      longitude: converted.longitude
+      latitude: latitude,
+      longitude: longitude
     });
   }
 
@@ -160,35 +293,25 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   }
 
+  /**
+   * For testing
+   */
   autofillForTesting() {
-    this.eastingChanged(`472938.52`);
-    this.northingsChanged(`5364221.84`);
-    this.zoneChanged(`10`);
+    if (this.locationEntryModeLatLong) {
+      this.latChanged( `48.430562`);
+      this.longChanged(`-123.365831`);
+    } else {
+      this.eastingChanged(`472938.52`);
+      this.northingsChanged(`5364221.84`);
+      this.zoneChanged(`10`);
+    }
+
+    this.organizationChanged( {
+      name: this.organizations[1][this.dropdownService.displayedOrganizationField],
+      object: this.organizations[1],
+    });
+    this.observerLastNameChanged(`Gates`);
+    this.observerFirstNameChanged(`Bill`);
   }
-  // testWithLatLon() {
-  //   this.lat = "48.430562"
-  //   this.long = "-123.365831"
-  //   this.latLongValuesChanged()
-  // }
-
-  // testWithUTM() {
-  //   this.eastings = "472938.52"
-  //   this.northings = "5364221.84"
-  //   this.zone = "10"
-  //   this.utmValuesChanged()
-  // }
-
-  // testWithKewloanaLatLong() {
-  //   this.lat = "49.9055772"
-  //   this.long = "-119.472584"
-  //   this.latLongValuesChanged()
-  // }
-
-  // testWithKewloanaUTM() {
-  //   this.eastings = "322462.246733"
-  //   this.northings = "5531063.683699"
-  //   this.zone = "11"
-  //   this.utmValuesChanged()
-  // }
 
 }
