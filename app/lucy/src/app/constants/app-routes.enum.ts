@@ -1,11 +1,17 @@
 export enum AppRoutes {
     Root = '',
-    Login = 'Login',
-    UserInfo = 'UserInfo',
-    Profile = 'Profile',
-    AdminTools = 'AdminTools',
-    AddObservation = 'AddObservation',
-    Inventory = 'Inventory'
+    Login = 'login',
+    // User Routes
+    UserInfo = 'info',
+    Profile = 'profile',
+    // Admin Routes
+    AdminTools = 'admin',
+    // Inventory
+    Inventory = 'inventory',
+    // Observation Routes
+    AddObservation = 'create',
+    ViewObservation = 'view/:id',
+    EditObservation = 'edit/:id',
 }
 
 export enum AppRoutesParams {

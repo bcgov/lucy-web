@@ -4,6 +4,7 @@ import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { FormMode, Observation, Organization } from 'src/app/models';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-add-plant-observation-basic-information',
@@ -18,6 +19,8 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   private markers: LatLong[] = [];
 
   organizations: Organization[] = [];
+
+  observationDate: NgbDate;
 
   get observerFirstName(): string {
     if (this.observationObject) {
@@ -86,6 +89,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     return this.validation.isValidInteger(this.zone);
   }
 
+  get isViewMode(): boolean {
+    return this.mode === FormMode.View;
+  }
+
    ///// Form Mode
    private _mode: FormMode = FormMode.View;
    // Get
@@ -107,6 +114,8 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   // Set
   @Input() set observationObject(object: Observation) {
     this._object = object;
+    this.setUTMFromObservationLatLong();
+
   }
   ////////////////////
 
@@ -126,7 +135,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   private notifyChangeEvent() {
-    if (this.observationObject) {
+    if (this.observationObject && !this.isViewMode) {
       this.basicInfoChanged.emit(this.observationObject);
     }
   }
@@ -153,6 +162,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       this.observationObject.observerOrganization = value.object;
     }
     this.notifyChangeEvent();
+  }
+
+  observationDateChanged(value: NgbDate) {
+    console.dir(value);
   }
 
   private utmCoordinatesAreValid(): boolean {
@@ -216,7 +229,11 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       return;
     }
 
-    if (!this.validation.isValidLatitude(String(this.observationObject.lat)) || !this.validation.isValidLongitude(String(this.observationObject.long))) {
+    this.setUTMFromObservationLatLong();
+  }
+
+  setUTMFromObservationLatLong() {
+    if (!this.observationObject || !this.validation.isValidLatitude(String(this.observationObject.lat)) || !this.validation.isValidLongitude(String(this.observationObject.long))) {
       return;
     }
 

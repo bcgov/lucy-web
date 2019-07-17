@@ -1,10 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
   styleUrls: ['./side-nav.component.css']
 })
+
+
+@NgModule({schemas: [CUSTOM_ELEMENTS_SCHEMA]})
+
 export class SideNavComponent implements OnInit {
   
   private _visibleClasses = [];

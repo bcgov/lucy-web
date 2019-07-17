@@ -19,6 +19,7 @@ const routes: Routes = [
   { path: AppRoutes.UserInfo, component: UserInformationComponent},
   { path: AppRoutes.AdminTools , component: AdminToolsComponent },
   { path: AppRoutes.AddObservation , component: AddPlantObservationComponent},
+  { path: AppRoutes.ViewObservation , component: AddPlantObservationComponent},
   { path: AppRoutes.Inventory , component: InventoryComponent}
 ];
 

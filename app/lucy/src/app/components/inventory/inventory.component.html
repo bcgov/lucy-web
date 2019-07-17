@@ -38,7 +38,7 @@
       <tbody>
         <tr class="table-row" *ngFor="let item of observations">
           <td scope="row" (click)="view(item)">{{item.date}}</td>
-          <td scope="row" (click)="view(item)">{{item.invasivePlantSpecies[0].commonName}}</td>
+          <td scope="row" (click)="view(item)">{{item.speciesObservations[0].species.commonName}}</td>
           <td scope="row" (click)="view(item)">{{item.lat}}</td>
           <td scope="row" (click)="view(item)">{{item.observerFirstName + " " +item.observerLastName}}</td>
           <td>
