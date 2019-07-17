@@ -18,7 +18,6 @@ export class ObservationService {
       date: observation.date
     };
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_observation, observationBody);
-    console.dir(response);
     if (response.success) {
       const observation_Id = response.response[`observation_id`];
       let failed = false;
@@ -50,7 +49,6 @@ export class ObservationService {
 
   public async getAll(): Promise<Observation[]> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observation, null);
-    console.dir (response);
     if (response.success && Array.isArray(response.response) && this.objectValidator.isObservationObject(response.response[0])) {
       return response.response;
     } else {

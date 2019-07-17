@@ -76,7 +76,6 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
   // Set
   @Input() set mode(mode: FormMode) {
-    console.log(`Form - plant info mode is ${mode}`);
     this._mode = mode;
   }
   ////////////////////

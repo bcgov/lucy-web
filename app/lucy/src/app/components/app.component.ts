@@ -19,7 +19,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public get isAuthenticated(): boolean {
     if (this.authStatusIsLoading === null || this.authStatusIsLoading) {
-      console.log('Auth status is loading');
       return false;
     }
     return this.ssoService.isAuthenticated();
@@ -71,12 +70,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private reRouteIfNeeded() {
     this.checkAuthStatus().then((isAuthenticated) => {
-      console.log(`CheckAuthStatus returned:  ${isAuthenticated}`);
-      console.log(`Route: ${this.routerService.current}`);
-      console.log(`Root:  ${AppRoutes.Root}`);
-      console.log(this.routerService.current === AppRoutes.Root);
       if (isAuthenticated && (this.routerService.current === AppRoutes.Root) || this.routerService.current === undefined) {
-        console.log(`Redirecting to profile`);
         this.routerService.navigateTo(AppRoutes.Profile);
       }
     });
@@ -97,7 +91,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
-      console.dir(messages);
       /// For testing
       const msg = {
         body: null,

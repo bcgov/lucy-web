@@ -2,7 +2,6 @@
     background-color: #F7F7F7;
     position: sticky;
     top:0;
-    width:100%;
     /* height: 100px; */
     padding-top: 20px;
     padding-bottom: 20px;
@@ -12,9 +11,41 @@
 
 .view-title {
     height: 34px;
-	width: 304px;
 	color: #000000;
 	font-size: 28px;
 	font-weight: bold;
     line-height: 34px;
+}
+
+.map-box-partial {
+    height: 400px;
+}
+
+.map-box-full {
+    height: 80vh;
+}
+
+.toggle-btn-on {
+    height: 32px;
+    width: 32px;
+    background-color: #000000;
+    color: #D8D8D8;
+}
+
+.toggle-btn-off {
+    height: 32px;
+	width: 32px;
+    background-color: #D8D8D8;
+    color: #000000;
+    border-radius: 5;
+}
+
+.left-toggle {
+    border-top-left-radius: 20%;
+    border-bottom-left-radius: 20%;
+}
+
+.right-toggle {
+    border-top-right-radius: 20%;
+    border-bottom-right-radius: 20%;
 }

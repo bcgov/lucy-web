@@ -86,11 +86,9 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   }
 
   speciesCellInfoChanged(event: SpeciesObservations) {
-    console.log(`change received`);
     for (const i in this.objects) {
       if (this.objects[i].observationSpecies_Id === event.observationSpecies_Id) {
         this.objects[i] = event;
-        console.log(`change saved`);
         this.notifyChangeEvent();
       }
     }
