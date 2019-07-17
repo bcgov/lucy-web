@@ -80,6 +80,10 @@ export class InventoryComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  // get dateToString(date: Date): string {
+  //   return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+  // }
+
   /************ Sorting Function ************/
   sortByDate() {
     // If aready sorting by this criteria,
@@ -130,8 +134,36 @@ export class InventoryComponent implements OnInit {
   }
 
   sortByObservationId() {
+    // If aready sorting by this criteria,
+    // Flip between ascending and descending
+    if (this.sortingByObservationId) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortAscending = false;
+    }
+
+    // Set sort flags
     this.resetSortFields();
     this.sortingByObservationId = true;
+
+    // Sort objects
+    this.observations.sort((left, right): number => {
+      if (left.observation_id < right.observation_id) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      if (left.observation_id > right.observation_id) {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      return 0;
+    });
   }
 
   resetSortFields() {

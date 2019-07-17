@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, AfterViewChecked, NgZone } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
 import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 // import 'node_modules/leaflet/';
 import { FormMode, SpeciesObservations, Observation } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
-import { AlertService } from 'src/app/services/alert.service';
+import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
@@ -223,15 +223,22 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   async submitAction() {
-    if (this.viewing) {
-      this.alert.show(`Not Yet`, `Feature is not yet implemented`, null);
+    if (this.viewing && this.mode !== FormMode.Create) {
+      this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
     }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
       console.log(` ***** can submit *****`);
       const success = await this.observationService.submitObservation(this.observationObject);
       if (success) {
-        this.alert.show(`Success`, `Submitted`, null);
+        const eventEmitter = new EventEmitter<boolean>();
+        eventEmitter.subscribe(clicked => this.router.navigateTo(AppRoutes.Inventory));
+        const successMsgbtn: AlertModalButton = {
+          name: `Okay`,
+          canDismiss: true,
+          eventEmitter: eventEmitter,
+        };
+        this.alert.show(`Success`, `Submitted`, [successMsgbtn]);
       } else {
         this.alert.show(`Error`, `Submission failed`, null);
       }
