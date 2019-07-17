@@ -190,7 +190,7 @@ export class ApiService {
       const requestResult: APIRequestResult = {
         success: true,
         response: result['data']
-      }
+      };
       return requestResult;
 
     } catch (error) {

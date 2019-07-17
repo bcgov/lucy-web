@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, Output, AfterViewChecked, EventEmitter } from '@angular/core';
 import { FormMode, Jurisdiction, InvasivePlantSpecies, ObservationInvasivePlantSpecies } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
@@ -9,7 +9,6 @@ import { DropdownService, DropdownObject } from 'src/app/services/dropdown.servi
   styleUrls: ['./add-plant-observation-invasive-plant-species-cell.component.css']
 })
 export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnInit, AfterViewChecked {
-
   ViewMode = FormMode.View;
 
   get width(): string {
@@ -47,7 +46,11 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
 
   get calculatedArea(): string {
-    return `${this.object.width * this.object.length} m²`;
+    if (!this.object) {
+      return ``;
+    }
+    const total =  parseFloat((this.object.width * this.object.length).toFixed(6));
+    return `${total} m²`;
   }
 
   get accessDescription(): string {
@@ -90,6 +93,7 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
   ////////////////////
 
+  @Output() speciesCellInfoChanged = new EventEmitter<ObservationInvasivePlantSpecies>();
   constructor(private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {
@@ -130,6 +134,12 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
     });
   }
 
+  private notifyChangeEvent() {
+    if (this.object) {
+      this.speciesCellInfoChanged.emit(this.object);
+    }
+  }
+
   fieldValueChanged(value: DropdownObject) {
     console.log(value);
   }
@@ -137,12 +147,14 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   invasivePlantSpeciesChanged(value: DropdownObject) {
     if (this.object && value.object) {
       this.object.species = value.object;
+      this.notifyChangeEvent();
     }
   }
 
   jurisdictionChanged(value: DropdownObject) {
     if (this.object && value.object) {
       this.object.jurisdiction = value.object;
+      this.notifyChangeEvent();
     }
   }
 
@@ -169,18 +181,21 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   plotDimentionWidthChanged(value: number) {
     if (this.object) {
       this.object.width = value;
+      this.notifyChangeEvent();
     }
   }
 
   plotDimentionLengthChanged(value: number) {
     if (this.object) {
       this.object.length = value;
+      this.notifyChangeEvent();
     }
   }
 
   accessDescriptionChanged(value: string) {
     if (this.object) {
       this.object.accessDescription = value;
+      this.notifyChangeEvent();
     }
   }
 }
