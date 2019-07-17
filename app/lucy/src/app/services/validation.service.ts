@@ -75,6 +75,12 @@ export class ValidationService {
       return `Location is invalid`;
     }
 
+    if (!observation.date) {
+      return `Observation date is missing`;
+    }
+
+    console.dir(observation.date);
+
     if (observation.speciesObservations.length < 1) {
       return `You must add an invasive plant species`;
     }

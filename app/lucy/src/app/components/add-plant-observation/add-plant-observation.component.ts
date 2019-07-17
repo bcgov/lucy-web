@@ -150,7 +150,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         observerFirstName: undefined,
         observerLastName: undefined,
         observerOrganization: undefined,
-        date: `2019-05-30`,
+        date: undefined,
         speciesObservations: []
       };
       console.log(`initialized observation`);

@@ -58,7 +58,6 @@ export class DatePickerComponent implements OnInit {
     } else {
       this._date = new Date(date);
     }
-    console.log(this._date);
   }
   ////////////////////
 

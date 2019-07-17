@@ -4,6 +4,8 @@ import { CodeTableService } from 'src/app/services/code-table.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
+import { LatLong } from '../map-preview/map-preview.component';
+import { delay } from 'q';
 
 @Component({
   selector: 'app-inventory',
@@ -14,14 +16,20 @@ export class InventoryComponent implements OnInit {
 
   /************ Sorting Variables ************/
   sortAscending = false;
+  sortingByObservationId = false;
   sortingByDate = false;
   sortingBySpecies = false;
   sortingByLocation = false;
   sortingBySurveyor = false;
-
   /************ End of Sorting Variables ************/
 
+  markers: LatLong[] = [];
   observations: Observation[];
+
+  /************ Flags ************/
+  showMap = true;
+  showList = true;
+  /************ End of Flags ************/
 
   constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService) { }
 
@@ -32,8 +40,44 @@ export class InventoryComponent implements OnInit {
 
   private async fetchObservations() {
     const observations = await this.observationService.getAll();
-    console.dir(observations);
     this.observations = observations;
+    this.markers = [];
+    for (const object of observations) {
+      this.markers.push( {
+        latitude: object.lat,
+        longitude: object.long
+      });
+    }
+  }
+
+  switchShowMap() {
+    this.showMap = !this.showMap;
+  }
+
+  switchShowList() {
+    this.showList = !this.showList;
+
+    /**
+     * When adding and removing
+     * list div, the size of the map needs to change.
+     * so if map is showing, we can remove and
+     * re-add it quickly
+    */
+
+    if (this.showMap) {
+      this.showMap = false;
+      this.delay(1).then(() => {
+        this.showMap = true;
+      });
+    }
+  }
+
+  /**
+   * Create a delay
+   * @param ms milliseconds
+   */
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /************ Sorting Function ************/
@@ -85,11 +129,17 @@ export class InventoryComponent implements OnInit {
     this.sortingBySurveyor = true;
   }
 
+  sortByObservationId() {
+    this.resetSortFields();
+    this.sortingByObservationId = true;
+  }
+
   resetSortFields() {
     this.sortingByDate = false;
     this.sortingBySpecies = false;
     this.sortingByLocation = false;
     this.sortingBySurveyor = false;
+    this.sortingByObservationId = false;
   }
 
   /************ End of Sorting Function ************/
