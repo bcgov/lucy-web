@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, AfterViewChecked, EventEmitter } from '@angular/core';
-import { FormMode, Jurisdiction, InvasivePlantSpecies, ObservationInvasivePlantSpecies } from 'src/app/models';
+import { FormMode, Jurisdiction, InvasivePlantSpecies, SpeciesObservations } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
 
@@ -82,18 +82,18 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   ////////////////////
 
   ///// Invasive plant objects
-  private _object: ObservationInvasivePlantSpecies;
+  private _object: SpeciesObservations;
   // Get
-  get object(): ObservationInvasivePlantSpecies {
+  get object(): SpeciesObservations {
     return this._object;
   }
   // Set
-  @Input() set object(object: ObservationInvasivePlantSpecies) {
+  @Input() set object(object: SpeciesObservations) {
     this._object = object;
   }
   ////////////////////
 
-  @Output() speciesCellInfoChanged = new EventEmitter<ObservationInvasivePlantSpecies>();
+  @Output() speciesCellInfoChanged = new EventEmitter<SpeciesObservations>();
   constructor(private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {

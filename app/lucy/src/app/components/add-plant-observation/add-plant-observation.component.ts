@@ -1,18 +1,25 @@
 import { Component, OnInit, Input, AfterViewChecked, NgZone } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
-
-import 'node_modules/leaflet/';
-import { FormMode, ObservationInvasivePlantSpecies, Observation } from 'src/app/models';
+import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+// import 'node_modules/leaflet/';
+import { FormMode, SpeciesObservations, Observation } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
-declare let L;
+import { RouterService } from 'src/app/services/router.service';
+import { AppRoutes } from 'src/app/constants';
+// declare let L;
+
 
 @Component({
   selector: 'app-add-plant-observation',
   templateUrl: './add-plant-observation.component.html',
-  styleUrls: ['./add-plant-observation.component.css']
+  styleUrls: ['./add-plant-observation.component.css'],
 })
+
+@NgModule({schemas: [CUSTOM_ELEMENTS_SCHEMA]})
+
 
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
@@ -49,11 +56,15 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     return this.mode === FormMode.View;
   }
 
+  get invasiveSpecies(): SpeciesObservations[] {
+    if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
+    return this.observationObject.speciesObservations;
+  }
+
   ///// Invasive plant objects
   private _object: Observation;
   // Get
   get observationObject(): Observation {
-    this.initializeObjectIfDoesntExist();
     return this._object;
   }
   // Set
@@ -62,44 +73,98 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService) { }
+  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService, private router: RouterService) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.zone.run(() => {
-        // this.mode = FormMode.Edit;
-        this.mode = FormMode.Create;
-      });
-    }, 1000);
+    this.initialize();
   }
 
   ngAfterViewChecked(): void {
   }
 
+  private initialize() {
+
+    if (this.viewing()) {
+      const id = this.idInParams();
+      if (!id) { this.showErrorPage(); }
+      this.mode = FormMode.View;
+      this.fetchObservation(this.idInParams());
+
+    } else if (this.editing()) {
+      const id = this.idInParams();
+      if (!id) { this.showErrorPage(); }
+      this.mode = FormMode.Edit;
+
+    } else if (this.creating()) {
+      this.initializeObjectIfDoesntExist();
+      this.mode = FormMode.Create;
+    } else {
+      this.showErrorPage();
+    }
+  }
+
+  private showErrorPage() {
+    console.log('Throw error');
+  }
+
+  private viewing() {
+    const current = this.router.current;
+    return (current === AppRoutes.ViewObservation);
+  }
+
+  private creating() {
+    const current = this.router.current;
+    return (current === AppRoutes.AddObservation);
+  }
+
+  private editing() {
+    const current = this.router.current;
+    return (current === AppRoutes.EditObservation);
+  }
+
+  idInParams(): number | undefined {
+    const current = this.router.current;
+    if (current === AppRoutes.ViewObservation || current === AppRoutes.EditObservation) {
+      const id = this.router.routeId;
+      if (id) {
+        return id;
+      }
+    }
+    return undefined;
+  }
+
+  async fetchObservation(id: number) {
+    console.log(`Fetching`);
+    const object = await this.observationService.getWithId(id);
+    console.log(this.observationObject);
+    this.observationObject = object;
+    console.log(this.observationObject);
+  }
+
   initializeObjectIfDoesntExist() {
     if (!this._object) {
        this._object = {
-        observation_Id: -1,
+        observation_id: -1,
         lat: undefined,
         long: undefined,
         observerFirstName: undefined,
         observerLastName: undefined,
         observerOrganization: undefined,
         date: `2019-05-30`,
-        invasivePlantSpecies: []
+        speciesObservations: []
       };
       console.log(`initialized observation`);
     }
   }
 
-  invasivePlantSpeciesChanged(event: ObservationInvasivePlantSpecies[]) {
-    this.observationObject.invasivePlantSpecies = event;
+  invasivePlantSpeciesChanged(event: SpeciesObservations[]) {
+    this.observationObject.speciesObservations = event;
   }
 
   basicInfoChanged(event: Observation) {
     this.observationObject.lat = event.lat;
     this.observationObject.long = event.long;
-    this.observationObject.observation_Id = event.observation_Id;
+    this.observationObject.observation_id = event.observation_id;
   }
 
   public onIntersection({ target, visible }: { target: Element; visible: boolean }): void {

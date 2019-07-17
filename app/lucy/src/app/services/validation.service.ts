@@ -14,14 +14,19 @@ export class ValidationService {
   }
 
   public isValidInteger(string: string): boolean {
-    const service = new ValidationService();
-    return (service.isValidNumber(string) && service.decimalPlaces(string) === 0);
+    return (this.isValidNumber(string) && this.decimalPlaces(string) === 0);
   }
 
   public isValidUTM(string: string): boolean {
-    const service = this;
-    // TODO: only allow 7 digits for northings, 6 digits for eastings
-    return (this.isValidNumber(string));
+    return (this.isValidNumber(string) && string.length < 7);
+  }
+
+  public isValidUTMNorthings(string: string): boolean {
+    return (this.isValidNumber(string) && string.length < 8);
+  }
+
+  public isValidUTMEastings(string: string): boolean {
+    return (this.isValidNumber(string) && string.length < 7);
   }
 
   public hasMinDecimalPlaces(number: any, minDecimals: number): boolean {
@@ -95,11 +100,11 @@ export class ValidationService {
       return `Location is invalid`;
     }
 
-    if (observation.invasivePlantSpecies.length < 1) {
+    if (observation.speciesObservations.length < 1) {
       return `You must add an invasive plant species`;
     }
 
-    for (const species of observation.invasivePlantSpecies) {
+    for (const species of observation.speciesObservations) {
       if (!species.width || !species.length) {
         return `You must specify Plot for invasive plant species`;
       }

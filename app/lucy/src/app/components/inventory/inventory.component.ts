@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observation } from 'src/app/models';
 import { CodeTableService } from 'src/app/services/code-table.service';
+import { ObservationService } from 'src/app/services/observation.service';
+import { AppRoutes } from 'src/app/constants';
+import { RouterService } from 'src/app/services/router.service';
 
 @Component({
   selector: 'app-inventory',
@@ -20,10 +23,17 @@ export class InventoryComponent implements OnInit {
 
   observations: Observation[];
 
-  constructor(private codeTables: CodeTableService) { }
+  constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService) { }
 
   ngOnInit() {
     this.createDummys();
+    this.fetchObservations();
+  }
+
+  private async fetchObservations() {
+    const observations = await this.observationService.getAll();
+    console.dir(observations);
+    this.observations = observations;
   }
 
   /************ Sorting Function ************/
@@ -85,7 +95,7 @@ export class InventoryComponent implements OnInit {
   /************ End of Sorting Function ************/
 
   view(observation: Observation) {
-
+    this.router.navigateTo(AppRoutes.ViewObservation, observation.observation_id);
   }
 
   /************ Dummy Data ************/
@@ -94,14 +104,14 @@ export class InventoryComponent implements OnInit {
     this.codeTables.getInvasivePlantSpecies().then((invasivePlantSpecies) => {
       this.codeTables.getJuristictions().then((juristictions) => {
         this.observations.push({
-          observation_Id: this.getUniqueId(),
+          observation_id: this.getUniqueId(),
           lat: 1,
           long: 1,
           date: `2019-05-30`,
           observerFirstName: `Jake`,
           observerLastName: `Lake`,
           observerOrganization: { name: `freshworks` },
-          invasivePlantSpecies: [{
+          speciesObservations: [{
             observationSpecies_Id: 1,
             species: invasivePlantSpecies[0],
             jurisdiction: juristictions[0],
@@ -111,14 +121,14 @@ export class InventoryComponent implements OnInit {
           }]
         },
         {
-          observation_Id: this.getUniqueId(),
+          observation_id: this.getUniqueId(),
           lat: 1,
           long: 1,
           date: `2019-05-30`,
           observerFirstName: `Mike`,
           observerLastName: `Ike`,
           observerOrganization: { name: `Freshworks` },
-          invasivePlantSpecies: [{
+          speciesObservations: [{
             observationSpecies_Id: 1,
             species: invasivePlantSpecies[0],
             jurisdiction: juristictions[0],
@@ -139,7 +149,7 @@ export class InventoryComponent implements OnInit {
     }
     const usedIds: number[] = [];
     for (const object of this.observations) {
-      usedIds.push(object.observation_Id);
+      usedIds.push(object.observation_id);
     }
 
     const sortedUsedIds = usedIds.sort((n1, n2) => n1 - n2);

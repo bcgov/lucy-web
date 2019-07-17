@@ -32,7 +32,7 @@ export class AdminService {
     console.log(`responding to request`);
     const body = {
       requestedAccessCode: request.requestedAccessCode.role_code_id,
-      status: approved? 1: 2,
+      status: approved ? 1 : 2,
       approverNote: request.approverNote
     };
     console.dir(body);
@@ -48,7 +48,7 @@ export class AdminService {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_allUsers, null);
     if (response.success) {
       if (Array.isArray(response.response) && this.objectValidator.isUserObject(response.response[0])) {
-        return response.response
+        return response.response;
       } else {
         return [];
       }
@@ -75,17 +75,15 @@ export class AdminService {
   }
 
   async changeUserRole(user: User, accessCode: Role): Promise<UserChangeResult> {
-    console.log("Selected Role: ")
-    console.dir(accessCode)
     const body = {
-      "roles": [accessCode.role_code_id],
+      'roles': [accessCode.role_code_id],
     }
     return this.changeUser(user, body);
   }
 
   async changeUserAccountStatus(user: User, status: number): Promise<UserChangeResult> {
     const body = {
-      "accountStatus": status,
+      'accountStatus': status,
     }
     return this.changeUser(user, body);
   }

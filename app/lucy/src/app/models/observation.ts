@@ -1,12 +1,12 @@
 export interface Observation {
-	observation_Id: number;
-	lat: number;
+    observation_id: number;
+    lat: number;
     long: number;
     date: `2019-05-30`;
     observerFirstName: string;
     observerLastName: string;
     observerOrganization: Organization;
-	invasivePlantSpecies: ObservationInvasivePlantSpecies[];
+    speciesObservations: SpeciesObservations[];
 }
 
 export interface Organization {
@@ -31,7 +31,7 @@ export interface Jurisdiction {
     activeIndicator: true;
 }
 
-export interface ObservationInvasivePlantSpecies {
+export interface SpeciesObservations {
     observationSpecies_Id: number;
     species: InvasivePlantSpecies;
     jurisdiction: Jurisdiction;

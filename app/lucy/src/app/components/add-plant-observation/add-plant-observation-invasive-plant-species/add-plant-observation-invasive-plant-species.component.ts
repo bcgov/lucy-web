@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormMode } from 'src/app/models';
-import { InvasivePlantSpecies, ObservationInvasivePlantSpecies, Jurisdiction } from 'src/app/models/observation';
+import { InvasivePlantSpecies, SpeciesObservations, Jurisdiction } from 'src/app/models/observation';
 import { CodeTableService } from 'src/app/services/code-table.service';
 
 @Component({
@@ -11,6 +11,9 @@ import { CodeTableService } from 'src/app/services/code-table.service';
 export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit {
 
   get buttonTitle(): string {
+    if (!this.objects.length) {
+      return '+ Add a species to location';
+    }
     if (this.objects.length < 1) {
       return `+ Add a species to location`;
     } else {
@@ -18,6 +21,9 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
     }
   }
 
+  get isViewMode(): boolean {
+    return this._mode === FormMode.View;
+  }
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
   // Get
@@ -31,29 +37,29 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   ////////////////////
 
   ///// Invasive plant objects
-  private _objects: ObservationInvasivePlantSpecies[] = [];
+  private _objects: SpeciesObservations[] = [];
   // Get
-  get objects(): ObservationInvasivePlantSpecies[] {
+  get objects(): SpeciesObservations[] {
     return this._objects;
   }
   // Set
-  @Input() set objects(objects: ObservationInvasivePlantSpecies[]) {
+  @Input() set objects(objects: SpeciesObservations[]) {
     this._objects = objects;
   }
   ////////////////////
 
-  @Output() invasivePlantSpeciesChanged = new EventEmitter<ObservationInvasivePlantSpecies[]>();
+  @Output() invasivePlantSpeciesChanged = new EventEmitter<SpeciesObservations[]>();
 
   constructor(private codeTableService: CodeTableService) { }
 
   ngOnInit() {
   }
 
-  addNewSpecies(): ObservationInvasivePlantSpecies {
+  addNewSpecies(): SpeciesObservations {
     return this.addSpecies(undefined, undefined, undefined, 0, 0, undefined);
   }
 
-  addSpecies(id: number, species: InvasivePlantSpecies, jurisdiction: Jurisdiction, width: number, length: number, accessDescription: string): ObservationInvasivePlantSpecies {
+  addSpecies(id: number, species: InvasivePlantSpecies, jurisdiction: Jurisdiction, width: number, length: number, accessDescription: string): SpeciesObservations {
     const newSpecies = {
       observationSpecies_Id: id ? id : this.getUniqueId(),
       species: species,
@@ -79,7 +85,7 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
     return sortedUsedIds.pop() + 1;
   }
 
-  speciesCellInfoChanged(event: ObservationInvasivePlantSpecies) {
+  speciesCellInfoChanged(event: SpeciesObservations) {
     console.log(`change received`);
     for (const i in this.objects) {
       if (this.objects[i].observationSpecies_Id === event.observationSpecies_Id) {

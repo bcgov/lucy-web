@@ -16,15 +16,13 @@ export class ObservationService {
       lat: observation.lat,
       long: observation.long,
       date: `2019-05-30`
-    }
+    };
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_observation, observationBody);
     console.dir(response);
     if (response.success) {
-      console.log(`observation success!!`);
-      console.log(response.response[`observation_id`]);
       const observation_Id = response.response[`observation_id`];
       let failed = false;
-      for (const species of observation.invasivePlantSpecies) {
+      for (const species of observation.speciesObservations) {
         console.dir(species)
         const speciesBody = {
           observation: observation_Id,
@@ -35,20 +33,37 @@ export class ObservationService {
           accessDescription: species.accessDescription
         };
         const speciesResponse = await this.api.request(APIRequestMethod.POST, AppConstants.API_observationSpecies, speciesBody);
-        console.dir(speciesResponse);
-          if (speciesResponse.success) {
-            console.log(`species success!!`);
-          } else {
-            console.log(`species FAIL!!`);
-            failed = true;
-          }
+        if (speciesResponse.success) {
+          console.log(`species success!!`);
+        } else {
+          console.log(`species FAIL!!`);
+          failed = true;
         }
-        return !failed;
+      }
+      return !failed;
 
     } else {
       console.log(`observation FAIL!!`);
     }
-
     return false;
+  }
+
+  public async getAll(): Promise<Observation[]> {
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observation, null);
+    console.dir (response);
+    if (response.success && Array.isArray(response.response) && this.objectValidator.isObservationObject(response.response[0])) {
+      return response.response;
+    } else {
+      return[];
+    }
+  }
+
+  public async getWithId(id: number): Promise<Observation | undefined> {
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observationWith(id), null);
+    if (response.success && this.objectValidator.isObservationObject(response.response)) {
+      return response.response;
+    } else {
+      return undefined;
+    }
   }
 }
