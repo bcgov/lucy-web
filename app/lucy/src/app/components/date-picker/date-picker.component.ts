@@ -59,7 +59,6 @@ export class DatePickerComponent implements OnInit {
       this._date = new Date(date);
     }
     console.log(this._date);
-    // this.ngDate = new NgbDate(this._date.getFullYear(), this._date.getMonth(), this._date.getDay());
   }
   ////////////////////
 
