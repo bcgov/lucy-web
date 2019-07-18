@@ -1,0 +1,18 @@
+<div *ngIf="!readonly" class="col-12 field">
+    <label class="field-header">{{header}}</label>
+    <input 
+    class="form-control edit"
+    type="text"
+    ngbDatepicker #customDatePicker="ngbDatepicker" 
+    [(ngModel)]="ngDate"
+    (click)="customDatePicker.toggle()" 
+    (dateSelect)="dateChanged($event)"/>
+</div>
+<div *ngIf="readonly">
+  <app-field
+  [mode]="mode" 
+  [header]="header"
+  [value]="date">
+</app-field>
+
+</div>

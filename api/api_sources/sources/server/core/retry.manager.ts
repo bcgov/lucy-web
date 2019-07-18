@@ -48,7 +48,7 @@ export class RetryManager<T> extends LoggerBase {
             // RetryManager.logger.info(` // ** --- Will try [${this.key}] with retry count: ${this.noOfRetry}`);
             this.object[this.key]().then((data?: T) => {
                 callback(data);
-            }).catch((err: any)=> {
+            }).catch((err: any) => {
                 this.noOfRetry = this.noOfRetry + 1;
                 this.error = err;
                 setTimeout(() => {

@@ -18,3 +18,4 @@ describe('application configuration', () => {
         expect(AppConfig.dbHost).not.equal(undefined);
     });
 });
+// -----------------------------------------------------------------------------

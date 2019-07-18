@@ -19,8 +19,7 @@ services:
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
   volumes:
-    - ./api_sources:/home/nodejs/app
-
+    - ./api_sources:/opt/app-root/src
   networks:
   - local-network
   links:

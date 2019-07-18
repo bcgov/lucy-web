@@ -22,5 +22,7 @@
 export * from './userFactory';
 export * from './userSessionFactory';
 export * from './requestAccessFactory';
+export * from './observationCodesFactory';
+export * from './observationFactory';
 // ----------------------------------------------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@
     <div class="col-12 section-title">
       Invasive Plant Species
     </div>
-    <div class="col-12">
+    <div *ngIf="!isViewMode" class="col-12">
       <button class="btn btn-test" (click)="autofillForTesting()">Auto-Create One For Testing</button>
     </div>
   </div>
@@ -17,7 +17,7 @@
       </app-add-plant-observation-invasive-plant-species-cell>
     </div>
 
-    <div class="col-12 topPadding">
+    <div *ngIf="!isViewMode" class="col-12 topPadding">
       <br />
       <button type="button" class="btn btn-secondary addButton button-fill"
         (click)="addNewSpecies()">{{buttonTitle}}</button>

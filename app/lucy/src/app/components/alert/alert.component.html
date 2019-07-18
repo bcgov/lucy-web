@@ -2,9 +2,9 @@
   <!-- Modal Title -->
   <div class="modal-header">
     <h5 class="modal-title" id="alertModalTitle">{{title}}</h5>
-    <button type="button" class="close" (click)="cancelAction()" data-dismiss="modal" aria-label="Close">
+    <!-- <button type="button" class="close" (click)="cancelAction()" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
-    </button>
+    </button> -->
   </div>
   <!-- Modal Body -->
   <div class="modal-body">
@@ -16,7 +16,6 @@
   </div>
   <!-- Footer -->
   <div class="modal-footer">
-
     <button type="button" class="btn button-fill" *ngFor="let button of buttons; let i = index" (click)="buttonPressed(button)">
       {{button.name}}
     </button>

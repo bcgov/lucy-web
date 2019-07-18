@@ -62,6 +62,11 @@ describe('Test Admin ops data models', () => {
         expect(request).not.equal(undefined);
         expect(request.request_id).to.equal(dbObj.request_id);
 
+        // Load user and check
+        const requester = await UserDataController.shared.findById(obj.requester.user_id);
+        const existing: any = requester.existingRequestAccess || {};
+        expect(existing.request_id).to.equal(obj.request_id);
+
         // Clean
         RequestAccessController.shared.remove(obj);
         UserDataController.shared.remove(obj.approver);

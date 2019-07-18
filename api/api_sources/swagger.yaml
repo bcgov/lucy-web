@@ -46,24 +46,24 @@ paths:
           schema:
             $ref: '#/definitions/UserInfo'
         '401':
-          description: Unauthorize user
+          description: Unauthorized user
           schema:
             $ref: '#/definitions/Error'
   /api/observation/codes:
     get:
       parameters:
-          - in: header
-            name: token
-            type: string
-            description: JWT Token
-            required: true
+        - in: header
+          name: token
+          type: string
+          description: JWT Token
+          required: true
       responses:
         '200':
           description: Success
-          schema: 
+          schema:
             $ref: '#/definitions/ObservationCodesResp'
         '401':
-          description: Unauthorize user
+          description: Unauthorized user
           schema:
             $ref: '#/definitions/Error'
         '500':
@@ -72,31 +72,70 @@ paths:
             $ref: '#/definitions/Error'
   /api/observation:
     parameters:
-        - in: header
-          name: token
-          type: string
-          description: JWT Token
-          required: true
-        - in: body
-          name: Create Body
-          schema:
-            $ref: '#/definitions/ObservationCreateRequestBody'
+      - in: header
+        name: token
+        type: string
+        description: JWT Token
+        required: true
     post:
       summary: Create Observation
-      description: API to create observation model and return newly created model with database id (observation id)
+      description: >-
+        API to create observation model and return newly created model with
+        database id (observation id)
       operationId: observation
       produces:
         - application/json
       consumes:
         - application/json
+      parameters:
+        - in: body
+          name: Create Body
+          schema:
+            $ref: '#/definitions/ObservationCreateRequestBody'
       responses:
         '201':
           description: Created
           schema:
             $ref: '#/definitions/Observation'
         '401':
-          description: Unauthorize user
+          description: Unauthorized user
           schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: 'Validation error - no observation with id'
+          schema:
+            type: object
+            $ref: '#/definitions/Error'
+    get:
+      summary: Fetch all observation
+      responses:
+        '200':
+          description: Fetched
+          schema:
+            type: array
+            $ref: '#/definitions/Observation'
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation/:observationId:
+    get:
+      summary: Get single observation
+      parameters:
+        - in: path
+          required: true
+          name: ObservationId
+          type: number
+      responses:
+        '200':
+          description: 'Fetch observation with id'
+          schema:
+            type: object
+            $ref: '#/definitions/Observation'
+        '422':
+          description: 'Validation error - no observation with id'
+          schema:
+            type: object
             $ref: '#/definitions/Error'
   /api/observation/species:
     parameters:
@@ -107,17 +146,19 @@ paths:
         required: true
     post:
       summary: Create Observation for particular species
-      description: API to create observation for species return newly created model with database id (observation id)
-      operationId: observation
+      description: >-
+        API to create observation for species return newly created model with
+        database id (observation id)
+      operationId: observation-species
       produces:
         - application/json
       consumes:
         - application/json
       parameters:
-      - in: body
-        name: Create Body
-        schema:
-          $ref: '#/definitions/ObservationSpeciesCreateRequest'
+        - in: body
+          name: Create Body
+          schema:
+            $ref: '#/definitions/ObservationSpeciesCreateRequest'
       responses:
         '201':
           description: Created
@@ -126,6 +167,11 @@ paths:
         '401':
           description: Unauthorize user
           schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: 'Validation error - no observation with id'
+          schema:
+            type: object
             $ref: '#/definitions/Error'
 definitions:
   User:
@@ -143,6 +189,9 @@ definitions:
       - updateAt
       - createdAt
     properties:
+      existingRequestAccess:
+        type: object
+        $ref: '#/definitions/RequestAccess'
       user_id:
         type: number
       email:
@@ -402,8 +451,8 @@ definitions:
       - jurisdictionCodes
       - speciesList
     properties:
-      jurisdictionCode:
-        type: object
+      jurisdictionCodes:
+        type: array
         $ref: '#/definitions/JurisdictionCode'
       speciesList:
         type: array
@@ -412,7 +461,7 @@ definitions:
     required:
       - message
       - data
-    properties: 
+    properties:
       message:
         type: string
       data:
@@ -452,7 +501,7 @@ definitions:
         type: number
         description: Species id
       jurisdiction:
-        type: number 
+        type: number
         description: Jurisdiction code id
       observation:
         type: number

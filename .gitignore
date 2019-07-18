@@ -1,3 +1,5 @@
 node_modules/
 swagger/
 .nvm
+.DS_Store
+*.swp
