@@ -1,7 +1,7 @@
 /**
  * Application Con figuration
  */
-import * as path from 'path'
+import * as path from 'path';
 import * as assert from 'assert';
 declare const process: any;
 declare const __dirname: any;

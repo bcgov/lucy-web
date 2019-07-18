@@ -119,7 +119,7 @@ export class MemoryDataManager {
     // Global data map
     globalDataMap: any = {};
 
-    // Constructor 
+    // Constructor
     constructor() {
     }
 

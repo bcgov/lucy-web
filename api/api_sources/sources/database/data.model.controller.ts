@@ -27,6 +27,11 @@ import { ApplicationTable } from './applicationSchemaInterface';
 
 export interface DataController {
     findById(id: number): Promise<any>;
+    remove(object: any): Promise<void>;
+    removeById( id: number): Promise<void>;
+    all(filter: any): Promise<any>;
+    create(): any;
+    saveInDB(obj: any): Promise<any>;
 }
 
 /**
@@ -105,6 +110,8 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase imp
      * @param number id
      */
     async removeById( id: number): Promise<void> {
+        await this.repo.delete(id);
+        return;
     }
 
     /**

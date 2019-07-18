@@ -57,4 +57,16 @@
     border: none;
     border-radius: 0;
     width: 50%;
+    height: 100%;
+}
+
+.padding-0{
+    padding-right:0;
+    padding-left:0;
+}
+
+.full-width {
+    width: 100%;
+    padding-right:0;
+    padding-left:0;
 }

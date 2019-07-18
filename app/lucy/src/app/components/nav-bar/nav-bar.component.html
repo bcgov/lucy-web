@@ -24,14 +24,14 @@
       <li class="nav-item" [class.active]="isProfileActive">
         <a class="nav-link" (click)="navigateToProfile()">Home</a>
       </li>
+      <li class="nav-item" [class.active]="isInventoryActive">
+          <a class="nav-link" (click)="navigateToInventory()">View Database</a>
+        </li>
       <li *ngIf="isAdmin" class="nav-item"  [class.active]="isAdminToolsActive">
         <a class="nav-link" (click)="navigateToAdminTools()">Admin Tools</a>
       </li>
       <li *ngIf="isDataEditor" class="nav-item"  [class.active]="isAddObservationActive">
           <a class="nav-link" (click)="navigateToAddObservation()">Add Observation</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
       </li>
     </ul>
     <div class="nav-item" *ngIf="isAuthenticated">

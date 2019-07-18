@@ -36,7 +36,7 @@ export class AlertService {
    * Add Alert message to que.
    * @param body string
    * @param title string
-   * @param buttons AlertModalButton[] ! null. Array of custom buttons
+   * @param buttons AlertModalButton[] || null. Array of custom buttons
    */
   public show(title: string, body: string, buttons: AlertModalButton[] | null) {
     let actionButtons: AlertModalButton[] = [];

@@ -8,17 +8,22 @@ import { SsoService, SSOLoginProvider } from '../../services/sso.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private ssoService: SsoService) { }
+  constructor(private ssoService?: SsoService) { }
 
   ngOnInit() {
   }
 
   loginWithBCeID() {
-    this.ssoService.login(SSOLoginProvider.BCeID);
-  }
+    if(this.ssoService)
+	{	
+    		this.ssoService.login(SSOLoginProvider.BCeID);
+  	}
+    }
 
   loginWithIDIR() {
-    this.ssoService.login(SSOLoginProvider.idir);
-  }
-
+    if(this.ssoService)
+	{	
+		this.ssoService.login(SSOLoginProvider.idir);
+  	}
+    }
 }
