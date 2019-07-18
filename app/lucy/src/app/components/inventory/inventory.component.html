@@ -1,0 +1,73 @@
+<div class="container">
+  <!-- Header Section -->
+  <div class="row view-title-section">
+    <div class="col-11 view-title">
+          Lucy Database
+    </div>
+       <div class="col left-toggle" [ngClass]="showMap ? 'toggle-btn-on' : 'toggle-btn-off'" (click)="switchShowMap()">
+          <i class="material-icons">map</i>
+      </div>
+      <div  class="col right-toggle" [ngClass]="showList ? 'toggle-btn-on' : 'toggle-btn-off'" (click)="switchShowList()">
+          <i class="material-icons">view_list</i>
+      </div>
+  </div>
+  <!-- -------------------- -->
+  <div *ngIf="showMap" class="row map-box-partial" [ngClass]="showList ? 'map-box-partial' : 'map-box-full'">
+    <div class="col-12">
+      <app-map-preview [markers]="markers">
+      </app-map-preview>
+    </div>
+  </div>
+  <div *ngIf="showList" class="row">
+    <table class="table table-hover">
+      <thead class="thead, table-header">
+        <tr>
+          <th scope="col" (click)="sortByObservationId()">
+            Observation ID
+            <i *ngIf="sortingByObservationId && !sortAscending" class="material-icons">arrow_downward</i>
+            <i *ngIf="sortingByObservationId && sortAscending" class="material-icons">arrow_upward</i>
+          </th>
+          <th scope="col" (click)="sortByLocation()">
+            Location
+            <i *ngIf="sortingByLocation && !sortAscending" class="material-icons">arrow_downward</i>
+            <i *ngIf="sortingByLocation && sortAscending" class="material-icons">arrow_upward</i>
+          </th>
+          <th scope="col" (click)="sortBySpecies()">
+            Species
+            <i *ngIf="sortingBySpecies && !sortAscending" class="material-icons">arrow_downward</i>
+            <i *ngIf="sortingBySpecies&& sortAscending" class="material-icons">arrow_upward</i>
+          </th>
+          <th scope="col" (click)="sortByDate()">
+            Date
+            <i *ngIf="sortingByDate && !sortAscending" class="material-icons">arrow_downward</i>
+            <i *ngIf="sortingByDate && sortAscending" class="material-icons">arrow_upward</i>
+          </th>
+          <th scope="col" (click)="sortBySurveyor()">
+            Surveyor
+            <i *ngIf="sortingBySurveyor && !sortAscending" class="material-icons">arrow_downward</i>
+            <i *ngIf="sortingBySurveyor && sortAscending" class="material-icons">arrow_upward</i>
+          </th>
+          <th scope="col">
+            ACTIONS
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-row" *ngFor="let item of observations">
+          <td scope="row" (click)="view(item)">{{item.observation_id}}</td>
+          <td scope="row" (click)="view(item)">{{item.lat}}, {{item.long}}</td>
+          <td scope="row" (click)="view(item)">{{item.speciesObservations[0].species.commonName}}</td>
+          <td scope="row" (click)="view(item)">{{item.date | date: 'dd-MMM-yyyy'}}</td>
+          <td scope="row" (click)="view(item)">{{item.observerFirstName + " " +item.observerLastName}}</td>
+          <td>
+            <div class="option-buttons">
+              <button class="btn action-btn" type="button" (click)="view(item)">
+                View
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

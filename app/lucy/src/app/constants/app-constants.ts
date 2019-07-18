@@ -27,6 +27,10 @@ export class AppConstants {
     static get API_observationSpecies(): string { return `${AppConstants.API_baseURL}/observation/species`; }
     static get API_observationCodes(): string { return `${AppConstants.API_baseURL}/observation/codes`; }
 
+    static API_observationWith(id: number): string {
+         return `${AppConstants.API_baseURL}/observation/${id}`;
+    }
+
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
         const baseAuthEndpoint = `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;

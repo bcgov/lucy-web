@@ -4,10 +4,12 @@
       Location
     </div>
   </div>
+  <br/>
   <div class="row">
     <!-- Left content  -->
     <div class="col-12 col-md-4">
       <div class="row">
+        
         <!-- Input mode switch  -->
         <div class="col-12 input-mode">
           <div class="input-mode-container">
@@ -20,53 +22,43 @@
       </div>
       <!-- lat long input  -->
       <div *ngIf="locationEntryModeLatLong">
-          <div class="row">
-              <app-field 
-                [mode]="mode" 
-                [header]="'Latitude'" 
-                [value]="lat"
-                [validationFunc]="validation.isValidLatitude.bind(validation)" 
-                (valueChanged)='latChanged($event)'>
-              </app-field>
-            </div>
-            <div class="row">
-              <app-field 
-                [mode]="mode" 
-                [header]="'Longitude'" 
-                [value]="long"
-                [validationFunc]="validation.isValidLongitude.bind(validation)" 
-                (valueChanged)='longChanged($event)'>
-              </app-field>
-            </div>
+        <div class="row">
+          <div class="full-width">
+            <app-field [mode]="mode" [header]="'Latitude'" [value]="lat"
+              [validationFunc]="validation.isValidLatitude.bind(validation)" (valueChanged)='latChanged($event)'>
+            </app-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="full-width">
+            <app-field [mode]="mode" [header]="'Longitude'" [value]="long"
+              [validationFunc]="validation.isValidLongitude.bind(validation)" (valueChanged)='longChanged($event)'>
+            </app-field>
+          </div>
+        </div>
       </div>
       <!-- UTM input  -->
       <div *ngIf="!locationEntryModeLatLong">
         <div class="row">
-          <app-field 
-            [mode]="mode" 
-            [header]="'Eastings'" 
-            [value]="eastings"
-            [validationFunc]="validation.isValidUTM.bind(validation)" 
-            (valueChanged)='eastingChanged($event)'>
-          </app-field>
+          <div class="full-width">
+            <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings"
+              [validationFunc]="validation.isValidUTMEastings.bind(validation)" (valueChanged)='eastingChanged($event)'>
+            </app-field>
+          </div>
         </div>
         <div class="row">
-          <app-field 
-            [mode]="mode" 
-            [header]="'Northings'" 
-            [value]="northings"
-            [validationFunc]="validation.isValidUTM.bind(validation)" 
-            (valueChanged)='northingsChanged($event)'>
-          </app-field>
+          <div class="full-width">
+            <app-field [mode]="mode" [header]="'Northings'" [value]="northings"
+              [validationFunc]="validation.isValidUTMNorthings.bind(validation)" (valueChanged)='northingsChanged($event)'>
+            </app-field>
+          </div>
         </div>
         <div class="row">
-          <app-field 
-            [mode]="mode" 
-            [header]="'Zone'" 
-            [value]="zone" 
-            [validationFunc]="validation.isValidInteger"
-            (valueChanged)='zoneChanged($event)'>
-          </app-field>
+          <div class="full-width">
+            <app-field [mode]="mode" [header]="'Zone'" [value]="zone" [validationFunc]="validation.isValidInteger.bind(validation)"
+              (valueChanged)='zoneChanged($event)'>
+            </app-field>
+          </div>
         </div>
       </div>
       <!-- Observer Information  -->
@@ -77,43 +69,47 @@
         </div>
       </div>
       <div class="row">
-        <app-field 
-          [mode]="mode" 
-          [header]="'First Name'" 
-          [value]="observerFirstName"
-          (valueChanged)='observerFirstNameChanged($event)'>
-        </app-field>
+        <div class="full-width">
+          <app-field [mode]="mode" [header]="'First Name'" [value]="observerFirstName"
+            (valueChanged)='observerFirstNameChanged($event)'>
+          </app-field>
+        </div>
       </div>
       <div class="row">
-        <app-field 
-          [mode]="mode" 
-          [header]="'Last Name'" 
-          [value]="observerLastName"
-          (valueChanged)='observerLastNameChanged($event)'>
-        </app-field>
+        <div class="full-width">
+          <app-field [mode]="mode" [header]="'Last Name'" [value]="observerLastName"
+            (valueChanged)='observerLastNameChanged($event)'>
+          </app-field>
+        </div>
       </div>
       <div class="row">
-        <app-dropdown 
-          [mode]="mode" 
-          [items]="organizations" 
-          [fieldHeader]="'Completed on behalf of'"
-          [selectedItem]="organization" 
-          (selectionChanged)='organizationChanged($event)'>
-        </app-dropdown>
+        <div class="full-width">
+          <app-dropdown [mode]="mode" [items]="organizations" [fieldHeader]="'Completed on behalf of'"
+            [selectedItem]="organization" (selectionChanged)='organizationChanged($event)'>
+          </app-dropdown>
+        </div>
+      </div>
+      <!-- Date -->
+      <div class="row">
+        <div class="full-width">
+          <app-date-picker
+          [mode]="mode"
+          [date]="observationDate"
+          [header]="'Observation Date'"
+          (selected)='observationDateChanged($event)'
+          ></app-date-picker>
+        </div>
       </div>
     </div>
     <!-- Map -->
     <div class="col-12 col-md-8">
-      <app-map-preview 
-        (centerPointChanged)='mapCenterChanged($event)' 
-        [center]="mapCenter" 
-        [markers]="markers">
+      <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [center]="mapCenter" [markers]="markers">
       </app-map-preview>
     </div>
   </div>
   <div class="col-12">
     <br />
-    <button class="btn btn-test" (click)="autofillForTesting()">Auto-fill For Testing</button>
+    <button *ngIf="!isViewMode" class="btn btn-test" (click)="autofillForTesting()">Auto-fill For Testing</button>
   </div>
   <hr class="divider">
 </div>
