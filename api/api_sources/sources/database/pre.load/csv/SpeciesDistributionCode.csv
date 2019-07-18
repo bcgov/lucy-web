@@ -1,0 +1,10 @@
+code,description
+1,"rare individual, a single occurrence"
+2,"few sporadically occurring individuals"
+3,"single patch or clump of a species"
+4,"several sporadically occurring individuals"
+5,"a few patches or clumps of a species"
+6,"several well-spaced patches or clumps"
+7,"continuous uniform occurrence of well-spaced individuals"
+8,"continuous occurrence of a species with a few gaps in the distribution" 
+9,"continuous dense occurrence of a species"

@@ -23,6 +23,8 @@
 import 'reflect-metadata';
 import { JurisdictionCodeSchema, getSQLFilePath, ObservationSchema, ObservationSpeciesSchema } from '../sources/database/database-schema';
 import { SpeciesSchema } from '../sources/database/database-schema';
+import { SpeciesDistributionCodeSchema } from '../sources/database/database-schema';
+import { SpeciesDensityCodeSchema } from '../sources/database/database-schema';
 
 (() => {
     const jurisdictionSchema = new JurisdictionCodeSchema();
@@ -38,4 +40,13 @@ import { SpeciesSchema } from '../sources/database/database-schema';
 
     const species = new SpeciesSchema();
     species.createDataEntry();
+
+    const speciesDistribution = new SpeciesDistributionCodeSchema();
+    speciesDistribution.createMigrationFile();
+    speciesDistribution.createDataEntry();
+
+    const speciesDensity = new SpeciesDensityCodeSchema();
+    speciesDensity.createMigrationFile();
+    speciesDensity.createDataEntry();
+
 })();
