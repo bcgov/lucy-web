@@ -38,6 +38,13 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private _center: MapPreviewPoint;
   // get
   get center(): MapPreviewPoint {
+    if (!this._center) {
+      this._center = {
+        latitude: 52.068508,
+        longitude: -123.288152,
+        zoom: 4
+      };
+    }
     return this._center;
   }
   // set
@@ -92,6 +99,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       } else {
         this.showMapAtCenter();
       }
+      this.addMarkers();
     }
   }
   //////////////////////////////////////////////
@@ -106,8 +114,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     if (this.map) { return; }
     this.map = L.map(this.mapId).setView([center.latitude, center.latitude], center.zoom);
     this.markerGroup = L.layerGroup().addTo(this.map);
-    this.initMapWithGoogleSatellite();
-    // this.initWithOpenStreet();
+    // this.initMapWithGoogleSatellite();
+    this.initWithOpenStreet();
   }
 
   private initWithOpenStreet() {
@@ -166,7 +174,6 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * @param center MapPreviewPoint
    */
   private showMapAt(center: MapPreviewPoint) {
-    console.log(`showing at point`);
     this.map.setView(new L.LatLng(center.latitude, center.longitude), center.zoom);
   }
   //////////////////////////////////////////////

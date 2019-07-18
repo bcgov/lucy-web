@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AppRoutes } from 'src/app/constants';
 import { UserAccessType } from 'src/app/models/Role';
 import { AlertService } from 'src/app/services/alert.service';
+import { RouterService } from 'src/app/services/router.service';
 
 @Component({
   selector: 'app-profile',
@@ -40,7 +41,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   // Not yet used.. if loadingQue > 0, something is loading
   public loadingQue = 0;
 
-  constructor(private userService: UserService, private router: Router, private alertService: AlertService) { }
+  constructor(private userService: UserService, private router: RouterService, private alertService: AlertService) { }
 
   ngOnInit() {
     this.loadingQue = 0;
@@ -113,6 +114,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   public navigateToUserInfo() {
-    this.router.navigate([AppRoutes.UserInfo]);
+    this.router.navigateTo(AppRoutes.UserInfo);
   }
 }

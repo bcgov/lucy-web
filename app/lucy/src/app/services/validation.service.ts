@@ -14,14 +14,15 @@ export class ValidationService {
   }
 
   public isValidInteger(string: string): boolean {
-    const service = new ValidationService();
-    return (service.isValidNumber(string) && service.decimalPlaces(string) === 0);
+    return (this.isValidNumber(string) && this.decimalPlaces(string) === 0);
   }
 
-  public isValidUTM(string: string): boolean {
-    const service = this;
-    // TODO: only allow 7 digits for northings, 6 digits for eastings
-    return (this.isValidNumber(string));
+  public isValidUTMNorthings(string: string): boolean {
+    return (this.isValidNumber(string) && string.length < 8);
+  }
+
+  public isValidUTMEastings(string: string): boolean {
+    return (this.isValidNumber(string) && string.length < 7);
   }
 
   public hasMinDecimalPlaces(number: any, minDecimals: number): boolean {
@@ -53,18 +54,7 @@ export class ValidationService {
   public isValidLatitude(latitude: string) {
     const regexpOne = new RegExp('^[+-]?((90\\.?0*$)|(([0-8]?[0-9])\\.?[0-9]*$))');
     const regexpOneResult = regexpOne.test(latitude);
-    // console.log(regexpOneResult);
     return regexpOneResult;
-
-    const regexpTwo = new RegExp('^(\\+|-)?(\\d\.\\d{1,6}|[1-8]\\d\\.\\d{1,6}|90\\.0{1,6})$');
-    const regexpTwoResult = regexpTwo.test(latitude);
-    console.log(regexpTwoResult);
-
-    if (!regexpTwoResult || !regexpOneResult) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
   /**
@@ -75,17 +65,7 @@ export class ValidationService {
   public isValidLongitude(longitude: string) {
     const regexpOne = new RegExp('^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\\.{1}\\d{1,6}');
     const regexpOneResult = regexpOne.test(longitude);
-    console.log(regexpOneResult);
-
-    const regexpTwo = new RegExp('^[+-]?((180\\.?0*$)|(((1[0-7][0-9])|([0-9]{0,2}))\\.?[0-9]*$))');
-    const regexpTwoResult = regexpTwo.test(longitude);
-    console.log(regexpTwoResult);
-
-    if (!regexpTwoResult || !regexpOneResult) {
-      return false;
-    } else {
-      return true;
-    }
+    return regexpOneResult;
   }
 
   public isValidObservationMessage(observation: Observation): string | null {
@@ -95,11 +75,17 @@ export class ValidationService {
       return `Location is invalid`;
     }
 
-    if (observation.invasivePlantSpecies.length < 1) {
+    if (!observation.date) {
+      return `Observation date is missing`;
+    }
+
+    console.dir(observation.date);
+
+    if (observation.speciesObservations.length < 1) {
       return `You must add an invasive plant species`;
     }
 
-    for (const species of observation.invasivePlantSpecies) {
+    for (const species of observation.speciesObservations) {
       if (!species.width || !species.length) {
         return `You must specify Plot for invasive plant species`;
       }

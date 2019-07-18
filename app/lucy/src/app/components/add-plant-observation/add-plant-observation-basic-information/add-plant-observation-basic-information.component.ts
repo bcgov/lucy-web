@@ -4,6 +4,7 @@ import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { FormMode, Observation, Organization } from 'src/app/models';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-add-plant-observation-basic-information',
@@ -43,6 +44,13 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     return undefined;
   }
 
+  get observationDate(): string | undefined {
+    if (this.observationObject) {
+      return this.observationObject.date;
+    }
+    return undefined;
+  }
+
   // * UTM
   eastings: string;
   northings: string;
@@ -75,15 +83,19 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   get validEastings(): boolean {
-    return this.validation.isValidUTM(this.eastings);
+    return this.validation.isValidUTMEastings(this.eastings);
   }
 
   get validNorthings(): boolean {
-    return this.validation.isValidUTM(this.northings);
+    return this.validation.isValidUTMNorthings(this.northings);
   }
 
   get validZone(): boolean {
     return this.validation.isValidInteger(this.zone);
+  }
+
+  get isViewMode(): boolean {
+    return this.mode === FormMode.View;
   }
 
    ///// Form Mode
@@ -107,6 +119,8 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   // Set
   @Input() set observationObject(object: Observation) {
     this._object = object;
+    this.autofill();
+
   }
   ////////////////////
 
@@ -125,13 +139,30 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     });
   }
 
+  ngAfterViewChecked(): void {
+  }
+
   private notifyChangeEvent() {
-    if (this.observationObject) {
+    if (this.observationObject && !this.isViewMode) {
       this.basicInfoChanged.emit(this.observationObject);
     }
   }
 
-  ngAfterViewChecked(): void {
+  autofill() {
+    this.setUTMFromObservationLatLong();
+  }
+
+  setUTMFromObservationLatLong() {
+    if (!this.observationObject || !this.validation.isValidLatitude(String(this.observationObject.lat)) || !this.validation.isValidLongitude(String(this.observationObject.long))) {
+      return;
+    }
+
+    const converted = this.converterService.toUTM(this.observationObject.lat, this.observationObject.long);
+    this.zoneChanged(converted.zoneNum);
+    this.northingsChanged(String(converted.northing.toFixed(0)));
+    this.eastingChanged(String(converted.easting.toFixed(0)));
+
+    this.setMapToObservationLocation();
   }
 
   observerLastNameChanged(value: string) {
@@ -153,6 +184,12 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       this.observationObject.observerOrganization = value.object;
     }
     this.notifyChangeEvent();
+  }
+
+  observationDateChanged(value: any) {
+    if (this.observationObject && value) {
+      this.observationObject.date = value;
+    }
   }
 
   private utmCoordinatesAreValid(): boolean {
@@ -216,16 +253,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       return;
     }
 
-    if (!this.validation.isValidLatitude(String(this.observationObject.lat)) || !this.validation.isValidLongitude(String(this.observationObject.long))) {
-      return;
-    }
-
-    const converted = this.converterService.toUTM(this.observationObject.lat, this.observationObject.long);
-    this.zoneChanged(converted.zoneNum);
-    this.northingsChanged(String(converted.northing.toFixed(2)));
-    this.eastingChanged(String(converted.easting.toFixed(2)));
-
-    this.setMapToObservationLocation();
+    this.setUTMFromObservationLatLong();
   }
 
   /**
@@ -241,9 +269,9 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     if (!this.utmCoordinatesAreValid()) {
       return;
     }
+
     // 2) Convert to lat long
     const converted = this.converterService.toLatLon(this.eastings, this.northings, this.zone, null, true, false);
-    console.dir(converted);
 
     // 3) Check if converted lat long are valid
     if (!this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {
@@ -301,8 +329,8 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       this.latChanged( `48.430562`);
       this.longChanged(`-123.365831`);
     } else {
-      this.eastingChanged(`472938.52`);
-      this.northingsChanged(`5364221.84`);
+      this.eastingChanged(`472938`);
+      this.northingsChanged(`5364221`);
       this.zoneChanged(`10`);
     }
 

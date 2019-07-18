@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies} from '../models';
+import { User, Jurisdiction, InvasivePlantSpecies, Observation} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 
@@ -53,6 +53,11 @@ export class ObjectValidatorService {
   public isInvasivePlantSpeciesObject(species: any): species is InvasivePlantSpecies {
     if (species === undefined || species === null) {return false; }
     return (<InvasivePlantSpecies>species.species) !== undefined;
+  }
+
+  public isObservationObject(observation: any): observation is Observation {
+    if (observation === undefined || observation === null) {return false; }
+    return (<Observation>observation.date) !== undefined;
   }
 
 }

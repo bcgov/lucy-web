@@ -60,7 +60,7 @@ export class AlertComponent implements OnInit {
   ngOnInit() {}
 
   buttonPressed(button: AlertModalButton) {
-    button.eventEmitter.emit(true);
+    button.eventEmitter.emit();
     if (button.canDismiss) {
       this.removeModal();
       if (this.model) {
