@@ -1,7 +1,7 @@
 version: '1.0'
 schemas: 
   JurisdictionCodeSchema:
-    name: jurisdiction_code_table
+    name: jurisdiction_code
     description: Jurisdiction code of observation area
     baseSchema: CodeTableSchema
     columns: 
@@ -30,11 +30,11 @@ schemas:
         definition: DATE NULL
       lat:
         name: 'observation_location_lat'
-        comment: 'Date of observation'
+        comment: 'Latitude of observation location'
         definition: NUMERIC(8, 6) NOT NULL
       long:
         name: 'observation_location_long'
-        comment: 'Date of observation'
+        comment: 'Longitude of observation location'
         definition: NUMERIC(9, 6) NOT NULL
   # -- Observation Species schema
   ObservationSpeciesSchema:
@@ -69,7 +69,7 @@ schemas:
         name: 'jurisdiction_code_id'
         comment: Foreign key reference to Jurisdiction code table 
         definition: INT NULL
-        foreignTable: 'jurisdiction_code_table'
+        foreignTable: 'jurisdiction_code'
         refColumn: jurisdiction_code_id
         deleteCascade: true
       observation:
@@ -79,3 +79,34 @@ schemas:
         foreignTable: observation
         refColumn: observation_id
         deleteCascade: true
+  # --
+  # -- SpeciesDistributionCode
+  SpeciesDistributionCodeSchema:
+    name: species_distribution_code
+    description: Distribution code table of species for an observation
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: species_distribution_code_id
+        comment: Identifier as code
+        definition: INT NOT NULL PRIMARY KEY
+      description:
+        name: description
+        comment: Description of distribution code
+        definition: VARCHAR(100) NOT NULL
+  # --
+  # -- SpeciesDensityCodeSchema --
+  SpeciesDensityCodeSchema:
+    name: species_density_code
+    description: Density enum code table for a species of observation
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'species_density_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: 'density_code'
+        comment: Density code values based on species present on location
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --

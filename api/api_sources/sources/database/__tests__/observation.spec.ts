@@ -25,6 +25,7 @@ import { expect, should } from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
 import { observationFactory, destroyObservation, observationSpeciesFactory, destroyObservationSpecies } from '../factory';
 import { ObservationController, ObservationSpeciesController } from '../models';
+import { speciesDensityCodeFactory, speciesDistributionCodeFactory} from '../factory';
 
 describe('Observation tests', () => {
     before(async () => {
@@ -62,6 +63,18 @@ describe('Observation tests', () => {
         expect(obs.updatedBy.user_id).to.equal(f.updatedBy.user_id);
         expect(obs.observation_species_id).to.equal(f.observation_species_id);
         await destroyObservationSpecies(obs);
+    });
+
+    it('should fetch species density code', async () => {
+        const code = await speciesDensityCodeFactory(2);
+        should().exist(code);
+        expect(code.species_density_code_id).to.be.equals(2);
+    });
+
+    it('should fetch species density code', async () => {
+        const code = await speciesDistributionCodeFactory(2);
+        should().exist(code);
+        expect(code.species_distribution_code_id).to.be.equals(2);
     });
 });
 
