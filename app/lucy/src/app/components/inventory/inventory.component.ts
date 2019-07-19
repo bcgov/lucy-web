@@ -6,6 +6,7 @@ import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
 import { LatLong } from '../map-preview/map-preview.component';
 import { delay } from 'q';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-inventory',
@@ -31,7 +32,7 @@ export class InventoryComponent implements OnInit {
   showList = true;
   /************ End of Flags ************/
 
-  constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService) { }
+  constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService, private loadingService: LoadingService) { }
 
   ngOnInit() {
     // this.createDummys();
@@ -39,17 +40,17 @@ export class InventoryComponent implements OnInit {
   }
 
   private async fetchObservations() {
+    this.loadingService.add();
     const observations = await this.observationService.getAll();
     this.observations = observations;
     this.markers = [];
     for (const object of observations) {
-      console.log("***");
-      console.dir(object);
       this.markers.push( {
         latitude: object.lat,
         longitude: object.long
       });
     }
+    this.loadingService.remove();
   }
 
   switchShowMap() {
