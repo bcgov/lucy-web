@@ -70,9 +70,9 @@ export class AccessRequestResponseModalComponent implements OnInit {
     if (this.accessRequest === undefined) {
       return;
     }
-    for (let role of this.activeRoles) {
-      if (role.role == name) {
-        this.accessRequest.requestedAccessCode = role
+    for (const role of this.activeRoles) {
+      if (role.role === name) {
+        this.accessRequest.requestedAccessCode = role;
       }
     }
   }
@@ -134,14 +134,8 @@ export class AccessRequestResponseModalComponent implements OnInit {
     this.acessRequestModalEmitter.emit(AccessRequestResponseModalEmitterResponse.cancelled);
   }
 
-  // private removeModal() {
-  //   $('#requestResponseModal').modal('hide');
-  //   $('.modal-backdrop').remove();
-  // }
-
   private removeModal() {
     if (this.modalReference) {
-      console.log(`XX closing Modal`);
       this.modalReference.close();
       this.modalReference = undefined;
     } else {
