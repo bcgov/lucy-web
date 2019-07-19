@@ -1,24 +1,26 @@
 <!-- Submission message -->
 <div *ngIf="submitted">
-    <div class="container">
+    <div class="container text-center">
         <div class="row">
           <div class="col-12">
-
+            <lottie-animation-view [options]="lottieConfig" [width]="200" [height]="200"
+              (animCreated)="handleAnimation($event)">
+            </lottie-animation-view>
           </div>
         </div>
         <div class="row">
-            <div class="col-12">
-
+            <div class="col-12  entries-added">
+              Entries Added
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-
+              <hr class="confirmation-divider">
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-
+                <button type="button" class="btn btn-secondary back-to-db button-hollow" (click)="viewInventory()">Back to Database</button>
             </div>
         </div>
     </div>
