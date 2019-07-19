@@ -9,7 +9,6 @@ import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
-import { isCreationMode } from '@angular/core/src/render3/state';
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -17,9 +16,25 @@ import { isCreationMode } from '@angular/core/src/render3/state';
   styleUrls: ['./add-plant-observation.component.css'],
 })
 
-@NgModule({schemas: [CUSTOM_ELEMENTS_SCHEMA]})
+@NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
+
+  // State flags
+  private submitted = false;
   private inReviewMode = false;
+  get readonly(): boolean {
+    return this.mode === FormMode.View;
+  }
+  /////////////////
+
+  // Lottie Animation
+  public lottieConfig: Object;
+  private anim: any;
+  private animationSpeed = 1;
+  /////////////////
+
   /**
    * TODO: REMOVE - Its For testing
    */
@@ -120,10 +135,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  get readonly(): boolean {
-    return this.mode === FormMode.View;
-  }
-
   get invasiveSpecies(): SpeciesObservations[] {
     if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
     return this.observationObject.speciesObservations;
@@ -141,7 +152,35 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService, private router: RouterService) { }
+  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService, private router: RouterService) {
+    this.lottieConfig = {
+      path: 'https://assets4.lottiefiles.com/datafiles/jEgAWaDrrm6qdJx/data.json',
+      renderer: 'canvas',
+      autoplay: true,
+      loop: false
+    };
+  }
+
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
 
   ngOnInit() {
     this.initialize();
@@ -262,20 +301,25 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       }
       const success = await this.observationService.submitObservation(this.observationObject);
       if (success) {
-        const eventEmitter = new EventEmitter<boolean>();
-        eventEmitter.subscribe(clicked => this.router.navigateTo(AppRoutes.Inventory));
-        const successMsgbtn: AlertModalButton = {
-          name: `Okay`,
-          canDismiss: true,
-          eventEmitter: eventEmitter,
-        };
-        this.alert.show(`Success`, `Submitted`, [successMsgbtn]);
+        // const eventEmitter = new EventEmitter<boolean>();
+        // eventEmitter.subscribe(clicked => this.submitted = true);
+        // const successMsgbtn: AlertModalButton = {
+        //   name: `Okay`,
+        //   canDismiss: true,
+        //   eventEmitter: eventEmitter,
+        // };
+        // this.alert.show(`Success`, `Submitted`, [successMsgbtn]);
+        this.submitted = true;
       } else {
         this.alert.show(`Error`, `Submission failed`, null);
       }
     } else {
       this.alert.show(`Incomplete data`, validationMessage, null);
     }
+  }
+
+  viewInventory() {
+    this.router.navigateTo(AppRoutes.Inventory);
   }
 
   changeToReviewMode() {

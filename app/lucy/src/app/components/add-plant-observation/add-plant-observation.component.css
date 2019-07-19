@@ -94,3 +94,28 @@
     }
   }
   /****************************************/
+
+  /* Confirmation */
+  .entries-added {
+      color: #000000;
+      font-size: 34px;
+      font-weight: bold;
+      line-height: 41px;
+  }
+
+  .back-to-db {
+      height: 50px;
+      width: 250px;
+      color: #000000;
+      font-size: 16px;
+      font-weight: bold;
+      letter-spacing: -0.32px;
+      line-height: 21px;
+      text-align: center;
+  }
+
+  .confirmation-divider {
+	height: 1px;
+	width: 342px;
+	background-color: #000000;
+}
