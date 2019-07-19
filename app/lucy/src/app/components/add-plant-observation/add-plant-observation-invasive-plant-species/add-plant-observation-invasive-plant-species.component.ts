@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { InvasivePlantSpecies, SpeciesObservations, Jurisdiction } from 'src/app/models/observation';
 import { CodeTableService } from 'src/app/services/code-table.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-add-plant-observation-invasive-plant-species',
@@ -50,7 +51,7 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
 
   @Output() invasivePlantSpeciesChanged = new EventEmitter<SpeciesObservations[]>();
 
-  constructor(private codeTableService: CodeTableService) { }
+  constructor(private codeTableService: CodeTableService, private loadingService: LoadingService) { }
 
   ngOnInit() {
   }
@@ -101,9 +102,11 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   }
 
   autofillForTesting() {
+    this.loadingService.add();
     this.codeTableService.getInvasivePlantSpecies().then((plantSpecies) => {
       this.codeTableService.getJuristictions().then((jurisdiction) => {
         const species = this.addSpecies(undefined, plantSpecies[0], jurisdiction[0], 5, 5, `go left`);
+        this.loadingService.remove();
       });
     });
   }

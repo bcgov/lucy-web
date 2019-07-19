@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AccessRequest } from 'src/app/models/AccessRequest';
 import { RolesService } from 'src/app/services/roles.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { User } from 'src/app/models';
 import { Role } from 'src/app/models/Role';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-admin-tools',
@@ -11,14 +12,14 @@ import { Role } from 'src/app/models/Role';
   styleUrls: ['./admin-tools.component.css']
 })
 
-export class AdminToolsComponent implements OnInit {
+export class AdminToolsComponent implements OnInit, AfterViewInit {
   public requests: AccessRequest[] = []
   public allUsers: User[] = []
   public activeRoles: Role[] = []
 
   public focusedAccessRequest: AccessRequest;
 
-  constructor(private roles: RolesService, private admin: AdminService) { }
+  constructor(private roles: RolesService, private admin: AdminService, private loadingService: LoadingService) { }
 
   ngOnInit() {}
 
@@ -37,27 +38,30 @@ export class AdminToolsComponent implements OnInit {
   }
 
   private async getAllRequests() {
+    this.loadingService.add();
     this.admin.getRequests().then((value) => {
-      console.log("got requests")
-      this.requests = value
-      console.dir(value)
+      this.requests = value;
+      this.loadingService.remove();
     });
   }
 
   private async getAllUsers() {
+    this.loadingService.add();
     this.admin.getAllUsers().then((value) => {
-      this.allUsers = value
+      this.allUsers = value;
+      this.loadingService.remove();
     });
   }
 
-  private async getAllRoles()  {
+  private async getAllRoles() {
+    this.loadingService.add();
     this.roles.getRoles().then((value) => {
       this.activeRoles = value;
+      this.loadingService.remove();
     });
   }
 
   public requestResponseSent() {
-    console.log("refreshing");
     this.fetchNonStaticData();
   }
 }

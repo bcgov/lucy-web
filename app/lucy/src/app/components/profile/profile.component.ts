@@ -6,6 +6,8 @@ import { AppRoutes } from 'src/app/constants';
 import { UserAccessType } from 'src/app/models/Role';
 import { AlertService } from 'src/app/services/alert.service';
 import { RouterService } from 'src/app/services/router.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { RolesService } from 'src/app/services/roles.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +16,7 @@ import { RouterService } from 'src/app/services/router.service';
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
 
-  private userAccessType: UserAccessType = UserAccessType.DataViewer;
+  private userAccessType: UserAccessType;
 
   public get requestDataEntryAccessMessage(): string {
     return StringConstants.databaseAccess_requestDataEntryAccess_Message;
@@ -25,8 +27,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   public get showRequestDataEntryAccessMessage(): boolean {
-    // TODO: Create access service: if accessService.hasDataEntryAccess
-    if (this.userAccessType === UserAccessType.DataEditor || this.userAccessType === UserAccessType.Admin) {
+    if (!this.userAccessType) {
+      return false;
+    }
+    if ( this.roleService.accessTypeCanCreateObservation(this.userAccessType)) {
       return false;
     } else {
       return this.userService.showRequestDataEntryAccessMessage();
@@ -38,29 +42,25 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public userFullName = ``;
   public userInitials = ``;
 
-  // Not yet used.. if loadingQue > 0, something is loading
-  public loadingQue = 0;
-
-  constructor(private userService: UserService, private router: RouterService, private alertService: AlertService) { }
+  constructor(private userService: UserService, private router: RouterService, private alertService: AlertService, private loadingService: LoadingService, private roleService: RolesService) { }
 
   ngOnInit() {
-    this.loadingQue = 0;
   }
 
   ngAfterViewInit() {
-    this.loadingQue++;
+    this.loadingService.add();
     this.userService.getFullName().then((value) => {
       this.userFullName = value;
-      this.loadingQue--;
+      this.loadingService.remove();
     });
 
-    this.loadingQue++;
+    this.loadingService.add();
     this.userService.getInitials().then((value) => {
       this.userInitials = value;
-      this.loadingQue--;
+      this.loadingService.remove();
     });
 
-    this.loadingQue++;
+    this.loadingService.add();
     this.userService.getAccess().then((value) => {
       this.userAccessType = value;
       switch (value) {
@@ -74,19 +74,19 @@ export class ProfileComponent implements OnInit, AfterViewInit {
           this.accessTypeMessage = StringConstants.databaseAccess_Admin_Badge;
           break;
       }
-      this.loadingQue--;
+      this.loadingService.remove();
     });
 
-    this.loadingQue++;
+    this.loadingService.add();
     this.userService.getOranizarionAndRole().then((value) => {
       this.userRoleAndOrganization = value;
-      this.loadingQue--;
+      this.loadingService.remove();
     });
 
     // Redirect to user info page if basic information isnt filled
-    this.loadingQue++;
+    this.loadingService.add();
     this.userService.basicInformationExists().then((exists) => {
-      this.loadingQue--;
+      this.loadingService.remove();
       if (!exists) {
         this.navigateToUserInfo();
       }
