@@ -33,6 +33,7 @@
     "jwt-decode": "^2.2.0",
     "leaflet": "^1.5.1",
     "ng-in-viewport": "^6.0.3",
+    "ng-lottie": "^0.3.2",
     "ngx-cookie-service": "^2.2.0",
     "popper.js": "^1.15.0",
     "rxjs": "~6.3.3",

@@ -17,6 +17,9 @@ import { InViewportModule } from 'ng-in-viewport';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 
+// Lottie
+import { LottieAnimationViewModule } from 'ng-lottie';
+
 // Application
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './components/app.component';
@@ -91,6 +94,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     NgbModule,
     RouterModule,
     InViewportModule,
+    LottieAnimationViewModule.forRoot(),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
