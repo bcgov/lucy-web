@@ -29,7 +29,7 @@ export class UserService {
     private objectValidator: ObjectValidatorService) { }
 
   /**
-   * Return a User object 
+   * Return a User object
    * containing user information.
    */
   public async getUser(): Promise<User | null> {
@@ -78,7 +78,7 @@ export class UserService {
    */
   public async getFirstName(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
   }
 
@@ -88,7 +88,7 @@ export class UserService {
    */
   public async getLastName(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1));
   }
 
@@ -98,8 +98,8 @@ export class UserService {
    */
   public async getFullName(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
-      (user.firstName + " " + user.lastName));
+    return (user == null ? `` :
+      (user.firstName + ` ` + user.lastName));
   }
 
   /**
@@ -108,7 +108,7 @@ export class UserService {
    */
   public async getInitials(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       (user.firstName.charAt(0) + user.lastName.charAt(0)).toUpperCase());
   }
 
@@ -118,13 +118,13 @@ export class UserService {
    */
   public async getEmail(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       user.email);
   }
 
   /**
    * Get Users Access Type.
-   * Determined based on User's 
+   * Determined based on User's
    * Access Code.
    * @returns UserAccessType
    */
@@ -138,7 +138,7 @@ export class UserService {
 
   /**
    * Return User's relevant access code.
-   * @param user 
+   * @param user object
    * @returns accessCode
    */
   public getUserAccessCode(user: User): Role {
@@ -149,14 +149,14 @@ export class UserService {
   public async getOranizarionAndRole(): Promise<string> {
     // const user = await this.getUser();
     // return (user.roleInOrganization + ", " + user.organization);
-    return "Invasive Plant Specialist, Ministry of Tranaportation";
+    return `Invasive Plant Specialist, Ministry of Tranaportation`;
   }
 
   // TODO: Does not exist in api yet
   public async getOranization(): Promise<string> {
     // const user = await this.getUser();
     // return user.organization;
-    return "Ministry of Tranaportation";
+    return `Ministry of Tranaportation`;
   }
 
   /**
@@ -169,8 +169,8 @@ export class UserService {
       return false;
     }
     return (
-      (user.firstName != "") &&
-      (user.lastName != "")
+      (user.firstName !== ``) &&
+      (user.lastName !== ``)
     );
   }
   /*------------------------------------END OF GETs------------------------------------*/
@@ -178,36 +178,36 @@ export class UserService {
   /*------------------------------------SETs------------------------------------*/
   /**
    * Update User information
-   * @param firstName 
-   * @param lastName 
+   * @param firstName string
+   * @param lastName string
    * @returns boolean
    */
   async updateUserInfo(firstName: string, lastName: string): Promise<boolean> {
-    let user = await this.getUser()
+    const user = await this.getUser();
     user.firstName = firstName;
     user.lastName = lastName;
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_me, user);
     if (response.success) {
       if (!this.objectValidator.isUserObject(response.response)) {
-        return false
+        return false;
       } else {
         return (response.response.firstName === user.firstName && response.response.lastName === user.lastName)
       }
     } else {
-      return false
+      return false;
     }
   }
 
   /**
    * Create an Access Request
-   * @param notes 
+   * @param notes string
    * @returns boolean
    */
   async submitDataEntryRequest(notes: string): Promise<boolean> {
-    let user = await this.getUser();
-    let dataEntryRole = await this.roles.getDataEntryRole();
+    const user = await this.getUser();
+    const dataEntryRole = await this.roles.getDataEntryRole();
     if (dataEntryRole === null) {
-      console.log("Could not fetch data entry role");
+      console.log(`Could not fetch data entry role`);
       return false;
     }
     const body = {
@@ -215,8 +215,6 @@ export class UserService {
       requestNote: notes
     }
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_DataEntryAccessRequest, body);
-    console.log("Response:")
-    console.dir(response);
     if (!this.objectValidator.isUserObject(response)) {
       return false;
     } else {
@@ -237,7 +235,7 @@ export class UserService {
    */
   public showRequestDataEntryAccessMessage(): boolean {
     const value = this.cookieService.get('ShowRequestDataEntryAccessMessage');
-    if (value == "") {
+    if (value === ``) {
       return true;
     };
   }
