@@ -39,3 +39,16 @@ export interface SpeciesObservations {
 	length: number;
 	accessDescription: string;
 }
+
+export interface SpeciesDensityCodes {
+        species_density_code_id: number;
+        code: string;
+        description: string;
+        activeIndicator: boolean;
+}
+
+export interface SpeciesDistributionCodes {
+        description: string;
+        activeIndicator: boolean;
+        species_distribution_code_id: number;
+}

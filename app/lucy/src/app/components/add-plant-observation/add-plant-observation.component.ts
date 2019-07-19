@@ -9,6 +9,7 @@ import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
+import { isCreationMode } from '@angular/core/src/render3/state';
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -18,7 +19,7 @@ import { AppRoutes } from 'src/app/constants';
 
 @NgModule({schemas: [CUSTOM_ELEMENTS_SCHEMA]})
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
-
+  private inReviewMode = false;
   /**
    * TODO: REMOVE - Its For testing
    */
@@ -47,7 +48,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
    /* ***** */
 
    /**
-   * TODO: REMOVE - Its For testing
+   * submit button title for different states
    */
   get submitBtnName(): string {
     switch (this.mode) {
@@ -60,7 +61,36 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         break;
       }
       case FormMode.View: {
+        if (this.inReviewMode) {
+          return `Confirm Observation`;
+        }
         return ``;
+        break;
+      }
+      default:
+        return `How are you here?`;
+    }
+  }
+   /* ***** */
+
+    /**
+   * Page title for different states
+   */
+  get pageTitle(): string {
+    switch (this.mode) {
+      case FormMode.Create: {
+        return `Add Observation`;
+        break;
+      }
+      case FormMode.Edit: {
+        return `Edit Observation`;
+        break;
+      }
+      case FormMode.View: {
+        if (this.inReviewMode) {
+          return `Confirm Entries`;
+        }
+        return `View Observation`;
         break;
       }
       default:
@@ -219,12 +249,17 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   async submitAction() {
-    if (this.viewing && this.mode !== FormMode.Create) {
+    if (this.mode === FormMode.Edit) {
       this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
+      return;
     }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
       console.log(` ***** can submit *****`);
+      if (!this.inReviewMode) {
+        this.changeToReviewMode();
+        return;
+      }
       const success = await this.observationService.submitObservation(this.observationObject);
       if (success) {
         const eventEmitter = new EventEmitter<boolean>();
@@ -241,6 +276,22 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     } else {
       this.alert.show(`Incomplete data`, validationMessage, null);
     }
+  }
+
+  changeToReviewMode() {
+    if (!this.creating) {
+      return;
+    }
+    this.inReviewMode = true;
+    this.mode = FormMode.View;
+  }
+
+  exitReviewMode() {
+    if (!this.creating) {
+      return;
+    }
+    this.inReviewMode = false;
+    this.mode = FormMode.Create;
   }
 
    /**

@@ -1,15 +1,49 @@
+<!-- Submission message -->
+<div *ngIf="submitted">
+    <div class="container">
+        <div class="row">
+          <div class="col-12">
+
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form  -->
+<div *ngIf="!submitted">
 <div class="container">
   <!-- Header Section -->
   <div class="row view-title-section">
     <div class="col-12 col-md-9 view-title">
-      Add Observation <span class="view-title-detail">- Plant</span>
+      {{pageTitle}} <span *ngIf="!readonly || !inReviewMode" class="view-title-detail"> - Plant</span>
     </div>
     <div class="col-12 col-md-3">
-      <button *ngIf="!readonly" type="button" class="btn btn-secondary submit-button button-fill" (click)="submitAction()">{{submitBtnName}}</button>
-    </div>
-
-    <div class="col-12">
-        <button type="button" class="btn btn-secondary btn-test" (click)="testBtnClicked()">{{testBtnName}}</button>
+     <div class="row">
+        <div class="col-12">
+            <button *ngIf="!readonly || inReviewMode" type="button" class="btn btn-secondary submit-button button-fill" (click)="submitAction()">{{submitBtnName}}</button>
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-12">
+            <button *ngIf="inReviewMode" type="button" class="btn btn-secondary submit-button button-hollow" (click)="exitReviewMode()">Edit</button>
+        </div>
+      </div>
     </div>
   </div>
   <!-- -------------------- -->
@@ -49,4 +83,5 @@
       <!-- -------------------- -->
     </div>
   </div>
+</div>
 </div>
