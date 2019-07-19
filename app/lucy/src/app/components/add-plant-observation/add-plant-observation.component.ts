@@ -9,6 +9,7 @@ import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -152,7 +153,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService, private router: RouterService) {
+  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService, private router: RouterService, private loadingService: LoadingService) {
     this.lottieConfig = {
       path: 'https://assets4.lottiefiles.com/datafiles/jEgAWaDrrm6qdJx/data.json',
       renderer: 'canvas',
@@ -205,6 +206,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     } else if (this.creating()) {
       this.initializeObjectIfDoesntExist();
       this.mode = FormMode.Create;
+
     } else {
       this.showErrorPage();
     }
@@ -241,11 +243,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   async fetchObservation(id: number) {
-    console.log(`Fetching`);
+    this.loadingService.add();
     const object = await this.observationService.getWithId(id);
-    console.log(this.observationObject);
     this.observationObject = object;
-    console.log(this.observationObject);
+    this.loadingService.remove();
   }
 
   initializeObjectIfDoesntExist() {
@@ -299,16 +300,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         this.changeToReviewMode();
         return;
       }
+      this.loadingService.add();
       const success = await this.observationService.submitObservation(this.observationObject);
+      this.loadingService.remove();
       if (success) {
-        // const eventEmitter = new EventEmitter<boolean>();
-        // eventEmitter.subscribe(clicked => this.submitted = true);
-        // const successMsgbtn: AlertModalButton = {
-        //   name: `Okay`,
-        //   canDismiss: true,
-        //   eventEmitter: eventEmitter,
-        // };
-        // this.alert.show(`Success`, `Submitted`, [successMsgbtn]);
         this.submitted = true;
       } else {
         this.alert.show(`Error`, `Submission failed`, null);
@@ -337,31 +332,4 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     this.inReviewMode = false;
     this.mode = FormMode.Create;
   }
-
-   /**
-   * TODO: REMOVE - Its For testing
-   */
-  testBtnClicked() {
-    switch (this.mode) {
-      case FormMode.Create: {
-        this.mode = FormMode.View;
-        break;
-      }
-      case FormMode.Edit: {
-        this.mode = FormMode.View;
-        break;
-      }
-      case FormMode.View: {
-        if (this.creating()) {
-          this.mode = FormMode.Create;
-        } else {
-          this.mode = FormMode.Edit;
-        }
-        break;
-      }
-      default:
-        return `How are you here?`;
-    }
-  }
-   /* ***** */
 }

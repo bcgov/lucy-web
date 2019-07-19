@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, AfterViewChecked, EventEmitter } from
 import { FormMode, Jurisdiction, InvasivePlantSpecies, SpeciesObservations } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-add-plant-observation-invasive-plant-species-cell',
@@ -93,7 +94,7 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   ////////////////////
 
   @Output() speciesCellInfoChanged = new EventEmitter<SpeciesObservations>();
-  constructor(private validation: ValidationService, private dropdownService: DropdownService) { }
+  constructor(private validation: ValidationService, private dropdownService: DropdownService, private loadingService: LoadingService) { }
 
   ngOnInit() {
     this.getDropdownData();
@@ -104,32 +105,46 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
 
   getDropdownData() {
+    this.loadingService.add();
     this.dropdownService.getInvasivePlantSpecies().then((result) => {
       this.invasivePlantSpecies = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getJuristictions().then((result) => {
       this.juristictions = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getSurveyModes().then((result) => {
       this.surveyModes = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getSoilTextureCodes().then((result) => {
       this.soilTextureCodes = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getSpecificUseCodes().then((result) => {
       this.specificUseCodes = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getDistributions().then((result) => {
       this.distributions = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getDensities().then((result) => {
       this.densities = result;
+      this.loadingService.remove();
     });
   }
 
