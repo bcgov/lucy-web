@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies, Observation} from '../models';
+import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 
@@ -55,6 +55,28 @@ export class ObjectValidatorService {
     return (<InvasivePlantSpecies>species.species) !== undefined;
   }
 
+  /**
+   * Check if object is SpeciesDensityCode
+   * @param density object
+   */
+  public isSpeciesDensityCodeObject(density: any): density is SpeciesDensityCodes {
+    if (density === undefined || density === null) {return false; }
+    return (<SpeciesDensityCodes>density.code) !== undefined;
+  }
+
+  /**
+   * Check if object is SpeciesDistributionCode
+   * @param distribution object
+   */
+  public isSpeciesDistributionCodeObject(distribution: any): distribution is SpeciesDistributionCodes {
+    if (distribution === undefined || distribution === null) {return false; }
+    return (<SpeciesDensityCodes>distribution.description) !== undefined;
+  }
+
+  /**
+   * Check if object is an observation
+   * @param observation object
+   */
   public isObservationObject(observation: any): observation is Observation {
     if (observation === undefined || observation === null) {return false; }
     return (<Observation>observation.date) !== undefined;
