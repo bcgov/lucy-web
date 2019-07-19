@@ -21,28 +21,53 @@
  */
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
 import { Record } from './user';
-import { ObservationSpeciesSchema, SpeciesSchema, JurisdictionCodeSchema, ObservationSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { Species } from './species';
 import { JurisdictionCode } from './observation.codes';
 import { Observation } from './observation';
+import { SpeciesDensityCode } from './speciesDensity.code';
+import { SpeciesDistributionCode } from './speciesDistribution.code';
+import {
+    ObservationSpeciesSchema,
+    SpeciesSchema,
+    JurisdictionCodeSchema,
+    ObservationSchema,
+    SpeciesDensityCodeSchema,
+    SpeciesDistributionCodeSchema,
+    SurveyTypeCodeSchema,
+    SpeciesAgencyCodeSchema
+     } from '../database-schema';
+import { SurveyTypeCode } from './surveyType.code';
+import { SpeciesAgencyCode } from './speciesAgency.code';
 
 export interface ObservationSpeciesCreateModel {
     width: number;
     length: number;
     accessDescription: string;
+    surveyorFirstName: string;
+    surveyorLastName: string;
     species: Species;
     jurisdiction: JurisdictionCode;
     observation: Observation;
+    density: SpeciesDensityCode;
+    distribution: SpeciesDistributionCode;
+    surveyType: SurveyTypeCode;
+    speciesAgency: SpeciesAgencyCode;
 }
 
 export interface ObservationSpeciesUpdateModel {
     width?: number;
     length?: number;
     accessDescription?: string;
+    surveyorFirstName?: string;
+    surveyorLastName?: string;
     species?: Species;
     jurisdiction?: JurisdictionCode;
     observation?: Observation;
+    density?: SpeciesDensityCode;
+    distribution?: SpeciesDistributionCode;
+    surveyType?: SurveyTypeCode;
+    speciesAgency?: SpeciesAgencyCode;
 }
 @Entity({ name: ObservationSpeciesSchema.dbTable})
 export class ObservationSpecies extends Record implements ObservationSpeciesCreateModel {
@@ -63,6 +88,14 @@ export class ObservationSpecies extends Record implements ObservationSpeciesCrea
     @ModelProperty({ type: PropertyType.string})
     accessDescription: string;
 
+    @Column({ name: ObservationSpeciesSchema.columns.surveyorFirstName})
+	@ModelProperty({type: PropertyType.string})
+	surveyorFirstName: string;
+
+	@Column({ name: ObservationSpeciesSchema.columns.surveyorLastName})
+	@ModelProperty({type: PropertyType.string})
+	surveyorLastName: string;
+
     @ManyToOne( type => Species, {eager: true})
     @JoinColumn({
         name: ObservationSpeciesSchema.columns.species,
@@ -78,6 +111,38 @@ export class ObservationSpecies extends Record implements ObservationSpeciesCrea
     })
     @ModelProperty({ type: PropertyType.object})
     jurisdiction: JurisdictionCode;
+
+    @ManyToOne( type => SpeciesDensityCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSpeciesSchema.columns.density,
+        referencedColumnName: SpeciesDensityCodeSchema.columns.id
+    })
+    @ModelProperty({ type: PropertyType.object})
+    density: SpeciesDensityCode;
+
+    @ManyToOne( type => SpeciesDistributionCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSpeciesSchema.columns.distribution,
+        referencedColumnName: SpeciesDistributionCodeSchema.columns.id
+    })
+    @ModelProperty({ type: PropertyType.object})
+    distribution: SpeciesDistributionCode;
+
+    @ManyToOne( type => SurveyTypeCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSpeciesSchema.columns.surveyType,
+        referencedColumnName: SurveyTypeCodeSchema.columns.id
+    })
+    @ModelProperty({ type: PropertyType.object})
+    surveyType: SurveyTypeCode;
+
+    @ManyToOne( type => SpeciesAgencyCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSpeciesSchema.columns.speciesAgency,
+        referencedColumnName: SpeciesAgencyCodeSchema.columns.id
+    })
+    @ModelProperty({ type: PropertyType.object})
+    speciesAgency: SpeciesAgencyCode;
 
     @ManyToOne( type => Observation)
     @JoinColumn({

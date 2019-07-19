@@ -24,10 +24,13 @@
  /**
   * Imports
   */
+import { CodeFactory } from './helper';
 import { JurisdictionCode, JurisdictionCodeController} from '../models';
 import { Species, SpeciesController} from '../models';
 import { SpeciesDensityCode, SpeciesDensityCodeController} from '../models';
 import { SpeciesDistributionCode, SpeciesDistributionCodeController} from '../models';
+import { SurveyTypeCode, SurveyTypeCodeController} from '../models';
+import { SpeciesAgencyCode, SpeciesAgencyCodeController } from '../models';
 
 /**
  * @description Factory for code
@@ -83,5 +86,19 @@ export const speciesDistributionCodeFactory = async (id?: number): Promise<Speci
     const obj = id !== undefined ? await SpeciesDistributionCodeController.shared.findById(id || 1) : await SpeciesDistributionCodeController.shared.random();
     return obj;
 };
+
+/**
+ * @description Factory for survey code type
+ * @param number id
+ * @returns Promise<SurveyTypeCode>
+ */
+export const surveyCodeTypeFactory = CodeFactory<SurveyTypeCode, SurveyTypeCodeController>(SurveyTypeCodeController.shared);
+
+/**
+ * @description Factory for Species agency code type
+ * @param number id
+ * @returns Promise<SpeciesAgencyCode>
+ */
+export const speciesAgencyCodeFactory = CodeFactory<SpeciesAgencyCode, SpeciesAgencyCodeController>(SpeciesAgencyCodeController.shared);
 // -------------------------------------------------------------------------------
 

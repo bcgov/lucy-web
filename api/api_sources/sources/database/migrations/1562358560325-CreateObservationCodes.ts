@@ -19,12 +19,16 @@
 
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { SpeciesDensityCodeSchema, SpeciesDistributionCodeSchema, getSQLFileData } from '../database-schema';
+import { SpeciesAgencyCodeSchema } from '../database-schema';
+import { SurveyTypeCodeSchema } from '../database-schema';
 /**
  * @description Migration File create JurisdictionCode table
  */
 export class CreateObservationCode1562358560325 implements MigrationInterface {
     densitySchema: SpeciesDensityCodeSchema = new SpeciesDensityCodeSchema();
     distributionSchema: SpeciesDistributionCodeSchema = new SpeciesDistributionCodeSchema();
+    agencyCodeSchema: SpeciesAgencyCodeSchema = new SpeciesAgencyCodeSchema();
+    surveyTypeCodeSchema: SurveyTypeCodeSchema = new SurveyTypeCodeSchema();
     /**
      * @description Up method
      * @param QueryRunner queryRunner
@@ -34,9 +38,13 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
         // Creating Tables
         await queryRunner.query(this.densitySchema.migrationSQL);
         await queryRunner.query(this.distributionSchema.migrationSQL);
+        await queryRunner.query(this.agencyCodeSchema.migrationSQL);
+        await queryRunner.query(this.surveyTypeCodeSchema.migrationSQL);
         // Pre-load codes
         await queryRunner.query(getSQLFileData(this.densitySchema.dataSQLPath()));
         await queryRunner.query(getSQLFileData(this.distributionSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.agencyCodeSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.surveyTypeCodeSchema.dataSQLPath()));
     }
 
     /**
@@ -47,6 +55,8 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(this.densitySchema.dropTable());
         await queryRunner.query(this.distributionSchema.dropTable());
+        await queryRunner.query(this.agencyCodeSchema.dropTable());
+        await queryRunner.query(this.surveyTypeCodeSchema.dropTable());
     }
 
 }

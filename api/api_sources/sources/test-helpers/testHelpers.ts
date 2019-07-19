@@ -166,14 +166,14 @@ export const testRequest = (app: any, setup: TestSetup) => {
     const actualAuth: number = (setup.auth || AuthType.noAuth) as number;
     let token: string;
     switch (actualAuth) {
-        case 0:
+        case 1:
             console.log('here....');
             token = adminToken();
             break;
-        case 2:
+        case 3:
             token = editorToken();
             break;
-        case 1:
+        case 2:
             token = viewerToken();
             break;
         default:
