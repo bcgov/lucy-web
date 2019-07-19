@@ -73,6 +73,10 @@ export class CodeTableSchema extends RecordTableSchema {
                 });
         }
     }
+
+    entryString() {
+        return `${this.table.columns.code}, ${this.table.columns.description}`;
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------

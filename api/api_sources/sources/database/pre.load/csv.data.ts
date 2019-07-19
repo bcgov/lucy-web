@@ -40,6 +40,11 @@ export interface Code {
     description: string;
 }
 
+export class CodeCSVData extends CSV<Code> {
+    constructor(inputName: string) {
+        super(getDataFilePath(inputName));
+    }
+}
 export class SpeciesCSVData extends CSV<SpeciesCSV> {
     constructor() {
         super(getDataFilePath('Code_Tables_Species.csv'));
