@@ -16,6 +16,9 @@ export class DropdownService {
   public displayedJuristictionsField = `code`;
   public displayedInvasivePlantspeciesField = `latinName`;
   public displayedOrganizationField = `name`;
+  public displayedDistributionField = `description`;
+  public displayedDensityField = `code`;
+
 
   constructor(private codeTableService: CodeTableService) { }
 
@@ -80,17 +83,19 @@ export class DropdownService {
   }
 
    /**
-   * TODO: Incomplete
+   *
    */
   public async getDistributions(): Promise<DropdownObject[]> {
-    return this.getDummyDropdownObjects();
+    const distributions =  await this.codeTableService.getDistributionCodes();
+    return this.createDropdownObjectsFrom(distributions, this.displayedDistributionField);
   }
 
   /**
-   * TODO: Incomplete
+   *
    */
   public async getDensities(): Promise<DropdownObject[]> {
-    return this.getDummyDropdownObjects();
+    const densities =  await this.codeTableService.getDensityCodes();
+    return this.createDropdownObjectsFrom(densities, this.displayedDensityField);
   }
 
   /**

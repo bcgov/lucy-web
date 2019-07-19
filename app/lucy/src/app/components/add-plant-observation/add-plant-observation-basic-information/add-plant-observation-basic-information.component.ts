@@ -12,9 +12,9 @@ import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./add-plant-observation-basic-information.component.css']
 })
 export class AddPlantObservationBasicInformationComponent implements OnInit, AfterViewChecked {
+  locationEntryModeLatLong = true;
 
-  locationEntryModeLatLong = false;
-
+  // Map helpers
   private mapCenter: MapPreviewPoint;
   private markers: LatLong[] = [];
 
@@ -59,7 +59,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   // * Lat Long
   get lat(): string {
-    if (this.observationObject.lat) {
+    if (this.observationObject && this.observationObject.lat) {
       return String(this.observationObject.lat);
     } else {
       return ``;
@@ -67,7 +67,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   get long(): string {
-    if (this.observationObject.long) {
+    if (this.observationObject && this.observationObject.long) {
       return String(this.observationObject.long);
     } else {
       return ``;
@@ -260,6 +260,11 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
    * Validate, convert to Lat/Long, store and show location on map
    */
   utmValuesChanged() {
+    // If observation is being viewed, dont convert
+    if (this.mode === FormMode.View) {
+      return;
+    }
+
     // If its in lat long entry mode, dont run this function.
     if (this.locationEntryModeLatLong || !this.observationObject) {
       return;

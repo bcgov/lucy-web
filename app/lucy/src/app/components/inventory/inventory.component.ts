@@ -34,7 +34,7 @@ export class InventoryComponent implements OnInit {
   constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService) { }
 
   ngOnInit() {
-    this.createDummys();
+    // this.createDummys();
     this.fetchObservations();
   }
 
@@ -43,6 +43,8 @@ export class InventoryComponent implements OnInit {
     this.observations = observations;
     this.markers = [];
     for (const object of observations) {
+      console.log("***");
+      console.dir(object);
       this.markers.push( {
         latitude: object.lat,
         longitude: object.long

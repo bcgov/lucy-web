@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { ObjectValidatorService } from './object-validator.service';
 import { AppConstants } from '../constants';
-import { Jurisdiction, InvasivePlantSpecies, Organization } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, Organization, SpeciesDensityCodes, SpeciesDistributionCodes } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,8 @@ export class CodeTableService {
   private juristictions: Jurisdiction[];
   private invasivePlantSpecies: InvasivePlantSpecies[];
   private organizations: Organization[];
+  private density: SpeciesDensityCodes[];
+  private distributions: SpeciesDistributionCodes[];
 
   private codeTables: any| null = null;
 
@@ -52,7 +54,7 @@ export class CodeTableService {
        return [];
     }
 
-    const juristictionCodes = codes['jurisdictionCodes'];
+    const juristictionCodes = codes.jurisdictionCodes;
     if ( juristictionCodes && (Array.isArray(juristictionCodes) && this.objectValidator.isJurisdictionObject(juristictionCodes[0]))) {
       this.juristictions = juristictionCodes;
       return this.juristictions;
@@ -75,10 +77,44 @@ export class CodeTableService {
        return [];
     }
 
-    const speciesCodes = codes['speciesList'];
+    const speciesCodes = codes.speciesList;
     if ( speciesCodes && (Array.isArray(speciesCodes) && this.objectValidator.isInvasivePlantSpeciesObject(speciesCodes[0]))) {
       this.invasivePlantSpecies = speciesCodes;
       return speciesCodes;
+    }
+  }
+
+  public async getDensityCodes(): Promise<SpeciesDensityCodes[]> {
+    if (this.density && this.density.length > 0 ) {
+      return this.density;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+
+    const densityCodes = codes.speciesDensityCodes;
+    if ( densityCodes && (Array.isArray(densityCodes) && this.objectValidator.isSpeciesDensityCodeObject(densityCodes[0]))) {
+      this.density = densityCodes;
+      return densityCodes;
+    }
+  }
+
+  public async getDistributionCodes(): Promise<SpeciesDistributionCodes[]> {
+    if (this.distributions && this.distributions.length > 0 ) {
+      return this.distributions;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+
+    const distributionCodes = codes.speciesDistributionCodes;
+    if ( distributionCodes && (Array.isArray(distributionCodes) && this.objectValidator.isSpeciesDistributionCodeObject(distributionCodes[0]))) {
+      this.distributions = distributionCodes;
+      return distributionCodes;
     }
   }
 
