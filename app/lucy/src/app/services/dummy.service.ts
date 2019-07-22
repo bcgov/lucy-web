@@ -141,6 +141,7 @@ export class DummyService {
     if (!jurisdiction || ! invasivePlantSpecies) {
       return undefined;
     }
+    
     const observation: Observation = {
       observation_id: this.getUniqueObservationId(forObservations),
       lat: this.randomLat(),
