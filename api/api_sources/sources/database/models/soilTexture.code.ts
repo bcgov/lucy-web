@@ -27,12 +27,13 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SoilTextureCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
+import { ApplicationCode } from './user';
 
 /**
  * @description SoilTexture Code Table Model
  */
 @Entity( { name: SoilTextureCodeSchema.dbTable} )
-export class SoilTextureCode {
+export class SoilTextureCode extends ApplicationCode {
 
 	/**
 	 * Class Properties

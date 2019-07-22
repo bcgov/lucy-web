@@ -14,10 +14,10 @@
  * File: surveyGeometry.code.ts
  * Project: lucy
  * File Created: Monday, 22nd July 2019 11:29:50 am
- * Author: pushan (you@you.you)
+ * Author: pushan
  * -----
  * Last Modified: Monday, 22nd July 2019 11:30:14 am
- * Modified By: pushan (you@you.you>)
+ * Modified By: pushan
  * -----
  */
 
@@ -27,8 +27,10 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SurveyGeometryCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
+import { ApplicationCode } from './user';
+
 @Entity( { name: SurveyGeometryCodeSchema.dbTable} )
-export class SurveyGeometryCode {
+export class SurveyGeometryCode extends ApplicationCode {
 
 	/**
 	 * Class Properties

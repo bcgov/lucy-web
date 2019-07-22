@@ -412,6 +412,9 @@ definitions:
       - surveyType
       - speciesAgency
       - observation
+      - soilTexture
+      - surveyGeometry
+      - specificUseCode
       - updateAt
       - createdAt
     properties:
@@ -440,6 +443,12 @@ definitions:
       speciesAgency:
         type: object
       observation:
+        type: object
+      soilTexture:
+        type: object
+      surveyGeometry:
+        type: object
+      specificUseCode:
         type: object
       updateAt:
         type: string
@@ -557,6 +566,9 @@ definitions:
       - speciesDistributionCodes
       - speciesAgencyCodes
       - surveyTypeCodes
+      - soilTextureCodes
+      - surveyGeometryCodes
+      - specificUseCodes
     properties:
       jurisdictionCodes:
         type: array
@@ -576,6 +588,12 @@ definitions:
       surveyTypeCodes:
         type: array
         $ref: '#/definitions/SurveyTypeCode'
+      soilTextureCodes:
+        type: array
+        $ref: '#/definitions/SoilTextureCode'
+      surveyGeometryCodes:
+        type: array
+        $ref: '#/definitions/SoilTextureCode'
   ObservationCodesResp:
     required:
       - message

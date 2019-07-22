@@ -38,7 +38,10 @@ import {
     speciesDensityCodeFactory,
     speciesDistributionCodeFactory,
     speciesAgencyCodeFactory,
-    surveyCodeTypeFactory
+    surveyCodeTypeFactory,
+    soilTextureCodeFactory,
+    surveyGeometryCodeFactory,
+    specificUseCodeFactory
 } from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
@@ -66,6 +69,9 @@ describe('Test for observation routes', () => {
                 should().exist(data.speciesDistributionCodes);
                 should().exist(data.speciesAgencyCodes);
                 should().exist(data.surveyTypeCodes);
+                should().exist(data.soilTextureCodes);
+                should().exist(data.surveyGeometryCodes);
+                should().exist(data.specificUseCodes);
             });
             // done();
         });
@@ -158,6 +164,9 @@ describe('Test for observation routes', () => {
         const distribution = await speciesDistributionCodeFactory();
         const agency = await speciesAgencyCodeFactory();
         const type = await surveyCodeTypeFactory();
+        const texture = await soilTextureCodeFactory();
+        const geom = await surveyGeometryCodeFactory();
+        const specificCode = await specificUseCodeFactory();
         const create = {
             length: 6700.78,
             width: 900.00,
@@ -170,7 +179,10 @@ describe('Test for observation routes', () => {
             surveyType: type.survey_type_code_id,
             speciesAgency: agency.species_agency_code_id,
             distribution: distribution.species_distribution_code_id,
-            density: density.species_density_code_id
+            density: density.species_density_code_id,
+            surveyGeometry: geom.survey_geometry_code_id,
+            specificUseCode: specificCode.specific_use_code_id,
+            soilTexture: texture.soil_texture_code_id
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
@@ -189,6 +201,9 @@ describe('Test for observation routes', () => {
                 should().exist(body.distribution);
                 should().exist(body.speciesAgency);
                 should().exist(body.surveyType);
+                should().exist(body.soilTexture);
+                should().exist(body.specificUseCode);
+                should().exist(body.surveyGeometry);
                 expect(body.length).to.be.equal(create.length);
                 await ObservationSpeciesController.shared.removeById(body.observation_species_id);
             });

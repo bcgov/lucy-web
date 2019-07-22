@@ -27,8 +27,10 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SpecificUseCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
+import { ApplicationCode } from './user';
+
 @Entity( { name: SpecificUseCodeSchema.dbTable} )
-export class SpecificUseCode {
+export class SpecificUseCode extends ApplicationCode {
 
 	/**
 	 * Class Properties
