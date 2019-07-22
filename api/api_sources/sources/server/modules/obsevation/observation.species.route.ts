@@ -30,7 +30,10 @@ import { ObservationSpeciesController,
     SpeciesAgencyCodeController,
     SpeciesDensityCodeController,
     SpeciesDistributionCodeController,
-    SurveyTypeCodeController
+    SurveyTypeCodeController,
+    SurveyGeometryCodeController,
+    SpecificUseCodeController,
+    SoilTextureCodeController
 } from '../../../database/models';
 import { ObservationSpeciesCreateModel,
     ObservationSpeciesUpdateModel,
@@ -71,6 +74,15 @@ const CreateValidator = (): any[] =>  {
         }),
         idValidator<SurveyTypeCodeController>('surveyType', SurveyTypeCodeController.shared, (data, req) => {
             UpdateRequest(req, {surveyType: data});
+        }),
+        idValidator<SurveyGeometryCodeController>('surveyGeometry', SurveyGeometryCodeController.shared, (data, req) => {
+            UpdateRequest(req, {surveyGeometry: data});
+        }),
+        idValidator<SpecificUseCodeController>('specificUseCode', SpecificUseCodeController.shared, (data, req) => {
+            UpdateRequest(req, {specificUseCode: data});
+        }),
+        idValidator<SoilTextureCodeController>('soilTexture', SoilTextureCodeController.shared, (data, req) => {
+            UpdateRequest(req, {soilTexture: data});
         })
     ];
 };
@@ -102,6 +114,9 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
                 speciesAgency: req.validation.speciesAgency,
                 density: req.validation.density,
                 distribution: req.validation.distribution,
+                surveyGeometry: req.validation.surveyGeometry,
+                specificUseCode: req.validation.specificUseCode,
+                soilTexture: req.validation.soilTexture,
                 surveyorFirstName: data.surveyorFirstName,
                 surveyorLastName: data.surveyorLastName
             };
@@ -125,6 +140,9 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
                 distribution: req.validation.distribution,
                 surveyType: req.validation.surveyType,
                 speciesAgency: req.validation.speciesAgency,
+                surveyGeometry: req.validation.surveyGeometry,
+                specificUseCode: req.validation.specificUseCode,
+                soilTexture: req.validation.soilTexture,
                 surveyorFirstName: data.surveyorFirstName,
                 surveyorLastName: data.surveyorLastName
             };

@@ -1,0 +1,23 @@
+﻿specific_use_code,description
+GP,Gravel pit
+NS,No-spray zone
+HW,Numbered highway
+PL,Parking lot
+RS,Rec site/trail
+RA,Rest area
+SS,Sensitive site
+TS,Transfer station/landfill
+PF,Within PFZ
+WB,Within PFZ - water body
+WE,Within PFZ - well
+YD,Yard / ditching waste dump
+QU,Quarry
+RW,Railway
+TL,Transmission line
+CL,Cultivated land
+RC,Research site
+RV,Reservoir
+MI,Mine site
+MT,Mine tailings
+BS,Burn scar
+IS,Industrial site
