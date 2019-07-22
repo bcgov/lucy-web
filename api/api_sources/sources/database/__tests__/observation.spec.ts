@@ -29,7 +29,10 @@ import {
     observationSpeciesFactory,
     destroyObservationSpecies,
     speciesAgencyCodeFactory,
-    surveyCodeTypeFactory
+    surveyCodeTypeFactory,
+    soilTextureCodeFactory,
+    surveyGeometryCodeFactory,
+    specificUseCodeFactory
 } from '../factory';
 import { ObservationController,
     ObservationSpeciesController
@@ -75,6 +78,9 @@ describe('Observation tests', () => {
         should().exist(obs.speciesAgency);
         should().exist(obs.density);
         should().exist(obs.distribution);
+        should().exist(obs.soilTexture);
+        should().exist(obs.surveyGeometry);
+        should().exist(obs.specificUseCode);
         expect(obs.createdBy.user_id).to.equal(f.createdBy.user_id);
         expect(obs.updatedBy.user_id).to.equal(f.updatedBy.user_id);
         expect(obs.observation_species_id).to.equal(f.observation_species_id);
@@ -99,10 +105,28 @@ describe('Observation tests', () => {
         expect(code.species_agency_code_id).to.be.equals(2);
     });
 
-    it('should fetch species survey type codes', async () => {
+    it('should fetch species survey type code', async () => {
         const code = await surveyCodeTypeFactory(2);
         should().exist(code);
         expect(code.survey_type_code_id).to.be.equals(2);
+    });
+
+    it('should fetch soil texture code', async () => {
+        const code = await soilTextureCodeFactory(2);
+        should().exist(code);
+        expect(code.soil_texture_code_id).to.be.equals(2);
+    });
+
+    it('should fetch survey geometry code', async () => {
+        const code = await surveyGeometryCodeFactory(2);
+        should().exist(code);
+        expect(code.survey_geometry_code_id).to.be.equals(2);
+    });
+
+    it('should fetch specific use code', async () => {
+        const code = await specificUseCodeFactory(2);
+        should().exist(code);
+        expect(code.specific_use_code_id).to.be.equals(2);
     });
 });
 

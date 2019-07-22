@@ -38,13 +38,13 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         }
     });
     let defClass = ``;
-    defClass = defClass + `// ** Model  ${className} from schema ${schemaName} ** ${n}`;
+    defClass = defClass + `// ** Model  ${className} from schema ${schemaName} **${n}`;
     defClass = defClass + `${n}import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';`;
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
     defClass = defClass + `${n}import { ModelProperty, PropertyType } from '../../libs/core-model';`;
     defClass = defClass + `${n}import { DataModelController } from '../data.model.controller';`;
     defClass = defClass + `${n}@Entity( { name: ${schemaName}.dbTable} )\nexport class ${className} {\n${props}\n}\n`;
-    let defClassController = `// ** DataModel controller of ${className} **`;
+    let defClassController = `// ** DataModel controller of ${className} **\n`;
     defClassController = defClassController + `${n}export class ${className}Controller extends DataModelController<${className}> {`;
     defClassController = defClassController + `${n}${t}/**`;
     defClassController = defClassController + `${n}${t}* @description Getter for shared instance`;
