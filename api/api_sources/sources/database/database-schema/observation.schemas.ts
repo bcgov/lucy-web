@@ -131,4 +131,25 @@ export class SpeciesAgencyCodeSchema extends ObservationCodeTable {
         return csvData.load();
     }
 }
+
+export class SoilTextureCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SoilTextureCode.csv');
+        return csvData.load();
+    }
+}
+
+export class SurveyGeometryCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SurveyGeometryCode.csv');
+        return csvData.load();
+    }
+}
+
+export class SpecificUseCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SpecificUseCode.csv');
+        return csvData.load();
+    }
+}
 // -----------------------------------------------------------------------------------------
