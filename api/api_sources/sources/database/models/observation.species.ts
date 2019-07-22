@@ -59,6 +59,9 @@ export interface ObservationSpeciesCreateModel {
     distribution: SpeciesDistributionCode;
     surveyType: SurveyTypeCode;
     speciesAgency: SpeciesAgencyCode;
+    soilTexture: SoilTextureCode;
+    surveyGeometry: SurveyGeometryCode;
+    specificUseCode: SpecificUseCode;
 }
 
 export interface ObservationSpeciesUpdateModel {
@@ -74,6 +77,9 @@ export interface ObservationSpeciesUpdateModel {
     distribution?: SpeciesDistributionCode;
     surveyType?: SurveyTypeCode;
     speciesAgency?: SpeciesAgencyCode;
+    soilTexture?: SoilTextureCode;
+    surveyGeometry?: SurveyGeometryCode;
+    specificUseCode?: SpecificUseCode;
 }
 @Entity({ name: ObservationSpeciesSchema.dbTable})
 export class ObservationSpecies extends Record implements ObservationSpeciesCreateModel {

@@ -130,6 +130,9 @@ export class ObservationSpeciesController extends DataModelController<Observatio
         obj.distribution = data.distribution || obj.distribution;
         obj.density = data.density || obj.density;
         obj.surveyType = data.surveyType || obj.surveyType;
+        obj.surveyGeometry = data.surveyGeometry || obj.surveyGeometry;
+        obj.specificUseCode = data.specificUseCode || obj.specificUseCode;
+        obj.soilTexture = data.soilTexture || obj.soilTexture;
         obj.updatedBy = user;
         await this.saveInDB(obj);
         return obj;
