@@ -270,6 +270,7 @@ export class  BaseTableSchema {
         \n${auditColumns}\n -- ### End: ${this.table.name} ### --\n`;
         // console.log(`${final}`);
         fs.writeFileSync(fileToSave, final, { flag: 'w+', encoding: 'utf8'});
+        return final;
     }
 
     get migrationSQL(): string {
@@ -307,8 +308,9 @@ export class  BaseTableSchema {
         return base;
     }
 
-    public dataSQLPath(context: string): string {
-        throw new Error('Subclass must override');
+    public dataSQLPath(context?: string): string {
+        const comps = this.className.split('Schema');
+        return `${comps[0]}Data.sql`;
     }
     entryString(context?: any, inputColumns?: string): string {
         const input = inputColumns || '';

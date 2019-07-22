@@ -23,9 +23,21 @@
 
 import { expect, should } from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
-import { observationFactory, destroyObservation, observationSpeciesFactory, destroyObservationSpecies } from '../factory';
-import { ObservationController, ObservationSpeciesController } from '../models';
-import { speciesDensityCodeFactory, speciesDistributionCodeFactory} from '../factory';
+import {
+    observationFactory,
+    destroyObservation,
+    observationSpeciesFactory,
+    destroyObservationSpecies,
+    speciesAgencyCodeFactory,
+    surveyCodeTypeFactory
+} from '../factory';
+import { ObservationController,
+    ObservationSpeciesController
+} from '../models';
+import {
+    speciesDensityCodeFactory,
+    speciesDistributionCodeFactory
+} from '../factory';
 
 describe('Observation tests', () => {
     before(async () => {
@@ -59,6 +71,10 @@ describe('Observation tests', () => {
         should().exist(obs.updatedBy);
         should().exist(obs.jurisdiction);
         should().exist(obs.species);
+        should().exist(obs.surveyType);
+        should().exist(obs.speciesAgency);
+        should().exist(obs.density);
+        should().exist(obs.distribution);
         expect(obs.createdBy.user_id).to.equal(f.createdBy.user_id);
         expect(obs.updatedBy.user_id).to.equal(f.updatedBy.user_id);
         expect(obs.observation_species_id).to.equal(f.observation_species_id);
@@ -75,6 +91,18 @@ describe('Observation tests', () => {
         const code = await speciesDistributionCodeFactory(2);
         should().exist(code);
         expect(code.species_distribution_code_id).to.be.equals(2);
+    });
+
+    it('should fetch species agency code', async () => {
+        const code = await speciesAgencyCodeFactory(2);
+        should().exist(code);
+        expect(code.species_agency_code_id).to.be.equals(2);
+    });
+
+    it('should fetch species survey type codes', async () => {
+        const code = await surveyCodeTypeFactory(2);
+        should().exist(code);
+        expect(code.survey_type_code_id).to.be.equals(2);
     });
 });
 

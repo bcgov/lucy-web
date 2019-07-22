@@ -24,8 +24,22 @@ import { should, expect } from 'chai';
 import { SharedExpressApp } from '../../../initializers';
 import { adminToken } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction, testRequest, AuthType, HttpMethodType} from '../../../../test-helpers/testHelpers';
-import { ObservationCreateModel, ObservationController, Observation, ObservationSpeciesController } from '../../../../database/models';
-import { observationFactory, destroyObservation, jurisdictionCodeFactory, speciesFactory, observationSpeciesFactory } from '../../../../database/factory';
+import {
+    ObservationCreateModel,
+    ObservationController,
+    Observation, ObservationSpeciesController
+} from '../../../../database/models';
+import {
+    observationFactory,
+    destroyObservation,
+    jurisdictionCodeFactory,
+    speciesFactory,
+    observationSpeciesFactory,
+    speciesDensityCodeFactory,
+    speciesDistributionCodeFactory,
+    speciesAgencyCodeFactory,
+    surveyCodeTypeFactory
+} from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
     before(async () => {
@@ -50,6 +64,8 @@ describe('Test for observation routes', () => {
                 should().exist(data.speciesList);
                 should().exist(data.speciesDensityCodes);
                 should().exist(data.speciesDistributionCodes);
+                should().exist(data.speciesAgencyCodes);
+                should().exist(data.surveyTypeCodes);
             });
             // done();
         });
@@ -138,13 +154,23 @@ describe('Test for observation routes', () => {
         const obs = await observationFactory();
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
+        const density = await speciesDensityCodeFactory();
+        const distribution = await speciesDistributionCodeFactory();
+        const agency = await speciesAgencyCodeFactory();
+        const type = await surveyCodeTypeFactory();
         const create = {
             length: 6700.78,
             width: 900.00,
             accessDescription: 'Test description',
+            surveyorFirstName: 'Lao',
+            surveyorLastName: 'Ballabh',
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id,
-            observation: obs.observation_id
+            observation: obs.observation_id,
+            surveyType: type.survey_type_code_id,
+            speciesAgency: agency.species_agency_code_id,
+            distribution: distribution.species_distribution_code_id,
+            density: density.species_density_code_id
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
@@ -159,6 +185,10 @@ describe('Test for observation routes', () => {
                 should().exist(body.species);
                 should().exist(body.jurisdiction);
                 should().exist(body.observation);
+                should().exist(body.density);
+                should().exist(body.distribution);
+                should().exist(body.speciesAgency);
+                should().exist(body.surveyType);
                 expect(body.length).to.be.equal(create.length);
                 await ObservationSpeciesController.shared.removeById(body.observation_species_id);
             });

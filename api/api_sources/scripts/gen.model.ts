@@ -25,5 +25,8 @@ import * as schemas from '../sources/database/database-schema';
 import { modelClassCreator } from './schema.model.gen';
 (() => {
     // modelClassCreator(new schemas.SpeciesDistributionCodeSchema());
-    modelClassCreator(new schemas.SpeciesDensityCodeSchema());
+    // modelClassCreator(new schemas.SpeciesDensityCodeSchema());
+    // modelClassCreator(new schemas.SurveyTypeCodeSchema());
+    // modelClassCreator(new schemas.SpeciesAgencyCodeSchema());
+    modelClassCreator(new schemas.ObservationSpeciesSchema());
 })();
