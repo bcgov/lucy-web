@@ -23,8 +23,19 @@ import * as assert from 'assert';
 import { Router } from 'express';
 import { check } from 'express-validator';
 import { SecureRouteController, RouteHandler, MakeOptionalValidator, idValidator, UpdateRequest } from '../../core';
-import { ObservationSpeciesController, SpeciesController, JurisdictionCodeController, ObservationController, SpeciesAgencyCode, SpeciesAgencyCodeController, SpeciesDensityCode, SpeciesDensityCodeController, SpeciesDistributionCodeController, SurveyTypeCodeController } from '../../../database/models';
-import { ObservationSpeciesCreateModel, ObservationSpeciesUpdateModel, ObservationSpecies } from '../../../database/models';
+import { ObservationSpeciesController,
+    SpeciesController,
+    JurisdictionCodeController,
+    ObservationController,
+    SpeciesAgencyCodeController,
+    SpeciesDensityCodeController,
+    SpeciesDistributionCodeController,
+    SurveyTypeCodeController
+} from '../../../database/models';
+import { ObservationSpeciesCreateModel,
+    ObservationSpeciesUpdateModel,
+    ObservationSpecies 
+} from '../../../database/models';
 // import { DataController } from '../../../database/data.model.controller';
 
 const CreateValidator = (): any[] =>  {
@@ -90,7 +101,9 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
                 surveyType: req.validation.surveyType,
                 speciesAgency: req.validation.speciesAgency,
                 density: req.validation.density,
-                distribution: req.validation.distribution
+                distribution: req.validation.distribution,
+                surveyorFirstName: data.surveyorFirstName,
+                surveyorLastName: data.surveyorLastName
             };
             return [201, await this.dataController.createObservationOfSpecies(model, req.user)];
         });
@@ -111,7 +124,9 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
                 density: req.validation.density,
                 distribution: req.validation.distribution,
                 surveyType: req.validation.surveyType,
-                speciesAgency: req.validation.speciesAgency
+                speciesAgency: req.validation.speciesAgency,
+                surveyorFirstName: data.surveyorFirstName,
+                surveyorLastName: data.surveyorLastName
             };
             const observationSpecies: ObservationSpecies = this.validation<any>(req).id as ObservationSpecies;
             return [200, await this.dataController.updateObservationOfSpecies(observationSpecies, model, req.user)];
