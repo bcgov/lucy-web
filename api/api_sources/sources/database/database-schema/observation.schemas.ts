@@ -22,7 +22,7 @@
 import { ApplicationTable, defineColumn} from '../applicationSchemaInterface';
 import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
 import { getYAMLFilePath } from './schema-files';
-import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData, SpeciesDensityCodeCSVData } from '../pre.load';
+import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData, SpeciesDensityCodeCSVData, CodeCSVData } from '../pre.load';
 
 export class SpeciesSchema extends RecordTableSchema {
     private _dataSqlPath = 'SpeciesData.sql';
@@ -98,41 +98,37 @@ export class ObservationSpeciesSchema extends RecordTableSchema {
     }
 }
 
-export class SpeciesDistributionCodeSchema extends CodeTableSchema {
+export class ObservationCodeTable extends CodeTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
     }
-
+}
+export class SpeciesDistributionCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
         const csvData = new SpeciesDistributionCodeCSVData();
         return csvData.load();
     }
-
     entryString(input?: string, context?: string): string {
-        return `${this.table.columns.id}, ${this.table.columns.description}`;
-    }
-
-    dataSQLPath(context?: any): string {
-        return 'SpeciesDistributionCodeData.sql';
+        return `${this.table.columns.id},${this.table.columns.description}`;
     }
 }
-
-export class SpeciesDensityCodeSchema extends CodeTableSchema {
-    get schemaFilePath(): string {
-        return getYAMLFilePath('observation.codes.schema.yaml');
-    }
-
+export class SpeciesDensityCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
         const csvData = new SpeciesDensityCodeCSVData();
         return csvData.load();
     }
-
-    entryString(input?: string, context?: string): string {
-        return `${this.table.columns.code}, ${this.table.columns.description}`;
+}
+export class SurveyTypeCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SurveyTypeCode.csv');
+        return csvData.load();
     }
+}
 
-    dataSQLPath(context?: any): string {
-        return 'SpeciesDensityCodeData.sql';
+export class SpeciesAgencyCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SurveyAgencyCode.csv');
+        return csvData.load();
     }
 }
 // -----------------------------------------------------------------------------------------

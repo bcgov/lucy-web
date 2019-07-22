@@ -67,3 +67,10 @@ export function Create<Model, Controller extends DataController>(controller: Con
         return model;
     };
 }
+
+export function CodeFactory<Model, Controller extends DataController>(controller: Controller) {
+    return async (id?: number): Promise<Model> => {
+        const obj = id !== undefined ? await controller.findById(id || 1) : await controller.random();
+        return obj;
+    };
+}
