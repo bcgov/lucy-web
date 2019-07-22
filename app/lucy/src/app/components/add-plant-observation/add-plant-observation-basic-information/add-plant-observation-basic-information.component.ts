@@ -46,6 +46,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   get observationDate(): string | undefined {
     if (this.observationObject) {
+      // console.log(this.observationObject.date);
       return this.observationObject.date;
     }
     return undefined;
@@ -325,26 +326,4 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   private mapCenterChanged(event: MapPreviewPoint) {
 
   }
-
-  /**
-   * For testing
-   */
-  autofillForTesting() {
-    if (this.locationEntryModeLatLong) {
-      this.latChanged( `48.430562`);
-      this.longChanged(`-123.365831`);
-    } else {
-      this.eastingChanged(`472938`);
-      this.northingsChanged(`5364221`);
-      this.zoneChanged(`10`);
-    }
-
-    this.organizationChanged( {
-      name: this.organizations[1][this.dropdownService.displayedOrganizationField],
-      object: this.organizations[1],
-    });
-    this.observerLastNameChanged(`Gates`);
-    this.observerFirstNameChanged(`Bill`);
-  }
-
 }
