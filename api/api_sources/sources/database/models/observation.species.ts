@@ -35,10 +35,16 @@ import {
     SpeciesDensityCodeSchema,
     SpeciesDistributionCodeSchema,
     SurveyTypeCodeSchema,
-    SpeciesAgencyCodeSchema
+    SpeciesAgencyCodeSchema,
+    SoilTextureCodeSchema,
+    SurveyGeometryCodeSchema,
+    SpecificUseCodeSchema
      } from '../database-schema';
 import { SurveyTypeCode } from './surveyType.code';
 import { SpeciesAgencyCode } from './speciesAgency.code';
+import { SoilTextureCode } from './soilTexture.code';
+import { SurveyGeometryCode } from './surveyGeometry.code';
+import { SpecificUseCode } from './specificUse.code';
 
 export interface ObservationSpeciesCreateModel {
     width: number;
@@ -53,6 +59,9 @@ export interface ObservationSpeciesCreateModel {
     distribution: SpeciesDistributionCode;
     surveyType: SurveyTypeCode;
     speciesAgency: SpeciesAgencyCode;
+    soilTexture: SoilTextureCode;
+    surveyGeometry: SurveyGeometryCode;
+    specificUseCode: SpecificUseCode;
 }
 
 export interface ObservationSpeciesUpdateModel {
@@ -68,6 +77,9 @@ export interface ObservationSpeciesUpdateModel {
     distribution?: SpeciesDistributionCode;
     surveyType?: SurveyTypeCode;
     speciesAgency?: SpeciesAgencyCode;
+    soilTexture?: SoilTextureCode;
+    surveyGeometry?: SurveyGeometryCode;
+    specificUseCode?: SpecificUseCode;
 }
 @Entity({ name: ObservationSpeciesSchema.dbTable})
 export class ObservationSpecies extends Record implements ObservationSpeciesCreateModel {
@@ -151,5 +163,29 @@ export class ObservationSpecies extends Record implements ObservationSpeciesCrea
     })
     @ModelProperty({ type: PropertyType.object})
     observation: Observation;
+
+    @ManyToOne( type => SoilTextureCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSpeciesSchema.columns.soilTexture,
+        referencedColumnName: SoilTextureCodeSchema.columns.id
+    })
+	@ModelProperty({type: PropertyType.object})
+	soilTexture: SoilTextureCode;
+
+    @ManyToOne( type => SurveyGeometryCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSpeciesSchema.columns.surveyGeometry,
+        referencedColumnName: SurveyGeometryCodeSchema.columns.id
+    })
+	@ModelProperty({type: PropertyType.object})
+	surveyGeometry: SurveyGeometryCode;
+
+    @ManyToOne( type => SpecificUseCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSpeciesSchema.columns.specificUseCode,
+        referencedColumnName: SpecificUseCodeSchema.columns.id
+    })
+	@ModelProperty({type: PropertyType.object})
+	specificUseCode: SpecificUseCode;
 }
 // -------------------------------------------------------------

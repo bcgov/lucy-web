@@ -24,6 +24,9 @@ import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
 import { getYAMLFilePath } from './schema-files';
 import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData, SpeciesDensityCodeCSVData, CodeCSVData } from '../pre.load';
 
+/**
+ * @description DB Schema for Species
+ */
 export class SpeciesSchema extends RecordTableSchema {
     private _dataSqlPath = 'SpeciesData.sql';
     defineTable() {
@@ -62,6 +65,9 @@ export class SpeciesSchema extends RecordTableSchema {
     }
 }
 
+/**
+ * @description DB Schema for JurisdictionCode
+ */
 export class JurisdictionCodeSchema extends CodeTableSchema {
     private _dataSqlPath = 'JurisdictionCodeData.sql';
     get schemaFilePath(): string {
@@ -86,23 +92,36 @@ export class JurisdictionCodeSchema extends CodeTableSchema {
     }
 }
 
+/**
+ * @description Base DB Schema for all other observation schema
+ */
 export class ObservationSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
     }
 }
 
+/**
+ * @description Observation species Schema, this schema table will hold main observation data
+ */
 export class ObservationSpeciesSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
     }
 }
 
+/**
+ * @description Base DB Schema for all observation code tables
+ */
 export class ObservationCodeTable extends CodeTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
     }
 }
+
+/**
+ * @description DB Schema for SpeciesDistributionCodeSchema
+ */
 export class SpeciesDistributionCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
         const csvData = new SpeciesDistributionCodeCSVData();
@@ -112,12 +131,20 @@ export class SpeciesDistributionCodeSchema extends ObservationCodeTable {
         return `${this.table.columns.id},${this.table.columns.description}`;
     }
 }
+
+/**
+ * @description DB Schema for SpeciesDensityCodeSchema
+ */
 export class SpeciesDensityCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
         const csvData = new SpeciesDensityCodeCSVData();
         return csvData.load();
     }
 }
+
+/**
+ * @description DB Schema for SurveyTypeCodeSchema
+ */
 export class SurveyTypeCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
         const csvData = new CodeCSVData('SurveyTypeCode.csv');
@@ -125,9 +152,42 @@ export class SurveyTypeCodeSchema extends ObservationCodeTable {
     }
 }
 
+/**
+ * @description DB Schema for SpeciesAgencyCodeSchema
+ */
 export class SpeciesAgencyCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
         const csvData = new CodeCSVData('SurveyAgencyCode.csv');
+        return csvData.load();
+    }
+}
+
+/**
+ * @description DB Schema for SoilTextureCodeSchema
+ */
+export class SoilTextureCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SoilTextureCode.csv');
+        return csvData.load();
+    }
+}
+
+/**
+ * @description DB Schema for SurveyGeometryCodeSchema
+ */
+export class SurveyGeometryCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SurveyGeometryCode.csv');
+        return csvData.load();
+    }
+}
+
+/**
+ * @description DB Schema for SpecificUseCodeSchema
+ */
+export class SpecificUseCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SpecificUseCode.csv');
         return csvData.load();
     }
 }
