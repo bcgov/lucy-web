@@ -23,8 +23,9 @@ import * as assert from 'assert';
 import * as _ from 'underscore';
 import { Request, Router} from 'express';
 import { check } from 'express-validator';
-import { SecureRouteController, RouteHandler } from '../../core';
-import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel, Observation, ObservationUpdateModel} from '../../../database/models';
+import { WriterRouteController, RouteHandler } from '../../core';
+import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel, Observation, ObservationUpdateModel, SpeciesAgencyCodeController, SurveyTypeCodeController} from '../../../database/models';
+import { SpeciesDensityCodeController, SpeciesDistributionCodeController } from '../../../database/models';
 import { observationSpeciesRoute } from './observation.species.route';
 import { unWrap } from '../../../libs/utilities';
 
@@ -61,7 +62,7 @@ const UpdateValidator = (): any[] => {
     return _.map(CreateValidator(), checkVal => checkVal.optional());
 };
 
-export class ObservationRouteController extends SecureRouteController<ObservationController> {
+export class ObservationRouteController extends WriterRouteController<ObservationController> {
 
     static get shared(): ObservationRouteController {
         return this.sharedInstance<ObservationController>() as ObservationRouteController;
@@ -97,7 +98,12 @@ export class ObservationRouteController extends SecureRouteController<Observatio
     get indexCodes(): RouteHandler {
         return this.routeConfig<any>('indexCodes', async () => [200, {
             jurisdictionCodes : await JurisdictionCodeController.shared.all(),
-            speciesList: await SpeciesController.shared.all()}]);
+            speciesList: await SpeciesController.shared.all(),
+            speciesDensityCodes: await SpeciesDensityCodeController.shared.all(),
+            speciesDistributionCodes: await SpeciesDistributionCodeController.shared.all(),
+            speciesAgencyCodes: await SpeciesAgencyCodeController.shared.all(),
+            surveyTypeCodes: await SurveyTypeCodeController.shared.all()
+        }]);
     }
 
     /**

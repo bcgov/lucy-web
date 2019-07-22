@@ -22,9 +22,20 @@
 import * as assert from 'assert';
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { SecureRouteController, RouteHandler, MakeOptionalValidator } from '../../core';
-import { ObservationSpeciesController, SpeciesController, JurisdictionCodeController, ObservationController } from '../../../database/models';
-import { ObservationSpeciesCreateModel, ObservationSpeciesUpdateModel, ObservationSpecies } from '../../../database/models';
+import { SecureRouteController, RouteHandler, MakeOptionalValidator, idValidator, UpdateRequest } from '../../core';
+import { ObservationSpeciesController,
+    SpeciesController,
+    JurisdictionCodeController,
+    ObservationController,
+    SpeciesAgencyCodeController,
+    SpeciesDensityCodeController,
+    SpeciesDistributionCodeController,
+    SurveyTypeCodeController
+} from '../../../database/models';
+import { ObservationSpeciesCreateModel,
+    ObservationSpeciesUpdateModel,
+    ObservationSpecies 
+} from '../../../database/models';
 // import { DataController } from '../../../database/data.model.controller';
 
 const CreateValidator = (): any[] =>  {
@@ -32,6 +43,8 @@ const CreateValidator = (): any[] =>  {
         check('width').isNumeric().withMessage('width: should be number'),
         check('length').isNumeric().withMessage('length: should be number'),
         check('accessDescription').isString().withMessage('accessDescription: should be string'),
+        check('surveyorFirstName').isString().withMessage('surveyorFirstName: should be string'),
+        check('surveyorLastName').isString().withMessage('surveyorLastName: should be string'),
         check('species').isInt().custom(async (value: number, {req}) => {
             const species = await SpeciesController.shared.findById(value);
             assert(species, `species: No Species exists with id ${value}`);
@@ -46,6 +59,18 @@ const CreateValidator = (): any[] =>  {
             const obs = await ObservationController.shared.findById(value);
             assert(obs, `observation: No observation exists with id ${value}`);
             req.observation = obs;
+        }),
+        idValidator<SpeciesAgencyCodeController>('speciesAgency', SpeciesAgencyCodeController.shared, (data, req) => {
+            UpdateRequest(req, {speciesAgency: data});
+        }),
+        idValidator<SpeciesDensityCodeController>('density', SpeciesDensityCodeController.shared, (data, req) => {
+            UpdateRequest(req, {density: data});
+        }),
+        idValidator<SpeciesDistributionCodeController>('distribution', SpeciesDistributionCodeController.shared, (data, req) => {
+            UpdateRequest(req, {distribution: data});
+        }),
+        idValidator<SurveyTypeCodeController>('surveyType', SurveyTypeCodeController.shared, (data, req) => {
+            UpdateRequest(req, {surveyType: data});
         })
     ];
 };
@@ -72,7 +97,13 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
                 accessDescription: data.accessDescription,
                 jurisdiction: req.jurisdictionCode,
                 species: req.species,
-                observation: req.observation
+                observation: req.observation,
+                surveyType: req.validation.surveyType,
+                speciesAgency: req.validation.speciesAgency,
+                density: req.validation.density,
+                distribution: req.validation.distribution,
+                surveyorFirstName: data.surveyorFirstName,
+                surveyorLastName: data.surveyorLastName
             };
             return [201, await this.dataController.createObservationOfSpecies(model, req.user)];
         });
@@ -89,7 +120,13 @@ export class ObservationSpeciesRouteController extends SecureRouteController <Ob
                 accessDescription: data.accessDescription,
                 jurisdiction: req.jurisdictionCode,
                 species: req.species,
-                observation: req.observation
+                observation: req.observation,
+                density: req.validation.density,
+                distribution: req.validation.distribution,
+                surveyType: req.validation.surveyType,
+                speciesAgency: req.validation.speciesAgency,
+                surveyorFirstName: data.surveyorFirstName,
+                surveyorLastName: data.surveyorLastName
             };
             const observationSpecies: ObservationSpecies = this.validation<any>(req).id as ObservationSpecies;
             return [200, await this.dataController.updateObservationOfSpecies(observationSpecies, model, req.user)];

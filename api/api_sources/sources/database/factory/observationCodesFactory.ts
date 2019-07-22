@@ -24,11 +24,17 @@
  /**
   * Imports
   */
+import { CodeFactory } from './helper';
 import { JurisdictionCode, JurisdictionCodeController} from '../models';
 import { Species, SpeciesController} from '../models';
+import { SpeciesDensityCode, SpeciesDensityCodeController} from '../models';
+import { SpeciesDistributionCode, SpeciesDistributionCodeController} from '../models';
+import { SurveyTypeCode, SurveyTypeCodeController} from '../models';
+import { SpeciesAgencyCode, SpeciesAgencyCodeController } from '../models';
 
 /**
  * @description Factory for code
+ * @param number id
  * @param boolean noSave: Save on db flag
  */
 export const jurisdictionCodeFactory = async (id?: number, noSave?: boolean): Promise<JurisdictionCode> => {
@@ -60,5 +66,39 @@ export const speciesFactory = async (id?: number, noSave?: boolean): Promise<Spe
 export const destroySpecies = async (species: Species) => {
     await SpeciesController.shared.remove(species);
 };
+
+/**
+ * @description Factory for code
+ * @param number id
+ * @returns Promise<SpeciesDensityCode>
+ */
+export const speciesDensityCodeFactory = async (id?: number): Promise<SpeciesDensityCode> => {
+    const obj = id !== undefined ? await SpeciesDensityCodeController.shared.findById(id || 1) : await SpeciesDensityCodeController.shared.random();
+    return obj;
+};
+
+/**
+ * @description Factory for code
+ * @param number id
+ * @returns Promise<SpeciesDensityCode>
+ */
+export const speciesDistributionCodeFactory = async (id?: number): Promise<SpeciesDistributionCode> => {
+    const obj = id !== undefined ? await SpeciesDistributionCodeController.shared.findById(id || 1) : await SpeciesDistributionCodeController.shared.random();
+    return obj;
+};
+
+/**
+ * @description Factory for survey code type
+ * @param number id
+ * @returns Promise<SurveyTypeCode>
+ */
+export const surveyCodeTypeFactory = CodeFactory<SurveyTypeCode, SurveyTypeCodeController>(SurveyTypeCodeController.shared);
+
+/**
+ * @description Factory for Species agency code type
+ * @param number id
+ * @returns Promise<SpeciesAgencyCode>
+ */
+export const speciesAgencyCodeFactory = CodeFactory<SpeciesAgencyCode, SpeciesAgencyCodeController>(SpeciesAgencyCodeController.shared);
 // -------------------------------------------------------------------------------
 

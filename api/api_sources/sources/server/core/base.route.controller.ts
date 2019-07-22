@@ -74,6 +74,14 @@ export const UpdateRequest = (req: any, obj: object) => {
  */
 export const MakeOptionalValidator = (validators: (() => any[])) => _.map(validators(), checkVal => checkVal.optional());
 
+export function idValidator<Controller extends DataController>(fieldName: string, controller: Controller, handle: (data: any, req: any) => void) {
+    return check(fieldName).isInt().custom(async (value: number, {req}) => {
+        const data = await controller.findById(value);
+        assert(data, `${fieldName}: No such item exists with id: ${value}`);
+        await handle(data, req);
+    });
+}
+
 /**
  * @description Base express route controller. Provides
  * 1. Common functionality for all routes
@@ -261,6 +269,18 @@ export class BaseAdminRouteController<T extends DataController> extends SecureRo
 
         // Register role middleware
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin]));
+    }
+}
+
+/**
+ * @description Generic route controller to check User has write access or not
+ */
+export class WriterRouteController<T extends DataController> extends SecureRouteController<T> {
+    constructor() {
+        super();
+
+        // Register role middleware
+        this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]));
     }
 }
 // -----------------------------------------------------------------------------------------------------------

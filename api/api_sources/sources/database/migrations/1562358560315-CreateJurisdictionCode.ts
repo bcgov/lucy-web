@@ -43,6 +43,7 @@ export class CreateJurisdictionCode1562358560315 implements MigrationInterface {
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(this.schema.dropTable());
+        await queryRunner.query(`DROP TABLE IF EXISTS jurisdiction_code_table`);
     }
 
 }

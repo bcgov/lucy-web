@@ -102,7 +102,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         '422':
-          description: 'Validation error - no observation with id'
+          description: Validation error - no observation with id
           schema:
             type: object
             $ref: '#/definitions/Error'
@@ -118,7 +118,7 @@ paths:
           description: Unauthorized user
           schema:
             $ref: '#/definitions/Error'
-  /api/observation/:observationId:
+  '/api/observation/:observationId':
     get:
       summary: Get single observation
       parameters:
@@ -128,12 +128,12 @@ paths:
           type: number
       responses:
         '200':
-          description: 'Fetch observation with id'
+          description: Fetch observation with id
           schema:
             type: object
             $ref: '#/definitions/Observation'
         '422':
-          description: 'Validation error - no observation with id'
+          description: Validation error - no observation with id
           schema:
             type: object
             $ref: '#/definitions/Error'
@@ -169,7 +169,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         '422':
-          description: 'Validation error - no observation with id'
+          description: Validation error - no observation with id
           schema:
             type: object
             $ref: '#/definitions/Error'
@@ -403,8 +403,14 @@ definitions:
       - width
       - length
       - accessDescription
+      - surveyorFirstName
+      - surveyorLastName
       - species
       - jurisdiction
+      - density
+      - distribution
+      - surveyType
+      - speciesAgency
       - observation
       - updateAt
       - createdAt
@@ -417,12 +423,109 @@ definitions:
         type: number
       accessDescription:
         type: string
+      surveyorFirstName:
+        type: string
+      surveyorLastName:
+        type: string
       species:
         type: object
       jurisdiction:
         type: object
+      density:
+        type: object
+      distribution:
+        type: object
+      surveyType:
+        type: object
+      speciesAgency:
+        type: object
       observation:
         type: object
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpeciesDensityCode:
+    type: object
+    required:
+      - species_density_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_density_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpeciesDistributionCode:
+    type: object
+    required:
+      - species_distribution_code_id
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_distribution_code_id:
+        type: number
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpeciesAgencyCode:
+    type: object
+    required:
+      - species_agency_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_agency_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SurveyTypeCode:
+    type: object
+    required:
+      - survey_type_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      survey_type_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
       updateAt:
         type: string
       createdAt:
@@ -450,6 +553,10 @@ definitions:
     required:
       - jurisdictionCodes
       - speciesList
+      - speciesDensityCodes
+      - speciesDistributionCodes
+      - speciesAgencyCodes
+      - surveyTypeCodes
     properties:
       jurisdictionCodes:
         type: array
@@ -457,6 +564,18 @@ definitions:
       speciesList:
         type: array
         $ref: '#/definitions/Species'
+      speciesDensityCodes:
+        type: array
+        $ref: '#/definitions/SpeciesDensityCode'
+      speciesDistributionCodes:
+        type: array
+        $ref: '#/definitions/SpeciesDistributionCode'
+      speciesAgencyCodes:
+        type: array
+        $ref: '#/definitions/SpeciesAgencyCode'
+      surveyTypeCodes:
+        type: array
+        $ref: '#/definitions/SurveyTypeCode'
   ObservationCodesResp:
     required:
       - message
@@ -487,22 +606,39 @@ definitions:
       - width
       - length
       - accessDescription
+      - surveyorFirstName
+      - surveyorLastName
       - species
       - jurisdiction
+      - density
+      - distribution
+      - surveyType
+      - speciesAgency
       - observation
     properties:
+      observation_species_id:
+        type: number
       width:
         type: number
       length:
         type: number
       accessDescription:
         type: string
+      surveyorFirstName:
+        type: string
+      surveyorLastName:
+        type: string
       species:
         type: number
-        description: Species id
       jurisdiction:
         type: number
-        description: Jurisdiction code id
+      density:
+        type: number
+      distribution:
+        type: number
+      surveyType:
+        type: number
+      speciesAgency:
+        type: number
       observation:
         type: number
-        description: Parent observation

@@ -40,6 +40,11 @@ export interface Code {
     description: string;
 }
 
+export class CodeCSVData extends CSV<Code> {
+    constructor(inputName: string) {
+        super(getDataFilePath(inputName));
+    }
+}
 export class SpeciesCSVData extends CSV<SpeciesCSV> {
     constructor() {
         super(getDataFilePath('Code_Tables_Species.csv'));
@@ -49,6 +54,18 @@ export class SpeciesCSVData extends CSV<SpeciesCSV> {
 export class JurisdictionCodeCSVData extends CSV<Code> {
     constructor() {
         super(getDataFilePath('Jurisdiction_Code.csv'));
+    }
+}
+
+export class SpeciesDistributionCodeCSVData extends CSV<Code> {
+    constructor() {
+        super(getDataFilePath('SpeciesDistributionCode.csv'));
+    }
+}
+
+export class SpeciesDensityCodeCSVData extends CSV<Code> {
+    constructor() {
+        super(getDataFilePath('SpeciesDensityCode.csv'));
     }
 }
 

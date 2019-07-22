@@ -31,4 +31,8 @@ export * from './observation.codes';
 export * from './observation';
 export * from './observation.species';
 export * from '../data-controllers';
+export * from './speciesDensity.code';
+export * from './speciesDistribution.code';
+export * from './speciesAgency.code';
+export * from './surveyType.code';
 // ----------------------------------------------------------------------------------------------------------------
