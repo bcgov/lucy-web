@@ -24,7 +24,18 @@ import * as _ from 'underscore';
 import { Request, Router} from 'express';
 import { check } from 'express-validator';
 import { WriterRouteController, RouteHandler } from '../../core';
-import { ObservationController, JurisdictionCodeController, SpeciesController, ObservationCreateModel, Observation, ObservationUpdateModel, SpeciesAgencyCodeController, SurveyTypeCodeController} from '../../../database/models';
+import { ObservationController,
+    JurisdictionCodeController,
+    SpeciesController,
+    ObservationCreateModel,
+    Observation,
+    ObservationUpdateModel,
+    SpeciesAgencyCodeController,
+    SurveyTypeCodeController,
+    SurveyGeometryCodeController,
+    SpecificUseCodeController,
+    SoilTextureCodeController,
+} from '../../../database/models';
 import { SpeciesDensityCodeController, SpeciesDistributionCodeController } from '../../../database/models';
 import { observationSpeciesRoute } from './observation.species.route';
 import { unWrap } from '../../../libs/utilities';
@@ -102,7 +113,11 @@ export class ObservationRouteController extends WriterRouteController<Observatio
             speciesDensityCodes: await SpeciesDensityCodeController.shared.all(),
             speciesDistributionCodes: await SpeciesDistributionCodeController.shared.all(),
             speciesAgencyCodes: await SpeciesAgencyCodeController.shared.all(),
-            surveyTypeCodes: await SurveyTypeCodeController.shared.all()
+            surveyTypeCodes: await SurveyTypeCodeController.shared.all(),
+            soilTextureCodes: await SoilTextureCodeController.shared.all(),
+            surveyGeometryCodes: await SurveyGeometryCodeController.shared.all(),
+            specificUseCodes: await SpecificUseCodeController.shared.all()
+
         }]);
     }
 

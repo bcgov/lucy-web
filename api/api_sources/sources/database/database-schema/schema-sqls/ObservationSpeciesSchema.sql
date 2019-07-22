@@ -15,6 +15,9 @@ ALTER TABLE observation_species ADD COLUMN species_density_code_id INT NULL REFE
 ALTER TABLE observation_species ADD COLUMN species_distribution_code_id INT NULL REFERENCES species_distribution_code(species_distribution_code_id) ON DELETE SET NULL;
 ALTER TABLE observation_species ADD COLUMN survey_type_code_id INT NULL REFERENCES survey_type_code(survey_type_code_id) ON DELETE SET NULL;
 ALTER TABLE observation_species ADD COLUMN species_agency_code_id INT NULL REFERENCES species_agency_code(species_agency_code_id) ON DELETE SET NULL;
+ALTER TABLE observation_species ADD COLUMN soil_texture_code_id INT NULL REFERENCES soil_texture_code(soil_texture_code_id) ON DELETE SET NULL;
+ALTER TABLE observation_species ADD COLUMN survey_geometry_code_id INT NULL REFERENCES survey_geometry_code(survey_geometry_code_id) ON DELETE SET NULL;
+ALTER TABLE observation_species ADD COLUMN specific_use_code_id INT NULL REFERENCES specific_use_code(specific_use_code_id) ON DELETE SET NULL;
 
 
         
@@ -35,6 +38,9 @@ COMMENT ON COLUMN observation_species.species_density_code_id IS 'Foreign key re
 COMMENT ON COLUMN observation_species.species_distribution_code_id IS 'Foreign key reference to observation table';
 COMMENT ON COLUMN observation_species.survey_type_code_id IS 'Foreign key reference to survey type code table';
 COMMENT ON COLUMN observation_species.species_agency_code_id IS 'Foreign key reference to Species Agency code table';
+COMMENT ON COLUMN observation_species.soil_texture_code_id IS 'Foreign key reference to Soil Texture code table';
+COMMENT ON COLUMN observation_species.survey_geometry_code_id IS 'Foreign key reference to survey geometry code table';
+COMMENT ON COLUMN observation_species.specific_use_code_id IS 'Foreign key reference to Specific use code table';
 
 
         

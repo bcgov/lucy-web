@@ -115,6 +115,27 @@ schemas:
         foreignTable: species_agency_code
         refColumn: species_agency_code_id
         deleteCascade: false
+      soilTexture: 
+        name: 'soil_texture_code_id'
+        comment: Foreign key reference to Soil Texture code table 
+        definition: INT NULL
+        foreignTable: soil_texture_code
+        refColumn: soil_texture_code_id
+        deleteCascade: false
+      surveyGeometry:
+        name: 'survey_geometry_code_id'
+        comment: Foreign key reference to survey geometry code table 
+        definition: INT NULL
+        foreignTable: survey_geometry_code
+        refColumn: survey_geometry_code_id
+        deleteCascade: false
+      specificUseCode:
+        name: 'specific_use_code_id'
+        comment: Foreign key reference to Specific use code table 
+        definition: INT NULL
+        foreignTable: specific_use_code
+        refColumn: specific_use_code_id
+        deleteCascade: false
   # --
   # -- SpeciesDistributionCode
   SpeciesDistributionCodeSchema:
@@ -175,4 +196,49 @@ schemas:
         name: 'species_agency_code'
         comment: Agency code values for managing invasive species
         definition: VARCHAR(10) NOT NULL UNIQUE
+  # --
+  # -- SoilTextureCodeSchema
+  SoilTextureCodeSchema:
+    name: soil_texture_code
+    description: Code table for schema of soil texture codes
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'soil_texture_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'soil_texture_code'
+        comment: Soil texture code values in the system
+        definition: VARCHAR(1) NOT NULL UNIQUE
+  # --
+  # -- SurveyGeometryCodeSchema
+  SurveyGeometryCodeSchema:
+    name: survey_geometry_code
+    description: Code table for schema of survey geometry codes
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'survey_geometry_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'survey_geometry_code'
+        comment: Survey geometry code of the system
+        definition: VARCHAR(2) NOT NULL UNIQUE
+  # --
+  # -- SpecificUseCodeSchema
+  SpecificUseCodeSchema:
+    name: specific_use_code
+    description: Code table for schema of Specific use codes of the observation
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'specific_use_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'specific_use_code'
+        comment: Code values of specific use codes
+        definition: VARCHAR(2) NOT NULL UNIQUE
   # --

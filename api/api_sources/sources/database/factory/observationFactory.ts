@@ -27,7 +27,16 @@ import * as faker from 'faker';
 import { Observation, ObservationController, User, UserDataController} from '../models';
 import { ObservationSpecies, ObservationSpeciesController} from '../models';
 import { userFactory } from './userFactory';
-import { jurisdictionCodeFactory, speciesFactory, speciesDensityCodeFactory, speciesDistributionCodeFactory, speciesAgencyCodeFactory, surveyCodeTypeFactory} from './observationCodesFactory';
+import { jurisdictionCodeFactory,
+    speciesFactory,
+    speciesDensityCodeFactory,
+    speciesDistributionCodeFactory,
+    speciesAgencyCodeFactory,
+    surveyCodeTypeFactory,
+    soilTextureCodeFactory,
+    surveyGeometryCodeFactory,
+    specificUseCodeFactory
+} from './observationCodesFactory';
 import { Create, Destroy } from './helper';
 
 /**
@@ -74,6 +83,9 @@ export const observationSpeciesFactory = async (noSave?: boolean): Promise<Obser
         obsSpecies.distribution = await speciesDistributionCodeFactory();
         obsSpecies.speciesAgency = await speciesAgencyCodeFactory();
         obsSpecies.surveyType = await surveyCodeTypeFactory();
+        obsSpecies.soilTexture = await soilTextureCodeFactory();
+        obsSpecies.surveyGeometry = await surveyGeometryCodeFactory();
+        obsSpecies.specificUseCode = await specificUseCodeFactory();
         obsSpecies.surveyorFirstName = faker.name.firstName();
         obsSpecies.surveyorLastName = faker.name.lastName();
     });
