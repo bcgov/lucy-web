@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewChecked, Output, EventEmitter } from
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { FormMode, Observation, Organization } from 'src/app/models';
+import { FormMode, Observation, SpeciesAgencyCodes } from 'src/app/models';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
@@ -18,28 +18,47 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   private mapCenter: MapPreviewPoint;
   private markers: LatLong[] = [];
 
-  organizations: Organization[] = [];
+  agencies: DropdownObject[] = [];
 
+  // TODO: Refactor after observation object change
   get observerFirstName(): string {
     if (this.observationObject) {
+      const species = this.observationObject.speciesObservations[0];
+      if (species && species.surveyorFirstName) {
+        return species.surveyorFirstName;
+      }
       return this.observationObject.observerFirstName;
     }
     return ``;
   }
 
+  // TODO: Refactor after observation object change
   get observerLastName(): string {
     if (this.observationObject) {
+      const species = this.observationObject.speciesObservations[0];
+      if (species && species.surveyorLastName) {
+        return species.surveyorFirstName;
+      }
       return this.observationObject.observerLastName;
     }
     return ``;
   }
 
+  // TODO: Refactor after observation object change
   get organization(): DropdownObject | undefined  {
-    if (this.observationObject && this.observationObject.observerOrganization) {
-      return {
-        name: this.observationObject.observerOrganization[this.dropdownService.displayedOrganizationField],
-        object: this.observationObject.observerOrganization,
-      };
+    if (this.observationObject) {
+      const species = this.observationObject.speciesObservations[0];
+      if (species && species.speciesAgency) {
+        return {
+          name: species.speciesAgency[this.dropdownService.displayedAgencyField],
+          object: species.speciesAgency,
+        };
+      } else if (this.observationObject.observerOrganization) {
+        return {
+          name: this.observationObject.observerOrganization[this.dropdownService.displayedAgencyField],
+          object: this.observationObject.observerOrganization,
+        };
+      }
     }
     return undefined;
   }
@@ -135,8 +154,8 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       zoom: 4
     };
 
-    this.dropdownService.getOrganizations().then((result) => {
-      this.organizations = result;
+    this.dropdownService.getAgencies().then((result) => {
+      this.agencies = result;
     });
   }
 

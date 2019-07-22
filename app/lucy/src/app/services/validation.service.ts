@@ -79,7 +79,17 @@ export class ValidationService {
       return `Observation date is missing`;
     }
 
-    console.dir(observation.date);
+    if (!observation.observerFirstName) {
+      return `Observer's first name is missing`;
+    }
+
+    if (!observation.observerLastName) {
+      return `Observer's last name is missing`;
+    }
+
+    if (!observation.observerOrganization) {
+      return `Observer organization is missing`;
+    }
 
     if (observation.speciesObservations.length < 1) {
       return `You must add an invasive plant species`;
@@ -96,6 +106,30 @@ export class ValidationService {
 
       if (!species.species) {
         return `You must add a plant species for invasive plant species`;
+      }
+
+      if (!species.density) {
+        return `You must add density for invasive plant species`;
+      }
+
+      if (!species.distribution) {
+        return `You must add distribution for invasive plant species`;
+      }
+
+      if (!species.surveyType) {
+        return `You must add survey type for invasive plant species`;
+      }
+
+      if (!species.surveyGeometry) {
+        return `You must add survey geometry type for invasive plant species`;
+      }
+
+      if (!species.specificUseCode) {
+        return `You must add specific use code for invasive plant species`;
+      }
+
+      if (!species.soilTexture) {
+        return `You must add soil texture for invasive plant species`;
       }
     }
     return null;
