@@ -29,6 +29,9 @@ import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './user';
 
+/**
+ * @description Survey Geometry Code Data Model
+ */
 @Entity( { name: SurveyGeometryCodeSchema.dbTable} )
 export class SurveyGeometryCode extends ApplicationCode {
 

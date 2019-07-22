@@ -29,6 +29,9 @@ import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './user';
 
+/**
+ * @description Specific Use Code Model for Observation
+ */
 @Entity( { name: SpecificUseCodeSchema.dbTable} )
 export class SpecificUseCode extends ApplicationCode {
 
