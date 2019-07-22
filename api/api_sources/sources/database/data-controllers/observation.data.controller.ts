@@ -121,9 +121,15 @@ export class ObservationSpeciesController extends DataModelController<Observatio
         obj.length = data.length || obj.length;
         obj.width = data.width || obj.width;
         obj.accessDescription = data.accessDescription || obj.accessDescription;
+        obj.surveyorFirstName = data.surveyorFirstName || obj.surveyorFirstName;
+        obj.surveyorLastName = data.surveyorLastName || obj.surveyorLastName;
         obj.species = data.species || obj.species;
         obj.jurisdiction = data.jurisdiction || obj.jurisdiction;
         obj.observation = data.observation || obj.observation;
+        obj.speciesAgency = data.speciesAgency || obj.speciesAgency;
+        obj.distribution = data.distribution || obj.distribution;
+        obj.density = data.density || obj.density;
+        obj.surveyType = data.surveyType || obj.surveyType;
         obj.updatedBy = user;
         await this.saveInDB(obj);
         return obj;

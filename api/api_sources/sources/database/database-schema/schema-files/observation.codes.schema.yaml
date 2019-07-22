@@ -1,7 +1,7 @@
 version: '1.0'
 schemas: 
   JurisdictionCodeSchema:
-    name: jurisdiction_code_table
+    name: jurisdiction_code
     description: Jurisdiction code of observation area
     baseSchema: CodeTableSchema
     columns: 
@@ -14,7 +14,7 @@ schemas:
         comment: Unique code value for jurisdiction area
         definition: VARCHAR(10) NOT NULL UNIQUE
   # -- End JurisdictionCode
-  # -- Observation
+  # -- Observation - DEPRECATED 
   ObservationSchema:
     name: observation
     description: Observation table
@@ -30,13 +30,13 @@ schemas:
         definition: DATE NULL
       lat:
         name: 'observation_location_lat'
-        comment: 'Date of observation'
+        comment: 'Latitude of observation location'
         definition: NUMERIC(8, 6) NOT NULL
       long:
         name: 'observation_location_long'
-        comment: 'Date of observation'
+        comment: 'Longitude of observation location'
         definition: NUMERIC(9, 6) NOT NULL
-  # -- Observation Species schema
+  # -- Observation Species schema ** Observation
   ObservationSpeciesSchema:
     name: observation_species
     description: This table store observation data for particular species
@@ -58,6 +58,14 @@ schemas:
         name: 'access_description'
         comment: Note to specify how to access the location
         definition: VARCHAR(500) NULL
+      surveyorFirstName: 
+        name: 'surveyor_first_name'
+        comment: First name of the surveyor of the observation
+        definition: VARCHAR(100) NULL
+      surveyorLastName:
+        name: 'surveyor_last_name'
+        comment: Last name of the surveyor of the observation
+        definition: VARCHAR(100) NULL
       species:
         name: 'species_id'
         comment: Foreign key reference to species table 
@@ -69,7 +77,7 @@ schemas:
         name: 'jurisdiction_code_id'
         comment: Foreign key reference to Jurisdiction code table 
         definition: INT NULL
-        foreignTable: 'jurisdiction_code_table'
+        foreignTable: 'jurisdiction_code'
         refColumn: jurisdiction_code_id
         deleteCascade: true
       observation:
@@ -79,3 +87,92 @@ schemas:
         foreignTable: observation
         refColumn: observation_id
         deleteCascade: true
+      density:
+        name: 'species_density_code_id'
+        comment: Foreign key reference to species density code table 
+        definition: INT NULL
+        foreignTable: species_density_code
+        refColumn: species_density_code_id
+        deleteCascade: false
+      distribution:
+        name: 'species_distribution_code_id'
+        comment: Foreign key reference to observation table 
+        definition: INT NULL
+        foreignTable: species_distribution_code
+        refColumn: species_distribution_code_id
+        deleteCascade: false
+      surveyType:
+        name: 'survey_type_code_id'
+        comment: Foreign key reference to survey type code table 
+        definition: INT NULL
+        foreignTable: survey_type_code
+        refColumn: survey_type_code_id
+        deleteCascade: false
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+  # --
+  # -- SpeciesDistributionCode
+  SpeciesDistributionCodeSchema:
+    name: species_distribution_code
+    description: Distribution code table of species for an observation
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: species_distribution_code_id
+        comment: Identifier as code
+        definition: INT NOT NULL PRIMARY KEY
+      description:
+        name: description
+        comment: Description of distribution code
+        definition: VARCHAR(100) NOT NULL
+  # --
+  # -- SpeciesDensityCodeSchema --
+  SpeciesDensityCodeSchema:
+    name: species_density_code
+    description: Density enum code table for a species of observation
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'species_density_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: 'density_code'
+        comment: Density code values based on species present on location
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- Survey Type Codes
+  SurveyTypeCodeSchema:
+    name: survey_type_code
+    description: Code table for schema of survey types
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'survey_type_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'survey_type_code'
+        comment: Code value for survey types
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- SpeciesAgencyCodeSchema
+  SpeciesAgencyCodeSchema:
+    name: species_agency_code
+    description: Code table for schema of species agencies
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'species_agency_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'species_agency_code'
+        comment: Agency code values for managing invasive species
+        definition: VARCHAR(10) NOT NULL UNIQUE
+  # --
