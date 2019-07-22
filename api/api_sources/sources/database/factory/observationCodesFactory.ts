@@ -31,6 +31,9 @@ import { SpeciesDensityCode, SpeciesDensityCodeController} from '../models';
 import { SpeciesDistributionCode, SpeciesDistributionCodeController} from '../models';
 import { SurveyTypeCode, SurveyTypeCodeController} from '../models';
 import { SpeciesAgencyCode, SpeciesAgencyCodeController } from '../models';
+import { SoilTextureCode, SoilTextureCodeController } from '../models';
+import { SurveyGeometryCode, SurveyGeometryCodeController } from '../models';
+import { SpecificUseCode, SpecificUseCodeController } from '../models';
 
 /**
  * @description Factory for code
@@ -89,16 +92,37 @@ export const speciesDistributionCodeFactory = async (id?: number): Promise<Speci
 
 /**
  * @description Factory for survey code type
- * @param number id
+ * @param number? id optional
  * @returns Promise<SurveyTypeCode>
  */
 export const surveyCodeTypeFactory = CodeFactory<SurveyTypeCode, SurveyTypeCodeController>(SurveyTypeCodeController.shared);
 
 /**
  * @description Factory for Species agency code type
- * @param number id
+ * @param number? id optional
  * @returns Promise<SpeciesAgencyCode>
  */
 export const speciesAgencyCodeFactory = CodeFactory<SpeciesAgencyCode, SpeciesAgencyCodeController>(SpeciesAgencyCodeController.shared);
+
+/**
+ * @description Factory for Soil texture code type
+ * @param number? id optional
+ * @returns Promise<SoilTextureCode>
+ */
+export const soilTextureCodeFactory = CodeFactory<SoilTextureCode, SoilTextureCodeController>(SoilTextureCodeController.shared);
+
+/**
+ * @description Factory for Survey Geometry code type
+ * @param number? id optional
+ * @returns Promise<SurveyGeometryCode>
+ */
+export const surveyGeometryCodeFactory = CodeFactory<SurveyGeometryCode, SurveyGeometryCodeController>(SurveyGeometryCodeController.shared);
+
+/**
+ * @description Factory for Specific Use code type
+ * @param number? id optional
+ * @returns Promise<SpecificUseCode>
+ */
+export const specificUseCodeFactory = CodeFactory<SpecificUseCode, SpecificUseCodeController>(SpecificUseCodeController.shared);
 // -------------------------------------------------------------------------------
 
