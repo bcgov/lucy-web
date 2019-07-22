@@ -37,7 +37,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     if (this.observationObject) {
       const species = this.observationObject.speciesObservations[0];
       if (species && species.surveyorLastName) {
-        return species.surveyorFirstName;
+        return species.surveyorLastName;
       }
       return this.observationObject.observerLastName;
     }
