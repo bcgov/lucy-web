@@ -100,14 +100,4 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
       this.invasivePlantSpeciesChanged.emit(this.objects);
     }
   }
-
-  autofillForTesting() {
-    this.loadingService.add();
-    this.codeTableService.getInvasivePlantSpecies().then((plantSpecies) => {
-      this.codeTableService.getJuristictions().then((jurisdiction) => {
-        const species = this.addSpecies(undefined, plantSpecies[0], jurisdiction[0], 5, 5, `go left`);
-        this.loadingService.remove();
-      });
-    });
-  }
 }
