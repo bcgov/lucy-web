@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { FormMode } from 'src/app/models';
 
 @Component({
@@ -48,15 +48,22 @@ export class DatePickerComponent implements OnInit {
 
   ///// Date
   private _date: Date;
-  get date(): string {
-    return `${this._date.getFullYear()}-${this._date.getMonth()}-${this._date.getDay()}`;
-  }
+  // get date(): string {
+  //   return `${this._date.getFullYear()}-${this._date.getMonth()}-${this._date.getDay()}`;
+  // }
   // Set
   @Input() set date(date: string) {
     if (!date) {
       this._date = new Date();
     } else {
       this._date = new Date(date);
+      console.log(`Setting`);
+      console.dir(this._date);
+      console.dir(date);
+      const ngDate = new NgbDate(this._date.getUTCFullYear(), this._date.getUTCMonth() + 1, this._date.getUTCDay());
+      console.log(`to ng date:`);
+      console.dir(ngDate);
+      // this.ngDate = ngDate;
     }
   }
   ////////////////////
@@ -69,10 +76,9 @@ export class DatePickerComponent implements OnInit {
   }
 
   dateChanged(value: NgbDate) {
-    console.dir(value);
-    const newDate = new Date(`${value.year}-${value.month}-${value.day}`);
+    const newDate = new Date(`${value.year}-${value.month - 1}-${value.day}`);
     if (this._date !== newDate) {
-      this._date = new Date(`${value.year}-${value.month}-${value.day}`);
+      this._date = newDate;
       this.emitSelection();
     }
   }
