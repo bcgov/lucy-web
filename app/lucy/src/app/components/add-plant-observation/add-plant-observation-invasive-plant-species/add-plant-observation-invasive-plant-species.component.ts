@@ -56,15 +56,26 @@ export class AddPlantObservationInvasivePlantSpeciesComponent implements OnInit 
   ngOnInit() {
   }
 
+  // TODO: Refactor after observation object change
   addNewSpecies(): SpeciesObservations {
     return this.addSpecies(undefined, undefined, undefined, 0, 0, undefined);
   }
 
+  // TODO: Refactor after observation object change
   addSpecies(id: number, species: InvasivePlantSpecies, jurisdiction: Jurisdiction, width: number, length: number, accessDescription: string): SpeciesObservations {
     const newSpecies = {
       observationSpecies_Id: id ? id : this.getUniqueId(),
       species: species,
       jurisdiction: jurisdiction,
+      density: undefined,
+      distribution: undefined,
+      surveyType: undefined,
+      surveyGeometry: undefined,
+      specificUseCode: undefined,
+      soilTexture: undefined,
+      surveyorFirstName: undefined,
+      surveyorLastName: undefined,
+      speciesAgency: undefined,
       width: width,
       length: length,
       accessDescription: accessDescription,

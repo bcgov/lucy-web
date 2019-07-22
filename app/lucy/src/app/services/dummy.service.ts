@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LatLong } from '../components/map-preview/map-preview.component';
-import { Observation, InvasivePlantSpecies, Jurisdiction } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, SurveyTypeCodes, SoilTextureCodes, SurveyGeometryCodes, SpecificUseCodes, Observation } from '../models';
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 
@@ -15,9 +15,9 @@ export class DummyService {
    * Return a random jurisdiction
    */
   public async randomJurisdiction():  Promise<Jurisdiction | undefined> {
-    const jurisdiction = await this.codeTables.getJuristictions();
-    if (jurisdiction.length > 0) {
-      return jurisdiction[this.randomIntFromInterval(0, jurisdiction.length - 1)];
+    const codes = await this.codeTables.getJuristictions();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
     } else {
       return undefined;
     }
@@ -27,9 +27,80 @@ export class DummyService {
    * Return a random invasive plant species.
    */
   public async randomInvasivePlantSpecies(): Promise<InvasivePlantSpecies | undefined> {
-    const invasivePlantSpecies = await this.codeTables.getInvasivePlantSpecies();
-    if (invasivePlantSpecies.length > 0) {
-      return invasivePlantSpecies[this.randomIntFromInterval(0, invasivePlantSpecies.length - 1)];
+    const codes = await this.codeTables.getInvasivePlantSpecies();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+   /**
+   * Return a random density code.
+   */
+  public async randomSpeciesDensityCodes(): Promise<SpeciesDensityCodes | undefined> {
+    const codes = await this.codeTables.getDensityCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+   /**
+   * Return a random distribution code.
+   */
+  public async randomSpeciesDistributionCodes(): Promise<SpeciesDistributionCodes | undefined> {
+    const codes = await this.codeTables.getDistributionCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+
+  public async randomSpeciesAgencyCodes(): Promise<SpeciesAgencyCodes | undefined> {
+    const codes = await this.codeTables.getSpeciesAgencyCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomSurveyTypeCodes(): Promise<SurveyTypeCodes | undefined> {
+    const codes = await this.codeTables.getSurveyTypeCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+
+  public async randomSoilTextureCodes(): Promise<SoilTextureCodes | undefined> {
+    const codes = await this.codeTables.getSoilTextureCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomSurveyGeometryCodes(): Promise<SurveyGeometryCodes | undefined> {
+    const codes = await this.codeTables.getSurveyGeometryCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomSpecificUseCodes(): Promise<SpecificUseCodes | undefined> {
+    const codes = await this.codeTables.getSpecificUseCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
     } else {
       return undefined;
     }
@@ -59,6 +130,14 @@ export class DummyService {
   public async createDummyObservation(forObservations: Observation[]): Promise<Observation | undefined> {
     const invasivePlantSpecies = await this.randomInvasivePlantSpecies();
     const jurisdiction = await this.randomJurisdiction();
+    const agency = await this.randomSpeciesAgencyCodes();
+    const density = await this.randomSpeciesDensityCodes();
+    const distribution = await this.randomSpeciesDistributionCodes();
+    const surveyType = await this.randomSurveyTypeCodes();
+    const soilTexture = await this.randomSoilTextureCodes();
+    const geometry = await this.randomSurveyGeometryCodes();
+    const useCode = await this.randomSpecificUseCodes();
+
     if (!jurisdiction || ! invasivePlantSpecies) {
       return undefined;
     }
@@ -69,16 +148,24 @@ export class DummyService {
       date: this.randomDateString(),
       observerFirstName: faker.name.firstName(),
       observerLastName: faker.name.lastName(),
-      observerOrganization: {
-        name: faker.company.companyName()
-      },
+      observerOrganization: agency,
       speciesObservations: [{
         observationSpecies_Id: 1,
         species: invasivePlantSpecies,
         jurisdiction: jurisdiction,
+        density: density,
+        distribution: distribution,
+        surveyType: surveyType,
+        surveyGeometry: geometry,
+        specificUseCode: useCode,
+        soilTexture: soilTexture,
         width: this.randomIntFromInterval(4, 20),
         length: this.randomIntFromInterval(4, 20),
         accessDescription: faker.lorem.sentences(),
+
+        surveyorFirstName: faker.name.firstName(),
+        surveyorLastName: faker.name.lastName(),
+        speciesAgency: agency,
       }]
     };
     return observation;

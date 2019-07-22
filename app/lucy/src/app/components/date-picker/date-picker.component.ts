@@ -48,9 +48,9 @@ export class DatePickerComponent implements OnInit {
 
   ///// Date
   private _date: Date;
-  // get date(): string {
-  //   return `${this._date.getFullYear()}-${this._date.getMonth()}-${this._date.getDay()}`;
-  // }
+  get date(): string {
+    return `${this._date.getFullYear()}-${this._date.getMonth()}-${this._date.getDay()}`;
+  }
   // Set
   @Input() set date(date: string) {
     if (!date) {
@@ -60,9 +60,9 @@ export class DatePickerComponent implements OnInit {
       console.log(`Setting`);
       console.dir(this._date);
       console.dir(date);
-      const ngDate = new NgbDate(this._date.getUTCFullYear(), this._date.getUTCMonth() + 1, this._date.getUTCDay());
-      console.log(`to ng date:`);
-      console.dir(ngDate);
+      // const ngDate = new NgbDate(this._date.getUTCFullYear(), this._date.getUTCMonth() + 1, this._date.getUTCDay());
+      // console.log(`to ng date:`);
+      // console.dir(ngDate);
       // this.ngDate = ngDate;
     }
   }
