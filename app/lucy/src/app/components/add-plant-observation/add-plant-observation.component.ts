@@ -10,6 +10,7 @@ import { ObservationService } from 'src/app/services/observation.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
 import { LoadingService } from 'src/app/services/loading.service';
+import { DummyService } from 'src/app/services/dummy.service';
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -35,33 +36,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   private anim: any;
   private animationSpeed = 1;
   /////////////////
-
-  /**
-   * TODO: REMOVE - Its For testing
-   */
-  get testBtnName(): string {
-    switch (this.mode) {
-      case FormMode.Create: {
-        return `Switch To View Mode`;
-        break;
-      }
-      case FormMode.Edit: {
-        return `Switch To View Mode`;
-        break;
-      }
-      case FormMode.View: {
-        if (this.creating()) {
-          return `Switch To Create Mode`;
-        } else {
-          return `Switch To Edit Mode`;
-        }
-        break;
-      }
-      default:
-        return `How are you here?`;
-    }
-  }
-   /* ***** */
 
    /**
    * submit button title for different states
@@ -89,7 +63,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
    /* ***** */
 
-    /**
+  /**
    * Page title for different states
    */
   get pageTitle(): string {
@@ -136,6 +110,23 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
+  ///// States Baed on Routes
+  private get viewing() {
+    const current = this.router.current;
+    return (current === AppRoutes.ViewObservation);
+  }
+
+  private get creating() {
+    const current = this.router.current;
+    return (current === AppRoutes.AddObservation);
+  }
+
+  private get editing() {
+    const current = this.router.current;
+    return (current === AppRoutes.EditObservation);
+  }
+  ////////////////////
+
   get invasiveSpecies(): SpeciesObservations[] {
     if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
     return this.observationObject.speciesObservations;
@@ -153,7 +144,14 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService, private router: RouterService, private loadingService: LoadingService) {
+  constructor(
+    private zone: NgZone,
+    private validation: ValidationService,
+    private alert: AlertService,
+    private observationService: ObservationService,
+    private router: RouterService,
+    private loadingService: LoadingService,
+    private dummy: DummyService) {
     this.lottieConfig = {
       path: 'https://assets4.lottiefiles.com/datafiles/jEgAWaDrrm6qdJx/data.json',
       renderer: 'canvas',
@@ -192,18 +190,18 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   private initialize() {
 
-    if (this.viewing()) {
+    if (this.viewing) {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
       this.mode = FormMode.View;
       this.fetchObservation(this.idInParams());
 
-    } else if (this.editing()) {
+    } else if (this.editing) {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
       this.mode = FormMode.Edit;
 
-    } else if (this.creating()) {
+    } else if (this.creating) {
       this.initializeObjectIfDoesntExist();
       this.mode = FormMode.Create;
 
@@ -214,21 +212,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   private showErrorPage() {
     console.log('Throw error');
-  }
-
-  private viewing() {
-    const current = this.router.current;
-    return (current === AppRoutes.ViewObservation);
-  }
-
-  private creating() {
-    const current = this.router.current;
-    return (current === AppRoutes.AddObservation);
-  }
-
-  private editing() {
-    const current = this.router.current;
-    return (current === AppRoutes.EditObservation);
   }
 
   idInParams(): number | undefined {
@@ -331,5 +314,13 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     }
     this.inReviewMode = false;
     this.mode = FormMode.Create;
+  }
+
+  async generateObservationForTesting() {
+    this.loadingService.add();
+    const obj = await this.dummy.createDummyObservation([]);
+    console.dir(obj);
+    this.observationObject = obj;
+    this.loadingService.remove();
   }
 }

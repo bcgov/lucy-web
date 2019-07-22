@@ -12,12 +12,19 @@
       </div>
   </div>
   <!-- -------------------- -->
-  <div *ngIf="showMap" class="row map-box-partial" [ngClass]="showList ? 'map-box-partial' : 'map-box-full'">
+  <div class="row">
+      <div class="col-12">
+          <button class="btn" (click)="generateObservationForTesting()">Generate for testing</button>
+        </div>
+  </div>
+  <br/>
+  <div *ngIf="showMap" class="row map-box" [ngClass]="showList ? 'map-box-partial' : 'map-box-full'">
     <div class="col-12">
       <app-map-preview [markers]="markers">
       </app-map-preview>
     </div>
   </div>
+  <br/>
   <div *ngIf="showList" class="row">
     <table class="table table-hover">
       <thead class="thead, table-header">
@@ -43,7 +50,7 @@
             <i *ngIf="sortingByDate && sortAscending" class="material-icons">arrow_upward</i>
           </th>
           <th scope="col" (click)="sortBySurveyor()">
-            Surveyor
+           Observer
             <i *ngIf="sortingBySurveyor && !sortAscending" class="material-icons">arrow_downward</i>
             <i *ngIf="sortingBySurveyor && sortAscending" class="material-icons">arrow_upward</i>
           </th>
