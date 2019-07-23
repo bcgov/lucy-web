@@ -14,7 +14,7 @@ export class RolesService {
 
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
-  async getRoles(): Promise<Role[] | null> {
+  public async getRoles(): Promise<Role[] | null> {
     if (this.roles !== null) {
       return this.roles;
     }
@@ -31,7 +31,7 @@ export class RolesService {
     }
   }
 
-  async getDataEntryRole(): Promise<Role | null> {
+  public async getDataEntryRole(): Promise<Role | null> {
     const allRoles = await this.getRoles();
     return allRoles !== null ? allRoles.find(i => i.code === `DAE`) : null;
   }

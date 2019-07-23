@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, AfterViewChecked, EventEmitter } from
 import { FormMode, Jurisdiction, InvasivePlantSpecies, SpeciesObservations } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-add-plant-observation-invasive-plant-species-cell',
@@ -42,6 +43,66 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
     return {
       name: this.object.jurisdiction[this.dropdownService.displayedJuristictionsField],
       object: this.object.jurisdiction,
+    };
+  }
+
+  get selectedDensity(): DropdownObject | undefined {
+    if (!this.object || !this.object.density) {
+      return undefined;
+    }
+    return {
+      name: this.object.density[this.dropdownService.displayedDensityField],
+      object: this.object.density,
+    };
+  }
+
+  get selectedDistribution(): DropdownObject | undefined {
+    if (!this.object || !this.object.distribution) {
+      return undefined;
+    }
+    return {
+      name: this.object.distribution[this.dropdownService.displayedDistributionField],
+      object: this.object.distribution,
+    };
+  }
+ 
+  get selectedSurveyType(): DropdownObject | undefined {
+    if (!this.object || !this.object.surveyType) {
+      return undefined;
+    }
+    return {
+      name: this.object.surveyType[this.dropdownService.displayedSurveyTypeField],
+      object: this.object.surveyType,
+    };
+  }
+
+  get selectedSurveyGeometry(): DropdownObject | undefined {
+    if (!this.object || !this.object.surveyGeometry) {
+      return undefined;
+    }
+    return {
+      name: this.object.surveyGeometry[this.dropdownService.displayedSurveyGeometryField],
+      object: this.object.surveyGeometry,
+    };
+  }
+
+  get selectedSpecificUseCode(): DropdownObject | undefined {
+    if (!this.object || !this.object.specificUseCode) {
+      return undefined;
+    }
+    return {
+      name: this.object.specificUseCode[this.dropdownService.displayedSpecificUseCodeField],
+      object: this.object.specificUseCode,
+    };
+  }
+
+  get selectedSoilTexture(): DropdownObject | undefined {
+    if (!this.object || !this.object.soilTexture) {
+      return undefined;
+    }
+    return {
+      name: this.object.soilTexture[this.dropdownService.displayedSoilTextureField],
+      object: this.object.soilTexture,
     };
   }
 
@@ -93,7 +154,7 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   ////////////////////
 
   @Output() speciesCellInfoChanged = new EventEmitter<SpeciesObservations>();
-  constructor(private validation: ValidationService, private dropdownService: DropdownService) { }
+  constructor(private validation: ValidationService, private dropdownService: DropdownService, private loadingService: LoadingService) { }
 
   ngOnInit() {
     this.getDropdownData();
@@ -104,32 +165,46 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
 
   getDropdownData() {
+    this.loadingService.add();
     this.dropdownService.getInvasivePlantSpecies().then((result) => {
       this.invasivePlantSpecies = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getJuristictions().then((result) => {
       this.juristictions = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getSurveyModes().then((result) => {
       this.surveyModes = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getSoilTextureCodes().then((result) => {
       this.soilTextureCodes = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getSpecificUseCodes().then((result) => {
       this.specificUseCodes = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getDistributions().then((result) => {
       this.distributions = result;
+      this.loadingService.remove();
     });
 
+    this.loadingService.add();
     this.dropdownService.getDensities().then((result) => {
       this.densities = result;
+      this.loadingService.remove();
     });
   }
 
@@ -158,23 +233,38 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
 
   densityChanged(value: DropdownObject) {
-    console.log(value);
+    if (this.object && value.object) {
+      this.object.density = value.object;
+      this.notifyChangeEvent();
+    }
   }
 
   distributionChanged(value: DropdownObject) {
-    console.log(value);
+    if (this.object && value.object) {
+      this.object.distribution = value.object;
+      this.notifyChangeEvent();
+    }
   }
 
   surveyModeChanged(value: DropdownObject) {
-    console.log(value);
+    if (this.object && value.object) {
+      this.object.surveyType = value.object;
+      this.notifyChangeEvent();
+    }
   }
 
   soilTextureCodeChanged(value: DropdownObject) {
-    console.log(value);
+    if (this.object && value.object) {
+      this.object.soilTexture = value.object;
+      this.notifyChangeEvent();
+    }
   }
 
   specificUseCodeChanged(value: DropdownObject) {
-    console.log(value);
+    if (this.object && value.object) {
+      this.object.specificUseCode = value.object;
+      this.notifyChangeEvent();
+    }
   }
 
   plotDimentionWidthChanged(value: number) {

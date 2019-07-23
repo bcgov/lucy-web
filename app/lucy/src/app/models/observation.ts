@@ -5,12 +5,8 @@ export interface Observation {
     date: string;
     observerFirstName: string;
     observerLastName: string;
-    observerOrganization: Organization;
+    observerOrganization: SpeciesAgencyCodes;
     speciesObservations: SpeciesObservations[];
-}
-
-export interface Organization {
-    name: string;
 }
 export interface InvasivePlantSpecies {
     commonName: string;
@@ -35,7 +31,65 @@ export interface SpeciesObservations {
     observationSpecies_Id: number;
     species: InvasivePlantSpecies;
     jurisdiction: Jurisdiction;
-	width: number;
-	length: number;
-	accessDescription: string;
+    density: SpeciesDensityCodes;
+    distribution: SpeciesDistributionCodes;
+    surveyType: SurveyTypeCodes;
+    surveyGeometry: SurveyGeometryCodes;
+    specificUseCode: SpecificUseCodes;
+    soilTexture: SoilTextureCodes;
+    width: number;
+    length: number;
+    accessDescription: string;
+
+    surveyorFirstName: string;
+    surveyorLastName: string;
+    speciesAgency: SpeciesAgencyCodes;
+}
+
+export interface SpeciesDensityCodes {
+        species_density_code_id: number;
+        code: string;
+        description: string;
+        activeIndicator: boolean;
+}
+
+export interface SpeciesDistributionCodes {
+        description: string;
+        activeIndicator: boolean;
+        species_distribution_code_id: number;
+}
+
+export interface SpeciesAgencyCodes {
+    description: string;
+    activeIndicator: boolean;
+    species_agency_code_id: number;
+    code: string;
+}
+
+export interface SurveyTypeCodes {
+    description: string;
+    activeIndicator:  boolean;
+    survey_type_code_id: 1;
+    code: string;
+}
+
+export interface SoilTextureCodes {
+    description: string;
+    activeIndicator:  boolean;
+    soil_texture_code_id: number;
+    code: string;
+}
+
+export interface SurveyGeometryCodes {
+    description: string;
+    activeIndicator: boolean;
+    survey_geometry_code_id: number;
+    code: string;
+}
+
+export interface SpecificUseCodes {
+    description: string;
+    activeIndicator: boolean;
+    specific_use_code_id: number;
+    code: string;
 }

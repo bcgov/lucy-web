@@ -9,6 +9,8 @@ import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
+import { LoadingService } from 'src/app/services/loading.service';
+import { DummyService } from 'src/app/services/dummy.service';
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -16,38 +18,27 @@ import { AppRoutes } from 'src/app/constants';
   styleUrls: ['./add-plant-observation.component.css'],
 })
 
-@NgModule({schemas: [CUSTOM_ELEMENTS_SCHEMA]})
+@NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
-  /**
-   * TODO: REMOVE - Its For testing
-   */
-  get testBtnName(): string {
-    switch (this.mode) {
-      case FormMode.Create: {
-        return `Switch To View Mode`;
-        break;
-      }
-      case FormMode.Edit: {
-        return `Switch To View Mode`;
-        break;
-      }
-      case FormMode.View: {
-        if (this.creating()) {
-          return `Switch To Create Mode`;
-        } else {
-          return `Switch To Edit Mode`;
-        }
-        break;
-      }
-      default:
-        return `How are you here?`;
-    }
+  // State flags
+  private submitted = false;
+  private inReviewMode = false;
+  get readonly(): boolean {
+    return this.mode === FormMode.View;
   }
-   /* ***** */
+  /////////////////
+
+  // Lottie Animation
+  public lottieConfig: Object;
+  private anim: any;
+  private animationSpeed = 1;
+  /////////////////
 
    /**
-   * TODO: REMOVE - Its For testing
+   * submit button title for different states
    */
   get submitBtnName(): string {
     switch (this.mode) {
@@ -60,7 +51,36 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         break;
       }
       case FormMode.View: {
+        if (this.inReviewMode) {
+          return `Confirm Observation`;
+        }
         return ``;
+        break;
+      }
+      default:
+        return `How are you here?`;
+    }
+  }
+   /* ***** */
+
+  /**
+   * Page title for different states
+   */
+  get pageTitle(): string {
+    switch (this.mode) {
+      case FormMode.Create: {
+        return `Add Observation`;
+        break;
+      }
+      case FormMode.Edit: {
+        return `Edit Observation`;
+        break;
+      }
+      case FormMode.View: {
+        if (this.inReviewMode) {
+          return `Confirm Entries`;
+        }
+        return `View Observation`;
         break;
       }
       default:
@@ -90,9 +110,22 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  get readonly(): boolean {
-    return this.mode === FormMode.View;
+  ///// States Baed on Routes
+  private get viewing() {
+    const current = this.router.current;
+    return (current === AppRoutes.ViewObservation);
   }
+
+  private get creating() {
+    const current = this.router.current;
+    return (current === AppRoutes.AddObservation);
+  }
+
+  private get editing() {
+    const current = this.router.current;
+    return (current === AppRoutes.EditObservation);
+  }
+  ////////////////////
 
   get invasiveSpecies(): SpeciesObservations[] {
     if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
@@ -111,7 +144,42 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  constructor(private zone: NgZone, private validation: ValidationService, private alert: AlertService, private observationService: ObservationService, private router: RouterService) { }
+  constructor(
+    private zone: NgZone,
+    private validation: ValidationService,
+    private alert: AlertService,
+    private observationService: ObservationService,
+    private router: RouterService,
+    private loadingService: LoadingService,
+    private dummy: DummyService) {
+    this.lottieConfig = {
+      path: 'https://assets4.lottiefiles.com/datafiles/jEgAWaDrrm6qdJx/data.json',
+      renderer: 'canvas',
+      autoplay: true,
+      loop: false
+    };
+  }
+
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
 
   ngOnInit() {
     this.initialize();
@@ -122,20 +190,21 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   private initialize() {
 
-    if (this.viewing()) {
+    if (this.viewing) {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
       this.mode = FormMode.View;
       this.fetchObservation(this.idInParams());
 
-    } else if (this.editing()) {
+    } else if (this.editing) {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
       this.mode = FormMode.Edit;
 
-    } else if (this.creating()) {
+    } else if (this.creating) {
       this.initializeObjectIfDoesntExist();
       this.mode = FormMode.Create;
+
     } else {
       this.showErrorPage();
     }
@@ -143,21 +212,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   private showErrorPage() {
     console.log('Throw error');
-  }
-
-  private viewing() {
-    const current = this.router.current;
-    return (current === AppRoutes.ViewObservation);
-  }
-
-  private creating() {
-    const current = this.router.current;
-    return (current === AppRoutes.AddObservation);
-  }
-
-  private editing() {
-    const current = this.router.current;
-    return (current === AppRoutes.EditObservation);
   }
 
   idInParams(): number | undefined {
@@ -172,11 +226,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   async fetchObservation(id: number) {
-    console.log(`Fetching`);
+    this.loadingService.add();
     const object = await this.observationService.getWithId(id);
-    console.log(this.observationObject);
     this.observationObject = object;
-    console.log(this.observationObject);
+    this.loadingService.remove();
   }
 
   initializeObjectIfDoesntExist() {
@@ -219,22 +272,22 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   async submitAction() {
-    if (this.viewing && this.mode !== FormMode.Create) {
+    if (this.mode === FormMode.Edit) {
       this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
+      return;
     }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
       console.log(` ***** can submit *****`);
+      if (!this.inReviewMode) {
+        this.changeToReviewMode();
+        return;
+      }
+      this.loadingService.add();
       const success = await this.observationService.submitObservation(this.observationObject);
+      this.loadingService.remove();
       if (success) {
-        const eventEmitter = new EventEmitter<boolean>();
-        eventEmitter.subscribe(clicked => this.router.navigateTo(AppRoutes.Inventory));
-        const successMsgbtn: AlertModalButton = {
-          name: `Okay`,
-          canDismiss: true,
-          eventEmitter: eventEmitter,
-        };
-        this.alert.show(`Success`, `Submitted`, [successMsgbtn]);
+        this.submitted = true;
       } else {
         this.alert.show(`Error`, `Submission failed`, null);
       }
@@ -243,30 +296,31 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     }
   }
 
-   /**
-   * TODO: REMOVE - Its For testing
-   */
-  testBtnClicked() {
-    switch (this.mode) {
-      case FormMode.Create: {
-        this.mode = FormMode.View;
-        break;
-      }
-      case FormMode.Edit: {
-        this.mode = FormMode.View;
-        break;
-      }
-      case FormMode.View: {
-        if (this.creating()) {
-          this.mode = FormMode.Create;
-        } else {
-          this.mode = FormMode.Edit;
-        }
-        break;
-      }
-      default:
-        return `How are you here?`;
-    }
+  viewInventory() {
+    this.router.navigateTo(AppRoutes.Inventory);
   }
-   /* ***** */
+
+  changeToReviewMode() {
+    if (!this.creating) {
+      return;
+    }
+    this.inReviewMode = true;
+    this.mode = FormMode.View;
+  }
+
+  exitReviewMode() {
+    if (!this.creating) {
+      return;
+    }
+    this.inReviewMode = false;
+    this.mode = FormMode.Create;
+  }
+
+  async generateObservationForTesting() {
+    this.loadingService.add();
+    const obj = await this.dummy.createDummyObservation([]);
+    console.dir(obj);
+    this.observationObject = obj;
+    this.loadingService.remove();
+  }
 }
