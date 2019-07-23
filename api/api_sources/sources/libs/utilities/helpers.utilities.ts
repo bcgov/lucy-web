@@ -21,6 +21,7 @@
  * Imports
  */
 import * as fs from 'fs';
+import * as _ from 'underscore';
 import * as yml from 'js-yaml';
 
 /**
@@ -77,6 +78,13 @@ export const saveYaml = (data: any, savePath: string, options?: yml.DumpOptions)
         flag: 'w',
         encoding: 'utf8'
     });
+};
+
+export const arrayToString = (array: any[]) => {
+    let result = '';
+    _.each(array, (v: any) => (result = result + `${v},`));
+    result = result.replace(/.$/, '');
+    return result;
 };
 
 // -------------------------------
