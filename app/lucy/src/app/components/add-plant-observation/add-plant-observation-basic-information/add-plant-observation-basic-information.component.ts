@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewChecked, Output, EventEmitter } from
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { FormMode, Observation, Organization } from 'src/app/models';
+import { FormMode, Observation, SpeciesAgencyCodes } from 'src/app/models';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,40 +12,60 @@ import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./add-plant-observation-basic-information.component.css']
 })
 export class AddPlantObservationBasicInformationComponent implements OnInit, AfterViewChecked {
+  locationEntryModeLatLong = true;
 
-  locationEntryModeLatLong = false;
-
+  // Map helpers
   private mapCenter: MapPreviewPoint;
   private markers: LatLong[] = [];
 
-  organizations: Organization[] = [];
+  agencies: DropdownObject[] = [];
 
+  // TODO: Refactor after observation object change
   get observerFirstName(): string {
     if (this.observationObject) {
+      const species = this.observationObject.speciesObservations[0];
+      if (species && species.surveyorFirstName) {
+        return species.surveyorFirstName;
+      }
       return this.observationObject.observerFirstName;
     }
     return ``;
   }
 
+  // TODO: Refactor after observation object change
   get observerLastName(): string {
     if (this.observationObject) {
+      const species = this.observationObject.speciesObservations[0];
+      if (species && species.surveyorLastName) {
+        return species.surveyorLastName;
+      }
       return this.observationObject.observerLastName;
     }
     return ``;
   }
 
+  // TODO: Refactor after observation object change
   get organization(): DropdownObject | undefined  {
-    if (this.observationObject && this.observationObject.observerOrganization) {
-      return {
-        name: this.observationObject.observerOrganization[this.dropdownService.displayedOrganizationField],
-        object: this.observationObject.observerOrganization,
-      };
+    if (this.observationObject) {
+      const species = this.observationObject.speciesObservations[0];
+      if (species && species.speciesAgency) {
+        return {
+          name: species.speciesAgency[this.dropdownService.displayedAgencyField],
+          object: species.speciesAgency,
+        };
+      } else if (this.observationObject.observerOrganization) {
+        return {
+          name: this.observationObject.observerOrganization[this.dropdownService.displayedAgencyField],
+          object: this.observationObject.observerOrganization,
+        };
+      }
     }
     return undefined;
   }
 
   get observationDate(): string | undefined {
     if (this.observationObject) {
+      // console.log(this.observationObject.date);
       return this.observationObject.date;
     }
     return undefined;
@@ -59,7 +79,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   // * Lat Long
   get lat(): string {
-    if (this.observationObject.lat) {
+    if (this.observationObject && this.observationObject.lat) {
       return String(this.observationObject.lat);
     } else {
       return ``;
@@ -67,7 +87,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   get long(): string {
-    if (this.observationObject.long) {
+    if (this.observationObject && this.observationObject.long) {
       return String(this.observationObject.long);
     } else {
       return ``;
@@ -134,8 +154,8 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       zoom: 4
     };
 
-    this.dropdownService.getOrganizations().then((result) => {
-      this.organizations = result;
+    this.dropdownService.getAgencies().then((result) => {
+      this.agencies = result;
     });
   }
 
@@ -260,6 +280,11 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
    * Validate, convert to Lat/Long, store and show location on map
    */
   utmValuesChanged() {
+    // If observation is being viewed, dont convert
+    if (this.mode === FormMode.View) {
+      return;
+    }
+
     // If its in lat long entry mode, dont run this function.
     if (this.locationEntryModeLatLong || !this.observationObject) {
       return;
@@ -320,26 +345,4 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   private mapCenterChanged(event: MapPreviewPoint) {
 
   }
-
-  /**
-   * For testing
-   */
-  autofillForTesting() {
-    if (this.locationEntryModeLatLong) {
-      this.latChanged( `48.430562`);
-      this.longChanged(`-123.365831`);
-    } else {
-      this.eastingChanged(`472938`);
-      this.northingsChanged(`5364221`);
-      this.zoneChanged(`10`);
-    }
-
-    this.organizationChanged( {
-      name: this.organizations[1][this.dropdownService.displayedOrganizationField],
-      object: this.organizations[1],
-    });
-    this.observerLastNameChanged(`Gates`);
-    this.observerFirstNameChanged(`Bill`);
-  }
-
 }

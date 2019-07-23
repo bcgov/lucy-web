@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SsoService } from '../services/sso.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
@@ -8,7 +8,7 @@ import * as bootstrap from 'bootstrap';
 import * as $AB from 'jquery';
 import { AlertModel, AlertService } from '../services/alert.service';
 import { Subscription } from 'rxjs';
-
+import { LoadingService } from '../services/loading.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -36,7 +36,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private alertsSubscription: Subscription;
   ////////
 
-  constructor(private routerService: RouterService, private ssoService: SsoService, private messageService: MessageService, private alertService: AlertService) {
+  // Lottie Animation
+  public lottieConfig: Object;
+  private anim: any;
+  private animationSpeed = 1;
+  private showLoading = false;
+  private loadingSubscription: Subscription;
+  /////////////////
+
+  constructor(private routerService: RouterService, private ssoService: SsoService, private messageService: MessageService, private alertService: AlertService, private loadingService: LoadingService, private cdr: ChangeDetectorRef) {
+    this.setupLoadingIcon();
     this.subscribeToAlertService();
   }
 
@@ -45,13 +54,61 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.unSubscribeFromAlertService();
+    this.unSubscribeFromLoadingService();
   }
 
   ngAfterViewInit() {
+    this.subscribeToLoadingService();
     this.reRouteIfNeeded();
     this.testAlerts();
   }
 
+  /******** Loading animation ********/
+  setupLoadingIcon() {
+    this.lottieConfig = {
+      path: 'https://assets3.lottiefiles.com/datafiles/fPx4vaZrul2Fvg9/data.json',
+      // path: 'src/assets/loading.json',
+      renderer: 'canvas',
+      autoplay: true,
+      loop: true
+    };
+  }
+
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stopLoadingAnimation() {
+    this.anim.stop();
+  }
+
+  playLoadingAnimation() {
+    this.anim.play();
+  }
+
+  pauseLoadingAnimation() {
+    this.anim.pause();
+  }
+
+  setSpeedOfLoadingAnimation(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
+
+  private subscribeToLoadingService() {
+    this.loadingSubscription = this.loadingService.getObservable().subscribe(show => {
+      this.showLoading = show;
+      this.cdr.detectChanges();
+    });
+  }
+
+  private unSubscribeFromLoadingService() {
+    this.loadingSubscription.unsubscribe();
+  }
+
+  /******** End Loading animation ********/
+
+  /******** Alerts ********/
   private subscribeToAlertService() {
     this.alertsSubscription = this.alertService.getObservable().subscribe(message => {
       console.log(`GOT A MESSAGE`);
@@ -67,13 +124,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private unSubscribeFromAlertService() {
     this.alertsSubscription.unsubscribe();
   }
+  /******** End Alerts ********/
 
-  private reRouteIfNeeded() {
-    this.checkAuthStatus().then((isAuthenticated) => {
-      if (isAuthenticated && (this.routerService.current === AppRoutes.Root) || this.routerService.current === undefined) {
-        this.routerService.navigateTo(AppRoutes.Profile);
-      }
-    });
+  /******** Auth and Routing ********/
+  private async reRouteIfNeeded() {
+    this.loadingService.add();
+    const isAuthenticated =  await this.checkAuthStatus();
+    if (isAuthenticated && (this.routerService.current === AppRoutes.Root) || this.routerService.current === undefined) {
+      this.routerService.navigateTo(AppRoutes.Profile);
+    }
+    this.loadingService.remove();
   }
 
   private async checkAuthStatus(): Promise<boolean> {
@@ -88,7 +148,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return isAuthenticated;
   }
+  /******** End Auth and Routing ********/
 
+  /******** Notifications ********/
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
       /// For testing
@@ -111,17 +173,18 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  userAccessUpdatedModalEmitted(event: boolean) {
+    console.log(`Messages was respoded to, re-fetching`);
+    this.fetchMessages();
+  }
+  /******** End Notifications ********/
+
   /**
    * Create a delay
    * @param ms milliseconds
    */
   delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  userAccessUpdatedModalEmitted(event: boolean) {
-    console.log(`Messages was respoded to, re-fetching`);
-    this.fetchMessages();
   }
 
   private testAlerts() {

@@ -99,9 +99,13 @@ h6 {
   margin-top: 8px;
 }
 
-
 .btn-test {
   color: rgba(83, 48, 92, 0.493) !important;
   background-color: #ffffff !important;
   border: 1px solid rgba(83, 48, 92, 0.493) !important;
+}
+
+.box-shadow {
+  background: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }

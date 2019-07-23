@@ -6,6 +6,8 @@ import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
 import { LatLong } from '../map-preview/map-preview.component';
 import { delay } from 'q';
+import { LoadingService } from 'src/app/services/loading.service';
+import { DummyService } from 'src/app/services/dummy.service';
 
 @Component({
   selector: 'app-inventory',
@@ -31,18 +33,24 @@ export class InventoryComponent implements OnInit {
   showList = true;
   /************ End of Flags ************/
 
-  constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService) { }
+  constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService, private loadingService: LoadingService, private dummy: DummyService) { }
 
   ngOnInit() {
-    this.createDummys();
+    // this.createDummys();
     this.fetchObservations();
   }
 
   private async fetchObservations() {
+    this.loadingService.add();
     const observations = await this.observationService.getAll();
     this.observations = observations;
+    this.setMapMarkers();
+    this.loadingService.remove();
+  }
+
+  private setMapMarkers() {
     this.markers = [];
-    for (const object of observations) {
+    for (const object of this.observations) {
       this.markers.push( {
         latitude: object.lat,
         longitude: object.long
@@ -237,49 +245,16 @@ export class InventoryComponent implements OnInit {
   }
 
   /************ Dummy Data ************/
-  createDummys() {
+  async createDummys() {
+    this.loadingService.add();
     this.observations = [];
-    this.codeTables.getInvasivePlantSpecies().then((invasivePlantSpecies) => {
-      this.codeTables.getJuristictions().then((juristictions) => {
-        this.observations.push({
-          observation_id: this.getUniqueId(),
-          lat: 1,
-          long: 1,
-          date: `2019-05-30`,
-          observerFirstName: `Jake`,
-          observerLastName: `Lake`,
-          observerOrganization: { name: `freshworks` },
-          speciesObservations: [{
-            observationSpecies_Id: 1,
-            species: invasivePlantSpecies[0],
-            jurisdiction: juristictions[0],
-            width: 1,
-            length: 2,
-            accessDescription: 'go right',
-          }]
-        },
-        {
-          observation_id: this.getUniqueId(),
-          lat: 1,
-          long: 1,
-          date: `2019-05-30`,
-          observerFirstName: `Mike`,
-          observerLastName: `Ike`,
-          observerOrganization: { name: `Freshworks` },
-          speciesObservations: [{
-            observationSpecies_Id: 1,
-            species: invasivePlantSpecies[0],
-            jurisdiction: juristictions[0],
-            width: 1,
-            length: 2,
-            accessDescription: 'go right',
-          }]
-        }
-        );
-      });
-    });
+    const random = await this.dummy.createDummyObservations(40);
+    this.observations = random;
+    this.setMapMarkers();
+    this.loadingService.remove();
   }
-  /************ End of Data ************/
+
+  /************ End of Dummy Data ************/
 
   private getUniqueId(): number {
     if (this.observations.length < 1) {
@@ -292,6 +267,10 @@ export class InventoryComponent implements OnInit {
 
     const sortedUsedIds = usedIds.sort((n1, n2) => n1 - n2);
     return sortedUsedIds.pop() + 1;
+  }
+
+  generateObservationForTesting() {
+    this.createDummys();
   }
 
 }

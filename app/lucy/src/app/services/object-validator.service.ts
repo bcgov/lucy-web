@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies, Observation} from '../models';
+import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, SurveyTypeCodes, SoilTextureCodes, SurveyGeometryCodes, SpecificUseCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 
@@ -55,6 +55,73 @@ export class ObjectValidatorService {
     return (<InvasivePlantSpecies>species.species) !== undefined;
   }
 
+  /**
+   * Check if object is SpeciesDensityCode
+   * @param density object
+   */
+  public isSpeciesDensityCodeObject(density: any): density is SpeciesDensityCodes {
+    if (density === undefined || density === null) {return false; }
+    return (<SpeciesDensityCodes>density.code) !== undefined;
+  }
+
+  /**
+   * Check if object is speciesAgencyCode
+   * @param distribution object
+   */
+  public isSpeciesAgencyCodeObject(agency: any): agency is SpeciesAgencyCodes {
+    if (agency === undefined || agency === null) {return false; }
+    return (<SpeciesAgencyCodes>agency.description) !== undefined;
+  }
+
+  /**
+   * Check if object is SpeciesDistributionCode
+   * @param distribution object
+   */
+  public isSpeciesDistributionCodeObject(distribution: any): distribution is SpeciesDistributionCodes {
+    if (distribution === undefined || distribution === null) {return false; }
+    return (<SpeciesDensityCodes>distribution.description) !== undefined;
+  }
+
+  /**
+   * Check if object is surveyTypeCodes
+   * @param distribution object
+   */
+  public isSurveyTypeCodesObject(surveyType: any): surveyType is SurveyTypeCodes {
+    if (surveyType === undefined || surveyType === null) {return false; }
+    return (<SurveyTypeCodes>surveyType.description) !== undefined;
+  }
+
+  /**
+   * Check if object is soilTextureCodes
+   * @param distribution object
+   */
+  public isSoilTextureCodesObject(soilTexture: any): soilTexture is SoilTextureCodes {
+    if (soilTexture === undefined || soilTexture === null) {return false; }
+    return (<SoilTextureCodes>soilTexture.description) !== undefined;
+  }
+
+  /**
+   * Check if object is surveyGeometryCodes
+   * @param distribution object
+   */
+  public isSurveyGeometryCodesObject(surveyGeometry: any): surveyGeometry is SurveyGeometryCodes {
+    if (surveyGeometry === undefined || surveyGeometry === null) {return false; }
+    return (<SurveyGeometryCodes>surveyGeometry.description) !== undefined;
+  }
+
+  /**
+   * Check if object is specificUseCodes
+   * @param distribution object
+   */
+  public isSpecificUseCodesObject(specificUseCodes: any): specificUseCodes is SpecificUseCodes {
+    if (specificUseCodes === undefined || specificUseCodes === null) {return false; }
+    return (<SpecificUseCodes>specificUseCodes.description) !== undefined;
+  }
+
+  /**
+   * Check if object is an observation
+   * @param observation object
+   */
   public isObservationObject(observation: any): observation is Observation {
     if (observation === undefined || observation === null) {return false; }
     return (<Observation>observation.date) !== undefined;

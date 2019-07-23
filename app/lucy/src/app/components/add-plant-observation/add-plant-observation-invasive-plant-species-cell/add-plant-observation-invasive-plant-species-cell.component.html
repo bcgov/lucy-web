@@ -28,6 +28,7 @@
           [mode]="mode"
           [items]="densities"
           [fieldHeader]="'Density'"
+          [selectedItem]="selectedDensity"
           (selectionChanged)='densityChanged($event)'>
         </app-dropdown>
         </div>
@@ -36,6 +37,7 @@
           [mode]="mode"
           [items]="distributions"
           [fieldHeader]="'Distribution'"
+          [selectedItem]="selectedDistribution"
           (selectionChanged)='distributionChanged($event)'>
         </app-dropdown>
         </div>
@@ -79,6 +81,7 @@
           [mode]="mode" 
           [items]="surveyModes" 
           [fieldHeader]="'Survey Mode'"
+          [selectedItem]="selectedSurveyType"
           (selectionChanged)='surveyModeChanged($event)'>
         </app-dropdown>
         </div>
@@ -87,6 +90,7 @@
           [mode]="mode" 
           [items]="soilTextureCodes" 
           [fieldHeader]="'Soil Texture Code'"
+          [selectedItem]="selectedSoilTexture"
           (selectionChanged)='soilTextureCodeChanged($event)'>
         </app-dropdown>
         </div>
@@ -95,6 +99,7 @@
           [mode]="mode" 
           [items]="specificUseCodes" 
           [fieldHeader]="'Specific Use Code'"
+          [selectedItem]="selectedSpecificUseCode"
           (selectionChanged)='specificUseCodeChanged($event)'>
         </app-dropdown>
         </div>

@@ -65,28 +65,27 @@ export class AdminService {
       return {
         success: true,
         response: response.response
-      }
+      };
     } else {
       return {
         success: false,
         response: null
-      }
+      };
     }
   }
 
   async changeUserRole(user: User, accessCode: Role): Promise<UserChangeResult> {
     const body = {
       'roles': [accessCode.role_code_id],
-    }
+    };
     return this.changeUser(user, body);
   }
 
   async changeUserAccountStatus(user: User, status: number): Promise<UserChangeResult> {
     const body = {
       'accountStatus': status,
-    }
+    };
     return this.changeUser(user, body);
   }
 
-  
 }
