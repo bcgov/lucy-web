@@ -18,6 +18,8 @@ import { InViewportModule } from 'ng-in-viewport';
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
 
+import { MomentPipe } from './pipes/MomentPipe';
+
 // Lottie
 import { LottieAnimationViewModule } from 'ng-lottie';
 
@@ -83,7 +85,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     FieldComponent,
     SideNavComponent,
     InventoryComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    MomentPipe
   ],
   imports: [
     BrowserModule,
