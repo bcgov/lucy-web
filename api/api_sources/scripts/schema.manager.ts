@@ -1,0 +1,183 @@
+/*
+ * Copyright © 2019 Province of British Columbia
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * **
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * **
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * File: schema.manager.ts
+ * Project: lucy
+ * File Created: Monday, 22nd July 2019 2:18:25 pm
+ * Author: pushan
+ * -----
+ * Last Modified: Monday, 22nd July 2019 3:50:03 pm
+ * Modified By: pushan
+ * -----
+ */
+import * as _ from 'underscore';
+import * as minimist from 'minimist';
+import * as schema from '../sources/database/database-schema';
+import { arrayToString } from '../sources/libs/utilities';
+import { modelClassCreator } from './schema.model.gen';
+
+
+/**
+ * @description Script options
+ */
+interface OptionInfo {
+    name: string;
+    alias: string[];
+    expected: string[];
+    required: boolean;
+    description: string;
+}
+
+/**
+ * @description Print Option usage
+ * @param OptionInfo option
+ * @param string value Value entered in options
+ */
+const usage = (option: OptionInfo, value?: string) => {
+    let usageString = `Usage: option: ${option.name}\n ** Description: ${option.description}`;
+    usageString = usageString + `\n ** expected values: [${arrayToString(option.expected)}]`;
+    if (value) {
+        usageString = usageString + `\n ** WRONG INPUT = ${value}`;
+    }
+    usageString = usageString + `\n ** alias: [${arrayToString(option.alias)}]`;
+    usageString = usageString + `\n ** example: --${option.name}=${option.expected[0] || null}`;
+    console.log(usageString);
+};
+
+
+const optionCheck = async (options: any, option: OptionInfo, handler: (value: string) => void) => {
+    const allNames = option.alias.concat(option.name);
+    const check = Object.keys(options).filter(k => allNames.includes(k));
+    let success = false;
+    if (check) {
+        let value = options[option.name];
+        if (!value) {
+            _.each(option.alias, (alias) => (value = options[alias]));
+        }
+        if (value) {
+            if (option.expected.length > 0) {
+                if (!option.expected.includes(value)) {
+                    usage(option, value);
+                    return;
+                }
+            }
+            await handler(value);
+            success = true;
+        }
+    }
+
+    if (!success && option.required === true) {
+        usage(option);
+    }
+};
+
+/**
+ * @description Script Method
+ */
+(() => {
+    const options = minimist(process.argv.slice(2));
+    const scriptOptions: OptionInfo[] = [
+        {
+            name: 'schema',
+            alias: ['s'],
+            expected: [],
+            required: true,
+            description: 'Name of the schema',
+        },
+        {
+            name: 'migration',
+            alias: ['m'],
+            expected: ['yes', 'y', 'Y', 'YES'],
+            required: false,
+            description: 'Create Migration File'
+        },
+        {
+            name: 'data',
+            alias: ['d'],
+            expected: ['yes', 'y', 'Y', 'YES'],
+            required: false,
+            description: 'Create Data Entry SQL'
+        },
+        {
+            name: 'dataFile',
+            alias: ['df', 'data-file'],
+            expected: [],
+            required: false,
+            description: 'Data Entry file path'
+        },
+        {
+            name: 'entryString',
+            alias: ['es', 'entry-string'],
+            expected: [],
+            required: false,
+            description: 'Column name for data entry'
+        },
+        {
+            name: 'createModel',
+            alias: ['cm', 'create-model', 'model'],
+            expected: [],
+            required: false,
+            description: 'Create Data Model for Schema'
+        },
+        {
+            name: 'modelName',
+            alias: ['mn', 'model-name'],
+            expected: [],
+            required: false,
+            description: 'Model Class name'
+        }
+    ];
+    let schemaClass: any;
+    optionCheck(options, scriptOptions[0], (value: string) => {
+        schemaClass = schema[value];
+        if (!schemaClass) {
+            usage(scriptOptions[0], value);
+        } else {
+            console.log(`Processing schema=${value} ...`);
+        }
+    });
+    if (schemaClass) {
+        const schemaObj = new schemaClass();
+        _.each(scriptOptions, (info: OptionInfo) => optionCheck(options, info, (value: string) => {
+            if (info.name === 'name') {
+                return;
+            } else {
+                switch (info.name) {
+                    case 'migration':
+                        console.log('Creating migration file...');
+                        schemaObj.createMigrationFile();
+                        break;
+                    case 'data':
+                        let entryString;
+                        optionCheck(options, scriptOptions[4], es => (entryString = es));
+                        if (entryString) {
+                            console.log(`Creating Data Entry SQL for columns: ${entryString}...`);
+                            schemaObj.createDataEntry(entryString);
+                        } else {
+                            console.log('Creating Data Entry SQL...');
+                            schemaObj.createDataEntry();
+                        }
+                        break;
+                    case 'createModel':
+                        let clsName;
+                        console.log('Creating Data Model Class...');
+                        optionCheck(options, scriptOptions[6], cn => (clsName = cn));
+                        console.log(`Using Model Name: ${clsName || 'default'}`);
+                        modelClassCreator(schemaObj, clsName);
+                        break;
+                }
+            }
+        }));
+    }
+})();
+
