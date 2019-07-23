@@ -6,6 +6,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 
 // Third-party
 // ng-bootstrap
@@ -16,6 +17,8 @@ import { InViewportModule } from 'ng-in-viewport';
 
 // Cookies
 import { CookieService } from 'ngx-cookie-service';
+
+import { MomentPipe } from './pipes/MomentPipe';
 
 // Lottie
 import { LottieAnimationViewModule } from 'ng-lottie';
@@ -82,7 +85,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     FieldComponent,
     SideNavComponent,
     InventoryComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    MomentPipe
   ],
   imports: [
     BrowserModule,
@@ -95,6 +99,10 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     RouterModule,
     InViewportModule,
     LottieAnimationViewModule.forRoot(),
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

@@ -5,14 +5,14 @@ import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
 import { LatLong } from '../map-preview/map-preview.component';
-import { delay } from 'q';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DummyService } from 'src/app/services/dummy.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
-  styleUrls: ['./inventory.component.css']
+  styleUrls: ['./inventory.component.css'],
 })
 export class InventoryComponent implements OnInit {
 
@@ -36,7 +36,6 @@ export class InventoryComponent implements OnInit {
   constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService, private loadingService: LoadingService, private dummy: DummyService) { }
 
   ngOnInit() {
-    // this.createDummys();
     this.fetchObservations();
   }
 
