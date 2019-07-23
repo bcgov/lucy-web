@@ -45,18 +45,19 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   }
 
   // TODO: Refactor after observation object change
-  get organization(): DropdownObject | undefined  {
-    if (this.observationObject) {
+  get organization(): DropdownObject | undefined {
+
+    if (this.observationObject && this.observationObject.observerOrganization) {
+      return {
+        name: this.observationObject.observerOrganization[this.dropdownService.displayedAgencyField],
+        object: this.observationObject.observerOrganization,
+      };
+    } else if (this.observationObject) {
       const species = this.observationObject.speciesObservations[0];
       if (species && species.speciesAgency) {
         return {
           name: species.speciesAgency[this.dropdownService.displayedAgencyField],
           object: species.speciesAgency,
-        };
-      } else if (this.observationObject.observerOrganization) {
-        return {
-          name: this.observationObject.observerOrganization[this.dropdownService.displayedAgencyField],
-          object: this.observationObject.observerOrganization,
         };
       }
     }
