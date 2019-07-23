@@ -13,11 +13,11 @@ export interface DropdownObject {
 
 export class DropdownService {
 
-  public displayedJuristictionsField = `code`;
-  public displayedInvasivePlantspeciesField = `latinName`;
+  public displayedJuristictionsField = `description`;
+  public displayedInvasivePlantspeciesField = `commonName`;
   public displayedAgencyField = `description`;
   public displayedDistributionField = `description`;
-  public displayedDensityField = `code`;
+  public displayedDensityField = `description`;
   public displayedSurveyTypeField = 'description';
   public displayedSoilTextureField = 'description';
   public displayedSurveyGeometryField = 'description';
