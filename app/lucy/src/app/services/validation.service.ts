@@ -72,6 +72,9 @@ export class ValidationService {
    * @param latitude string - * use String(number) if needed.
    */
   public isValidLatitude(latitude: string) {
+    if (!this.hasMinDecimalPlaces(latitude, 5)) {
+      return false;
+    }
     const regexpOne = new RegExp('^[+-]?((90\\.?0*$)|(([0-8]?[0-9])\\.?[0-9]*$))');
     const regexpOneResult = regexpOne.test(latitude);
     return regexpOneResult;
@@ -83,6 +86,9 @@ export class ValidationService {
    * @param longitude string - * use String(number) if needed.
    */
   public isValidLongitude(longitude: string) {
+    if (!this.hasMinDecimalPlaces(longitude, 5)) {
+      return false;
+    }
     const regexpOne = new RegExp('^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\\.{1}\\d{1,6}');
     const regexpOneResult = regexpOne.test(longitude);
     return regexpOneResult;
@@ -93,8 +99,8 @@ export class ValidationService {
   public isValidObservationMessage(observation: Observation): string | null {
     if (!observation) { return `Object does not exist`; }
     const service = new ValidationService();
-    if (!service.hasMinDecimalPlaces(observation.lat, 6) || !service.hasMinDecimalPlaces(observation.long, 6)) {
-      return `Location is invalid`;
+    if (!service.isValidLongitude(String(observation.long)) || !service.isValidLatitude(String(observation.lat))) {
+      return `Location is invalid:\nLatitude and Longitude must have at least 5 decimal.`;
     }
 
     if (!observation.date) {
