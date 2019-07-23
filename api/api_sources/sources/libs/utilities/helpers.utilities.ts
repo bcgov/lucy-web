@@ -1,5 +1,5 @@
 //
-// Utility methods
+// Utility methods/helpers
 //
 // Copyright © 2019 Province of British Columbia
 //
