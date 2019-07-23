@@ -2,9 +2,9 @@ import { Component, OnInit, Input, AfterViewChecked, Output, EventEmitter } from
 import { MapPreviewPoint, LatLong } from '../../map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { FormMode, Observation, SpeciesAgencyCodes } from 'src/app/models';
+import { FormMode, Observation } from 'src/app/models';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-add-plant-observation-basic-information',
@@ -66,7 +66,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   get observationDate(): string | undefined {
     if (this.observationObject) {
-      // console.log(this.observationObject.date);
       return this.observationObject.date;
     }
     return undefined;
@@ -207,9 +206,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     this.notifyChangeEvent();
   }
 
-  observationDateChanged(value: any) {
-    if (this.observationObject && value) {
-      this.observationObject.date = value;
+  observationDateChanged(date: Date) {
+    if (this.observationObject && date) {
+      const formatted = moment(date).format('YYYY-MM-DD');
+      this.observationObject.date = formatted;
     }
   }
 
