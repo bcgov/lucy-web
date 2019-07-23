@@ -36,18 +36,6 @@ export class DatePickerComponent implements OnInit {
   }
   ////////////////////
 
-  ///// NG Bootstrap Date
-  private _ngDate: NgbDate;
-  // Get
-  get ngDate(): NgbDate {
-    return this._ngDate;
-  }
-  // Set
-  set ngDate(date: NgbDate) {
-    this._ngDate = date;
-  }
-  ////////////////////
-
   ///// Date
   private _date: Date;
   get date(): string {
@@ -74,14 +62,12 @@ export class DatePickerComponent implements OnInit {
 
   dateChanged(event: MatDatepickerInputEvent<Date>) {
     if (this._date !== event.value) {
-        console.log('Changned');
         this._date = event.value;
         this.emitSelection();
     }
   }
 
   emitSelection() {
-    console.log('emiting');
     console.dir(this._date);
     this.selected.emit(this._date);
   }
