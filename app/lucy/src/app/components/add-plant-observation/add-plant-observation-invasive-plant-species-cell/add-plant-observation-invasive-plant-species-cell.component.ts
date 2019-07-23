@@ -36,6 +36,16 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
     };
   }
 
+  get selectedGeometry(): DropdownObject | undefined {
+    if (!this.object || !this.object.surveyGeometry) {
+      return undefined;
+    }
+    return {
+      name: this.object.surveyGeometry[this.dropdownService.displayedSurveyGeometryField],
+      object: this.object.surveyGeometry,
+    };
+  }
+
   get selectedJurisdiction(): DropdownObject | undefined {
     if (!this.object || !this.object.jurisdiction) {
       return undefined;
@@ -128,6 +138,7 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   specificUseCodes: DropdownObject[];
   distributions: DropdownObject[];
   densities: DropdownObject[];
+  geometry: DropdownObject[];
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -204,6 +215,12 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
     this.loadingService.add();
     this.dropdownService.getDensities().then((result) => {
       this.densities = result;
+      this.loadingService.remove();
+    });
+
+    this.loadingService.add();
+    this.dropdownService.getGeometry().then((result) => {
+      this.geometry = result;
       this.loadingService.remove();
     });
   }
@@ -284,6 +301,13 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   accessDescriptionChanged(value: string) {
     if (this.object) {
       this.object.accessDescription = value;
+      this.notifyChangeEvent();
+    }
+  }
+
+  geometryChanged(value: DropdownObject) {
+    if (this.object && value.object) {
+      this.object.surveyGeometry = value.object;
       this.notifyChangeEvent();
     }
   }
