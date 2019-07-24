@@ -8,27 +8,27 @@ export class ValidationService {
 
   constructor() { }
 
-  public isValidNumber(string: string): boolean {
-    const toNumber: number = +string;
+  //////////////// Number Validations ////////////////
+
+  public isValidNumber(value: string): boolean {
+    const toNumber: number = +value;
     return toNumber ? true : false;
   }
 
-  public isValidInteger(string: string): boolean {
-    return (this.isValidNumber(string) && this.decimalPlaces(string) === 0);
-  }
-
-  public isValidUTMNorthings(string: string): boolean {
-    return (this.isValidNumber(string) && string.length < 8);
-  }
-
-  public isValidUTMEastings(string: string): boolean {
-    return (this.isValidNumber(string) && string.length < 7);
+  public isValidInteger(value: string): boolean {
+    return (this.isValidNumber(value) && this.decimalPlaces(value) === 0);
   }
 
   public hasMinDecimalPlaces(number: any, minDecimals: number): boolean {
     const service = new ValidationService();
     const numberOfDecimals = service.decimalPlaces(number);
     return numberOfDecimals >= minDecimals;
+  }
+
+  public isPositiveNumber(value: string): boolean {
+    if (this.isValidNumber(value)) {
+      return +value >= 0;
+    }
   }
 
   /**
@@ -44,6 +44,26 @@ export class ValidationService {
     return Math.max(0,
       (match[1] === '0' ? 0 : (match[1] || '').length)
       - (+match[2] || 0));
+  }
+
+  //////////////// End Number Validations ////////////////
+
+  //////////////// Specific Field Validations ////////////////
+
+  public isValidPlotDimention(value: string): boolean {
+    return this.isPositiveNumber(value);
+  }
+
+  //////////////// End Specific Field Validations ////////////////
+
+  //////////////// Location Validations ////////////////
+
+  public isValidUTMNorthings(value: string): boolean {
+    return (this.isValidNumber(value) && value.length < 8);
+  }
+
+  public isValidUTMEastings(value: string): boolean {
+    return (this.isValidNumber(value) && value.length < 7);
   }
 
   /**
@@ -67,6 +87,8 @@ export class ValidationService {
     const regexpOneResult = regexpOne.test(longitude);
     return regexpOneResult;
   }
+
+   //////////////// End Location Validations ////////////////
 
   public isValidObservationMessage(observation: Observation): string | null {
     if (!observation) { return `Object does not exist`; }
@@ -96,8 +118,8 @@ export class ValidationService {
     }
 
     for (const species of observation.speciesObservations) {
-      if (!species.width || !species.length) {
-        return `You must specify Plot for invasive plant species`;
+      if (!species.width || !species.length || !this.isValidPlotDimention(String(species.length)) || !this.isValidPlotDimention(String(species.width)) ) {
+        return `You must specify a valid plot dimention for invasive plant species`;
       }
 
       if (!species.jurisdiction) {
