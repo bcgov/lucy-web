@@ -3,6 +3,7 @@ import { LatLong } from '../components/map-preview/map-preview.component';
 import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, SurveyTypeCodes, SoilTextureCodes, SurveyGeometryCodes, SpecificUseCodes, Observation } from '../models';
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -195,7 +196,7 @@ export class DummyService {
    */
   public randomDateString() {
     const date = faker.date.past();
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+    return moment(date).format('YYYY-MM-DD');
   }
 
   /**

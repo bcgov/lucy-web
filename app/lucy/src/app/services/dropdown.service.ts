@@ -114,6 +114,15 @@ export class DropdownService {
   }
 
   /**
+   * Fetch Geometry code table, return as array of
+   * deopdown objects
+   */
+  public async getGeometry(): Promise<DropdownObject[]> {
+    const geometry = await this.codeTableService.getSurveyGeometryCodes();
+    return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
+  }
+
+  /**
    * Return array of dropdowns to use for testing.
    */
   public async getDummyDropdownObjects(): Promise<DropdownObject[]> {
