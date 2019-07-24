@@ -87,14 +87,12 @@ export class ApplicationAuthMiddleware extends LoggerBase {
     async _tokenCallback(request: express.Request, payload: any, done: any) {
         const { errorWithCode } = BCHelperLib.getCommonUtility();
         try {
-            // Get user info
+             // Get user info
+             // ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
              const { preferred_username, email, family_name, given_name} = payload;
-             assert(preferred_username, 'JWT payload preferred_username is missing');
-             assert(email, 'JWT payload email is missing');
-             assert(family_name, 'JWT payload family_name is missing');
-             assert(given_name, 'JWT payload given_name is missing');
+             assert((!preferred_username || !email), `Email Or Preferred user name is missing from payload\n ${JSON.stringify(payload)}`);
+
              const api = `${request.originalUrl}[${request.method}]`;
-             ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
@@ -111,16 +109,21 @@ export class ApplicationAuthMiddleware extends LoggerBase {
 
              // Get user
              ApplicationAuthMiddleware.logger.info(`${api} | Getting user`);
-             let user: User = await UserDataController.shared.fetchOne({email: email});
+             let user: User;
+             if (email) {
+                 user = await UserDataController.shared.fetchOne({email: email});
+             } else {
+                 user = await UserDataController.shared.fetchOne({ preferredUsername: preferred_username});
+             }
              if (!user) {
                  ApplicationAuthMiddleware.logger.info(`${api} | Creating new user with email and username: {${email}, ${preferred_username}}`);
 
                  // Creating new user with viewer role
                  user = UserDataController.shared.create();
-                 user.email = email;
-                 user.preferredUsername = preferred_username;
-                 user.firstName = given_name;
-                 user.lastName = family_name;
+                 user.email = email || preferred_username;
+                 user.preferredUsername = preferred_username || email;
+                 user.firstName = given_name || 'Test';
+                 user.lastName = family_name || 'User';
                  user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
                  user.accountStatus = AccountStatus.active;
                  await UserDataController.shared.saveInDB(user);
