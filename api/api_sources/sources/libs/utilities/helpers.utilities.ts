@@ -23,6 +23,7 @@
 import * as fs from 'fs';
 import * as _ from 'underscore';
 import * as yml from 'js-yaml';
+import * as assert from 'assert';
 
 /**
  * @description AsyncFor
@@ -85,6 +86,12 @@ export const arrayToString = (array: any[]) => {
     _.each(array, (v: any) => (result = result + `${v},`));
     result = result.replace(/.$/, '');
     return result;
+};
+
+export const verifyObject = (obj: any, keys: any[], tag: string) => {
+    assert(obj, `${tag}: Object is undefined`);
+    _.each(keys, (k: any) => assert(Object.keys(obj).includes(k) === true, `${tag}: key not available: ${k} for obj ${JSON.stringify(obj)}`));
+    return obj;
 };
 
 // -------------------------------
