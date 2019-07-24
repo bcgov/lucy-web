@@ -28,7 +28,7 @@
 import * as request from 'supertest';
 import {expect} from 'chai';
 import { SharedExpressApp } from '../../../initializers';
-import { adminToken } from '../../../../test-helpers/token';
+import { adminToken, testIdr3Token } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction} from '../../../../test-helpers/testHelpers';
 import { UserDataController, RolesCodeValue, User } from '../../../../database/models';
 import { userFactory } from '../../../../database/factory';
@@ -67,6 +67,20 @@ describe('Test account routes', () => {
             const body = resp.body;
             await verifySuccessBody(body, (data: any) => {
                 expect(data.email).to.equal('amir@freshworks.io');
+            });
+            // done();
+        });
+    });
+
+    it('should fetch me {test.idr3}', async () => {
+        await request(SharedExpressApp.app)
+        .get('/api/account/me')
+        .set('Authorization', `Bearer ${testIdr3Token()}`)
+        .expect(200)
+        .then(async (resp) => {
+            const body = resp.body;
+            await verifySuccessBody(body, (data: any) => {
+                expect(data.preferredUsername).to.equal('istest3@idir');
             });
             // done();
         });

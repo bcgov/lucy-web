@@ -90,7 +90,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              // Get user info
              // ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
              const { preferred_username, email, family_name, given_name} = payload;
-             assert((!preferred_username || !email), `Email Or Preferred user name is missing from payload\n ${JSON.stringify(payload)}`);
+             assert((preferred_username || email), `Email And Preferred user name is missing from payload\n ${JSON.stringify(payload)}`);
 
              const api = `${request.originalUrl}[${request.method}]`;
 
@@ -113,6 +113,8 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              if (email) {
                  user = await UserDataController.shared.fetchOne({email: email});
              } else {
+                 ApplicationAuthMiddleware.logger.info(`${api} | Fetching user by preferredUsername: ${preferred_username}
+                  - *** - \n[ISSUE]*: possibly email is missing from payload: \n${JSON.stringify(payload)}`);
                  user = await UserDataController.shared.fetchOne({ preferredUsername: preferred_username});
              }
              if (!user) {
