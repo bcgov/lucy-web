@@ -42,5 +42,12 @@ export const viewerToken = (): string => {
 export const editorToken = (): string => {
     return fs.readFileSync(path.join(__dirname, 'editor.token'), 'utf8');
 };
+
+/**
+ * @description Getter: idr3 token
+ */
+export const testIdr3Token = (): string => {
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr3.token'), 'utf8');
+};
 // -----------------------------------------------------------------------------------------------------------
 
