@@ -1,11 +1,15 @@
 <!-- Editable -->
 <div *ngIf="!readonly" class="col-12 field">
-  <label class="field-header">{{header}}</label>
+  <label *ngIf="multiline" class="field-header">{{header}}</label>
 
   <!-- Single field -->
-  <input *ngIf="!multiline" type="text" [(ngModel)]="value" class="form-control edit" [attr.id]="fieldId"
+  <!-- <input *ngIf="!multiline" type="text" [(ngModel)]="value" class="form-control edit" [attr.id]="fieldId"
     [ngClass]="isValid && !readonly ? 'valid' : 'invalid'"
-    [readonly]="readonly"/>
+    [readonly]="readonly"/> -->
+
+    <mat-form-field *ngIf="!multiline">
+        <input matInput placeholder="{{header}}" [(ngModel)]="value" [attr.id]="fieldId">
+      </mat-form-field>
     
   <!-- multiLine -->
   <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control" [attr.id]="fieldId"

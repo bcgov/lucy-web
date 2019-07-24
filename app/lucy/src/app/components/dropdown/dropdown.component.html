@@ -1,16 +1,14 @@
-<div *ngIf="!readonly" class="col-12 field d-inline-block" ngbDropdown #itemsDropdown="ngbDropdown">
+<div *ngIf="!readonly" class="col-12 field d-inline-block">
 
-  <label for="UserRole" class="field-header">{{fieldHeader}}</label>
-  <input type="text"  autocomplete="off" class="form-control field-box field-input" ngbDropdownAnchor
-    (focus)="itemsDropdown.open()" [(ngModel)]="selectedItemName" (input)="filer($event.target.value)" />
-
-  <div ngbDropdownMenu aria-labelledby="itemsDropdown">
-    <div class="col-12" *ngFor="let item of filteredItems; let i = index">
-      <button ngbDropdownItem class="btn" (click)="selected(item)">
-        {{item.name}}
-      </button>
-    </div>
-  </div>
+    <mat-form-field [attr.id]="fieldId">
+        <mat-select [formControl]="optionCtrl" placeholder="{{fieldHeader}}" [(ngModel)]="selectedItemName" #singleSelect>
+          <app-mat-select-search [formControl]="optionFilterCtrl"></app-mat-select-search>
+          <mat-option *ngFor="let item of filteredItems; let i = index" [value]="item.name" (click)="selected(item)">
+              {{item.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    <!-- https://stackblitz.com/edit/mat-select-search -->
 </div>
 
 <div *ngIf="readonly">
