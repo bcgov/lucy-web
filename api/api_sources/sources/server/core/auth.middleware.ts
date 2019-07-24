@@ -244,4 +244,12 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
 export const adminOnlyRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin]);
 };
+
+/**
+ * @description Route For Editor
+ * @export closure writerOnlyRoute
+ */
+export const writerOnlyRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]);
+};
 // -----------------------------------------------------------------------------------------------------------
