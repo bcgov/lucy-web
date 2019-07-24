@@ -6,7 +6,9 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+
+// Material
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule } from '@angular/material';
 
 // Third-party
 // ng-bootstrap
@@ -53,6 +55,8 @@ import { FieldComponent } from './components/field/field.component';
 import { SideNavComponent } from './components/add-plant-observation/side-nav/side-nav.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
+import { MatSelectSearchComponent } from './components/mat-select-search/mat-select-search.component';
+import { MatSelectSearchModule } from './components/mat-select-search/mat-select-search.module';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -86,7 +90,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     SideNavComponent,
     InventoryComponent,
     DatePickerComponent,
-    MomentPipe
+    MomentPipe,
+    MatSelectSearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,7 +107,9 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatButtonModule,
     MatCheckboxModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSelectModule,
+    MatInputModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

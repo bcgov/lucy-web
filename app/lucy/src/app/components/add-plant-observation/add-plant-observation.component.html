@@ -51,14 +51,6 @@
   </div>
   <!-- -------------------- -->
   <br />
-  <!-- test btn -->
-  <div *ngIf="creating" class="row">
-    <div class="col-12">
-      <button class="btn" (click)="generateObservationForTesting()">Generate for testing</button>
-    </div>
-  </div>
-  <br />
-  <!-- -------------------- -->
   <div class="row">
      <!-- Side Nav -->
     <div class="col-12 col-lg-3 nav-bar">
@@ -94,5 +86,13 @@
       <!-- -------------------- -->
     </div>
   </div>
+  <!-- test btn -->
+  <div *ngIf="creating" class="row test-btn">
+      <div class="col-12">
+        <button class="btn" (click)="generateObservationForTesting()">Generate for testing</button>
+      </div>
+    </div>
+    <br />
+  <!-- -------------------- -->
 </div>
 </div>
