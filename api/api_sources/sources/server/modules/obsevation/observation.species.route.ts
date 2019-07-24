@@ -22,7 +22,7 @@
 import * as assert from 'assert';
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { SecureRouteController, RouteHandler, MakeOptionalValidator, idValidator, UpdateRequest } from '../../core';
+import { RouteHandler, MakeOptionalValidator, idValidator, UpdateRequest, WriterRouteController } from '../../core';
 import { ObservationSpeciesController,
     SpeciesController,
     JurisdictionCodeController,
@@ -87,7 +87,7 @@ const CreateValidator = (): any[] =>  {
     ];
 };
 
-export class ObservationSpeciesRouteController extends SecureRouteController <ObservationSpeciesController> {
+export class ObservationSpeciesRouteController extends WriterRouteController <ObservationSpeciesController> {
 
     static get shared(): ObservationSpeciesRouteController {
         return this.sharedInstance<ObservationSpeciesController>() as ObservationSpeciesRouteController;

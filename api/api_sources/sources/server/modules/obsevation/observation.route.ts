@@ -23,7 +23,10 @@ import * as assert from 'assert';
 import * as _ from 'underscore';
 import { Request, Router} from 'express';
 import { check } from 'express-validator';
-import { WriterRouteController, RouteHandler } from '../../core';
+import { RouteHandler,
+    SecureRouteController,
+    writerOnlyRoute
+} from '../../core';
 import { ObservationController,
     JurisdictionCodeController,
     SpeciesController,
@@ -47,7 +50,7 @@ const CreateValidator = (): any[] =>  {
     return [
         check('lat').isNumeric().withMessage('lat: should be number'),
         check('long').isNumeric().withMessage('long: should be number'),
-        check('date').isString().withMessage('date: should be string')
+        check('date').isString().withMessage('date: should be string'),
     ];
 };
 
@@ -73,7 +76,7 @@ const UpdateValidator = (): any[] => {
     return _.map(CreateValidator(), checkVal => checkVal.optional());
 };
 
-export class ObservationRouteController extends WriterRouteController<ObservationController> {
+export class ObservationRouteController extends SecureRouteController<ObservationController> {
 
     static get shared(): ObservationRouteController {
         return this.sharedInstance<ObservationController>() as ObservationRouteController;
@@ -91,7 +94,7 @@ export class ObservationRouteController extends WriterRouteController<Observatio
         this.router.get('/codes', this.indexCodes);
 
         // Create observation
-        this.router.post('/', CreateValidator(), this.create);
+        this.router.post('/', CreateValidator().concat(writerOnlyRoute()), this.create);
 
         // Get all observation
         this.router.get('/', this.index);
@@ -100,7 +103,7 @@ export class ObservationRouteController extends WriterRouteController<Observatio
         this.router.get('/:observationId', ObservationIdValidator(), this.index);
 
         // Update single observation
-        this.router.put('/:observationId', UpdateValidator().concat(ObservationIdValidator()), this.update);
+        this.router.put('/:observationId', UpdateValidator().concat(ObservationIdValidator(), writerOnlyRoute()), this.update);
     }
 
     /**

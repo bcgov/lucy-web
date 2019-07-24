@@ -22,7 +22,7 @@
 import * as request from 'supertest';
 import { should, expect } from 'chai';
 import { SharedExpressApp } from '../../../initializers';
-import { adminToken } from '../../../../test-helpers/token';
+import { adminToken, viewerToken } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction, testRequest, AuthType, HttpMethodType} from '../../../../test-helpers/testHelpers';
 import {
     ObservationCreateModel,
@@ -41,7 +41,8 @@ import {
     surveyCodeTypeFactory,
     soilTextureCodeFactory,
     surveyGeometryCodeFactory,
-    specificUseCodeFactory
+    specificUseCodeFactory,
+    destroyObservationSpecies
 } from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
@@ -110,6 +111,23 @@ describe('Test for observation routes', () => {
         });
     });
 
+    it('should not create observation for viewer', async () => {
+        const create: ObservationCreateModel = {
+            lat: 76.98,
+            long: 67.76,
+            date: '2019-05-01'
+        };
+        await request(SharedExpressApp.app)
+        .post('/api/observation')
+        .set('Authorization', `Bearer ${viewerToken()}`)
+        .send(create)
+        .expect(401)
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+            // done();
+        });
+    });
+
     it('should not create observation', async () => {
         const create = {
         };
@@ -128,7 +146,7 @@ describe('Test for observation routes', () => {
         const obs = await observationFactory();
         await request(SharedExpressApp.app)
         .get('/api/observation')
-        .set('Authorization', `Bearer ${adminToken()}`)
+        .set('Authorization', `Bearer ${viewerToken()}`)
         .expect(200)
         .then(async (resp) => {
             await verifySuccessBody(resp.body, (body) => {
@@ -147,7 +165,7 @@ describe('Test for observation routes', () => {
             type: HttpMethodType.get,
             url: `/api/observation/${obs.observation_id}`,
             expect: 200,
-            auth: AuthType.admin
+            auth: AuthType.viewer
         }).then(async resp => {
             await verifySuccessBody(resp.body, async data => {
                 expect(data.observation_id).to.be.equal(obs.observation_id);
@@ -211,6 +229,20 @@ describe('Test for observation routes', () => {
         });
     });
 
+    it('should not create observation-species for viewer', async () => {
+        const create = {};
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.post,
+            url: '/api/observation/species',
+            expect: 401,
+            auth: AuthType.viewer,
+            send: create
+        })
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+        });
+    });
+
     it('should update observation with {id}', async () => {
         const obs = await observationFactory();
         const update = {
@@ -227,6 +259,23 @@ describe('Test for observation routes', () => {
                 expect(data.observation_id).to.be.equal(obs.observation_id);
                 expect(data.lat).to.be.equal(update.lat);
             });
+            await destroyObservation(obs);
+        });
+    });
+
+    it('should not update observation with {id} for viewer', async () => {
+        const obs = await observationFactory();
+        const update = {
+            lat: 35.78
+        };
+        await testRequest(SharedExpressApp.app , {
+            type: HttpMethodType.put,
+            url: `/api/observation/${obs.observation_id}`,
+            expect: 401,
+            auth: AuthType.viewer,
+            send: update
+        }).then(async resp => {
+            await verifyErrorBody(resp.body);
             await destroyObservation(obs);
         });
     });
@@ -277,6 +326,33 @@ describe('Test for observation routes', () => {
                 expect(body.length).to.be.equal(update.length);
                 await ObservationSpeciesController.shared.removeById(body.observation_species_id);
             });
+            await destroyObservation(obs);
+        });
+    });
+
+    it('should not update observation-species with {id} for viewer', async () => {
+        const obsSpecies = await observationSpeciesFactory();
+        const obs = await observationFactory();
+        const jurisdictionCode = await jurisdictionCodeFactory(2);
+        const species = await speciesFactory(2);
+        const update = {
+            length: 6700.78,
+            width: 900.00,
+            accessDescription: 'Test description',
+            jurisdiction: jurisdictionCode.jurisdiction_code_id,
+            species: species.species_id,
+            observation: obs.observation_id
+        };
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.put,
+            url: `/api/observation/species/${obsSpecies.observation_species_id}`,
+            expect: 401,
+            auth: AuthType.viewer,
+            send: update
+        })
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+            await destroyObservationSpecies(obsSpecies);
             await destroyObservation(obs);
         });
     });
