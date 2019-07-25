@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 // Material
 import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule } from '@angular/material';
+import {MatMenuModule} from '@angular/material/menu';
 
 // Third-party
 // ng-bootstrap
@@ -108,6 +109,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatNativeDateModule,
     MatSelectModule,
     MatInputModule,
+    MatMenuModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
