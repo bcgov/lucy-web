@@ -3,10 +3,22 @@ export interface Observation {
     lat: number;
     long: number;
     date: string;
-    observerFirstName: string;
-    observerLastName: string;
-    observerOrganization: SpeciesAgencyCodes;
-    speciesObservations: SpeciesObservations[];
+    
+    surveyorFirstName: string;
+    surveyorLastName: string;
+    speciesAgency: SpeciesAgencyCodes;
+
+    species: InvasivePlantSpecies;
+    jurisdiction: Jurisdiction;
+    density: SpeciesDensityCodes;
+    distribution: SpeciesDistributionCodes;
+    surveyType: SurveyTypeCodes;
+    surveyGeometry: SurveyGeometryCodes;
+    specificUseCode: SpecificUseCodes;
+    soilTexture: SoilTextureCodes;
+    width: number;
+    length: number;
+    accessDescription: string;
 }
 export interface InvasivePlantSpecies {
     commonName: string;

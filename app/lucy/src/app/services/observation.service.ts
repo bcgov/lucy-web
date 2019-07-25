@@ -12,34 +12,59 @@ export class ObservationService {
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
   public async submitObservation(observation: Observation): Promise<boolean> {
-    const observationBody = {
-      lat: observation.lat,
-      long: observation.long,
-      date: observation.date
-    };
+    // You shouldn't use the object directly because api expects ids, not objects
+    const observationBody = this.observationBody(observation);
+
+    // Make the call
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_observation, observationBody);
     if (response.success) {
       const observation_Id = response.response[`observation_id`];
-      let failed = false;
-      for (const species of observation.speciesObservations) {
-        console.dir(species);
-        const speciesBody = this.speciesObservationBody(species, observation, observation_Id);
-        const speciesResponse = await this.api.request(APIRequestMethod.POST, AppConstants.API_observationSpecies, speciesBody);
-        if (speciesResponse.success) {
-          console.log(`species success!!`);
-        } else {
-          console.log(`species FAIL!!`);
-          failed = true;
-        }
+      if (observation_Id) {
+        console.log(`Created successfully`);
+        return true;
+      } else {
+        console.log(`Got a response, but something is off - id is missing`);
+        console.dir(response);
+        return false;
       }
-      return !failed;
-
     } else {
-      console.log(`observation FAIL!!`);
+      console.log(`observation creation failed`);
+      console.dir(response);
+      return false;
     }
-    return false;
   }
 
+  /**
+   * Creates json body for observation creation.
+   * @param observation object
+   */
+  private observationBody(observation: Observation): any {
+    const body = {
+      // basic information
+      lat: observation.lat,
+      long: observation.long,
+      date: observation.date,
+      surveyorFirstName: observation.surveyorFirstName,
+      surveyorLastName: observation.surveyorLastName,
+      speciesAgency: observation.speciesAgency.species_agency_code_id,
+      // invasive plant species
+      species: observation.species.species_id,
+      jurisdiction: observation.jurisdiction.jurisdiction_code_id,
+      density: observation.density.species_density_code_id,
+      distribution: observation.distribution.species_distribution_code_id,
+      surveyType: observation.surveyType.survey_type_code_id,
+      surveyGeometry: observation.surveyGeometry.survey_geometry_code_id,
+      specificUseCode: observation.specificUseCode.specific_use_code_id,
+      soilTexture: observation.soilTexture.soil_texture_code_id,
+      width: +observation.width,
+      length: +observation.length,
+      accessDescription: observation.accessDescription,
+    };
+
+    return body;
+  }
+
+  // TODO: Remove
   private speciesObservationBody(species: SpeciesObservations, observation: Observation, observationId: number): any {
     const speciesBody = {
       observation: observationId,
@@ -55,9 +80,9 @@ export class ObservationService {
       length: +species.length,
       accessDescription: species.accessDescription,
 
-      surveyorFirstName: observation.observerFirstName,
-      surveyorLastName: observation.observerLastName,
-      speciesAgency: observation.observerOrganization.species_agency_code_id
+      surveyorFirstName: observation.surveyorFirstName,
+      surveyorLastName: observation.surveyorLastName,
+      speciesAgency: observation.speciesAgency.species_agency_code_id
     };
 
     return speciesBody;
