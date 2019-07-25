@@ -11,35 +11,40 @@ import * as moment from 'moment';
   templateUrl: './add-plant-observation-basic-information.component.html',
   styleUrls: ['./add-plant-observation-basic-information.component.css']
 })
+/**
+ * Basic information section of observation form.
+ * Takes an observation object and formMode as input
+ * Emits Observation object on changes.
+ * @Input mode: FormMode
+ * @Input observationObject: Observation
+ * @Output basicInfoChanged: EventEmitter<Observation>();
+ */
+
 export class AddPlantObservationBasicInformationComponent implements OnInit, AfterViewChecked {
   locationEntryModeLatLong = true;
 
-  // Map helpers
-  private mapCenter: MapPreviewPoint;
+  // Set the initial view location for map
+  public mapCenter: MapPreviewPoint = {
+    latitude: 52.068508,
+    longitude: -123.288152,
+    zoom: 4
+  };
+
+  // Markers shown on map
   private markers: LatLong[] = [];
 
   agencies: DropdownObject[] = [];
 
-  // TODO: Refactor after observation object change
   get observerFirstName(): string {
     if (this.observationObject) {
-      const species = this.observationObject.speciesObservations[0];
-      if (species && species.surveyorFirstName) {
-        return species.surveyorFirstName;
-      }
-      return this.observationObject.observerFirstName;
+      return this.observationObject.surveyorFirstName;
     }
     return ``;
   }
 
-  // TODO: Refactor after observation object change
   get observerLastName(): string {
     if (this.observationObject) {
-      const species = this.observationObject.speciesObservations[0];
-      if (species && species.surveyorLastName) {
-        return species.surveyorLastName;
-      }
-      return this.observationObject.observerLastName;
+      return this.observationObject.surveyorLastName;
     }
     return ``;
   }
@@ -47,21 +52,14 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   // TODO: Refactor after observation object change
   get organization(): DropdownObject | undefined {
 
-    if (this.observationObject && this.observationObject.observerOrganization) {
+    if (this.observationObject && this.observationObject.speciesAgency) {
       return {
-        name: this.observationObject.observerOrganization[this.dropdownService.displayedAgencyField],
-        object: this.observationObject.observerOrganization,
+        name: this.observationObject.speciesAgency[this.dropdownService.displayedAgencyField],
+        object: this.observationObject.speciesAgency,
       };
-    } else if (this.observationObject) {
-      const species = this.observationObject.speciesObservations[0];
-      if (species && species.speciesAgency) {
-        return {
-          name: species.speciesAgency[this.dropdownService.displayedAgencyField],
-          object: species.speciesAgency,
-        };
-      }
+    } else {
+      return undefined;
     }
-    return undefined;
   }
 
   get observationDate(): string | undefined {
@@ -148,12 +146,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   constructor(private converterService: ConverterService, private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {
-    this.mapCenter = {
-      latitude: 52.068508,
-      longitude: -123.288152,
-      zoom: 4
-    };
-
     this.dropdownService.getAgencies().then((result) => {
       this.agencies = result;
     });
@@ -187,21 +179,21 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   observerLastNameChanged(value: string) {
     if (this.observationObject) {
-      this.observationObject.observerLastName = value;
+      this.observationObject.surveyorLastName = value;
     }
     this.notifyChangeEvent();
   }
 
   observerFirstNameChanged(value: string) {
     if (this.observationObject) {
-      this.observationObject.observerFirstName = value;
+      this.observationObject.surveyorFirstName = value;
     }
     this.notifyChangeEvent();
   }
 
   organizationChanged(value: DropdownObject) {
     if (this.observationObject) {
-      this.observationObject.observerOrganization = value.object;
+      this.observationObject.speciesAgency = value.object;
     }
     this.notifyChangeEvent();
   }

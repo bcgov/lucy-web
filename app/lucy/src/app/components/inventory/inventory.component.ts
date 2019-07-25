@@ -140,14 +140,14 @@ export class InventoryComponent implements OnInit {
 
     // Sort objects
     this.observations.sort((left, right): number => {
-      if (left.speciesObservations[0].species.commonName < right.speciesObservations[0].species.commonName) {
+      if (left.species.commonName < right.species.commonName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.speciesObservations[0].species.commonName > right.speciesObservations[0].species.commonName) {
+      if (left.species.commonName > right.species.commonName) {
         if (this.sortAscending) {
           return -1;
         } else {
@@ -178,14 +178,14 @@ export class InventoryComponent implements OnInit {
 
     // Sort objects
     this.observations.sort((left, right): number => {
-      if (left.observerLastName < right.observerLastName) {
+      if (left.surveyorFirstName < right.surveyorLastName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.observerLastName > right.observerLastName) {
+      if (left.surveyorFirstName > right.surveyorLastName) {
         if (this.sortAscending) {
           return -1;
         } else {
