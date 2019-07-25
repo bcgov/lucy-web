@@ -41,7 +41,7 @@
       <div *ngIf="!locationEntryModeLatLong">
         <div class="row">
           <div class="full-width">
-            <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings"
+            <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings" 
               [validationFunc]="validation.isValidUTMEastings.bind(validation)" (valueChanged)='eastingChanged($event)'>
             </app-field>
           </div>
