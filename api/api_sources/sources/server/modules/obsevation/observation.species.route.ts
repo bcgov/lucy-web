@@ -20,6 +20,7 @@
  * Imports
  */
 import * as assert from 'assert';
+import * as moment from 'moment';
 import { Router } from 'express';
 import { check } from 'express-validator';
 import { RouteHandler, MakeOptionalValidator, idValidator, UpdateRequest, WriterRouteController } from '../../core';
@@ -41,6 +42,11 @@ import { Observation,
 
 const CreateValidator = (): any[] =>  {
     return [
+        check('lat').isNumeric().withMessage('lat: should be number'),
+        check('long').isNumeric().withMessage('long: should be number'),
+        check('date').isString().custom(async (value: string, {req}) => {
+            assert(moment(value, 'YYYY-MM-DD').isValid(), `date: should be string in YYYY-MM-DD format`);
+        }),
         check('width').isNumeric().withMessage('width: should be number'),
         check('length').isNumeric().withMessage('length: should be number'),
         check('accessDescription').isString().withMessage('accessDescription: should be string'),
