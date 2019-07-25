@@ -23,21 +23,19 @@ import * as assert from 'assert';
 import { Router } from 'express';
 import { check } from 'express-validator';
 import { RouteHandler, MakeOptionalValidator, idValidator, UpdateRequest, WriterRouteController } from '../../core';
-import { ObservationSpeciesController,
+import { Observation,
+    ObservationController,
     SpeciesController,
     JurisdictionCodeController,
-    ObservationController,
     SpeciesAgencyCodeController,
     SpeciesDensityCodeController,
     SpeciesDistributionCodeController,
-    SurveyTypeCodeController,
-    SurveyGeometryCodeController,
+    ObservationTypeCodeController,
+    ObservationGeometryCodeController,
     SpecificUseCodeController,
-    SoilTextureCodeController
-} from '../../../database/models';
-import { ObservationSpeciesCreateModel,
-    ObservationSpeciesUpdateModel,
-    ObservationSpecies 
+    SoilTextureCodeController,
+    ObservationCreateModel,
+    ObservationUpdateModel
 } from '../../../database/models';
 // import { DataController } from '../../../database/data.model.controller';
 
@@ -46,8 +44,8 @@ const CreateValidator = (): any[] =>  {
         check('width').isNumeric().withMessage('width: should be number'),
         check('length').isNumeric().withMessage('length: should be number'),
         check('accessDescription').isString().withMessage('accessDescription: should be string'),
-        check('surveyorFirstName').isString().withMessage('surveyorFirstName: should be string'),
-        check('surveyorLastName').isString().withMessage('surveyorLastName: should be string'),
+        check('observerFirstName').isString().withMessage('observerFirstName: should be string'),
+        check('observerLastName').isString().withMessage('observerLastName: should be string'),
         check('species').isInt().custom(async (value: number, {req}) => {
             const species = await SpeciesController.shared.findById(value);
             assert(species, `species: No Species exists with id ${value}`);
@@ -58,11 +56,6 @@ const CreateValidator = (): any[] =>  {
             assert(code, `jurisdiction: No Jurisdiction code exists with id ${value}`);
             req.jurisdictionCode = code;
         }),
-        check('observation').isInt().custom(async (value: number, {req}) => {
-            const obs = await ObservationController.shared.findById(value);
-            assert(obs, `observation: No observation exists with id ${value}`);
-            req.observation = obs;
-        }),
         idValidator<SpeciesAgencyCodeController>('speciesAgency', SpeciesAgencyCodeController.shared, (data, req) => {
             UpdateRequest(req, {speciesAgency: data});
         }),
@@ -72,11 +65,11 @@ const CreateValidator = (): any[] =>  {
         idValidator<SpeciesDistributionCodeController>('distribution', SpeciesDistributionCodeController.shared, (data, req) => {
             UpdateRequest(req, {distribution: data});
         }),
-        idValidator<SurveyTypeCodeController>('surveyType', SurveyTypeCodeController.shared, (data, req) => {
-            UpdateRequest(req, {surveyType: data});
+        idValidator<ObservationTypeCodeController>('observationType', ObservationTypeCodeController.shared, (data, req) => {
+            UpdateRequest(req, {observationType: data});
         }),
-        idValidator<SurveyGeometryCodeController>('surveyGeometry', SurveyGeometryCodeController.shared, (data, req) => {
-            UpdateRequest(req, {surveyGeometry: data});
+        idValidator<ObservationGeometryCodeController>('observationGeometry', ObservationGeometryCodeController.shared, (data, req) => {
+            UpdateRequest(req, {observationGeometry: data});
         }),
         idValidator<SpecificUseCodeController>('specificUseCode', SpecificUseCodeController.shared, (data, req) => {
             UpdateRequest(req, {specificUseCode: data});
@@ -87,15 +80,15 @@ const CreateValidator = (): any[] =>  {
     ];
 };
 
-export class ObservationSpeciesRouteController extends WriterRouteController <ObservationSpeciesController> {
+export class ObservationModifyRouteController extends WriterRouteController <ObservationController> {
 
-    static get shared(): ObservationSpeciesRouteController {
-        return this.sharedInstance<ObservationSpeciesController>() as ObservationSpeciesRouteController;
+    static get shared(): ObservationModifyRouteController {
+        return this.sharedInstance<ObservationController>() as ObservationModifyRouteController;
     }
 
     constructor() {
         super();
-        this.dataController = ObservationSpeciesController.shared;
+        this.dataController = ObservationController.shared;
         this.router.post('/', CreateValidator(), this.create);
         this.router.put('/:id', this.combineValidator(MakeOptionalValidator(CreateValidator), this.idValidation()), this.update);
     }
@@ -103,24 +96,26 @@ export class ObservationSpeciesRouteController extends WriterRouteController <Ob
     // Create Observation - species entry
     get create(): RouteHandler {
         return this.routeConfig<any>('obs:species-create', async (data: any, req: any) => {
-            const model: ObservationSpeciesCreateModel = {
+            const model: ObservationCreateModel = {
+                lat: data.lat,
+                long: data.long,
+                date: data.date,
                 length: data.length,
                 width: data.width,
                 accessDescription: data.accessDescription,
                 jurisdiction: req.jurisdictionCode,
                 species: req.species,
-                observation: req.observation,
-                surveyType: req.validation.surveyType,
+                observationType: req.validation.observationType,
                 speciesAgency: req.validation.speciesAgency,
                 density: req.validation.density,
                 distribution: req.validation.distribution,
-                surveyGeometry: req.validation.surveyGeometry,
+                observationGeometry: req.validation.observationGeometry,
                 specificUseCode: req.validation.specificUseCode,
                 soilTexture: req.validation.soilTexture,
-                surveyorFirstName: data.surveyorFirstName,
-                surveyorLastName: data.surveyorLastName
+                observerFirstName: data.observerFirstName,
+                observerLastName: data.observerLastName
             };
-            return [201, await this.dataController.createObservationOfSpecies(model, req.user)];
+            return [201, await this.dataController.createObservation(model, req.user)];
         });
     }
 
@@ -129,25 +124,27 @@ export class ObservationSpeciesRouteController extends WriterRouteController <Ob
      */
     get update(): RouteHandler {
         return this.routeConfig<any>('obs:species-update', async (data: any, req: any) => {
-            const model: ObservationSpeciesUpdateModel = {
+            const model: ObservationUpdateModel = {
+                lat: data.lat,
+                long: data.long,
+                date: data.date,
                 length: data.length,
                 width: data.width,
                 accessDescription: data.accessDescription,
                 jurisdiction: req.jurisdictionCode,
                 species: req.species,
-                observation: req.observation,
+                observationType: req.validation.observationType,
+                speciesAgency: req.validation.speciesAgency,
                 density: req.validation.density,
                 distribution: req.validation.distribution,
-                surveyType: req.validation.surveyType,
-                speciesAgency: req.validation.speciesAgency,
-                surveyGeometry: req.validation.surveyGeometry,
+                observationGeometry: req.validation.observationGeometry,
                 specificUseCode: req.validation.specificUseCode,
                 soilTexture: req.validation.soilTexture,
-                surveyorFirstName: data.surveyorFirstName,
-                surveyorLastName: data.surveyorLastName
+                observerFirstName: data.observerFirstName,
+                observerLastName: data.observerLastName
             };
-            const observationSpecies: ObservationSpecies = this.validation<any>(req).id as ObservationSpecies;
-            return [200, await this.dataController.updateObservationOfSpecies(observationSpecies, model, req.user)];
+            const observation: Observation = this.validation<any>(req).id as Observation;
+            return [200, await this.dataController.update(observation, model, req.user)];
         });
     }
 }
@@ -155,6 +152,6 @@ export class ObservationSpeciesRouteController extends WriterRouteController <Ob
 /**
  * @description Exposing router object
  */
-export const observationSpeciesRoute = (): Router => ObservationSpeciesRouteController.shared.router;
+export const observationModifyRoute = (): Router => ObservationModifyRouteController.shared.router;
 
 // -----------------------------------------------------------------------------------------------------------
