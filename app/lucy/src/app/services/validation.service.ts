@@ -107,58 +107,52 @@ export class ValidationService {
       return `Observation date is missing`;
     }
 
-    if (!observation.observerFirstName) {
+    if (!observation.surveyorFirstName) {
       return `Observer's first name is missing`;
     }
 
-    if (!observation.observerLastName) {
+    if (!observation.surveyorLastName) {
       return `Observer's last name is missing`;
     }
 
-    if (!observation.observerOrganization) {
+    if (!observation.speciesAgency) {
       return `Observer organization is missing`;
     }
 
-    if (observation.speciesObservations.length < 1) {
-      return `You must add an invasive plant species`;
+    if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width)) ) {
+      return `You must specify a valid plot dimention for invasive plant species`;
     }
 
-    for (const species of observation.speciesObservations) {
-      if (!species.width || !species.length || !this.isValidPlotDimention(String(species.length)) || !this.isValidPlotDimention(String(species.width)) ) {
-        return `You must specify a valid plot dimention for invasive plant species`;
-      }
+    if (!observation.jurisdiction) {
+      return `You must add a jurisdiction for invasive plant species`;
+    }
 
-      if (!species.jurisdiction) {
-        return `You must add a jurisdiction for invasive plant species`;
-      }
+    if (!observation.species) {
+      return `You must add a plant species for invasive plant species`;
+    }
 
-      if (!species.species) {
-        return `You must add a plant species for invasive plant species`;
-      }
+    if (!observation.density) {
+      return `You must add density for invasive plant species`;
+    }
 
-      if (!species.density) {
-        return `You must add density for invasive plant species`;
-      }
+    if (!observation.distribution) {
+      return `You must add distribution for invasive plant species`;
+    }
 
-      if (!species.distribution) {
-        return `You must add distribution for invasive plant species`;
-      }
+    if (!observation.surveyType) {
+      return `You must add survey type for invasive plant species`;
+    }
 
-      if (!species.surveyType) {
-        return `You must add survey type for invasive plant species`;
-      }
+    if (!observation.surveyGeometry) {
+      return `You must add survey geometry type for invasive plant species`;
+    }
 
-      if (!species.surveyGeometry) {
-        return `You must add survey geometry type for invasive plant species`;
-      }
+    if (!observation.specificUseCode) {
+      return `You must add specific use code for invasive plant species`;
+    }
 
-      if (!species.specificUseCode) {
-        return `You must add specific use code for invasive plant species`;
-      }
-
-      if (!species.soilTexture) {
-        return `You must add soil texture for invasive plant species`;
-      }
+    if (!observation.soilTexture) {
+      return `You must add soil texture for invasive plant species`;
     }
     return null;
   }

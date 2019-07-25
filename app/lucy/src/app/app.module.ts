@@ -44,7 +44,6 @@ import { AccessRequestResponseModalComponent} from './components/admin-tools/acc
 import { UserCellComponent } from './components/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/admin-tools/request-cell/request-cell.component';
 import { AddPlantObservationBasicInformationComponent } from './components/add-plant-observation/add-plant-observation-basic-information/add-plant-observation-basic-information.component';
-import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species/add-plant-observation-invasive-plant-species.component';
 import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/user-access-updated-modal/user-access-updated-modal.component';
 import { AlertComponent } from './components/alert/alert.component';
@@ -80,7 +79,6 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     UserCellComponent,
     RequestCellComponent,
     AddPlantObservationBasicInformationComponent,
-    AddPlantObservationInvasivePlantSpeciesComponent,
     UserAccessUpdatedModalComponent,
     AlertComponent,
     MapPreviewComponent,

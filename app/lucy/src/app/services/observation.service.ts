@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observation, SpeciesObservations } from '../models';
+import { Observation } from '../models';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
 import { ObjectValidatorService } from './object-validator.service';
@@ -64,30 +64,6 @@ export class ObservationService {
     return body;
   }
 
-  // TODO: Remove
-  private speciesObservationBody(species: SpeciesObservations, observation: Observation, observationId: number): any {
-    const speciesBody = {
-      observation: observationId,
-      species: species.species.species_id,
-      jurisdiction: species.jurisdiction.jurisdiction_code_id,
-      density: species.density.species_density_code_id,
-      distribution: species.distribution.species_distribution_code_id,
-      surveyType: species.surveyType.survey_type_code_id,
-      surveyGeometry: species.surveyGeometry.survey_geometry_code_id,
-      specificUseCode: species.specificUseCode.specific_use_code_id,
-      soilTexture: species.soilTexture.soil_texture_code_id,
-      width: +species.width,
-      length: +species.length,
-      accessDescription: species.accessDescription,
-
-      surveyorFirstName: observation.surveyorFirstName,
-      surveyorLastName: observation.surveyorLastName,
-      speciesAgency: observation.speciesAgency.species_agency_code_id
-    };
-
-    return speciesBody;
-  }
-
   public async getAll(): Promise<Observation[]> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observation, null);
     if (response.success && Array.isArray(response.response) && this.objectValidator.isObservationObject(response.response[0])) {
@@ -104,5 +80,31 @@ export class ObservationService {
     } else {
       return undefined;
     }
+  }
+
+  public getEmptyObservation(): Observation {
+    const object: Observation = {
+      observation_id: -1,
+      lat: undefined,
+      long: undefined,
+      date: undefined,
+
+      surveyorFirstName: undefined,
+      surveyorLastName: undefined,
+      speciesAgency: undefined,
+
+      species: undefined,
+      jurisdiction: undefined,
+      density: undefined,
+      distribution: undefined,
+      surveyType: undefined,
+      surveyGeometry: undefined,
+      specificUseCode: undefined,
+      soilTexture: undefined,
+      width: undefined,
+      length: undefined,
+      accessDescription: undefined,
+    }
+    return object;
   }
 }

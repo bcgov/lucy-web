@@ -2,8 +2,7 @@ import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter } from
 import { ConverterService } from 'src/app/services/converter.service';
 import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-// import 'node_modules/leaflet/';
-import { FormMode, SpeciesObservations, Observation } from 'src/app/models';
+import { FormMode, Observation } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
@@ -127,10 +126,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  get invasiveSpecies(): SpeciesObservations[] {
-    if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
-    return this.observationObject.speciesObservations;
-  }
+  // get invasiveSpecies(): SpeciesObservations[] {
+  //   if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
+  //   return this.observationObject.speciesObservations;
+  // }
 
   ///// Invasive plant objects
   private _object: Observation;
@@ -160,22 +159,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     };
   }
 
-  handleAnimation(anim: any) {
-    this.anim = anim;
-  }
-
-  stop() {
-    this.anim.stop();
-  }
-
-  play() {
-    this.anim.play();
-  }
-
-  pause() {
-    this.anim.pause();
-  }
-
   setSpeed(speed: number) {
     this.animationSpeed = speed;
     this.anim.setSpeed(speed);
@@ -186,10 +169,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
+
   }
 
   private initialize() {
-
     if (this.viewing) {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
@@ -234,28 +217,46 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   initializeObjectIfDoesntExist() {
     if (!this._object) {
-       this._object = {
-        observation_id: -1,
-        lat: undefined,
-        long: undefined,
-        observerFirstName: undefined,
-        observerLastName: undefined,
-        observerOrganization: undefined,
-        date: undefined,
-        speciesObservations: []
-      };
+      this._object = this.observationService.getEmptyObservation();
       console.log(`initialized observation`);
     }
   }
 
-  invasivePlantSpeciesChanged(event: SpeciesObservations[]) {
-    this.observationObject.speciesObservations = event;
+  /**
+   * Triggered with changed from
+   * app-add-plant-observation-invasive-plant-species-cell Component.
+   * Stores fields from event that are present in the component.
+   * @param event Observation
+   */
+  invasivePlantSpeciesChanged(event: Observation) {
+    /* DO NOT set object in this class to = event */
+    this.observationObject.species = event.species;
+    this.observationObject.jurisdiction = event.jurisdiction;
+    this.observationObject.density = event.density;
+    this.observationObject.distribution = event.distribution;
+    this.observationObject.surveyType = event.surveyType;
+    this.observationObject.surveyGeometry = event.surveyGeometry;
+    this.observationObject.specificUseCode = event.specificUseCode;
+    this.observationObject.soilTexture = event.soilTexture;
+    this.observationObject.width = event.width;
+    this.observationObject.length = event.length;
+    this.observationObject.accessDescription = event.accessDescription;
   }
 
+  /**
+   * Triggered with changed from
+   * app-add-plant-observation-basic-information Component.
+   * Stores fields from event that are present in the component.
+   * @param event Observation
+   */
   basicInfoChanged(event: Observation) {
+    /* DO NOT set object in this class to = event */
     this.observationObject.lat = event.lat;
     this.observationObject.long = event.long;
     this.observationObject.observation_id = event.observation_id;
+    this.observationObject.surveyorFirstName = event.surveyorFirstName;
+    this.observationObject.surveyorLastName = event.surveyorLastName;
+    this.observationObject.speciesAgency = event.speciesAgency;
   }
 
   public onIntersection({ target, visible }: { target: Element; visible: boolean }): void {
@@ -276,6 +277,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
       return;
     }
+    console.log(`Validating Object`);
+    console.dir(this.observationObject);
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
       console.log(` ***** can submit *****`);
@@ -319,7 +322,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   async generateObservationForTesting() {
     this.loadingService.add();
     const obj = await this.dummy.createDummyObservation([]);
-    console.dir(obj);
     this.observationObject = obj;
     this.loadingService.remove();
   }
