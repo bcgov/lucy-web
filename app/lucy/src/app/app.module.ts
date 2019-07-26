@@ -8,7 +8,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 // Material
-import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule, MatToolbarModule } from '@angular/material';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
 
 // Third-party
 // ng-bootstrap
@@ -44,7 +46,6 @@ import { AccessRequestResponseModalComponent} from './components/admin-tools/acc
 import { UserCellComponent } from './components/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/admin-tools/request-cell/request-cell.component';
 import { AddPlantObservationBasicInformationComponent } from './components/add-plant-observation/add-plant-observation-basic-information/add-plant-observation-basic-information.component';
-import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species/add-plant-observation-invasive-plant-species.component';
 import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/user-access-updated-modal/user-access-updated-modal.component';
 import { AlertComponent } from './components/alert/alert.component';
@@ -80,7 +81,6 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     UserCellComponent,
     RequestCellComponent,
     AddPlantObservationBasicInformationComponent,
-    AddPlantObservationInvasivePlantSpeciesComponent,
     UserAccessUpdatedModalComponent,
     AlertComponent,
     MapPreviewComponent,
@@ -110,6 +110,9 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatNativeDateModule,
     MatSelectModule,
     MatInputModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatIconModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

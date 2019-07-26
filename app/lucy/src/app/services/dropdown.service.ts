@@ -82,7 +82,7 @@ export class DropdownService {
    * deopdown objects
    */
   public async getSurveyModes(): Promise<DropdownObject[]> {
-    const modes = await this.codeTableService.getSurveyTypeCodes();
+    const modes = await this.codeTableService.observationTypeCodes();
     return this.createDropdownObjectsFrom(modes, this.displayedSurveyTypeField);
   }
 
@@ -118,7 +118,7 @@ export class DropdownService {
    * deopdown objects
    */
   public async getGeometry(): Promise<DropdownObject[]> {
-    const geometry = await this.codeTableService.getSurveyGeometryCodes();
+    const geometry = await this.codeTableService.observationGeometryCodes();
     return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
   }
 
