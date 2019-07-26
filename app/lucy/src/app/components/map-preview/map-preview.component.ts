@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, AfterContentChecked, Input, Output , EventEmitter, AfterViewChecked} from '@angular/core';
 import 'node_modules/leaflet/';
+import 'node_modules/leaflet.markercluster';
 declare let L;
 
 export interface MapPreviewPoint {
@@ -22,6 +23,8 @@ export interface LatLong {
 })
 
 export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChecked {
+  private markerColor = '#3700B3';
+  private clusterMarkers = L.markerClusterGroup();
   private map?;
   private markerGroup?;
   private ready = false;
@@ -122,16 +125,20 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     // Use Open street tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      preferCanvas: true,
       key: this.makeid(10)
     }).addTo(this.map);
+    this.mask();
   }
 
   private initMapWithGoogleSatellite() {
     // Use Google tiles
     L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
       // attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'.
+      preferCanvas: true,
       key: this.makeid(10)
     }).addTo(this.map);
+    this.mask();
   }
 
   private makeid(length: number) {
@@ -184,10 +191,21 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * and add all markers in this.markers.
    */
   private addMarkers() {
-    this.clearMarkers();
+    this.addClusteringMarkers();
+    // this.clearMarkers();
+    // this.markers.forEach((element) => {
+    //   this.addMapMarkerAt(element.latitude, element.longitude);
+    // });
+  }
+
+  private addClusteringMarkers() {
     this.markers.forEach((element) => {
-      this.addMapMarkerAt(element.latitude, element.longitude);
+      const marker = L.circleMarker([element.latitude, element.longitude], {
+        color: this.markerColor,
+      });
+      this.clusterMarkers.addLayer(marker);
     });
+    this.map.addLayer(this.clusterMarkers);
   }
 
   /**
@@ -205,12 +223,166 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    */
   private addMapMarkerAt(lat: number, long: number) {
     if (!this.markerGroup) { return; }
-    L.marker([lat, long]).addTo(this.markerGroup);
+    L.circleMarker([lat, long], {
+      color: '#3388ff'
+    }).addTo(this.markerGroup);
   }
   //////////////////////////////////////////////
+
+  private addMapClusteringMarkers(lat: number, long: number) {
+    let markers = L.markerClusterGroup();
+    markers.addLayer(L.marker([lat, long]));
+    this.map.addLayer(markers);
+  }
 
   // showMapAtCurrentLatLong() {
   //   this.showMapAt(this.lat, this.long, 15)
   //   this.addMapMarkerAt(this.lat, this.long)
   // }
+
+  /**
+   * GeoJSON outline of bc
+   * generated with http://geojson.io/
+   */
+  get bc(): any {
+    const bc = {
+      'type': 'FeatureCollection',
+      'features': [
+        {
+          'type': 'Feature',
+          'properties': {},
+          'geometry': {
+            'type': 'LineString',
+            'coordinates': [
+              [
+                -139.39453125,
+                60.02095215374802
+              ],
+              [
+                -119.92675781249999,
+                60.04290359809164
+              ],
+              [
+                -119.970703125,
+                53.80065082633023
+              ],
+              [
+                -114.9609375,
+                48.980216985374994
+              ],
+              [
+                -123.26660156249999,
+                49.03786794532644
+              ],
+              [
+                -123.04687499999999,
+                48.777912755501845
+              ],
+              [
+                -123.26660156249999,
+                48.66194284607006
+              ],
+              [
+                -123.04687499999999,
+                48.37084770238366
+              ],
+              [
+                -123.3544921875,
+                48.19538740833338
+              ],
+              [
+                -124.76074218749999,
+                48.48748647988415
+              ],
+              [
+                -129.77050781249997,
+                50.90303283111257
+              ],
+              [
+                -132.71484375,
+                52.93539665862318
+              ],
+              [
+                -133.1982421875,
+                54.059387886623576
+              ],
+              [
+                -133.7255859375,
+                55.32914440840507
+              ],
+              [
+                -134.9560546875,
+                56.19448087726972
+              ],
+              [
+                -135.4833984375,
+                56.897003921272606
+              ],
+              [
+                -135.966796875,
+                56.9449741808516
+              ],
+              [
+                -136.58203125,
+                57.98480801923985
+              ],
+              [
+                -139.70214843749997,
+                59.489726035537075
+              ],
+              [
+                -139.39453125,
+                60.02095215374802
+              ]
+            ]
+          }
+        }
+      ]
+    };
+    return bc;
+  }
+
+  addBCBorder() {
+    L.geoJSON(this.bc).addTo(this.map);
+  }
+
+  mask() {
+    this.addBCBorder();
+    return;
+    // L.Mask = L.Polygon.extend({
+    //   options: {
+    //     stroke: false,
+    //     color: '#333',
+    //     fillOpacity: 0.5,
+    //     clickable: true,
+
+    //     outerBounds: new L.LatLngBounds([-90, -360], [90, 360])
+    //   },
+
+    //   initialize: function (latLngs, options) {
+
+    //     const outerBoundsLatLngs = [
+    //       this.options.outerBounds.getSouthWest(),
+    //       this.options.outerBounds.getNorthWest(),
+    //       this.options.outerBounds.getNorthEast(),
+    //       this.options.outerBounds.getSouthEast()
+    //     ];
+    //     L.Polygon.prototype.initialize.call(this, [outerBoundsLatLngs, latLngs], options);
+    //   },
+
+    // });
+    // L.mask = function (points, options) {
+    //   return new L.Mask(points, options);
+    // };
+
+    const coordinates = this.bc.features[0].geometry.coordinates[0];
+    const bcCoordinates = [];
+    for (let i = 0; i < coordinates.length; i++) {
+      bcCoordinates.push(new L.LatLng(coordinates[i][1], coordinates[i][0]));
+    }
+
+    console.log('masking');
+
+    L.mask(bcCoordinates).addTo(this.map);
+  }
 }
