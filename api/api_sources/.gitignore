@@ -2,6 +2,10 @@
 **/swagger.raw.yaml
 swagger.raw.yaml
 
+# Sample file gen
+sample.sql
+sample-*.sql
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Dist
 **/.DS_Store

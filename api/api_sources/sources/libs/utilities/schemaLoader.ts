@@ -27,7 +27,7 @@ import { yaml, verifyObject } from './helpers.utilities';
 import { TableColumnDefinition } from '../../database/applicationSchemaInterface';
 
 export class SchemaCache {
-    static _cached: {[key: string]: SchemaLoader};
+    static _cached: {[key: string]: SchemaLoader} = {};
     static getSchemaLoader(path: string): SchemaLoader {
         if (this._cached[path]) {
             return this._cached[path];
@@ -129,13 +129,17 @@ export class SchemaLoader {
         const ft = column.foreignTable || '';
         if (ft) {
             // Checking Foreign table
-            assert(this.tables[ft], new Error(`SchemaLoader(vfc): No foreign Table ${ft} for column ${columnKey}:${column.name}`));
+            // 1. Check for external tables
+            const ftExists = _.some(this.schemaFileObj.externalTables || [], (ext: any) => ext.name === ft);
+            if (!ftExists) {
+                assert(this.tables[ft], new Error(`SchemaLoader(vfc): No foreign Table ${ft} for column ${columnKey}:${column.name}`));
 
-            // Checking Ref column
-            const rc = column.refColumn || '';
-            if (rc) {
-                const columns = this.tables[ft];
-                assert(columns.includes(rc) === true, new Error(`SchemaLoader(vfc): no ref column ${rc} for ${column}:${column.name} with foreign table ${ft}`));
+                // Checking Ref column
+                const rc = column.refColumn || '';
+                if (rc) {
+                    const columns = this.tables[ft];
+                    assert(columns.includes(rc) === true, new Error(`SchemaLoader(vfc): no ref column ${rc} for ${column}:${column.name} with foreign table ${ft}`));
+                }
             }
         }
     }

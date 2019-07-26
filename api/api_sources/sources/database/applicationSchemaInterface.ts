@@ -19,7 +19,7 @@
 import * as _ from 'underscore';
 import * as assert from 'assert';
 import * as fs from 'fs';
-import { unWrap, yaml, saveYaml } from '../libs/utilities';
+import { unWrap, yaml, saveYaml, SchemaCache, SchemaLoader, incrementalWrite } from '../libs/utilities';
 import { getSQLFileData, getSQLFilePath } from './database-schema/schema-sqls';
 
 export type TableColumnRef = [string, string, boolean];
@@ -212,8 +212,8 @@ export class  BaseTableSchema {
     }
 
     loadSchema(): boolean {
-        assert(yaml);
-        const yamlObject: any = yaml(this.schemaFilePath);
+        const schemaLoader: SchemaLoader = SchemaCache.getSchemaLoader(this.schemaFilePath);
+        const yamlObject: any = schemaLoader.schemaFileObj;
         // Get schema
         const def = (yamlObject.schemas || {})[this.constructor.name];
         if (!def) {
@@ -269,7 +269,7 @@ export class  BaseTableSchema {
         \n-- ### Creating User Audit Columns ### --\n
         \n${auditColumns}\n -- ### End: ${this.table.name} ### --\n`;
         // console.log(`${final}`);
-        fs.writeFileSync(fileToSave, final, { flag: 'w+', encoding: 'utf8'});
+        incrementalWrite(fileToSave, final);
         return final;
     }
 
@@ -336,7 +336,7 @@ export class  BaseTableSchema {
         const entryString = this.entryString(context, inputColumns);
         const sqlString = this.createDataEntrySql(entryString, data);
         const saveFilePath = getSQLFilePath(this.dataSQLPath(context));
-        fs.writeFileSync(saveFilePath, sqlString, { flag: 'w+', encoding: 'utf8'});
+        incrementalWrite(saveFilePath, sqlString);
     }
 
     /**
