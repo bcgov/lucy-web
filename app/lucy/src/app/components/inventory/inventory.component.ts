@@ -247,7 +247,7 @@ export class InventoryComponent implements OnInit {
   async createDummys() {
     this.loadingService.add();
     this.observations = [];
-    const random = await this.dummy.createDummyObservations(40);
+    const random = await this.dummy.createDummyObservations(100);
     this.observations = random;
     this.setMapMarkers();
     this.loadingService.remove();

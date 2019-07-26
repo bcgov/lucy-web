@@ -8,8 +8,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 // Material
-import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule, MatToolbarModule } from '@angular/material';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
 
 // Third-party
 // ng-bootstrap
@@ -110,6 +111,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatSelectModule,
     MatInputModule,
     MatMenuModule,
+    MatToolbarModule,
+    MatIconModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

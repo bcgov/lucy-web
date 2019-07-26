@@ -24,6 +24,12 @@
   border: 1px solid #333333 !important;
 }
 
+/* Remove outline box around buttons - overriding bootstrap */
+button:focus, button:active:focus, button.active:focus {
+  outline: none !important;
+  outline-style: none !important;
+  }
+
 /* Center material icons with text */
 .material-icons {
   vertical-align: middle;
