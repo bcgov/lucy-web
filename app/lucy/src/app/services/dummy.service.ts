@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LatLong } from '../components/map-preview/map-preview.component';
-import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, SurveyTypeCodes, SoilTextureCodes, SurveyGeometryCodes, SpecificUseCodes, Observation } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, Observation } from '../models';
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
@@ -70,8 +70,8 @@ export class DummyService {
     }
   }
 
-  public async randomSurveyTypeCodes(): Promise<SurveyTypeCodes | undefined> {
-    const codes = await this.codeTables.getSurveyTypeCodes();
+  public async randomSurveyTypeCodes(): Promise<ObservationTypeCodes | undefined> {
+    const codes = await this.codeTables.observationTypeCodes();
     if (codes.length > 0) {
       return codes[this.randomIntFromInterval(0, codes.length - 1)];
     } else {
@@ -89,8 +89,8 @@ export class DummyService {
     }
   }
 
-  public async randomSurveyGeometryCodes(): Promise<SurveyGeometryCodes | undefined> {
-    const codes = await this.codeTables.getSurveyGeometryCodes();
+  public async randomSurveyGeometryCodes(): Promise<ObservationGeometryCodes | undefined> {
+    const codes = await this.codeTables.observationGeometryCodes();
     if (codes.length > 0) {
       return codes[this.randomIntFromInterval(0, codes.length - 1)];
     } else {
@@ -150,25 +150,18 @@ export class DummyService {
       date: this.randomDateString(),
       observerFirstName: faker.name.firstName(),
       observerLastName: faker.name.lastName(),
-      observerOrganization: agency,
-      speciesObservations: [{
-        observationSpecies_Id: 1,
-        species: invasivePlantSpecies,
-        jurisdiction: jurisdiction,
-        density: density,
-        distribution: distribution,
-        surveyType: surveyType,
-        surveyGeometry: geometry,
-        specificUseCode: useCode,
-        soilTexture: soilTexture,
-        width: this.randomIntFromInterval(4, 20),
-        length: this.randomIntFromInterval(4, 20),
-        accessDescription: faker.lorem.sentences(),
-
-        surveyorFirstName: faker.name.firstName(),
-        surveyorLastName: faker.name.lastName(),
-        speciesAgency: agency,
-      }]
+      speciesAgency: agency,
+      species: invasivePlantSpecies,
+      jurisdiction: jurisdiction,
+      density: density,
+      distribution: distribution,
+      observationType: surveyType,
+      observationGeometry: geometry,
+      specificUseCode: useCode,
+      soilTexture: soilTexture,
+      width: this.randomIntFromInterval(4, 20),
+      length: this.randomIntFromInterval(4, 20),
+      accessDescription: faker.lorem.sentences(),
     };
     return observation;
   }
