@@ -1,4 +1,9 @@
 version: '1.0'
+externalTables:
+  - name: species
+    description: Species table
+  - name: application_user
+    description: User table
 schemas: 
   JurisdictionCodeSchema:
     name: jurisdiction_code

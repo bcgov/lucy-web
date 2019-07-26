@@ -21,7 +21,7 @@
  * -----
  */
 import { should, expect } from 'chai';
-import { verifyObject } from './helpers.utilities';
+import { verifyObject, incrementalFileName, applicationTemFileDir, incrementalWrite } from './helpers.utilities';
 
 
 describe('Test Helper/Utilities', () => {
@@ -39,5 +39,23 @@ describe('Test Helper/Utilities', () => {
             console.log(`Exception: ${excp}`);
             should().exist(excp);
         }
+    });
+
+    it('should return incremental file name', () => {
+        const fileName = 'laba.gas.txt';
+        const result = incrementalFileName(fileName, 123);
+        expect(result).to.be.equal('laba.gas-123.txt');
+    });
+
+    it('should return application temp dir', () => {
+        should().exist(applicationTemFileDir());
+    });
+
+    it('should incrementally write', () => {
+        const filePath = `${applicationTemFileDir()}/test.${Date.now()}.txt`;
+        const r1 = incrementalWrite(filePath, 'Lao 1');
+        expect(r1).to.be.equal(filePath);
+        const r2 = incrementalWrite(filePath, 'Lao 2');
+        expect(r2).to.be.not.equal(filePath);
     });
 });
