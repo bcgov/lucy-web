@@ -23,6 +23,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as cross from 'cors';
 import * as path from 'path';
+import * as fs from 'fs';
 
 import {Logger} from '../logger';
 import AppConfig from '../../AppConfig';
@@ -75,12 +76,7 @@ class ExpressApp {
         // Cross origin
         this.app.use(cross());
 
-        // Schema-spy local url
-        const schemaSpy = process.env.SCHEMASPY_PATH;
-        if (schemaSpy) {
-            this.logger.info(`Schemaspy analysis result path: ${schemaSpy}`);
-            this.app.use('/api/dev/schemaspy', express.static(schemaSpy));
-        }
+        this.configSchemaSpy();
 
         // Code coverage
         const coverage = path.resolve(__dirname, '../../../coverage');
@@ -126,7 +122,21 @@ class ExpressApp {
             this.logger.error(`*** Error: ${err} **`);
             process.exit(1);
         }
+    }
 
+    configSchemaSpy() {
+        // Schema-spy local url
+        const schemaSpy = process.env.SCHEMASPY_PATH;
+        if (schemaSpy) {
+            this.logger.info(`Schemaspy analysis result path: ${schemaSpy}`);
+            this.app.use('/api/dev/schemaspy', express.static(schemaSpy));
+        } else {
+            const schemaSpyPath = path.resolve(__dirname, '../../../schemaspy');
+            if (fs.existsSync(schemaSpyPath)) {
+                this.logger.info(`Schemaspy analysis result path: ${schemaSpyPath}`);
+                this.app.use('/api/dev/schemaspy', express.static(schemaSpyPath));
+            }
+        }
     }
 }
 

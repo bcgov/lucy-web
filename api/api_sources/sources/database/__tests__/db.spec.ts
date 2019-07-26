@@ -23,7 +23,6 @@ import { should, expect } from 'chai';
 import { ApplicationTableColumn, defineColumn, createColumn, BaseTableSchema, ApplicationTable} from '../applicationSchemaInterface';
 import { getYAMLFilePath } from '../database-schema/schema-files';
 import { SchemaCache } from '../../libs/utilities';
-import { getSQLFilePath } from '../database-schema';
 
 class TestSchema extends BaseTableSchema {
     defineTable() {
