@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
 import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormMode, Observation } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
@@ -36,9 +36,9 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   private animationSpeed = 1;
   /////////////////
 
-   /**
-   * submit button title for different states
-   */
+  /**
+  * submit button title for different states
+  */
   get submitBtnName(): string {
     switch (this.mode) {
       case FormMode.Create: {
@@ -60,7 +60,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         return `How are you here?`;
     }
   }
-   /* ***** */
+  /* ***** */
 
   /**
    * Page title for different states
@@ -86,7 +86,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         return `How are you here?`;
     }
   }
-   /* ***** */
+  /* ***** */
 
   private _visibleClasses = [];
 
@@ -159,11 +159,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     };
   }
 
-  setSpeed(speed: number) {
-    this.animationSpeed = speed;
-    this.anim.setSpeed(speed);
-  }
-
   ngOnInit() {
     this.initialize();
   }
@@ -222,6 +217,30 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  //// Lottie
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
+
+  ///////
+
   /**
    * Triggered with changed from
    * app-add-plant-observation-invasive-plant-species-cell Component.
@@ -234,8 +253,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     this.observationObject.jurisdiction = event.jurisdiction;
     this.observationObject.density = event.density;
     this.observationObject.distribution = event.distribution;
-    this.observationObject.surveyType = event.surveyType;
-    this.observationObject.surveyGeometry = event.surveyGeometry;
+    this.observationObject.observationType = event.observationType;
+    this.observationObject.observationGeometry = event.observationGeometry;
     this.observationObject.specificUseCode = event.specificUseCode;
     this.observationObject.soilTexture = event.soilTexture;
     this.observationObject.width = event.width;
@@ -254,8 +273,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     this.observationObject.lat = event.lat;
     this.observationObject.long = event.long;
     this.observationObject.observation_id = event.observation_id;
-    this.observationObject.surveyorFirstName = event.surveyorFirstName;
-    this.observationObject.surveyorLastName = event.surveyorLastName;
+    this.observationObject.observerFirstName = event.observerFirstName;
+    this.observationObject.observerLastName = event.observerLastName;
     this.observationObject.speciesAgency = event.speciesAgency;
   }
 

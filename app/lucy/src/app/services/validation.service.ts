@@ -107,11 +107,11 @@ export class ValidationService {
       return `Observation date is missing`;
     }
 
-    if (!observation.surveyorFirstName) {
+    if (!observation.observerFirstName) {
       return `Observer's first name is missing`;
     }
 
-    if (!observation.surveyorLastName) {
+    if (!observation.observerLastName) {
       return `Observer's last name is missing`;
     }
 
@@ -139,11 +139,11 @@ export class ValidationService {
       return `You must add distribution for invasive plant species`;
     }
 
-    if (!observation.surveyType) {
+    if (!observation.observationType) {
       return `You must add survey type for invasive plant species`;
     }
 
-    if (!observation.surveyGeometry) {
+    if (!observation.observationGeometry) {
       return `You must add survey geometry type for invasive plant species`;
     }
 

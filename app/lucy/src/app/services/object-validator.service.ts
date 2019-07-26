@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, SurveyTypeCodes, SoilTextureCodes, SurveyGeometryCodes, SpecificUseCodes} from '../models';
+import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 
@@ -83,12 +83,12 @@ export class ObjectValidatorService {
   }
 
   /**
-   * Check if object is surveyTypeCodes
+   * Check if object is ObservationTypeCodes
    * @param distribution object
    */
-  public isSurveyTypeCodesObject(surveyType: any): surveyType is SurveyTypeCodes {
-    if (surveyType === undefined || surveyType === null) {return false; }
-    return (<SurveyTypeCodes>surveyType.description) !== undefined;
+  public isObservationTypeCodesObject(observationType: any): observationType is ObservationTypeCodes {
+    if (observationType === undefined || observationType === null) {return false; }
+    return (<ObservationTypeCodes>observationType.description) !== undefined;
   }
 
   /**
@@ -101,12 +101,12 @@ export class ObjectValidatorService {
   }
 
   /**
-   * Check if object is surveyGeometryCodes
+   * Check if object is ObservationGeometryCodes
    * @param distribution object
    */
-  public isSurveyGeometryCodesObject(surveyGeometry: any): surveyGeometry is SurveyGeometryCodes {
-    if (surveyGeometry === undefined || surveyGeometry === null) {return false; }
-    return (<SurveyGeometryCodes>surveyGeometry.description) !== undefined;
+  public isObservationGeometryCodesObject(observationGeometry: any): observationGeometry is ObservationGeometryCodes {
+    if (observationGeometry === undefined || observationGeometry === null) {return false; }
+    return (<ObservationGeometryCodes>observationGeometry.description) !== undefined;
   }
 
   /**

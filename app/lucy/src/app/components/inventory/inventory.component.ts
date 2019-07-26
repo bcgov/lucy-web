@@ -178,14 +178,14 @@ export class InventoryComponent implements OnInit {
 
     // Sort objects
     this.observations.sort((left, right): number => {
-      if (left.surveyorFirstName < right.surveyorLastName) {
+      if (left.observerFirstName < right.observerLastName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.surveyorFirstName > right.surveyorLastName) {
+      if (left.observerFirstName > right.observerLastName) {
         if (this.sortAscending) {
           return -1;
         } else {

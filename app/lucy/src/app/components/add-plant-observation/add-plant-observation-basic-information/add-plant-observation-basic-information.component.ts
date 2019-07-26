@@ -37,14 +37,14 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   get observerFirstName(): string {
     if (this.observationObject) {
-      return this.observationObject.surveyorFirstName;
+      return this.observationObject.observerFirstName;
     }
     return ``;
   }
 
   get observerLastName(): string {
     if (this.observationObject) {
-      return this.observationObject.surveyorLastName;
+      return this.observationObject.observerLastName;
     }
     return ``;
   }
@@ -179,14 +179,14 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
 
   observerLastNameChanged(value: string) {
     if (this.observationObject) {
-      this.observationObject.surveyorLastName = value;
+      this.observationObject.observerLastName = value;
     }
     this.notifyChangeEvent();
   }
 
   observerFirstNameChanged(value: string) {
     if (this.observationObject) {
-      this.observationObject.surveyorFirstName = value;
+      this.observationObject.observerFirstName = value;
     }
     this.notifyChangeEvent();
   }

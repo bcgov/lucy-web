@@ -46,12 +46,12 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
 
   get selectedGeometry(): DropdownObject | undefined {
-    if (!this.observationObject || !this.observationObject.surveyGeometry) {
+    if (!this.observationObject || !this.observationObject.observationGeometry) {
       return undefined;
     }
     return {
-      name: this.observationObject.surveyGeometry[this.dropdownService.displayedSurveyGeometryField],
-      object: this.observationObject.surveyGeometry,
+      name: this.observationObject.observationGeometry[this.dropdownService.displayedSurveyGeometryField],
+      object: this.observationObject.observationGeometry,
     };
   }
 
@@ -86,22 +86,22 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
   }
  
   get selectedSurveyType(): DropdownObject | undefined {
-    if (!this.observationObject || !this.observationObject.surveyType) {
+    if (!this.observationObject || !this.observationObject.observationType) {
       return undefined;
     }
     return {
-      name: this.observationObject.surveyType[this.dropdownService.displayedSurveyTypeField],
-      object: this.observationObject.surveyType,
+      name: this.observationObject.observationType[this.dropdownService.displayedSurveyTypeField],
+      object: this.observationObject.observationType,
     };
   }
 
   get selectedSurveyGeometry(): DropdownObject | undefined {
-    if (!this.observationObject || !this.observationObject.surveyGeometry) {
+    if (!this.observationObject || !this.observationObject.observationGeometry) {
       return undefined;
     }
     return {
-      name: this.observationObject.surveyGeometry[this.dropdownService.displayedSurveyGeometryField],
-      object: this.observationObject.surveyGeometry,
+      name: this.observationObject.observationGeometry[this.dropdownService.displayedSurveyGeometryField],
+      object: this.observationObject.observationGeometry,
     };
   }
 
@@ -274,7 +274,7 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
 
   surveyModeChanged(value: DropdownObject) {
     if (this.observationObject && value.object) {
-      this.observationObject.surveyType = value.object;
+      this.observationObject.observationType = value.object;
       this.notifyChangeEvent();
     }
   }
@@ -316,7 +316,7 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
 
   geometryChanged(value: DropdownObject) {
     if (this.observationObject && value.object) {
-      this.observationObject.surveyGeometry = value.object;
+      this.observationObject.observationGeometry = value.object;
       this.notifyChangeEvent();
     }
   }

@@ -4,16 +4,16 @@ export interface Observation {
     long: number;
     date: string;
  
-    surveyorFirstName: string;
-    surveyorLastName: string;
+    observerFirstName: string;
+    observerLastName: string;
     speciesAgency: SpeciesAgencyCodes;
 
     species: InvasivePlantSpecies;
     jurisdiction: Jurisdiction;
     density: SpeciesDensityCodes;
     distribution: SpeciesDistributionCodes;
-    surveyType: SurveyTypeCodes;
-    surveyGeometry: SurveyGeometryCodes;
+    observationType: ObservationTypeCodes;
+    observationGeometry: ObservationGeometryCodes;
     specificUseCode: SpecificUseCodes;
     soilTexture: SoilTextureCodes;
     width: number;
@@ -59,10 +59,10 @@ export interface SpeciesAgencyCodes {
     code: string;
 }
 
-export interface SurveyTypeCodes {
+export interface ObservationTypeCodes {
     description: string;
     activeIndicator:  boolean;
-    survey_type_code_id: 1;
+    observation_type_code_id: 1;
     code: string;
 }
 
@@ -73,10 +73,10 @@ export interface SoilTextureCodes {
     code: string;
 }
 
-export interface SurveyGeometryCodes {
+export interface ObservationGeometryCodes {
     description: string;
     activeIndicator: boolean;
-    survey_geometry_code_id: number;
+    observation_geometry_code_id: number;
     code: string;
 }
 

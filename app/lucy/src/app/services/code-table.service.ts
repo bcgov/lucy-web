@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { ObjectValidatorService } from './object-validator.service';
 import { AppConstants } from '../constants';
-import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, SurveyTypeCodes, SoilTextureCodes, SurveyGeometryCodes, SpecificUseCodes } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +15,9 @@ export class CodeTableService {
   private density: SpeciesDensityCodes[];
   private distributions: SpeciesDistributionCodes[];
 
-  private surveyTypes: SurveyTypeCodes[];
+  private surveyTypes: ObservationTypeCodes[];
   private soilTextures: SoilTextureCodes[];
-  private geometries: SurveyGeometryCodes[];
+  private geometries: ObservationGeometryCodes[];
   private useCodes: SpecificUseCodes[];
 
   private codeTables: any| null = null;
@@ -145,7 +145,7 @@ export class CodeTableService {
     return this.agencies;
   }
 
-  public async getSurveyTypeCodes(): Promise<SurveyTypeCodes[]> {
+  public async observationTypeCodes(): Promise<ObservationTypeCodes[]> {
     if (this.surveyTypes && this.surveyTypes.length > 0 ) {
       return this.surveyTypes;
     }
@@ -155,8 +155,8 @@ export class CodeTableService {
        return [];
     }
 
-    const surveyTypes = codes.surveyTypeCodes;
-    if ( surveyTypes && (Array.isArray(surveyTypes) && this.objectValidator.isSurveyTypeCodesObject(surveyTypes[0]))) {
+    const surveyTypes = codes.observationTypeCodes;
+    if ( surveyTypes && (Array.isArray(surveyTypes) && this.objectValidator.isObservationTypeCodesObject(surveyTypes[0]))) {
       this.surveyTypes = surveyTypes;
       return surveyTypes;
     }
@@ -181,7 +181,7 @@ export class CodeTableService {
     return this.soilTextures;
   }
 
-  public async getSurveyGeometryCodes(): Promise<SurveyGeometryCodes[]> {
+  public async observationGeometryCodes(): Promise<ObservationGeometryCodes[]> {
     if (this.geometries && this.geometries.length > 0 ) {
       return this.geometries;
     }
@@ -191,8 +191,8 @@ export class CodeTableService {
        return [];
     }
 
-    const geometries = codes.surveyGeometryCodes;
-    if ( geometries && (Array.isArray(geometries) && this.objectValidator.isSurveyGeometryCodesObject(geometries[0]))) {
+    const geometries = codes.observationGeometryCodes;
+    if ( geometries && (Array.isArray(geometries) && this.objectValidator.isObservationGeometryCodesObject(geometries[0]))) {
       this.geometries = geometries;
       return geometries;
     }
