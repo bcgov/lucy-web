@@ -103,7 +103,7 @@
     </div>
     <!-- Map -->
     <div class="col-12 col-md-8">
-      <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [center]="mapCenter" [markers]="markers">
+      <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [cluster]="false" [center]="mapCenter" [markers]="markers">
       </app-map-preview>
     </div>
   </div>

@@ -44,16 +44,16 @@ export class ObservationService {
       lat: observation.lat,
       long: observation.long,
       date: observation.date,
-      surveyorFirstName: observation.surveyorFirstName,
-      surveyorLastName: observation.surveyorLastName,
+      observerFirstName: observation.observerFirstName,
+      observerLastName: observation.observerLastName,
       speciesAgency: observation.speciesAgency.species_agency_code_id,
       // invasive plant species
       species: observation.species.species_id,
       jurisdiction: observation.jurisdiction.jurisdiction_code_id,
       density: observation.density.species_density_code_id,
       distribution: observation.distribution.species_distribution_code_id,
-      surveyType: observation.surveyType.survey_type_code_id,
-      surveyGeometry: observation.surveyGeometry.survey_geometry_code_id,
+      observationType: observation.observationType.observation_type_code_id,
+      observationGeometry: observation.observationGeometry.observation_geometry_code_id,
       specificUseCode: observation.specificUseCode.specific_use_code_id,
       soilTexture: observation.soilTexture.soil_texture_code_id,
       width: +observation.width,
@@ -76,6 +76,7 @@ export class ObservationService {
   public async getWithId(id: number): Promise<Observation | undefined> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observationWith(id), null);
     if (response.success && this.objectValidator.isObservationObject(response.response)) {
+      console.log(response.response);
       return response.response;
     } else {
       return undefined;
@@ -89,16 +90,16 @@ export class ObservationService {
       long: undefined,
       date: undefined,
 
-      surveyorFirstName: undefined,
-      surveyorLastName: undefined,
+      observerFirstName: undefined,
+      observerLastName: undefined,
       speciesAgency: undefined,
 
       species: undefined,
       jurisdiction: undefined,
       density: undefined,
       distribution: undefined,
-      surveyType: undefined,
-      surveyGeometry: undefined,
+      observationType: undefined,
+      observationGeometry: undefined,
       specificUseCode: undefined,
       soilTexture: undefined,
       width: undefined,
