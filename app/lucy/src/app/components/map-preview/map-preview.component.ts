@@ -25,7 +25,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   // Map reference
   private map?;
   // Single marker color
-  private markerColor = '#3700B3';
+  private markerColor = '#F3B229';
   // Used when cluser === true
   private clusterMarkers = L.markerClusterGroup();
   // used when cluser !== true
@@ -253,7 +253,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private addMapMarkerAt(lat: number, long: number) {
     if (!this.markerGroup) { return; }
     L.circleMarker([lat, long], {
-      color: '#3388ff'
+      color: this.markerColor
     }).addTo(this.markerGroup);
   }
 
