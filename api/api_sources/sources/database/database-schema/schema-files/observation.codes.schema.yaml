@@ -257,7 +257,7 @@ schemas:
       code: 
         name: 'observation_slope_code'
         comment: Integer encoded enum values for slope code
-        definition: SMALLINT NOT NULL UNIQUE
+        definition: VARCHAR(5) NOT NULL UNIQUE
   # --
   # -- AspectCodeSchema
   AspectCodeSchema:
@@ -270,6 +270,6 @@ schemas:
         definition: SERIAL PRIMARY KEY
       code: 
         name: 'observation_aspect_code'
-        comment: Integer encoded enum values for observation aspect code
-        definition: SMALLINT NOT NULL UNIQUE
+        comment: String encoded enum values for observation aspect code
+        definition: VARCHAR(4) NOT NULL UNIQUE
   # --

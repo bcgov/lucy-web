@@ -26,8 +26,8 @@ export class AspectCode extends Record {
 	 * @description Getter/Setter property for column {observation_aspect_code}
 	 */
 	@Column({ name: AspectCodeSchema.columns.code})
-	@ModelProperty({type: PropertyType.number})
-	code: number;
+	@ModelProperty({type: PropertyType.string})
+	code: string;
 
 	/**
 	 * @description Getter/Setter property for column {description}
