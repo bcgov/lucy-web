@@ -3,7 +3,7 @@
         
 CREATE TABLE observation_aspect_code ();
 ALTER TABLE observation_aspect_code ADD COLUMN observation_aspect_code_id SERIAL PRIMARY KEY;
-ALTER TABLE observation_aspect_code ADD COLUMN observation_aspect_code SMALLINT NOT NULL UNIQUE;
+ALTER TABLE observation_aspect_code ADD COLUMN observation_aspect_code VARCHAR(3) NOT NULL UNIQUE;
 ALTER TABLE observation_aspect_code ADD COLUMN description VARCHAR(100) NULL;
 ALTER TABLE observation_aspect_code ADD COLUMN active_ind BOOLEAN NOT NULL DEFAULT TRUE;
 
@@ -14,7 +14,7 @@ ALTER TABLE observation_aspect_code ADD COLUMN active_ind BOOLEAN NOT NULL DEFAU
         
 COMMENT ON TABLE observation_aspect_code IS 'Observation area aspect code. Aspect code provides integer enum encoded values for directional aspect of the observed species. The typical values like North facing or south facing';
 COMMENT ON COLUMN observation_aspect_code.observation_aspect_code_id IS 'Auto generated primary key';
-COMMENT ON COLUMN observation_aspect_code.observation_aspect_code IS 'Integer encoded enum values for observation aspect code';
+COMMENT ON COLUMN observation_aspect_code.observation_aspect_code IS 'String encoded enum values for observation aspect code';
 COMMENT ON COLUMN observation_aspect_code.description IS 'Description of code';
 COMMENT ON COLUMN observation_aspect_code.active_ind IS 'Indicator to check active status of code';
 

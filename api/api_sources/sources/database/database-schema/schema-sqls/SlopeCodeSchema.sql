@@ -3,7 +3,7 @@
         
 CREATE TABLE observation_slope_code ();
 ALTER TABLE observation_slope_code ADD COLUMN observation_slope_code_id SERIAL PRIMARY KEY;
-ALTER TABLE observation_slope_code ADD COLUMN observation_slope_code SMALLINT NOT NULL UNIQUE;
+ALTER TABLE observation_slope_code ADD COLUMN observation_slope_code VARCHAR(5) NOT NULL UNIQUE;
 ALTER TABLE observation_slope_code ADD COLUMN description VARCHAR(100) NULL;
 ALTER TABLE observation_slope_code ADD COLUMN active_ind BOOLEAN NOT NULL DEFAULT TRUE;
 

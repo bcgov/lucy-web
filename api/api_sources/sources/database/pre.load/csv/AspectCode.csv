@@ -1,11 +1,11 @@
 ﻿aspect_code,description
-0,Not available
-1,North facing
-2,Northeast facing
-3,East facing
-4,Southeast facing
-5,South facing
-6,Southwest facing
-7,West facing
-8,Northwest facing
+NA,Not available
+NF,North facing
+NEF,Northeast facing
+EF,East facing
+SEF,Southeast facing
+SF,South facing
+SWF,Southwest facing
+WF,West facing
+NWF,Northwest facing
 
