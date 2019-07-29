@@ -30,6 +30,15 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   /////////////////
 
+  get submitedMessage(): string {
+    if (this.creating) {
+      return `Entries Added`;
+    } else if (this.editing) {
+      return `Edits Submitted`;
+    }
+    return ``;
+  }
+
   // Lottie Animation
   public lottieConfig: Object;
   private anim: any;
@@ -328,10 +337,16 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
       console.log(` ***** can submit edit *****`);
-      // if (!this.inReviewMode) {
-      //   this.changeToReviewMode();
-      //   return;
-      // }
+      const changes = await this.observationService.diffObservation(this.observationObject);
+      if (changes && changes.changed) {
+        const confirmed = await this.alert.showConfirmation(`The following fields will be changed`, changes.diffMessage);
+        if (!confirmed) {
+          return;
+        }
+      } else {
+        this.alert.show(`No Edits found`, `There are no edits to submit`);
+        return;
+      }
       this.loadingService.add();
       const success = await this.observationService.editObservation(this.observationObject);
       this.loadingService.remove();
