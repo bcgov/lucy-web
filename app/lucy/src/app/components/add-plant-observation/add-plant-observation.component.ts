@@ -303,40 +303,18 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   async submitAction() {
     if (this.mode === FormMode.Edit) {
-      // this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
       this.editObservation();
-      return;
     } else {
       this.createObservation();
-    }
-    console.log(`Validating Object`);
-    console.dir(this.observationObject);
-    const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
-    if (validationMessage === null) {
-      console.log(` ***** can submit *****`);
-      if (!this.inReviewMode) {
-        this.changeToReviewMode();
-        return;
-      }
-      this.loadingService.add();
-      const success = await this.observationService.submitObservation(this.observationObject);
-      this.loadingService.remove();
-      if (success) {
-        this.submitted = true;
-      } else {
-        this.alert.show(`Error`, `Submission failed`, null);
-      }
-    } else {
-      this.alert.show(`Incomplete data`, validationMessage, null);
     }
   }
 
   async editObservation() {
-    console.log(`Validating Object`);
-    console.dir(this.observationObject);
+    if (!this.editing) {
+      return;
+    }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
-      console.log(` ***** can submit edit *****`);
       const changes = await this.observationService.diffObservation(this.observationObject);
       if (changes && changes.changed) {
         const confirmed = await this.alert.showConfirmation(`The following fields will be changed`, changes.diffMessage);
@@ -361,11 +339,11 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
 
   async createObservation() {
-    console.log(`Validating Object`);
-    console.dir(this.observationObject);
+    if (!this.creating) {
+      return;
+    }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
-      console.log(` ***** can submit *****`);
       if (!this.inReviewMode) {
         this.changeToReviewMode();
         return;
