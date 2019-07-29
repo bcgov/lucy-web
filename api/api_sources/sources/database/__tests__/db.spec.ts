@@ -18,8 +18,11 @@
 // Created by Pushan Mitra on 2019-07-04.
 //
 import * as path from 'path';
+import * as fs from 'fs';
 import { should, expect } from 'chai';
 import { ApplicationTableColumn, defineColumn, createColumn, BaseTableSchema, ApplicationTable} from '../applicationSchemaInterface';
+import { getYAMLFilePath } from '../database-schema/schema-files';
+import { SchemaCache } from '../../libs/utilities';
 
 class TestSchema extends BaseTableSchema {
     defineTable() {
@@ -81,7 +84,17 @@ describe('Test for db utilities', () => {
         schema.table.name = 'sample2_table';
         schema.saveSchema();
         schema.createMigrationFile(path.resolve(__dirname, '../database-schema/schema-sqls/sample.sql'));
+        fs.unlinkSync(path.resolve(__dirname, '../database-schema/schema-sqls/sample.sql'));
+
         // schema.saveSchema(path.resolve(__dirname, '../database-schema/schema-files/sample2.schema.yaml'));
+    });
+
+    it('should load schema', () => {
+        const pathOfSchema = getYAMLFilePath('observation.codes.schema.yaml');
+        const schema = SchemaCache.getSchemaLoader(pathOfSchema);
+        should().exist(schema);
+        should().exist(schema.schemaFileObj);
+        should().exist(schema.schemaFileObj.schemas);
     });
 });
 

@@ -16,28 +16,16 @@
 // limitations under the License.
 //
 // Created by Pushan Mitra on 2019-07-08.
-import * as moment from 'moment';
+/**
+ * Imports
+ */
 import { DataModelController } from '../data.model.controller';
-import { Observation, ObservationSpecies, Species, JurisdictionCode, User, ObservationSpeciesCreateModel, ObservationSpeciesUpdateModel } from '../models';
-import { ObservationSchema, ObservationSpeciesSchema, SpeciesSchema, JurisdictionCodeSchema } from '../database-schema';
+import { Observation, Species, JurisdictionCode, User, ObservationCreateModel, ObservationUpdateModel } from '../models';
+import { ObservationSchema, SpeciesSchema, JurisdictionCodeSchema } from '../database-schema';
 
 /**
  * @description Request body of observation create
  */
-export interface ObservationCreateModel {
-    lat: number;
-    long: number;
-    date: string;
-}
-
-/**
- * @description Request body to update observation
- */
-export interface ObservationUpdateModel {
-    lat?: number;
-    long?: number;
-    date?: string;
-}
 
 /**
  * @description Data Model controller for Observation
@@ -58,10 +46,7 @@ export class ObservationController extends DataModelController<Observation> {
      */
     async createObservation(createModel: ObservationCreateModel, user: User): Promise<Observation> {
         // Create new observation
-        const observation: Observation = this.create();
-        observation.date = moment(createModel.date).toDate();
-        observation.lat = createModel.lat;
-        observation.long = createModel.long;
+        const observation: Observation = createModel as Observation;
 
         // Saving audit
         observation.createdBy = user;
@@ -78,59 +63,22 @@ export class ObservationController extends DataModelController<Observation> {
      * @param ObservationUpdateModel update: Input values
      * @param  User user : Update by
      */
-    async update(observation: Observation, update: ObservationUpdateModel, user: User) {
-        observation.lat = update.lat || observation.lat;
-        observation.long = update.long || observation.long;
-        observation.date = update.date ? moment(update.date).toDate() : observation.date;
-        observation.updatedBy = user;
-        await this.saveInDB(observation);
-        return observation;
-    }
-}
-
-/**
- * @description Data Model controller for ObservationSpecies
- */
-export class ObservationSpeciesController extends DataModelController<ObservationSpecies> {
-    /**
-     * @description Getter for shared instance
-     */
-    public static get shared(): ObservationSpeciesController {
-        return this.sharedInstance<ObservationSpecies>(ObservationSpecies, ObservationSpeciesSchema) as ObservationSpeciesController;
-    }
-
-    /**
-     * @description Create new observation species
-     * @param ObservationSpeciesCreateModel data
-     * @param User user
-     */
-    async createObservationOfSpecies(data: ObservationSpeciesCreateModel, user: User) {
-        const obj: ObservationSpecies = data as ObservationSpecies;
-        obj.createdBy = user;
-        obj.updatedBy = user;
-        await this.saveInDB(obj);
-        return obj;
-    }
-
-    /**
-     * @description Create new observation species
-     * @param ObservationSpeciesCreateModel data
-     * @param User user
-     */
-    async updateObservationOfSpecies(obj: ObservationSpecies, data: ObservationSpeciesUpdateModel, user: User) {
+    async update(obj: Observation, data: ObservationUpdateModel, user: User) {
+        obj.lat = data.lat || obj.lat;
+        obj.long = data.long || obj.long;
+        obj.date = data.date || obj.date;
         obj.length = data.length || obj.length;
         obj.width = data.width || obj.width;
         obj.accessDescription = data.accessDescription || obj.accessDescription;
-        obj.surveyorFirstName = data.surveyorFirstName || obj.surveyorFirstName;
-        obj.surveyorLastName = data.surveyorLastName || obj.surveyorLastName;
+        obj.observerFirstName = data.observerFirstName || obj.observerFirstName;
+        obj.observerLastName = data.observerLastName || obj.observerLastName;
         obj.species = data.species || obj.species;
         obj.jurisdiction = data.jurisdiction || obj.jurisdiction;
-        obj.observation = data.observation || obj.observation;
         obj.speciesAgency = data.speciesAgency || obj.speciesAgency;
         obj.distribution = data.distribution || obj.distribution;
         obj.density = data.density || obj.density;
-        obj.surveyType = data.surveyType || obj.surveyType;
-        obj.surveyGeometry = data.surveyGeometry || obj.surveyGeometry;
+        obj.observationType = data.observationType || obj.observationType;
+        obj.observationGeometry = data.observationGeometry || obj.observationGeometry;
         obj.specificUseCode = data.specificUseCode || obj.specificUseCode;
         obj.soilTexture = data.soilTexture || obj.soilTexture;
         obj.updatedBy = user;
