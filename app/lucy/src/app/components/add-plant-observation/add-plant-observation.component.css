@@ -1,5 +1,10 @@
+.header-container {
+    background: #002C71;
+    margin: 0 auto;
+    width: 100%;
+}
+
 .view-title-section {
-    background-color: #F7F7F7;
     position: sticky;
     top:0;
     width:100%;
@@ -11,27 +16,24 @@
 }
 
 .view-title {
-    height: 34px;
-	width: 304px;
-	color: #000000;
-	font-size: 28px;
-	font-weight: bold;
-    line-height: 34px;
+	color: #FFFFFF;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 29px;
 }
 
 .view-title-detail {
-    color: rgba(0,0,0,0.4);
+    color: #FAFAFA;
 }
 
 .submit-button {
+    height: 42px;
 	width: 250px;
-	color: #FFFFFF;
+	color: #234075;
 	font-size: 16px;
 	font-weight: bold;
-	letter-spacing: -0.32px;
 	line-height: 21px;
-    text-align: center;
-    /* float: right; */
+	text-align: center;
 }
 
 .subsection-title {

@@ -23,12 +23,14 @@
               "src/assets"
             ],
             "styles": [
+              {
+                "input": "src/custom-theme.scss"
+              },
               "src/styles.css",
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/custom-theme.scss"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
