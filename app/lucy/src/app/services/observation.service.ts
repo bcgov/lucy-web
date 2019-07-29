@@ -3,7 +3,6 @@ import { Observation } from '../models';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
 import { ObjectValidatorService } from './object-validator.service';
-import 'node_modules/json-diff';
 
 export interface ObservationDiffResult {
   changed: boolean;
