@@ -34,6 +34,29 @@ export class ObservationService {
     }
   }
 
+  public async editObservation(observation: Observation): Promise<boolean> {
+    // You shouldn't use the object directly because api expects ids, not objects
+    const observationBody = this.observationBody(observation);
+
+    // Make the call
+    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_observationWith(observation.observation_id), observationBody);
+    if (response.success) {
+      const observation_Id = response.response[`observation_id`];
+      if (observation_Id) {
+        console.log(`Edited successfully`);
+        return true;
+      } else {
+        console.log(`Got a response, but something is off - id is missing`);
+        console.dir(response);
+        return false;
+      }
+    } else {
+      console.log(`observation edit failed`);
+      console.dir(response);
+      return false;
+    }
+  }
+
   /**
    * Creates json body for observation creation.
    * @param observation object
