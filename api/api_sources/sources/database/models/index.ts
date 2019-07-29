@@ -37,4 +37,6 @@ export * from './soilTexture.code';
 export * from './specificUse.code';
 export * from './observationType.code';
 export * from './observationGeometry.code';
+export * from './slope.code';
+export * from './observationAspect.code';
 // ----------------------------------------------------------------------------------------------------------------

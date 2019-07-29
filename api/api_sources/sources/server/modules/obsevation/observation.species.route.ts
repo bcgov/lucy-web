@@ -36,7 +36,9 @@ import { Observation,
     SpecificUseCodeController,
     SoilTextureCodeController,
     ObservationCreateModel,
-    ObservationUpdateModel
+    ObservationUpdateModel,
+    SlopeCodeController,
+    AspectCodeController
 } from '../../../database/models';
 // import { DataController } from '../../../database/data.model.controller';
 
@@ -82,7 +84,14 @@ const CreateValidator = (): any[] =>  {
         }),
         idValidator<SoilTextureCodeController>('soilTexture', SoilTextureCodeController.shared, (data, req) => {
             UpdateRequest(req, {soilTexture: data});
+        }),
+        idValidator<SlopeCodeController>('slopeCode', SlopeCodeController.shared, (data, req) => {
+            UpdateRequest(req, {slopeCode: data});
+        }),
+        idValidator<AspectCodeController>('aspectCode', AspectCodeController.shared, (data, req) => {
+            UpdateRequest(req, {aspectCode: data});
         })
+
     ];
 };
 
@@ -119,7 +128,9 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 specificUseCode: req.validation.specificUseCode,
                 soilTexture: req.validation.soilTexture,
                 observerFirstName: data.observerFirstName,
-                observerLastName: data.observerLastName
+                observerLastName: data.observerLastName,
+                slopeCode: req.validation.slopeCode,
+                aspectCode: req.validation.aspectCode
             };
             return [201, await this.dataController.createObservation(model, req.user)];
         });
@@ -147,7 +158,9 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 specificUseCode: req.validation.specificUseCode,
                 soilTexture: req.validation.soilTexture,
                 observerFirstName: data.observerFirstName,
-                observerLastName: data.observerLastName
+                observerLastName: data.observerLastName,
+                slopeCode: req.validation.slopeCode,
+                aspectCode: req.validation.aspectCode
             };
             const observation: Observation = this.validation<any>(req).id as Observation;
             return [200, await this.dataController.update(observation, model, req.user)];

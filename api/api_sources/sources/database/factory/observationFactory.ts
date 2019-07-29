@@ -35,7 +35,9 @@ import { jurisdictionCodeFactory,
     observationTypeCodeFactory,
     soilTextureCodeFactory,
     observerGeometryCodeFactory,
-    specificUseCodeFactory
+    specificUseCodeFactory,
+    slopeCodeFactory,
+    aspectCodeFactory
 } from './observationCodesFactory';
 import { Create, Destroy } from './helper';
 
@@ -66,6 +68,8 @@ export const observationFactory = async (noSave?: boolean): Promise<Observation>
         obs.specificUseCode = await specificUseCodeFactory();
         obs.observerFirstName = faker.name.firstName();
         obs.observerLastName = faker.name.lastName();
+        obs.slopeCode = await slopeCodeFactory();
+        obs.aspectCode = await aspectCodeFactory();
     });
 };
 

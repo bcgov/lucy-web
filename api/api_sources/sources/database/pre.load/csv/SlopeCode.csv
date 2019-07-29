@@ -1,0 +1,11 @@
+﻿slope_code,description
+0,Not available
+1,Flat 0 %
+2,Nearly flat 1-4 %
+3,Gentle slope 5-9 %
+4,Moderate slope 10-14 %
+5,Strong slope 15-19 %
+6,Very strong slope 20-24 %
+7,Extreme slope 25-29 %
+8,Steep slope 30-44 %
+9,Very steep slope > 45 %

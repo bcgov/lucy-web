@@ -39,7 +39,9 @@ import {
     observationTypeCodeFactory,
     soilTextureCodeFactory,
     observerGeometryCodeFactory,
-    specificUseCodeFactory
+    specificUseCodeFactory,
+    slopeCodeFactory,
+    aspectCodeFactory
 } from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
@@ -70,6 +72,8 @@ describe('Test for observation routes', () => {
                 should().exist(data.soilTextureCodes);
                 should().exist(data.observationGeometryCodes);
                 should().exist(data.specificUseCodes);
+                should().exist(data.slopeCodes);
+                should().exist(data.aspectCodes);
             });
             // done();
         });
@@ -142,6 +146,8 @@ describe('Test for observation routes', () => {
         const texture = await soilTextureCodeFactory();
         const geom = await observerGeometryCodeFactory();
         const specificCode = await specificUseCodeFactory();
+        const slopeCode = await slopeCodeFactory();
+        const aspectCode = await aspectCodeFactory();
         const create = {
             lat: 12.67,
             long: 18.97,
@@ -159,7 +165,9 @@ describe('Test for observation routes', () => {
             density: density.species_density_code_id,
             observationGeometry: geom.observation_geometry_code_id,
             specificUseCode: specificCode.specific_use_code_id,
-            soilTexture: texture.soil_texture_code_id
+            soilTexture: texture.soil_texture_code_id,
+            slopeCode: slopeCode.observation_slope_code_id,
+            aspectCode: aspectCode.observation_aspect_code_id,
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
@@ -180,6 +188,8 @@ describe('Test for observation routes', () => {
                 should().exist(body.soilTexture);
                 should().exist(body.specificUseCode);
                 should().exist(body.observationGeometry);
+                should().exist(body.slopeCode);
+                should().exist(body.aspectCode);
                 expect(body.length).to.be.equal(create.length);
                 await ObservationController.shared.removeById(body.observation_id);
             });

@@ -81,6 +81,8 @@ export class ObservationController extends DataModelController<Observation> {
         obj.observationGeometry = data.observationGeometry || obj.observationGeometry;
         obj.specificUseCode = data.specificUseCode || obj.specificUseCode;
         obj.soilTexture = data.soilTexture || obj.soilTexture;
+        obj.slopeCode = data.slopeCode || obj.slopeCode;
+        obj.aspectCode = data.aspectCode || obj.aspectCode;
         obj.updatedBy = user;
         await this.saveInDB(obj);
         return obj;

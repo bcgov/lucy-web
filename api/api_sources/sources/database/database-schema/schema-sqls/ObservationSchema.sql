@@ -20,6 +20,8 @@ ALTER TABLE observation ADD COLUMN species_agency_code_id INT NULL REFERENCES sp
 ALTER TABLE observation ADD COLUMN soil_texture_code_id INT NULL REFERENCES soil_texture_code(soil_texture_code_id) ON DELETE SET NULL;
 ALTER TABLE observation ADD COLUMN observation_geometry_code_id INT NULL REFERENCES observation_geometry_code(observation_geometry_code_id) ON DELETE SET NULL;
 ALTER TABLE observation ADD COLUMN specific_use_code_id INT NULL REFERENCES specific_use_code(specific_use_code_id) ON DELETE SET NULL;
+ALTER TABLE observation ADD COLUMN observation_slope_code_id INT NULL REFERENCES observation_slope_code(observation_slope_code_id) ON DELETE SET NULL;
+ALTER TABLE observation ADD COLUMN observation_aspect_code_id INT NULL REFERENCES observation_aspect_code(observation_aspect_code_id) ON DELETE SET NULL;
 
 
         
@@ -45,6 +47,8 @@ COMMENT ON COLUMN observation.species_agency_code_id IS 'Foreign key reference t
 COMMENT ON COLUMN observation.soil_texture_code_id IS 'Foreign key reference to Soil Texture code table';
 COMMENT ON COLUMN observation.observation_geometry_code_id IS 'Foreign key reference to observation geometry code table';
 COMMENT ON COLUMN observation.specific_use_code_id IS 'Foreign key reference to Specific use code table';
+COMMENT ON COLUMN observation.observation_slope_code_id IS 'Foreign key reference to observation slope code table';
+COMMENT ON COLUMN observation.observation_aspect_code_id IS 'Foreign key reference to observation directional aspect code table';
 
 
         
