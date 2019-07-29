@@ -12,7 +12,7 @@ ALTER TABLE observation_slope_code ADD COLUMN active_ind BOOLEAN NOT NULL DEFAUL
 -- ### Creating Comments on table ### --
 
         
-COMMENT ON TABLE observation_slope_code IS 'Observation area slope code. Slope code is integer encoded enum values [0 to 9]. O specified data not available and 1 means flat with 0%, similarly 9 specified very steep slop with more than 45%';
+COMMENT ON TABLE observation_slope_code IS 'Observation area slope code. Sloop code is encoded value of description . NA specified data not available and FL means flat with 0%, similarly VSTS specified very steep slop with more than 45%';
 COMMENT ON COLUMN observation_slope_code.observation_slope_code_id IS 'Auto generated primary key';
 COMMENT ON COLUMN observation_slope_code.observation_slope_code IS 'Integer encoded enum values for slope code';
 COMMENT ON COLUMN observation_slope_code.description IS 'Description of code';
