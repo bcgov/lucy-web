@@ -29,10 +29,10 @@ import { JurisdictionCode, JurisdictionCodeController} from '../models';
 import { Species, SpeciesController} from '../models';
 import { SpeciesDensityCode, SpeciesDensityCodeController} from '../models';
 import { SpeciesDistributionCode, SpeciesDistributionCodeController} from '../models';
-import { SurveyTypeCode, SurveyTypeCodeController} from '../models';
+import { ObservationTypeCode, ObservationTypeCodeController} from '../models';
 import { SpeciesAgencyCode, SpeciesAgencyCodeController } from '../models';
 import { SoilTextureCode, SoilTextureCodeController } from '../models';
-import { SurveyGeometryCode, SurveyGeometryCodeController } from '../models';
+import { ObservationGeometryCode, ObservationGeometryCodeController } from '../models';
 import { SpecificUseCode, SpecificUseCodeController } from '../models';
 
 /**
@@ -95,7 +95,7 @@ export const speciesDistributionCodeFactory = async (id?: number): Promise<Speci
  * @param number? id optional
  * @returns Promise<SurveyTypeCode>
  */
-export const surveyCodeTypeFactory = CodeFactory<SurveyTypeCode, SurveyTypeCodeController>(SurveyTypeCodeController.shared);
+export const observationTypeCodeFactory = CodeFactory<ObservationTypeCode, ObservationTypeCodeController>(ObservationTypeCodeController.shared);
 
 /**
  * @description Factory for Species agency code type
@@ -116,7 +116,7 @@ export const soilTextureCodeFactory = CodeFactory<SoilTextureCode, SoilTextureCo
  * @param number? id optional
  * @returns Promise<SurveyGeometryCode>
  */
-export const surveyGeometryCodeFactory = CodeFactory<SurveyGeometryCode, SurveyGeometryCodeController>(SurveyGeometryCodeController.shared);
+export const observerGeometryCodeFactory = CodeFactory<ObservationGeometryCode, ObservationGeometryCodeController>(ObservationGeometryCodeController.shared);
 
 /**
  * @description Factory for Specific Use code type

@@ -1,8 +1,13 @@
 version: '1.0'
+externalTables:
+  - name: species
+    description: Species table
+  - name: application_user
+    description: User table
 schemas: 
   JurisdictionCodeSchema:
     name: jurisdiction_code
-    description: Jurisdiction code of observation area
+    description: 'Who owns or is responsible for the land.  85% of the province is "crown" under the jurisdiction of the Ministry of Forests, Lands, Natural Resource Operations & Rural Development'
     baseSchema: CodeTableSchema
     columns: 
       id: 
@@ -14,19 +19,20 @@ schemas:
         comment: Unique code value for jurisdiction area
         definition: VARCHAR(10) NOT NULL UNIQUE
   # -- End JurisdictionCode
-  # -- Observation - DEPRECATED 
+  # -- Observation schema ** Observation
   ObservationSchema:
     name: observation
-    description: Observation table
-    baseSchema: Record
-    columns:
+    description: 'An observation describing the nature and extent of the species on the landscape. It may be collected by 1) an individual (a scientist or citizen) at the location, 2) a digital tracking device (airborne or ground based), or 3) an inferred analysis based on surrounding data.  An observation location provides an historical record of all surveys done regarding a particular species of invasive plant on the site. Provides a chronological recording of the change in distribution and density of invasive plants on the site.
+    An area with confirmed ground sightings of invasive alien plants. This may be terrestrial (invasive plants on the ground) or aquatic (invasive plants in lakes, streams or other water-bodies). Within this inventory area, all roads accessible by a four-wheel drive vehicle that cross potential habitat will be checked for occurrences of invasive plants. Plants on both sides of the road will be identified as far as can be seen from the road, or as defined for specific inventory projects. In addition, all major disturbances including but not limited to landings, log sort yards, burned areas, gravel pits, air strips, landfills, parking lots, construction or maintenance sites and recreational sites and trails within the potential habitat will be checked.
+    baseSchema: Record'
+    columns: 
       id: 
         name: 'observation_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
       date:
         name: 'observation_date'
-        comment: 'Date of observation'
+        comment: 'The Observation Date is the date that the invasive species occurrence was observed by the submitter.'
         definition: DATE NULL
       lat:
         name: 'observation_location_lat'
@@ -36,16 +42,6 @@ schemas:
         name: 'observation_location_long'
         comment: 'Longitude of observation location'
         definition: NUMERIC(9, 6) NOT NULL
-  # -- Observation Species schema ** Observation
-  ObservationSpeciesSchema:
-    name: observation_species
-    description: This table store observation data for particular species
-    baseSchema: Record
-    columns: 
-      id: 
-        name: 'observation_species_id'
-        comment: 'Auto generated primary key'
-        definition: SERIAL PRIMARY KEY
       width:
         name: 'area_width'
         comment: 'Width of the area observed'
@@ -58,13 +54,13 @@ schemas:
         name: 'access_description'
         comment: Note to specify how to access the location
         definition: VARCHAR(500) NULL
-      surveyorFirstName: 
-        name: 'surveyor_first_name'
-        comment: First name of the surveyor of the observation
+      observerFirstName: 
+        name: 'observer_first_name'
+        comment: First name of the observer of the observation
         definition: VARCHAR(100) NULL
-      surveyorLastName:
-        name: 'surveyor_last_name'
-        comment: Last name of the surveyor of the observation
+      observerLastName:
+        name: 'observer_last_name'
+        comment: Last name of the observer of the observation
         definition: VARCHAR(100) NULL
       species:
         name: 'species_id'
@@ -80,13 +76,6 @@ schemas:
         foreignTable: 'jurisdiction_code'
         refColumn: jurisdiction_code_id
         deleteCascade: true
-      observation:
-        name: 'observation_id'
-        comment: Foreign key reference to observation table 
-        definition: INT NULL
-        foreignTable: observation
-        refColumn: observation_id
-        deleteCascade: true
       density:
         name: 'species_density_code_id'
         comment: Foreign key reference to species density code table 
@@ -101,12 +90,12 @@ schemas:
         foreignTable: species_distribution_code
         refColumn: species_distribution_code_id
         deleteCascade: false
-      surveyType:
-        name: 'survey_type_code_id'
-        comment: Foreign key reference to survey type code table 
+      observationType:
+        name: 'observation_type_code_id'
+        comment: Foreign key reference to observation type code table 
         definition: INT NULL
-        foreignTable: survey_type_code
-        refColumn: survey_type_code_id
+        foreignTable: observation_type_code
+        refColumn: observation_type_code_id
         deleteCascade: false
       speciesAgency:
         name: 'species_agency_code_id'
@@ -122,12 +111,12 @@ schemas:
         foreignTable: soil_texture_code
         refColumn: soil_texture_code_id
         deleteCascade: false
-      surveyGeometry:
-        name: 'survey_geometry_code_id'
-        comment: Foreign key reference to survey geometry code table 
+      observationGeometry:
+        name: 'observation_geometry_code_id'
+        comment: Foreign key reference to observation geometry code table 
         definition: INT NULL
-        foreignTable: survey_geometry_code
-        refColumn: survey_geometry_code_id
+        foreignTable: observation_geometry_code
+        refColumn: observation_geometry_code_id
         deleteCascade: false
       specificUseCode:
         name: 'specific_use_code_id'
@@ -140,7 +129,7 @@ schemas:
   # -- SpeciesDistributionCode
   SpeciesDistributionCodeSchema:
     name: species_distribution_code
-    description: Distribution code table of species for an observation
+    description: 'Identifies the geographic distribution of individuals of each species. Example: several well-spaced patches or clumps.'
     baseSchema: CodeTableSchema
     columns: 
       id: 
@@ -155,7 +144,7 @@ schemas:
   # -- SpeciesDensityCodeSchema --
   SpeciesDensityCodeSchema:
     name: species_density_code
-    description: Density enum code table for a species of observation
+    description: 'Indicates the number of plants per square metre. Examples: 2-5 plants/m2, 6-10 plants/m2.'
     baseSchema: CodeTableSchema
     columns:
       id: 
@@ -168,24 +157,24 @@ schemas:
         definition: VARCHAR(5) NOT NULL UNIQUE
   # --
   # -- Survey Type Codes
-  SurveyTypeCodeSchema:
-    name: survey_type_code
-    description: Code table for schema of survey types
+  ObservationTypeCodeSchema:
+    name: observation_type_code
+    description: 'The description of the observation was obtained (akin to quality): Operational, cursory, research, mobile, aerial photo, satellite imagery.'
     baseSchema: CodeTableSchema
     columns:
       id: 
-        name: 'survey_type_code_id'
+        name: 'observation_type_code_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
       code: 
-        name: 'survey_type_code'
-        comment: Code value for survey types
+        name: 'observation_type_code'
+        comment: Cross domain Code values for observation type types
         definition: VARCHAR(5) NOT NULL UNIQUE
   # --
   # -- SpeciesAgencyCodeSchema
   SpeciesAgencyCodeSchema:
     name: species_agency_code
-    description: Code table for schema of species agencies
+    description: 'Any BC Ministry, Federal Department, local government (Regional District, municipality, etc), corporation, non-profit or other organization that funds and/or manages invasive plant species on the land base for which they are responsible.  The Agency that oversees a particular activity concerning the Invasive Alien Plant Program. It is the originating agency that data belongs to or the agency that funded the activity.'
     baseSchema: CodeTableSchema
     columns:
       id: 
@@ -200,7 +189,7 @@ schemas:
   # -- SoilTextureCodeSchema
   SoilTextureCodeSchema:
     name: soil_texture_code
-    description: Code table for schema of soil texture codes
+    description: 'The soil texture code provides details regarding the quality and water-retention of soil in a site where an invasive plant has been identified. Values are C (Coarse), M (Medium), F (Fine), O (Organic)'
     baseSchema: CodeTableSchema
     columns:
       id: 
@@ -213,24 +202,24 @@ schemas:
         definition: VARCHAR(1) NOT NULL UNIQUE
   # --
   # -- SurveyGeometryCodeSchema
-  SurveyGeometryCodeSchema:
-    name: survey_geometry_code
-    description: Code table for schema of survey geometry codes
+  ObservationGeometryCodeSchema:
+    name: observation_geometry_code
+    description: 'A 2 or 3 dimensional geometry used to describe the spatial extent of an observation: Point, linear corridor, transect, circle, rectangular plot, stratified grid, radio tract, GPS tract, water body outline.'
     baseSchema: CodeTableSchema
     columns:
       id: 
-        name: 'survey_geometry_code_id'
+        name: 'observation_geometry_code_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
       code: 
-        name: 'survey_geometry_code'
-        comment: Survey geometry code of the system
+        name: 'observation_geometry_code'
+        comment: Observation geometry code of the system
         definition: VARCHAR(2) NOT NULL UNIQUE
   # --
   # -- SpecificUseCodeSchema
   SpecificUseCodeSchema:
     name: specific_use_code
-    description: Code table for schema of Specific use codes of the observation
+    description: 'The site specific use code provides details regarding the use of an area where invasive species have been found. This assists in determining the appropriate response and treatment methods when dealing with the identified invasive plant species. Values are GR (Gravel pit), NS (No-spray buffer), NH (Numbered Highway), PL (Parking Lot), RT (Rec Site/Trail), RA (Rest Area), SS (Sensitive Site), TL (Transfer station/Landfil), WP (Within PFZ), YW (Yard/Ditching waste dump).'
     baseSchema: CodeTableSchema
     columns:
       id: 

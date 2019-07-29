@@ -1,0 +1,15 @@
+observation_type,description
+CU,Cursory
+OP,Operational
+PR,Precise
+RE,Research
+DR,Drone
+MO,Mobile RAW
+AP,Air Photo
+SI,Satellite Image
+FC,Field Camera
+VI,Video
+AU,Audio
+ME,Mechanical recording
+OT,Other Type
+NA,Unknown
