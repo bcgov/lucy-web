@@ -15,13 +15,13 @@
 /* Common Buttons */
 .button-fill {
   color: #FFFFFF !important;
-  background-color: #333333 !important;
+  background-color: #234075 !important;
 }
 
 .button-hollow {
-  color: black !important;
+  color: #234075 !important;
   background-color: #F7F7F7 !important;
-  border: 1px solid #333333 !important;
+  border: 1px solid #234075 !important;
 }
 
 /* Remove outline box around buttons - overriding bootstrap */
