@@ -30,7 +30,9 @@ import {
     observationTypeCodeFactory,
     soilTextureCodeFactory,
     observerGeometryCodeFactory,
-    specificUseCodeFactory
+    specificUseCodeFactory,
+    slopeCodeFactory,
+    aspectCodeFactory
 } from '../factory';
 import { ObservationController
 } from '../models';
@@ -64,6 +66,8 @@ describe('Observation tests', () => {
         should().exist(obs.soilTexture);
         should().exist(obs.observationGeometry);
         should().exist(obs.specificUseCode);
+        should().exist(obs.slopeCode);
+        should().exist(obs.aspectCode);
         expect(obs.createdBy.user_id).to.equal(f.createdBy.user_id);
         expect(obs.updatedBy.user_id).to.equal(f.updatedBy.user_id);
         expect(obs.observation_id).to.equal(f.observation_id);
@@ -111,6 +115,18 @@ describe('Observation tests', () => {
         const code = await specificUseCodeFactory(2);
         should().exist(code);
         expect(code.specific_use_code_id).to.be.equals(2);
+    });
+
+    it('should fetch slope code', async () => {
+        const code = await slopeCodeFactory(3);
+        should().exist(code);
+        expect(code.observation_slope_code_id).to.be.equal(3);
+    });
+
+    it('should fetch aspect code', async () => {
+        const code = await aspectCodeFactory(3);
+        should().exist(code);
+        expect(code.observation_aspect_code_id).to.be.equal(3);
     });
 });
 

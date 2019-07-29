@@ -19,7 +19,7 @@
 /**
  * Imports
  */
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad } from 'typeorm';
 import { Record } from './user';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
@@ -31,6 +31,8 @@ import { Species } from './species';
 import { JurisdictionCode } from './observation.codes';
 import { SpeciesDensityCode } from './speciesDensity.code';
 import { SpeciesDistributionCode } from './speciesDistribution.code';
+import { SlopeCode } from './slope.code';
+import { AspectCode } from './observationAspect.code';
 import {
     SpeciesSchema,
     JurisdictionCodeSchema,
@@ -41,8 +43,11 @@ import {
     SpeciesAgencyCodeSchema,
     SoilTextureCodeSchema,
     ObservationGeometryCodeSchema,
-    SpecificUseCodeSchema
+    SpecificUseCodeSchema,
+    SlopeCodeSchema,
+    AspectCodeSchema
 } from '../database-schema';
+import { NumericTransformer } from '../../libs/transformer';
 
 
 export interface ObservationCreateModel {
@@ -63,6 +68,8 @@ export interface ObservationCreateModel {
     soilTexture: SoilTextureCode;
     observationGeometry: ObservationGeometryCode;
     specificUseCode: SpecificUseCode;
+    slopeCode: SlopeCode;
+    aspectCode: AspectCode;
 }
 
 export interface ObservationUpdateModel {
@@ -83,6 +90,8 @@ export interface ObservationUpdateModel {
     soilTexture?: SoilTextureCode;
     observationGeometry?: ObservationGeometryCode;
     specificUseCode?: SpecificUseCode;
+    slopeCode?: SlopeCode;
+    aspectCode?: AspectCode;
 }
 
 @Entity({ name: ObservationSchema.dbTable})
@@ -95,11 +104,17 @@ export class Observation extends Record implements ObservationCreateModel {
     @ModelProperty({ type: PropertyType.string})
     date: string;
 
-    @Column({ name: ObservationSchema.columns.lat, nullable: false})
+    @Column({ name: ObservationSchema.columns.lat,
+        nullable: false,
+        transformer: new NumericTransformer()
+    })
     @ModelProperty({ type: PropertyType.number})
     lat: number;
 
-    @Column({ name: ObservationSchema.columns.long, nullable: false})
+    @Column({ name: ObservationSchema.columns.long,
+        nullable: false,
+        transformer: new NumericTransformer()
+    })
     @ModelProperty({ type: PropertyType.number})
     long: number;
 
@@ -193,6 +208,28 @@ export class Observation extends Record implements ObservationCreateModel {
         referencedColumnName: SpecificUseCodeSchema.columns.id
     })
 	@ModelProperty({type: PropertyType.object})
-	specificUseCode: SpecificUseCode;
+    specificUseCode: SpecificUseCode;
+
+    @ManyToOne( type => SlopeCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSchema.columns.slopeCode,
+        referencedColumnName: SlopeCodeSchema.columns.id
+    })
+	@ModelProperty({type: PropertyType.object})
+    slopeCode: SlopeCode;
+
+    @ManyToOne( type => AspectCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSchema.columns.aspectCode,
+        referencedColumnName: AspectCodeSchema.columns.id
+    })
+	@ModelProperty({type: PropertyType.object})
+    aspectCode: AspectCode;
+
+    /**
+     * Model Behavior
+     */
+    @AfterLoad()
+    entityDidLoad() {}
 }
 // -------------------------------------------------------------

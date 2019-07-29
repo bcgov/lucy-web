@@ -90,6 +90,8 @@ export class ApplicationTableColumn implements TableColumnDefinition {
             return 'number';
         } else if (def.includes('boolean')) {
             return 'boolean';
+        } else if (def.includes('int') || def.includes('smallint')) {
+            return 'number';
         } else {
             return 'object';
         }

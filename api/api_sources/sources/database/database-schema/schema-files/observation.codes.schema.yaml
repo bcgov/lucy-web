@@ -125,6 +125,20 @@ schemas:
         foreignTable: specific_use_code
         refColumn: specific_use_code_id
         deleteCascade: false
+      slopeCode:
+        name: 'observation_slope_code_id'
+        comment: Foreign key reference to observation slope code table 
+        definition: INT NULL
+        foreignTable: observation_slope_code
+        refColumn: observation_slope_code_id
+        deleteCascade: false
+      aspectCode: 
+        name: 'observation_aspect_code_id'
+        comment: Foreign key reference to observation directional aspect code table 
+        definition: INT NULL
+        foreignTable: observation_aspect_code
+        refColumn: observation_aspect_code_id
+        deleteCascade: false
   # --
   # -- SpeciesDistributionCode
   SpeciesDistributionCodeSchema:
@@ -230,4 +244,32 @@ schemas:
         name: 'specific_use_code'
         comment: Code values of specific use codes
         definition: VARCHAR(2) NOT NULL UNIQUE
+  # --
+  # -- SlopCodeSchema
+  SlopeCodeSchema:
+    name: observation_slope_code
+    description: 'Observation area slope code. Slope code is integer encoded enum values [0 to 9]. O specified data not available and 1 means flat with 0%, similarly 9 specified very steep slop with more than 45%'
+    columns:
+      id: 
+        name: 'observation_slope_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_slope_code'
+        comment: Integer encoded enum values for slope code
+        definition: SMALLINT NOT NULL UNIQUE
+  # --
+  # -- AspectCodeSchema
+  AspectCodeSchema:
+    name: observation_aspect_code
+    description: 'Observation area aspect code. Aspect code provides integer enum encoded values for directional aspect of the observed species. The typical values like North facing or south facing'
+    columns:
+      id: 
+        name: 'observation_aspect_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_aspect_code'
+        comment: Integer encoded enum values for observation aspect code
+        definition: SMALLINT NOT NULL UNIQUE
   # --
