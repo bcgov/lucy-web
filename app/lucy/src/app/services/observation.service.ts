@@ -166,18 +166,20 @@ export class ObservationService {
    * @return ObservationDiffResult | undefined
    */
   public async diffObservation(observation: Observation): Promise<ObservationDiffResult | undefined> {
+    // 1) Fetch the latest original
     const original = await this.getWithId(observation.observation_id);
     // if couldnt fetch the original, return undefind
     if (!original) {
       return undefined;
     }
+    // 2) Compare
     const changes = this.compare(observation, original);
     // if comparison fails, return undefinied.
     if (!changes) {
       return undefined;
     }
 
-    // Successfully diffed, generate response
+    // 3) Successfully diffed, generate response
 
     // Convert keys from camel case:
     const keys =  Object.keys(changes).map(x => {
@@ -194,7 +196,6 @@ export class ObservationService {
       changes: changes
     };
   }
-
 
   /**
    * Compare a change Object to original observation
