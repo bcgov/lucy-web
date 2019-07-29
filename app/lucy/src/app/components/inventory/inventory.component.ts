@@ -243,11 +243,15 @@ export class InventoryComponent implements OnInit {
     this.router.navigateTo(AppRoutes.ViewObservation, observation.observation_id);
   }
 
+  edit(observation: Observation) {
+    this.router.navigateTo(AppRoutes.EditObservation, observation.observation_id);
+  }
+
   /************ Dummy Data ************/
   async createDummys() {
     this.loadingService.add();
     this.observations = [];
-    const random = await this.dummy.createDummyObservations(100);
+    const random = await this.dummy.createDummyObservations(10000);
     this.observations = random;
     this.setMapMarkers();
     this.loadingService.remove();

@@ -178,6 +178,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
       this.mode = FormMode.Edit;
+      this.fetchObservation(this.idInParams());
 
     } else if (this.creating) {
       this.initializeObjectIfDoesntExist();
@@ -293,9 +294,58 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   async submitAction() {
     if (this.mode === FormMode.Edit) {
-      this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
+      // this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
+      this.editObservation();
       return;
+    } else {
+      this.createObservation();
     }
+    console.log(`Validating Object`);
+    console.dir(this.observationObject);
+    const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
+    if (validationMessage === null) {
+      console.log(` ***** can submit *****`);
+      if (!this.inReviewMode) {
+        this.changeToReviewMode();
+        return;
+      }
+      this.loadingService.add();
+      const success = await this.observationService.submitObservation(this.observationObject);
+      this.loadingService.remove();
+      if (success) {
+        this.submitted = true;
+      } else {
+        this.alert.show(`Error`, `Submission failed`, null);
+      }
+    } else {
+      this.alert.show(`Incomplete data`, validationMessage, null);
+    }
+  }
+
+  async editObservation() {
+    console.log(`Validating Object`);
+    console.dir(this.observationObject);
+    const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
+    if (validationMessage === null) {
+      console.log(` ***** can submit edit *****`);
+      // if (!this.inReviewMode) {
+      //   this.changeToReviewMode();
+      //   return;
+      // }
+      this.loadingService.add();
+      const success = await this.observationService.editObservation(this.observationObject);
+      this.loadingService.remove();
+      if (success) {
+        this.submitted = true;
+      } else {
+        this.alert.show(`Error`, `Edit Submission failed`, null);
+      }
+    } else {
+      this.alert.show(`Incomplete data`, validationMessage, null);
+    }
+  }
+
+  async createObservation() {
     console.log(`Validating Object`);
     console.dir(this.observationObject);
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
