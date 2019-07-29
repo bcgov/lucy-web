@@ -1,25 +1,20 @@
-<div class="container">
-  <!-- Header Section -->
-  <!-- <mat-toolbar color="">
-  <mat-toolbar-row>
-    <span class="view-title-section">Lucy Database</span>
-    <span class="toolbar-spacer"></span>
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon" (click)="switchShowMap()">map</mat-icon>
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon" (click)="switchShowList()">view_list</mat-icon>
-  </mat-toolbar-row>
-  </mat-toolbar> -->
-  <div class="row view-title-section">
-    <div class="col-11 view-title">
-          Lucy Database
-    </div>
-       <div class="col left-toggle" [ngClass]="showMap ? 'toggle-btn-on' : 'toggle-btn-off'" (click)="switchShowMap()">
-          <i class="material-icons">map</i>
-      </div>
-      <div  class="col right-toggle" [ngClass]="showList ? 'toggle-btn-on' : 'toggle-btn-off'" (click)="switchShowList()">
-          <i class="material-icons">view_list</i>
-      </div>
+<!-- Header Section -->
+<div class="container-fluid header-container">
+  <div class="container">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <span class="view-title">Lucy Database</span>
+        <span class="spacer-toolbar"></span>
+        <mat-icon [ngClass]="showMap ? 'active-btn' : 'inactive-btn'"  aria-hidden="false" aria-label="map view" (click)="switchShowMap()">map
+        </mat-icon>
+        <mat-icon [ngClass]="showList ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="list view" (click)="switchShowList()">
+          view_list</mat-icon>
+      </mat-toolbar-row>
+    </mat-toolbar>
   </div>
-  <!-- -------------------- -->
+</div>
+<!-- -------------------- -->
+<div class="container">
   <div class="row">
       <div class="col-12">
           <button class="btn" (click)="generateObservationForTesting()">Generate for testing</button>
