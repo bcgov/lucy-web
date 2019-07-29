@@ -10,3 +10,7 @@
   letter-spacing: -0.434118px;
   color: #002C71;
 }
+
+.spacer-toolbar {
+  flex: 1 1 auto;
+}

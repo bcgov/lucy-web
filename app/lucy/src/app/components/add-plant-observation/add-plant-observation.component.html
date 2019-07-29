@@ -27,31 +27,21 @@
 </div>
 <!-- Entry Form  -->
 <div *ngIf="!submitted">
+   <!-- Header Section  -->
   <div class="container-fluid header-container">
     <div class="container">
-      <!-- Header Section -->
-      <div class="row view-title-section">
-        <div class="col-12 col-md-9 view-title">
-          {{pageTitle}} <span *ngIf="!readonly || !inReviewMode" class="view-title-detail"> - Plant</span>
-        </div>
-        <div class="col-12 col-md-3">
-          <div class="row">
-            <!-- Submit button -->
-            <div class="col-12">
-              <button *ngIf="!readonly || inReviewMode" type="button"
-                class="btn btn-secondary submit-button button-hollow" (click)="submitAction()">{{submitBtnName}}</button>
-            </div>
-          </div>
-          <br />
-          <!-- Edit button -->
-          <div class="row">
-            <div class="col-12">
-              <button *ngIf="inReviewMode" type="button" class="btn btn-secondary submit-button button-hollow"
-                (click)="exitReviewMode()">Edit</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <mat-toolbar color="primary">
+        <mat-toolbar-row>
+          <span class="view-title"> {{pageTitle}} <span *ngIf="!readonly || !inReviewMode" class="view-title-detail"> - Plant</span></span>
+          <span class="spacer-toolbar"></span>
+          <button *ngIf="!readonly || inReviewMode" type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons"
+            (click)="submitAction()">{{submitBtnName}}</button>
+          <button *ngIf="inReviewMode" type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons"
+            (click)="exitReviewMode()">Edit</button>
+        </mat-toolbar-row>
+      </mat-toolbar>
     </div>
   </div>
   <!-- -------------------- -->
