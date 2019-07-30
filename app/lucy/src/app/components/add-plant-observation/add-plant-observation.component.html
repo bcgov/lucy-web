@@ -55,6 +55,14 @@
     <!-- -------------------- -->
     <div class="col content">
       <!-- Basic Information -->
+      <div class="container">
+          <div class="row">
+            <div class="col-12 section-name">
+              Basic Observation Data
+              <hr class="section-divider"/>
+            </div>
+          </div>
+       </div>
       <app-add-plant-observation-basic-information 
       [mode]="mode"
       class="basic-Information" 
@@ -81,7 +89,16 @@
       <!-- -------------------- -->
 
       <!-- Advanced Data -->
+      <div class="container">
+          <div class="row">
+            <div class="col-12 section-name">
+              Advanced Data Elements
+              <hr class="section-divider"/>
+            </div>
+          </div>
+       </div>
       <app-add-plant-observation-advanced-data
+      class="advanced-data" 
       [mode]="mode"
       [observationObject]="observationObject"
       (invasivePlantSpeciesChanged)='advancedDataChanged($event)'

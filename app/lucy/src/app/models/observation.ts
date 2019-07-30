@@ -1,13 +1,18 @@
 export interface Observation {
+    // Basic
+
+    // Location
     observation_id: number;
     lat: number;
     long: number;
     date: string;
  
+    // Observer
     observerFirstName: string;
     observerLastName: string;
     speciesAgency: SpeciesAgencyCodes;
 
+    // Invasive Plant Species
     species: InvasivePlantSpecies;
     jurisdiction: Jurisdiction;
     density: SpeciesDensityCodes;
@@ -19,6 +24,19 @@ export interface Observation {
     length: number;
     accessDescription: string;
 
+    // Advanced
+
+    // indicators
+    sampleTakenIndicator: boolean;
+    wellIndicator: boolean;
+    legacysiteIndicator: boolean;
+    edrrIndicator: boolean;
+    researchIndicator: boolean;
+    specialCareFlag: boolean;
+    biologicalIndicator: boolean;
+    aquaticIndicator: boolean;
+
+    // Further details
     proposedAction: ProposedActionCodes;
     sampleTaken: string;
     rangeUnitNumber: string;

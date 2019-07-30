@@ -119,8 +119,8 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .divider {
-  border: none;
-  height: 1px;
-  color: #000000;
-  background-color: #000000;
+	box-sizing: border-box;
+	height: 1px;
+	width: 100%;
+	border: 1px solid grey;
 }
