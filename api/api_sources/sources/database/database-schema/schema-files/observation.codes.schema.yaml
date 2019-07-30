@@ -300,7 +300,7 @@ schemas:
   # -- SlopCodeSchema
   SlopeCodeSchema:
     name: observation_slope_code
-    description: 'Observation area slope code. Sloop code is encoded value of description . NA specified data not available and FL means flat with 0%, similarly VSTS specified very steep slop with more than 45%'
+    description: 'Observation area slope code. Slope code is encoded value of description . NA specified data not available and FL means flat with 0%, similarly VSTS specified very steep slop with more than 45%'
     columns:
       id: 
         name: 'observation_slope_code_id'
