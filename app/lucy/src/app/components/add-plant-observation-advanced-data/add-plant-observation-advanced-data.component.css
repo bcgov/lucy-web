@@ -10,3 +10,7 @@
 	font-weight: bold;
 	line-height: 22px;
 }
+
+.field {
+    width: 100% !important;
+}

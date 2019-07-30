@@ -1,4 +1,22 @@
 <div class="container">
+  <div class="row">
+    <div class="col-12 section-title">
+      Further Observation Details
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-12">
+      <div class="container card">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+  </div>
+</div>
+
+<div class="container">
     <div class="row">
       <div class="col-12 section-title">
         Further Observation Details
@@ -9,7 +27,7 @@
       <div class="col-12">
           <div class="container card">
               <div class="row">
-                <!-- Invasive Plant Species -->
+                <!-- 1st row -->
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12">
@@ -23,7 +41,34 @@
                         </div>
                      </div>
                 </div>
-                <!-- Plot Dimention -->
+                <!-- 2nd row -->
+                <div class="col-12">
+                    <div class="row">
+                      <div class="col-12 col-md-4">
+                        <div class="col-12 field">
+                          <label class="field-header">Attach Photo</label>
+                          <button class="btn  button-fill field">Select From Device</button>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-4">
+                          <app-field
+                            [mode]="mode"
+                            [header]="'Sample Taken'"
+                            [value]="sampleTaken"
+                            (valueChanged)='sampleTakenChanged($event)'>
+                          </app-field>
+                      </div>
+                      <div class="col-12 col-md-4">
+                          <app-field
+                            [mode]="mode"
+                            [header]="'Range Unit Number'"
+                            [value]="rangeUnitNumber"
+                            (valueChanged)='rangeUnitNumberChanged($event)'>
+                          </app-field>
+                      </div>
+                    </div>
+                  </div>
+                <!-- 3rd row -->
                 <div class="col-12">
                   <div class="row">
                     <div class="col-12 col-md-4">
@@ -53,7 +98,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- Survey Mode, Soil Texture Code, Specific Use Code -->
+                <!-- 4th row -->
                 <div class="col-12">
                   <div class="row">
                     <div class="col-8">
@@ -69,6 +114,6 @@
                 </div>
             </div>          
          </div>
+         <hr class="divider">
       </div>
-     <hr class="divider">
   </div>
