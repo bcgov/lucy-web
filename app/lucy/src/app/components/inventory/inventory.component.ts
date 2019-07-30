@@ -250,14 +250,13 @@ export class InventoryComponent implements OnInit {
   /************ Dummy Data ************/
   async createDummys() {
     this.loadingService.add();
+    await this.delayAsync(10);
     this.observations = [];
     const random = await this.dummy.createDummyObservations(10000);
     this.observations = random;
     this.setMapMarkers();
     this.loadingService.remove();
   }
-
-  /************ End of Dummy Data ************/
 
   private getUniqueId(): number {
     if (this.observations.length < 1) {
@@ -275,5 +274,14 @@ export class InventoryComponent implements OnInit {
   generateObservationForTesting() {
     this.createDummys();
   }
+
+   /**
+   * Create a delay
+   * @param ms milliseconds
+   */
+  async delayAsync(ms: number): Promise<any> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  /************ End of Dummy Data ************/
 
 }
