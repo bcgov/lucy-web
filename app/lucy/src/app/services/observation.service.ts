@@ -185,13 +185,13 @@ export class ObservationService {
       const fromCamel = x.replace( /([A-Z])/g, ` $1` );
       return fromCamel.charAt(0).toUpperCase() + fromCamel.slice(1);
     });
-
-    const changed = keys.length > 1;
+    const changedKeys = keys.join(`, `);
+    const changed = changedKeys.length > 1;
     return {
       changed: changed,
       newObervation: observation,
       originalObservation: original,
-      diffMessage: keys.join(`, `),
+      diffMessage: changedKeys,
       changes: changes
     };
   }

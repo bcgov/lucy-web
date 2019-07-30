@@ -316,6 +316,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
       const changes = await this.observationService.diffObservation(this.observationObject);
+      console.log(changes);
       if (changes && changes.changed) {
         const confirmed = await this.alert.showConfirmation(`The following fields will be changed`, changes.diffMessage);
         if (!confirmed) {
