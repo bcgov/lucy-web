@@ -84,6 +84,14 @@ export class ObservationController extends DataModelController<Observation> {
         obj.slopeCode = data.slopeCode || obj.slopeCode;
         obj.aspectCode = data.aspectCode || obj.aspectCode;
         obj.proposedAction = data.proposedAction || obj.proposedAction;
+        obj.sampleIdentifier = data.sampleIdentifier || obj.sampleIdentifier;
+        obj.rangeUnitNumber = data.rangeUnitNumber || obj.rangeUnitNumber;
+        obj.legacySiteIndicator = data.legacySiteIndicator || obj.legacySiteIndicator;
+        obj.edrrIndicator = data.edrrIndicator || obj.edrrIndicator;
+        obj.researchIndicator = data.researchIndicator || obj.researchIndicator;
+        obj.specialCareIndicator = data.specialCareIndicator || obj.specialCareIndicator;
+        obj.biologicalIndicator = data.biologicalIndicator || obj.biologicalIndicator;
+
         obj.updatedBy = user;
         await this.saveInDB(obj);
         return obj;

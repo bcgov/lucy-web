@@ -61,6 +61,17 @@ export interface ObservationCreateModel {
     accessDescription: string;
     observerFirstName: string;
     observerLastName: string;
+    sampleIdentifier?: string;
+    rangeUnitNumber?: string;
+	legacySiteIndicator?: boolean;
+	edrrIndicator?: boolean;
+	researchIndicator?: boolean;
+	sampleTakenIndicator?: boolean;
+	wellIndicator?: boolean;
+	specialCareIndicator?: boolean;
+	biologicalIndicator?: boolean;
+	aquaticIndicator?: boolean;
+
     species: Species;
     jurisdiction: JurisdictionCode;
     density: SpeciesDensityCode;
@@ -84,6 +95,16 @@ export interface ObservationUpdateModel {
     accessDescription?: string;
     observerFirstName?: string;
     observerLastName?: string;
+    sampleIdentifier?: string;
+    rangeUnitNumber?: string;
+	legacySiteIndicator?: boolean;
+	edrrIndicator?: boolean;
+	researchIndicator?: boolean;
+	sampleTakenIndicator?: boolean;
+	wellIndicator?: boolean;
+	specialCareIndicator?: boolean;
+	biologicalIndicator?: boolean;
+	aquaticIndicator?: boolean;
     species?: Species;
     jurisdiction?: JurisdictionCode;
     density?: SpeciesDensityCode;
@@ -140,7 +161,77 @@ export class Observation extends Record implements ObservationCreateModel {
 
 	@Column({ name: ObservationSchema.columns.observerLastName})
 	@ModelProperty({type: PropertyType.string})
-	observerLastName: string;
+    observerLastName: string;
+
+    /**
+	 * @description Getter/Setter property for column {sample_identifier}
+	 */
+	@Column({ name: ObservationSchema.columns.sampleIdentifier, nullable: true})
+	@ModelProperty({type: PropertyType.string})
+	sampleIdentifier: string;
+
+	/**
+	 * @description Getter/Setter property for column {range_unit_number}
+	 */
+	@Column({ name: ObservationSchema.columns.rangeUnitNumber, nullable: true})
+	@ModelProperty({type: PropertyType.string})
+	rangeUnitNumber: string;
+
+	/**
+	 * @description Getter/Setter property for column {legacy_site_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.legacySiteIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	legacySiteIndicator: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {early_detection_rapid_resp_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.edrrIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	edrrIndicator: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {research_detection_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.researchIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	researchIndicator: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {sample_taken_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.sampleTakenIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	sampleTakenIndicator: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {well_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.wellIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	wellIndicator: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {special_care_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.specialCareIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	specialCareIndicator: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {biological_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.biologicalIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	biologicalIndicator: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {aquatic_ind}
+	 */
+	@Column({ name: ObservationSchema.columns.aquaticIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	aquaticIndicator: boolean;
 
     @ManyToOne( type => Species, {eager: true})
     @JoinColumn({

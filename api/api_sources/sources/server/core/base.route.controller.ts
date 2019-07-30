@@ -202,6 +202,7 @@ export class BaseRoutController<Controller extends DataController>  {
                 // Check for error
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
+                    this.logger.error(`${tag}: Validation error: ${JSON.stringify(errors.array)}`);
                     return resp.status(422).json({
                         message: 'Input validation error',
                         errors: errors.array()
