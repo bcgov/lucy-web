@@ -39,12 +39,12 @@
 .input-mode-container {
     border-style: solid;
     border-width: 1px;
-    border-color: #333333;
+    border-color: #002C71;
     border-radius: 4px;
 }
 
 .input-mode-on {
-    background-color: #333333;
+    background-color: #002C71;
     color: white;
 }
 
