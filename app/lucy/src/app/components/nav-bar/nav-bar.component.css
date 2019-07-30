@@ -3,12 +3,10 @@
 }
 
 .title-app {
-  font-style: normal;
-  font-weight: 600;
-  line-height: 23px;
-  font-size: 18px;
-  letter-spacing: -0.434118px;
-  color: #002C71;
+	color: #142E5C;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 29px;
 }
 
 .spacer-toolbar {
