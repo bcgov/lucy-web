@@ -19,6 +19,20 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     return `0 meters`;
   }
 
+  get sampleTaken(): string {
+    if (!this.observationObject || !this.observationObject.sampleTaken) {
+      return '';
+    }
+    return this.observationObject.sampleTaken;
+  }
+
+  get rangeUnitNumber(): string {
+    if (!this.observationObject || !this.observationObject.rangeUnitNumber) {
+      return '';
+    }
+    return this.observationObject.rangeUnitNumber;
+  }
+
   get selectedProposedAction(): DropdownObject | undefined {
     if (!this.observationObject || !this.observationObject.proposedAction) {
       return undefined;
@@ -146,6 +160,20 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   surveyGeometryChanged(value: DropdownObject) {
     if (this.observationObject && value.object) {
       this.observationObject.observationGeometry = value.object;
+      this.notifyChangeEvent();
+    }
+  }
+
+  sampleTakenChanged(value: string) {
+    if (this.observationObject) {
+      this.observationObject.sampleTaken = value;
+      this.notifyChangeEvent();
+    }
+  }
+
+  rangeUnitNumberChanged(value: string) {
+    if (this.observationObject) {
+      this.observationObject.rangeUnitNumber = value;
       this.notifyChangeEvent();
     }
   }
