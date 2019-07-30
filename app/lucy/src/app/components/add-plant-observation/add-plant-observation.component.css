@@ -78,6 +78,8 @@
         overflow-x: hidden; /* Disable horizontal scroll */
         padding-top: 0px;
         z-index:1;
+        border-radius: 5px;
+        box-shadow: 0 2px 12px 0 rgba(35,64,117,0.3);
     }
     
     .content {
@@ -93,9 +95,12 @@
         width:100%;
         padding-top: 20px;
         padding-bottom: 20px;
-        overflow-x: hidden
+        overflow-x: hidden;
+        border-radius: 5px;
+        box-shadow: 0 2px 12px 0 rgba(35,64,117,0.3);
         /* z-index: inherit; */
     }
+
     .content {
         
     }
