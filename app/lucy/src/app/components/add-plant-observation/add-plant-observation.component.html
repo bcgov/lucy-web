@@ -78,18 +78,6 @@
       (inViewportAction)="onIntersection($event)" 
       >
       </app-add-plant-observation-invasive-plant-species-cell>
-      
-      <app-add-plant-observation-invasive-plant-species 
-      [mode]="mode"
-      class="invasive-species" 
-      [objects] = "invasiveSpecies"
-      (invasivePlantSpeciesChanged)='invasivePlantSpeciesChanged($event)'
-
-      inViewport
-      [inViewportOptions]="{ threshold: [0] }"
-      (inViewportAction)="onIntersection($event)" 
-      >
-      </app-add-plant-observation-invasive-plant-species>
       <!-- -------------------- -->
     </div>
   </div>

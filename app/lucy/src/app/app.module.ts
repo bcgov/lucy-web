@@ -11,6 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule, MatToolbarModule } from '@angular/material';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatCardModule} from '@angular/material/card';
 
 // Third-party
 // ng-bootstrap
@@ -112,7 +114,9 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatInputModule,
     MatMenuModule,
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatDividerModule,
+    MatCardModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
