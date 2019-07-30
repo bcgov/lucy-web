@@ -38,7 +38,8 @@ import { Observation,
     ObservationCreateModel,
     ObservationUpdateModel,
     SlopeCodeController,
-    AspectCodeController
+    AspectCodeController,
+    ProposedActionCodeController
 } from '../../../database/models';
 // import { DataController } from '../../../database/data.model.controller';
 
@@ -90,6 +91,9 @@ const CreateValidator = (): any[] =>  {
         }),
         idValidator<AspectCodeController>('aspectCode', AspectCodeController.shared, (data, req) => {
             UpdateRequest(req, {aspectCode: data});
+        }),
+        idValidator<ProposedActionCodeController>('proposedAction', ProposedActionCodeController.shared, (data, req) => {
+            UpdateRequest(req, {proposedAction: data});
         })
 
     ];
@@ -130,7 +134,8 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 observerFirstName: data.observerFirstName,
                 observerLastName: data.observerLastName,
                 slopeCode: req.validation.slopeCode,
-                aspectCode: req.validation.aspectCode
+                aspectCode: req.validation.aspectCode,
+                proposedAction: req.validation.proposedAction
             };
             return [201, await this.dataController.createObservation(model, req.user)];
         });
@@ -160,7 +165,8 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 observerFirstName: data.observerFirstName,
                 observerLastName: data.observerLastName,
                 slopeCode: req.validation.slopeCode,
-                aspectCode: req.validation.aspectCode
+                aspectCode: req.validation.aspectCode,
+                proposedAction: req.validation.proposedAction
             };
             const observation: Observation = this.validation<any>(req).id as Observation;
             return [200, await this.dataController.update(observation, model, req.user)];

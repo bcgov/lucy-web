@@ -72,6 +72,7 @@ export interface ObservationCreateModel {
     specificUseCode: SpecificUseCode;
     slopeCode: SlopeCode;
     aspectCode: AspectCode;
+    proposedAction: ProposedActionCode;
 }
 
 export interface ObservationUpdateModel {
@@ -94,6 +95,7 @@ export interface ObservationUpdateModel {
     specificUseCode?: SpecificUseCode;
     slopeCode?: SlopeCode;
     aspectCode?: AspectCode;
+    proposedAction?: ProposedActionCode;
 }
 
 @Entity({ name: ObservationSchema.dbTable})

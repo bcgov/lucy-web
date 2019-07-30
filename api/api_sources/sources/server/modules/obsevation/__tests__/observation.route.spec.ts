@@ -41,7 +41,8 @@ import {
     observerGeometryCodeFactory,
     specificUseCodeFactory,
     slopeCodeFactory,
-    aspectCodeFactory
+    aspectCodeFactory,
+    proposedActionCodeFactory
 } from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
@@ -74,6 +75,7 @@ describe('Test for observation routes', () => {
                 should().exist(data.specificUseCodes);
                 should().exist(data.slopeCodes);
                 should().exist(data.aspectCodes);
+                should().exist(data.proposedActionCodes);
             });
             // done();
         });
@@ -148,6 +150,7 @@ describe('Test for observation routes', () => {
         const specificCode = await specificUseCodeFactory();
         const slopeCode = await slopeCodeFactory();
         const aspectCode = await aspectCodeFactory();
+        const proposedActionCode = await proposedActionCodeFactory();
         const create = {
             lat: 12.67,
             long: 18.97,
@@ -168,6 +171,7 @@ describe('Test for observation routes', () => {
             soilTexture: texture.soil_texture_code_id,
             slopeCode: slopeCode.observation_slope_code_id,
             aspectCode: aspectCode.observation_aspect_code_id,
+            proposedAction: proposedActionCode.observation_proposed_action_code_id
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
@@ -190,6 +194,7 @@ describe('Test for observation routes', () => {
                 should().exist(body.observationGeometry);
                 should().exist(body.slopeCode);
                 should().exist(body.aspectCode);
+                should().exist(body.proposedAction);
                 expect(body.length).to.be.equal(create.length);
                 await ObservationController.shared.removeById(body.observation_id);
             });
