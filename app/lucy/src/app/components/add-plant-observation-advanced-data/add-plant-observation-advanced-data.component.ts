@@ -9,14 +9,77 @@ import { LoadingService } from 'src/app/services/loading.service';
   styleUrls: ['./add-plant-observation-advanced-data.component.css']
 })
 export class AddPlantObservationAdvancedDataComponent implements OnInit {
+  ViewMode = FormMode.View;
 
   proposedActions: DropdownObject[] = [];
   groundSlopes: DropdownObject[] = [];
   groundAspects: DropdownObject[] = [];
   geometries: DropdownObject[] = [];
 
+  ////////// Indicators //////////
+
+  get sampleTakenIndicator(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.sampleTakenIndicator;
+  }
+
+  get wellIndicator(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.wellIndicator;
+  }
+
+  get legacysiteIndicator(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.legacysiteIndicator;
+  }
+
+  get edrrIndicator(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.edrrIndicator;
+  }
+
+  get researchIndicator(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.researchIndicator;
+  }
+
+  get specialCareFlag(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.specialCareFlag;
+  }
+
+  get biologicalIndicator(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.biologicalIndicator;
+  }
+
+  get aquaticIndicator(): boolean {
+    if (!this.observationObject) {
+      return false;
+    }
+    return this.observationObject.aquaticIndicator;
+  }
+
+  ////////// End of indicators //////////
+
+  ////////// Further Observation //////////
+
   get wellProximity(): string {
-    return `0 meters`;
+    return `Unknwon`;
   }
 
   get sampleTaken(): string {
@@ -72,6 +135,8 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
       object: this.observationObject.observationGeometry,
     };
   }
+
+  ////////// End of Further Observation //////////
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -136,6 +201,61 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     }
   }
 
+
+  ////////// Indicators //////////
+
+  sampleTakenIndicatorChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.sampleTakenIndicator = value;
+    }
+  }
+
+  wellIndicatorChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.wellIndicator = value;
+    }
+  }
+
+  legacysiteIndicatorChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.legacysiteIndicator = value;
+    }
+  }
+
+  edrrIndicatorChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.edrrIndicator = value;
+    }
+  }
+
+  researchIndicatorChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.researchIndicator = value;
+    }
+  }
+
+  specialCareFlagChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.specialCareFlag = value;
+    }
+  }
+
+  biologicalIndicatorChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.biologicalIndicator = value;
+    }
+  }
+
+  aquaticIndicatorChanged(value: boolean) {
+    if (this.observationObject) {
+      this.observationObject.aquaticIndicator = value;
+    }
+  }
+
+  ////////// End of Indicators //////////
+
+  ////////// Further Observation //////////
+
   proposedActionChanged(value: DropdownObject) {
      if (this.observationObject && value.object) {
       this.observationObject.proposedAction = value.object;
@@ -178,4 +298,5 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     }
   }
 
+  ////////// End of Further Observation //////////
 }
