@@ -72,6 +72,9 @@ export class ValidationService {
    * @param latitude string - * use String(number) if needed.
    */
   public isValidLatitude(latitude: string) {
+    if (!this.hasMinDecimalPlaces(latitude, 5)) {
+      return false;
+    }
     const regexpOne = new RegExp('^[+-]?((90\\.?0*$)|(([0-8]?[0-9])\\.?[0-9]*$))');
     const regexpOneResult = regexpOne.test(latitude);
     return regexpOneResult;
@@ -83,6 +86,9 @@ export class ValidationService {
    * @param longitude string - * use String(number) if needed.
    */
   public isValidLongitude(longitude: string) {
+    if (!this.hasMinDecimalPlaces(longitude, 5)) {
+      return false;
+    }
     const regexpOne = new RegExp('^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\\.{1}\\d{1,6}');
     const regexpOneResult = regexpOne.test(longitude);
     return regexpOneResult;
@@ -93,8 +99,8 @@ export class ValidationService {
   public isValidObservationMessage(observation: Observation): string | null {
     if (!observation) { return `Object does not exist`; }
     const service = new ValidationService();
-    if (!service.hasMinDecimalPlaces(observation.lat, 6) || !service.hasMinDecimalPlaces(observation.long, 6)) {
-      return `Location is invalid`;
+    if (!service.isValidLongitude(String(observation.long)) || !service.isValidLatitude(String(observation.lat))) {
+      return `Location is invalid:\nLatitude and Longitude must have at least 5 decimal.`;
     }
 
     if (!observation.date) {
@@ -109,50 +115,44 @@ export class ValidationService {
       return `Observer's last name is missing`;
     }
 
-    if (!observation.observerOrganization) {
+    if (!observation.speciesAgency) {
       return `Observer organization is missing`;
     }
 
-    if (observation.speciesObservations.length < 1) {
-      return `You must add an invasive plant species`;
+    if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width)) ) {
+      return `You must specify a valid plot dimention for invasive plant species`;
     }
 
-    for (const species of observation.speciesObservations) {
-      if (!species.width || !species.length || !this.isValidPlotDimention(String(species.length)) || !this.isValidPlotDimention(String(species.width)) ) {
-        return `You must specify a valid plot dimention for invasive plant species`;
-      }
+    if (!observation.jurisdiction) {
+      return `You must add a jurisdiction for invasive plant species`;
+    }
 
-      if (!species.jurisdiction) {
-        return `You must add a jurisdiction for invasive plant species`;
-      }
+    if (!observation.species) {
+      return `You must add a plant species for invasive plant species`;
+    }
 
-      if (!species.species) {
-        return `You must add a plant species for invasive plant species`;
-      }
+    if (!observation.density) {
+      return `You must add density for invasive plant species`;
+    }
 
-      if (!species.density) {
-        return `You must add density for invasive plant species`;
-      }
+    if (!observation.distribution) {
+      return `You must add distribution for invasive plant species`;
+    }
 
-      if (!species.distribution) {
-        return `You must add distribution for invasive plant species`;
-      }
+    if (!observation.observationType) {
+      return `You must add survey type for invasive plant species`;
+    }
 
-      if (!species.surveyType) {
-        return `You must add survey type for invasive plant species`;
-      }
+    if (!observation.observationGeometry) {
+      return `You must add survey geometry type for invasive plant species`;
+    }
 
-      if (!species.surveyGeometry) {
-        return `You must add survey geometry type for invasive plant species`;
-      }
+    if (!observation.specificUseCode) {
+      return `You must add specific use code for invasive plant species`;
+    }
 
-      if (!species.specificUseCode) {
-        return `You must add specific use code for invasive plant species`;
-      }
-
-      if (!species.soilTexture) {
-        return `You must add soil texture for invasive plant species`;
-      }
+    if (!observation.soilTexture) {
+      return `You must add soil texture for invasive plant species`;
     }
     return null;
   }
