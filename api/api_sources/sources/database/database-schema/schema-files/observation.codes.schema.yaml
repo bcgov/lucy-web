@@ -139,6 +139,13 @@ schemas:
         foreignTable: observation_aspect_code
         refColumn: observation_aspect_code_id
         deleteCascade: false
+      proposedAction:
+        name: 'observation_proposed_action_code_id'
+        comment: Foreign key reference to observation proposed action codes 
+        definition: INT NULL
+        foreignTable: observation_proposed_action_code
+        refColumn: observation_proposed_action_code_id
+        deleteCascade: false
   # --
   # -- SpeciesDistributionCode
   SpeciesDistributionCodeSchema:
@@ -271,5 +278,19 @@ schemas:
       code: 
         name: 'observation_aspect_code'
         comment: String encoded enum values for observation aspect code
+        definition: VARCHAR(4) NOT NULL UNIQUE
+  # --
+  # -- ProposedActionCodeSchema
+  ProposedActionCodeSchema:
+    name: observation_proposed_action_code
+    description: 'The is list of proposed action item of observation like Treatment or Monitoring. So code values like CT for Chemical treatment or CM for Chemical monitoring'
+    columns:
+      id: 
+        name: 'observation_proposed_action_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_proposed_action_code'
+        comment: String encoded enum values for proposed action items.
         definition: VARCHAR(4) NOT NULL UNIQUE
   # --

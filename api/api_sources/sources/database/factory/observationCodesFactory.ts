@@ -36,6 +36,7 @@ import { ObservationGeometryCode, ObservationGeometryCodeController } from '../m
 import { SpecificUseCode, SpecificUseCodeController } from '../models';
 import { SlopeCode, SlopeCodeController } from '../models';
 import { AspectCode, AspectCodeController } from '../models';
+import { ProposedActionCode, ProposedActionCodeController } from '../models';
 
 /**
  * @description Factory for code
@@ -140,5 +141,12 @@ export const slopeCodeFactory = CodeFactory<SlopeCode, SlopeCodeController>(Slop
  * @returns Promise<AspectCode>
  */
 export const aspectCodeFactory = CodeFactory<AspectCode, AspectCodeController>(AspectCodeController.shared);
+
+/**
+ * @description Factory for proposed Actions Code
+ * @param number? id optional
+ * @returns Promise<ProposedActionCode>
+ */
+export const proposedActionCodeFactory = CodeFactory<ProposedActionCode, ProposedActionCodeController>(ProposedActionCodeController.shared);
 // -------------------------------------------------------------------------------
 
