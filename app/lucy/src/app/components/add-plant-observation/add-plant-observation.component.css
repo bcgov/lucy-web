@@ -59,6 +59,15 @@
     padding-bottom: 16px;
 }
 
+.test-btn {
+    align-content: center;
+    text-align: center;
+    background: greenyellow;
+    border-radius: .25rem;
+    position: fixed;
+    bottom: 0;
+    width: 18%;
+}
 
 /* HANDELING SIDE NAV ON SCREEN SIZE CHANGE */
 @media (min-width: 992px) {
