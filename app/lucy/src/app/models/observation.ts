@@ -13,13 +13,41 @@ export interface Observation {
     density: SpeciesDensityCodes;
     distribution: SpeciesDistributionCodes;
     observationType: ObservationTypeCodes;
-    observationGeometry: ObservationGeometryCodes;
     specificUseCode: SpecificUseCodes;
     soilTexture: SoilTextureCodes;
     width: number;
     length: number;
     accessDescription: string;
+
+    proposedAction: ProposedActionCodes;
+    sampleTaken: string;
+    rangeUnitNumber: string;
+    groundAspect: GroundAspectCodes;
+    groundSlope: GroundSlopeCodes;
+    observationGeometry: ObservationGeometryCodes;
 }
+
+export interface ProposedActionCodes {
+    proposed_actions_code_id: number;
+    code: string;
+    description: string;
+    activeIndicator: true;
+}
+
+export interface GroundAspectCodes {
+    ground_aspect_code_id: number;
+    code: string;
+    description: string;
+    activeIndicator: true;
+}
+
+export interface GroundSlopeCodes {
+    ground_slope_code_id: number;
+    code: string;
+    description: string;
+    activeIndicator: true;
+}
+
 export interface InvasivePlantSpecies {
     commonName: string;
     containmentSpacialRef: number;

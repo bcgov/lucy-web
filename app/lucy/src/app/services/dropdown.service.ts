@@ -22,6 +22,9 @@ export class DropdownService {
   public displayedSoilTextureField = 'description';
   public displayedSurveyGeometryField = 'description';
   public displayedSpecificUseCodeField = 'description';
+  public displayedGroundSlopeField = 'description';
+  public displayedGroundAspecField = 'description';
+  public displayedProposedActionField = 'description';
 
   constructor(private codeTableService: CodeTableService) { }
 
@@ -32,6 +35,9 @@ export class DropdownService {
    */
   public createDropdownObjectsFrom(objects: any[], displayValue: string): DropdownObject[] {
     const dropdownObjects: DropdownObject[] = [];
+    if (!objects) {
+      return dropdownObjects;
+    }
     for (const object of objects) {
       dropdownObjects.push({
         name: object[displayValue],
@@ -119,6 +125,33 @@ export class DropdownService {
    */
   public async getGeometry(): Promise<DropdownObject[]> {
     const geometry = await this.codeTableService.observationGeometryCodes();
+    return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
+  }
+
+  /**
+   * Fetch Geometry code table, return as array of
+   * deopdown objects
+   */
+  public async getProposedActions(): Promise<DropdownObject[]> {
+    const geometry = await this.codeTableService.getProposedActionCodes();
+    return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
+  }
+
+  /**
+   * Fetch Geometry code table, return as array of
+   * deopdown objects
+   */
+  public async getGroundSlopes(): Promise<DropdownObject[]> {
+    const geometry = await this.codeTableService.getGroundSlopeCodes();
+    return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
+  }
+
+  /**
+   * Fetch Geometry code table, return as array of
+   * deopdown objects
+   */
+  public async getGroundAspects(): Promise<DropdownObject[]> {
+    const geometry = await this.codeTableService.getGroundAspectCodes();
     return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
   }
 

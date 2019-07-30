@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { ObjectValidatorService } from './object-validator.service';
 import { AppConstants } from '../constants';
-import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes,
+   SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes,
+   SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
+   ProposedActionCodes, GroundAspectCodes, GroundSlopeCodes } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +22,11 @@ export class CodeTableService {
   private soilTextures: SoilTextureCodes[];
   private geometries: ObservationGeometryCodes[];
   private useCodes: SpecificUseCodes[];
+
+  private proposedActions: ProposedActionCodes[];
+  private groundAspects: GroundAspectCodes[];
+  private groundSlope: GroundSlopeCodes[];
+
 
   private codeTables: any| null = null;
 
@@ -215,5 +223,59 @@ export class CodeTableService {
       return useCodes;
     }
     return this.useCodes;
+  }
+
+  public async getProposedActionCodes(): Promise<ProposedActionCodes[]> {
+    if (this.proposedActions && this.proposedActions.length > 0 ) {
+      return this.proposedActions;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+
+    const proposedActions = codes.proposedActionCodes;
+    if ( proposedActions && (Array.isArray(proposedActions) && this.objectValidator.isProposedActionCodesObject(proposedActions[0]))) {
+      this.proposedActions = proposedActions;
+      return proposedActions;
+    }
+    return this.proposedActions;
+  }
+
+  public async getGroundSlopeCodes(): Promise<GroundSlopeCodes[]> {
+    if (this.groundSlope && this.groundSlope.length > 0 ) {
+      return this.groundSlope;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+
+    const groundSlope = codes.groundSlopeCodes;
+    if (groundSlope && (Array.isArray(groundSlope) && this.objectValidator.isGroundSlopeCodesObject(groundSlope[0]))) {
+      this.groundSlope = groundSlope;
+      return groundSlope;
+    }
+    return this.groundSlope;
+  }
+
+  public async getGroundAspectCodes(): Promise<GroundAspectCodes[]> {
+    if (this.groundAspects && this.groundAspects.length > 0 ) {
+      return this.groundAspects;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+       return [];
+    }
+
+    const groundAspects = codes.groundAspectCodes;
+    if ( groundAspects && (Array.isArray(groundAspects) && this.objectValidator.isGroundAspectCodesObject(groundAspects[0]))) {
+      this.groundAspects = groundAspects;
+      return groundAspects;
+    }
+    return this.groundAspects;
   }
 }

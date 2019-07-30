@@ -15,10 +15,10 @@
                         <div class="col-12">
                             <app-dropdown 
                               [mode]="mode"
-                              [items]="proposedTreatments" 
-                              [fieldHeader]="'Proposed Treatment'"
-                              [selectedItem]="selectedProposedTreatment"
-                              (selectionChanged)='proposedTreatmentChanged($event)'>
+                              [items]="proposedActions" 
+                              [fieldHeader]="'Proposed Action'"
+                              [selectedItem]="selectedProposedAction"
+                              (selectionChanged)='proposedActionChanged($event)'>
                             </app-dropdown>
                         </div>
                      </div>
@@ -59,8 +59,8 @@
                     <div class="col-8">
                       <app-dropdown
                         [mode]="mode" 
-                        [items]="surveyGeometries" 
-                        [fieldHeader]="'Survey Geometry'"
+                        [items]="geometries" 
+                        [fieldHeader]="'Geometry'"
                         [selectedItem]="selectedSurveyGeometry"
                         (selectionChanged)='surveyGeometryChanged($event)'>
                       </app-dropdown>

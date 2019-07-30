@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes} from '../models';
+import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, GroundSlopeCodes, GroundAspectCodes, ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 
@@ -125,6 +125,34 @@ export class ObjectValidatorService {
   public isObservationObject(observation: any): observation is Observation {
     if (observation === undefined || observation === null) {return false; }
     return (<Observation>observation.date) !== undefined;
+  }
+
+   /**
+   * Check if object is ProposedActionCodes
+   * @param observation object
+   */
+  public isProposedActionCodesObject(proposedActionCodes: any): proposedActionCodes is ProposedActionCodes {
+    if (proposedActionCodes === undefined || proposedActionCodes === null) {return false; }
+    return (<ProposedActionCodes>proposedActionCodes.date) !== undefined;
+  }
+
+
+   /**
+   * Check if object is GroundAspectCodes
+   * @param observation object
+   */
+  public isGroundAspectCodesObject(groundAspectCodes: any): groundAspectCodes is GroundAspectCodes {
+    if (groundAspectCodes === undefined || groundAspectCodes === null) {return false; }
+    return (<GroundAspectCodes>groundAspectCodes.date) !== undefined;
+  }
+
+   /**
+   * Check if object is GroundSlopeCodes
+   * @param observation object
+   */
+  public isGroundSlopeCodesObject(groundSlopeCodes: any): groundSlopeCodes is GroundSlopeCodes {
+    if (groundSlopeCodes === undefined || groundSlopeCodes === null) {return false; }
+    return (<GroundSlopeCodes>groundSlopeCodes.date) !== undefined;
   }
 
 }
