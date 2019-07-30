@@ -79,6 +79,19 @@
       >
       </app-add-plant-observation-invasive-plant-species-cell>
       <!-- -------------------- -->
+
+      <!-- Advanced Data -->
+      <app-add-plant-observation-advanced-data
+      [mode]="mode"
+      [observationObject]="observationObject"
+      (invasivePlantSpeciesChanged)='advancedDataChanged($event)'
+
+      inViewport
+      [inViewportOptions]="{ threshold: [0] }"
+      (inViewportAction)="onIntersection($event)" >
+
+      </app-add-plant-observation-advanced-data>
+      <!-- -------------------- -->
     </div>
   </div>
   <!-- test btn -->

@@ -1,0 +1,74 @@
+<div class="container">
+    <div class="row">
+      <div class="col-12 section-title">
+        Further Observation Details
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-12">
+          <div class="container card">
+              <div class="row">
+                <!-- Invasive Plant Species -->
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <app-dropdown 
+                              [mode]="mode"
+                              [items]="proposedTreatments" 
+                              [fieldHeader]="'Proposed Treatment'"
+                              [selectedItem]="selectedProposedTreatment"
+                              (selectionChanged)='proposedTreatmentChanged($event)'>
+                            </app-dropdown>
+                        </div>
+                     </div>
+                </div>
+                <!-- Plot Dimention -->
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12 col-md-4">
+                        <app-dropdown 
+                          [mode]="mode"
+                          [items]="groundSlopes" 
+                          [fieldHeader]="'Ground Slope'"
+                          [selectedItem]="selectedGroundSlope"
+                          (selectionChanged)='groundSlopeChanged($event)'>
+                        </app-dropdown>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <app-dropdown 
+                            [mode]="mode"
+                            [items]="groundAspects" 
+                            [fieldHeader]="'Ground Aspect'"
+                            [selectedItem]="selectedGroundAspect"
+                            (selectionChanged)='groundAspectChanged($event)'>
+                          </app-dropdown>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <app-field
+                          [mode]="ViewMode"
+                          [header]="'Well Proximity'" 
+                          [value]="wellProximity">
+                        </app-field>
+                    </div>
+                  </div>
+                </div>
+                <!-- Survey Mode, Soil Texture Code, Specific Use Code -->
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-8">
+                      <app-dropdown
+                        [mode]="mode" 
+                        [items]="surveyGeometries" 
+                        [fieldHeader]="'Survey Geometry'"
+                        [selectedItem]="selectedSurveyGeometry"
+                        (selectionChanged)='surveyGeometryChanged($event)'>
+                      </app-dropdown>
+                    </div>
+                  </div>
+                </div>
+            </div>          
+         </div>
+      </div>
+     <hr class="divider">
+  </div>

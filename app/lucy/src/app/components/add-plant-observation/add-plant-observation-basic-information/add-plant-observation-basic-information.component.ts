@@ -138,7 +138,6 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
   @Input() set observationObject(object: Observation) {
     this._object = object;
     this.autofill();
-
   }
   ////////////////////
 
