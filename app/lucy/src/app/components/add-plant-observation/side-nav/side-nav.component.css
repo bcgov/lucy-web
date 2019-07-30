@@ -1,19 +1,23 @@
 .side-nav {
-    background: #002C71;
     height: 100%;
 	width: 100%;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	border-radius: 5px;
+	background-color: #FFFFFF;
+	/* box-shadow: 0 2px 12px 0 rgba(35,64,117,0.3); */
 }
 
+
 .item  {
-	color: #FFFFFF;
+	color: #002C71;
 	font-size: 14px;
 	font-weight: bold;
 	line-height: 16px;
+	letter-spacing: -0.05px;
+	line-height: 18px;
 }
 
 .on {
-	color: #FFFFFF;
+	color: #002C71;
 	font-size: 14px;
 	font-weight: bold;
 	line-height: 16px;
@@ -21,7 +25,7 @@
 
 .off {
 	opacity: 0.5;
-	color: #FFFFFF;
+	color: #333333;
 	font-size: 14px;
 	line-height: 16px;
 }
