@@ -2,12 +2,12 @@
 <div class="container side-nav">
   <br />
   <div class="row">
-    <div class="col-12 on">
+    <div class="col-12" [ngClass]="basicInfoIsVisible ? 'on' : 'off'">
       <i class="material-icons">crop_square</i>
       Basic Observation Data
     </div>
     <br />
-    <div class="col-12 off">
+    <div class="col-12" [ngClass]="advancedDataIsVisible ? 'on' : 'off'">
       <i class="material-icons">crop_square</i>
       Advanced Data Elements
     </div>

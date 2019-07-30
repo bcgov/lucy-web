@@ -61,6 +61,7 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
 import { MatSelectSearchComponent } from './components/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from './components/mat-select-search/mat-select-search.module';
 import { AddPlantObservationAdvancedDataComponent } from './components/add-plant-observation-advanced-data/add-plant-observation-advanced-data.component';
+import { CheckboxComponent } from './components/checkbox/checkbox.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -96,6 +97,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MomentPipe,
     MatSelectSearchComponent,
     AddPlantObservationAdvancedDataComponent,
+    CheckboxComponent,
   ],
   imports: [
     BrowserModule,
