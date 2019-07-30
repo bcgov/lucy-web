@@ -293,6 +293,21 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   advancedDataChanged(event: Observation) {
     console.log(`TODO: CALL BACK NOT HANDLED`);
+
+    this.observationObject.sampleTakenIndicator = event.sampleTakenIndicator;
+    this.observationObject.wellIndicator = event.wellIndicator;
+    this.observationObject.legacysiteIndicator = event.legacysiteIndicator;
+    this.observationObject.edrrIndicator = event.edrrIndicator;
+    this.observationObject.researchIndicator = event.researchIndicator;
+    this.observationObject.specialCareFlag = event.specialCareFlag;
+    this.observationObject.biologicalIndicator = event.biologicalIndicator;
+    this.observationObject.aquaticIndicator = event.aquaticIndicator;
+    this.observationObject.proposedAction = event.proposedAction;
+    this.observationObject.sampleTaken = event.sampleTaken;
+    this.observationObject.rangeUnitNumber = event.rangeUnitNumber;
+    this.observationObject.groundAspect = event.groundAspect;
+    this.observationObject.groundSlope = event.groundSlope;
+    this.observationObject.observationGeometry = event.observationGeometry;
   }
 
   sideNavItemClicked(className: string) {
