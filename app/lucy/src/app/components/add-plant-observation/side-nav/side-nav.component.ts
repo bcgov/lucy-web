@@ -57,4 +57,12 @@ export class SideNavComponent implements OnInit {
     this.basicInfoIsVisible = false;
     this.advancedDataIsVisible = false;
   }
+
+  basicSectionSelected() {
+    this.sideNavItemClicked.emit(`basic`);
+  }
+
+  advancedSectionSelected() {
+    this.sideNavItemClicked.emit(`advanced`);
+  }
 }
