@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-12 section-title">
-      Further Observation Details
+      Indicators
     </div>
   </div>
   <br />
@@ -9,11 +9,66 @@
     <div class="col-12">
       <div class="container card">
         <div class="row">
+             <div class="col-4">
+                <app-checkbox
+                [header]="'Sample Taken'"
+                [value]="sampleTakenIndicator"
+                (selectionChanged)='sampleTakenIndicatorChanged($event)'>
+                </app-checkbox>
+            </div>
+            <div class="col-4">
+                <app-checkbox
+                [header]="'Well indicator'"
+                [value]="wellIndicator"
+                (selectionChanged)='wellIndicatorChanged($event)'>
+                </app-checkbox>
+             </div>
+            <div class="col-4">
+                <app-checkbox
+                [header]="'Legacy site indicator'"
+                [value]="legacysiteIndicator"
+                (selectionChanged)='legacysiteIndicatorChanged($event)'>
+                </app-checkbox>
+             </div>
+             <div class="col-4">
+                <app-checkbox
+                [header]="'EDRR indicator'"
+                [value]="edrrIndicator"
+                (selectionChanged)='edrrIndicatorChanged($event)'>
+                </app-checkbox>
+             </div>
+             <div class="col-4">
+                <app-checkbox
+                [header]="'Research indicator'"
+                [value]="researchIndicator"
+                (selectionChanged)='researchIndicatorChanged($event)'>
+                </app-checkbox>
+            </div>
+            <div class="col-4">
+                <app-checkbox
+                [header]="'Special care flag'"
+                [value]="specialCareFlag"
+                (selectionChanged)='specialCareFlagChanged($event)'>
+                </app-checkbox>
+             </div>
+             <div class="col-4">
+                <app-checkbox
+                [header]="'Biological indicator'"
+                [value]="biologicalIndicator"
+                (selectionChanged)='biologicalIndicatorChanged($event)'>
+                </app-checkbox>
+             </div><div class="col-4">
+                <app-checkbox
+                [header]="'Aquatic indicator'"
+                [value]="aquaticIndicator"
+                (selectionChanged)='aquaticIndicatorChanged($event)'>
+                </app-checkbox>
+            </div>
         </div>
       </div>
     </div>
-    <hr class="divider">
   </div>
+  <hr class="divider">
 </div>
 
 <div class="container">
@@ -52,6 +107,7 @@
                       </div>
                       <div class="col-12 col-md-4">
                           <app-field
+                            *ngIf="sampleTakenIndicator"
                             [mode]="mode"
                             [header]="'Sample Taken'"
                             [value]="sampleTaken"
@@ -60,6 +116,7 @@
                       </div>
                       <div class="col-12 col-md-4">
                           <app-field
+                            *ngIf="sampleTakenIndicator"
                             [mode]="mode"
                             [header]="'Range Unit Number'"
                             [value]="rangeUnitNumber"
