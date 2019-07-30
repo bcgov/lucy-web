@@ -274,9 +274,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       [[world], [innerPoints]],
       {
         color: this.markerColor,
-        fillColor: 'grey',
+        fillColor: 'white',
         // between 0 and 1
-        fillOpacity: 0.5,
+        fillOpacity: 0.7,
         weight: 1,
       }
     ).addTo(this.map);
