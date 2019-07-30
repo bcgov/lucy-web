@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
 import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -21,6 +21,9 @@ import { DummyService } from 'src/app/services/dummy.service';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
+
+  @ViewChild('advanced') advancedSection: ElementRef;
+  @ViewChild('basic') basicSection: ElementRef;
 
   // State flags
   private submitted = false;
@@ -290,6 +293,14 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   advancedDataChanged(event: Observation) {
     console.log(`TODO: CALL BACK NOT HANDLED`);
+  }
+
+  sideNavItemClicked(className: string) {
+    if (className === `basic`) {
+      this.basicSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
+    } else if (className === `advanced`) {
+      this.advancedSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
+    }
   }
 
   public onIntersection({ target, visible }: { target: Element; visible: boolean }): void {
