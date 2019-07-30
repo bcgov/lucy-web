@@ -14,3 +14,8 @@
 .spacer-toolbar {
   flex: 1 1 auto;
 }
+
+.navbar-nav > li{
+  margin-left:5px;
+  margin-right:5px;
+}
