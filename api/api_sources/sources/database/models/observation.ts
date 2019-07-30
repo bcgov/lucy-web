@@ -33,6 +33,7 @@ import { SpeciesDensityCode } from './speciesDensity.code';
 import { SpeciesDistributionCode } from './speciesDistribution.code';
 import { SlopeCode } from './slope.code';
 import { AspectCode } from './observationAspect.code';
+import { ProposedActionCode } from './proposedAction.code';
 import {
     SpeciesSchema,
     JurisdictionCodeSchema,
@@ -45,7 +46,8 @@ import {
     ObservationGeometryCodeSchema,
     SpecificUseCodeSchema,
     SlopeCodeSchema,
-    AspectCodeSchema
+    AspectCodeSchema,
+    ProposedActionCodeSchema
 } from '../database-schema';
 import { NumericTransformer } from '../../libs/transformer';
 
@@ -225,6 +227,14 @@ export class Observation extends Record implements ObservationCreateModel {
     })
 	@ModelProperty({type: PropertyType.object})
     aspectCode: AspectCode;
+
+    @ManyToOne( type => ProposedActionCode, {eager: true})
+    @JoinColumn({
+        name: ObservationSchema.columns.proposedAction,
+        referencedColumnName: ProposedActionCodeSchema.columns.id
+    })
+	@ModelProperty({type: PropertyType.object})
+    proposedAction: ProposedActionCode;
 
     /**
      * Model Behavior

@@ -22,6 +22,7 @@ ALTER TABLE observation ADD COLUMN observation_geometry_code_id INT NULL REFEREN
 ALTER TABLE observation ADD COLUMN specific_use_code_id INT NULL REFERENCES specific_use_code(specific_use_code_id) ON DELETE SET NULL;
 ALTER TABLE observation ADD COLUMN observation_slope_code_id INT NULL REFERENCES observation_slope_code(observation_slope_code_id) ON DELETE SET NULL;
 ALTER TABLE observation ADD COLUMN observation_aspect_code_id INT NULL REFERENCES observation_aspect_code(observation_aspect_code_id) ON DELETE SET NULL;
+ALTER TABLE observation ADD COLUMN observation_proposed_action_code_id INT NULL REFERENCES observation_proposed_action_code(observation_proposed_action_code_id) ON DELETE SET NULL;
 
 
         
@@ -49,6 +50,7 @@ COMMENT ON COLUMN observation.observation_geometry_code_id IS 'Foreign key refer
 COMMENT ON COLUMN observation.specific_use_code_id IS 'Foreign key reference to Specific use code table';
 COMMENT ON COLUMN observation.observation_slope_code_id IS 'Foreign key reference to observation slope code table';
 COMMENT ON COLUMN observation.observation_aspect_code_id IS 'Foreign key reference to observation directional aspect code table';
+COMMENT ON COLUMN observation.observation_proposed_action_code_id IS 'Foreign key reference to observation proposed action codes';
 
 
         
