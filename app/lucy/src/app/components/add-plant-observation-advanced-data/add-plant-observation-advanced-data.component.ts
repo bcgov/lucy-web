@@ -207,48 +207,56 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   sampleTakenIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.sampleTakenIndicator = value;
+      this.notifyChangeEvent();
     }
   }
 
   wellIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.wellIndicator = value;
+      this.notifyChangeEvent();
     }
   }
 
   legacysiteIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.legacysiteIndicator = value;
+      this.notifyChangeEvent();
     }
   }
 
   edrrIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.edrrIndicator = value;
+      this.notifyChangeEvent();
     }
   }
 
   researchIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.researchIndicator = value;
+      this.notifyChangeEvent();
     }
   }
 
   specialCareFlagChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.specialCareFlag = value;
+      this.notifyChangeEvent();
     }
   }
 
   biologicalIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.biologicalIndicator = value;
+      this.notifyChangeEvent();
     }
   }
 
   aquaticIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.aquaticIndicator = value;
+      this.notifyChangeEvent();
     }
   }
 
