@@ -72,6 +72,16 @@ export const observationFactory = async (noSave?: boolean): Promise<Observation>
         obs.slopeCode = await slopeCodeFactory();
         obs.aspectCode = await aspectCodeFactory();
         obs.proposedAction = await proposedActionCodeFactory();
+        obs.legacySiteIndicator = faker.random.boolean();
+        obs.edrrIndicator = faker.random.boolean();
+        obs.sampleTakenIndicator = true;
+        obs.sampleIdentifier = faker.random.alphaNumeric(49);
+        obs.rangeUnitNumber = faker.random.alphaNumeric(49);
+        obs.researchIndicator = faker.random.boolean();
+        obs.wellIndicator = false;
+        obs.specialCareIndicator = faker.random.boolean();
+        obs.biologicalIndicator = faker.random.boolean();
+        obs.aquaticIndicator = faker.random.boolean();
     });
 };
 

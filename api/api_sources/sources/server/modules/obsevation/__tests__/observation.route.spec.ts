@@ -160,6 +160,7 @@ describe('Test for observation routes', () => {
             accessDescription: 'Test description',
             observerFirstName: 'Lao',
             observerLastName: 'Ballabh',
+            edrrIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id,
             observationType: type.observation_type_code_id,
@@ -195,6 +196,8 @@ describe('Test for observation routes', () => {
                 should().exist(body.slopeCode);
                 should().exist(body.aspectCode);
                 should().exist(body.proposedAction);
+                should().exist(body.edrrIndicator);
+                expect(body.edrrIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(create.length);
                 await ObservationController.shared.removeById(body.observation_id);
             });
@@ -242,6 +245,7 @@ describe('Test for observation routes', () => {
             length: 6700.78,
             width: 900.00,
             accessDescription: 'Test description',
+            researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id
         };
@@ -257,6 +261,8 @@ describe('Test for observation routes', () => {
                 should().exist(body.observation_id);
                 should().exist(body.species);
                 should().exist(body.jurisdiction);
+                should().exist(body.researchIndicator);
+                expect(body.researchIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(update.length);
             });
             await destroyObservation(obsSpecies);

@@ -99,6 +99,21 @@ const CreateValidator = (): any[] =>  {
     ];
 };
 
+const CreateOptionalValidator = (): any[] => {
+    return [
+        check('sampleIdentifier').isAlphanumeric().withMessage('sampleIdentifier: should be alphanumeric string'),
+        check('rangeUnitNumber').isAlphanumeric().withMessage('rangeUnitNumber: should be alphanumeric string'),
+        check('legacySiteIndicator').isBoolean().withMessage('legacySiteIndicator: should be boolean'),
+        check('edrrIndicator').isBoolean().withMessage('edrrIndicator: should be boolean'),
+        check('researchIndicator').isBoolean().withMessage('researchIndicator: should be boolean'),
+        check('sampleTakenIndicator').isBoolean().withMessage('sampleTakenIndicator: should be boolean'),
+        check('wellIndicator').isBoolean().withMessage('wellIndicator: should be boolean'),
+        check('specialCareIndicator').isBoolean().withMessage('specialCareIndicator: should be boolean'),
+        check('biologicalIndicator').isBoolean().withMessage('biologicalIndicator: should be boolean'),
+        check('aquaticIndicator').isBoolean().withMessage('aquaticIndicator: should be boolean')
+    ];
+};
+
 export class ObservationModifyRouteController extends WriterRouteController <ObservationController> {
 
     static get shared(): ObservationModifyRouteController {
@@ -108,8 +123,8 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
     constructor() {
         super();
         this.dataController = ObservationController.shared;
-        this.router.post('/', CreateValidator(), this.create);
-        this.router.put('/:id', this.combineValidator(MakeOptionalValidator(CreateValidator), this.idValidation()), this.update);
+        this.router.post('/', this.combineValidator(CreateValidator(), MakeOptionalValidator(CreateOptionalValidator)), this.create);
+        this.router.put('/:id', this.combineValidator(MakeOptionalValidator(CreateValidator), this.idValidation(), MakeOptionalValidator(CreateOptionalValidator)), this.update);
     }
 
     // Create Observation - species entry
@@ -135,7 +150,17 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 observerLastName: data.observerLastName,
                 slopeCode: req.validation.slopeCode,
                 aspectCode: req.validation.aspectCode,
-                proposedAction: req.validation.proposedAction
+                proposedAction: req.validation.proposedAction,
+                sampleIdentifier: data.sampleIdentifier,
+                rangeUnitNumber: data.rangeUnitNumber,
+                legacySiteIndicator: data.legacySiteIndicator,
+                edrrIndicator: data.edrrIndicator,
+                researchIndicator: data.researchIndicator,
+                sampleTakenIndicator: data.sampleTakenIndicator,
+                wellIndicator: data.wellIndicator,
+                specialCareIndicator: data.specialCareIndicator,
+                biologicalIndicator: data.biologicalIndicator,
+                aquaticIndicator: data.aquaticIndicator
             };
             return [201, await this.dataController.createObservation(model, req.user)];
         });
@@ -166,7 +191,17 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 observerLastName: data.observerLastName,
                 slopeCode: req.validation.slopeCode,
                 aspectCode: req.validation.aspectCode,
-                proposedAction: req.validation.proposedAction
+                proposedAction: req.validation.proposedAction,
+                sampleIdentifier: data.sampleIdentifier,
+                rangeUnitNumber: data.rangeUnitNumber,
+                legacySiteIndicator: data.legacySiteIndicator,
+                edrrIndicator: data.edrrIndicator,
+                researchIndicator: data.researchIndicator,
+                sampleTakenIndicator: data.sampleTakenIndicator,
+                wellIndicator: data.wellIndicator,
+                specialCareIndicator: data.specialCareIndicator,
+                biologicalIndicator: data.biologicalIndicator,
+                aquaticIndicator: data.aquaticIndicator
             };
             const observation: Observation = this.validation<any>(req).id as Observation;
             return [200, await this.dataController.update(observation, model, req.user)];
