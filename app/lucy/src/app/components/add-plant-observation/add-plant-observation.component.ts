@@ -288,6 +288,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     this.observationObject.speciesAgency = event.speciesAgency;
   }
 
+  advancedDataChanged(event: Observation) {
+    console.log(`TODO: CALL BACK NOT HANDLED`);
+  }
+
   public onIntersection({ target, visible }: { target: Element; visible: boolean }): void {
     const visibleClasses = [];
     this.visibleClasses.push(target.className);
