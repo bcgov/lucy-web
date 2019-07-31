@@ -21,8 +21,10 @@
  * Imports
  */
 import * as fs from 'fs';
+import * as path from 'path';
 import * as _ from 'underscore';
 import * as yml from 'js-yaml';
+import * as assert from 'assert';
 
 /**
  * @description AsyncFor
@@ -85,6 +87,49 @@ export const arrayToString = (array: any[]) => {
     _.each(array, (v: any) => (result = result + `${v},`));
     result = result.replace(/.$/, '');
     return result;
+};
+
+export const verifyObject = (obj: any, keys: any[], tag: string) => {
+    assert(obj, `${tag}: Object is undefined`);
+    _.each(keys, (k: any) => assert(Object.keys(obj).includes(k) === true, `${tag}: key not available: ${k} for obj ${JSON.stringify(obj)}`));
+    return obj;
+};
+
+export const applicationTemFileDir = () => {
+    const dirPath = path.resolve(__dirname, '../../../.temp');
+    if (fs.existsSync(dirPath)) {
+        return dirPath;
+    } else {
+        fs.mkdirSync(dirPath);
+        return dirPath;
+    }
+};
+
+export const incrementalFileName = (fileName: string, marker?: number) => {
+    const components = fileName.split('.');
+    const ext = components[components.length - 1];
+    const fileNameWithoutExt = fileName.split(`.${ext}`)[0];
+    return `${fileNameWithoutExt}-${ marker ||  Date.now()}.${ext}`;
+};
+
+export const incrementalWrite = (filePath: string, data: any) => {
+    if (fs.existsSync(filePath)) {
+        const fileName = path.basename(filePath);
+        const newFileName = incrementalFileName(fileName);
+        const dirPath = filePath.split(fileName)[0];
+        const newFilePath = `${dirPath}${newFileName}`;
+        fs.writeFileSync(newFilePath, data, {
+            flag: 'w',
+            encoding: 'utf8'
+        });
+        return newFilePath;
+    } else {
+        fs.writeFileSync(filePath, data, {
+            flag: 'w',
+            encoding: 'utf8'
+        });
+        return filePath;
+    }
 };
 
 // -------------------------------

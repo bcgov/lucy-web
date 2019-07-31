@@ -1,0 +1,10 @@
+﻿observation_geometry_code,description
+PO,Point - Small area circle
+PL,Plot - Length x Area
+GR,Grid - Parallel traverses
+LN,Linear track < 100m
+TR,Linear corridor > 100m
+GP,GPS tracking path
+RA,Radio tracking path
+WA,Water body outline
+DR,Drone track
