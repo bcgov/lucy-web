@@ -24,6 +24,9 @@ import { ObservationTypeCodeSchema } from '../database-schema';
 import { SoilTextureCodeSchema } from '../database-schema';
 import { ObservationGeometryCodeSchema } from '../database-schema';
 import { SpecificUseCodeSchema } from '../database-schema';
+import { SlopeCodeSchema } from '../database-schema';
+import { AspectCodeSchema } from '../database-schema';
+import { ProposedActionCodeSchema } from '../database-schema';
 /**
  * @description Migration File create JurisdictionCode table
  */
@@ -35,6 +38,10 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
     soilTextureCodeSchema: SoilTextureCodeSchema = new SoilTextureCodeSchema();
     observationGeometryCodeSchema: ObservationGeometryCodeSchema = new ObservationGeometryCodeSchema();
     specificUseCodeSchema: SpecificUseCodeSchema = new SpecificUseCodeSchema();
+    slopeCodeSchema: SlopeCodeSchema = new SlopeCodeSchema();
+    aspectCodeSchema: SlopeCodeSchema = new AspectCodeSchema();
+    proposedCodeSchema: ProposedActionCodeSchema = new ProposedActionCodeSchema();
+
     /**
      * @description Up method
      * @param QueryRunner queryRunner
@@ -49,6 +56,9 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
         await queryRunner.query(this.soilTextureCodeSchema.migrationSQL);
         await queryRunner.query(this.observationGeometryCodeSchema.migrationSQL);
         await queryRunner.query(this.specificUseCodeSchema.migrationSQL);
+        await queryRunner.query(this.slopeCodeSchema.migrationSQL);
+        await queryRunner.query(this.aspectCodeSchema.migrationSQL);
+        await queryRunner.query(this.proposedCodeSchema.migrationSQL);
         // Pre-load codes
         await queryRunner.query(getSQLFileData(this.densitySchema.dataSQLPath()));
         await queryRunner.query(getSQLFileData(this.distributionSchema.dataSQLPath()));
@@ -57,6 +67,9 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
         await queryRunner.query(getSQLFileData(this.soilTextureCodeSchema.dataSQLPath()));
         await queryRunner.query(getSQLFileData(this.observationGeometryCodeSchema.dataSQLPath()));
         await queryRunner.query(getSQLFileData(this.specificUseCodeSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.slopeCodeSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.aspectCodeSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.proposedCodeSchema.dataSQLPath()));
     }
 
     /**
@@ -73,6 +86,9 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
         await queryRunner.query(this.soilTextureCodeSchema.dropTable());
         await queryRunner.query(this.observationGeometryCodeSchema.dropTable());
         await queryRunner.query(this.specificUseCodeSchema.dropTable());
+        await queryRunner.query(this.slopeCodeSchema.dropTable());
+        await queryRunner.query(this.aspectCodeSchema.dropTable());
+        await queryRunner.query(this.proposedCodeSchema.dropTable());
 
         // Removing some old code table ref
         await queryRunner.query(`DROP TABLE IF EXISTS survey_geometry_code`);

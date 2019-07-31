@@ -36,7 +36,10 @@ import { Observation,
     SpecificUseCodeController,
     SoilTextureCodeController,
     ObservationCreateModel,
-    ObservationUpdateModel
+    ObservationUpdateModel,
+    SlopeCodeController,
+    AspectCodeController,
+    ProposedActionCodeController
 } from '../../../database/models';
 // import { DataController } from '../../../database/data.model.controller';
 
@@ -82,7 +85,32 @@ const CreateValidator = (): any[] =>  {
         }),
         idValidator<SoilTextureCodeController>('soilTexture', SoilTextureCodeController.shared, (data, req) => {
             UpdateRequest(req, {soilTexture: data});
+        }),
+        idValidator<SlopeCodeController>('slopeCode', SlopeCodeController.shared, (data, req) => {
+            UpdateRequest(req, {slopeCode: data});
+        }),
+        idValidator<AspectCodeController>('aspectCode', AspectCodeController.shared, (data, req) => {
+            UpdateRequest(req, {aspectCode: data});
+        }),
+        idValidator<ProposedActionCodeController>('proposedAction', ProposedActionCodeController.shared, (data, req) => {
+            UpdateRequest(req, {proposedAction: data});
         })
+
+    ];
+};
+
+const CreateOptionalValidator = (): any[] => {
+    return [
+        check('sampleIdentifier').isAlphanumeric().withMessage('sampleIdentifier: should be alphanumeric string'),
+        check('rangeUnitNumber').isAlphanumeric().withMessage('rangeUnitNumber: should be alphanumeric string'),
+        check('legacySiteIndicator').isBoolean().withMessage('legacySiteIndicator: should be boolean'),
+        check('edrrIndicator').isBoolean().withMessage('edrrIndicator: should be boolean'),
+        check('researchIndicator').isBoolean().withMessage('researchIndicator: should be boolean'),
+        check('sampleTakenIndicator').isBoolean().withMessage('sampleTakenIndicator: should be boolean'),
+        check('wellIndicator').isBoolean().withMessage('wellIndicator: should be boolean'),
+        check('specialCareIndicator').isBoolean().withMessage('specialCareIndicator: should be boolean'),
+        check('biologicalIndicator').isBoolean().withMessage('biologicalIndicator: should be boolean'),
+        check('aquaticIndicator').isBoolean().withMessage('aquaticIndicator: should be boolean')
     ];
 };
 
@@ -95,8 +123,8 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
     constructor() {
         super();
         this.dataController = ObservationController.shared;
-        this.router.post('/', CreateValidator(), this.create);
-        this.router.put('/:id', this.combineValidator(MakeOptionalValidator(CreateValidator), this.idValidation()), this.update);
+        this.router.post('/', this.combineValidator(CreateValidator(), MakeOptionalValidator(CreateOptionalValidator)), this.create);
+        this.router.put('/:id', this.combineValidator(MakeOptionalValidator(CreateValidator), this.idValidation(), MakeOptionalValidator(CreateOptionalValidator)), this.update);
     }
 
     // Create Observation - species entry
@@ -119,7 +147,20 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 specificUseCode: req.validation.specificUseCode,
                 soilTexture: req.validation.soilTexture,
                 observerFirstName: data.observerFirstName,
-                observerLastName: data.observerLastName
+                observerLastName: data.observerLastName,
+                slopeCode: req.validation.slopeCode,
+                aspectCode: req.validation.aspectCode,
+                proposedAction: req.validation.proposedAction,
+                sampleIdentifier: data.sampleIdentifier,
+                rangeUnitNumber: data.rangeUnitNumber,
+                legacySiteIndicator: data.legacySiteIndicator,
+                edrrIndicator: data.edrrIndicator,
+                researchIndicator: data.researchIndicator,
+                sampleTakenIndicator: data.sampleTakenIndicator,
+                wellIndicator: data.wellIndicator,
+                specialCareIndicator: data.specialCareIndicator,
+                biologicalIndicator: data.biologicalIndicator,
+                aquaticIndicator: data.aquaticIndicator
             };
             return [201, await this.dataController.createObservation(model, req.user)];
         });
@@ -147,7 +188,20 @@ export class ObservationModifyRouteController extends WriterRouteController <Obs
                 specificUseCode: req.validation.specificUseCode,
                 soilTexture: req.validation.soilTexture,
                 observerFirstName: data.observerFirstName,
-                observerLastName: data.observerLastName
+                observerLastName: data.observerLastName,
+                slopeCode: req.validation.slopeCode,
+                aspectCode: req.validation.aspectCode,
+                proposedAction: req.validation.proposedAction,
+                sampleIdentifier: data.sampleIdentifier,
+                rangeUnitNumber: data.rangeUnitNumber,
+                legacySiteIndicator: data.legacySiteIndicator,
+                edrrIndicator: data.edrrIndicator,
+                researchIndicator: data.researchIndicator,
+                sampleTakenIndicator: data.sampleTakenIndicator,
+                wellIndicator: data.wellIndicator,
+                specialCareIndicator: data.specialCareIndicator,
+                biologicalIndicator: data.biologicalIndicator,
+                aquaticIndicator: data.aquaticIndicator
             };
             const observation: Observation = this.validation<any>(req).id as Observation;
             return [200, await this.dataController.update(observation, model, req.user)];

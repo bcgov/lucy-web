@@ -34,6 +34,9 @@ import { SpeciesAgencyCode, SpeciesAgencyCodeController } from '../models';
 import { SoilTextureCode, SoilTextureCodeController } from '../models';
 import { ObservationGeometryCode, ObservationGeometryCodeController } from '../models';
 import { SpecificUseCode, SpecificUseCodeController } from '../models';
+import { SlopeCode, SlopeCodeController } from '../models';
+import { AspectCode, AspectCodeController } from '../models';
+import { ProposedActionCode, ProposedActionCodeController } from '../models';
 
 /**
  * @description Factory for code
@@ -124,5 +127,26 @@ export const observerGeometryCodeFactory = CodeFactory<ObservationGeometryCode, 
  * @returns Promise<SpecificUseCode>
  */
 export const specificUseCodeFactory = CodeFactory<SpecificUseCode, SpecificUseCodeController>(SpecificUseCodeController.shared);
+
+/**
+ * @description Factory for observation slope codes
+ * @param number? id optional
+ * @returns Promise<SlopeCode>
+ */
+export const slopeCodeFactory = CodeFactory<SlopeCode, SlopeCodeController>(SlopeCodeController.shared);
+
+/**
+ * @description Factory for observation directional aspect codes
+ * @param number? id optional
+ * @returns Promise<AspectCode>
+ */
+export const aspectCodeFactory = CodeFactory<AspectCode, AspectCodeController>(AspectCodeController.shared);
+
+/**
+ * @description Factory for proposed Actions Code
+ * @param number? id optional
+ * @returns Promise<ProposedActionCode>
+ */
+export const proposedActionCodeFactory = CodeFactory<ProposedActionCode, ProposedActionCodeController>(ProposedActionCodeController.shared);
 // -------------------------------------------------------------------------------
 

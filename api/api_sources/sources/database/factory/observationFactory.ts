@@ -35,7 +35,10 @@ import { jurisdictionCodeFactory,
     observationTypeCodeFactory,
     soilTextureCodeFactory,
     observerGeometryCodeFactory,
-    specificUseCodeFactory
+    specificUseCodeFactory,
+    slopeCodeFactory,
+    aspectCodeFactory,
+    proposedActionCodeFactory
 } from './observationCodesFactory';
 import { Create, Destroy } from './helper';
 
@@ -66,6 +69,19 @@ export const observationFactory = async (noSave?: boolean): Promise<Observation>
         obs.specificUseCode = await specificUseCodeFactory();
         obs.observerFirstName = faker.name.firstName();
         obs.observerLastName = faker.name.lastName();
+        obs.slopeCode = await slopeCodeFactory();
+        obs.aspectCode = await aspectCodeFactory();
+        obs.proposedAction = await proposedActionCodeFactory();
+        obs.legacySiteIndicator = faker.random.boolean();
+        obs.edrrIndicator = faker.random.boolean();
+        obs.sampleTakenIndicator = true;
+        obs.sampleIdentifier = faker.random.alphaNumeric(49);
+        obs.rangeUnitNumber = faker.random.alphaNumeric(49);
+        obs.researchIndicator = faker.random.boolean();
+        obs.wellIndicator = false;
+        obs.specialCareIndicator = faker.random.boolean();
+        obs.biologicalIndicator = faker.random.boolean();
+        obs.aquaticIndicator = faker.random.boolean();
     });
 };
 

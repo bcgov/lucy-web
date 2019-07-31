@@ -32,6 +32,9 @@ import { ObservationController,
     ObservationTypeCodeController,
     SpecificUseCodeController,
     SoilTextureCodeController,
+    SlopeCodeController,
+    AspectCodeController,
+    ProposedActionCodeController,
 } from '../../../database/models';
 import { SpeciesDensityCodeController, SpeciesDistributionCodeController } from '../../../database/models';
 import { observationModifyRoute } from './observation.species.route';
@@ -84,8 +87,10 @@ export class ObservationRouteController extends SecureRouteController<Observatio
             observationTypeCodes: await ObservationTypeCodeController.shared.all(),
             soilTextureCodes: await SoilTextureCodeController.shared.all(),
             observationGeometryCodes: await ObservationGeometryCodeController.shared.all(),
-            specificUseCodes: await SpecificUseCodeController.shared.all()
-
+            specificUseCodes: await SpecificUseCodeController.shared.all(),
+            slopeCodes: await SlopeCodeController.shared.all(),
+            aspectCodes: await AspectCodeController.shared.all(),
+            proposedActionCodes: await ProposedActionCodeController.shared.all()
         }]);
     }
 
