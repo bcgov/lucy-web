@@ -1,9 +1,8 @@
-import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
 import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-// import 'node_modules/leaflet/';
-import { FormMode, SpeciesObservations, Observation } from 'src/app/models';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormMode, Observation } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { ObservationService } from 'src/app/services/observation.service';
@@ -23,6 +22,9 @@ import { DummyService } from 'src/app/services/dummy.service';
 })
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
+  @ViewChild('advanced') advancedSection: ElementRef;
+  @ViewChild('basic') basicSection: ElementRef;
+
   // State flags
   private submitted = false;
   private inReviewMode = false;
@@ -31,15 +33,24 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   /////////////////
 
+  get submitedMessage(): string {
+    if (this.creating) {
+      return `Entries Added`;
+    } else if (this.editing) {
+      return `Edits Submitted`;
+    }
+    return ``;
+  }
+
   // Lottie Animation
   public lottieConfig: Object;
   private anim: any;
   private animationSpeed = 1;
   /////////////////
 
-   /**
-   * submit button title for different states
-   */
+  /**
+  * submit button title for different states
+  */
   get submitBtnName(): string {
     switch (this.mode) {
       case FormMode.Create: {
@@ -61,7 +72,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         return `How are you here?`;
     }
   }
-   /* ***** */
+  /* ***** */
 
   /**
    * Page title for different states
@@ -87,7 +98,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         return `How are you here?`;
     }
   }
-   /* ***** */
+  /* ***** */
 
   private _visibleClasses = [];
 
@@ -127,10 +138,10 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  get invasiveSpecies(): SpeciesObservations[] {
-    if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
-    return this.observationObject.speciesObservations;
-  }
+  // get invasiveSpecies(): SpeciesObservations[] {
+  //   if (!this.observationObject || !this.observationObject.speciesObservations) { return []; }
+  //   return this.observationObject.speciesObservations;
+  // }
 
   ///// Invasive plant objects
   private _object: Observation;
@@ -160,36 +171,15 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     };
   }
 
-  handleAnimation(anim: any) {
-    this.anim = anim;
-  }
-
-  stop() {
-    this.anim.stop();
-  }
-
-  play() {
-    this.anim.play();
-  }
-
-  pause() {
-    this.anim.pause();
-  }
-
-  setSpeed(speed: number) {
-    this.animationSpeed = speed;
-    this.anim.setSpeed(speed);
-  }
-
   ngOnInit() {
     this.initialize();
   }
 
   ngAfterViewChecked(): void {
+
   }
 
   private initialize() {
-
     if (this.viewing) {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
@@ -200,6 +190,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
       this.mode = FormMode.Edit;
+      this.fetchObservation(this.idInParams());
 
     } else if (this.creating) {
       this.initializeObjectIfDoesntExist();
@@ -234,28 +225,96 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   initializeObjectIfDoesntExist() {
     if (!this._object) {
-       this._object = {
-        observation_id: -1,
-        lat: undefined,
-        long: undefined,
-        observerFirstName: undefined,
-        observerLastName: undefined,
-        observerOrganization: undefined,
-        date: undefined,
-        speciesObservations: []
-      };
+      this._object = this.observationService.getEmptyObservation();
       console.log(`initialized observation`);
     }
   }
 
-  invasivePlantSpeciesChanged(event: SpeciesObservations[]) {
-    this.observationObject.speciesObservations = event;
+  //// Lottie
+  handleAnimation(anim: any) {
+    this.anim = anim;
   }
 
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
+
+  ///////
+
+  /**
+   * Triggered with changed from
+   * app-add-plant-observation-invasive-plant-species-cell Component.
+   * Stores fields from event that are present in the component.
+   * @param event Observation
+   */
+  invasivePlantSpeciesChanged(event: Observation) {
+    /* DO NOT set object in this class to = event */
+    this.observationObject.species = event.species;
+    this.observationObject.jurisdiction = event.jurisdiction;
+    this.observationObject.density = event.density;
+    this.observationObject.distribution = event.distribution;
+    this.observationObject.observationType = event.observationType;
+    this.observationObject.observationGeometry = event.observationGeometry;
+    this.observationObject.specificUseCode = event.specificUseCode;
+    this.observationObject.soilTexture = event.soilTexture;
+    this.observationObject.width = event.width;
+    this.observationObject.length = event.length;
+    this.observationObject.accessDescription = event.accessDescription;
+  }
+
+  /**
+   * Triggered with changed from
+   * app-add-plant-observation-basic-information Component.
+   * Stores fields from event that are present in the component.
+   * @param event Observation
+   */
   basicInfoChanged(event: Observation) {
+    /* DO NOT set object in this class to = event */
     this.observationObject.lat = event.lat;
     this.observationObject.long = event.long;
     this.observationObject.observation_id = event.observation_id;
+    this.observationObject.observerFirstName = event.observerFirstName;
+    this.observationObject.observerLastName = event.observerLastName;
+    this.observationObject.speciesAgency = event.speciesAgency;
+  }
+
+  advancedDataChanged(event: Observation) {
+    /* DO NOT set object in this class to = event */
+    this.observationObject.sampleTakenIndicator = event.sampleTakenIndicator;
+    this.observationObject.wellIndicator = event.wellIndicator;
+    this.observationObject.legacysiteIndicator = event.legacysiteIndicator;
+    this.observationObject.edrrIndicator = event.edrrIndicator;
+    this.observationObject.researchIndicator = event.researchIndicator;
+    this.observationObject.specialCareIndicator = event.specialCareIndicator;
+    this.observationObject.biologicalIndicator = event.biologicalIndicator;
+    this.observationObject.aquaticIndicator = event.aquaticIndicator;
+    this.observationObject.proposedAction = event.proposedAction;
+    this.observationObject.sampleIdentifier = event.sampleIdentifier;
+    this.observationObject.rangeUnitNumber = event.rangeUnitNumber;
+    this.observationObject.aspectCode = event.aspectCode;
+    this.observationObject.slopeCode = event.slopeCode;
+    this.observationObject.observationGeometry = event.observationGeometry;
+  }
+
+  sideNavItemClicked(className: string) {
+    if (className === `basic`) {
+      this.basicSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
+    } else if (className === `advanced`) {
+      this.advancedSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
+    }
   }
 
   public onIntersection({ target, visible }: { target: Element; visible: boolean }): void {
@@ -273,12 +332,48 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   async submitAction() {
     if (this.mode === FormMode.Edit) {
-      this.alert.show(`Not Yet`, `Edit feature is not yet implemented`, null);
+      this.editObservation();
+    } else {
+      this.createObservation();
+    }
+  }
+
+  async editObservation() {
+    if (!this.editing) {
       return;
     }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
-      console.log(` ***** can submit *****`);
+      const changes = await this.observationService.diffObservation(this.observationObject);
+      console.log(changes);
+      if (changes && changes.changed) {
+        const confirmed = await this.alert.showConfirmation(`The following fields will be changed`, changes.diffMessage);
+        if (!confirmed) {
+          return;
+        }
+      } else {
+        this.alert.show(`No Edits found`, `There are no edits to submit`);
+        return;
+      }
+      this.loadingService.add();
+      const success = await this.observationService.editObservation(this.observationObject);
+      this.loadingService.remove();
+      if (success) {
+        this.submitted = true;
+      } else {
+        this.alert.show(`Error`, `Edit Submission failed`, null);
+      }
+    } else {
+      this.alert.show(`Incomplete data`, validationMessage, null);
+    }
+  }
+
+  async createObservation() {
+    if (!this.creating) {
+      return;
+    }
+    const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
+    if (validationMessage === null) {
       if (!this.inReviewMode) {
         this.changeToReviewMode();
         return;
@@ -319,7 +414,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   async generateObservationForTesting() {
     this.loadingService.add();
     const obj = await this.dummy.createDummyObservation([]);
-    console.dir(obj);
     this.observationObject = obj;
     this.loadingService.remove();
   }

@@ -2,14 +2,18 @@
 <div class="container side-nav">
   <br />
   <div class="row">
-    <div class="col-12 on">
-      <i class="material-icons">crop_square</i>
-      Basic Observation Data
+    <div class="col-12" [ngClass]="basicInfoIsVisible ? 'on' : 'off'">
+      <div (click)="basicSectionSelected()">
+        <i class="material-icons">crop_square</i>
+        Basic Observation Data
+      </div>
     </div>
     <br />
-    <div class="col-12 off">
-      <i class="material-icons">crop_square</i>
-      Advanced Data Elements
+    <div class="col-12" [ngClass]="advancedDataIsVisible ? 'on' : 'off'">
+      <div (click)="advancedSectionSelected()">
+        <i class="material-icons">crop_square</i>
+        Advanced Data Elements
+      </div>
     </div>
     <br />
     <div class="col-12 off">
