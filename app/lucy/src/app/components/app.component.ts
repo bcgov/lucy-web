@@ -111,8 +111,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   /******** Alerts ********/
   private subscribeToAlertService() {
     this.alertsSubscription = this.alertService.getObservable().subscribe(message => {
-      console.log(`GOT A MESSAGE`);
-      console.dir(message);
       if (message) {
         this.alertMessage = message;
       } else {

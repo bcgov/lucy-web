@@ -1,7 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { DropdownObject } from 'src/app/services/dropdown.service';
+import { FormControl } from '@angular/forms';
+import { Subject, ReplaySubject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+import { MatSelect } from '@angular/material';
 
+interface Bank {
+  id: string;
+  name: string;
+ }
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
@@ -9,9 +17,22 @@ import { DropdownObject } from 'src/app/services/dropdown.service';
 })
 export class DropdownComponent implements OnInit {
 
+  /** control for the selected option */
+  public optionCtrl: FormControl = new FormControl();
+
+   /** control for the MatSelect filter keyword */
+  public optionFilterCtrl: FormControl = new FormControl();
+
+  /** Subject that emits when the component has been destroyed. */
+  private _onDestroy = new Subject<void>();
+
   @Input() fieldHeader = ``;
   // Optional Input
   @Input() editable = true;
+
+  get fieldId(): string {
+    return this.fieldHeader;
+  }
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -85,11 +106,41 @@ export class DropdownComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // set initial selection
+    // this.optionCtrl.setValue(this.items[0]);
+
+    this.optionFilterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterOptions();
+      });
   }
 
   selected(item: DropdownObject) {
     this.selectedItem = item;
     this.selectionChanged.emit(this.selectedItem);
+  }
+
+  filterOptions() {
+    if (!this.items) {
+      return;
+    }
+
+    // get the search keyword
+    let search = this.optionFilterCtrl.value;
+    if (!search) {
+      this.filteredItems = this.items;
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    this.filteredItems = [];
+    console.log(`searching`);
+    for (const item of this.items) {
+      if (item.name.toLowerCase().includes(search.toLowerCase())) {
+        this.filteredItems.push(item);
+      }
+    }
   }
 
   filer(string: string) {

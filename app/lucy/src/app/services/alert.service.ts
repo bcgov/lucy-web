@@ -38,10 +38,10 @@ export class AlertService {
    * @param title string
    * @param buttons AlertModalButton[] || null. Array of custom buttons
    */
-  public show(title: string, body: string, buttons: AlertModalButton[] | null) {
+  public show(title: string, body: string, buttons?: AlertModalButton[] | null) {
     let actionButtons: AlertModalButton[] = [];
 
-    if (buttons === null || buttons.length < 1) {
+    if (!buttons || buttons === null || buttons.length < 1) {
       actionButtons.push({
         name: `Okay`,
         canDismiss: true,
@@ -58,6 +58,56 @@ export class AlertService {
     };
     this.que.push(model);
     this.emit();
+  }
+
+  /**
+   * Add message to que and returns true or false
+   * to indicate if user confirmed or cancelled.
+   * @returns boolean
+   */
+  public async showConfirmation(title: string, body: string): Promise<boolean> {
+    const confirmAction = new EventEmitter<boolean>();
+    const cancelAction = new EventEmitter<boolean>();
+    const actionButtons: AlertModalButton[] = [];
+
+    return new Promise<boolean>((resolve, reject) => {
+
+
+      confirmAction.subscribe(item => {
+        confirmAction.unsubscribe();
+        cancelAction.unsubscribe();
+        console.log(`should confirm`);
+        resolve(true);
+      });
+
+      cancelAction.subscribe(item => {
+        confirmAction.unsubscribe();
+        cancelAction.unsubscribe();
+        console.log(`should cancel`);
+        resolve(false);
+      });
+
+      actionButtons.push({
+        name: `Confirm`,
+        canDismiss: true,
+        eventEmitter: confirmAction,
+      });
+
+      actionButtons.push({
+        name: `Cancel`,
+        canDismiss: true,
+        eventEmitter: cancelAction,
+      });
+
+      const model: AlertModel = {
+        title: title,
+        body: body,
+        buttons: actionButtons
+      };
+
+      this.que.push(model);
+      this.emit();
+    });
   }
 
   /**

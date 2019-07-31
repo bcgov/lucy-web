@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LatLong } from '../components/map-preview/map-preview.component';
-import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, SurveyTypeCodes, SoilTextureCodes, SurveyGeometryCodes, SpecificUseCodes, Observation } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, Observation, SlopeCodes, AspectCodes, ProposedActionCodes } from '../models';
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
@@ -70,8 +70,8 @@ export class DummyService {
     }
   }
 
-  public async randomSurveyTypeCodes(): Promise<SurveyTypeCodes | undefined> {
-    const codes = await this.codeTables.getSurveyTypeCodes();
+  public async randomSurveyTypeCodes(): Promise<ObservationTypeCodes | undefined> {
+    const codes = await this.codeTables.observationTypeCodes();
     if (codes.length > 0) {
       return codes[this.randomIntFromInterval(0, codes.length - 1)];
     } else {
@@ -89,8 +89,8 @@ export class DummyService {
     }
   }
 
-  public async randomSurveyGeometryCodes(): Promise<SurveyGeometryCodes | undefined> {
-    const codes = await this.codeTables.getSurveyGeometryCodes();
+  public async randomSurveyGeometryCodes(): Promise<ObservationGeometryCodes | undefined> {
+    const codes = await this.codeTables.observationGeometryCodes();
     if (codes.length > 0) {
       return codes[this.randomIntFromInterval(0, codes.length - 1)];
     } else {
@@ -100,6 +100,33 @@ export class DummyService {
 
   public async randomSpecificUseCodes(): Promise<SpecificUseCodes | undefined> {
     const codes = await this.codeTables.getSpecificUseCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomProposedActionCodes(): Promise<ProposedActionCodes | undefined> {
+    const codes = await this.codeTables.getProposedActionCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomGroundAspectCodes(): Promise<AspectCodes | undefined> {
+    const codes = await this.codeTables.getGroundAspectCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomGroundSlopeCodes(): Promise<SlopeCodes | undefined> {
+    const codes = await this.codeTables.getGroundSlopeCodes();
     if (codes.length > 0) {
       return codes[this.randomIntFromInterval(0, codes.length - 1)];
     } else {
@@ -138,37 +165,63 @@ export class DummyService {
     const soilTexture = await this.randomSoilTextureCodes();
     const geometry = await this.randomSurveyGeometryCodes();
     const useCode = await this.randomSpecificUseCodes();
+    const groundSlope = await this.randomGroundSlopeCodes();
+    const groundAspect = await this.randomGroundAspectCodes();
+    const proposedAction = await this.randomProposedActionCodes();
+
+    const sampleTakenIndicator = faker.random.boolean();
+    let sampleIdentifier = faker.lorem.word();
+    let rangeUnitNumber = String(faker.random.number());
+
+    if (!sampleTakenIndicator) {
+      sampleIdentifier = undefined;
+      rangeUnitNumber = undefined;
+    }
 
     if (!jurisdiction || ! invasivePlantSpecies) {
       return undefined;
     }
-    
+
     const observation: Observation = {
       observation_id: this.getUniqueObservationId(forObservations),
+
+      // Basic //
+      // Location
       lat: this.randomLat(),
       long: this.randomLong(),
       date: this.randomDateString(),
+      // Observer
       observerFirstName: faker.name.firstName(),
       observerLastName: faker.name.lastName(),
-      observerOrganization: agency,
-      speciesObservations: [{
-        observationSpecies_Id: 1,
-        species: invasivePlantSpecies,
-        jurisdiction: jurisdiction,
-        density: density,
-        distribution: distribution,
-        surveyType: surveyType,
-        surveyGeometry: geometry,
-        specificUseCode: useCode,
-        soilTexture: soilTexture,
-        width: this.randomIntFromInterval(4, 20),
-        length: this.randomIntFromInterval(4, 20),
-        accessDescription: faker.lorem.sentences(),
-
-        surveyorFirstName: faker.name.firstName(),
-        surveyorLastName: faker.name.lastName(),
-        speciesAgency: agency,
-      }]
+      // Invasive Plant
+      speciesAgency: agency,
+      species: invasivePlantSpecies,
+      jurisdiction: jurisdiction,
+      density: density,
+      distribution: distribution,
+      observationType: surveyType,
+      specificUseCode: useCode,
+      soilTexture: soilTexture,
+      width: this.randomIntFromInterval(4, 20),
+      length: this.randomIntFromInterval(4, 20),
+      accessDescription: faker.lorem.sentences(),
+      // Advanced //
+      // indicators
+      sampleTakenIndicator: sampleTakenIndicator,
+      wellIndicator: faker.random.boolean(),
+      legacysiteIndicator: faker.random.boolean(),
+      edrrIndicator: faker.random.boolean(),
+      researchIndicator: faker.random.boolean(),
+      specialCareIndicator: faker.random.boolean(),
+      biologicalIndicator: faker.random.boolean(),
+      aquaticIndicator: faker.random.boolean(),
+      // Further details
+      proposedAction: proposedAction,
+      sampleIdentifier: sampleIdentifier,
+      rangeUnitNumber: rangeUnitNumber,
+      aspectCode: groundAspect,
+      slopeCode: groundSlope,
+      observationGeometry: geometry,
     };
     return observation;
   }
@@ -215,6 +268,11 @@ export class DummyService {
     const max = 127977180;
     const min = 120845602;
 
+    const a = this.randomIntFromInterval(0, 7);
+    const b = this.randomIntFromInterval(845602, 977180);
+    const z = `-12${a}.${b}`;
+    return +z;
+
     const randomString = String(this.randomIntFromInterval(min, max));
     const withDecimal = randomString.slice(0, 3) + '.' + randomString.slice(2);
     return Math.abs(+withDecimal) * -1;
@@ -226,6 +284,11 @@ export class DummyService {
   public randomLat() {
     const max = 58202679;
     const min = 50713134;
+
+    const a = this.randomIntFromInterval(0, 8);
+    const b = this.randomIntFromInterval(713134, 202679);
+    const z = `5${a}.${b}`;
+    return +z;
 
     const randomString = String(this.randomIntFromInterval(min, max));
     const withDecimal = randomString.slice(0, 2) + '.' + randomString.slice(1);
