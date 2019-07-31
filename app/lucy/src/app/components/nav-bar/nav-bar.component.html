@@ -34,25 +34,19 @@
           <a class="nav-link" (click)="navigateToAddObservation()">Add Observation</a>
       </li>
     </ul>
+    <!-- User Menu -->
     <div class="nav-item" *ngIf="isAuthenticated">
-      <div ngbDropdown class="circle">
-        <button class="btn d-inline-block" id="userActions" ngbDropdownToggle>{{userInitials}}</button>
-        <!-- Options -->
-        <div ngbDropdownMenu aria-labelledby="userActions">
-          <div class="col-12">
-            <!-- Profile -->
-            <button type="button" class="btn btn-with-icon" (click)="navigateToProfile()">
+        <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
+        <mat-menu #menu="matMenu">
+          <!-- Profile -->
+          <button mat-menu-item class="btn-with-icon" (click)="navigateToProfile()">
               Profile <i class="material-icons">account_circle</i>
-            </button>
-          </div>
-          <div class="col-12">
-            <!-- Logout -->
-            <button type="button" class="btn btn-with-icon" (click)="logout()">
+          </button>
+          <!-- Logout -->
+          <button mat-menu-item class="btn-with-icon" (click)="logout()">
               Logout <i class="material-icons">input</i>
-            </button>
-          </div>
-        </div>
-      </div>
+          </button>
+        </mat-menu>
     </div>
   </div>
 </nav>

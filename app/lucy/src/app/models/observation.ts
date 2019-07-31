@@ -3,10 +3,22 @@ export interface Observation {
     lat: number;
     long: number;
     date: string;
+ 
     observerFirstName: string;
     observerLastName: string;
-    observerOrganization: SpeciesAgencyCodes;
-    speciesObservations: SpeciesObservations[];
+    speciesAgency: SpeciesAgencyCodes;
+
+    species: InvasivePlantSpecies;
+    jurisdiction: Jurisdiction;
+    density: SpeciesDensityCodes;
+    distribution: SpeciesDistributionCodes;
+    observationType: ObservationTypeCodes;
+    observationGeometry: ObservationGeometryCodes;
+    specificUseCode: SpecificUseCodes;
+    soilTexture: SoilTextureCodes;
+    width: number;
+    length: number;
+    accessDescription: string;
 }
 export interface InvasivePlantSpecies {
     commonName: string;
@@ -25,25 +37,6 @@ export interface Jurisdiction {
     code: string;
     description: string;
     activeIndicator: true;
-}
-
-export interface SpeciesObservations {
-    observationSpecies_Id: number;
-    species: InvasivePlantSpecies;
-    jurisdiction: Jurisdiction;
-    density: SpeciesDensityCodes;
-    distribution: SpeciesDistributionCodes;
-    surveyType: SurveyTypeCodes;
-    surveyGeometry: SurveyGeometryCodes;
-    specificUseCode: SpecificUseCodes;
-    soilTexture: SoilTextureCodes;
-    width: number;
-    length: number;
-    accessDescription: string;
-
-    surveyorFirstName: string;
-    surveyorLastName: string;
-    speciesAgency: SpeciesAgencyCodes;
 }
 
 export interface SpeciesDensityCodes {
@@ -66,10 +59,10 @@ export interface SpeciesAgencyCodes {
     code: string;
 }
 
-export interface SurveyTypeCodes {
+export interface ObservationTypeCodes {
     description: string;
     activeIndicator:  boolean;
-    survey_type_code_id: 1;
+    observation_type_code_id: 1;
     code: string;
 }
 
@@ -80,10 +73,10 @@ export interface SoilTextureCodes {
     code: string;
 }
 
-export interface SurveyGeometryCodes {
+export interface ObservationGeometryCodes {
     description: string;
     activeIndicator: boolean;
-    survey_geometry_code_id: number;
+    observation_geometry_code_id: number;
     code: string;
 }
 

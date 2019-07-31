@@ -1,17 +1,15 @@
 <div *ngIf="!readonly" class="col-12 field">
-    <label class="field-header">{{header}}</label>
     <mat-form-field>
         <input 
           class="form-control edit"
           matInput
           [matDatepicker]="datePicker"
-          placeholder=""
+          placeholder="{{header}}"
           [value]="_date"
           (dateChange)="dateChanged($event)"
           (click)="datePicker.open()"
           (keydown)="false">
-          <!-- uncomment to add icon -->
-        <!-- <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle> -->
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>
     </mat-form-field>
 </div>

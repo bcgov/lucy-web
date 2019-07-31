@@ -140,14 +140,14 @@ export class InventoryComponent implements OnInit {
 
     // Sort objects
     this.observations.sort((left, right): number => {
-      if (left.speciesObservations[0].species.commonName < right.speciesObservations[0].species.commonName) {
+      if (left.species.commonName < right.species.commonName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.speciesObservations[0].species.commonName > right.speciesObservations[0].species.commonName) {
+      if (left.species.commonName > right.species.commonName) {
         if (this.sortAscending) {
           return -1;
         } else {
@@ -178,14 +178,14 @@ export class InventoryComponent implements OnInit {
 
     // Sort objects
     this.observations.sort((left, right): number => {
-      if (left.observerLastName < right.observerLastName) {
+      if (left.observerFirstName < right.observerLastName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.observerLastName > right.observerLastName) {
+      if (left.observerFirstName > right.observerLastName) {
         if (this.sortAscending) {
           return -1;
         } else {
@@ -247,7 +247,7 @@ export class InventoryComponent implements OnInit {
   async createDummys() {
     this.loadingService.add();
     this.observations = [];
-    const random = await this.dummy.createDummyObservations(40);
+    const random = await this.dummy.createDummyObservations(100);
     this.observations = random;
     this.setMapMarkers();
     this.loadingService.remove();
