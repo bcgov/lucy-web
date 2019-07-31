@@ -1,6 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
+import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {ErrorStateMatcher} from '@angular/material/core';
+
+/** Error when invalid control is dirty, touched, or submitted. */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-field',
@@ -19,6 +29,20 @@ export class FieldComponent implements OnInit {
   @Input() multiline = false;
   // Field header
   @Input() header = '';
+
+
+  private _required = false;
+  get required(): boolean {
+    return this._required;
+  }
+  @Input() set required(value: boolean) {
+    if (value) {
+      this.fieldFormControl = new FormControl('', [
+        Validators.required,
+      ]);
+    }
+    this._required = value;
+  }
 
   get fieldId(): string {
     return this.header;
@@ -74,6 +98,8 @@ export class FieldComponent implements OnInit {
       return true;
     }
   }
+
+  fieldFormControl: FormControl;
 
   constructor(private validation: ValidationService) { }
 

@@ -6,7 +6,13 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+
+// Material
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule, MatToolbarModule } from '@angular/material';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatCardModule} from '@angular/material/card';
 
 // Third-party
 // ng-bootstrap
@@ -42,7 +48,6 @@ import { AccessRequestResponseModalComponent} from './components/admin-tools/acc
 import { UserCellComponent } from './components/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/admin-tools/request-cell/request-cell.component';
 import { AddPlantObservationBasicInformationComponent } from './components/add-plant-observation/add-plant-observation-basic-information/add-plant-observation-basic-information.component';
-import { AddPlantObservationInvasivePlantSpeciesComponent } from './components/add-plant-observation/add-plant-observation-invasive-plant-species/add-plant-observation-invasive-plant-species.component';
 import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/user-access-updated-modal/user-access-updated-modal.component';
 import { AlertComponent } from './components/alert/alert.component';
@@ -53,6 +58,10 @@ import { FieldComponent } from './components/field/field.component';
 import { SideNavComponent } from './components/add-plant-observation/side-nav/side-nav.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
+import { MatSelectSearchComponent } from './components/mat-select-search/mat-select-search.component';
+import { MatSelectSearchModule } from './components/mat-select-search/mat-select-search.module';
+import { AddPlantObservationAdvancedDataComponent } from './components/add-plant-observation-advanced-data/add-plant-observation-advanced-data.component';
+import { CheckboxComponent } from './components/checkbox/checkbox.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -76,7 +85,6 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     UserCellComponent,
     RequestCellComponent,
     AddPlantObservationBasicInformationComponent,
-    AddPlantObservationInvasivePlantSpeciesComponent,
     UserAccessUpdatedModalComponent,
     AlertComponent,
     MapPreviewComponent,
@@ -86,7 +94,10 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     SideNavComponent,
     InventoryComponent,
     DatePickerComponent,
-    MomentPipe
+    MomentPipe,
+    MatSelectSearchComponent,
+    AddPlantObservationAdvancedDataComponent,
+    CheckboxComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,7 +113,14 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatButtonModule,
     MatCheckboxModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSelectModule,
+    MatInputModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatDividerModule,
+    MatCardModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
