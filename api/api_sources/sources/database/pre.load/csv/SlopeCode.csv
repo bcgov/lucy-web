@@ -1,0 +1,11 @@
+﻿slope_code,description
+NA,Not available
+FLT,Flat 0 %
+NFL,Nearly flat 1-4 %
+GS,Gentle slope 5-9 %
+MS,Moderate slope 10-14 %
+SS,Strong slope 15-19 %
+VSS,Very strong slope 20-24 %
+ES,Extreme slope 25-29 %
+STS,Steep slope 30-44 %
+VSTS,Very steep slope > 45 %

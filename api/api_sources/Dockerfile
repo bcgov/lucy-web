@@ -4,6 +4,7 @@ FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ENV PORT 3001
+ENV HOME /opt/app-root/src
 
 # RUN set -x \
 
@@ -11,7 +12,7 @@ RUN npm install -g npm
 
 # Create app directory
 
-WORKDIR /opt/app-root/src
+WORKDIR ${HOME}
 
 # Logging in Build Console
 RUN echo ' --- BUILD START --- '
@@ -36,12 +37,17 @@ RUN rm -rf ./dist-server
 # Building App
 RUN npm run build
 
-ENV NODE_PATH /opt/app-root/src
+ENV NODE_PATH ${HOME}
+
+RUN mkdir ./schemaspy
+COPY ./resources/archives/schemaspy.tar.gz ./schemaspy.tar.gz
+RUN tar -zxf ./schemaspy.tar.gz -C ./schemaspy
+ENV SCHEMASPY_PATH=${HOME}/schemaspy
 
 RUN ls -a
 
 
-VOLUME /opt/app-root/src
+VOLUME ${HOME}
 
 EXPOSE 3001
 
