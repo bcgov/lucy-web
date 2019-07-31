@@ -21,7 +21,7 @@
  */
 import { Application} from 'express';
 import { accountRoute, requestAccessRoutes, observationRoute} from '../modules';
-import { defaultRoute} from '../modules';
+import { defaultRoute, miscellaneousRouter } from '../modules';
 
 /**
  * @description Configuring main app routes
@@ -36,6 +36,9 @@ export const routes = (app: Application) => {
 
     // Observation
     app.use('/api/observation', observationRoute());
+
+    // Miscellaneous
+    app.use('/api/misc', miscellaneousRouter());
 
     // Default Route
     app.use('*', defaultRoute());
