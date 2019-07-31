@@ -15,14 +15,20 @@
 /* Common Buttons */
 .button-fill {
   color: #FFFFFF !important;
-  background-color: #333333 !important;
+  background-color: #234075 !important;
 }
 
 .button-hollow {
-  color: black !important;
+  color: #234075 !important;
   background-color: #F7F7F7 !important;
-  border: 1px solid #333333 !important;
+  border: 1px solid #234075 !important;
 }
+
+/* Remove outline box around buttons - overriding bootstrap */
+button:focus, button:active:focus, button.active:focus {
+  outline: none !important;
+  outline-style: none !important;
+  }
 
 /* Center material icons with text */
 .material-icons {
@@ -111,3 +117,10 @@ h6 {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.divider {
+	box-sizing: border-box;
+	height: 1px;
+	width: 100%;
+	border: 1px solid grey;
+}

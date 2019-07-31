@@ -1,21 +1,18 @@
-  /* .user-access-level {
-    text-align: center;
-    border: 1px solid #CCCCCC;
-    background-color: #F7F7F7;
-    padding: 5px;
-    border-radius: 9px;
-    font-weight: bold;
-    font-size: 12px;
-  }
+.access-reaquest-reasons {
+  color: #333333;
+  font-size: 15px;
+  line-height: 18px;
+}
 
-  .form-check-label {
-    color: #999999;
-    font-size: 14px;
-    line-height: 16px;
-  } */
+.header-container {
+  background: #002C71;
+  margin: 0 auto;
+  width: 100%;
+}
 
-  .access-reaquest-reasons {
-    color: #333333;
-    font-size: 15px;
-    line-height: 18px;
-  }
+.view-title {
+  color: #FFFFFF;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29px;
+}
