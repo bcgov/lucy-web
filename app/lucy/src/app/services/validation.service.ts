@@ -99,10 +99,14 @@ export class ValidationService {
   public isValidObservationMessage(observation: Observation): string | null {
     if (!observation) { return `Object does not exist`; }
     const service = new ValidationService();
+
+    //////////////// Basic ////////////////
+    // Location
     if (!service.isValidLongitude(String(observation.long)) || !service.isValidLatitude(String(observation.lat))) {
       return `Location is invalid:\nLatitude and Longitude must have at least 5 decimal.`;
     }
 
+    // Observer
     if (!observation.date) {
       return `Observation date is missing`;
     }
@@ -115,6 +119,7 @@ export class ValidationService {
       return `Observer's last name is missing`;
     }
 
+    // Invasive Plant species
     if (!observation.speciesAgency) {
       return `Observer organization is missing`;
     }
@@ -143,10 +148,6 @@ export class ValidationService {
       return `You must add survey type for invasive plant species`;
     }
 
-    if (!observation.observationGeometry) {
-      return `You must add survey geometry type for invasive plant species`;
-    }
-
     if (!observation.specificUseCode) {
       return `You must add specific use code for invasive plant species`;
     }
@@ -154,6 +155,28 @@ export class ValidationService {
     if (!observation.soilTexture) {
       return `You must add soil texture for invasive plant species`;
     }
+
+    //////////////// Advanced ////////////////
+    if (!observation.proposedAction) {
+      return `You must specify a proposed action in advanced data section`;
+    }
+
+    if (!observation.aspectCode) {
+      return `You must specify an aspect code in advanced data section`;
+    }
+
+    if (!observation.slopeCode) {
+      return `You must specify a slope code in advanced data section`;
+    }
+
+    if (!observation.observationGeometry) {
+      return `You must specify survey geometry in advanced data section`;
+    }
+
+    if (observation.sampleTakenIndicator && (observation.sampleIdentifier === undefined || observation.rangeUnitNumber === undefined)) {
+      return `Please provide a sample identifier and range range unit number for the sample identified in advanced section`;
+    }
+
     return null;
   }
 }
