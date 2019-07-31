@@ -24,7 +24,8 @@
  */
 import * as express from 'express';
 import * as assert from 'assert';
-import { errorBody} from '../../core';
+import { errorBody, BaseRoutController, RouteHandler} from '../../core';
+import { testIdr1Token, testIdr3Token, viewerToken } from '../../../test-helpers/token';
 
 export const miscellaneous = () => {};
 
@@ -36,5 +37,47 @@ export const defaultRoute = () => {
     });
     return route;
 };
+
+/**
+ * @description Tokens map
+ */
+const tokens = {
+    admin : testIdr1Token(),
+    sme: testIdr3Token(),
+    viewer: viewerToken()
+};
+
+/**
+ * @description MiscellaneousRoute route controller
+ */
+export class MiscellaneousRouteController extends BaseRoutController<any> {
+    static get shared(): MiscellaneousRouteController {
+        return this.sharedInstance<MiscellaneousRouteController>() as MiscellaneousRouteController;
+    }
+
+    constructor() {
+        super();
+
+        this.router.get('/version', this.version);
+
+        this.router.get('/test-token/:key', this.testToken);
+    }
+
+    get version(): RouteHandler {
+        return this.routeConfig<any>('version', async () => [200, { version: process.env.VERSION || `0.-1`}]);
+    }
+
+    get testToken(): RouteHandler {
+        return this.routeConfig<any>('test-token', async (d: any, req: express.Request) => [200, {
+            token: tokens[req.params.key] || ''
+        }]);
+    }
+}
+
+/**
+ * @description Miscellaneous Router
+ */
+export const miscellaneousRouter = () => MiscellaneousRouteController.shared.router;
+
 // -----------------------------------------------------------------------------------------------------------
 

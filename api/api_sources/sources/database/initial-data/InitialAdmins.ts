@@ -37,6 +37,33 @@ export const InitialUsers = [
         additionalInitDataInfo: {
             roles: [2]
         }
+    },
+    {
+        email: 'istest1@idir',
+        preferred_username: 'istest1@idir',
+        first_name: 'Test',
+        last_name: 'Idr1',
+        additionalInitDataInfo: {
+            roles: [1]
+        }
+    },
+    {
+        email: 'istest2@idir',
+        preferred_username: 'istest2@idir',
+        first_name: 'Test',
+        last_name: 'Idr2',
+        additionalInitDataInfo: {
+            roles: [1]
+        }
+    },
+    {
+        email: 'istest3@idir',
+        preferred_username: 'istest3@idir',
+        first_name: 'Test',
+        last_name: 'Idr3',
+        additionalInitDataInfo: {
+            roles: [3]
+        }
     }
 ];
 
