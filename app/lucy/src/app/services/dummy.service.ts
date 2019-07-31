@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LatLong } from '../components/map-preview/map-preview.component';
-import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, Observation } from '../models';
+import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, Observation, SlopeCodes, AspectCodes, ProposedActionCodes } from '../models';
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
@@ -107,6 +107,33 @@ export class DummyService {
     }
   }
 
+  public async randomProposedActionCodes(): Promise<ProposedActionCodes | undefined> {
+    const codes = await this.codeTables.getProposedActionCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomGroundAspectCodes(): Promise<AspectCodes | undefined> {
+    const codes = await this.codeTables.getGroundAspectCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomGroundSlopeCodes(): Promise<SlopeCodes | undefined> {
+    const codes = await this.codeTables.getGroundSlopeCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
   /**
    * Create and return a random array of observations
    * @param number of observations
@@ -138,30 +165,63 @@ export class DummyService {
     const soilTexture = await this.randomSoilTextureCodes();
     const geometry = await this.randomSurveyGeometryCodes();
     const useCode = await this.randomSpecificUseCodes();
+    const groundSlope = await this.randomGroundSlopeCodes();
+    const groundAspect = await this.randomGroundAspectCodes();
+    const proposedAction = await this.randomProposedActionCodes();
+
+    const sampleTakenIndicator = faker.random.boolean();
+    let sampleIdentifier = faker.lorem.word();
+    let rangeUnitNumber = String(faker.random.number());
+
+    if (!sampleTakenIndicator) {
+      sampleIdentifier = undefined;
+      rangeUnitNumber = undefined;
+    }
 
     if (!jurisdiction || ! invasivePlantSpecies) {
       return undefined;
     }
-    
+
     const observation: Observation = {
       observation_id: this.getUniqueObservationId(forObservations),
+
+      // Basic //
+      // Location
       lat: this.randomLat(),
       long: this.randomLong(),
       date: this.randomDateString(),
+      // Observer
       observerFirstName: faker.name.firstName(),
       observerLastName: faker.name.lastName(),
+      // Invasive Plant
       speciesAgency: agency,
       species: invasivePlantSpecies,
       jurisdiction: jurisdiction,
       density: density,
       distribution: distribution,
       observationType: surveyType,
-      observationGeometry: geometry,
       specificUseCode: useCode,
       soilTexture: soilTexture,
       width: this.randomIntFromInterval(4, 20),
       length: this.randomIntFromInterval(4, 20),
       accessDescription: faker.lorem.sentences(),
+      // Advanced //
+      // indicators
+      sampleTakenIndicator: sampleTakenIndicator,
+      wellIndicator: faker.random.boolean(),
+      legacysiteIndicator: faker.random.boolean(),
+      edrrIndicator: faker.random.boolean(),
+      researchIndicator: faker.random.boolean(),
+      specialCareIndicator: faker.random.boolean(),
+      biologicalIndicator: faker.random.boolean(),
+      aquaticIndicator: faker.random.boolean(),
+      // Further details
+      proposedAction: proposedAction,
+      sampleIdentifier: sampleIdentifier,
+      rangeUnitNumber: rangeUnitNumber,
+      aspectCode: groundAspect,
+      slopeCode: groundSlope,
+      observationGeometry: geometry,
     };
     return observation;
   }

@@ -1,17 +1,14 @@
 export interface Observation {
-    // Basic
-
+    // Basic //
     // Location
     observation_id: number;
     lat: number;
     long: number;
     date: string;
- 
     // Observer
     observerFirstName: string;
     observerLastName: string;
     speciesAgency: SpeciesAgencyCodes;
-
     // Invasive Plant Species
     species: InvasivePlantSpecies;
     jurisdiction: Jurisdiction;
@@ -23,44 +20,41 @@ export interface Observation {
     width: number;
     length: number;
     accessDescription: string;
-
-    // Advanced
-
+    // Advanced //
     // indicators
     sampleTakenIndicator: boolean;
     wellIndicator: boolean;
     legacysiteIndicator: boolean;
     edrrIndicator: boolean;
     researchIndicator: boolean;
-    specialCareFlag: boolean;
+    specialCareIndicator: boolean;
     biologicalIndicator: boolean;
     aquaticIndicator: boolean;
-
     // Further details
     proposedAction: ProposedActionCodes;
-    sampleTaken: string;
+    sampleIdentifier: string;
     rangeUnitNumber: string;
-    groundAspect: GroundAspectCodes;
-    groundSlope: GroundSlopeCodes;
+    aspectCode: AspectCodes;
+    slopeCode: SlopeCodes;
     observationGeometry: ObservationGeometryCodes;
 }
 
 export interface ProposedActionCodes {
-    proposed_actions_code_id: number;
+    observation_proposed_action_code_id: number;
     code: string;
     description: string;
     activeIndicator: true;
 }
 
-export interface GroundAspectCodes {
-    ground_aspect_code_id: number;
+export interface AspectCodes {
+    observation_aspect_code_id: number;
     code: string;
     description: string;
     activeIndicator: true;
 }
 
-export interface GroundSlopeCodes {
-    ground_slope_code_id: number;
+export interface SlopeCodes {
+    observation_slope_code_id: number;
     code: string;
     description: string;
     activeIndicator: true;

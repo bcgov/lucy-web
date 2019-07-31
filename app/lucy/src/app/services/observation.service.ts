@@ -24,15 +24,17 @@ export class ObservationService {
    */
   private observationBody(observation: Observation): any {
     /**
-     * Note: If you observation end up having nested objects,
+     * Note: If your observation ends up having nested objects,
      * this function will no longer work for compare() in this class.
-     * You'll need to create a similar function to "flatten" an obs
+     * You'll need to create a similar function to "flatten" an observation.
      */
     const body = {
-      // basic information
+      // basic //
+      // Location
       lat: +String(observation.lat),
       long: +String(observation.long),
       date: observation.date,
+      // Observer
       observerFirstName: observation.observerFirstName,
       observerLastName: observation.observerLastName,
       speciesAgency: observation.speciesAgency.species_agency_code_id,
@@ -42,12 +44,28 @@ export class ObservationService {
       density: observation.density.species_density_code_id,
       distribution: observation.distribution.species_distribution_code_id,
       observationType: observation.observationType.observation_type_code_id,
-      observationGeometry: observation.observationGeometry.observation_geometry_code_id,
       specificUseCode: observation.specificUseCode.specific_use_code_id,
       soilTexture: observation.soilTexture.soil_texture_code_id,
       width: +observation.width,
       length: +observation.length,
       accessDescription: observation.accessDescription,
+      // Advanced
+      // indicators
+      sampleTakenIndicator: observation.sampleTakenIndicator,
+      wellIndicator: observation.wellIndicator,
+      legacysiteIndicator: observation.legacysiteIndicator,
+      edrrIndicator: observation.edrrIndicator,
+      researchIndicator: observation.researchIndicator,
+      specialCareIndicator: observation.specialCareIndicator,
+      biologicalIndicator: observation.biologicalIndicator,
+      aquaticIndicator: observation.aquaticIndicator,
+      // Further details
+      proposedAction: observation.proposedAction.observation_proposed_action_code_id,
+      sampleIdentifier: observation.sampleIdentifier,
+      rangeUnitNumber: observation.rangeUnitNumber,
+      aspectCode: observation.aspectCode.observation_aspect_code_id,
+      slopeCode: observation.slopeCode.observation_slope_code_id,
+      observationGeometry: observation.observationGeometry.observation_geometry_code_id,
     };
 
     return body;
@@ -56,6 +74,8 @@ export class ObservationService {
   public async submitObservation(observation: Observation): Promise<boolean> {
     // You shouldn't use the object directly because api expects ids, not objects
     const observationBody = this.observationBody(observation);
+    console.dir(observationBody);
+    console.log(observationBody);
 
     // Make the call
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_observation, observationBody);
@@ -133,25 +153,43 @@ export class ObservationService {
   public getEmptyObservation(): Observation {
     const object: Observation = {
       observation_id: -1,
+      // Basic //
+      // Location
       lat: undefined,
       long: undefined,
       date: undefined,
-
+      // Observer
       observerFirstName: undefined,
       observerLastName: undefined,
       speciesAgency: undefined,
-
+      // Invasive Plant
       species: undefined,
       jurisdiction: undefined,
       density: undefined,
       distribution: undefined,
       observationType: undefined,
-      observationGeometry: undefined,
       specificUseCode: undefined,
       soilTexture: undefined,
       width: undefined,
       length: undefined,
       accessDescription: undefined,
+      // Advanced //
+      // indicators
+      sampleTakenIndicator: false,
+      wellIndicator: false,
+      legacysiteIndicator: false,
+      edrrIndicator: false,
+      researchIndicator: false,
+      specialCareIndicator: false,
+      biologicalIndicator: false,
+      aquaticIndicator: false,
+      // Further details
+      proposedAction: undefined,
+      sampleIdentifier: undefined,
+      rangeUnitNumber: undefined,
+      aspectCode: undefined,
+      slopeCode: undefined,
+      observationGeometry: undefined,
     };
     return object;
   }

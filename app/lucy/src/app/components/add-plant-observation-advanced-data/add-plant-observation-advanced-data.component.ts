@@ -57,7 +57,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     if (!this.observationObject) {
       return false;
     }
-    return this.observationObject.specialCareFlag;
+    return this.observationObject.specialCareIndicator;
   }
 
   get biologicalIndicator(): boolean {
@@ -83,10 +83,10 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   }
 
   get sampleTaken(): string {
-    if (!this.observationObject || !this.observationObject.sampleTaken) {
+    if (!this.observationObject || !this.observationObject.sampleIdentifier) {
       return '';
     }
-    return this.observationObject.sampleTaken;
+    return this.observationObject.sampleIdentifier;
   }
 
   get rangeUnitNumber(): string {
@@ -107,22 +107,22 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   }
 
   get selectedGroundSlope(): DropdownObject | undefined {
-    if (!this.observationObject || !this.observationObject.groundSlope) {
+    if (!this.observationObject || !this.observationObject.slopeCode) {
       return undefined;
     }
     return {
-      name: this.observationObject.groundSlope[this.dropdownService.displayedGroundSlopeField],
-      object: this.observationObject.groundSlope,
+      name: this.observationObject.slopeCode[this.dropdownService.displayedGroundSlopeField],
+      object: this.observationObject.slopeCode,
     };
   }
 
   get selectedGroundAspect(): DropdownObject | undefined {
-    if (!this.observationObject || !this.observationObject.groundAspect) {
+    if (!this.observationObject || !this.observationObject.aspectCode) {
       return undefined;
     }
     return {
-      name: this.observationObject.groundAspect[this.dropdownService.displayedGroundAspecField],
-      object: this.observationObject.groundAspect,
+      name: this.observationObject.aspectCode[this.dropdownService.displayedGroundAspecField],
+      object: this.observationObject.aspectCode,
     };
   }
 
@@ -207,6 +207,10 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   sampleTakenIndicatorChanged(value: boolean) {
     if (this.observationObject) {
       this.observationObject.sampleTakenIndicator = value;
+      if (!value) {
+        this.observationObject.sampleIdentifier = undefined;
+        this.observationObject.rangeUnitNumber = undefined;
+      }
       this.notifyChangeEvent();
     }
   }
@@ -241,7 +245,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
 
   specialCareFlagChanged(value: boolean) {
     if (this.observationObject) {
-      this.observationObject.specialCareFlag = value;
+      this.observationObject.specialCareIndicator = value;
       this.notifyChangeEvent();
     }
   }
@@ -273,14 +277,14 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
 
   groundSlopeChanged(value: DropdownObject) {
     if (this.observationObject && value.object) {
-      this.observationObject.groundSlope = value.object;
+      this.observationObject.slopeCode = value.object;
       this.notifyChangeEvent();
     }
   }
 
   groundAspectChanged(value: DropdownObject) {
     if (this.observationObject && value.object) {
-      this.observationObject.groundAspect = value.object;
+      this.observationObject.aspectCode = value.object;
       this.notifyChangeEvent();
     }
   }
@@ -294,7 +298,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
 
   sampleTakenChanged(value: string) {
     if (this.observationObject) {
-      this.observationObject.sampleTaken = value;
+      this.observationObject.sampleIdentifier = value;
       this.notifyChangeEvent();
     }
   }

@@ -11,6 +11,7 @@
         <div class="row">
              <div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'Sample Taken'"
                 [value]="sampleTakenIndicator"
                 (selectionChanged)='sampleTakenIndicatorChanged($event)'>
@@ -18,6 +19,7 @@
             </div>
             <div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'Well indicator'"
                 [value]="wellIndicator"
                 (selectionChanged)='wellIndicatorChanged($event)'>
@@ -25,6 +27,7 @@
              </div>
             <div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'Legacy site indicator'"
                 [value]="legacysiteIndicator"
                 (selectionChanged)='legacysiteIndicatorChanged($event)'>
@@ -32,6 +35,7 @@
              </div>
              <div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'EDRR indicator'"
                 [value]="edrrIndicator"
                 (selectionChanged)='edrrIndicatorChanged($event)'>
@@ -39,6 +43,7 @@
              </div>
              <div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'Research indicator'"
                 [value]="researchIndicator"
                 (selectionChanged)='researchIndicatorChanged($event)'>
@@ -46,6 +51,7 @@
             </div>
             <div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'Special care flag'"
                 [value]="specialCareFlag"
                 (selectionChanged)='specialCareFlagChanged($event)'>
@@ -53,12 +59,14 @@
              </div>
              <div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'Biological indicator'"
                 [value]="biologicalIndicator"
                 (selectionChanged)='biologicalIndicatorChanged($event)'>
                 </app-checkbox>
              </div><div class="col-4">
                 <app-checkbox
+                [mode]="mode"
                 [header]="'Aquatic indicator'"
                 [value]="aquaticIndicator"
                 (selectionChanged)='aquaticIndicatorChanged($event)'>
@@ -107,7 +115,7 @@
                       </div>
                       <div class="col-12 col-md-4">
                           <app-field
-                            *ngIf="sampleTakenIndicator"
+                          [editable]="sampleTakenIndicator"
                             [mode]="mode"
                             [header]="'Sample Taken'"
                             [value]="sampleTaken"
@@ -116,7 +124,7 @@
                       </div>
                       <div class="col-12 col-md-4">
                           <app-field
-                            *ngIf="sampleTakenIndicator"
+                          [editable]="sampleTakenIndicator"
                             [mode]="mode"
                             [header]="'Range Unit Number'"
                             [value]="rangeUnitNumber"
