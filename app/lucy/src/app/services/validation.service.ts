@@ -94,7 +94,7 @@ export class ValidationService {
     return regexpOneResult;
   }
 
-   //////////////// End Location Validations ////////////////
+  //////////////// End Location Validations ////////////////
 
   public isValidObservationMessage(observation: Observation): string | null {
     if (!observation) { return `Object does not exist`; }
@@ -124,7 +124,7 @@ export class ValidationService {
       return `Observer organization is missing`;
     }
 
-    if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width)) ) {
+    if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width))) {
       return `You must specify a valid plot dimention for invasive plant species`;
     }
 
