@@ -377,7 +377,33 @@ definitions:
       - date
       - lat
       - long
-      - speciesObservations
+      - width
+      - length
+      - accessDescription
+      - observerFirstName
+      - observerLastName
+      - sampleIdentifier
+      - rangeUnitNumber
+      - legacySiteIndicator
+      - edrrIndicator
+      - researchIndicator
+      - sampleTakenIndicator
+      - wellIndicator
+      - specialCareIndicator
+      - biologicalIndicator
+      - aquaticIndicator
+      - species
+      - jurisdiction
+      - density
+      - distribution
+      - observationType
+      - speciesAgency
+      - soilTexture
+      - observationGeometry
+      - specificUseCode
+      - slopeCode
+      - aspectCode
+      - proposedAction
       - updateAt
       - createdAt
     properties:
@@ -389,47 +415,36 @@ definitions:
         type: number
       long:
         type: number
-      speciesObservations:
-        type: object
-        $ref: '#/definitions/ObservationSpecies'
-      updateAt:
-        type: string
-      createdAt:
-        type: string
-  ObservationSpecies:
-    type: object
-    required:
-      - observation_species_id
-      - width
-      - length
-      - accessDescription
-      - surveyorFirstName
-      - surveyorLastName
-      - species
-      - jurisdiction
-      - density
-      - distribution
-      - surveyType
-      - speciesAgency
-      - observation
-      - soilTexture
-      - surveyGeometry
-      - specificUseCode
-      - updateAt
-      - createdAt
-    properties:
-      observation_species_id:
-        type: number
       width:
         type: number
       length:
         type: number
       accessDescription:
         type: string
-      surveyorFirstName:
+      observerFirstName:
         type: string
-      surveyorLastName:
+      observerLastName:
         type: string
+      sampleIdentifier:
+        type: string
+      rangeUnitNumber:
+        type: string
+      legacySiteIndicator:
+        type: boolean
+      edrrIndicator:
+        type: boolean
+      researchIndicator:
+        type: boolean
+      sampleTakenIndicator:
+        type: boolean
+      wellIndicator:
+        type: boolean
+      specialCareIndicator:
+        type: boolean
+      biologicalIndicator:
+        type: boolean
+      aquaticIndicator:
+        type: boolean
       species:
         type: object
       jurisdiction:
@@ -438,17 +453,21 @@ definitions:
         type: object
       distribution:
         type: object
-      surveyType:
+      observationType:
         type: object
       speciesAgency:
         type: object
-      observation:
-        type: object
       soilTexture:
         type: object
-      surveyGeometry:
+      observationGeometry:
         type: object
       specificUseCode:
+        type: object
+      slopeCode:
+        type: object
+      aspectCode:
+        type: object
+      proposedAction:
         type: object
       updateAt:
         type: string
@@ -517,17 +536,127 @@ definitions:
         type: string
       createdAt:
         type: string
-  SurveyTypeCode:
+  SoilTextureCode:
     type: object
     required:
-      - survey_type_code_id
+      - soil_texture_code_id
       - code
       - description
       - activeIndicator
       - updateAt
       - createdAt
     properties:
-      survey_type_code_id:
+      soil_texture_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpecificUseCode:
+    type: object
+    required:
+      - specific_use_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      specific_use_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationTypeCode:
+    type: object
+    required:
+      - observation_type_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_type_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationGeometryCode:
+    type: object
+    required:
+      - observation_geometry_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_geometry_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SlopeCode:
+    type: object
+    required:
+      - observation_slope_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_slope_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  AspectCode:
+    type: object
+    required:
+      - observation_aspect_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_aspect_code_id:
         type: number
       code:
         type: string
@@ -558,6 +687,86 @@ definitions:
       data:
         type: object
         $ref: '#/definitions/User'
+  ObservationSpecies:
+    type: object
+    required:
+      - observation_species_id
+      - width
+      - length
+      - accessDescription
+      - surveyorFirstName
+      - surveyorLastName
+      - species
+      - jurisdiction
+      - density
+      - distribution
+      - surveyType
+      - speciesAgency
+      - observation
+      - soilTexture
+      - surveyGeometry
+      - specificUseCode
+      - updateAt
+      - createdAt
+    properties:
+      observation_species_id:
+        type: number
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      surveyorFirstName:
+        type: string
+      surveyorLastName:
+        type: string
+      species:
+        type: object
+      jurisdiction:
+        type: object
+      density:
+        type: object
+      distribution:
+        type: object
+      surveyType:
+        type: object
+      speciesAgency:
+        type: object
+      observation:
+        type: object
+      soilTexture:
+        type: object
+      surveyGeometry:
+        type: object
+      specificUseCode:
+        type: object
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SurveyTypeCode:
+    type: object
+    required:
+      - survey_type_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      survey_type_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
   ObservationCodes:
     required:
       - jurisdictionCodes
@@ -565,10 +774,13 @@ definitions:
       - speciesDensityCodes
       - speciesDistributionCodes
       - speciesAgencyCodes
-      - surveyTypeCodes
+      - observationTypeCodes
       - soilTextureCodes
-      - surveyGeometryCodes
+      - observationGeometryCodes
       - specificUseCodes
+      - slopeCodes
+      - aspectCodes
+      - proposedActionCodes
     properties:
       jurisdictionCodes:
         type: array
@@ -585,15 +797,27 @@ definitions:
       speciesAgencyCodes:
         type: array
         $ref: '#/definitions/SpeciesAgencyCode'
-      surveyTypeCodes:
+      observationTypeCodes:
         type: array
-        $ref: '#/definitions/SurveyTypeCode'
+        $ref: '#/definitions/ObservationTypeCode'
       soilTextureCodes:
         type: array
         $ref: '#/definitions/SoilTextureCode'
-      surveyGeometryCodes:
+      observationGeometryCodes:
         type: array
-        $ref: '#/definitions/SoilTextureCode'
+        $ref: '#/definitions/ObservationGeometryCode'
+      specificUseCodes:
+        type: array
+        $ref: '#/definitions/SpecificUseCode'
+      slopeCodes:
+        type: array
+        $ref: '#/definitions/SlopeCode'
+      aspectCodes:
+        type: array
+        $ref: '#/definitions/AspectCode'
+      proposedActionCodes:
+        type: array
+        $ref: '#/definitions/ProposedActionCode'
   ObservationCodesResp:
     required:
       - message
@@ -607,20 +831,9 @@ definitions:
   ObservationCreateRequestBody:
     type: object
     required:
-      - date
       - lat
       - long
-    properties:
-      date:
-        type: string
-        description: Date string in YYYY-MM-DD format
-      lat:
-        type: number
-      long:
-        type: number
-  ObservationSpeciesCreateRequest:
-    type: object
-    required:
+      - date
       - width
       - length
       - accessDescription
@@ -630,12 +843,22 @@ definitions:
       - jurisdiction
       - density
       - distribution
-      - surveyType
+      - observationType
       - speciesAgency
-      - observation
+      - soilTexture
+      - observationGeometry
+      - specificUseCode
+      - slopeCode
+      - aspectCode
+      - proposedAction
     properties:
-      observation_species_id:
+      lat:
         type: number
+      long:
+        type: number
+      date:
+        type: string
+        description: Date in YYYY-MM-DD format
       width:
         type: number
       length:
@@ -654,9 +877,39 @@ definitions:
         type: number
       distribution:
         type: number
-      surveyType:
+      observationType:
         type: number
       speciesAgency:
         type: number
-      observation:
+      soilTexture:
         type: number
+      observationGeometry:
+        type: number
+      specificUseCode:
+        type: number
+      slopeCode:
+        type: number
+      aspectCode:
+        type: number
+      proposedAction:
+        type: number
+      sampleIdentifier:
+        type: string
+      rangeUnitNumber:
+        type: string
+      legacySiteIndicator:
+        type: boolean
+      edrrIndicator:
+        type: boolean
+      researchIndicator:
+        type: boolean
+      sampleTakenIndicator:
+        type: boolean
+      wellIndicator:
+        type: boolean
+      specialCareIndicator:
+        type: boolean
+      biologicalIndicator:
+        type: boolean
+      aquaticIndicator:
+        type: boolean

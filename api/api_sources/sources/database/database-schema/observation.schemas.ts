@@ -108,6 +108,11 @@ export class ObservationCodeTable extends CodeTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
     }
+
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData(`${this.className.split('Schema')[0]}.csv`);
+        return csvData.load();
+    }
 }
 
 /**
@@ -182,4 +187,31 @@ export class SpecificUseCodeSchema extends ObservationCodeTable {
         return csvData.load();
     }
 }
+
+
+/**
+ * @description DB Schema for Observation area slope code
+ */
+export class SlopeCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SlopeCode.csv');
+        return csvData.load();
+    }
+}
+
+/**
+ * @description DB Schema for Observation location directional aspect codes
+ */
+export class AspectCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('AspectCode.csv');
+        return csvData.load();
+    }
+}
+
+/**
+ * @description DB Schema for Proposed action
+ */
+export class ProposedActionCodeSchema extends ObservationCodeTable {}
+
 // -----------------------------------------------------------------------------------------

@@ -39,7 +39,10 @@ import {
     observationTypeCodeFactory,
     soilTextureCodeFactory,
     observerGeometryCodeFactory,
-    specificUseCodeFactory
+    specificUseCodeFactory,
+    slopeCodeFactory,
+    aspectCodeFactory,
+    proposedActionCodeFactory
 } from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
@@ -70,6 +73,9 @@ describe('Test for observation routes', () => {
                 should().exist(data.soilTextureCodes);
                 should().exist(data.observationGeometryCodes);
                 should().exist(data.specificUseCodes);
+                should().exist(data.slopeCodes);
+                should().exist(data.aspectCodes);
+                should().exist(data.proposedActionCodes);
             });
             // done();
         });
@@ -142,6 +148,9 @@ describe('Test for observation routes', () => {
         const texture = await soilTextureCodeFactory();
         const geom = await observerGeometryCodeFactory();
         const specificCode = await specificUseCodeFactory();
+        const slopeCode = await slopeCodeFactory();
+        const aspectCode = await aspectCodeFactory();
+        const proposedActionCode = await proposedActionCodeFactory();
         const create = {
             lat: 12.67,
             long: 18.97,
@@ -151,6 +160,7 @@ describe('Test for observation routes', () => {
             accessDescription: 'Test description',
             observerFirstName: 'Lao',
             observerLastName: 'Ballabh',
+            edrrIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id,
             observationType: type.observation_type_code_id,
@@ -159,7 +169,10 @@ describe('Test for observation routes', () => {
             density: density.species_density_code_id,
             observationGeometry: geom.observation_geometry_code_id,
             specificUseCode: specificCode.specific_use_code_id,
-            soilTexture: texture.soil_texture_code_id
+            soilTexture: texture.soil_texture_code_id,
+            slopeCode: slopeCode.observation_slope_code_id,
+            aspectCode: aspectCode.observation_aspect_code_id,
+            proposedAction: proposedActionCode.observation_proposed_action_code_id
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
@@ -180,6 +193,11 @@ describe('Test for observation routes', () => {
                 should().exist(body.soilTexture);
                 should().exist(body.specificUseCode);
                 should().exist(body.observationGeometry);
+                should().exist(body.slopeCode);
+                should().exist(body.aspectCode);
+                should().exist(body.proposedAction);
+                should().exist(body.edrrIndicator);
+                expect(body.edrrIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(create.length);
                 await ObservationController.shared.removeById(body.observation_id);
             });
@@ -227,6 +245,7 @@ describe('Test for observation routes', () => {
             length: 6700.78,
             width: 900.00,
             accessDescription: 'Test description',
+            researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id
         };
@@ -242,6 +261,8 @@ describe('Test for observation routes', () => {
                 should().exist(body.observation_id);
                 should().exist(body.species);
                 should().exist(body.jurisdiction);
+                should().exist(body.researchIndicator);
+                expect(body.researchIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(update.length);
             });
             await destroyObservation(obsSpecies);

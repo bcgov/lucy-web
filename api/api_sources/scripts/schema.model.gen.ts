@@ -51,7 +51,6 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         }
     });
     let defClass = ``;
-    defClass = defClass + `// ** Model  ${className} from schema ${schemaName} ** ${n}`;
     defClass = defClass + `// ** Model: ${className} from schema ${schemaName} **${n}`;
     defClass = defClass + `${n}import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';`;
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
