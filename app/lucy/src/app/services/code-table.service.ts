@@ -5,7 +5,7 @@ import { AppConstants } from '../constants';
 import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes,
    SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes,
    SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
-   ProposedActionCodes, GroundAspectCodes, GroundSlopeCodes } from '../models';
+   ProposedActionCodes, AspectCodes, SlopeCodes } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,8 @@ export class CodeTableService {
   private useCodes: SpecificUseCodes[];
 
   private proposedActions: ProposedActionCodes[];
-  private groundAspects: GroundAspectCodes[];
-  private groundSlope: GroundSlopeCodes[];
+  private groundAspects: AspectCodes[];
+  private groundSlope: SlopeCodes[];
 
 
   private codeTables: any| null = null;
@@ -243,7 +243,7 @@ export class CodeTableService {
     return this.proposedActions;
   }
 
-  public async getGroundSlopeCodes(): Promise<GroundSlopeCodes[]> {
+  public async getGroundSlopeCodes(): Promise<SlopeCodes[]> {
     if (this.groundSlope && this.groundSlope.length > 0 ) {
       return this.groundSlope;
     }
@@ -253,7 +253,7 @@ export class CodeTableService {
        return [];
     }
 
-    const groundSlope = codes.groundSlopeCodes;
+    const groundSlope = codes.slopeCodes;
     if (groundSlope && (Array.isArray(groundSlope) && this.objectValidator.isGroundSlopeCodesObject(groundSlope[0]))) {
       this.groundSlope = groundSlope;
       return groundSlope;
@@ -261,7 +261,7 @@ export class CodeTableService {
     return this.groundSlope;
   }
 
-  public async getGroundAspectCodes(): Promise<GroundAspectCodes[]> {
+  public async getGroundAspectCodes(): Promise<AspectCodes[]> {
     if (this.groundAspects && this.groundAspects.length > 0 ) {
       return this.groundAspects;
     }
@@ -271,7 +271,7 @@ export class CodeTableService {
        return [];
     }
 
-    const groundAspects = codes.groundAspectCodes;
+    const groundAspects = codes.aspectCodes;
     if ( groundAspects && (Array.isArray(groundAspects) && this.objectValidator.isGroundAspectCodesObject(groundAspects[0]))) {
       this.groundAspects = groundAspects;
       return groundAspects;

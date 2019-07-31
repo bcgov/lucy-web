@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { FormMode } from 'src/app/models';
 
 @Component({
   selector: 'app-checkbox',
@@ -10,6 +11,29 @@ export class CheckboxComponent implements OnInit {
   @Input() header = '';
   @Input() set value(checked: boolean) {
     this._checked = checked;
+  }
+  
+  // Optional Input
+  @Input() editable = true;
+
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  // Get
+  get mode(): FormMode {
+    return this._mode;
+  }
+  // Set
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+  }
+  ////////////////////
+
+  get readonly(): boolean {
+    if (this.mode === FormMode.View) {
+      return true;
+    } else {
+      return !this.editable;
+    }
   }
 
   private _checked = false;
