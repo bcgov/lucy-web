@@ -28,8 +28,8 @@
 import * as request from 'supertest';
 import {expect} from 'chai';
 import { SharedExpressApp } from '../../../initializers';
-import { adminToken, testIdr3Token } from '../../../../test-helpers/token';
-import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction} from '../../../../test-helpers/testHelpers';
+import { adminToken, testIdr3Token, testIdr1Token, testIdr2Token } from '../../../../test-helpers/token';
+import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction, testRequest, HttpMethodType} from '../../../../test-helpers/testHelpers';
 import { UserDataController, RolesCodeValue, User } from '../../../../database/models';
 import { userFactory } from '../../../../database/factory';
 // import { SharedDBManager } from '../../../../database/dataBaseManager';
@@ -249,6 +249,45 @@ describe('Test account routes', () => {
                 }
             });
             // done();
+        });
+    });
+
+    it('should act as editor [test-idr3]', async () => {
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/account/me',
+            expect: 200,
+            token: testIdr3Token()
+        }).then(async resp => {
+            await verifySuccessBody(resp.body, (data: any) => {
+                expect(data.roles[0].code).to.be.equal('DAE');
+            });
+        });
+    });
+
+    it('should act as editor [test-idr1]', async () => {
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/account/me',
+            expect: 200,
+            token: testIdr1Token()
+        }).then(async resp => {
+            await verifySuccessBody(resp.body, (data: any) => {
+                expect(data.roles[0].code).to.be.equal('ADM');
+            });
+        });
+    });
+
+    it('should act as editor [test-idr2]', async () => {
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/account/me',
+            expect: 200,
+            token: testIdr2Token()
+        }).then(async resp => {
+            await verifySuccessBody(resp.body, (data: any) => {
+                expect(data.roles[0].code).to.be.equal('ADM');
+            });
         });
     });
 });
