@@ -18,6 +18,7 @@ services:
     - DB_PORT=${DB_PORT}
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
+    - VERSION=${VERSION}
   volumes:
     - ./api_sources:/opt/app-root/src
   networks:
@@ -69,6 +70,7 @@ services:
     dockerfile: .build/Dockerfile.local
   ports:
     - ${APP_PORT}:${APP_PORT}
+    - 3030:3030
   volumes: 
    - ../app/lucy/src:/opt/app-root/src/src
   networks:
