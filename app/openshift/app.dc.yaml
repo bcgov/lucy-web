@@ -58,13 +58,13 @@ objects:
             protocol: TCP
           resources: {}
           readinessProbe:
-            failureThreshold: 3
+            failureThreshold: 10
             httpGet:
               path: /healthcheck
               port: 3030
               scheme: HTTP
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 200
+            periodSeconds: 20
             successThreshold: 1
             timeoutSeconds: 10
           livenessProbe:
