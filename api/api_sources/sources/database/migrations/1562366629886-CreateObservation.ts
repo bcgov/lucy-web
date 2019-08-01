@@ -18,14 +18,13 @@
 // Created by Pushan Mitra on 2019-07-05.
 
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { ObservationSchema, ObservationSpeciesSchema } from '../database-schema';
+import { ObservationSchema } from '../database-schema';
 
 
 export class CreateObservation1562366629886 implements MigrationInterface {
 
     // Schema
     schema: ObservationSchema = new ObservationSchema();
-    observationSpeciesSchema: ObservationSpeciesSchema = new ObservationSpeciesSchema();
 
     /**
      * @description Up method
@@ -34,7 +33,6 @@ export class CreateObservation1562366629886 implements MigrationInterface {
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(this.schema.migrationSQL);
-        await queryRunner.query(this.observationSpeciesSchema.migrationSQL);
     }
 
     /**
@@ -43,7 +41,7 @@ export class CreateObservation1562366629886 implements MigrationInterface {
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(this.observationSpeciesSchema.dropTable());
+        await queryRunner.query(`DROP TABLE IF EXISTS observation_species`);
         await queryRunner.query(this.schema.dropTable());
     }
 

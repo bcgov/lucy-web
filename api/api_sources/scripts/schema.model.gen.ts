@@ -20,10 +20,10 @@
  * Modified By: pushan
  * -----
  */
-import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'underscore';
 import { BaseTableSchema } from '../sources/database/applicationSchemaInterface';
+import { incrementalWrite } from '../sources/libs/utilities';
 
 const addDoc = (input: string, description: string, ipTabs?: string, others?: any): string => {
     const tab = ipTabs || '';
@@ -51,7 +51,6 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         }
     });
     let defClass = ``;
-    defClass = defClass + `// ** Model  ${className} from schema ${schemaName} ** ${n}`;
     defClass = defClass + `// ** Model: ${className} from schema ${schemaName} **${n}`;
     defClass = defClass + `${n}import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';`;
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
@@ -70,7 +69,7 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClassController = defClassController + `${n}${t}}\n}\n`;
     const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
 
-    fs.writeFileSync(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final, { encoding: 'utf8'});
+    incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
     return final;
 };
 

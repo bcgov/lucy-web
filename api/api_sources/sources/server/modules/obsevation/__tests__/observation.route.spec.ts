@@ -25,24 +25,24 @@ import { SharedExpressApp } from '../../../initializers';
 import { adminToken, viewerToken } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction, testRequest, AuthType, HttpMethodType} from '../../../../test-helpers/testHelpers';
 import {
-    ObservationCreateModel,
     ObservationController,
-    Observation, ObservationSpeciesController
+    Observation
 } from '../../../../database/models';
 import {
     observationFactory,
     destroyObservation,
     jurisdictionCodeFactory,
     speciesFactory,
-    observationSpeciesFactory,
     speciesDensityCodeFactory,
     speciesDistributionCodeFactory,
     speciesAgencyCodeFactory,
-    surveyCodeTypeFactory,
+    observationTypeCodeFactory,
     soilTextureCodeFactory,
-    surveyGeometryCodeFactory,
+    observerGeometryCodeFactory,
     specificUseCodeFactory,
-    destroyObservationSpecies
+    slopeCodeFactory,
+    aspectCodeFactory,
+    proposedActionCodeFactory
 } from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
@@ -69,10 +69,13 @@ describe('Test for observation routes', () => {
                 should().exist(data.speciesDensityCodes);
                 should().exist(data.speciesDistributionCodes);
                 should().exist(data.speciesAgencyCodes);
-                should().exist(data.surveyTypeCodes);
+                should().exist(data.observationTypeCodes);
                 should().exist(data.soilTextureCodes);
-                should().exist(data.surveyGeometryCodes);
+                should().exist(data.observationGeometryCodes);
                 should().exist(data.specificUseCodes);
+                should().exist(data.slopeCodes);
+                should().exist(data.aspectCodes);
+                should().exist(data.proposedActionCodes);
             });
             // done();
         });
@@ -88,45 +91,6 @@ describe('Test for observation routes', () => {
         });
     });
 
-    it('should create observation', async () => {
-        const create: ObservationCreateModel = {
-            lat: 76.98,
-            long: 67.76,
-            date: '2019-05-01'
-        };
-        await request(SharedExpressApp.app)
-        .post('/api/observation')
-        .set('Authorization', `Bearer ${adminToken()}`)
-        .send(create)
-        .expect(201)
-        .then(async (resp) => {
-            await verifySuccessBody(resp.body, async (body) => {
-                should().exist(body.observation_id);
-                expect(body.lat).to.be.equal(create.lat);
-
-                // Remove
-                ObservationController.shared.removeById(body.observation_id);
-            });
-            // done();
-        });
-    });
-
-    it('should not create observation for viewer', async () => {
-        const create: ObservationCreateModel = {
-            lat: 76.98,
-            long: 67.76,
-            date: '2019-05-01'
-        };
-        await request(SharedExpressApp.app)
-        .post('/api/observation')
-        .set('Authorization', `Bearer ${viewerToken()}`)
-        .send(create)
-        .expect(401)
-        .then(async (resp) => {
-            await verifyErrorBody(resp.body);
-            // done();
-        });
-    });
 
     it('should not create observation', async () => {
         const create = {
@@ -174,66 +138,77 @@ describe('Test for observation routes', () => {
         });
     });
 
-    it('should create observation-species', async () => {
-        const obs = await observationFactory();
+    it('should create observation', async () => {
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const density = await speciesDensityCodeFactory();
         const distribution = await speciesDistributionCodeFactory();
         const agency = await speciesAgencyCodeFactory();
-        const type = await surveyCodeTypeFactory();
+        const type = await observationTypeCodeFactory();
         const texture = await soilTextureCodeFactory();
-        const geom = await surveyGeometryCodeFactory();
+        const geom = await observerGeometryCodeFactory();
         const specificCode = await specificUseCodeFactory();
+        const slopeCode = await slopeCodeFactory();
+        const aspectCode = await aspectCodeFactory();
+        const proposedActionCode = await proposedActionCodeFactory();
         const create = {
+            lat: 12.67,
+            long: 18.97,
+            date: '2019-06-05',
             length: 6700.78,
             width: 900.00,
             accessDescription: 'Test description',
-            surveyorFirstName: 'Lao',
-            surveyorLastName: 'Ballabh',
+            observerFirstName: 'Lao',
+            observerLastName: 'Ballabh',
+            edrrIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id,
-            observation: obs.observation_id,
-            surveyType: type.survey_type_code_id,
+            observationType: type.observation_type_code_id,
             speciesAgency: agency.species_agency_code_id,
             distribution: distribution.species_distribution_code_id,
             density: density.species_density_code_id,
-            surveyGeometry: geom.survey_geometry_code_id,
+            observationGeometry: geom.observation_geometry_code_id,
             specificUseCode: specificCode.specific_use_code_id,
-            soilTexture: texture.soil_texture_code_id
+            soilTexture: texture.soil_texture_code_id,
+            slopeCode: slopeCode.observation_slope_code_id,
+            aspectCode: aspectCode.observation_aspect_code_id,
+            proposedAction: proposedActionCode.observation_proposed_action_code_id
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
-            url: '/api/observation/species',
+            url: '/api/observation',
             expect: 201,
             auth: AuthType.admin,
             send: create
         })
         .then(async (resp) => {
             await verifySuccessBody(resp.body, async (body) => {
-                should().exist(body.observation_species_id);
+                should().exist(body.observation_id);
                 should().exist(body.species);
                 should().exist(body.jurisdiction);
-                should().exist(body.observation);
                 should().exist(body.density);
                 should().exist(body.distribution);
                 should().exist(body.speciesAgency);
-                should().exist(body.surveyType);
+                should().exist(body.observationType);
                 should().exist(body.soilTexture);
                 should().exist(body.specificUseCode);
-                should().exist(body.surveyGeometry);
+                should().exist(body.observationGeometry);
+                should().exist(body.slopeCode);
+                should().exist(body.aspectCode);
+                should().exist(body.proposedAction);
+                should().exist(body.edrrIndicator);
+                expect(body.edrrIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(create.length);
-                await ObservationSpeciesController.shared.removeById(body.observation_species_id);
+                await ObservationController.shared.removeById(body.observation_id);
             });
-            await destroyObservation(obs);
         });
     });
 
-    it('should not create observation-species for viewer', async () => {
+    it('should not create observation for viewer', async () => {
         const create = {};
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
-            url: '/api/observation/species',
+            url: '/api/observation',
             expect: 401,
             auth: AuthType.viewer,
             send: create
@@ -243,25 +218,6 @@ describe('Test for observation routes', () => {
         });
     });
 
-    it('should update observation with {id}', async () => {
-        const obs = await observationFactory();
-        const update = {
-            lat: 35.78
-        };
-        await testRequest(SharedExpressApp.app , {
-            type: HttpMethodType.put,
-            url: `/api/observation/${obs.observation_id}`,
-            expect: 200,
-            auth: AuthType.admin,
-            send: update
-        }).then(async resp => {
-            await verifySuccessBody(resp.body, async data => {
-                expect(data.observation_id).to.be.equal(obs.observation_id);
-                expect(data.lat).to.be.equal(update.lat);
-            });
-            await destroyObservation(obs);
-        });
-    });
 
     it('should not update observation with {id} for viewer', async () => {
         const obs = await observationFactory();
@@ -280,59 +236,41 @@ describe('Test for observation routes', () => {
         });
     });
 
-    it('should not update observation with {id}', async () => {
-        const obs = await observationFactory();
-        const update = {
-            lat: 'laba'
-        };
-        await testRequest(SharedExpressApp.app , {
-            type: HttpMethodType.put,
-            url: `/api/observation/${obs.observation_id}`,
-            expect: 422,
-            auth: AuthType.admin,
-            send: update
-        }).then(async resp => {
-            await verifyErrorBody(resp.body);
-            await destroyObservation(obs);
-        });
-    });
 
-    it('should update observation-species with {id}', async () => {
-        const obsSpecies = await observationSpeciesFactory();
-        const obs = await observationFactory();
+    it('should update observation with {id}', async () => {
+        const obsSpecies = await observationFactory();
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const update = {
             length: 6700.78,
             width: 900.00,
             accessDescription: 'Test description',
+            researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
-            species: species.species_id,
-            observation: obs.observation_id
+            species: species.species_id
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.put,
-            url: `/api/observation/species/${obsSpecies.observation_species_id}`,
+            url: `/api/observation/${obsSpecies.observation_id}`,
             expect: 200,
             auth: AuthType.admin,
             send: update
         })
         .then(async (resp) => {
             await verifySuccessBody(resp.body, async (body) => {
-                should().exist(body.observation_species_id);
+                should().exist(body.observation_id);
                 should().exist(body.species);
                 should().exist(body.jurisdiction);
-                should().exist(body.observation);
+                should().exist(body.researchIndicator);
+                expect(body.researchIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(update.length);
-                await ObservationSpeciesController.shared.removeById(body.observation_species_id);
             });
-            await destroyObservation(obs);
+            await destroyObservation(obsSpecies);
         });
     });
 
     it('should not update observation-species with {id} for viewer', async () => {
-        const obsSpecies = await observationSpeciesFactory();
-        const obs = await observationFactory();
+        const obsSpecies = await observationFactory();
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const update = {
@@ -341,19 +279,17 @@ describe('Test for observation routes', () => {
             accessDescription: 'Test description',
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id,
-            observation: obs.observation_id
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.put,
-            url: `/api/observation/species/${obsSpecies.observation_species_id}`,
+            url: `/api/observation/${obsSpecies.observation_id}`,
             expect: 401,
             auth: AuthType.viewer,
             send: update
         })
         .then(async (resp) => {
             await verifyErrorBody(resp.body);
-            await destroyObservationSpecies(obsSpecies);
-            await destroyObservation(obs);
+            await destroyObservation(obsSpecies);
         });
     });
 });

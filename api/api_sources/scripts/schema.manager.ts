@@ -125,7 +125,7 @@ const optionCheck = async (options: any, option: OptionInfo, handler: (value: st
         {
             name: 'createModel',
             alias: ['cm', 'create-model', 'model'],
-            expected: [],
+            expected: ['y', 'YES', 'Y', 'yes'],
             required: false,
             description: 'Create Data Model for Schema'
         },
