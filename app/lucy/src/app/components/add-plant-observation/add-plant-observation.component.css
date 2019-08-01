@@ -72,7 +72,9 @@
 @media (min-width: 992px) {
 
     /* CSS that should be displayed if width is equal to or greater than 992px goes here */
-    .nav-bar {
+
+    /* Floating */
+    .nav-barrr {
         display: flex;
         height: 50%;
         width: 260px;
@@ -87,8 +89,20 @@
         box-shadow: 0 2px 12px 0 rgba(35, 64, 117, 0.3);
     }
 
+    /* Stick to top */
+    .nav-bar {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 90px;
+        z-index: 1;
+        width: 260px;
+        border-radius: 5px;
+        box-shadow: 0 2px 12px 0 rgba(35, 64, 117, 0.3);
+        height: 500px;
+    }
+
     .content {
-        margin-left: 260px;
+        /* margin-left: 260px; */
         /* Same as the width of the sidebar */
     }
 }
