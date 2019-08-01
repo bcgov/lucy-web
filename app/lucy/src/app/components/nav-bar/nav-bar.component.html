@@ -16,35 +16,50 @@
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarActions"
       aria-controls="navbarActions" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <i class="material-icons">
+        menu
+      </i>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarActions">
       <ul class="navbar-nav mr-auto">
       </ul>
       <ul class="navbar-nav">
+        <!-- User menu for smaller sizes (in dropdown) -->
+        <li class="nav-item user-actions-menu">
+          <a class="nav-link" (click)="navigateToProfile()">Profile</a>
+        </li>
+        <li class="nav-item user-actions-menu">
+          <a class="nav-link" (click)="logout()">Logout</a>
+        </li>
+        <!-- Other Navar elements  -->
+        <!-- View Database -->
         <li class="nav-item" [class.active]="isInventoryActive">
           <a class="nav-link" (click)="navigateToInventory()">View Database</a>
         </li>
+        <!-- Admin Tools -->
         <li *ngIf="isAdmin" class="nav-item" [class.active]="isAdminToolsActive">
           <a class="nav-link" (click)="navigateToAdminTools()">Admin Tools</a>
         </li>
+        <!-- Create Observation  -->
         <li *ngIf="isDataEditor" class="nav-item" [class.active]="isAddObservationActive">
           <button class="btn button-fill" (click)="navigateToAddObservation()">+ Add Observation</button>
         </li>
       </ul>
+      <!-- User Menu for FULL SIZE NAVBAR-->
       <ul *ngIf="isAuthenticated" class="navbar-nav">
         <li class="nav-item">
-          <!-- User Menu -->
-          <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item class="btn-with-icon" (click)="navigateToProfile()">
-              Profile <i class="material-icons">account_circle</i>
-            </button>
-            <button mat-menu-item class="btn-with-icon" (click)="logout()">
-              Logout <i class="material-icons">input</i>
-            </button>
-          </mat-menu>
+          <div class="user-actions-large">
+            <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item class="btn-with-icon" (click)="navigateToProfile()">
+                Profile <i class="material-icons">account_circle</i>
+              </button>
+              <button mat-menu-item class="btn-with-icon" (click)="logout()">
+                Logout <i class="material-icons">input</i>
+              </button>
+            </mat-menu>
+          </div>
         </li>
       </ul>
     </div>
