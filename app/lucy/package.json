@@ -45,6 +45,7 @@
     "ng-lottie": "^0.3.2",
     "ngx-cookie-service": "^2.2.0",
     "popper.js": "^1.15.0",
+    "request": "^2.88.0",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "yarn": "^1.17.3",
