@@ -9,7 +9,7 @@
     <div class="col-12">
       <div class="container card">
         <div class="row">
-             <div class="col-4">
+             <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'Sample Taken'"
@@ -17,7 +17,7 @@
                 (selectionChanged)='sampleTakenIndicatorChanged($event)'>
                 </app-checkbox>
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'Well indicator'"
@@ -25,7 +25,7 @@
                 (selectionChanged)='wellIndicatorChanged($event)'>
                 </app-checkbox>
              </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'Legacy site indicator'"
@@ -33,7 +33,7 @@
                 (selectionChanged)='legacysiteIndicatorChanged($event)'>
                 </app-checkbox>
              </div>
-             <div class="col-4">
+             <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'EDRR indicator'"
@@ -41,7 +41,7 @@
                 (selectionChanged)='edrrIndicatorChanged($event)'>
                 </app-checkbox>
              </div>
-             <div class="col-4">
+             <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'Research indicator'"
@@ -49,7 +49,7 @@
                 (selectionChanged)='researchIndicatorChanged($event)'>
                 </app-checkbox>
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'Special care flag'"
@@ -57,20 +57,51 @@
                 (selectionChanged)='specialCareFlagChanged($event)'>
                 </app-checkbox>
              </div>
-             <div class="col-4">
+             <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'Biological indicator'"
                 [value]="biologicalIndicator"
                 (selectionChanged)='biologicalIndicatorChanged($event)'>
                 </app-checkbox>
-             </div><div class="col-4">
+             </div>
+             <div class="col-12 col-md-4">
                 <app-checkbox
                 [mode]="mode"
                 [header]="'Aquatic indicator'"
                 [value]="aquaticIndicator"
                 (selectionChanged)='aquaticIndicatorChanged($event)'>
                 </app-checkbox>
+              </div>
+        </div>
+        <div class="row" *ngIf="sampleTakenIndicator">
+            <div class="col-12">
+                <div class="col-12">
+                  <hr class="divider"/>
+                </div>
+            </div>
+            <div class="col-12 section-title">
+              <div class="col-12">
+                Sample Details
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <app-field
+                  [editable]="sampleTakenIndicator"
+                  [mode]="mode"
+                  [header]="'Sample Taken'"
+                  [value]="sampleTaken"
+                  (valueChanged)='sampleTakenChanged($event)'>
+                </app-field>
+            </div>
+            <div class="col-12 col-md-6">
+                <app-field
+                  [editable]="sampleTakenIndicator"
+                  [mode]="mode"
+                  [header]="'Range Unit Number'"
+                  [value]="rangeUnitNumber"
+                  (valueChanged)='rangeUnitNumberChanged($event)'>
+                </app-field>
             </div>
         </div>
       </div>
@@ -106,35 +137,6 @@
                 </div>
                 <!-- 2nd row -->
                 <div class="col-12">
-                    <div class="row">
-                      <div class="col-12 col-md-4">
-                        <div class="col-12 field">
-                          <label class="field-header">Attach Photo</label>
-                          <button class="btn  button-fill field">Select From Device</button>
-                        </div>
-                      </div>
-                      <div class="col-12 col-md-4">
-                          <app-field
-                          [editable]="sampleTakenIndicator"
-                            [mode]="mode"
-                            [header]="'Sample Taken'"
-                            [value]="sampleTaken"
-                            (valueChanged)='sampleTakenChanged($event)'>
-                          </app-field>
-                      </div>
-                      <div class="col-12 col-md-4">
-                          <app-field
-                          [editable]="sampleTakenIndicator"
-                            [mode]="mode"
-                            [header]="'Range Unit Number'"
-                            [value]="rangeUnitNumber"
-                            (valueChanged)='rangeUnitNumberChanged($event)'>
-                          </app-field>
-                      </div>
-                    </div>
-                  </div>
-                <!-- 3rd row -->
-                <div class="col-12">
                   <div class="row">
                     <div class="col-12 col-md-4">
                         <app-dropdown 
@@ -163,10 +165,10 @@
                     </div>
                   </div>
                 </div>
-                <!-- 4th row -->
+                <!-- 3rd row -->
                 <div class="col-12">
                   <div class="row">
-                    <div class="col-8">
+                    <div class="col-12 col-md-7">
                       <app-dropdown
                         [mode]="mode" 
                         [items]="geometries" 
@@ -175,6 +177,12 @@
                         (selectionChanged)='surveyGeometryChanged($event)'>
                       </app-dropdown>
                     </div>
+                    <div class="col-auto">
+                        <div class="col-12">
+                          <label class="field-header">Attach Photo</label>
+                          <button class="btn  button-fill field">Select From Device</button>
+                        </div>
+                      </div>
                   </div>
                 </div>
             </div>          
