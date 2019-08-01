@@ -3,7 +3,7 @@
 }
 
 .title-app {
-	color: #142E5C;
+	color: #002C71;
 	font-size: 24px;
 	font-weight: 500;
 	line-height: 29px;
@@ -54,4 +54,14 @@
     /* hide sidebar */
     display: none;
   }
+}
+
+.menu-item-on {
+  color: #002C71;
+  font-weight: bold;
+}
+
+.menu-item-off {
+  color: #333333;
+  font-weight: normal;
 }
