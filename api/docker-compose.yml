@@ -79,7 +79,8 @@ services:
     - nginx
   environment:
     - APP_PORT=${APP_PORT}
-    - API_HOST=app_api:${API_PORT}
+    - LOCAL_API_HOST=app_api:${API_PORT}
+    
 # Application Local docker network
 networks:
  local-network:
