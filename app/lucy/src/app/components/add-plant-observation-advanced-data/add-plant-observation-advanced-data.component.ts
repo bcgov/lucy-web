@@ -6,7 +6,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-add-plant-observation-advanced-data',
   templateUrl: './add-plant-observation-advanced-data.component.html',
-  styleUrls: ['./add-plant-observation-advanced-data.component.css']
+  styleUrls: ['./add-plant-observation-advanced-data.component.css'],
 })
 export class AddPlantObservationAdvancedDataComponent implements OnInit {
   ViewMode = FormMode.View;
