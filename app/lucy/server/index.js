@@ -46,7 +46,7 @@ const request = require('request');
     // Health check
     app.use('/healthcheck', (_, resp) => {
         // Request server api
-        const host = process.env.API_HOST || 'localhost'
+        const host = process.env.API_HOST || process.env.LOCAL_API_HOST || 'localhost'
         request(`http://${host}/api/misc/version`, (err, res) => {
             if (err) {
                 console.log(`Error: ${err}, host: ${host}`);
@@ -60,6 +60,12 @@ const request = require('request');
             }
         });
     });
+
+    // All routes
+    const route = express.Router();
+    route.all('*', express.static(resourcePath));
+    app.use('*', route);
+
     // Logging
     console.log(`Stating express web server on port with resource path => ${port}: ${resourcePath}`);
     // Listing to port
