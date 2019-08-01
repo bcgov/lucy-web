@@ -24,18 +24,21 @@
   * Imports
   */
 import * as faker from 'faker';
+import * as moment from  'moment';
 import { Observation, ObservationController, User, UserDataController} from '../models';
-import { ObservationSpecies, ObservationSpeciesController} from '../models';
 import { userFactory } from './userFactory';
 import { jurisdictionCodeFactory,
     speciesFactory,
     speciesDensityCodeFactory,
     speciesDistributionCodeFactory,
     speciesAgencyCodeFactory,
-    surveyCodeTypeFactory,
+    observationTypeCodeFactory,
     soilTextureCodeFactory,
-    surveyGeometryCodeFactory,
-    specificUseCodeFactory
+    observerGeometryCodeFactory,
+    specificUseCodeFactory,
+    slopeCodeFactory,
+    aspectCodeFactory,
+    proposedActionCodeFactory
 } from './observationCodesFactory';
 import { Create, Destroy } from './helper';
 
@@ -51,7 +54,34 @@ export const observationFactory = async (noSave?: boolean): Promise<Observation>
         obs.updatedBy = obs.createdBy;
         obs.lat = parseFloat(faker.address.latitude());
         obs.long = parseFloat(faker.address.longitude());
-        obs.date = faker.date.recent();
+        obs.date = `${moment(faker.date.recent()).format('YYYY-MM-DD')}`;
+        obs.accessDescription = faker.random.word();
+        obs.jurisdiction = await jurisdictionCodeFactory();
+        obs.species = await speciesFactory();
+        obs.width = faker.random.number();
+        obs.length = faker.random.number();
+        obs.density = await speciesDensityCodeFactory();
+        obs.distribution = await speciesDistributionCodeFactory();
+        obs.speciesAgency = await speciesAgencyCodeFactory();
+        obs.observationType = await observationTypeCodeFactory();
+        obs.soilTexture = await soilTextureCodeFactory();
+        obs.observationGeometry = await observerGeometryCodeFactory();
+        obs.specificUseCode = await specificUseCodeFactory();
+        obs.observerFirstName = faker.name.firstName();
+        obs.observerLastName = faker.name.lastName();
+        obs.slopeCode = await slopeCodeFactory();
+        obs.aspectCode = await aspectCodeFactory();
+        obs.proposedAction = await proposedActionCodeFactory();
+        obs.legacySiteIndicator = faker.random.boolean();
+        obs.edrrIndicator = faker.random.boolean();
+        obs.sampleTakenIndicator = true;
+        obs.sampleIdentifier = faker.random.alphaNumeric(49);
+        obs.rangeUnitNumber = faker.random.alphaNumeric(49);
+        obs.researchIndicator = faker.random.boolean();
+        obs.wellIndicator = false;
+        obs.specialCareIndicator = faker.random.boolean();
+        obs.biologicalIndicator = faker.random.boolean();
+        obs.aquaticIndicator = faker.random.boolean();
     });
 };
 
@@ -63,41 +93,4 @@ Destroy<Observation, ObservationController>(ObservationController.shared, async 
     await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
     return;
 });
-
-/**
- * @description Observation Factory
- * @param User creator
- * @param boolean noSave
- */
-export const observationSpeciesFactory = async (noSave?: boolean): Promise<ObservationSpecies> => {
-    const creator = Create<ObservationSpecies, ObservationSpeciesController>(ObservationSpeciesController.shared);
-    return creator(async (obsSpecies: ObservationSpecies) => {
-        obsSpecies.createdBy = await userFactory();
-        obsSpecies.updatedBy = obsSpecies.createdBy;
-        obsSpecies.accessDescription = faker.random.word();
-        obsSpecies.jurisdiction = await jurisdictionCodeFactory();
-        obsSpecies.species = await speciesFactory();
-        obsSpecies.width = faker.random.number();
-        obsSpecies.length = faker.random.number();
-        obsSpecies.density = await speciesDensityCodeFactory();
-        obsSpecies.distribution = await speciesDistributionCodeFactory();
-        obsSpecies.speciesAgency = await speciesAgencyCodeFactory();
-        obsSpecies.surveyType = await surveyCodeTypeFactory();
-        obsSpecies.soilTexture = await soilTextureCodeFactory();
-        obsSpecies.surveyGeometry = await surveyGeometryCodeFactory();
-        obsSpecies.specificUseCode = await specificUseCodeFactory();
-        obsSpecies.surveyorFirstName = faker.name.firstName();
-        obsSpecies.surveyorLastName = faker.name.lastName();
-    });
-};
-
-/**
- * @description Destroy object
- */
-export const destroyObservationSpecies =
-Destroy<ObservationSpecies, ObservationSpeciesController>(ObservationSpeciesController.shared, async (obj: ObservationSpecies) => {
-    await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
-    return;
-});
-
 // -------------------------------------------------------------

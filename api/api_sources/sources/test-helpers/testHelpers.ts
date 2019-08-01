@@ -136,7 +136,8 @@ export const enum AuthType {
     admin = 1,
     viewer = 2,
     sme = 3,
-    noAuth = 0
+    noAuth = 4,
+    token = 0
 }
 
 export const enum HttpMethodType {
@@ -152,6 +153,7 @@ export interface TestSetup {
     expect: number;
     auth?: AuthType;
     send?: any;
+    token?: string;
 }
 
 /**
@@ -163,7 +165,7 @@ export interface TestSetup {
  * @param send send data
  */
 export const testRequest = (app: any, setup: TestSetup) => {
-    const actualAuth: number = (setup.auth || AuthType.noAuth) as number;
+    const actualAuth: number = (setup.auth || AuthType.token) as number;
     let token: string;
     switch (actualAuth) {
         case 1:
@@ -176,8 +178,11 @@ export const testRequest = (app: any, setup: TestSetup) => {
         case 2:
             token = viewerToken();
             break;
-        default:
+        case 4:
             token = '';
+            break;
+        default:
+            token = setup.token || '';
             break;
     }
     if (token && token !== '') {

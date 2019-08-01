@@ -19,62 +19,35 @@
 /**
  * Imports
  */
-import * as assert from 'assert';
-import * as _ from 'underscore';
 import { Request, Router} from 'express';
-import { check } from 'express-validator';
 import { RouteHandler,
-    SecureRouteController,
-    writerOnlyRoute
+    SecureRouteController
 } from '../../core';
 import { ObservationController,
     JurisdictionCodeController,
     SpeciesController,
-    ObservationCreateModel,
     Observation,
-    ObservationUpdateModel,
     SpeciesAgencyCodeController,
-    SurveyTypeCodeController,
-    SurveyGeometryCodeController,
+    ObservationGeometryCodeController,
+    ObservationTypeCodeController,
     SpecificUseCodeController,
     SoilTextureCodeController,
+    SlopeCodeController,
+    AspectCodeController,
+    ProposedActionCodeController,
 } from '../../../database/models';
 import { SpeciesDensityCodeController, SpeciesDistributionCodeController } from '../../../database/models';
-import { observationSpeciesRoute } from './observation.species.route';
+import { observationModifyRoute } from './observation.species.route';
 import { unWrap } from '../../../libs/utilities';
 
-/**
- * @description Validation of create object for observation
- */
-const CreateValidator = (): any[] =>  {
-    return [
-        check('lat').isNumeric().withMessage('lat: should be number'),
-        check('long').isNumeric().withMessage('long: should be number'),
-        check('date').isString().withMessage('date: should be string'),
-    ];
-};
 
-/**
- * @description Validation of observationId in req param
- */
-const ObservationIdValidator = (): any[] => [
-    check('observationId').isInt().custom(async (value: number, {req}) => {
-    const obs = await ObservationController.shared.findById(value);
-    assert(obs, `observation: No observation exists with id ${value}`);
-    req.validation = {
-        observation: obs
-    };
-})];
 /**
  * @description Validation response object in request
  */
 interface ObservationIdValidation {
-    observation: Observation;
+    id: Observation;
 }
 
-const UpdateValidator = (): any[] => {
-    return _.map(CreateValidator(), checkVal => checkVal.optional());
-};
 
 export class ObservationRouteController extends SecureRouteController<ObservationController> {
 
@@ -87,23 +60,18 @@ export class ObservationRouteController extends SecureRouteController<Observatio
         // Data controller
         this.dataController = ObservationController.shared;
 
-        // Observation species route
-        this.router.use('/species', observationSpeciesRoute());
-
         // Get all codes
         this.router.get('/codes', this.indexCodes);
 
-        // Create observation
-        this.router.post('/', CreateValidator().concat(writerOnlyRoute()), this.create);
 
         // Get all observation
         this.router.get('/', this.index);
 
         // Get single observation
-        this.router.get('/:observationId', ObservationIdValidator(), this.index);
+        this.router.get('/:id', this.idValidation(), this.index);
 
-        // Update single observation
-        this.router.put('/:observationId', UpdateValidator().concat(ObservationIdValidator(), writerOnlyRoute()), this.update);
+        // Observation modify species route
+        this.router.use('/', observationModifyRoute());
     }
 
     /**
@@ -116,21 +84,14 @@ export class ObservationRouteController extends SecureRouteController<Observatio
             speciesDensityCodes: await SpeciesDensityCodeController.shared.all(),
             speciesDistributionCodes: await SpeciesDistributionCodeController.shared.all(),
             speciesAgencyCodes: await SpeciesAgencyCodeController.shared.all(),
-            surveyTypeCodes: await SurveyTypeCodeController.shared.all(),
+            observationTypeCodes: await ObservationTypeCodeController.shared.all(),
             soilTextureCodes: await SoilTextureCodeController.shared.all(),
-            surveyGeometryCodes: await SurveyGeometryCodeController.shared.all(),
-            specificUseCodes: await SpecificUseCodeController.shared.all()
-
+            observationGeometryCodes: await ObservationGeometryCodeController.shared.all(),
+            specificUseCodes: await SpecificUseCodeController.shared.all(),
+            slopeCodes: await SlopeCodeController.shared.all(),
+            aspectCodes: await AspectCodeController.shared.all(),
+            proposedActionCodes: await ProposedActionCodeController.shared.all()
         }]);
-    }
-
-    /**
-     * @description Route handle for creating new observation
-     */
-    get create(): RouteHandler {
-        return this.routeConfig<ObservationCreateModel>('observation-create',
-        async (data: ObservationCreateModel, req: Request) => [201, await this.dataController.createObservation(data, req.user)]
-        );
     }
 
     /**
@@ -139,14 +100,8 @@ export class ObservationRouteController extends SecureRouteController<Observatio
     get index(): RouteHandler {
         return this.routeConfig<any>('observation-index', async (d: any, req: Request) => [
             200,
-            unWrap(this.validation<ObservationIdValidation>(req, 'obs-index'), {}).observation || await this.dataController.all()
+            unWrap(this.validation<ObservationIdValidation>(req, 'obs-index'), {}).id || await this.dataController.all()
         ]);
-    }
-
-    get update(): RouteHandler {
-        return this.routeConfig<ObservationUpdateModel>('observation-update', async (data: ObservationUpdateModel, req: Request) => [
-            200,
-            await this.dataController.update(this.validation<ObservationIdValidation>(req, 'obs-update').observation, data, req.user)]);
     }
 }
 

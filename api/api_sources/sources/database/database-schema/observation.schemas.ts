@@ -102,20 +102,16 @@ export class ObservationSchema extends RecordTableSchema {
 }
 
 /**
- * @description Observation species Schema, this schema table will hold main observation data
- */
-export class ObservationSpeciesSchema extends RecordTableSchema {
-    get schemaFilePath(): string {
-        return getYAMLFilePath('observation.codes.schema.yaml');
-    }
-}
-
-/**
  * @description Base DB Schema for all observation code tables
  */
 export class ObservationCodeTable extends CodeTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
+    }
+
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData(`${this.className.split('Schema')[0]}.csv`);
+        return csvData.load();
     }
 }
 
@@ -145,9 +141,9 @@ export class SpeciesDensityCodeSchema extends ObservationCodeTable {
 /**
  * @description DB Schema for SurveyTypeCodeSchema
  */
-export class SurveyTypeCodeSchema extends ObservationCodeTable {
+export class ObservationTypeCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
-        const csvData = new CodeCSVData('SurveyTypeCode.csv');
+        const csvData = new CodeCSVData('ObservationTypeCode.csv');
         return csvData.load();
     }
 }
@@ -157,7 +153,7 @@ export class SurveyTypeCodeSchema extends ObservationCodeTable {
  */
 export class SpeciesAgencyCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
-        const csvData = new CodeCSVData('SurveyAgencyCode.csv');
+        const csvData = new CodeCSVData('SpeciesAgencyCode.csv');
         return csvData.load();
     }
 }
@@ -175,9 +171,9 @@ export class SoilTextureCodeSchema extends ObservationCodeTable {
 /**
  * @description DB Schema for SurveyGeometryCodeSchema
  */
-export class SurveyGeometryCodeSchema extends ObservationCodeTable {
+export class ObservationGeometryCodeSchema extends ObservationCodeTable {
     csvData(): Promise<any> {
-        const csvData = new CodeCSVData('SurveyGeometryCode.csv');
+        const csvData = new CodeCSVData('ObservationGeometryCode.csv');
         return csvData.load();
     }
 }
@@ -191,4 +187,31 @@ export class SpecificUseCodeSchema extends ObservationCodeTable {
         return csvData.load();
     }
 }
+
+
+/**
+ * @description DB Schema for Observation area slope code
+ */
+export class SlopeCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('SlopeCode.csv');
+        return csvData.load();
+    }
+}
+
+/**
+ * @description DB Schema for Observation location directional aspect codes
+ */
+export class AspectCodeSchema extends ObservationCodeTable {
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData('AspectCode.csv');
+        return csvData.load();
+    }
+}
+
+/**
+ * @description DB Schema for Proposed action
+ */
+export class ProposedActionCodeSchema extends ObservationCodeTable {}
+
 // -----------------------------------------------------------------------------------------

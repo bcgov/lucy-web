@@ -41,7 +41,7 @@
       <div *ngIf="!locationEntryModeLatLong">
         <div class="row">
           <div class="full-width">
-            <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings"
+            <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings" 
               [validationFunc]="validation.isValidUTMEastings.bind(validation)" (valueChanged)='eastingChanged($event)'>
             </app-field>
           </div>
@@ -103,7 +103,7 @@
     </div>
     <!-- Map -->
     <div class="col-12 col-md-8">
-      <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [center]="mapCenter" [markers]="markers">
+      <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [cluster]="false" [center]="mapCenter" [markers]="markers">
       </app-map-preview>
     </div>
   </div>

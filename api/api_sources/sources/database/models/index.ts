@@ -29,13 +29,15 @@ export * from './userMessage';
 export * from './species';
 export * from './observation.codes';
 export * from './observation';
-export * from './observation.species';
 export * from '../data-controllers';
 export * from './speciesDensity.code';
 export * from './speciesDistribution.code';
 export * from './speciesAgency.code';
-export * from './surveyType.code';
 export * from './soilTexture.code';
-export * from './surveyGeometry.code';
 export * from './specificUse.code';
+export * from './observationType.code';
+export * from './observationGeometry.code';
+export * from './slope.code';
+export * from './observationAspect.code';
+export * from './proposedAction.code';
 // ----------------------------------------------------------------------------------------------------------------

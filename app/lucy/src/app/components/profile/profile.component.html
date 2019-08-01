@@ -1,20 +1,16 @@
+<br/>
 <div class="container">
   <!-- Basic User Info -->
   <div class="row">
     <!-- Name and Role -->
     <div class="col-auto col-md-1 d-none d-md-block">
-      <div ngbDropdown class="circle">
-          <button class="btn d-inline-block user-button" id="userActions" ngbDropdownToggle>{{userInitials}}</button>
-          <!-- Options -->
-          <div ngbDropdownMenu aria-labelledby="userActions">
-            <div class="col-12">
-              <!-- Update Info -->
-                <button (click)="navigateToUserInfo()" type="button" class="btn btn-with-icon"> 
-                  Update Information  
-                </button>
-            </div>
-          </div>
-        </div>
+        <button mat-fab [matMenuTriggerFor]="userOptionsInProfile">{{userInitials}}</button>
+        <mat-menu #userOptionsInProfile="matMenu">
+           <!-- Update Info -->
+           <button mat-menu-item (click)="navigateToUserInfo()" class="btn-with-icon"> 
+              Update Information  
+            </button>
+        </mat-menu>
     </div>
     <div class="col-auto col-md-7" >
       <div class="col-12">

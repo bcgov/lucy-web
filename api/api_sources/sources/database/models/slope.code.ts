@@ -11,60 +11,75 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: surveyGeometry.code.ts
+ * File: SlopeCode.ts
  * Project: lucy
- * File Created: Monday, 22nd July 2019 11:29:50 am
+ * File Created: Monday, 29th July 2019 10:47:23 am
  * Author: pushan
  * -----
- * Last Modified: Monday, 22nd July 2019 11:30:14 am
+ * Last Modified: Monday, 29th July 2019 10:48:52 am
  * Modified By: pushan
  * -----
  */
 
-// ** Model  SurveyGeometryCode from schema SurveyGeometryCodeSchema **
+// ** Model: SlopeCode from schema SlopeCodeSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import { SurveyGeometryCodeSchema } from '../database-schema';
+import { SlopeCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
-import { ApplicationCode } from './user';
-
+import { Record } from './user';
 /**
- * @description Survey Geometry Code Data Model
+ * @description Data Model Class for SlopeCodeSchema
  */
-@Entity( { name: SurveyGeometryCodeSchema.dbTable} )
-export class SurveyGeometryCode extends ApplicationCode {
+@Entity( { name: SlopeCodeSchema.dbTable} )
+export class SlopeCode extends Record {
 
 	/**
 	 * Class Properties
 	 */
 
+	/**
+	 * @description Getter/Setter property for column {observation_slope_code_id}
+	 */
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
-	survey_geometry_code_id: number;
+	observation_slope_code_id: number;
 
-	@Column({ name: SurveyGeometryCodeSchema.columns.code})
+	/**
+	 * @description Getter/Setter property for column {observation_slope_code}
+	 */
+	@Column({ name: SlopeCodeSchema.columns.code})
 	@ModelProperty({type: PropertyType.string})
 	code: string;
 
-	@Column({ name: SurveyGeometryCodeSchema.columns.description})
+	/**
+	 * @description Getter/Setter property for column {description}
+	 */
+	@Column({ name: SlopeCodeSchema.columns.description})
 	@ModelProperty({type: PropertyType.string})
 	description: string;
 
-	@Column({ name: SurveyGeometryCodeSchema.columns.activeIndicator})
+	/**
+	 * @description Getter/Setter property for column {active_ind}
+	 */
+	@Column({ name: SlopeCodeSchema.columns.activeIndicator})
 	@ModelProperty({type: PropertyType.boolean})
 	activeIndicator: boolean;
 
 }
 
 
-// ** DataModel controller of SurveyGeometryCode **
-export class SurveyGeometryCodeController extends DataModelController<SurveyGeometryCode> {
+// ** DataModel controller of SlopeCode **
+
+/**
+ * @description Data Model Controller Class for SlopeCodeSchema and SlopeCode
+ */
+export class SlopeCodeController extends DataModelController<SlopeCode> {
 	/**
 	* @description Getter for shared instance
 	*/
-	public static get shared(): SurveyGeometryCodeController {
-		return this.sharedInstance<SurveyGeometryCode>(SurveyGeometryCode, SurveyGeometryCodeSchema) as SurveyGeometryCodeController;
+	public static get shared(): SlopeCodeController {
+		return this.sharedInstance<SlopeCode>(SlopeCode, SlopeCodeSchema) as SlopeCodeController;
 	}
 }
 

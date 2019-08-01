@@ -1,0 +1,27 @@
+.dropdown {
+    margin-top: 2em;
+    background-color: red;
+ }
+
+ .cdk-overlay-container .cdk-overlay-pane .dropdown {
+    background-color: red;
+ }
+
+ .scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+/* ::ng-deep .mat-select{
+    display: block;
+    height: calc(1.5em + .75rem + 2px);
+    font-style: normal;
+    font-weight: normal; 
+    font-size: 15px;
+    line-height: 1.5;
+} */
+
+::ng-deep .mat-form-field {
+    width: 100%;
+} 
