@@ -82,7 +82,7 @@ objects:
               path: /api/misc/version
               port: 3001
               scheme: HTTP
-            initialDelaySeconds: 180
+            initialDelaySeconds: 140
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 20
@@ -92,7 +92,7 @@ objects:
               path: /api/misc/version
               port: 3001
               scheme: HTTP
-            initialDelaySeconds: 200
+            initialDelaySeconds: 140
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 20
