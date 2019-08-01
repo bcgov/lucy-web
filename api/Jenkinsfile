@@ -7,8 +7,9 @@ pipeline {
         stage('Build') {
             agent { label 'build' }
             steps {
+                sh 'printenv'
                 script {
-                     echo "API Build Pipeline"
+                    echo "API Build Pipeline"
                     def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^api/|^/api/|^app/|^/app/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
                     def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
                     echo "${filesInThisCommitAsString}"
