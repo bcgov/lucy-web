@@ -90,19 +90,8 @@
   @media (max-width: 992px) {
     /* CSS that should be displayed if width is equal to or smaller than 992px goes here */
     .nav-bar {
-        position: sticky;
-        top: 0;
-        width:100%;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        overflow-x: hidden;
-        border-radius: 5px;
-        box-shadow: 0 2px 12px 0 rgba(35,64,117,0.3);
-        /* z-index: inherit; */
-    }
-
-    .content {
-        
+        /* hide sidebar */
+        display: none;
     }
   }
   /****************************************/
