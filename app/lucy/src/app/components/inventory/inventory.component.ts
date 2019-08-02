@@ -33,6 +33,9 @@ export class InventoryComponent implements OnInit {
   showList = true;
   /************ End of Flags ************/
 
+  // TEMP
+  numberOfObservationForTesting = 10000;
+
   constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService, private loadingService: LoadingService, private dummy: DummyService) { }
 
   ngOnInit() {
@@ -250,9 +253,9 @@ export class InventoryComponent implements OnInit {
   /************ Dummy Data ************/
   async createDummys() {
     this.loadingService.add();
-    await this.delayAsync(10);
+    await this.delayAsync(100);
     this.observations = [];
-    const random = await this.dummy.createDummyObservations(10000);
+    const random = await this.dummy.createDummyObservations(this.numberOfObservationForTesting);
     this.observations = random;
     this.setMapMarkers();
     this.loadingService.remove();
