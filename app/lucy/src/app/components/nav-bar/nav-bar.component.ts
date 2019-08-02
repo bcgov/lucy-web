@@ -155,8 +155,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Setting User's initials in
-   * userInitials to be consumed by HTML
+   * Setting User's access type
    */
   private setAccessType() {
     this.userService.getAccess().then((value) => {
