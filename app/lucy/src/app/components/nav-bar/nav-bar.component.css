@@ -3,7 +3,7 @@
 }
 
 .title-app {
-	color: #142E5C;
+	color: #002C71;
 	font-size: 24px;
 	font-weight: 500;
 	line-height: 29px;
@@ -16,4 +16,52 @@
 .navbar-nav > li{
   margin-left:5px;
   margin-right:5px;
+}
+
+@media (max-width: 768px) {
+
+  /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+  .container {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 100%;
+  }
+}
+
+
+@media (max-width: 992px) {
+  /* CSS that should be displayed if width is equal to or smaller than 992px goes here */
+  .user-actions-large {
+      /* hide sidebar */
+      display: none;
+  }
+
+  .user-actions-menu {
+    /* hide sidebar */
+    display: flex;
+  }
+}
+
+@media (min-width: 992px) {
+
+  /* CSS that should be displayed if width is equal to or bigger than 992px goes here */
+  .user-actions-large {
+      /* hide sidebar */
+      display: flex;
+  }
+
+  .user-actions-menu {
+    /* hide sidebar */
+    display: none;
+  }
+}
+
+.menu-item-on {
+  color: #002C71;
+  font-weight: bold;
+}
+
+.menu-item-off {
+  color: #333333;
+  font-weight: normal;
 }

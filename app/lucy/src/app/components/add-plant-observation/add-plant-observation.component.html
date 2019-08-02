@@ -28,11 +28,12 @@
 <!-- Entry Form  -->
 <div *ngIf="!submitted">
    <!-- Header Section  -->
-  <div class="container-fluid header-container">
-    <div class="container">
+  <div class="container-fluid header-container sticky">
+    <div class="container header-container-inner">
       <mat-toolbar color="primary">
         <mat-toolbar-row>
-          <span class="view-title"> {{pageTitle}} <span *ngIf="!readonly || !inReviewMode" class="view-title-detail"> - Plant</span></span>
+          <span class="view-title"> {{pageTitle}} <span *ngIf="!readonly || !inReviewMode" class="view-title-detail">
+              - Plant</span></span>
           <span class="spacer-toolbar"></span>
           <button *ngIf="!readonly || inReviewMode" type="button"
             class="btn btn-secondary submit-button button-hollow action-buttons"
