@@ -168,14 +168,14 @@ export class Observation extends Record implements ObservationCreateModel {
 	 */
 	@Column({ name: ObservationSchema.columns.sampleIdentifier, nullable: true})
 	@ModelProperty({type: PropertyType.string})
-	sampleIdentifier: string;
+	sampleIdentifier?: string;
 
 	/**
 	 * @description Getter/Setter property for column {range_unit_number}
 	 */
 	@Column({ name: ObservationSchema.columns.rangeUnitNumber, nullable: true})
 	@ModelProperty({type: PropertyType.string})
-	rangeUnitNumber: string;
+	rangeUnitNumber?: string;
 
 	/**
 	 * @description Getter/Setter property for column {legacy_site_ind}
