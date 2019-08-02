@@ -101,8 +101,8 @@ const CreateValidator = (): any[] =>  {
 
 const CreateOptionalValidator = (): any[] => {
     return [
-        check('sampleIdentifier').isAlphanumeric().withMessage('sampleIdentifier: should be alphanumeric string'),
-        check('rangeUnitNumber').isAlphanumeric().withMessage('rangeUnitNumber: should be alphanumeric string'),
+        check('sampleIdentifier').isString().isAlphanumeric().exists().withMessage('sampleIdentifier: should be alphanumeric string'),
+        check('rangeUnitNumber').isString().isAlphanumeric().exists().withMessage('rangeUnitNumber: should be alphanumeric string'),
         check('legacySiteIndicator').isBoolean().withMessage('legacySiteIndicator: should be boolean'),
         check('edrrIndicator').isBoolean().withMessage('edrrIndicator: should be boolean'),
         check('researchIndicator').isBoolean().withMessage('researchIndicator: should be boolean'),

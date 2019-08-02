@@ -74,6 +74,12 @@ export const yaml = (yamlPath: string): any => {
     return yml.safeLoad(fs.readFileSync(yamlPath, 'utf8'));
 };
 
+/**
+ * @description Save Yaml file in given path
+ * @param any data
+ * @param string savePath
+ * @param yml.DumpOptions options
+ */
 export const saveYaml = (data: any, savePath: string, options?: yml.DumpOptions): any => {
     const result = yml.safeDump(data, options);
     fs.writeFileSync(savePath, result, {
@@ -82,19 +88,35 @@ export const saveYaml = (data: any, savePath: string, options?: yml.DumpOptions)
     });
 };
 
-export const arrayToString = (array: any[]) => {
+/**
+ * @description Convert any array to comma separated string values
+ * @param any[] array
+ * @returns string
+ */
+export const arrayToString = (array: any[], sep?: string) => {
     let result = '';
-    _.each(array, (v: any) => (result = result + `${v},`));
+    _.each(array, (v: any) => (result = result + `${v}${sep || ','}`));
     result = result.replace(/.$/, '');
     return result;
 };
 
+/**
+ * @description Verify that key is present in object
+ * @param any obj
+ * @param any[] keys
+ * @param string tag
+ * @returns object
+ */
 export const verifyObject = (obj: any, keys: any[], tag: string) => {
     assert(obj, `${tag}: Object is undefined`);
     _.each(keys, (k: any) => assert(Object.keys(obj).includes(k) === true, `${tag}: key not available: ${k} for obj ${JSON.stringify(obj)}`));
     return obj;
 };
 
+/**
+ * @description [Create] and Return temp storage dir of application
+ * @returns string
+ */
 export const applicationTemFileDir = () => {
     const dirPath = path.resolve(__dirname, '../../../.temp');
     if (fs.existsSync(dirPath)) {
@@ -105,6 +127,12 @@ export const applicationTemFileDir = () => {
     }
 };
 
+/**
+ * @description Return a new file name by attaching marker with that. Ex x.ext => x-Marker.ext
+ * @param string fileName
+ * @param number marker
+ * @returns string
+ */
 export const incrementalFileName = (fileName: string, marker?: number) => {
     const components = fileName.split('.');
     const ext = components[components.length - 1];
@@ -112,6 +140,13 @@ export const incrementalFileName = (fileName: string, marker?: number) => {
     return `${fileNameWithoutExt}-${ marker ||  Date.now()}.${ext}`;
 };
 
+/**
+ * @description This method check any item exists on path or not if exists then write in a new
+ *              path with timestamp mark on it.
+ * @param string filePath
+ * @param any data
+ * @returns string new file path
+ */
 export const incrementalWrite = (filePath: string, data: any) => {
     if (fs.existsSync(filePath)) {
         const fileName = path.basename(filePath);
@@ -130,6 +165,16 @@ export const incrementalWrite = (filePath: string, data: any) => {
         });
         return filePath;
     }
+};
+
+/**
+ * @description Check status of value and return if defined or return default
+ * @param any value
+ * @param any defaultValue
+ * @returns any
+ */
+export const ifDefined = (value: any, defaultValue: any) => {
+    return value !== undefined ? value : defaultValue;
 };
 
 // -------------------------------

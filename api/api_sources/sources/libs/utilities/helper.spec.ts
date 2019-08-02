@@ -21,7 +21,7 @@
  * -----
  */
 import { should, expect } from 'chai';
-import { verifyObject, incrementalFileName, applicationTemFileDir, incrementalWrite } from './helpers.utilities';
+import { verifyObject, incrementalFileName, applicationTemFileDir, incrementalWrite, arrayToString, ifDefined } from './helpers.utilities';
 
 
 describe('Test Helper/Utilities', () => {
@@ -57,5 +57,20 @@ describe('Test Helper/Utilities', () => {
         expect(r1).to.be.equal(filePath);
         const r2 = incrementalWrite(filePath, 'Lao 2');
         expect(r2).to.be.not.equal(filePath);
+    });
+
+    it('should return array string', () => {
+        const array = [1, 2, 3];
+        const string = arrayToString(array);
+        should().exist(string);
+        expect(string).to.be.equal('1,2,3');
+    });
+
+    it('should define', () => {
+        const x = undefined;
+        const y = ifDefined(x, 1);
+        expect(y).to.be.equal(1);
+        const z = ifDefined(y, 2);
+        expect(z).to.be.equal(y);
     });
 });
