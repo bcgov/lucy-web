@@ -271,7 +271,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  //// Lottie
+  /////////// Lottie ///////////
   handleAnimation(anim: any) {
     this.anim = anim;
   }
@@ -293,7 +293,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     this.anim.setSpeed(speed);
   }
 
-  ///////
+  /////////// End Lottie ///////////
 
   /**
    * Triggered with changed from
@@ -336,7 +336,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     /* DO NOT set object in this class to = event */
     this.observationObject.sampleTakenIndicator = event.sampleTakenIndicator;
     this.observationObject.wellIndicator = event.wellIndicator;
-    this.observationObject.legacysiteIndicator = event.legacysiteIndicator;
+    this.observationObject.legacySiteIndicator = event.legacySiteIndicator;
     this.observationObject.edrrIndicator = event.edrrIndicator;
     this.observationObject.researchIndicator = event.researchIndicator;
     this.observationObject.specialCareIndicator = event.specialCareIndicator;
@@ -385,7 +385,9 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     }
     const validationMessage = this.validation.isValidObservationMessage(this.observationObject);
     if (validationMessage === null) {
+      this.loadingService.add();
       const changes = await this.observationService.diffObservation(this.observationObject);
+      this.loadingService.remove();
       console.log(changes);
       if (changes && changes.changed) {
         const confirmed = await this.alert.showConfirmation(`The following fields will be changed`, changes.diffMessage);
@@ -397,7 +399,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
         return;
       }
       this.loadingService.add();
-      const success = await this.observationService.editObservation(this.observationObject);
+      const success = await this.observationService.editObservationChangeOnly(this.observationObject, changes.originalObservation);
       this.loadingService.remove();
       if (success) {
         this.submitted = true;
@@ -432,10 +434,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  viewInventory() {
-    this.router.navigateTo(AppRoutes.Inventory);
-  }
-
   changeToReviewMode() {
     if (!this.creating) {
       return;
@@ -452,11 +450,9 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     this.mode = FormMode.Create;
   }
 
-  async generateObservationForTesting() {
-    this.loadingService.add();
-    const obj = await this.dummy.createDummyObservation([]);
-    this.observationObject = obj;
-    this.loadingService.remove();
+  /////////// Navigation ///////////
+  viewInventory() {
+    this.router.navigateTo(AppRoutes.Inventory);
   }
 
   edit() {
@@ -465,4 +461,13 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     }
     this.router.navigateTo(AppRoutes.EditObservation, this.observationObject.observation_id);
   }
+  /////////// End Navigation ///////////
+
+  async generateObservationForTesting() {
+    this.loadingService.add();
+    const obj = await this.dummy.createDummyObservation([]);
+    this.observationObject = obj;
+    this.loadingService.remove();
+  }
+
 }

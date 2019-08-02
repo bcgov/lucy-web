@@ -24,7 +24,7 @@ export interface Observation {
     // indicators
     sampleTakenIndicator: boolean;
     wellIndicator: boolean;
-    legacysiteIndicator: boolean;
+    legacySiteIndicator: boolean;
     edrrIndicator: boolean;
     researchIndicator: boolean;
     specialCareIndicator: boolean;
