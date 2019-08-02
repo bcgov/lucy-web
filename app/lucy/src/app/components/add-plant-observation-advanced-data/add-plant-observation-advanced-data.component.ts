@@ -36,7 +36,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     if (!this.observationObject) {
       return false;
     }
-    return this.observationObject.legacysiteIndicator;
+    return this.observationObject.legacySiteIndicator;
   }
 
   get edrrIndicator(): boolean {
@@ -224,7 +224,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
 
   legacysiteIndicatorChanged(value: boolean) {
     if (this.observationObject) {
-      this.observationObject.legacysiteIndicator = value;
+      this.observationObject.legacySiteIndicator = value;
       this.notifyChangeEvent();
     }
   }
