@@ -10,6 +10,9 @@ import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes } from 'src/app/constants';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DummyService } from 'src/app/services/dummy.service';
+import { UserAccessType } from 'src/app/models/Role';
+import { UserService } from 'src/app/services/user.service';
+import { RolesService } from 'src/app/services/roles.service';
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -22,8 +25,28 @@ import { DummyService } from 'src/app/services/dummy.service';
 })
 export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
+  /**
+   * Reference to sections in form used for side-nav
+   */
   @ViewChild('advanced') advancedSection: ElementRef;
   @ViewChild('basic') basicSection: ElementRef;
+
+  /**
+   * User access type
+   */
+  public accessType: UserAccessType = UserAccessType.DataViewer;
+
+  /**
+   * Show/Hide Add edit observation button
+   * This value will only change
+   * when is called ngOnInit().
+   * if you wish to manually refresh,
+   * call this.setAccessType().
+   */
+  public get isDataEditor(): boolean {
+    return this.roles.canCreateObservation(this.accessType);
+  }
+
 
   // State flags
   private submitted = false;
@@ -156,6 +179,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   ////////////////////
 
   constructor(
+    private userService: UserService,
+    private roles: RolesService,
     private zone: NgZone,
     private validation: ValidationService,
     private alert: AlertService,
@@ -179,7 +204,17 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   }
 
-  private initialize() {
+  /**
+   * Setting User's access type
+   */
+  private async setAccessType() {
+    this.loadingService.add();
+    this.accessType = await this.userService.getAccess();
+    this.loadingService.remove();
+  }
+
+  private async initialize() {
+    await this.setAccessType();
     if (this.viewing) {
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
@@ -187,12 +222,18 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       this.fetchObservation(this.idInParams());
 
     } else if (this.editing) {
+      if (!this.isDataEditor) {
+        this.showErrorPage();
+      }
       const id = this.idInParams();
       if (!id) { this.showErrorPage(); }
       this.mode = FormMode.Edit;
       this.fetchObservation(this.idInParams());
 
     } else if (this.creating) {
+      if (!this.isDataEditor) {
+        this.showErrorPage();
+      }
       this.initializeObjectIfDoesntExist();
       this.mode = FormMode.Create;
 
@@ -416,5 +457,12 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     const obj = await this.dummy.createDummyObservation([]);
     this.observationObject = obj;
     this.loadingService.remove();
+  }
+
+  edit() {
+    if (!this.observationObject || !this.viewing) {
+      return;
+    }
+    this.router.navigateTo(AppRoutes.EditObservation, this.observationObject.observation_id);
   }
 }
