@@ -177,4 +177,11 @@ export const ifDefined = (value: any, defaultValue: any) => {
     return value !== undefined ? value : defaultValue;
 };
 
+/**
+ * @description Set Null to object
+ * @param any obj
+ * @param string key
+ */
+export function setNull<T> (obj: T, key: keyof T) { (obj[key as string] = null); }
+
 // -------------------------------
