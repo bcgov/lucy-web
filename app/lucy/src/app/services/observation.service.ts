@@ -53,7 +53,7 @@ export class ObservationService {
       // indicators
       sampleTakenIndicator: observation.sampleTakenIndicator,
       wellIndicator: observation.wellIndicator,
-      legacysiteIndicator: observation.legacysiteIndicator,
+      legacySiteIndicator: observation.legacySiteIndicator,
       edrrIndicator: observation.edrrIndicator,
       researchIndicator: observation.researchIndicator,
       specialCareIndicator: observation.specialCareIndicator,
@@ -98,6 +98,7 @@ export class ObservationService {
 
   /**
    * Submit changes for an observation.
+   * Send Full object
    */
   public async editObservation(observation: Observation): Promise<boolean> {
     // You shouldn't use the object directly because api expects ids, not objects
@@ -105,6 +106,32 @@ export class ObservationService {
 
     // Make the call
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_observationWith(observation.observation_id), observationBody);
+    if (response.success) {
+      const observation_Id = response.response[`observation_id`];
+      if (observation_Id) {
+        console.log(`Edited successfully`);
+        return true;
+      } else {
+        console.log(`Got a response, but something is off - id is missing`);
+        console.dir(response);
+        return false;
+      }
+    } else {
+      console.log(`observation edit failed`);
+      console.dir(response);
+      return false;
+    }
+  }
+
+  /**
+   * Submit changes for an observation.
+   * Send Only changes
+   */
+  public async editObservationChangeOnly(newObservation: Observation, oldObservation: Observation): Promise<boolean> {
+    const changes = await this.compare(newObservation, oldObservation);
+    console.dir(changes);
+    // Make the call
+    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_observationWith(newObservation.observation_id), changes);
     if (response.success) {
       const observation_Id = response.response[`observation_id`];
       if (observation_Id) {
@@ -177,7 +204,7 @@ export class ObservationService {
       // indicators
       sampleTakenIndicator: false,
       wellIndicator: false,
-      legacysiteIndicator: false,
+      legacySiteIndicator: false,
       edrrIndicator: false,
       researchIndicator: false,
       specialCareIndicator: false,

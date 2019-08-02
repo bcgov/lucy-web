@@ -35,12 +35,37 @@
           <span class="view-title"> {{pageTitle}} <span *ngIf="!readonly || !inReviewMode" class="view-title-detail">
               - Plant</span></span>
           <span class="spacer-toolbar"></span>
-          <button *ngIf="!readonly || inReviewMode" type="button"
+          <!-- Submit button -->
+          <button 
+            *ngIf="!readonly || inReviewMode"
+            type="button"
             class="btn btn-secondary submit-button button-hollow action-buttons"
-            (click)="submitAction()">{{submitBtnName}}</button>
-          <button *ngIf="inReviewMode" type="button"
+            (click)="submitAction()">
+            {{submitBtnName}}
+          </button>
+          <!-- ---- -->
+          <!-- Edit button for review -->
+          <button 
+            (click)="exitReviewMode()"
+            *ngIf="inReviewMode" 
+            type="button"
             class="btn btn-secondary submit-button button-hollow action-buttons"
-            (click)="exitReviewMode()">Edit</button>
+            (click)="exitReviewMode()">
+            Edit
+          </button>
+          <!-- ---- -->
+          <!-- Edit Button for when in view mode and user is data editor -->
+          <button 
+            (click)="edit()"
+            *ngIf="isDataEditor && viewing"
+            type="button" 
+            class="btn btn-secondary submit-button button-hollow action-buttons">
+            Edit
+            <i class="material-icons action-icon">
+              edit
+            </i>
+          </button>
+          <!-- ---- -->
         </mat-toolbar-row>
       </mat-toolbar>
     </div>
