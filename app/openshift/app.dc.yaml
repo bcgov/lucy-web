@@ -73,8 +73,8 @@ objects:
               path: /healthcheck
               port: 3030
               scheme: HTTP
-            initialDelaySeconds: 300
-            periodSeconds: 45
+            initialDelaySeconds: 200
+            periodSeconds: 100
             successThreshold: 1
             timeoutSeconds: 20
           terminationMessagePath: /dev/termination-log
