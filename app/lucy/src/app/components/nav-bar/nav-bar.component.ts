@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
-import { AppRoutes, AppRoutesParams} from '../../constants/app-routes.enum';
+import { AppRoutes, AppRoutesParams } from '../../constants/app-routes.enum';
 import { SsoService } from '../../services/sso.service';
 import { UserService } from '../../services/user.service';
 import { RouterService } from '../../services/router.service';
@@ -41,7 +41,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Used for Highlighting element in
    * navigation bar when route is active
-   */ 
+   */
   public get isAdminToolsActive(): boolean {
     return this.routerService.current === AppRoutes.AdminTools;
   }
@@ -54,10 +54,10 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.routerService.current === AppRoutes.Profile;
   }
 
-   /**
-   * Used for Highlighting element in
-   * navigation bar when route is active
-   */
+  /**
+  * Used for Highlighting element in
+  * navigation bar when route is active
+  */
   public get isInventoryActive(): boolean {
     return this.routerService.current === AppRoutes.Inventory;
   }
@@ -78,7 +78,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * call this.setAccessType().
    */
   public get isDataEditor(): boolean {
-    return this.roles.accessTypeCanCreateObservation(this.accessType);
+    return this.roles.canCreateObservation(this.accessType);
   }
 
   /**
@@ -106,7 +106,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
     return (
       this.accessType === UserAccessType.Admin ||
       this.accessType === UserAccessType.DataEditor
-      );
+    );
   }
 
   constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService, private roles: RolesService) { }
@@ -147,21 +147,15 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * Setting User's initials in
    * userInitials to be consumed by HTML
    */
-  private setInitials() {
-    this.userService.getInitials().then((value) => {
-      this.userInitials = value;
-      }
-    );
+  private async setInitials() {
+    this.userInitials = await this.userService.getInitials();
   }
 
   /**
    * Setting User's access type
    */
-  private setAccessType() {
-    this.userService.getAccess().then((value) => {
-      this.accessType = value;
-      }
-    );
+  private async setAccessType() {
+    this.accessType = await this.userService.getAccess();
   }
 
   /**

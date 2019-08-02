@@ -33,7 +33,7 @@ export class InventoryComponent implements OnInit {
    * call this.setAccessType().
    */
   public get isDataEditor(): boolean {
-    return this.roles.accessTypeCanCreateObservation(this.accessType);
+    return this.roles.canCreateObservation(this.accessType);
   }
 
   /************ Sorting Variables ************/
@@ -83,11 +83,10 @@ export class InventoryComponent implements OnInit {
   /**
    * Setting User's access type
    */
-  private setAccessType() {
-    this.userService.getAccess().then((value) => {
-      this.accessType = value;
-      }
-    );
+  private async setAccessType() {
+    this.loadingService.add();
+    this.accessType = await this.userService.getAccess();
+    this.loadingService.remove();
   }
 
   private async fetchObservations() {
