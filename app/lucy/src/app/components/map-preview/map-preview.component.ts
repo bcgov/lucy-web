@@ -214,6 +214,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    */
   private addMarkers() {
     if (this.cluster) {
+      this.clusterMarkers.clearLayers();
       this.addClusteringMarkers();
     } else {
       this.clearMarkers();
