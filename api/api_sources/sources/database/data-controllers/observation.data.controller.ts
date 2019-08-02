@@ -22,6 +22,7 @@
 import { DataModelController } from '../data.model.controller';
 import { Observation, Species, JurisdictionCode, User, ObservationCreateModel, ObservationUpdateModel } from '../models';
 import { ObservationSchema, SpeciesSchema, JurisdictionCodeSchema } from '../database-schema';
+import { ifDefined } from '../../libs/utilities';
 
 /**
  * @description Request body of observation create
@@ -64,33 +65,40 @@ export class ObservationController extends DataModelController<Observation> {
      * @param  User user : Update by
      */
     async update(obj: Observation, data: ObservationUpdateModel, user: User) {
-        obj.lat = data.lat || obj.lat;
-        obj.long = data.long || obj.long;
-        obj.date = data.date || obj.date;
-        obj.length = data.length || obj.length;
-        obj.width = data.width || obj.width;
-        obj.accessDescription = data.accessDescription || obj.accessDescription;
-        obj.observerFirstName = data.observerFirstName || obj.observerFirstName;
-        obj.observerLastName = data.observerLastName || obj.observerLastName;
-        obj.species = data.species || obj.species;
-        obj.jurisdiction = data.jurisdiction || obj.jurisdiction;
-        obj.speciesAgency = data.speciesAgency || obj.speciesAgency;
-        obj.distribution = data.distribution || obj.distribution;
-        obj.density = data.density || obj.density;
-        obj.observationType = data.observationType || obj.observationType;
-        obj.observationGeometry = data.observationGeometry || obj.observationGeometry;
-        obj.specificUseCode = data.specificUseCode || obj.specificUseCode;
-        obj.soilTexture = data.soilTexture || obj.soilTexture;
-        obj.slopeCode = data.slopeCode || obj.slopeCode;
-        obj.aspectCode = data.aspectCode || obj.aspectCode;
-        obj.proposedAction = data.proposedAction || obj.proposedAction;
-        obj.sampleIdentifier = data.sampleIdentifier || obj.sampleIdentifier;
-        obj.rangeUnitNumber = data.rangeUnitNumber || obj.rangeUnitNumber;
-        obj.legacySiteIndicator = data.legacySiteIndicator || obj.legacySiteIndicator;
-        obj.edrrIndicator = data.edrrIndicator || obj.edrrIndicator;
-        obj.researchIndicator = data.researchIndicator || obj.researchIndicator;
-        obj.specialCareIndicator = data.specialCareIndicator || obj.specialCareIndicator;
-        obj.biologicalIndicator = data.biologicalIndicator || obj.biologicalIndicator;
+        obj.lat = ifDefined(data.lat, obj.lat);
+        obj.long = ifDefined(data.long, obj.long);
+        obj.date = ifDefined(data.date, obj.date);
+        obj.length = ifDefined(data.length, obj.length);
+        obj.width = ifDefined(data.width, obj.width);
+        obj.accessDescription = ifDefined(data.accessDescription, obj.accessDescription);
+        obj.observerFirstName = ifDefined (data.observerFirstName, obj.observerFirstName);
+        obj.observerLastName = ifDefined(data.observerLastName, obj.observerLastName);
+        obj.species = ifDefined(data.species, obj.species);
+        obj.jurisdiction = ifDefined(data.jurisdiction, obj.jurisdiction);
+        obj.speciesAgency = ifDefined(data.speciesAgency, obj.speciesAgency);
+        obj.distribution = ifDefined(data.distribution, obj.distribution);
+        obj.density = ifDefined (data.density, obj.density);
+        obj.observationType = ifDefined(data.observationType, obj.observationType);
+        obj.observationGeometry = ifDefined(data.observationGeometry, obj.observationGeometry);
+        obj.specificUseCode = ifDefined(data.specificUseCode, obj.specificUseCode);
+        obj.soilTexture = ifDefined(data.soilTexture, obj.soilTexture);
+        obj.slopeCode = ifDefined(data.slopeCode, obj.slopeCode);
+        obj.aspectCode = ifDefined(data.aspectCode, obj.aspectCode);
+        obj.proposedAction = ifDefined(data.proposedAction, obj.proposedAction);
+        obj.sampleIdentifier = ifDefined(data.sampleIdentifier, obj.sampleIdentifier);
+        obj.rangeUnitNumber = ifDefined(data.rangeUnitNumber, obj.rangeUnitNumber);
+        obj.legacySiteIndicator = ifDefined(data.legacySiteIndicator, obj.legacySiteIndicator);
+        obj.edrrIndicator = ifDefined(data.edrrIndicator, obj.edrrIndicator);
+        obj.researchIndicator = ifDefined(data.researchIndicator, obj.researchIndicator);
+        obj.specialCareIndicator = ifDefined(data.specialCareIndicator, obj.specialCareIndicator);
+        obj.biologicalIndicator = ifDefined(data.biologicalIndicator, obj.biologicalIndicator);
+        obj.aquaticIndicator = ifDefined(data.aquaticIndicator, obj.aquaticIndicator);
+        obj.sampleTakenIndicator = ifDefined(data.sampleTakenIndicator, obj.sampleTakenIndicator);
+        obj.wellIndicator = ifDefined(data.wellIndicator, obj.wellIndicator);
+        if (obj.sampleTakenIndicator === false) {
+            delete obj.sampleIdentifier;
+            delete obj.rangeUnitNumber;
+        }
 
         obj.updatedBy = user;
         await this.saveInDB(obj);
