@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observation } from 'src/app/models';
 import { CodeTableService } from 'src/app/services/code-table.service';
 import { ObservationService } from 'src/app/services/observation.service';
@@ -13,13 +13,15 @@ import { RolesService } from 'src/app/services/roles.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
 
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.css'],
 })
 export class InventoryComponent implements OnInit {
-
   /**
    * User access type
    */
@@ -64,6 +66,14 @@ export class InventoryComponent implements OnInit {
     return this._numberOfTests;
   }
   panelOpenState = false;
+  materialTable = true;
+
+
+  /************ Material Table ************/
+  displayedColumns: string[] = ['Observation_id', 'location', 'species', 'date', 'observer', 'actions'];
+  dataSource = new MatTableDataSource<Observation>(this.observations);
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+   /************ END OF Material Table ************/
 
   constructor(
     private userService: UserService,
@@ -80,6 +90,11 @@ export class InventoryComponent implements OnInit {
     this.setAccessType();
   }
 
+  private initMaterialTable() {
+    this.dataSource = new MatTableDataSource<Observation>(this.observations);
+    this.dataSource.paginator = this.paginator;
+  }
+
   /**
    * Setting User's access type
    */
@@ -93,6 +108,7 @@ export class InventoryComponent implements OnInit {
     this.loadingService.add();
     const observations = await this.observationService.getAll();
     this.observations = observations;
+    this.initMaterialTable();
     this.setMapMarkers();
     this.loadingService.remove();
   }
@@ -172,6 +188,7 @@ export class InventoryComponent implements OnInit {
       }
       return 0;
     });
+    this.initMaterialTable();
   }
 
   sortBySpecies() {
@@ -205,6 +222,7 @@ export class InventoryComponent implements OnInit {
       }
       return 0;
     });
+    this.initMaterialTable();
   }
 
   sortByLocation() {
@@ -243,6 +261,7 @@ export class InventoryComponent implements OnInit {
       }
       return 0;
     });
+    this.initMaterialTable();
   }
 
   sortByObservationId() {
@@ -276,6 +295,7 @@ export class InventoryComponent implements OnInit {
       }
       return 0;
     });
+    this.initMaterialTable();
   }
 
   resetSortFields() {
@@ -305,6 +325,7 @@ export class InventoryComponent implements OnInit {
     const random = await this.dummy.createDummyObservations(this.numberOfObservationForTesting);
     console.log(`generated`);
     this.observations = random;
+    this.initMaterialTable();
     console.log(`Adding Pins`);
     this.setMapMarkers();
     this.loadingService.remove();
