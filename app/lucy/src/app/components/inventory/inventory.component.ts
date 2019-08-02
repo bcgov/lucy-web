@@ -9,6 +9,9 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { DummyService } from 'src/app/services/dummy.service';
 import * as moment from 'moment';
 import { ValidationService } from 'src/app/services/validation.service';
+import { RolesService } from 'src/app/services/roles.service';
+import { UserAccessType } from 'src/app/models/Role';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-inventory',
@@ -16,6 +19,22 @@ import { ValidationService } from 'src/app/services/validation.service';
   styleUrls: ['./inventory.component.css'],
 })
 export class InventoryComponent implements OnInit {
+
+  /**
+   * User access type
+   */
+  public accessType: UserAccessType = UserAccessType.DataViewer;
+
+  /**
+   * Show/Hide Add edit observation button
+   * This value will only change
+   * when is called ngOnInit().
+   * if you wish to manually refresh,
+   * call this.setAccessType().
+   */
+  public get isDataEditor(): boolean {
+    return this.roles.accessTypeCanCreateObservation(this.accessType);
+  }
 
   /************ Sorting Variables ************/
   sortAscending = false;
@@ -47,6 +66,8 @@ export class InventoryComponent implements OnInit {
   panelOpenState = false;
 
   constructor(
+    private userService: UserService,
+    private roles: RolesService,
     private validationService: ValidationService,
     private codeTables: CodeTableService,
     private observationService: ObservationService,
@@ -56,6 +77,17 @@ export class InventoryComponent implements OnInit {
 
   ngOnInit() {
     this.fetchObservations();
+    this.setAccessType();
+  }
+
+  /**
+   * Setting User's access type
+   */
+  private setAccessType() {
+    this.userService.getAccess().then((value) => {
+      this.accessType = value;
+      }
+    );
   }
 
   private async fetchObservations() {
@@ -89,7 +121,6 @@ export class InventoryComponent implements OnInit {
      * so if map is showing, we can remove and
      * re-add it quickly
     */
-
     if (this.showMap) {
       this.showMap = false;
       this.delay(1).then(() => {
