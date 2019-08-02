@@ -208,8 +208,8 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     if (this.observationObject) {
       this.observationObject.sampleTakenIndicator = value;
       if (!value) {
-        this.observationObject.sampleIdentifier = undefined;
-        this.observationObject.rangeUnitNumber = undefined;
+        this.observationObject.sampleIdentifier = null;
+        this.observationObject.rangeUnitNumber = null;
       }
       this.notifyChangeEvent();
     }

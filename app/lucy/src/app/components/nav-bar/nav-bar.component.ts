@@ -43,8 +43,6 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * navigation bar when route is active
    */ 
   public get isAdminToolsActive(): boolean {
-    console.log(this.routerService.current);
-    console.log(AppRoutes.AdminTools);
     return this.routerService.current === AppRoutes.AdminTools;
   }
 

@@ -8,6 +8,7 @@ import { LatLong } from '../map-preview/map-preview.component';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DummyService } from 'src/app/services/dummy.service';
 import * as moment from 'moment';
+import { ValidationService } from 'src/app/services/validation.service';
 
 @Component({
   selector: 'app-inventory',
@@ -34,9 +35,24 @@ export class InventoryComponent implements OnInit {
   /************ End of Flags ************/
 
   // TEMP
-  numberOfObservationForTesting = 10000;
+  private _numberOfTests = 10;
+  set numberOfObservationForTesting(number: number) {
+    if (this.validationService.isValidInteger(String(number))) {
+      this._numberOfTests = number;
+    }
+  }
+  get numberOfObservationForTesting(): number {
+    return this._numberOfTests;
+  }
+  panelOpenState = false;
 
-  constructor(private codeTables: CodeTableService, private observationService: ObservationService, private router: RouterService, private loadingService: LoadingService, private dummy: DummyService) { }
+  constructor(
+    private validationService: ValidationService,
+    private codeTables: CodeTableService,
+    private observationService: ObservationService,
+    private router: RouterService,
+    private loadingService: LoadingService,
+    private dummy: DummyService) { }
 
   ngOnInit() {
     this.fetchObservations();
@@ -255,8 +271,11 @@ export class InventoryComponent implements OnInit {
     this.loadingService.add();
     await this.delayAsync(100);
     this.observations = [];
+    console.log(`generating`);
     const random = await this.dummy.createDummyObservations(this.numberOfObservationForTesting);
+    console.log(`generated`);
     this.observations = random;
+    console.log(`Adding Pins`);
     this.setMapMarkers();
     this.loadingService.remove();
   }
@@ -276,6 +295,10 @@ export class InventoryComponent implements OnInit {
 
   generateObservationForTesting() {
     this.createDummys();
+  }
+
+  removeGeneratedObservations() {
+    this.fetchObservations();
   }
 
    /**

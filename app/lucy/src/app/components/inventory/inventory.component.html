@@ -16,9 +16,37 @@
 <!-- -------------------- -->
 <div class="container">
   <div class="row">
-      <div class="col-12">
-          <button class="btn" (click)="generateObservationForTesting()">Generate {{numberOfObservationForTesting}} for testing</button>
-        </div>
+    <div class="col-12">
+      <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Test
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item>
+
+              <mat-form-field>
+                <input matInput placeholder="Number of observations" [(ngModel)]="numberOfObservationForTesting">
+              </mat-form-field>
+            </mat-list-item>
+
+            <mat-list-item>
+              <button mat-raised-button color="primary" (click)="generateObservationForTesting()">
+                Generate {{numberOfObservationForTesting}} for testing</button>
+            </mat-list-item>
+
+            <mat-list-item>
+              <button mat-raised-button color="accent" (click)="removeGeneratedObservations()">
+                Remove Generated Observations
+              </button>
+            </mat-list-item>
+
+          </mat-list>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
   </div>
   <br/>
   <div *ngIf="showMap" class="row map-box" [ngClass]="showList ? 'map-box-partial' : 'map-box-full'">
