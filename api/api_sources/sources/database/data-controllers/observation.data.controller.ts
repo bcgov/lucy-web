@@ -22,7 +22,7 @@
 import { DataModelController } from '../data.model.controller';
 import { Observation, Species, JurisdictionCode, User, ObservationCreateModel, ObservationUpdateModel } from '../models';
 import { ObservationSchema, SpeciesSchema, JurisdictionCodeSchema } from '../database-schema';
-import { ifDefined } from '../../libs/utilities';
+import { ifDefined, setNull } from '../../libs/utilities';
 
 /**
  * @description Request body of observation create
@@ -85,8 +85,6 @@ export class ObservationController extends DataModelController<Observation> {
         obj.slopeCode = ifDefined(data.slopeCode, obj.slopeCode);
         obj.aspectCode = ifDefined(data.aspectCode, obj.aspectCode);
         obj.proposedAction = ifDefined(data.proposedAction, obj.proposedAction);
-        obj.sampleIdentifier = ifDefined(data.sampleIdentifier, obj.sampleIdentifier);
-        obj.rangeUnitNumber = ifDefined(data.rangeUnitNumber, obj.rangeUnitNumber);
         obj.legacySiteIndicator = ifDefined(data.legacySiteIndicator, obj.legacySiteIndicator);
         obj.edrrIndicator = ifDefined(data.edrrIndicator, obj.edrrIndicator);
         obj.researchIndicator = ifDefined(data.researchIndicator, obj.researchIndicator);
@@ -95,12 +93,14 @@ export class ObservationController extends DataModelController<Observation> {
         obj.aquaticIndicator = ifDefined(data.aquaticIndicator, obj.aquaticIndicator);
         obj.sampleTakenIndicator = ifDefined(data.sampleTakenIndicator, obj.sampleTakenIndicator);
         obj.wellIndicator = ifDefined(data.wellIndicator, obj.wellIndicator);
-        if (obj.sampleTakenIndicator === false) {
-            delete obj.sampleIdentifier;
-            delete obj.rangeUnitNumber;
-        }
+        obj.sampleIdentifier = ifDefined(data.sampleIdentifier, obj.sampleIdentifier);
+        obj.rangeUnitNumber = ifDefined(data.rangeUnitNumber, obj.rangeUnitNumber);
 
         obj.updatedBy = user;
+        if (obj.sampleTakenIndicator === false) {
+           setNull<Observation>(obj, 'sampleIdentifier');
+           setNull<Observation>(obj, 'rangeUnitNumber');
+        }
         await this.saveInDB(obj);
         return obj;
     }
