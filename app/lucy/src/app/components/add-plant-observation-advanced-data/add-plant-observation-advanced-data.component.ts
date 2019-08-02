@@ -36,7 +36,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     if (!this.observationObject) {
       return false;
     }
-    return this.observationObject.legacysiteIndicator;
+    return this.observationObject.legacySiteIndicator;
   }
 
   get edrrIndicator(): boolean {
@@ -208,8 +208,8 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     if (this.observationObject) {
       this.observationObject.sampleTakenIndicator = value;
       if (!value) {
-        this.observationObject.sampleIdentifier = undefined;
-        this.observationObject.rangeUnitNumber = undefined;
+        this.observationObject.sampleIdentifier = null;
+        this.observationObject.rangeUnitNumber = null;
       }
       this.notifyChangeEvent();
     }
@@ -224,7 +224,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
 
   legacysiteIndicatorChanged(value: boolean) {
     if (this.observationObject) {
-      this.observationObject.legacysiteIndicator = value;
+      this.observationObject.legacySiteIndicator = value;
       this.notifyChangeEvent();
     }
   }

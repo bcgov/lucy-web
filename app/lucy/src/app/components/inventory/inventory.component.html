@@ -16,9 +16,37 @@
 <!-- -------------------- -->
 <div class="container">
   <div class="row">
-      <div class="col-12">
-          <button class="btn" (click)="generateObservationForTesting()">Generate for testing</button>
-        </div>
+    <div class="col-12">
+      <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Test
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item>
+
+              <mat-form-field>
+                <input matInput placeholder="Number of observations" [(ngModel)]="numberOfObservationForTesting">
+              </mat-form-field>
+            </mat-list-item>
+
+            <mat-list-item>
+              <button mat-raised-button color="primary" (click)="generateObservationForTesting()">
+                Generate {{numberOfObservationForTesting}} for testing</button>
+            </mat-list-item>
+
+            <mat-list-item>
+              <button mat-raised-button color="accent" (click)="removeGeneratedObservations()">
+                Remove Generated Observations
+              </button>
+            </mat-list-item>
+
+          </mat-list>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
   </div>
   <br/>
   <div *ngIf="showMap" class="row map-box" [ngClass]="showList ? 'map-box-partial' : 'map-box-full'">
@@ -58,7 +86,7 @@
             <i *ngIf="sortingBySurveyor && sortAscending" class="material-icons">arrow_upward</i>
           </th>
           <th scope="col">
-            ACTIONS
+            
           </th>
         </tr>
       </thead>
@@ -70,14 +98,29 @@
           <td scope="row" (click)="view(item)">{{item.date | momentPipe:'YYYY-MM-DD'}}</td>
           <td scope="row" (click)="view(item)">{{item.observerFirstName + " " + item.observerLastName}}</td>
           <td>
-            <div class="option-buttons">
+              <i class="material-icons" [matMenuTriggerFor]="menu">more_vert</i>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="view(item)">
+                  View
+                  <i class="material-icons action-icon">
+                    visibility
+                  </i>
+                </button>
+                <button *ngIf="isDataEditor" mat-menu-item (click)="edit(item)">
+                  Edit
+                  <i class="material-icons action-icon">
+                    edit
+                  </i>
+                </button>
+              </mat-menu>
+            <!-- <div class="option-buttons">
               <button class="btn action-btn" type="button" (click)="view(item)">
                 View
               </button>
               <button class="btn action-btn" type="button" (click)="edit(item)">
                 Edit
               </button>
-            </div>
+            </div> -->
           </td>
         </tr>
       </tbody>

@@ -209,7 +209,7 @@ export class DummyService {
       // indicators
       sampleTakenIndicator: sampleTakenIndicator,
       wellIndicator: faker.random.boolean(),
-      legacysiteIndicator: faker.random.boolean(),
+      legacySiteIndicator: faker.random.boolean(),
       edrrIndicator: faker.random.boolean(),
       researchIndicator: faker.random.boolean(),
       specialCareIndicator: faker.random.boolean(),
