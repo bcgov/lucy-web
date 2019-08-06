@@ -85,22 +85,13 @@
                 Sample Details
               </div>
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12">
                 <app-field
                   [editable]="sampleTakenIndicator"
                   [mode]="mode"
                   [header]="'Sample Taken'"
                   [value]="sampleTaken"
                   (valueChanged)='sampleTakenChanged($event)'>
-                </app-field>
-            </div>
-            <div class="col-12 col-md-6">
-                <app-field
-                  [editable]="sampleTakenIndicator"
-                  [mode]="mode"
-                  [header]="'Range Unit Number'"
-                  [value]="rangeUnitNumber"
-                  (valueChanged)='rangeUnitNumberChanged($event)'>
                 </app-field>
             </div>
         </div>
@@ -168,7 +159,7 @@
                 <!-- 3rd row -->
                 <div class="col-12">
                   <div class="row">
-                    <div class="col-12 col-md-7">
+                    <div class="col-12 col-md-4">
                       <app-dropdown
                         [mode]="mode" 
                         [items]="geometries" 
@@ -177,7 +168,15 @@
                         (selectionChanged)='surveyGeometryChanged($event)'>
                       </app-dropdown>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-12 col-md-4">
+                      <app-field
+                        [mode]="mode"
+                        [header]="'Range Unit Number'"
+                        [value]="rangeUnitNumber"
+                        (valueChanged)='rangeUnitNumberChanged($event)'>
+                      </app-field>
+                  </div>
+                    <div class="col-auto" *ngIf="enableUploadPhotoButton">
                         <div class="col-12">
                           <label class="field-header">Attach Photo</label>
                           <button class="btn  button-fill field">Select From Device</button>

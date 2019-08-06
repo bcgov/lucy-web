@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     if (!this.userAccessType) {
       return false;
     }
-    if ( this.roleService.accessTypeCanCreateObservation(this.userAccessType)) {
+    if ( this.roleService.canCreateObservation(this.userAccessType)) {
       return false;
     } else {
       return this.userService.showRequestDataEntryAccessMessage();

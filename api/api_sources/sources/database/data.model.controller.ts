@@ -19,7 +19,7 @@
 /**
  * Imports
  */
-import {Connection, getConnection, Repository, ObjectLiteral} from 'typeorm';
+import {Connection, getConnection, Repository, ObjectLiteral, QueryRunner} from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager} from './dataBaseManager';
 import { ApplicationTable } from './applicationSchemaInterface';
@@ -182,6 +182,11 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase imp
 
     get schema(): ApplicationTable {
         return this.schemaInterface.schema;
+    }
+
+    async runQuery(query: string): Promise<void> {
+        const queryRunner: QueryRunner = this.connection.createQueryRunner();
+        await queryRunner.query(query);
     }
 }
 // --------------------------------------------------------------------------------------------

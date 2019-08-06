@@ -49,9 +49,13 @@ export class RolesService {
     }
   }
 
-  public accessTypeCanCreateObservation(accessType: UserAccessType) {
+  public canCreateObservation(accessType: UserAccessType) {
     return (accessType === UserAccessType.Admin ||
       accessType === UserAccessType.DataEditor);
+  }
+
+  public canEditObservation(accessType: UserAccessType) {
+    return this.canCreateObservation(accessType);
   }
 
   private getDummyRoles(): Role[] {

@@ -221,8 +221,12 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
    * @param value latitude
    */
   latChanged(value: string) {
-    if (this.observationObject && this.validation.isValidLatitude(value)) {
-      this.observationObject.lat = +value;
+    if (this.observationObject) {
+      if (this.validation.isValidLatitude(value)) {
+        this.observationObject.lat = +value;
+      } else {
+        this.observationObject.lat = undefined;
+      }
     }
     this.latLongChanged();
   }
@@ -232,8 +236,12 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
    * @param value longitude
    */
   longChanged(value: string) {
-    if (this.observationObject && this.validation.isValidLongitude(value)) {
-      this.observationObject.long = +value;
+    if (this.observationObject) {
+      if (this.validation.isValidLongitude(value)) {
+        this.observationObject.long = +value;
+      } else {
+        this.observationObject.long = undefined;
+      }
     }
     this.latLongChanged();
   }

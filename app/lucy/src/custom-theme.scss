@@ -98,8 +98,41 @@ $md-secondary: (
         A700 : #ffffff,
     )
 );
+
+$md-red: (
+    50 : #ffeae9,
+    100 : #ffcbc9,
+    200 : #ffa9a5,
+    300 : #ff8780,
+    400 : #ff6d65,
+    500 : #ff534a,
+    600 : #ff4c43,
+    700 : #ff423a,
+    800 : #ff3932,
+    900 : #ff2922,
+    A100 : #ffffff,
+    A200 : #ffffff,
+    A400 : #ffd2d1,
+    A700 : #ffb9b8,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
 $custom-theme-primary: mat-palette($md-primary);
 $custom-theme-accent: mat-palette($md-accent);
-$custom-theme-warn: mat-palette($md-secondary);
+$custom-theme-warn: mat-palette($md-red);
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 @include angular-material-theme($custom-theme);

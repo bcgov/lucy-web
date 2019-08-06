@@ -8,11 +8,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 // Material
-import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatSelectModule, MatToolbarModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatToolbarModule } from '@angular/material';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule} from '@angular/material/card';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatListModule} from '@angular/material/list';
+import {MatInputModule} from '@angular/material/input';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 // Third-party
 // ng-bootstrap
@@ -62,6 +68,7 @@ import { MatSelectSearchComponent } from './components/mat-select-search/mat-sel
 import { MatSelectSearchModule } from './components/mat-select-search/mat-select-search.module';
 import { AddPlantObservationAdvancedDataComponent } from './components/add-plant-observation-advanced-data/add-plant-observation-advanced-data.component';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
+import { ErrorComponent } from './components/error/error.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -98,6 +105,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatSelectSearchComponent,
     AddPlantObservationAdvancedDataComponent,
     CheckboxComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,7 +128,12 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatToolbarModule,
     MatIconModule,
     MatDividerModule,
-    MatCardModule
+    MatCardModule,
+    MatExpansionModule,
+    MatListModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSlideToggleModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
