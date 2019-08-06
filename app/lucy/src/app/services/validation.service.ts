@@ -179,6 +179,10 @@ export class ValidationService {
         }
     }
 
+    if (!observation.rangeUnitNumber) {
+      return `You must specify a Range Unit Number`;
+    }
+
     return null;
   }
 }

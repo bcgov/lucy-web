@@ -13,6 +13,7 @@ import { DummyService } from 'src/app/services/dummy.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
 import { RolesService } from 'src/app/services/roles.service';
+import { ErrorService, ErrorType } from 'src/app/services/error.service';
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -178,7 +179,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  constructor(
+  constructor (
+    private errorService: ErrorService,
     private userService: UserService,
     private roles: RolesService,
     private zone: NgZone,
@@ -217,33 +219,33 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     await this.setAccessType();
     if (this.viewing) {
       const id = this.idInParams();
-      if (!id) { this.showErrorPage(); }
+      if (!id) {
+        this.errorService.show(ErrorType.NotFound);
+      }
       this.mode = FormMode.View;
       this.fetchObservation(this.idInParams());
 
     } else if (this.editing) {
       if (!this.isDataEditor) {
-        this.showErrorPage();
+        this.errorService.show(ErrorType.AccessDenied);
       }
       const id = this.idInParams();
-      if (!id) { this.showErrorPage(); }
+      if (!id) {
+        this.errorService.show(ErrorType.NotFound);
+      }
       this.mode = FormMode.Edit;
       this.fetchObservation(this.idInParams());
 
     } else if (this.creating) {
       if (!this.isDataEditor) {
-        this.showErrorPage();
+        this.errorService.show(ErrorType.AccessDenied);
       }
       this.initializeObjectIfDoesntExist();
       this.mode = FormMode.Create;
 
     } else {
-      this.showErrorPage();
+      this.errorService.show(ErrorType.NotFound);
     }
-  }
-
-  private showErrorPage() {
-    console.log('Throw error');
   }
 
   idInParams(): number | undefined {
