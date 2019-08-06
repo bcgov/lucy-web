@@ -172,9 +172,15 @@ export class ValidationService {
     if (!observation.observationGeometry) {
       return `You must specify survey geometry in advanced data section`;
     }
+    console.dir(observation);
+    if (observation.sampleTakenIndicator) {
+      if (observation.sampleIdentifier === undefined || observation.sampleIdentifier === `` ) {
+          return `Please provide a sample identifier for the sample identified in advanced section`;
+        }
+    }
 
-    if (observation.sampleTakenIndicator && (observation.sampleIdentifier === undefined || observation.rangeUnitNumber === undefined)) {
-      return `Please provide a sample identifier and range range unit number for the sample identified in advanced section`;
+    if (!observation.rangeUnitNumber) {
+      return `You must specify a Range Unit Number`;
     }
 
     return null;

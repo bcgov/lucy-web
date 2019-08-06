@@ -12,6 +12,7 @@ import { UserInformationComponent } from './components/user-information/user-inf
 import { AdminToolsComponent } from './components/admin-tools/admin-tools.component';
 import { AddPlantObservationComponent } from './components/add-plant-observation/add-plant-observation.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
+import { ErrorComponent } from './components/error/error.component';
 
 const routes: Routes = [
   { path: AppRoutes.Login, component: LoginComponent},
@@ -21,7 +22,9 @@ const routes: Routes = [
   { path: AppRoutes.AddObservation , component: AddPlantObservationComponent},
   { path: AppRoutes.ViewObservation , component: AddPlantObservationComponent},
   { path: AppRoutes.EditObservation , component: AddPlantObservationComponent},
-  { path: AppRoutes.Inventory , component: InventoryComponent}
+  { path: AppRoutes.Inventory , component: InventoryComponent},
+  { path: AppRoutes.Error , component: ErrorComponent}
+
 ];
 
 @NgModule({

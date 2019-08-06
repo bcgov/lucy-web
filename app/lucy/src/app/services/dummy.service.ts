@@ -1,6 +1,17 @@
 import { Injectable } from '@angular/core';
 import { LatLong } from '../components/map-preview/map-preview.component';
-import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, Observation, SlopeCodes, AspectCodes, ProposedActionCodes } from '../models';
+import { Jurisdiction,
+   InvasivePlantSpecies,
+   SpeciesDensityCodes,
+   SpeciesDistributionCodes,
+   SpeciesAgencyCodes,
+   ObservationTypeCodes,
+   SoilTextureCodes,
+   ObservationGeometryCodes,
+   SpecificUseCodes,
+   Observation, SlopeCodes,
+   AspectCodes,
+   ProposedActionCodes } from '../models';
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
@@ -171,11 +182,10 @@ export class DummyService {
 
     const sampleTakenIndicator = faker.random.boolean();
     let sampleIdentifier = faker.lorem.word();
-    let rangeUnitNumber = String(faker.random.number());
+    const rangeUnitNumber = String(faker.random.number());
 
     if (!sampleTakenIndicator) {
       sampleIdentifier = undefined;
-      rangeUnitNumber = undefined;
     }
 
     if (!jurisdiction || ! invasivePlantSpecies) {
@@ -209,7 +219,7 @@ export class DummyService {
       // indicators
       sampleTakenIndicator: sampleTakenIndicator,
       wellIndicator: faker.random.boolean(),
-      legacysiteIndicator: faker.random.boolean(),
+      legacySiteIndicator: faker.random.boolean(),
       edrrIndicator: faker.random.boolean(),
       researchIndicator: faker.random.boolean(),
       specialCareIndicator: faker.random.boolean(),

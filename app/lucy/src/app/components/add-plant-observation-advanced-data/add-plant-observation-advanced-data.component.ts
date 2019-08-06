@@ -36,7 +36,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
     if (!this.observationObject) {
       return false;
     }
-    return this.observationObject.legacysiteIndicator;
+    return this.observationObject.legacySiteIndicator;
   }
 
   get edrrIndicator(): boolean {
@@ -79,7 +79,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   ////////// Further Observation //////////
 
   get wellProximity(): string {
-    return `Unknwon`;
+    return `--`;
   }
 
   get sampleTaken(): string {
@@ -137,6 +137,10 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   }
 
   ////////// End of Further Observation //////////
+
+  get enableUploadPhotoButton(): boolean {
+    return this.mode === FormMode.Create || this.mode === FormMode.Edit;
+  }
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -209,7 +213,6 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
       this.observationObject.sampleTakenIndicator = value;
       if (!value) {
         this.observationObject.sampleIdentifier = undefined;
-        this.observationObject.rangeUnitNumber = undefined;
       }
       this.notifyChangeEvent();
     }
@@ -224,7 +227,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
 
   legacysiteIndicatorChanged(value: boolean) {
     if (this.observationObject) {
-      this.observationObject.legacysiteIndicator = value;
+      this.observationObject.legacySiteIndicator = value;
       this.notifyChangeEvent();
     }
   }

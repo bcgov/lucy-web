@@ -88,6 +88,20 @@ pod:
 	@echo "+\n++ Make: Creating Pod ...\n+"
 	@oc new-app  -e POSTGRESQL_USER=$(DB_USER) -e POSTGRESQL_PASSWORD=$(DB_PASS) -e POSTGRESQL_DATABASE=$(DB_DATABASE) centos/postgresql-95-centos7
 
+clean-dev:
+	@echo "+\n++ Make: Clean Remote Env with pr=$$PR"
+	@echo "+\n++ Cleanin API"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=dev 
+	@echo "+\n++ Cleaning App"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=dev
+
+clean-remote:
+	@echo "+\n++ Make: Clean Remote Env with pr=$$PR env=$$ENV"
+	@echo "+\n++ Cleanin API"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+	@echo "+\n++ Cleaning App"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+
 
 
 # ------------------------------------------------------------------------------

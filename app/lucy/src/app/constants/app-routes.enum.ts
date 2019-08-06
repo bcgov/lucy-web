@@ -1,4 +1,5 @@
 export enum AppRoutes {
+    Error = 'error',
     Root = '',
     Login = 'login',
     // User Routes

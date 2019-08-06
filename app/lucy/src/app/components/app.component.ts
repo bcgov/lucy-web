@@ -9,6 +9,7 @@ import * as $AB from 'jquery';
 import { AlertModel, AlertService } from '../services/alert.service';
 import { Subscription } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
+import { ErrorService } from '../services/error.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -44,7 +45,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadingSubscription: Subscription;
   /////////////////
 
-  constructor(private routerService: RouterService, private ssoService: SsoService, private messageService: MessageService, private alertService: AlertService, private loadingService: LoadingService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private errorService: ErrorService,
+    private routerService: RouterService,
+    private ssoService: SsoService,
+    private messageService: MessageService,
+    private alertService: AlertService,
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
   }
