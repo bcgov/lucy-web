@@ -99,7 +99,6 @@ export class ObservationController extends DataModelController<Observation> {
         obj.updatedBy = user;
         if (obj.sampleTakenIndicator === false) {
            setNull<Observation>(obj, 'sampleIdentifier');
-           setNull<Observation>(obj, 'rangeUnitNumber');
         }
         await this.saveInDB(obj);
         return obj;
