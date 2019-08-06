@@ -79,7 +79,7 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
   ////////// Further Observation //////////
 
   get wellProximity(): string {
-    return `Unknwon`;
+    return `--`;
   }
 
   get sampleTaken(): string {
@@ -209,7 +209,6 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
       this.observationObject.sampleTakenIndicator = value;
       if (!value) {
         this.observationObject.sampleIdentifier = undefined;
-        this.observationObject.rangeUnitNumber = undefined;
       }
       this.notifyChangeEvent();
     }

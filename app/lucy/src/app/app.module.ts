@@ -68,6 +68,7 @@ import { MatSelectSearchComponent } from './components/mat-select-search/mat-sel
 import { MatSelectSearchModule } from './components/mat-select-search/mat-select-search.module';
 import { AddPlantObservationAdvancedDataComponent } from './components/add-plant-observation-advanced-data/add-plant-observation-advanced-data.component';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
+import { ErrorComponent } from './components/error/error.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -104,6 +105,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatSelectSearchComponent,
     AddPlantObservationAdvancedDataComponent,
     CheckboxComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,

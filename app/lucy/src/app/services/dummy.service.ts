@@ -171,11 +171,10 @@ export class DummyService {
 
     const sampleTakenIndicator = faker.random.boolean();
     let sampleIdentifier = faker.lorem.word();
-    let rangeUnitNumber = String(faker.random.number());
+    const rangeUnitNumber = String(faker.random.number());
 
     if (!sampleTakenIndicator) {
       sampleIdentifier = undefined;
-      rangeUnitNumber = undefined;
     }
 
     if (!jurisdiction || ! invasivePlantSpecies) {
