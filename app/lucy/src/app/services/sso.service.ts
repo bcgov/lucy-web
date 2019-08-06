@@ -33,7 +33,7 @@ export enum SSOLoginProvider {
 export class SsoService {
   private static instance: SsoService;
 
-  private code: string = "";
+  private code = ``;
   private refreshTimer = null;
   private bearerToken: string | null = null;
   private tokenExpiery: Date | null;
