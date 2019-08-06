@@ -95,7 +95,12 @@ clean-dev:
 	@echo "+\n++ Cleaning App"
 	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=dev
 
-
+clean-remote:
+	@echo "+\n++ Make: Clean Remote Env with pr=$$PR env=$$ENV"
+	@echo "+\n++ Cleanin API"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+	@echo "+\n++ Cleaning App"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
 
 
 
