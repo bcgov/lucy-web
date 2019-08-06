@@ -125,7 +125,7 @@ export class ValidationService {
     }
 
     if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width))) {
-      return `You must specify a valid plot dimention for invasive plant species`;
+      return `You must specify a valid plot dimension for invasive plant species`;
     }
 
     if (!observation.jurisdiction) {
