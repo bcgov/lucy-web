@@ -149,7 +149,7 @@ export class UserService {
   public async getOranizarionAndRole(): Promise<string> {
     // const user = await this.getUser();
     // return (user.roleInOrganization + ", " + user.organization);
-    return `Invasive Plant Specialist, Ministry of Tranaportation`;
+    return `Invasive Plant Specialist, Ministry of Transportation`;
   }
 
   // TODO: Does not exist in api yet
