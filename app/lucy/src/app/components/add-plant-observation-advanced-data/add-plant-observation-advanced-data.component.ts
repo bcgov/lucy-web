@@ -138,6 +138,10 @@ export class AddPlantObservationAdvancedDataComponent implements OnInit {
 
   ////////// End of Further Observation //////////
 
+  get enableUploadPhotoButton(): boolean {
+    return this.mode === FormMode.Create || this.mode === FormMode.Edit;
+  }
+
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
   // Get

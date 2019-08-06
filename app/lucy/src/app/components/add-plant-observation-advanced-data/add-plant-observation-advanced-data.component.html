@@ -176,7 +176,7 @@
                         (valueChanged)='rangeUnitNumberChanged($event)'>
                       </app-field>
                   </div>
-                    <div class="col-auto">
+                    <div class="col-auto" *ngIf="enableUploadPhotoButton">
                         <div class="col-12">
                           <label class="field-header">Attach Photo</label>
                           <button class="btn  button-fill field">Select From Device</button>
