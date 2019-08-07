@@ -247,7 +247,8 @@ describe('Test for observation routes', () => {
             accessDescription: 'Test description',
             researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
-            species: species.species_id
+            species: species.species_id,
+            rangeUnitNumber: 'A7890'
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.put,
@@ -262,8 +263,10 @@ describe('Test for observation routes', () => {
                 should().exist(body.species);
                 should().exist(body.jurisdiction);
                 should().exist(body.researchIndicator);
+                should().exist(body.rangeUnitNumber);
                 expect(body.researchIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(update.length);
+                expect(body.rangeUnitNumber).to.be.equal(update.rangeUnitNumber);
             });
             await destroyObservation(obsSpecies);
         });
@@ -285,6 +288,32 @@ describe('Test for observation routes', () => {
             url: `/api/observation/${obsSpecies.observation_id}`,
             expect: 401,
             auth: AuthType.viewer,
+            send: update
+        })
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+            await destroyObservation(obsSpecies);
+        });
+    });
+
+    it('should not update observation with {id}', async () => {
+        const obsSpecies = await observationFactory();
+        const jurisdictionCode = await jurisdictionCodeFactory(2);
+        const species = await speciesFactory(2);
+        const update = {
+            length: 6700.78,
+            width: 900.00,
+            accessDescription: 'Test description',
+            researchIndicator: true,
+            jurisdiction: jurisdictionCode.jurisdiction_code_id,
+            species: species.species_id,
+            rangeUnitNumber: '$y790'
+        };
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.put,
+            url: `/api/observation/${obsSpecies.observation_id}`,
+            expect: 422,
+            auth: AuthType.admin,
             send: update
         })
         .then(async (resp) => {
