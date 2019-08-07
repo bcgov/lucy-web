@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LatLong } from '../components/map-preview/map-preview.component';
+import { MapMarker } from '../components/map-preview/map-preview.component';
 import { Jurisdiction,
    InvasivePlantSpecies,
    SpeciesDensityCodes,
@@ -309,8 +309,8 @@ export class DummyService {
    * Generate random coordinates in BC
    * @param number of coordinates
    */
-  public generateCoordinates(number: number): LatLong[] {
-    const coordinates: LatLong[] = [];
+  public generateCoordinates(number: number): MapMarker[] {
+    const coordinates: MapMarker[] = [];
     for (let _i = 0; _i < number; _i++) {
       coordinates.push( {
         latitude: this.randomLat(),
