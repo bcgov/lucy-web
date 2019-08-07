@@ -31,6 +31,12 @@ export class ValidationService {
     }
   }
 
+  public isAphaNumeric(value: string): boolean {
+    const regexpOne = new RegExp('^[+-]?((90\\.?0*$)|(([0-8]?[0-9])\\.?[0-9]*$))');
+    const regexpOneResult = regexpOne.test(value);
+    return regexpOneResult;
+  }
+
   /**
    * TODO: Refactor
    * From:

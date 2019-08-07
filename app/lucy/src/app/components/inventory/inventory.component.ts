@@ -4,7 +4,7 @@ import { CodeTableService } from 'src/app/services/code-table.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
-import { LatLong } from '../map-preview/map-preview.component';
+import { MapMarker } from '../map-preview/map-preview.component';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DummyService } from 'src/app/services/dummy.service';
 import * as moment from 'moment';
@@ -47,7 +47,7 @@ export class InventoryComponent implements OnInit {
   sortingBySurveyor = false;
   /************ End of Sorting Variables ************/
 
-  markers: LatLong[] = [];
+  markers: MapMarker[] = [];
   observations: Observation[];
 
   /************ Flags ************/
@@ -118,7 +118,8 @@ export class InventoryComponent implements OnInit {
     for (const object of this.observations) {
       this.markers.push( {
         latitude: object.lat,
-        longitude: object.long
+        longitude: object.long,
+        observation: object,
       });
     }
   }
