@@ -33,7 +33,13 @@ objects:
       activeDeadlineSeconds: 21600
       recreateParams:
         timeoutSeconds: 600
-      resources: {}
+      resources: 
+        limits:
+          cpu: 500m
+          memory: 2Gi
+        requests:
+          cpu: 200m
+          memory: 1Gi
       type: Recreate
     template:
       metadata:
@@ -56,7 +62,13 @@ objects:
             protocol: TCP
           - containerPort: 7070
             protocol: TCP
-          resources: {}
+          resources: 
+            limits:
+              cpu: 500m
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 1Gi
           readinessProbe:
             failureThreshold: 10
             httpGet:
