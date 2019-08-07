@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, AfterContentChecked, Input, Output , EventEmitter, AfterViewChecked} from '@angular/core';
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
+import { Observation } from 'src/app/models';
 declare let L;
 
 export interface MapPreviewPoint {
@@ -9,9 +10,10 @@ export interface MapPreviewPoint {
   zoom: number;
 }
 
-export interface LatLong {
+export interface MapMarker {
   latitude: number;
   longitude: number;
+  observation?: Observation;
 }
 
 @Component({
@@ -78,13 +80,13 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   //////////////////////////////////////////////
 
   ////////////// Markers //////////////
-  private _markers: LatLong[] = [];
+  private _markers: MapMarker[] = [];
   // get
-  get markers(): LatLong[] {
+  get markers(): MapMarker[] {
     return this._markers;
   }
   // set
-  @Input() set markers(locations: LatLong[]) {
+  @Input() set markers(locations: MapMarker[]) {
     this._markers = locations;
     if (this.ready) {
       this.addMarkers();
@@ -224,16 +226,26 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     }
   }
 
-  /**
+ /**
    * Add Markers that cluster together.
    */
   private addClusteringMarkers() {
     // https://github.com/Leaflet/Leaflet.markercluster
     this.markers.forEach((element) => {
-      const marker = L.circleMarker([element.latitude, element.longitude], {
-        color: this.markerColor,
-      });
-      this.clusterMarkers.addLayer(marker);
+      if (element.observation) {
+        // Marker with popup
+        const popupInfo = '<span>' + element.observation.species.commonName + '</span>';
+        const marker = L.circleMarker([element.latitude, element.longitude], {
+          color: this.markerColor,
+        }).bindPopup(popupInfo);
+        this.clusterMarkers.addLayer(marker);
+      } else {
+        // Marker with no popup
+        const marker = L.circleMarker([element.latitude, element.longitude], {
+          color: this.markerColor,
+        });
+        this.clusterMarkers.addLayer(marker);
+      }
     });
     this.map.addLayer(this.clusterMarkers);
   }
@@ -263,7 +275,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * gray out everything except for this polygon.
    * @param points LatLong
    */
-  addInvertedPolygon(points: LatLong[]) {
+  addInvertedPolygon(points: MapMarker[]) {
     const world = [[90, -180], [90, 180], [-90, 180], [-90, -180]];
     const innerPoints = [];
     for (const point of points) {
@@ -289,9 +301,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * Returns coordinate points
    * of the border of BC
    */
-  get bcBorderCoordinates(): LatLong[] {
+  get bcBorderCoordinates(): MapMarker[] {
     const coordinates = this.bcGeoJSON.features[0].geometry.coordinates;
-    const bcCoordinates: LatLong[] = [];
+    const bcCoordinates: MapMarker[] = [];
     for (const point of coordinates) {
       // Note: geoJSON is long,lat
       bcCoordinates.push({
