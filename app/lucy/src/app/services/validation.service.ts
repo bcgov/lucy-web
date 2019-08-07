@@ -31,6 +31,12 @@ export class ValidationService {
     }
   }
 
+  public isAphaNumeric(value: string): boolean {
+    const regexpOne = new RegExp('^[+-]?((90\\.?0*$)|(([0-8]?[0-9])\\.?[0-9]*$))');
+    const regexpOneResult = regexpOne.test(value);
+    return regexpOneResult;
+  }
+
   /**
    * TODO: Refactor
    * From:
@@ -125,7 +131,7 @@ export class ValidationService {
     }
 
     if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width))) {
-      return `You must specify a valid plot dimention for invasive plant species`;
+      return `You must specify a valid plot dimension for invasive plant species`;
     }
 
     if (!observation.jurisdiction) {
@@ -177,10 +183,6 @@ export class ValidationService {
       if (observation.sampleIdentifier === undefined || observation.sampleIdentifier === `` ) {
           return `Please provide a sample identifier for the sample identified in advanced section`;
         }
-    }
-
-    if (!observation.rangeUnitNumber) {
-      return `You must specify a Range Unit Number`;
     }
 
     return null;

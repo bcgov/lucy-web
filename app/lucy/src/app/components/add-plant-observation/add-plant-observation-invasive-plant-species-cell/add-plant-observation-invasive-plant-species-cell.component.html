@@ -64,13 +64,13 @@
                   </div>
                 </div>
               </div>
-              <!-- Plot Dimention -->
+              <!-- Plot Dimension -->
               <div class="col-12">
                 <div class="row">
                   <div class="col-12 col-md-4">
                     <app-field
                     [mode]="mode"
-                    [header]="'Plot Dimention Width'"
+                    [header]="'Plot Dimension Width'"
                     [value]="width"
                     [validationFunc]="validation.isValidPlotDimention.bind(validation)"
                     (valueChanged)='plotDimentionWidthChanged($event)'>
@@ -79,7 +79,7 @@
                   <div class="col-12 col-md-4">
                     <app-field
                     [mode]="mode"
-                    [header]="'Plot Dimention Length'"
+                    [header]="'Plot Dimension Length'"
                     [value]="length"
                     [validationFunc]="validation.isValidPlotDimention.bind(validation)"
                     (valueChanged)='plotDimentionLengthChanged($event)'>
