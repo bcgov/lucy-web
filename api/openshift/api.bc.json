@@ -118,7 +118,7 @@
                 "postCommit": {},
                 "resources": {
                     "limits": {
-                        "cpu": "500m",
+                        "cpu": "1000m",
                         "memory": "2Gi"
                     },
                     "requests": {
