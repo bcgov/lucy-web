@@ -30,6 +30,7 @@ import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { RolesCodeValue, UserDataController } from '../../database/models';
 import { DataController} from '../../database/data.model.controller';
+import { getRouteConfigs } from './route.des';
 
 /**
  * Common Message for API success
@@ -82,6 +83,38 @@ export function idValidator<Controller extends DataController>(fieldName: string
     });
 }
 
+export enum HTTPMethod {
+    get = 'get',
+    post = 'post',
+    put = 'put',
+    patch = 'patch',
+    delete = 'delete'
+}
+
+export interface ResponseSchema {
+    type: string;
+    $ref?: string;
+}
+
+export interface APIResponse {
+    description: string;
+    schema: ResponseSchema;
+}
+export interface RouteDescription {
+    path: string;
+    validator?: any[];
+    description: string;
+    index?: number;
+    method: HTTPMethod;
+    responses?: {[key: number]: APIResponse};
+}
+
+
+
+export interface RouteConfig {
+    description: RouteDescription;
+    handler: string;
+}
 /**
  * @description Base express route controller. Provides
  * 1. Common functionality for all routes
@@ -103,6 +136,9 @@ export class BaseRoutController<Controller extends DataController>  {
     // User Data Controller
     userController: UserDataController = UserDataController.shared;
 
+    // Configs
+    private configs: RouteConfig[];
+
     /**
      * @description Getter for share instance
      */
@@ -114,7 +150,36 @@ export class BaseRoutController<Controller extends DataController>  {
      * @description Constructor, create logger and other instances
      */
     constructor() {
+        // Initiate logger
         this.logger = new Logger(this.constructor.name);
+        // Get config
+        this.configs = getRouteConfigs(this) || [];
+        // Apply config
+        this.applyRouteConfig();
+    }
+
+    /**
+     * @description Adding config values
+     */
+    applyRouteConfig() {
+        const compare = (x: number, y: number): number => {
+            if (x > y) {
+                return 1;
+            } else if ( x < y) {
+                return -1;
+            } else {
+                return 0;
+            }
+        };
+        // Sort Configs
+        this.configs = this.configs.sort((c1: RouteConfig, c2: RouteConfig) => {
+            return compare(c1.description.index || 0, c2.description.index || 1);
+        });
+        // Apply config to route
+        _.each(this.configs, (config: RouteConfig) => {
+            const endPoint: string = config.description.path.split('#')[1];
+            this.router[config.description.method](endPoint, config.description.validator || [], this[config.handler]);
+        });
     }
 
     /**

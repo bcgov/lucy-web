@@ -20,6 +20,7 @@
  * Modified By: pushan (you@you.you>)
  * -----
  */
+import * as _ from 'underscore';
 import { DataController} from '../data.model.controller';
 
 /**
@@ -73,4 +74,16 @@ export function CodeFactory<Model, Controller extends DataController>(controller
         const obj = id !== undefined ? await controller.findById(id || 1) : await controller.random();
         return obj;
     };
+}
+
+export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec, controller: DataController): any {
+    const result = {};
+    _.each(spec, (v, k) => {
+        if (typeof v === 'object') {
+            result[k] = v[controller.schema.id];
+        } else {
+            result[k] = v;
+        }
+    });
+    return result;
 }

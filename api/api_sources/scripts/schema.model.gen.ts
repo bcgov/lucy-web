@@ -36,18 +36,49 @@ const addDoc = (input: string, description: string, ipTabs?: string, others?: an
     return output;
 };
 
+const addInterfaceProp = (input: string, props: any, forceOptional?: boolean , ipTab?: string) => {
+    const tab = ipTab || '';
+    let output = input;
+    _.each(props, (info: any, k) => {
+        if (typeof info === 'string') {
+            output = output + `\n${tab}\t${k}: ${info};`;
+        } else {
+            const { type, optional} = info;
+            if (forceOptional) {
+                output = output + `\n${tab}\t${k}?: ${type};`;
+            } else {
+                output = output + `\n${tab}\t${k}${optional ? '?' : ''}: ${type};`;
+            }
+        }
+    });
+    return output;
+};
+
+
+
+export const createInterface = (interfaceName: string, description: string, props: any, optional?: boolean) => {
+    const template = `\n\n/** Interface **/` +
+                `${addDoc('', description)}` +
+                `\nexport interface ${interfaceName} {` +
+                `${addInterfaceProp('', props, optional)}` +
+                `\n}\n// -- End: ${interfaceName} --\n`;
+    return template;
+};
+
 export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     const className = cls || schema.className.split('Schema')[0] || 'SampleClass';
     const schemaName = schema.className;
     const n = '\n';
     const t = '\t';
     let props = `\n${t}/**\n${t} * Class Properties\n${t} */\n`;
+    const propInfo = {};
     _.each(schema.table.columnsDefinition, (column, col) => {
         props = addDoc(props, `Getter/Setter property for column {${column.name}}`, t);
         if (col === 'id') {
             props = `${props}${n}${t}@PrimaryGeneratedColumn()${n}${t}@ModelProperty({type: PropertyType.number})${n}${t}${column.name}: number;${n}`;
         } else {
             props = `${props}${n}${t}@Column({ name: ${schemaName}.columns.${col}})${n}${t}@ModelProperty({type: PropertyType.${column.type}})${n}${t}${col}: ${column.type};${n}`;
+            propInfo[col] = { type: column.type, optional: false};
         }
     });
     let defClass = ``;
@@ -56,6 +87,8 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
     defClass = defClass + `${n}import { ModelProperty, PropertyType } from '../../libs/core-model';`;
     defClass = defClass + `${n}import { DataModelController } from '../data.model.controller';`;
+    defClass = defClass + `${createInterface(`${className}CreateSpec`, `${className} create interface`, propInfo)}`;
+    defClass = defClass + `${createInterface(`${className}UpdateSpec`, `${className} update interface`, propInfo, true)}`;
     defClass = addDoc(defClass, `Data Model Class for ${schemaName}`);
     defClass = defClass + `${n}@Entity( { name: ${schemaName}.dbTable} )\nexport class ${className} {\n${props}\n}\n`;
     let defClassController = `// ** DataModel controller of ${className} **\n`;
