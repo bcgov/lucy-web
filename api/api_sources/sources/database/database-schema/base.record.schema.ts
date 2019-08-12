@@ -19,6 +19,7 @@
 
 import { BaseTableSchema, createColumn } from '../applicationSchemaInterface';
 import { UserSchema } from './login.schema';
+import { CodeCSVData } from '../pre.load';
 
 export class RecordTableSchema extends BaseTableSchema {
     static get auditColumns(): {[key: string]: string} {
@@ -76,6 +77,11 @@ export class CodeTableSchema extends RecordTableSchema {
 
     entryString() {
         return `${this.table.columns.code}, ${this.table.columns.description}`;
+    }
+
+    csvData(): Promise<any> {
+        const csvData = new CodeCSVData(`${this.className.split('Schema')[0]}.csv`);
+        return csvData.load();
     }
 }
 

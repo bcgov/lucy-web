@@ -24,7 +24,7 @@
  */
 import * as express from 'express';
 import * as assert from 'assert';
-import { errorBody, BaseRoutController, RouteHandler} from '../../core';
+import { errorBody, BaseRoutController, RouteHandler, Route, HTTPMethod} from '../../core';
 import { testIdr1Token, testIdr3Token, viewerToken } from '../../../test-helpers/token';
 
 export const miscellaneous = () => {};
@@ -57,20 +57,39 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
 
     constructor() {
         super();
-
-        this.router.get('/version', this.version);
-
-        this.router.get('/test-token/:key', this.testToken);
     }
 
+    @Route({
+        path: 'api/misc#/version',
+        description: 'Version API for app',
+        method: HTTPMethod.get,
+        responses: {
+            200: {
+                description: 'Success',
+                schema: {
+                    type: 'object'
+                }
+            }
+        }
+    })
     get version(): RouteHandler {
         return this.routeConfig<any>('version', async () => [200, { version: process.env.VERSION || `0.-1`}]);
     }
 
+    @Route({
+        path: 'api/misc#/test-token/:key',
+        description: 'Get test token for testing',
+        method: HTTPMethod.get
+    })
     get testToken(): RouteHandler {
         return this.routeConfig<any>('test-token', async (d: any, req: express.Request) => [200, {
             token: tokens[req.params.key] || ''
         }]);
+    }
+
+    @Route({ description: 'Test route', path: 'api/misc#/test', index: 1, method: HTTPMethod.get})
+    get test(): RouteHandler {
+        return this.routeConfig<any>('test', async() => [200, {}]);
     }
 }
 
