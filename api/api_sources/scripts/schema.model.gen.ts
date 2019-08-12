@@ -85,11 +85,12 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClass = defClass + `// ** Model: ${className} from schema ${schemaName} **${n}`;
     defClass = defClass + `${n}import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';`;
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
-    defClass = defClass + `${n}import { ModelProperty, PropertyType } from '../../libs/core-model';`;
+    defClass = defClass + `${n}import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';`;
     defClass = defClass + `${n}import { DataModelController } from '../data.model.controller';`;
     defClass = defClass + `${createInterface(`${className}CreateSpec`, `${className} create interface`, propInfo)}`;
     defClass = defClass + `${createInterface(`${className}UpdateSpec`, `${className} update interface`, propInfo, true)}`;
     defClass = addDoc(defClass, `Data Model Class for ${schemaName}`);
+    defClass = defClass + `${n}@ClassDescription({\n\tdescription: 'Data Model Class for ${schemaName}',\n\tschema: ${schemaName},\n\tapiResource: false\n})`;
     defClass = defClass + `${n}@Entity( { name: ${schemaName}.dbTable} )\nexport class ${className} {\n${props}\n}\n`;
     let defClassController = `// ** DataModel controller of ${className} **\n`;
     defClassController = addDoc(defClassController, `Data Model Controller Class for ${schemaName} and ${className}`);
