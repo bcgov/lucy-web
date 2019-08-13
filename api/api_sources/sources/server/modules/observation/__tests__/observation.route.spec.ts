@@ -123,6 +123,26 @@ describe('Test for observation routes', () => {
         });
     });
 
+    it('should return observations with parameter', async () => {
+        const obs = await observationFactory();
+        const obs1 = await observationFactory();
+        await request(SharedExpressApp.app)
+        .get('/api/observation')
+        .set('Authorization', `Bearer ${viewerToken()}`)
+        .query({ observerFirstName: obs.observerFirstName, observerLastName: obs.observerLastName})
+        .expect(200)
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body, (body) => {
+                const results = body as Observation[];
+                expect(results.length).to.be.equal(1);
+                const filtered = results.filter( obj => obj.observation_id === obs.observation_id);
+                expect(filtered.length > 0).to.be.equal(true);
+            });
+            await destroyObservation(obs);
+            await destroyObservation(obs1);
+        });
+    });
+
     it('should return observation with {id}', async () => {
         const obs = await observationFactory();
         await testRequest(SharedExpressApp.app , {
