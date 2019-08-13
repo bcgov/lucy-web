@@ -25,5 +25,6 @@ export * from './requestAccessFactory';
 export * from './observationCodesFactory';
 export * from './observationFactory';
 export * from './treatmentFactory';
+export * from './helper';
 // ----------------------------------------------------------------------------------------------------------------
 

@@ -39,6 +39,8 @@ export interface MechanicalTreatmentCreateSpec {
 	longitude: number;
 	width: number;
 	length: number;
+	applicatorFirstName: string;
+	applicatorLastName: string;
 	observation: Observation;
 }
 // -- End: MechanicalTreatmentCreateSpec --
@@ -53,6 +55,8 @@ export interface MechanicalTreatmentUpdateSpec {
 	longitude?: number;
 	width?: number;
 	length?: number;
+	applicatorFirstName?: string;
+	applicatorLastName?: string;
 	observation?: Observation;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
@@ -106,6 +110,20 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	@Column({ name: MechanicalTreatmentSchema.columns.length})
 	@ModelProperty({type: PropertyType.number})
 	length: number;
+
+	/**
+	 * @description Getter/Setter property for column {applicator_first_name}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.applicatorFirstName})
+	@ModelProperty({type: PropertyType.string})
+	applicatorFirstName: string;
+
+	/**
+	 * @description Getter/Setter property for column {applicator_last_name}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.applicatorLastName})
+	@ModelProperty({type: PropertyType.string})
+	applicatorLastName: string;
 
 	/**
 	 * @description Getter/Setter property for column {observation_id}

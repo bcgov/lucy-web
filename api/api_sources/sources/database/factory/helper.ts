@@ -20,8 +20,8 @@
  * Modified By: pushan (you@you.you>)
  * -----
  */
-import * as _ from 'underscore';
 import { DataController} from '../data.model.controller';
+import { getClassInfo } from '../../libs/core-model';
 
 /**
  * @description Destroy model object
@@ -76,14 +76,20 @@ export function CodeFactory<Model, Controller extends DataController>(controller
     };
 }
 
-export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec, controller: DataController): any {
-    const result = {};
-    _.each(spec, (v, k) => {
-        if (typeof v === 'object') {
-            result[k] = v[controller.schema.id];
-        } else {
-            result[k] = v;
+export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec): any {
+    const result: any = {};
+    for (const key in spec) {
+        if (spec.hasOwnProperty(key)) {
+            if (typeof spec[key] === 'object') {
+                const obj: any = spec[key];
+                const info: any = getClassInfo(obj.constructor.name) || {};
+                if (info.schema && info.schema.columns.id) {
+                    result[key] = obj[info.schema.columns.id];
+                }
+            } else {
+                result[key] = spec[key];
+            }
         }
-    });
+    }
     return result;
 }

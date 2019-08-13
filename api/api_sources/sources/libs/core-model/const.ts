@@ -49,3 +49,5 @@ export class PropertyType {
         return 'array';
     }
 }
+
+// ----------------------------

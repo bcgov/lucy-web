@@ -169,7 +169,7 @@ export const testRequest = (app: any, setup: TestSetup) => {
     let token: string;
     switch (actualAuth) {
         case 1:
-            console.log('here....');
+            // console.log('here....');
             token = adminToken();
             break;
         case 3:
