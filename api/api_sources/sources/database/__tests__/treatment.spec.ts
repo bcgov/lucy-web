@@ -32,7 +32,7 @@ import {
     userFactory, mechanicalTreatmentUpdateSpecFactory,
     destroyObservation
 } from '../factory';
-import { MechanicalTreatmentController, MechanicalTreatment, User, UserDataController, MechanicalTreatmentUpdateSpec } from '../models';
+import { MechanicalTreatmentController, MechanicalTreatment, User, UserDataController, MechanicalTreatmentUpdateSpec, ObservationController, Observation } from '../models';
 import { Destroy } from '../factory/helper';
 
 describe('Treatment Test', () => {
@@ -81,6 +81,29 @@ describe('Treatment Test', () => {
         await destroyMechanicalTreatment(mt);
         await Destroy<User, UserDataController>(UserDataController.shared)(user);
         await destroyObservation(f.observation);
+    });
+
+    // Test3: Fetch Mechanical Treatments of observation
+    it('should fetch MechanicalTreatment for observation with promise', async () => {
+        const f = await mechanicalTreatmentFactory();
+        should().exist(f);
+        const obs = f.observation;
+        should().exist(obs);
+        let list: MechanicalTreatment[] = await obs.getMechanicalTreatments;
+        list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
+        expect(list.length).to.be.equal(1);
+    });
+
+    // Test3: Fetch Mechanical Treatments of observation
+    it('should fetch MechanicalTreatment for observation through prop', async () => {
+        const f = await mechanicalTreatmentFactory();
+        should().exist(f);
+        const obs = f.observation;
+        const fetchObs: Observation = await ObservationController.shared.findById(obs.observation_id);
+        should().exist(fetchObs);
+        let list: MechanicalTreatment[] = fetchObs.mechanicalTreatments || [];
+        list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
+        expect(list.length).to.be.equal(1);
     });
 
 });
