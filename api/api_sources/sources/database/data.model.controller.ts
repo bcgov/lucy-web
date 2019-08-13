@@ -19,7 +19,6 @@
 /**
  * Imports
  */
-import * as _ from 'underscore';
 import {Connection, getConnection, Repository, ObjectLiteral, QueryRunner} from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager} from './dataBaseManager';

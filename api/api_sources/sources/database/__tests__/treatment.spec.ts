@@ -25,7 +25,13 @@
  */
 import { expect, should } from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
-import { mechanicalTreatmentFactory, destroyMechanicalTreatment, mechanicalTreatmentCreateSpecFactory, userFactory, mechanicalTreatmentUpdateSpecFactory, destroyObservation} from '../factory';
+import {
+    mechanicalTreatmentFactory,
+    destroyMechanicalTreatment,
+    mechanicalTreatmentCreateSpecFactory,
+    userFactory, mechanicalTreatmentUpdateSpecFactory,
+    destroyObservation
+} from '../factory';
 import { MechanicalTreatmentController, MechanicalTreatment, User, UserDataController, MechanicalTreatmentUpdateSpec } from '../models';
 import { Destroy } from '../factory/helper';
 

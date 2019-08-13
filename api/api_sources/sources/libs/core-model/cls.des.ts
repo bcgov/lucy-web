@@ -41,7 +41,7 @@ export enum ClassType {
  */
 export interface ClassInfo {
     description: string;
-    schema?: Function;
+    schema?: any;
     parent?: Function;
     other?: any;
     apiResource?: boolean;

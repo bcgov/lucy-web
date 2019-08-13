@@ -23,7 +23,7 @@ import * as assert from 'assert';
 import * as _ from 'underscore';
 import * as express from 'express';
 import * as passport from 'passport';
-import { validationResult, check } from 'express-validator';
+import { validationResult, check, ValidationChain } from 'express-validator';
 // SOURCE
 import { Logger } from '../logger';
 import { errorBody } from '../core';
@@ -102,7 +102,8 @@ export interface APIResponse {
 }
 export interface RouteDescription {
     path: string;
-    validator?: any[];
+    validators?: () => any[];
+    middleware?: () => any[];
     description: string;
     index?: number;
     method: HTTPMethod;
@@ -152,16 +153,16 @@ export class BaseRoutController<Controller extends DataController>  {
     constructor() {
         // Initiate logger
         this.logger = new Logger(this.constructor.name);
-        // Get config
-        this.configs = getRouteConfigs(this) || [];
-        // Apply config
-        this.applyRouteConfig();
     }
 
     /**
      * @description Adding config values
      */
     applyRouteConfig() {
+        // Get config
+        this.configs = getRouteConfigs(this) || [];
+
+        // Local compare method for sorting
         const compare = (x: number, y: number): number => {
             if (x > y) {
                 return 1;
@@ -171,14 +172,23 @@ export class BaseRoutController<Controller extends DataController>  {
                 return 0;
             }
         };
+
         // Sort Configs
         this.configs = this.configs.sort((c1: RouteConfig, c2: RouteConfig) => {
             return compare(c1.description.index || 0, c2.description.index || 1);
         });
+
         // Apply config to route
         _.each(this.configs, (config: RouteConfig) => {
-            const endPoint: string = config.description.path.split('#')[1];
-            this.router[config.description.method](endPoint, config.description.validator || [], this[config.handler]);
+            try {
+                const endPoint: string = config.description.path.split('#')[1];
+                const validators = config.description.validators ? config.description.validators() : [];
+                const middleware = config.description.middleware ? config.description.middleware() : [];
+                const allMiddleware = this.combineValidator(middleware, validators);
+                this.router[config.description.method](endPoint, allMiddleware, this[config.handler]);
+            } catch (excp) {
+                this.logger.error(`Exception  while applying route config: ${excp}`);
+            }
         });
     }
 
@@ -267,7 +277,7 @@ export class BaseRoutController<Controller extends DataController>  {
                 // Check for error
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
-                    this.logger.error(`${tag}: Validation error: ${JSON.stringify(errors.array)}`);
+                    this.logger.error(`${tag}: Validation error: ${JSON.stringify(errors.array())}`);
                     return resp.status(422).json({
                         message: 'Input validation error',
                         errors: errors.array()
@@ -349,5 +359,44 @@ export class WriterRouteController<T extends DataController> extends SecureRoute
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]));
     }
 }
-// -----------------------------------------------------------------------------------------------------------
+
+/**
+ * @description Create Validator to check item exists on db or not
+ * @param any[] items: check input array with key in req and dataController to verify
+ * @returns any[]
+ */
+export const ValidatorExists = (items: {[key: string]: DataController}): any[] => {
+    const result: any[] = [];
+    _.each(items, (con: DataController, key: string) => {
+        result.push(check(key).isInt().custom(async (val: number, {req}) => {
+            const item = await con.findById(val);
+            assert(item, `${key}: Item not exists with id: ${val}`);
+            if (!req.body) {
+                req.body = {};
+            }
+            req.body[key] = item;
+        }));
+    });
+    return result;
+};
+
+export type Validate = (chain: ValidationChain) => ValidationChain;
+export interface ValidationInfo {
+    message?: string;
+    validate: Validate;
+}
+
+/**
+ * @description Create array of check validators
+ * @param object query: Fields with verify function
+ * @returns any[]: Array of check validators
+ */
+export const ValidatorCheck = (query: {[key: string]: ValidationInfo}) => {
+    const result: any[] = [];
+    _.each(query, ( info: ValidationInfo, key) => {
+        result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+    });
+    return result;
+};
+// --------------------------------------------------------------------------------------------------
 

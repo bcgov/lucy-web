@@ -45,8 +45,10 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
     latitude: parseFloat(faker.address.latitude()) || 0.0,
     longitude: parseFloat(faker.address.longitude()) || 0.0,
     observation: (await observationFactory()),
+    applicatorFirstName: faker.name.firstName(),
+    applicatorLastName: faker.name.lastName(),
     width: faker.random.number(),
-    length: faker.random.number()
+    length: faker.random.number(),
   };
 };
 
@@ -63,6 +65,8 @@ export const mechanicalTreatmentFactory = async () => {
         mechanicalTreatment.longitude = spec.longitude;
         mechanicalTreatment.width = spec.width;
         mechanicalTreatment.length = spec.length;
+        mechanicalTreatment.applicatorFirstName = spec.applicatorFirstName;
+        mechanicalTreatment.applicatorLastName = spec.applicatorLastName;
         mechanicalTreatment.observation = spec.observation;
     });
 };
