@@ -21,7 +21,10 @@
  */
 import { Request, Router} from 'express';
 import { RouteHandler,
-    SecureRouteController
+    SecureRouteController,
+    Route,
+    HTTPMethod,
+    ValidatorCheck
 } from '../../core';
 import { ObservationController,
     JurisdictionCodeController,
@@ -60,12 +63,14 @@ export class ObservationRouteController extends SecureRouteController<Observatio
         // Data controller
         this.dataController = ObservationController.shared;
 
+        this.applyRouteConfig();
+
         // Get all codes
         this.router.get('/codes', this.indexCodes);
 
 
         // Get all observation
-        this.router.get('/', this.index);
+        // this.router.get('/', this.index);
 
         // Get single observation
         this.router.get('/:id', this.idValidation(), this.index);
@@ -97,10 +102,44 @@ export class ObservationRouteController extends SecureRouteController<Observatio
     /**
      * @description Route handler to fetch all observation
      */
+    @Route({
+        path: 'api/observation#/',
+        description: 'API to fetch observation',
+        method: HTTPMethod.get,
+        validators: () => {
+            return ValidatorCheck({
+                lat: {
+                    validate: validate => validate.isNumeric().optional(),
+                    message: 'should be number'
+                },
+                long: {
+                    validate: validate => validate.isNumeric().optional(),
+                    message: 'should be number'
+                },
+                observerFirstName: {
+                    validate: validate => validate.isString().optional(),
+                    message: 'should be string'
+                },
+                observerLastName: {
+                    validate: validate => validate.isString().optional(),
+                    message: 'should be string'
+                }
+            });
+        },
+        responses: {
+            200: {
+                description: 'Fetch success',
+                schema: {
+                    type: 'array',
+                    $ref: '#/definitions/Observation'
+                }
+            }
+        }
+    })
     get index(): RouteHandler {
         return this.routeConfig<any>('observation-index', async (d: any, req: Request) => [
             200,
-            unWrap(this.validation<ObservationIdValidation>(req, 'obs-index'), {}).id || await this.dataController.all()
+            unWrap(this.validation<ObservationIdValidation>(req, 'obs-index'), {}).id || await this.dataController.all(req.query)
         ]);
     }
 }
