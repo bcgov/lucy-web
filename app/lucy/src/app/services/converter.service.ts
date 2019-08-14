@@ -1,298 +1,369 @@
 import { Injectable } from '@angular/core';
 
+export interface UTMCoordinate {
+  x: number;
+  y: number;
+  zone: number;
+}
+
+export interface LatLongCoordinate {
+  latitude: number;
+  longitude: number;
+}
+
+export interface AlbersCoordinate {
+  x: number;
+  y: number;
+}
 @Injectable({
   providedIn: 'root'
 })
-export class ConverterService {
 
+export class ConverterService {
+  // Diameter of earth at the equator
+  b = 6378137;
+  k0 = 0.9996;
+  k1 = 0.9992;
+  pi = Math.PI;
+  e = 0.081819218048345;
+
+  e2 = Math.pow(this.e, 2);
+  e3 = Math.pow(this.e, 3);
+  e4 = Math.pow(this.e, 4);
+  e5 = Math.pow(this.e, 5);
+  e6 = Math.pow(this.e, 6);
+  e7 = Math.pow(this.e, 7);
   constructor() { }
 
-  K0 = 0.9996;
+  convertLatLongCoordinateToUTM(
+    lat: number,
+    long: number
+  ): UTMCoordinate | undefined {
+    const utmZone = this.getUTMZone(long);
+    const angleP = this.getAngleP(long);
 
-  E = 0.00669438;
-  E2 = Math.pow(this.E, 2);
-  E3 = Math.pow(this.E, 3);
-  E_P2 = this.E / (1 - this.E);
-
-  SQRT_E = Math.sqrt(1 - this.E);
-  _E = (1 - this.SQRT_E) / (1 + this.SQRT_E);
-  _E2 = Math.pow(this._E, 2);
-  _E3 = Math.pow(this._E, 3);
-  _E4 = Math.pow(this._E, 4);
-  _E5 = Math.pow(this._E, 5);
-
-  M1 = 1 - this.E / 4 - 3 * this.E2 / 64 - 5 * this.E3 / 256;
-  M2 = 3 * this.E / 8 + 3 * this.E2 / 32 + 45 * this.E3 / 1024;
-  M3 = 15 * this.E2 / 256 + 45 * this.E3 / 1024;
-  M4 = 35 * this.E3 / 3072;
-
-  P2 = 3 / 2 * this._E - 27 / 32 * this._E3 + 269 / 512 * this._E5;
-  P3 = 21 / 16 * this._E2 - 55 / 32 * this._E4;
-  P4 = 151 / 96 * this._E3 - 417 / 128 * this._E5;
-  P5 = 1097 / 512 * this._E4;
-
-  R = 6378137;
-
-  ZONE_LETTERS = 'CDEFGHJKLMNPQRSTUVWXX';
-
-  toLatLon(easting, northing, zoneNum, zoneLetter, northern, strict) {
-    strict = strict !== undefined ? strict : true;
-
-    if (!zoneLetter && northern === undefined) {
-      throw new Error('either zoneLetter or northern needs to be set');
-    } else if (zoneLetter && northern !== undefined) {
-      throw new Error('set either zoneLetter or northern, but not both');
+    if (!angleP || !utmZone) {
+      return undefined;
     }
 
-    if (strict) {
-      if (easting < 100000 || 1000000 <= easting) {
-        throw new RangeError('easting out of range (must be between 100 000 m and 999 999 m)');
-      }
-      if (northing < 0 || northing > 10000000) {
-        throw new RangeError('northing out of range (must be between 0 m and 10 000 000 m)');
-      }
-    }
-    if (zoneNum < 1 || zoneNum > 60) {
-      throw new RangeError('zone number out of range (must be between 1 and 60)');
-    }
-    if (zoneLetter) {
-      zoneLetter = zoneLetter.toUpperCase();
-      if (zoneLetter.length !== 1 || this.ZONE_LETTERS.indexOf(zoneLetter) === -1) {
-        throw new RangeError('zone letter out of range (must be between C and X)');
-      }
-      northern = zoneLetter >= 'N';
-    }
+    const eP2 = this.e2 / (1 - this.e2);
+    const angle1 = this.toRadian(long);
+    const theta = this.toRadian(lat);
 
-    var x = easting - 500000;
-    var y = northing;
+    const n2 =
+      this.b / Math.pow(1 - this.e2 * Math.pow(Math.sin(theta), 2), 0.5);
+    const t = Math.pow(Math.tan(theta), 2);
+    const c = eP2 * Math.pow(Math.cos(theta), 2);
+    const a = (angle1 - angleP) * Math.cos(theta);
+    const m =
+      this.b *
+      ((1 - this.e2 / 4 - (3 * this.e4) / 64 - (5 * this.e6) / 256) * theta -
+        ((3 * this.e2) / 8 + (3 * this.e4) / 32 + (45 * this.e6) / 1024) *
+        Math.sin(2 * theta) +
+        ((15 * this.e4) / 256 + (45 * this.e6) / 1024) * Math.sin(theta * 4) -
+        ((35 * this.e6) / 3072) * Math.sin(6 * theta));
 
-    if (!northern) y -= 1e7;
+    const utmX =
+      this.k0 *
+      n2 *
+      (a +
+        ((1 - t + c) * Math.pow(a, 3)) / 6 +
+        ((5 - 18 * t + Math.pow(t, 2) + 72 * c - 58 * eP2) * Math.pow(a, 5)) /
+        120) +
+      500000;
 
-    var m = y / this.K0;
-    var mu = m / (this.R * this.M1);
+    const q1 = Math.pow(a, 2) / 2;
+    const q2 = ((5 - t + 9 * c + 4 * Math.pow(c, 2)) * Math.pow(a, 4)) / 24;
+    const q3 =
+      ((61 - 58 * t + Math.pow(t, 2) + 600 * c - 330 * eP2) * Math.pow(a, 6)) /
+      720;
 
-    var pRad = mu +
-      this.P2 * Math.sin(2 * mu) +
-      this.P3 * Math.sin(4 * mu) +
-      this.P4 * Math.sin(6 * mu) +
-      this.P5 * Math.sin(8 * mu);
-
-    var pSin = Math.sin(pRad);
-    var pSin2 = Math.pow(pSin, 2);
-
-    var pCos = Math.cos(pRad);
-
-    var pTan = Math.tan(pRad);
-    var pTan2 = Math.pow(pTan, 2);
-    var pTan4 = Math.pow(pTan, 4);
-
-    var epSin = 1 - this.E * pSin2;
-    var epSinSqrt = Math.sqrt(epSin);
-
-    var n = this.R / epSinSqrt;
-    var r = (1 - this.E) / epSin;
-
-    var c = this._E * pCos * pCos;
-    var c2 = c * c;
-
-    var d = x / (n * this.K0);
-    var d2 = Math.pow(d, 2);
-    var d3 = Math.pow(d, 3);
-    var d4 = Math.pow(d, 4);
-    var d5 = Math.pow(d, 5);
-    var d6 = Math.pow(d, 6);
-
-    var latitude = pRad - (pTan / r) *
-      (d2 / 2 -
-        d4 / 24 * (5 + 3 * pTan2 + 10 * c - 4 * c2 - 9 * this.E_P2)) +
-      d6 / 720 * (61 + 90 * pTan2 + 298 * c + 45 * pTan4 - 252 * this.E_P2 - 3 * c2);
-    var longitude = (d -
-      d3 / 6 * (1 + 2 * pTan2 + c) +
-      d5 / 120 * (5 - 2 * c + 28 * pTan2 - 3 * c2 + 8 * this.E_P2 + 24 * pTan4)) / pCos;
+    const utmY = this.k0 * (m + n2 * Math.tan(theta) * (q1 + q2 + q3));
 
     return {
-      latitude: this.toDegrees(latitude),
-      longitude: this.toDegrees(longitude) + this.zoneNumberToCentralLongitude(zoneNum)
+      y: utmY,
+      x: utmX,
+      zone: utmZone
     };
   }
 
-  fromLatLon(latitude, longitude, forceZoneNum) {
-    if (latitude > 84 || latitude < -80) {
-      throw new RangeError('latitude out of range (must be between 80 deg S and 84 deg N)');
+  toRadian(deg: number): number {
+    return (deg * this.pi) / 180;
+  }
+
+  toDegrees(rad: number): number {
+    return (rad / this.pi) * 180;
+  }
+
+  /*
+  Return UTM Zone given a longitude. if invalid (for BC) return undefined.
+  */
+  getUTMZone(longitude: number): number | undefined {
+    let utmZone: number;
+
+    if (longitude >= -114) {
+      utmZone = 12;
+    } else if (longitude >= -120) {
+      utmZone = 11;
+    } else if (longitude >= -126) {
+      utmZone = 10;
+    } else if (longitude >= -132) {
+      utmZone = 9;
+    } else if (longitude >= -138) {
+      utmZone = 8;
+    } else if (longitude >= -144) {
+      utmZone = 7;
     }
-    if (longitude > 180 || longitude < -180) {
-      throw new RangeError('longitude out of range (must be between 180 deg W and 180 deg E)');
+
+    return utmZone;
+  }
+
+  getAngleP(longitude: number): number | undefined {
+    let angleP: number;
+
+    if (longitude >= -114) {
+      angleP = -111;
+    } else if (longitude >= -120) {
+      angleP = -117;
+    } else if (longitude >= -126) {
+      angleP = -123;
+    } else if (longitude >= -132) {
+      angleP = -129;
+    } else if (longitude >= -138) {
+      angleP = -135;
+    } else if (longitude >= -144) {
+      angleP = -141;
     }
 
-    var latRad = this.toRadians(latitude);
-    var latSin = Math.sin(latRad);
-    var latCos = Math.cos(latRad);
-
-    var latTan = Math.tan(latRad);
-    var latTan2 = Math.pow(latTan, 2);
-    var latTan4 = Math.pow(latTan, 4);
-
-    var zoneNum;
-
-    if (forceZoneNum === undefined) {
-      zoneNum = this.latLonToZoneNumber(latitude, longitude);
-    } else {
-      zoneNum = forceZoneNum;
+    if (angleP) {
+      angleP = this.toRadian(angleP);
     }
 
-    var zoneLetter = this.latitudeToZoneLetter(latitude);
+    return angleP;
+  }
 
-    var lonRad = this.toRadians(longitude);
-    var centralLon = this.zoneNumberToCentralLongitude(zoneNum);
-    var centralLonRad = this.toRadians(centralLon);
+  convertUTMToLatLongCoordinate(
+    x: number,
+    y: number,
+    zone: number
+  ): LatLongCoordinate | undefined {
+    let g1 = 0;
+    switch (+zone) {
+      case 12: {
+        g1 = -111;
+        break;
+      }
+      case 11: {
+        g1 = -117;
+        break;
+      }
+      case 10: {
+        g1 = -123;
+        break;
+      }
+      case 9: {
+        g1 = -129;
+        break;
+      }
+      case 8: {
+        g1 = -135;
+        break;
+      }
+      case 7: {
+        g1 = -141;
+        break;
+      }
+      default: {
+        return undefined;
+        break;
+      }
+    }
+    const a = this.b;
+    const ee2 = 2 * (1 / 298.257222101) - Math.pow(1 / 298.257222101, 2);
+    const k = this.k0;
+    const eP2 = ee2 / (1 - ee2);
+    const m = y / k;
+    const ee1 = (1 - Math.pow(1 - ee2, 0.5)) / (1 + Math.pow(1 - ee2, 0.5));
+    const u =
+      m /
+      (a *
+        (1 -
+          ee2 / 4 -
+          (3 * Math.pow(ee2, 2)) / 64 -
+          (5 * Math.pow(ee2, 4)) / 256));
 
-    var n = this.R / Math.sqrt(1 - this.E * latSin * latSin);
-    var c = this.E_P2 * latCos * latCos;
+    const op =
+      u +
+      ((3 * ee1) / 2 - (27 * Math.pow(ee1, 3)) / 32) * Math.sin(2 * u) +
+      ((21 * Math.pow(ee1, 2)) / 16 - (55 * Math.pow(ee1, 4)) / 32) *
+      Math.sin(4 * u) +
+      ((151 * Math.pow(ee1, 3)) / 96) * Math.sin(6 * u);
 
-    var a = latCos * (lonRad - centralLonRad);
-    var a2 = Math.pow(a, 2);
-    var a3 = Math.pow(a, 3);
-    var a4 = Math.pow(a, 4);
-    var a5 = Math.pow(a, 5);
-    var a6 = Math.pow(a, 6);
+    const c1 = eP2 * Math.pow(Math.cos(op), 2);
+    const n1 = a / Math.pow(1 - ee2 * Math.pow(Math.sin(op), 2), 0.5);
 
-    var m = this.R * (this.M1 * latRad -
-      this.M2 * Math.sin(2 * latRad) +
-      this.M3 * Math.sin(4 * latRad) -
-      this.M4 * Math.sin(6 * latRad));
-    var easting = this.K0 * n * (a +
-      a3 / 6 * (1 - latTan2 + c) +
-      a5 / 120 * (5 - 18 * latTan2 + latTan4 + 72 * c - 58 * this.E_P2)) + 500000;
-    var northing = this.K0 * (m + n * latTan * (a2 / 2 +
-      a4 / 24 * (5 - latTan2 + 9 * c + 4 * c * c) +
-      a6 / 720 * (61 - 58 * latTan2 + latTan4 + 600 * c - 330 * this.E_P2)));
-    if (latitude < 0) northing += 1e7;
+    const t1 = Math.pow(Math.tan(op), 2);
+
+    const r1 =
+      (a * (1 - ee2)) /
+      Math.pow(1 - this.e2 * Math.pow(Math.sin(op), 2), 3 / 2);
+    const d = (x - 500000) / (n1 * k);
+    const w1 = (op * 180) / this.pi;
+    const w2 = (n1 * Math.tan(op)) / r1;
+    const w3 = Math.pow(d, 2) / 2;
+    const w4 =
+      ((5 + 3 * t1 + 10 * c1 - 4 * Math.pow(c1, 2) - 9 * eP2) *
+        Math.pow(d, 4)) /
+      24;
+    const w5 =
+      ((61 +
+        90 * t1 +
+        298 * c1 +
+        45 * Math.pow(t1, 2) -
+        252 * eP2 -
+        3 * Math.pow(c1, 2)) *
+        Math.pow(d, 6)) /
+      720;
+    const lat = w1 - w2 * (((w3 - w4 + w5) * 180) / this.pi);
+    const g2 = ((1 + 2 * t1 + c1) * Math.pow(d, 3)) / 6;
+    const g3 =
+      ((5 -
+        2 * c1 +
+        28 * t1 -
+        3 * Math.pow(c1, 2) +
+        8 * eP2 +
+        24 * Math.pow(t1, 2)) *
+        Math.pow(d, 5)) /
+      120;
+    const longitude = g1 + (((d - g2 + g3) / Math.cos(op)) * 180) / this.pi;
+    const latitude = lat;
 
     return {
-      easting: easting,
-      northing: northing,
-      zoneNum: zoneNum,
-      zoneLetter: zoneLetter
+      latitude: latitude,
+      longitude: longitude
     };
   }
 
-  toUTM(latitude, longitude) {
-    let utmZone = this.lonToZoneNumber(longitude)
-    let pi = Math.PI
-    let b = 6378137
-    let k0 = 0.9996
-    let k1 = 0.9992
-    let e = 4
-    // HERE
-    return this.fromLatLon(latitude, longitude, utmZone);
+  latLongCoordinateToAlbers(
+    latitude: number,
+    longitude: number
+  ): AlbersCoordinate {
+    const a = this.b;
+    const e2 = 2 * (1 / 298.257) - Math.pow(1 / 298.257, 2);
+    const k = this.k0;
+    const ep2 = e2 / (1 - e2);
+    const offsetX = 1000000;
+    const offsetY = 0;
+
+    const angle1 = this.toRadian(50);
+    const angle2 = this.toRadian(58.5);
+    const angle3 = this.toRadian(45);
+    const angle4 = -126;
+
+    const angle1Squared = Math.pow(Math.sin(angle1), 2);
+    const angle2Squared = Math.pow(Math.sin(angle2), 2);
+
+    const latY = this.toRadian(latitude);
+    const m1 = Math.cos(angle1) / Math.pow(1 - e2 * angle1Squared, 0.5);
+    const m2 = Math.cos(angle2) / Math.pow(1 - e2 * angle2Squared, 0.5);
+    const q1 =
+      (1 - e2) *
+      (Math.sin(angle1) / (1 - e2 * Math.pow(Math.sin(angle1), 2)) -
+        (1 / (2 * this.e)) *
+        Math.log(
+          (1 - this.e * Math.sin(angle1)) / (1 + this.e * Math.sin(angle1))
+        ));
+    const q2 =
+      (1 - e2) *
+      (Math.sin(angle2) / (1 - e2 * Math.pow(Math.sin(angle2), 2)) -
+        (1 / (2 * this.e)) *
+        Math.log(
+          (1 - this.e * Math.sin(angle2)) / (1 + this.e * Math.sin(angle2))
+        ));
+    const q0 =
+      (1 - e2) *
+      (Math.sin(angle3) / (1 - e2 * Math.pow(Math.sin(angle3), 2)) -
+        (1 / (2 * this.e)) *
+        Math.log(
+          (1 - this.e * Math.sin(angle3)) / (1 + this.e * Math.sin(angle3))
+        ));
+    const n = (Math.pow(m1, 2) - Math.pow(m2, 2)) / (q2 - q1);
+    const c = Math.pow(m1, 2) + n * q1;
+    const p0 = (a * Math.pow(c - n * q0, 0.5)) / n;
+    const q =
+      (1 - e2) *
+      (Math.sin(latY) / (1 - e2 * Math.pow(Math.sin(latY), 2)) -
+        (1 / (2 * this.e)) *
+        Math.log(
+          (1 - this.e * Math.sin(latY)) / (1 + this.e * Math.sin(latY))
+        ));
+    const p = (a * Math.pow(c - n * q, 0.5)) / n;
+    const theta = this.toRadian(n * (longitude - angle4));
+    const albersX = p * Math.sin(theta) + offsetX;
+    const albersY = p0 - p * Math.cos(theta) + offsetY;
+
+    return {
+      x: albersX,
+      y: albersY
+    };
   }
 
-  latitudeToZoneLetter(latitude) {
-    if (-80 <= latitude && latitude <= 84) {
-      return this.ZONE_LETTERS[Math.floor((latitude + 80) / 8)];
-    } else {
-      return null;
-    }
+  albersToLatLongCoordinate(x: number, y: number): LatLongCoordinate {
+    const a = this.b;
+    const e2 = 2 * (1 / 298.257222101) - Math.pow(1 / 298.257222101, 2);
+    const e1 = Math.pow(e2, 0.5);
+    const albX = x - 1000000;
+    // parallel 1
+    const angle1 = this.toRadian(50);
+    // parallel 2
+    const angle2 = this.toRadian(58.5);
+    // parallel origin
+    const angle3 = this.toRadian(45);
+    // longitude origin
+    const angle4 = -126;
+    const m1 =
+      Math.cos(angle1) / Math.pow(1 - e2 * Math.pow(Math.sin(angle1), 2), 0.5);
+
+    const m2 =
+      Math.cos(angle2) / Math.pow(1 - e2 * Math.pow(Math.sin(angle2), 2), 0.5);
+    const q1 =
+      (1 - e2) *
+      (Math.sin(angle1) / (1 - e2 * Math.pow(Math.sin(angle1), 2)) -
+        (1 / (2 * e1)) *
+        Math.log((1 - e1 * Math.sin(angle1)) / (1 + e1 * Math.sin(angle1))));
+
+    const q2 =
+      (1 - e2) *
+      (Math.sin(angle2) / (1 - e2 * Math.pow(Math.sin(angle2), 2)) -
+        (1 / (2 * e1)) *
+        Math.log((1 - e1 * Math.sin(angle2)) / (1 + e1 * Math.sin(angle2))));
+
+    const q0 =
+      (1 - e2) *
+      (Math.sin(angle3) / (1 - e2 * Math.pow(Math.sin(angle3), 2)) -
+        (1 / (2 * e1)) *
+        Math.log((1 - e1 * Math.sin(angle3)) / (1 + e1 * Math.sin(angle3))));
+
+    const n = (Math.pow(m1, 2) - Math.pow(m2, 2)) / (q2 - q1);
+    const c = Math.pow(m1, 2) + n * q1;
+    const p0 = (a * Math.pow(c - n * q0, 0.5)) / n;
+    const p = Math.pow(Math.pow(albX, 2) + Math.pow(p0 - y, 2), 0.5);
+    const q = (c - (Math.pow(p, 2) * Math.pow(n, 2)) / Math.pow(a, 2)) / n;
+    const theta = (Math.atan(albX / (p0 - y)) * 180) / this.pi;
+    const NewLong = angle4 + theta / n;
+    const Xm = q / (1 - ((1 - e2) / (2 * e1)) * Math.log((1 - e1) / (1 + e1)));
+    const Ba = (Math.atan(Xm / Math.pow(-Xm * Xm + 1, 0.5)) * 180) / this.pi;
+    const series1 =
+      (((e2 / 3 + (31 * e2 * e2) / 180 + (517 * e2 * e2 * e2) / 5040) *
+        Math.sin((2 * Ba * this.pi) / 180) +
+        ((23 * e2 * e2) / 360 + (251 * e2 * e2 * e2) / 3780) *
+        Math.sin((4 * Ba * this.pi) / 180)) *
+        180) /
+      this.pi;
+    const NewLat = Ba + series1;
+    return {
+      latitude: NewLat,
+      longitude: NewLong
+    };
   }
-
-  latLonToZoneNumber(latitude, longitude) {
-    return this.lonToZoneNumber(longitude)
-    if (56 <= latitude && latitude < 64 && 3 <= longitude && longitude < 12) return 32;
-
-    if (72 <= latitude && latitude <= 84 && longitude >= 0) {
-      if (longitude < 9) return 31;
-      if (longitude < 21) return 33;
-      if (longitude < 33) return 35;
-      if (longitude < 42) return 37;
-    }
-
-    return Math.floor((longitude + 180) / 6) + 1;
-  }
-
-  lonToZoneNumber(longitude) {
-    let int = parseInt(longitude)
-    if (int >= -114 && int <= -111) {
-      return 12
-    } else if (int >= -120 && int <= -117) {
-      return 11
-    } else if (int >= -126 && int <= -123) {
-      return 10
-    } else if (int >= -132 && int <= -129) {
-      return 9
-    } else if (int >= -138 && int <= -135) {
-      return 8
-    } else if (int >= -144 && int <= -141) {
-      return 7
-    } else {
-      return 0
-    }
-
-  }
-
-  zoneNumberToCentralLongitude(zoneNum) {
-    return (zoneNum - 1) * 6 - 180 + 3;
-  }
-
-  toDegrees(rad) {
-    return rad / Math.PI * 180;
-  }
-
-  toRadians(deg) {
-    return deg * Math.PI / 180;
-  }
-
-  isValidLatitude(latitude) {
-    let regexpOne = new RegExp('^[+-]?((90\\.?0*$)|(([0-8]?[0-9])\\.?[0-9]*$))');
-		var regexpOneResult = regexpOne.test(latitude);
-		
-		
-		let regexpTwo = new RegExp('^(\\+|-)?(\\d\.\\d{1,6}|[1-8]\\d\\.\\d{1,6}|90\\.0{1,6})$');
-		var regexpTwoResult = regexpTwo.test(latitude); 
-		
-		if (!regexpTwoResult || !regexpOneResult) {
-			return false
-		} else {
-			return true
-		}
-  }
-
-  isValidLongitude(longitude) {
-    let regexpOne = new RegExp('^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\\.{1}\\d{1,6}');
-		var regexpOneResult = regexpOne.test(longitude);
-		
-		
-		let regexpTwo = new RegExp('^[+-]?((180\\.?0*$)|(((1[0-7][0-9])|([0-9]{0,2}))\\.?[0-9]*$))');
-		var regexpTwoResult = regexpTwo.test(longitude); 
-		
-		if (!regexpTwoResult || !regexpOneResult) {
-			return false
-		} else {
-			return true
-    }
-  }
-
-  /**
-   * TODO: Refactor
-   * From:
-   * https://stackoverflow.com/questions/9539513/is-there-a-reliable-way-in-javascript-to-obtain-the-number-of-decimal-places-of
-   * @param n
-   */
-  decimalPlaces(n) {
-    // Make sure it is a number and use the builtin number -> string.
-    let s = `` + (+n);
-    // Pull out the fraction and the exponent.
-    const match = /(?:\.(\d+))?(?:[eE]([+\-]?\d+))?$/.exec(s);
-    // NaN or Infinity or integer.
-    // We arbitrarily decide that Infinity is integral.
-    if (!match) { return 0; }
-    // Count the number of digits in the fraction and subtract the
-    // exponent to simulate moving the decimal point left by exponent places.
-    // 1.234e+2 has 1 fraction digit and '234'.length -  2 == 1
-    // 1.234e-2 has 5 fraction digit and '234'.length - -2 == 5
-    return Math.max(
-        0,  // lower limit.
-        (match[1] === '0' ? 0 : (match[1] || '').length)  // fraction length
-        - (+match[2] || 0));  // exponent
-  }
-
 }
