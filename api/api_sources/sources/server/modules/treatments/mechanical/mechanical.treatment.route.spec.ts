@@ -70,7 +70,13 @@ describe('Test for mechanical treatment', () => {
             await verifySuccessBody(resp.body, async (data: any) => {
                 // console.dir(data);
                 should().exist(data.mechanical_treatment_id);
+                should().exist(data.species);
+                should().exist(data.speciesAgency);
+                should().exist(data.mechanicalMethod);
                 expect(data.observation.observation_id).to.be.equal(create.observation.observation_id);
+                expect(data.species.species_id).to.be.equal(create.species.species_id);
+                expect(data.speciesAgency.species_agency_code_id).to.be.equal(create.speciesAgency.species_agency_code_id);
+                expect(data.mechanicalMethod.mechanical_method_code_id).to.be.equal(create.mechanicalMethod.mechanical_method_code_id);
                 await MechanicalTreatmentController.shared.removeById(data.mechanical_treatment_id);
             });
             await ObservationController.shared.remove(create.observation);

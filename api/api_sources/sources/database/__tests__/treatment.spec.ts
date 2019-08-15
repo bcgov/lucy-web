@@ -51,7 +51,13 @@ describe('Treatment Test', () => {
         const mt: MechanicalTreatment = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
         should().exist(mt);
         should().exist(mt.observation);
+        should().exist(mt.species);
+        should().exist(mt.speciesAgency);
+        should().exist(mt.mechanicalMethod);
         expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
+        expect(mt.species.species_id).to.be.equal(f.species.species_id);
+        expect(mt.speciesAgency.species_agency_code_id).to.be.equal(f.speciesAgency.species_agency_code_id);
+        expect(mt.mechanicalMethod.mechanical_method_code_id).to.be.equal(f.mechanicalMethod.mechanical_method_code_id);
         await destroyMechanicalTreatment(mt);
     });
 
