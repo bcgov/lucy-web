@@ -24,11 +24,14 @@
 // ** Model: MechanicalTreatment from schema MechanicalTreatmentSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn} from 'typeorm';
-import { MechanicalTreatmentSchema, ObservationSchema } from '../database-schema';
+import { MechanicalTreatmentSchema, ObservationSchema, SpeciesSchema, SpeciesAgencyCodeSchema, MechanicalMethodCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { Observation } from './observation';
 import { Record, User } from './user';
+import { Species } from './species';
+import { SpeciesAgencyCode } from './speciesAgency.code';
+import { MechanicalMethodCode } from './mechanicalMethod.code';
 
 /** Interface **/
 /**
@@ -41,7 +44,13 @@ export interface MechanicalTreatmentCreateSpec {
 	length: number;
 	applicatorFirstName: string;
 	applicatorLastName: string;
+	date: string;
+	paperFileReference: string;
+	comment: string;
 	observation: Observation;
+	species: Species;
+	speciesAgency: SpeciesAgencyCode;
+	mechanicalMethod: MechanicalMethodCode;
 }
 // -- End: MechanicalTreatmentCreateSpec --
 
@@ -57,7 +66,13 @@ export interface MechanicalTreatmentUpdateSpec {
 	length?: number;
 	applicatorFirstName?: string;
 	applicatorLastName?: string;
+	date?: string;
+	paperFileReference?: string;
+	comment?: string;
 	observation?: Observation;
+	species?: Species;
+	speciesAgency?: SpeciesAgencyCode;
+	mechanicalMethod?: MechanicalMethodCode;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -76,7 +91,7 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	 * Class Properties
 	 */
 
-	/**
+	 /**
 	 * @description Getter/Setter property for column {mechanical_treatment_id}
 	 */
 	@PrimaryGeneratedColumn()
@@ -126,6 +141,27 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	applicatorLastName: string;
 
 	/**
+	 * @description Getter/Setter property for column {mechanical_treatment_date}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.date})
+	@ModelProperty({type: PropertyType.string})
+	date: string;
+
+	/**
+	 * @description Getter/Setter property for column {mechanical_treatment_paper_file_ref}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.paperFileReference})
+	@ModelProperty({type: PropertyType.string})
+	paperFileReference: string;
+
+	/**
+	 * @description Getter/Setter property for column {mechanical_treatment_comment}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.comment})
+	@ModelProperty({type: PropertyType.string})
+	comment: string;
+
+	/**
 	 * @description Getter/Setter property for column {observation_id}
 	 */
 	@ManyToOne( type => Observation, {eager: true})
@@ -135,6 +171,39 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	})
 	@ModelProperty({type: PropertyType.object})
 	observation: Observation;
+
+	/**
+	 * @description Getter/Setter property for column {species_id}
+	 */
+	@ManyToOne( type => Species, {eager: true})
+	@JoinColumn({
+		name: MechanicalTreatmentSchema.columns.species,
+		referencedColumnName: SpeciesSchema.columns.id
+	})
+	@ModelProperty({type: PropertyType.object})
+	species: Species;
+
+	/**
+	 * @description Getter/Setter property for column {species_agency_code_id}
+	 */
+	@ManyToOne( type => SpeciesAgencyCode, {eager: true})
+	@JoinColumn({
+		name: MechanicalTreatmentSchema.columns.speciesAgency,
+		referencedColumnName: SpeciesAgencyCodeSchema.pk
+	})
+	@ModelProperty({type: PropertyType.object})
+	speciesAgency: SpeciesAgencyCode;
+
+	/**
+	 * @description Getter/Setter property for column {species_agency_code_id}
+	 */
+	@ManyToOne( type => MechanicalMethodCode, {eager: true})
+	@JoinColumn({
+		name: MechanicalTreatmentSchema.columns.mechanicalMethod,
+		referencedColumnName: MechanicalMethodCodeSchema.pk
+	})
+	@ModelProperty({type: PropertyType.object})
+	mechanicalMethod: MechanicalMethodCode;
 
 }
 
