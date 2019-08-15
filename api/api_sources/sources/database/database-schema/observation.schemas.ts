@@ -108,11 +108,6 @@ export class ObservationCodeTable extends CodeTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('observation.codes.schema.yaml');
     }
-
-    csvData(): Promise<any> {
-        const csvData = new CodeCSVData(`${this.className.split('Schema')[0]}.csv`);
-        return csvData.load();
-    }
 }
 
 /**

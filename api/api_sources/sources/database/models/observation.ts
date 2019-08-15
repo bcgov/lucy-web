@@ -19,9 +19,9 @@
 /**
  * Imports
  */
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, OneToMany } from 'typeorm';
 import { Record } from './user';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
 import { SpeciesAgencyCode } from './speciesAgency.code';
 import { SoilTextureCode } from './soilTexture.code';
@@ -50,6 +50,7 @@ import {
     ProposedActionCodeSchema
 } from '../database-schema';
 import { NumericTransformer } from '../../libs/transformer';
+import { MechanicalTreatment } from './mechanical.treatment';
 
 
 export interface ObservationCreateModel {
@@ -120,6 +121,11 @@ export interface ObservationUpdateModel {
 }
 
 @Entity({ name: ObservationSchema.dbTable})
+@ClassDescription({
+    description: 'Observation Model class',
+    schema: ObservationSchema,
+    apiResource: true
+})
 export class Observation extends Record implements ObservationCreateModel {
     @PrimaryGeneratedColumn()
     @ModelProperty({ type: PropertyType.number})
@@ -233,6 +239,7 @@ export class Observation extends Record implements ObservationCreateModel {
 	@ModelProperty({type: PropertyType.boolean})
 	aquaticIndicator: boolean;
 
+    // Relationships
     @ManyToOne( type => Species, {eager: true})
     @JoinColumn({
         name: ObservationSchema.columns.species,
@@ -329,10 +336,22 @@ export class Observation extends Record implements ObservationCreateModel {
 	@ModelProperty({type: PropertyType.object})
     proposedAction: ProposedActionCode;
 
+    // Calculated Properties
+    @OneToMany(
+        type => MechanicalTreatment,
+        mechanicalTreatment => mechanicalTreatment.observation
+    )
+    getMechanicalTreatments: Promise<MechanicalTreatment[]>;
+
+    @ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
+    mechanicalTreatments?: MechanicalTreatment[];
+
     /**
      * Model Behavior
      */
     @AfterLoad()
-    entityDidLoad() {}
+    async entityDidLoad() {
+        this.mechanicalTreatments = await this.getMechanicalTreatments;
+    }
 }
 // -------------------------------------------------------------

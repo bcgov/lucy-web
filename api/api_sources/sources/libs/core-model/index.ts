@@ -20,4 +20,6 @@
  * Exports
  */
 export * from './prop.des';
+export * from './cls.des';
+export * from './const';
 // ---------------------------------------------
