@@ -21,7 +21,7 @@
  * -----
  */
 
-// ** Model  SpeciesAgencyCode from schema SpeciesAgencyCodeSchema ** 
+// ** Model  SpeciesAgencyCode from schema SpeciesAgencyCodeSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SpeciesAgencyCodeSchema } from '../database-schema';

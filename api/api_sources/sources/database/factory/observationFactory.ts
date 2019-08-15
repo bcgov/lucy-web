@@ -24,7 +24,7 @@
   * Imports
   */
 import * as faker from 'faker';
-import * as moment from  'moment';
+import * as moment from 'moment';
 import { Observation, ObservationController, User, UserDataController} from '../models';
 import { userFactory } from './userFactory';
 import { jurisdictionCodeFactory,

@@ -22,36 +22,9 @@
  */
 import 'reflect-metadata';
 import { BaseModel, ApplicationCode } from '../../database/models';
+import { getClassInfo, ClassInfo } from './cls.des';
+import { PropertyType } from './const';
 
-export class PropertyType {
-    static get string(): string {
-        return typeof '';
-    }
-
-    static get number(): string {
-        return typeof 0;
-    }
-
-    static get object(): string {
-        return typeof {};
-    }
-
-    static get func(): string {
-        return 'function';
-    }
-
-    static get boolean(): string {
-        return typeof true;
-    }
-
-    static get date(): string {
-        return 'string';
-    }
-
-    static get array(): string {
-        return 'array';
-    }
-}
 
 /**
  * Global propMap
@@ -71,7 +44,7 @@ const propMap: any = {
             info: { type: PropertyType.string }
         },
         activeIndicator: {
-            info: { type: PropertyType.string }
+            info: { type: PropertyType.boolean }
         }
     }
 };
@@ -92,7 +65,13 @@ export const classInfo = (typeValue: any) => {
     if (typeValue.prototype instanceof ApplicationCode) {
         result = { ...propMap[ApplicationCode.name]};
     }
-    return { ...propMap[typeValue.name], ...result, ...propMap[BaseModel.name]};
+    const info: ClassInfo = getClassInfo(typeValue);
+    let more: any = {};
+    if (info && info.parent) {
+        more = { ...classInfo(info.parent)};
+        more.classInfo = undefined;
+    }
+    return { ...propMap[typeValue.name], ...result, ...propMap[BaseModel.name], ...more, classInfo: info || {}};
 };
 
 /**
