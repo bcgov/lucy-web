@@ -9,6 +9,8 @@ module.exports = (settings)=>{
   const phase='build'
   let objects = []
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
+  const staticBranches = settings.staticBranches;
+  const changeId = phases[phase].changeId;
 
   // The building of your cool app goes here ▼▼▼
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/app.bc.json`, {
@@ -17,7 +19,7 @@ module.exports = (settings)=>{
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'SOURCE_REPOSITORY_URL': oc.git.http_url,
-      'SOURCE_REPOSITORY_REF': oc.git.ref
+      'SOURCE_REPOSITORY_REF': staticBranches.includes(changeId) ? changeId : oc.git.ref
     }
   }));
 
