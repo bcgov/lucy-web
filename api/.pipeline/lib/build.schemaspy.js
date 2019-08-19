@@ -35,14 +35,12 @@ module.exports = (settings)=>{
   // The building of your cool app goes here ▼▼▼
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.bc.json`, {
     'param':{
-      'NAME': phases[phase].name,
-      'SUFFIX': phases[phase].suffix,
-      'VERSION': phases[phase].tag,
-      'SOURCE_REPOSITORY_URL': oc.git.http_url,
-      'SOURCE_REPOSITORY_REF': 'refactor-pipeline'
+      'NAME': `${phases.schemaSpy.name}`,
+      'SUFFIX': `${phases[phase].suffix}`,
+      'VERSION': `${phases[phase].tag}`
     }
   }));
 
-  oc.applyRecommendedLabels(objects, phases[phase].name, phase, phases[phase].changeId, phases[phase].instance)
+  oc.applyRecommendedLabels(objects, `${phases.schemaSpy.name}`, phase, phases[phase].changeId, phases.schemaSpy.instance)
   oc.applyAndBuild(objects)
 }
