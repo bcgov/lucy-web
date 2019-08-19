@@ -24,6 +24,7 @@ pipeline {
                 }
                 echo "Building ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID}"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build-tools"
             }
         }
         stage('Deploy (DEV)') {
@@ -31,6 +32,7 @@ pipeline {
             steps {
                 echo "Deploying ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev"
             }
         }
         stage('Deploy (TEST)') {
