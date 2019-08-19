@@ -15,11 +15,73 @@ export class RouterService {
     // is it a route with params
     if (current.indexOf(`/`) !== -1) {
       const origin = current.slice(0, current.indexOf(`/`));
+      return this.resolveRoute(current);
+
       const genericOrigin = `${origin}/:id`;
-      return this.stringToEnumRoute(genericOrigin);
+      const result = this.stringToEnumRoute(genericOrigin);
+      return result;
     } else {
       // Route with no params
       return this.stringToEnumRoute(current);
+    }
+  }
+
+  private resolveRoute(route: string): AppRoutes {
+    const routeType = route.slice(0, route.indexOf(`/`));
+    switch (routeType.toLowerCase()) {
+      case `create`:
+        return this.resolveCreateRoute(route);
+      case `edit`:
+        return this.resolveEditRoute(route);
+      case `view`:
+        return this.resolveViewRoute(route);
+    }
+  }
+
+  private resolveCreateRoute(route: string): AppRoutes {
+    const createType = route.slice(route.indexOf(`/`) + 1, route.length);
+    if (!createType) {
+      // TODO: Handle
+      return AppRoutes.Error;
+    }
+    switch (createType.toLowerCase()) {
+      case `observation`:
+          return AppRoutes.AddObservation;
+      case `mechnical`:
+          return AppRoutes.AddMechanicalTreatment;
+      default:
+        console.log(`here`);
+          // return AppRoutes.Error;
+    }
+  }
+
+  private resolveEditRoute(route: string): AppRoutes {
+    const editTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
+    const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
+    const editType = editTypeAndId.slice(0, editTypeAndId.indexOf(`/`));
+    switch (editType.toLowerCase()) {
+      case `observation`:
+          return AppRoutes.EditObservation;
+      case `mechnical`:
+          return AppRoutes.EditMechanicalTreatment;
+      default:
+        console.log(`here`);
+          return AppRoutes.Error;
+    }
+  }
+
+  private resolveViewRoute(route: string): AppRoutes {
+    const viewTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
+    const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
+    const viewType = viewTypeAndId.slice(0, viewTypeAndId.indexOf(`/`));
+    switch (viewType.toLowerCase()) {
+      case `observation`:
+          return AppRoutes.ViewObservation;
+      case `mechnical`:
+          return AppRoutes.ViewMechanicalTreatment;
+      default:
+        console.log(`here`);
+        return AppRoutes.Error;
     }
   }
 
@@ -47,8 +109,10 @@ export class RouterService {
 
   public get routeId(): number | undefined {
     const current = this.router.url.substring(1);
+    console.log(`getting id... ${current}`);
     if (current.indexOf(`/`) !== -1) {
-      const id = current.slice(current.indexOf(`/`) + 1);
+      const id = current.slice(current.lastIndexOf(`/`) + 1);
+      console.log(id);
       return +id;
     } else {
       return undefined;

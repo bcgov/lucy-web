@@ -50,6 +50,14 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * Used for Highlighting element in
    * navigation bar when route is active
    */
+  public get isAddEntryActive(): boolean {
+    return this.routerService.current === AppRoutes.AddEntry;
+  }
+
+  /**
+   * Used for Highlighting element in
+   * navigation bar when route is active
+   */
   public get isProfileActive(): boolean {
     return this.routerService.current === AppRoutes.Profile;
   }
@@ -187,10 +195,20 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Navigate to Add Observation Component
    */
+  navigateToAddEntry() {
+    this.routerService.navigateTo(AppRoutes.AddEntry);
+  }
+
+  /**
+   * Navigate to Add Observation Component
+   */
   navigateToAddObservation() {
     this.routerService.navigateTo(AppRoutes.AddObservation);
   }
 
+  /**
+   * Navigate to Inventory Component
+   */
   navigateToInventory() {
     this.routerService.navigateTo(AppRoutes.Inventory);
   }
