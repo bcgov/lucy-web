@@ -28,19 +28,24 @@ module.exports = (settings) => {
   const phases = settings.phases
   const options= settings.options
   const phase = options.env
-  const changeId = phases[phase].changeId
+  const changeId = phases[phase].changeId || 'dev-tools'
   const oc= new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift/tools'))
-  var objects = []
+  var objects = [];
+  const instance = phases.schemaSpy.instance;
 
   // The deployment of your cool app goes here ▼▼▼
-  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.dc.json`, {
+  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.dc.yaml`, {
     'param':{
-      'APPLICATION_DOMAIN': `seism.schemaspy.${phases[phase].namespace}.pathfinder.gov.bc.ca`
+      'NAME': `${phases.schemaSpy.name}`,
+      'SUFFIX': phases[phase].suffix,
+      'VERSION': phases[phase].tag,
+      'APPLICATION_DOMAIN': `seism.schemaspy.${phases[phase].namespace}.pathfinder.gov.bc.ca`,
+      'BACKEND_HOST': phases[phase].host
     }
   }))
   
-  oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, phases[phase].instance)
+  oc.applyRecommendedLabels(objects, phases.schemaSpy.name, phase, `${changeId}`, instance)
   oc.importImageStreams(objects, phases[phase].tag, phases.build.namespace, phases.build.tag)
-  oc.applyAndDeploy(objects, phases[phase].instance)
+  oc.applyAndDeploy(objects, instance)
 }

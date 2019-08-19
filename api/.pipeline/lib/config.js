@@ -38,7 +38,7 @@ const phases = {
     namespace:'8ecbmv-test',
     name: `${name}`,
     phase: 'test',
-    changeId:deployChangeId,
+    changeId: deployChangeId,
     suffix: `-test`, 
     instance: `${name}-test`, 
     version:`${version}`, 
@@ -53,6 +53,11 @@ const phases = {
     instance: `${name}-prod`  , 
     version:`${version}`, 
     tag:`prod-${version}`},
+  schemaSpy: {
+    instance: `schema-spy-${changeId}`,
+    changeId: changeId,
+    name: 'schema-spy'
+  }
 };
 
 // This callback forces the node process to exit as failure.
