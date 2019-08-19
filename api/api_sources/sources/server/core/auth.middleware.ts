@@ -110,10 +110,13 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              // Get user
              ApplicationAuthMiddleware.logger.info(`${api} | Getting user`);
              let user: User;
-             if (preferred_username) {
+             if (preferred_username && email) {
+                ApplicationAuthMiddleware.logger.info(`${api} | Fetching using preferred_username => ${preferred_username}`);
                  user = await UserDataController.shared.fetchOne({preferredUsername: preferred_username});
-             } else if (email) {
-                 user = await UserDataController.shared.fetchOne({email: email});
+                 if (!user) {
+                    ApplicationAuthMiddleware.logger.info(`${api} | Fetching using email => ${email}`);
+                    user = await UserDataController.shared.fetchOne({email: email});
+                 }
              } else {
                  ApplicationAuthMiddleware.logger.info(`${api} | Fetching user by preferredUsername: ${preferred_username}
                   - *** - \n[ISSUE]*: possibly email is missing from payload: \n${JSON.stringify(payload)}`);
