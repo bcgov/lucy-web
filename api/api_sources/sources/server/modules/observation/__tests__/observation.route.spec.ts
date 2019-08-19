@@ -78,6 +78,7 @@ describe('Test for observation routes', () => {
                 should().exist(data.slopeCodes);
                 should().exist(data.aspectCodes);
                 should().exist(data.proposedActionCodes);
+                should().exist(data.mechanicalTreatmentMethodsCodes);
             });
             // done();
         });
