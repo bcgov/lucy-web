@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SsoService } from './sso.service';
+import { ErrorService, ErrorType } from './error.service';
 
 /*------------------------------------------------------------------------*/
 export enum APIRequestMethod {
@@ -26,12 +27,12 @@ export interface APIError {
   error: any;
   attempts: number;
 }
- /*------------------------------------------------------------------------*/
- export interface APIRequest {
-   URL: string;
-   method: APIRequestMethod;
-   promise: Promise<Object> | null;
- }
+/*------------------------------------------------------------------------*/
+export interface APIRequest {
+  URL: string;
+  method: APIRequestMethod;
+  promise: Promise<Object> | null;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +48,7 @@ export class ApiService {
   private APIRequests: APIRequest[] = [];
   private BearerToken = ``;
 
-  constructor(private httpClient: HttpClient, private ssoService: SsoService) { }
+  constructor(private httpClient: HttpClient, private ssoService: SsoService, private errorService: ErrorService) { }
 
   /**
    * Returns headers
@@ -87,7 +88,7 @@ export class ApiService {
    * @param method;
    * @param promise;
    */
-  private cacheRequstPromise(url: string, method: APIRequestMethod, promise:  Promise<Object>) {
+  private cacheRequstPromise(url: string, method: APIRequestMethod, promise: Promise<Object>) {
     if (!this.requestExists(url, method)) {
       // TODO: experiment with unshift() vs push().
       this.APIRequests.push({
@@ -113,10 +114,10 @@ export class ApiService {
     });
     if (index > -1) {
       this.APIRequests.splice(index, 1);
-   }
-   if (this.APIRequests.length < 1) {
-     console.log(`** No more requests in waiting **`);
-   }
+    }
+    if (this.APIRequests.length < 1) {
+      console.log(`** No more requests in waiting **`);
+    }
   }
 
   /**
@@ -171,7 +172,7 @@ export class ApiService {
   }
 
   /**
-   * Make an POST call to specified endpoint, 
+   * Make an POST call to specified endpoint,
    * with the specified body and return result.
    * If an Error occurs, try to handle it with handleError()
    * @param endpoint string
@@ -206,7 +207,7 @@ export class ApiService {
   }
 
   /**
-  * Make a PUT call to specified endpoint 
+  * Make a PUT call to specified endpoint
   * with the specified body and return result.
   * If an Error occurs, try to handle it with handleError()
   * @param endpoint string
@@ -218,12 +219,12 @@ export class ApiService {
     const jsonBody = JSON.parse(JSON.stringify(body));
     const headers = this.getHeaders();
     try {
-      const promise = this.httpClient.put<any>(endpoint, jsonBody, {headers: headers}).toPromise();
+      const promise = this.httpClient.put<any>(endpoint, jsonBody, { headers: headers }).toPromise();
       const result = await promise;
       const requestResult: APIRequestResult = {
         success: true,
         response: result['data']
-      }
+      };
       return requestResult;
 
     } catch (error) {
@@ -233,7 +234,7 @@ export class ApiService {
         method: APIRequestMethod.PUT,
         error: error,
         attempts: (attempts + 1)
-      }
+      };
       return await this.handleError(apiError);
     }
   }
@@ -254,7 +255,7 @@ export class ApiService {
       if (existingRequest !== null) {
         promise = existingRequest.promise;
       } else {
-        promise = this.httpClient.get(endpoint, {headers: headers}).toPromise();
+        promise = this.httpClient.get(endpoint, { headers: headers }).toPromise();
       }
       // Cache the promise to fullfill the top code block next time
       this.cacheRequstPromise(endpoint, APIRequestMethod.GET, promise);
@@ -297,12 +298,12 @@ export class ApiService {
         console.log(`Error 401 received, refreshing`);
         return await this.hendleErrorDescision(error, await this.decideOn401(error));
       case 404:
-          console.log(`Error 401 received: Resource is not Available`);
-          return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
+        console.log(`Error 401 received: Resource is not Available`);
+        return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
       default:
-          console.log(`ERRPR CASE NOT HANDLED.\n Error Code received: ${error.error.status}\nObject:`);
-          console.dir(error);
-          return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
+        console.log(`ERRPR CASE NOT HANDLED.\n Error Code received: ${error.error.status}\nObject:`);
+        console.dir(error);
+        return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
     }
   }
 
@@ -312,11 +313,11 @@ export class ApiService {
    *  * if Stop, Send fail responce to api caller
    * @param error APIError
    * @param descision APIErrorDescision
-   * @returns 
+   * @returns
    *  Based on descision:
-   *  * Retry: 
+   *  * Retry:
    *    * result of requestRetry()
-   *  * Stop: 
+   *  * Stop:
    *    * !Success & empty response
    */
   private async hendleErrorDescision(error: APIError, descision: APIErrorDescision): Promise<APIRequestResult> {
@@ -327,7 +328,7 @@ export class ApiService {
         return {
           success: false,
           response: null
-        }
+        };
     }
   }
 
@@ -340,11 +341,11 @@ export class ApiService {
     if (error.attempts >= this.MAX_NUMBER_OF_API_RETRY) {
       console.log(`REQUEST REACHED MAX NUMBER OF ATTEMPTS:`);
       console.dir(error);
+      this.errorService.show(ErrorType.AccessDenied);
       return APIErrorDescision.Stop;
     }
     const refreshed = await this.ssoService.refreshToken();
     return refreshed ? APIErrorDescision.Retry : APIErrorDescision.Stop;
   }
-
   /*------------------------------------END OF ERROR Handling------------------------------------*/
 }
