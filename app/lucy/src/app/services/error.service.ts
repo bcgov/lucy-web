@@ -5,7 +5,9 @@ import { AppRoutes } from '../constants';
 
 export enum ErrorType {
   AccessDenied,
-  NotFound
+  NotFound,
+  NotAvailable,
+  Unknown
 }
 
 export interface ErrorModel {
@@ -51,6 +53,18 @@ export class ErrorService {
         this.current = {
           title: `Not Found`,
           body: `The requested resource was not found`
+        };
+        break;
+      case ErrorType.NotAvailable:
+        this.current = {
+          title: `Unavailable`,
+          body: `The requested resource is currently unavailable`
+        };
+        break;
+      case ErrorType.Unknown:
+        this.current = {
+          title: `Whoops, something is wrong`,
+          body: `Please try again later`
         };
         break;
     }
