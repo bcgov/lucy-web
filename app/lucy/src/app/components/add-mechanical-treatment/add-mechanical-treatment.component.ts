@@ -10,6 +10,8 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { DummyService } from 'src/app/services/dummy.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { AppRoutes } from 'src/app/constants';
+import { MechanicalTreatment } from 'src/app/models/MechanicalTreatment';
+import { MechanicalTreatmentService } from 'src/app/services/mechanical-treatment.service';
 
 @Component({
   selector: 'app-add-mechanical-treatment',
@@ -19,7 +21,7 @@ import { AppRoutes } from 'src/app/constants';
 export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked {
 
   private componentName = `Mechanical Treatment`;
-  
+
   /**
    * Reference to sections in form used for side-nav
    */
@@ -165,18 +167,19 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
   // }
 
   ///// Invasive plant objects
-  private _object: Observation;
+  private _object: MechanicalTreatment;
   // Get
-  get object(): Observation {
+  get object(): MechanicalTreatment {
     return this._object;
   }
   // Set
-  @Input() set object(object: Observation) {
+  @Input() set object(object: MechanicalTreatment) {
     this._object = object;
   }
   ////////////////////
 
   constructor (
+    private mechanicalTreatmentService: MechanicalTreatmentService,
     private errorService: ErrorService,
     private userService: UserService,
     private roles: RolesService,
@@ -217,7 +220,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
         this.errorService.show(ErrorType.NotFound);
       }
       this.mode = FormMode.View;
-      this.fetchObservation(this.idInParams());
+      this.fetchMechanicalTreatment(this.idInParams());
 
     } else if (this.editing) {
       if (!this.isDataEditor) {
@@ -228,7 +231,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
         this.errorService.show(ErrorType.NotFound);
       }
       this.mode = FormMode.Edit;
-      this.fetchObservation(this.idInParams());
+      this.fetchMechanicalTreatment(this.idInParams());
 
     } else if (this.creating) {
       if (!this.isDataEditor) {
@@ -252,7 +255,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
     return undefined;
   }
 
-  async fetchObservation(id: number) {
+  async fetchMechanicalTreatment(id: number) {
     // this.loadingService.add();
     // const object = await this.observationService.getWithId(id);
     // this.observationObject = object;
@@ -261,8 +264,8 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
 
   initializeObjectIfDoesntExist() {
     if (!this._object) {
-      // this._object = this.observationService.getEmptyObservation();
-      // console.log(`initialized observation`);
+      this._object = this.mechanicalTreatmentService.getEmptyObject();
+      console.log(`initialized Mechanical treatment`);
     }
   }
 
@@ -289,4 +292,65 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
   }
 
   /////////// End Lottie ///////////
+
+  treatmentDetailsChanged(object: MechanicalTreatment) {
+
+  }
+
+  basicInfoChanged(object: MechanicalTreatment) {
+
+  }
+
+  async submitAction() {
+    if (this.mode === FormMode.Edit) {
+      this.editObservation();
+    } else {
+      this.createObservation();
+    }
+  }
+
+  async editObservation() {
+    if (!this.editing) {
+      return;
+    }
+  }
+
+  async createObservation() {
+    if (!this.creating) {
+      return;
+    }
+    const validationMessage = this.validation.isValidMechanicalTreatmentMessage(this.object);
+    if (validationMessage === null) {
+      if (!this.inReviewMode) {
+        this.changeToReviewMode();
+        return;
+      }
+      this.loadingService.add();
+      const success = await this.mechanicalTreatmentService.submit(this.object);
+      this.loadingService.remove();
+      if (success) {
+        this.submitted = true;
+      } else {
+        this.alert.show(`Error`, `Submission failed`, null);
+      }
+    } else {
+      this.alert.show(`Incomplete data`, validationMessage, null);
+    }
+  }
+
+  changeToReviewMode() {
+    if (!this.creating) {
+      return;
+    }
+    this.inReviewMode = true;
+    this.mode = FormMode.View;
+  }
+
+  exitReviewMode() {
+    if (!this.creating) {
+      return;
+    }
+    this.inReviewMode = false;
+    this.mode = FormMode.Create;
+  }
 }
