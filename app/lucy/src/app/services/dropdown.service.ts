@@ -25,6 +25,7 @@ export class DropdownService {
   public displayedGroundSlopeField = 'description';
   public displayedGroundAspecField = 'description';
   public displayedProposedActionField = 'description';
+  public displayedMechanicalTreatmentMethodField = 'description';
 
   constructor(private codeTableService: CodeTableService) { }
 
@@ -154,6 +155,16 @@ export class DropdownService {
     const geometry = await this.codeTableService.getGroundAspectCodes();
     return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
   }
+
+  /**
+   * Fetch Geometry code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalTreatmentMethods(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getMechanicalTreatmentMethodsCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedMechanicalTreatmentMethodField);
+  }
+
 
   /**
    * Return array of dropdowns to use for testing.

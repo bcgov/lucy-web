@@ -45,9 +45,7 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
     return ``;
   }
 
-  // TODO: Refactor after observation object change
   get organization(): DropdownObject | undefined {
-
     if (this.object && this.object.speciesAgency) {
       return {
         name: this.object.speciesAgency[this.dropdownService.displayedAgencyField],
