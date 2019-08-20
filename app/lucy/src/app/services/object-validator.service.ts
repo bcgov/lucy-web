@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, SlopeCodes, AspectCodes, ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
+import { MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -129,7 +130,7 @@ export class ObjectValidatorService {
 
    /**
    * Check if object is ProposedActionCodes
-   * @param observation object
+   * @param proposedActionCodes object
    */
   public isProposedActionCodesObject(proposedActionCodes: any): proposedActionCodes is ProposedActionCodes {
     if (proposedActionCodes === undefined || proposedActionCodes === null) {return false; }
@@ -139,7 +140,7 @@ export class ObjectValidatorService {
 
    /**
    * Check if object is GroundAspectCodes
-   * @param observation object
+   * @param groundAspectCodes object
    */
   public isGroundAspectCodesObject(groundAspectCodes: any): groundAspectCodes is AspectCodes {
     if (groundAspectCodes === undefined || groundAspectCodes === null) {return false; }
@@ -148,11 +149,19 @@ export class ObjectValidatorService {
 
    /**
    * Check if object is GroundSlopeCodes
-   * @param observation object
+   * @param groundSlopeCodes object
    */
   public isGroundSlopeCodesObject(groundSlopeCodes: any): groundSlopeCodes is SlopeCodes {
     if (groundSlopeCodes === undefined || groundSlopeCodes === null) {return false; }
     return (<SlopeCodes>groundSlopeCodes.description) !== undefined;
   }
 
+   /**
+   * Check if object is MechanicalTreatmentMethodsCodes
+   * @param mechanicalTreatmentMethodsCodes object
+   */
+  public isMechanicalTreatmentMethodsCodes(mechanicalTreatmentMethodsCodes: any): mechanicalTreatmentMethodsCodes is MechanicalTreatmentMethodsCodes {
+    if (mechanicalTreatmentMethodsCodes === undefined || mechanicalTreatmentMethodsCodes === null) {return false; }
+    return (<MechanicalTreatmentMethodsCodes>mechanicalTreatmentMethodsCodes.description) !== undefined;
+  }
 }
