@@ -33,7 +33,7 @@ export class MechanicalTreatmentService {
       observation: object.observation,
       species: object.species.species_id,
       speciesAgency: object.speciesAgency.species_agency_code_id,
-      mechanicalMethod: 2,
+      mechanicalMethod: object.mechanicalMethod.mechanical_method_code_id,
     };
 
     return body;

@@ -86,6 +86,13 @@ export class AddMechanicalTreatmentTreatmentDetailsComponent implements OnInit {
     }
   }
 
+  get comment(): string {
+    if (!this.object || !this.object.comment) {
+      return '';
+    }
+    return String(this.object.comment);
+  }
+
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
   get mode(): FormMode {
@@ -181,6 +188,12 @@ export class AddMechanicalTreatmentTreatmentDetailsComponent implements OnInit {
   widthChanged(value: string) {
     if (this.object) {
       this.object.width = +value;
+    }
+  }
+
+  commentChanged(value: string) {
+    if (this.object) {
+      this.object.comment = value;
     }
   }
 

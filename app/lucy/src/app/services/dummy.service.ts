@@ -172,7 +172,7 @@ export class DummyService {
       observation: 1,
       species: invasivePlantSpecies,
       speciesAgency: agency,
-      mechanicalMethod: mechanicalMethod.mechanical_method_code_id,
+      mechanicalMethod: mechanicalMethod,
     };
 
     return mechanicalTreatment;
