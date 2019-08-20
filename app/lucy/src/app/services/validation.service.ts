@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observation } from '../models';
+import { MechanicalTreatment } from '../models/MechanicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -183,6 +184,64 @@ export class ValidationService {
       if (observation.sampleIdentifier === undefined || observation.sampleIdentifier === `` ) {
           return `Please provide a sample identifier for the sample identified in advanced section`;
         }
+    }
+
+    return null;
+  }
+
+  public isValidMechanicalTreatmentMessage(mechanicalTreatment: MechanicalTreatment): string | null {
+    if (!mechanicalTreatment) { return `Object does not exist`; }
+
+    if (!mechanicalTreatment.latitude) {
+      return `Treatment location is missing`;
+    }
+
+    if (!mechanicalTreatment.longitude) {
+      return `Treatment location is missing`;
+    }
+
+    if (!mechanicalTreatment.width) {
+      return `Treatment width is missing`;
+    }
+
+    if (!mechanicalTreatment.length) {
+      return `Treatment length is missing`;
+    }
+
+    if (!mechanicalTreatment.applicatorFirstName) {
+      return `Applicator First Name is missing`;
+    }
+
+    if (!mechanicalTreatment.applicatorLastName) {
+      return `Applicator Last Name is missing`;
+    }
+
+    if (!mechanicalTreatment.date) {
+      return `Treatment date is missing`;
+    }
+ ///
+    if (!mechanicalTreatment.paperFileReference) {
+      return `Paper File Reference is missing`;
+    }
+
+    if (!mechanicalTreatment.comment) {
+      return `comment is missing`;
+    }
+
+    if (!mechanicalTreatment.observation) {
+      return `observation is missing`;
+    }
+
+    if (!mechanicalTreatment.species) {
+      return `species is missing`;
+    }
+
+    if (!mechanicalTreatment.speciesAgency) {
+      return `Species Agency is missing`;
+    }
+
+    if (!mechanicalTreatment.mechanicalMethod) {
+      return `Mechanical Method is missing`;
     }
 
     return null;

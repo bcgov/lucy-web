@@ -63,4 +63,23 @@ export class MechanicalTreatmentService {
       return false;
     }
   }
+
+  public getEmptyObject(): MechanicalTreatment {
+    const object: MechanicalTreatment = {
+      latitude: undefined,
+      longitude: undefined,
+      length: undefined,
+      width: undefined,
+      applicatorFirstName: undefined,
+      applicatorLastName: undefined,
+      date: undefined,
+      paperFileReference: undefined,
+      comment: undefined,
+      observation: undefined,
+      species: undefined,
+      speciesAgency: undefined,
+      mechanicalMethod: undefined,
+    };
+    return object;
+  }
 }
