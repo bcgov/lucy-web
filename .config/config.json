@@ -11,5 +11,17 @@
     "module": {
         "app": "lucy-app",
         "api": "lucy-api"
+    },
+    "staticBranches": ["dev", "staging", "prod"],
+    "staticUrls": {
+        "dev": "seism-dev-8ecbmv.dev.pathfinder.gov.bc.ca",
+        "staging": "seism-test-8ecbmv.dev.pathfinder.gov.bc.ca",
+        "prod": "seism-8ecbmv.dev.pathfinder.gov.bc.ca"
+    },
+    "staticUrlsAPI": {
+        "dev": "seism-dev-8ecbmv.api.dev.pathfinder.gov.bc.ca",
+        "staging": "seism-test-8ecbmv.api.dev.pathfinder.gov.bc.ca",
+        "prod": "seism-8ecbmv.dev.api.pathfinder.gov.bc.ca"
     }
+    
 }
