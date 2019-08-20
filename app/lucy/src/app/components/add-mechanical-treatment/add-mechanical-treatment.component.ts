@@ -353,4 +353,11 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
     this.inReviewMode = false;
     this.mode = FormMode.Create;
   }
+
+  async generateForTesting() {
+    this.loadingService.add();
+    const obj = await this.dummy.createDummyMechanicalTreatment();
+    this.object = obj;
+    this.loadingService.remove();
+  }
 }
