@@ -13,7 +13,7 @@ export interface MechanicalTreatment {
         observation: number;
         species: InvasivePlantSpecies;
         speciesAgency: SpeciesAgencyCodes;
-        mechanicalMethod: number;
+        mechanicalMethod: MechanicalTreatmentMethodsCodes;
 }
 
 

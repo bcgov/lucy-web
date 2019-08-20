@@ -72,18 +72,13 @@
             </div>
           <!-- Line 3 -->
           <div class="col-12">
-            <div class="row">
-
-            </div>
-          </div>
-          <!-- Survey Mode, Soil Texture Code, Specific Use Code -->
-          <div class="col-12">
-            <div class="row">
-
-            </div>
-          </div>
-          <div class="col-12">
-
+              <app-field
+              [mode]="mode"
+              [multiline]="true"
+              [header]="'Comments'"
+              [value]="comment"
+              (valueChanged)='commentChanged($event)'>
+            </app-field>
           </div>
         </div>
       </div>
