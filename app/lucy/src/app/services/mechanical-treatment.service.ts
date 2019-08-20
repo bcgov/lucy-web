@@ -30,7 +30,7 @@ export class MechanicalTreatmentService {
       date: object.date,
       paperFileReference: object.paperFileReference,
       comment: object.comment,
-      observation: object.observation.observation_id,
+      observation: object.observation,
       species: object.species.species_id,
       speciesAgency: object.speciesAgency.species_agency_code_id,
       mechanicalMethod: 2,
