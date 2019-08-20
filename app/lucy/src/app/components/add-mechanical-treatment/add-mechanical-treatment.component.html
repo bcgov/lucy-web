@@ -71,14 +71,26 @@
 </div>
 <!-- -------------------- -->
 <div class="container">
-<br />
-<!-- test btn -->
-<div *ngIf="creating" class="row test-btn">
+    <app-add-mechanical-treatment-basic-info
+      [mode]="mode"
+      [object]="object"
+      (basicInfoChanged)='basicInfoChanged($event)'
+  >
+  </app-add-mechanical-treatment-basic-info>
+  <app-add-mechanical-treatment-treatment-details 
+    [mode]="mode"
+    [object]="object"
+    (treatmentDetailsChanged)='treatmentDetailsChanged($event)'
+  >
+  </app-add-mechanical-treatment-treatment-details>
+  <br />
+  <!-- test btn -->
+  <div *ngIf="creating" class="row test-btn">
     <div class="col-12">
-      <button class="btn" (click)="generateObservationForTesting()">Generate for testing</button>
+      <button class="btn" (click)="generateForTesting()">Generate for testing</button>
     </div>
   </div>
   <br />
-<!-- -------------------- -->
+  <!-- -------------------- -->
 </div>
 </div>

@@ -71,6 +71,8 @@ import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { ErrorComponent } from './components/error/error.component';
 import { AddEntryComponent } from './components/add-entry/add-entry.component';
 import { AddMechanicalTreatmentComponent } from './components/add-mechanical-treatment/add-mechanical-treatment.component';
+import { AddMechanicalTreatmentBasicInfoComponent } from './components/add-mechanical-treatment/add-mechanical-treatment-basic-info/add-mechanical-treatment-basic-info.component';
+import { AddMechanicalTreatmentTreatmentDetailsComponent } from './components/add-mechanical-treatment/add-mechanical-treatment-treatment-details/add-mechanical-treatment-treatment-details.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -110,6 +112,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     ErrorComponent,
     AddEntryComponent,
     AddMechanicalTreatmentComponent,
+    AddMechanicalTreatmentBasicInfoComponent,
+    AddMechanicalTreatmentTreatmentDetailsComponent,
   ],
   imports: [
     BrowserModule,
