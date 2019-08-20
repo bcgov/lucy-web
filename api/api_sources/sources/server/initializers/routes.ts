@@ -19,8 +19,12 @@
 /**
  * Imports
  */
-import { Application} from 'express';
-import { accountRoute, requestAccessRoutes, observationRoute} from '../modules';
+import { Application } from 'express';
+import { accountRoute,
+    requestAccessRoutes,
+    observationRoute,
+    mechanicalTreatmentRoute
+} from '../modules';
 import { defaultRoute, miscellaneousRouter } from '../modules';
 
 /**
@@ -36,6 +40,9 @@ export const routes = (app: Application) => {
 
     // Observation
     app.use('/api/observation', observationRoute());
+
+    // Mechanical Treatment
+    app.use('/api/treatment/mechanical', mechanicalTreatmentRoute());
 
     // Miscellaneous
     app.use('/api/misc', miscellaneousRouter());

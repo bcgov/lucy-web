@@ -4,7 +4,8 @@
 export * from './miscellaneous';
 export * from './account';
 export * from './request.access';
-export * from './obsevation';
+export * from './observation';
+export * from './treatments';
 
 // --------------------------------------
 

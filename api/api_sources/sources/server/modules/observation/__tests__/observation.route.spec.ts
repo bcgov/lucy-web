@@ -42,7 +42,9 @@ import {
     specificUseCodeFactory,
     slopeCodeFactory,
     aspectCodeFactory,
-    proposedActionCodeFactory
+    proposedActionCodeFactory,
+    mechanicalTreatmentFactory,
+    destroyMechanicalTreatment
 } from '../../../../database/factory';
 
 describe('Test for observation routes', () => {
@@ -76,6 +78,7 @@ describe('Test for observation routes', () => {
                 should().exist(data.slopeCodes);
                 should().exist(data.aspectCodes);
                 should().exist(data.proposedActionCodes);
+                should().exist(data.mechanicalTreatmentMethodsCodes);
             });
             // done();
         });
@@ -123,6 +126,26 @@ describe('Test for observation routes', () => {
         });
     });
 
+    it('should return observations with parameter', async () => {
+        const obs = await observationFactory();
+        const obs1 = await observationFactory();
+        await request(SharedExpressApp.app)
+        .get('/api/observation')
+        .set('Authorization', `Bearer ${viewerToken()}`)
+        .query({ observerFirstName: obs.observerFirstName, observerLastName: obs.observerLastName})
+        .expect(200)
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body, (body) => {
+                const results = body as Observation[];
+                expect(results.length).to.be.equal(1);
+                const filtered = results.filter( obj => obj.observation_id === obs.observation_id);
+                expect(filtered.length > 0).to.be.equal(true);
+            });
+            await destroyObservation(obs);
+            await destroyObservation(obs1);
+        });
+    });
+
     it('should return observation with {id}', async () => {
         const obs = await observationFactory();
         await testRequest(SharedExpressApp.app , {
@@ -135,6 +158,23 @@ describe('Test for observation routes', () => {
                 expect(data.observation_id).to.be.equal(obs.observation_id);
             });
             await destroyObservation(obs);
+        });
+    });
+
+    it('should return observation with {id} and MechanicalTreatment', async () => {
+        const mt = await mechanicalTreatmentFactory();
+        const obs = mt.observation;
+        await testRequest(SharedExpressApp.app , {
+            type: HttpMethodType.get,
+            url: `/api/observation/${obs.observation_id}`,
+            expect: 200,
+            auth: AuthType.viewer
+        }).then(async resp => {
+            await verifySuccessBody(resp.body, async data => {
+                expect(data.observation_id).to.be.equal(obs.observation_id);
+                expect(data.mechanicalTreatments.length).to.be.equal(1);
+            });
+            await destroyMechanicalTreatment(mt);
         });
     });
 

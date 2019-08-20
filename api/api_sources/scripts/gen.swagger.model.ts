@@ -45,26 +45,42 @@ const isModelClass = (typeValue: any) => {
             const typeValue = models[key];
             if (typeof typeValue === 'function' && isModelClass(typeValue)) {
 
-                    let meta: any = {};
+                let meta: any = {};
                 const yml: any = { type: PropertyType.object, required: [], properties: {}};
+                const ymlCreate: any = { type: PropertyType.object, required: [], properties: {}};
+                const ymlUpdate: any = { type: PropertyType.object, properties: {}};
                 if ( (meta = classInfo(typeValue))) {
                     // console.log(`${typeValue.name}`);
                     // console.dir(meta);
                     _.each(meta, (val: any, k: string) => {
                         // console.log(`${k}`);
                         // console.dir(val);
+                        if (k === 'classInfo') {
+                            return;
+                        }
                         const info: any = val.info || {};
                         if (!info.optional) {
                             yml.required.push(k);
+                            ymlCreate.required.push(k);
                         }
                         yml.properties[k] = {
                             type: info.type || 'string'
+                        };
+                        ymlCreate.properties[k] = {
+                            type: (info.type === PropertyType.object ? PropertyType.number : (info.type || 'string'))
+                        };
+                        ymlUpdate.properties[k] = {
+                            type: (info.type === PropertyType.object ? PropertyType.number : (info.type || 'string'))
                         };
                         if (info.ref) {
                             yml.properties[k]['$ref'] = `#/definitions/${info.ref}`;
                         }
                     });
                     map[typeValue.name] = yml;
+                    if (meta.classInfo.apiResource) {
+                        map[`${typeValue.name}CreateSpec`] = ymlCreate;
+                        map[`${typeValue.name}UpdateSpec`] = ymlUpdate;
+                    }
                 }
             }
         }

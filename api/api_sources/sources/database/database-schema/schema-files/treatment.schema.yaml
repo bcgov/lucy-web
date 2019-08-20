@@ -1,0 +1,105 @@
+# Schema Model for Treatment 
+version: '1.0'
+description: Schema model for various Treatment
+externalTables:
+  - name: observation
+    description: Observation table described in observation.codes.schema.yaml
+  - name: species
+    description: Species table 
+  - name: species_agency_code
+    description: Species agency code table
+schemas:
+  ## -- MechanicalTreatmentSchema
+  MechanicalTreatmentSchema:
+    name: mechanical_treatment
+    description: 'An application of a mechanical or cultural control. Mechanical weed control employs various implements and techniques to physically disturb weeds or to interrupt their reproduction by depleting root reserves through repeated defoliation of the plant. Mechanical control includes the mowing, ploughing, chopping, and crushing of weeds.
+    Cultural control includes selective grazing, irrigation and deliberate flooding, mulching, hand pulling, and burning. Strategies and timing should depend on the weed species and its location in the province.'
+    baseSchema: RecordSchema
+    columns: 
+      # -- Data Columns
+      id: 
+        name: 'mechanical_treatment_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      latitude:
+        name: 'mechanical_treatment_location_latitude'
+        comment: 'Latitude of treatment  location'
+        definition: NUMERIC(8, 6) NOT NULL
+      longitude:
+        name: 'mechanical_treatment_location_longitude'
+        comment: 'Longitude of treatment location'
+        definition: NUMERIC(9, 6) NOT NULL
+      width:
+        name: 'mechanical_treatment_area_width'
+        comment: 'Width of the area of treatment'
+        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+      length:
+        name: 'mechanical_treatment_area_length'
+        comment: 'Length of the area of treatment'
+        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+      applicatorFirstName: 
+        name: 'applicator_first_name'
+        comment: 'First name of the applicator'
+        definition: VARCHAR(100) NULL
+      applicatorLastName: 
+        name: 'applicator_last_name'
+        comment: 'Last name of the applicator'
+        definition: VARCHAR(100) NULL
+      date:
+        name: mechanical_treatment_date
+        comment: 'Date of the treatment'
+        definition: DATE NOT NULL
+      paperFileReference:
+        name: mechanical_treatment_paper_file_ref
+        comment: 'Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+      comment:
+        name: mechanical_treatment_comment
+        comment: 'Comment on treatment record'
+        definition: VARCHAR(500) NULL
+      ## -- Relationship columns
+      observation:
+        name: 'observation_id'
+        comment: 'Observation associated with treatment'
+        definition: INT NOT NULL
+        foreignTable: observation
+        refColumn: observation_id
+        deleteCascade: true
+      species:
+        name: 'species_id'
+        comment: 'Species associated with a treatment'
+        definition: INT NULL
+        foreignTable: species
+        refColumn: species_id
+        deleteCascade: true
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency Code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+      mechanicalMethod:
+        name: 'mechanical_method_code_id'
+        comment: Foreign key reference to Mechanical Method Code table 
+        definition: INT NULL
+        foreignTable: mechanical_method_code
+        refColumn: mechanical_method_code_id
+        deleteCascade: false
+  ## --
+  ## -- MechanicalMethodCodeSchema
+  MechanicalMethodCodeSchema:
+    name: mechanical_method_code
+    description: 'Indicates the method of mechanical or cultural control. Examples: mulching, burning, mowing.
+    IAPP methods: Controlled Burning, Cultivation or till, Dead-heading, Digging, Flaming / Tiger Torch burn, Hand pulling, Hot water / Steam, Mowing Mulching, Suction dredging, Sheet Mulching , Salt water / Vinegar, Targeted grazing, Tarping , Seeding, Planting'
+    columns:
+      id: 
+        name: 'mechanical_method_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_method_code'
+        comment: String encoded enum values for Mechanical treatment methods.
+        definition: VARCHAR(4) NOT NULL UNIQUE
+  ## --
+
