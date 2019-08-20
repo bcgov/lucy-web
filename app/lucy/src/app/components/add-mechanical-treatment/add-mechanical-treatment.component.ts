@@ -360,4 +360,8 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
     this.object = obj;
     this.loadingService.remove();
   }
+
+  viewInventory() {
+    this.router.navigateTo(AppRoutes.Inventory);
+  }
 }

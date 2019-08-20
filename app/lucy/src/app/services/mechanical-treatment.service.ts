@@ -45,18 +45,18 @@ export class MechanicalTreatmentService {
     console.dir(mechanicalTreatment);
 
     // Make the call
-    const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_mechanicalTreatment, mechanicalTreatment);
+    const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_mechanicalTreatment, mechanicalTreatmentBody);
     if (response.success) {
       console.dir(response.response);
-      // const _Id = response.response[`observation_id`];
-      // if (observation_Id) {
-      //   console.log(`Created successfully`);
-      //   return true;
-      // } else {
-      //   console.log(`Got a response, but something is off - id is missing`);
-      //   console.dir(response);
-      //   return false;
-      // }
+      const _Id = response.response[`mechanical_treatment_id`];
+      if (_Id) {
+        console.log(`Created successfully`);
+        return true;
+      } else {
+        console.log(`Got a response, but something is off - id is missing`);
+        console.dir(response);
+        return false;
+      }
     } else {
       console.log(`mechanical treatment creation failed`);
       console.dir(response);
