@@ -21,15 +21,20 @@
  * -----
  */
 
-// ** Model  SpeciesAgencyCode from schema SpeciesAgencyCodeSchema ** 
+// ** Model  SpeciesAgencyCode from schema SpeciesAgencyCodeSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SpeciesAgencyCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './user';
 
 @Entity( { name: SpeciesAgencyCodeSchema.dbTable} )
+@ClassDescription({
+	description: 'Model class for SpeciesAgencyCodeSchema',
+	schema: SpeciesAgencyCodeSchema,
+	apiResource: false
+})
 export class SpeciesAgencyCode extends ApplicationCode {
 
 	/**

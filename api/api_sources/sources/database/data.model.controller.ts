@@ -26,6 +26,7 @@ import { ApplicationTable } from './applicationSchemaInterface';
 
 
 export interface DataController {
+    schema: ApplicationTable;
     findById(id: number): Promise<any>;
     remove(object: any): Promise<void>;
     removeById( id: number): Promise<void>;
@@ -187,6 +188,19 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase imp
     async runQuery(query: string): Promise<void> {
         const queryRunner: QueryRunner = this.connection.createQueryRunner();
         await queryRunner.query(query);
+    }
+
+    async updateObj<U extends ObjectLiteral>(obj: T, update: U): Promise<T> {
+        const o: any = obj;
+        for (const key in o) {
+            if (obj.hasOwnProperty(key) && update.hasOwnProperty(key)) {
+                if (update[key] && typeof obj[key] === typeof update[key]) {
+                    o[key as keyof T] = update[key];
+                }
+            }
+        }
+        await this.saveInDB(obj);
+        return obj;
     }
 }
 // --------------------------------------------------------------------------------------------
