@@ -21,7 +21,7 @@
  * -----
  */
 
-// ** Model  SoilTextureCode from schema SoilTextureCodeSchema ** 
+// ** Model  SoilTextureCode from schema SoilTextureCodeSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SoilTextureCodeSchema } from '../database-schema';

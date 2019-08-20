@@ -23,13 +23,14 @@ import * as assert from 'assert';
 import * as _ from 'underscore';
 import * as express from 'express';
 import * as passport from 'passport';
-import { validationResult, check } from 'express-validator';
+import { validationResult, check, ValidationChain } from 'express-validator';
 // SOURCE
 import { Logger } from '../logger';
 import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { RolesCodeValue, UserDataController } from '../../database/models';
 import { DataController} from '../../database/data.model.controller';
+import { getRouteConfigs } from './route.des';
 
 /**
  * Common Message for API success
@@ -82,6 +83,39 @@ export function idValidator<Controller extends DataController>(fieldName: string
     });
 }
 
+export enum HTTPMethod {
+    get = 'get',
+    post = 'post',
+    put = 'put',
+    patch = 'patch',
+    delete = 'delete'
+}
+
+export interface ResponseSchema {
+    type: string;
+    $ref?: string;
+}
+
+export interface APIResponse {
+    description: string;
+    schema: ResponseSchema;
+}
+export interface RouteDescription {
+    path: string;
+    validators?: () => any[];
+    middleware?: () => any[];
+    description: string;
+    index?: number;
+    method: HTTPMethod;
+    responses?: {[key: number]: APIResponse};
+}
+
+
+
+export interface RouteConfig {
+    description: RouteDescription;
+    handler: string;
+}
 /**
  * @description Base express route controller. Provides
  * 1. Common functionality for all routes
@@ -103,6 +137,9 @@ export class BaseRoutController<Controller extends DataController>  {
     // User Data Controller
     userController: UserDataController = UserDataController.shared;
 
+    // Configs
+    private configs: RouteConfig[];
+
     /**
      * @description Getter for share instance
      */
@@ -114,7 +151,45 @@ export class BaseRoutController<Controller extends DataController>  {
      * @description Constructor, create logger and other instances
      */
     constructor() {
+        // Initiate logger
         this.logger = new Logger(this.constructor.name);
+    }
+
+    /**
+     * @description Adding config values
+     */
+    applyRouteConfig() {
+        // Get config
+        this.configs = getRouteConfigs(this) || [];
+
+        // Local compare method for sorting
+        const compare = (x: number, y: number): number => {
+            if (x > y) {
+                return 1;
+            } else if ( x < y) {
+                return -1;
+            } else {
+                return 0;
+            }
+        };
+
+        // Sort Configs
+        this.configs = this.configs.sort((c1: RouteConfig, c2: RouteConfig) => {
+            return compare(c1.description.index || 0, c2.description.index || 1);
+        });
+
+        // Apply config to route
+        _.each(this.configs, (config: RouteConfig) => {
+            try {
+                const endPoint: string = config.description.path.split('#')[1];
+                const validators = config.description.validators ? config.description.validators() : [];
+                const middleware = config.description.middleware ? config.description.middleware() : [];
+                const allMiddleware = this.combineValidator(middleware, validators);
+                this.router[config.description.method](endPoint, allMiddleware, this[config.handler]);
+            } catch (excp) {
+                this.logger.error(`Exception  while applying route config: ${excp}`);
+            }
+        });
     }
 
     /**
@@ -202,7 +277,7 @@ export class BaseRoutController<Controller extends DataController>  {
                 // Check for error
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
-                    this.logger.error(`${tag}: Validation error: ${JSON.stringify(errors.array)}`);
+                    this.logger.error(`${tag}: Validation error: ${JSON.stringify(errors.array())}`);
                     return resp.status(422).json({
                         message: 'Input validation error',
                         errors: errors.array()
@@ -284,5 +359,44 @@ export class WriterRouteController<T extends DataController> extends SecureRoute
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]));
     }
 }
-// -----------------------------------------------------------------------------------------------------------
+
+/**
+ * @description Create Validator to check item exists on db or not
+ * @param any[] items: check input array with key in req and dataController to verify
+ * @returns any[]
+ */
+export const ValidatorExists = (items: {[key: string]: DataController}): any[] => {
+    const result: any[] = [];
+    _.each(items, (con: DataController, key: string) => {
+        result.push(check(key).isInt().custom(async (val: number, {req}) => {
+            const item = await con.findById(val);
+            assert(item, `${key}: Item not exists with id: ${val}`);
+            if (!req.body) {
+                req.body = {};
+            }
+            req.body[key] = item;
+        }));
+    });
+    return result;
+};
+
+export type Validate = (chain: ValidationChain) => ValidationChain;
+export interface ValidationInfo {
+    message?: string;
+    validate: Validate;
+}
+
+/**
+ * @description Create array of check validators
+ * @param object query: Fields with verify function
+ * @returns any[]: Array of check validators
+ */
+export const ValidatorCheck = (query: {[key: string]: ValidationInfo}) => {
+    const result: any[] = [];
+    _.each(query, ( info: ValidationInfo, key) => {
+        result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+    });
+    return result;
+};
+// --------------------------------------------------------------------------------------------------
 

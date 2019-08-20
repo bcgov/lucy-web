@@ -21,6 +21,7 @@
  * -----
  */
 import { DataController} from '../data.model.controller';
+import { getClassInfo } from '../../libs/core-model';
 
 /**
  * @description Destroy model object
@@ -73,4 +74,22 @@ export function CodeFactory<Model, Controller extends DataController>(controller
         const obj = id !== undefined ? await controller.findById(id || 1) : await controller.random();
         return obj;
     };
+}
+
+export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec): any {
+    const result: any = {};
+    for (const key in spec) {
+        if (spec.hasOwnProperty(key)) {
+            if (typeof spec[key] === 'object') {
+                const obj: any = spec[key];
+                const info: any = getClassInfo(obj.constructor.name) || {};
+                if (info.schema && info.schema.columns.id) {
+                    result[key] = obj[info.schema.columns.id];
+                }
+            } else {
+                result[key] = spec[key];
+            }
+        }
+    }
+    return result;
 }

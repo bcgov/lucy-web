@@ -82,6 +82,9 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     }
 
     get type(): string {
+        if (this.foreignTable) {
+            return 'object';
+        }
         let def = this.definition || '';
         def = def.toLowerCase();
         if (def.includes('varchar')) {
