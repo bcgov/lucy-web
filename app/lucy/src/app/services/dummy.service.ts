@@ -16,13 +16,14 @@ import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
 import { MechanicalTreatment, MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
+import { ObservationService } from './observation.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DummyService {
 
-  constructor(private codeTables: CodeTableService) { }
+  constructor(private codeTables: CodeTableService, private observationService: ObservationService) { }
 
   /**
    * Return a random jurisdiction
@@ -159,6 +160,11 @@ export class DummyService {
     const invasivePlantSpecies = await this.randomInvasivePlantSpecies();
     const agency = await this.randomSpeciesAgencyCodes();
     const mechanicalMethod = await this.randomMechanicalMethodCodes();
+    const observations = await this.observationService.getAll();
+    const observation = observations[1];
+    if (!observation) {
+      return undefined;
+    }
     const mechanicalTreatment: MechanicalTreatment = {
       latitude: this.randomLat(),
       longitude: this.randomLong(),
@@ -169,7 +175,7 @@ export class DummyService {
       date: this.randomDateString(),
       paperFileReference: faker.lorem.word(),
       comment: faker.lorem.sentences(),
-      observation: 1,
+      observation: observation,
       species: invasivePlantSpecies,
       speciesAgency: agency,
       mechanicalMethod: mechanicalMethod,
