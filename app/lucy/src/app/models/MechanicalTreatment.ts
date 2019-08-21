@@ -10,7 +10,7 @@ export interface MechanicalTreatment {
         date: string;
         paperFileReference: string;
         comment: string;
-        observation: number;
+        observation: Observation;
         species: InvasivePlantSpecies;
         speciesAgency: SpeciesAgencyCodes;
         mechanicalMethod: MechanicalTreatmentMethodsCodes;
