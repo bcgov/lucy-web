@@ -1,3 +1,7 @@
+# Sonar
+**/.scannerwork
+**/.sonar
+
 # Generated Swagger file
 **/swagger.raw.yaml
 swagger.raw.yaml

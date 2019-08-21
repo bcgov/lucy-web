@@ -29,7 +29,7 @@ import { adminToken, editorToken, viewerToken } from './token';
 /**
  * @description Closure type to verify any data
  */
-export type VerifyData = (data: any) => void;
+export type VerifyData = (data: any) => Promise<void>;
 
 /**
  * @description Check Success json structure of any test
