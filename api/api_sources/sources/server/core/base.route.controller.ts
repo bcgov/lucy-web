@@ -75,7 +75,7 @@ export const UpdateRequest = (req: any, obj: object) => {
  */
 export const MakeOptionalValidator = (validators: (() => any[])) => _.map(validators(), checkVal => checkVal.optional());
 
-export function idValidator<Controller extends DataController>(fieldName: string, controller: Controller, handle: (data: any, req: any) => void) {
+export function idValidator<Controller extends DataController>(fieldName: string, controller: Controller, handle: (data: any, req: any) => Promise<void>) {
     return check(fieldName).isInt().custom(async (value: number, {req}) => {
         const data = await controller.findById(value);
         assert(data, `${fieldName}: No such item exists with id: ${value}`);
@@ -174,9 +174,10 @@ export class BaseRoutController<Controller extends DataController>  {
         };
 
         // Sort Configs
-        this.configs = this.configs.sort((c1: RouteConfig, c2: RouteConfig) => {
+        const sorted = [...this.configs].sort((c1: RouteConfig, c2: RouteConfig) => {
             return compare(c1.description.index || 0, c2.description.index || 1);
         });
+        this.configs = sorted;
 
         // Apply config to route
         _.each(this.configs, (config: RouteConfig) => {

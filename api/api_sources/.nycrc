@@ -13,7 +13,8 @@
         "**/__mock__",
         "**/*.js",
         "**/migrations",
-        "**/scripts"
+        "**/scripts",
+        "sources/database/migrations/*.ts"
     ],
     "extension": [
         ".ts"
@@ -23,7 +24,10 @@
         "cobertura",
         "html",
         "text",
-        "text-summary"
+        "text-summary",
+        "lcov",
+        "json",
+        "clover"
     ],
     "temp-directory": "./coverage/.nyc_output"
 }
