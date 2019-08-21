@@ -2,7 +2,7 @@
 /** Gulp build pipe*/
 const gulp = require('gulp'),
     $ = require('gulp-load-plugins')({lazy: true}),
-    gu = require('gulp-util')
+    gu = require('gulp-util'),
     ts = require('gulp-typescript'),
     sourcemaps = require('gulp-sourcemaps'),
     del = require('del');
