@@ -77,7 +77,7 @@ export class AddMechanicalTreatmentTreatmentDetailsComponent implements OnInit {
   }
 
   get selectedSpecies(): DropdownObject | undefined {
-    if (this.object && this.object.speciesAgency) {
+    if (this.object && this.object.species) {
       return {
         name: this.object.species[this.dropdownService.displayedInvasivePlantspeciesField],
         object: this.object.species,
