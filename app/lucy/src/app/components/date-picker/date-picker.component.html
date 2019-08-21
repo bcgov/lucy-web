@@ -1,7 +1,6 @@
 <div *ngIf="!readonly" class="col-12 field">
-    <mat-form-field>
+    <mat-form-field [attr.id]="'date'">
         <input 
-          class="form-control edit"
           matInput
           [matDatepicker]="datePicker"
           placeholder="{{header}}"
