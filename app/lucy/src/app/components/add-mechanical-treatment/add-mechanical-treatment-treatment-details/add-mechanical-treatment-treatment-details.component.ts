@@ -14,6 +14,7 @@ export class AddMechanicalTreatmentTreatmentDetailsComponent implements OnInit {
   agencies: DropdownObject[] = [];
   mechanicalMethods: DropdownObject[] = [];
   species: DropdownObject[] = [];
+  observations: DropdownObject[] = [];
 
   ViewMode = FormMode.View;
 
@@ -93,6 +94,17 @@ export class AddMechanicalTreatmentTreatmentDetailsComponent implements OnInit {
     return String(this.object.comment);
   }
 
+  get observation(): DropdownObject | undefined {
+    if (this.object && this.object.observation) {
+      return {
+        name: this.object.observation[this.dropdownService.displayedObservationField],
+        object: this.object.observation,
+      };
+    } else {
+      return undefined;
+    }
+  }
+
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
   get mode(): FormMode {
@@ -133,6 +145,10 @@ export class AddMechanicalTreatmentTreatmentDetailsComponent implements OnInit {
     this.dropdownService.getInvasivePlantSpecies().then((result) => {
       this.species = result;
     });
+    this.dropdownService.getObservations().then((result) => {
+      this.observations = result;
+    });
+    
   }
 
   private notifyChangeEvent() {
@@ -143,6 +159,13 @@ export class AddMechanicalTreatmentTreatmentDetailsComponent implements OnInit {
 
   autofill() {
 
+  }
+
+  observationChanged(value: DropdownObject) {
+    if (this.object) {
+      this.object.observation = value.object;
+    }
+    this.notifyChangeEvent();
   }
 
   treatmentDateChanged(date: Date) {
