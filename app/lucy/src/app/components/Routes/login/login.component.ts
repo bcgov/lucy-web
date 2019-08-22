@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SsoService, SSOLoginProvider } from '../../services/sso.service';
+import { SsoService, SSOLoginProvider } from '../../../services/sso.service';
 import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
