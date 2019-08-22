@@ -31,6 +31,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
    */
   @ViewChild('advanced') advancedSection: ElementRef;
   @ViewChild('basic') basicSection: ElementRef;
+  @ViewChild('mechanical-treatments') mechanicalTreatmentsSection: ElementRef;
 
   /**
    * User access type
@@ -357,6 +358,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       this.basicSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
     } else if (className === `advanced`) {
       this.advancedSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
+    } else if (className === 'mechanical-treatments') {
+      this.mechanicalTreatmentsSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
     }
   }
 

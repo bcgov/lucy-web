@@ -1,3 +1,5 @@
+import { MechanicalTreatment } from './MechanicalTreatment';
+
 export interface Observation {
     // Basic //
     // Location
@@ -37,6 +39,7 @@ export interface Observation {
     aspectCode: AspectCodes;
     slopeCode: SlopeCodes;
     observationGeometry: ObservationGeometryCodes;
+    mechanicalTreatments: MechanicalTreatment[];
 }
 
 export interface ProposedActionCodes {

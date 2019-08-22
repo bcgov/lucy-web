@@ -1,6 +1,7 @@
 import { Observation, InvasivePlantSpecies, SpeciesAgencyCodes } from './observation';
 
 export interface MechanicalTreatment {
+        mechanical_treatment_id: number;
         latitude: number;
         longitude: number;
         length: number;
