@@ -66,6 +66,7 @@ export class MechanicalTreatmentService {
 
   public getEmptyObject(): MechanicalTreatment {
     const object: MechanicalTreatment = {
+      mechanical_treatment_id: -1,
       latitude: undefined,
       longitude: undefined,
       length: undefined,

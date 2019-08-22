@@ -166,6 +166,7 @@ export class DummyService {
       return undefined;
     }
     const mechanicalTreatment: MechanicalTreatment = {
+      mechanical_treatment_id: 1,
       latitude: this.randomLat(),
       longitude: this.randomLong(),
       length: this.randomIntFromInterval(4, 20),
@@ -271,6 +272,7 @@ export class DummyService {
       aspectCode: groundAspect,
       slopeCode: groundSlope,
       observationGeometry: geometry,
+      mechanicalTreatments: [],
     };
     return observation;
   }
