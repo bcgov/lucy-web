@@ -65,34 +65,34 @@ const CreateValidator = (): any[] =>  {
             assert(code, `jurisdiction: No Jurisdiction code exists with id ${value}`);
             req.jurisdictionCode = code;
         }),
-        idValidator<SpeciesAgencyCodeController>('speciesAgency', SpeciesAgencyCodeController.shared, (data, req) => {
+        idValidator<SpeciesAgencyCodeController>('speciesAgency', SpeciesAgencyCodeController.shared, async (data, req) => {
             UpdateRequest(req, {speciesAgency: data});
         }),
-        idValidator<SpeciesDensityCodeController>('density', SpeciesDensityCodeController.shared, (data, req) => {
+        idValidator<SpeciesDensityCodeController>('density', SpeciesDensityCodeController.shared, async (data, req) => {
             UpdateRequest(req, {density: data});
         }),
-        idValidator<SpeciesDistributionCodeController>('distribution', SpeciesDistributionCodeController.shared, (data, req) => {
+        idValidator<SpeciesDistributionCodeController>('distribution', SpeciesDistributionCodeController.shared, async (data, req) => {
             UpdateRequest(req, {distribution: data});
         }),
-        idValidator<ObservationTypeCodeController>('observationType', ObservationTypeCodeController.shared, (data, req) => {
+        idValidator<ObservationTypeCodeController>('observationType', ObservationTypeCodeController.shared, async (data, req) => {
             UpdateRequest(req, {observationType: data});
         }),
-        idValidator<ObservationGeometryCodeController>('observationGeometry', ObservationGeometryCodeController.shared, (data, req) => {
+        idValidator<ObservationGeometryCodeController>('observationGeometry', ObservationGeometryCodeController.shared, async (data, req) => {
             UpdateRequest(req, {observationGeometry: data});
         }),
-        idValidator<SpecificUseCodeController>('specificUseCode', SpecificUseCodeController.shared, (data, req) => {
+        idValidator<SpecificUseCodeController>('specificUseCode', SpecificUseCodeController.shared, async (data, req) => {
             UpdateRequest(req, {specificUseCode: data});
         }),
-        idValidator<SoilTextureCodeController>('soilTexture', SoilTextureCodeController.shared, (data, req) => {
+        idValidator<SoilTextureCodeController>('soilTexture', SoilTextureCodeController.shared, async (data, req) => {
             UpdateRequest(req, {soilTexture: data});
         }),
-        idValidator<SlopeCodeController>('slopeCode', SlopeCodeController.shared, (data, req) => {
+        idValidator<SlopeCodeController>('slopeCode', SlopeCodeController.shared, async (data, req) => {
             UpdateRequest(req, {slopeCode: data});
         }),
-        idValidator<AspectCodeController>('aspectCode', AspectCodeController.shared, (data, req) => {
+        idValidator<AspectCodeController>('aspectCode', AspectCodeController.shared, async (data, req) => {
             UpdateRequest(req, {aspectCode: data});
         }),
-        idValidator<ProposedActionCodeController>('proposedAction', ProposedActionCodeController.shared, (data, req) => {
+        idValidator<ProposedActionCodeController>('proposedAction', ProposedActionCodeController.shared, async (data, req) => {
             UpdateRequest(req, {proposedAction: data});
         })
 

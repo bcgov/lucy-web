@@ -49,6 +49,9 @@ export class TreatmentCodeSchema extends CodeTableSchema {
  */
 export class MechanicalTreatmentSchema extends TreatmentSchema {}
 
-
+/**
+ * @description Schema Handler for Mechanical Treatment Code
+ */
+export class MechanicalMethodCodeSchema extends TreatmentCodeSchema {}
 // ----------------------------------------------------------
 

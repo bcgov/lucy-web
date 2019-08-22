@@ -22,13 +22,33 @@
  */
 
 import {MigrationInterface, QueryRunner} from 'typeorm';
+import { MechanicalMethodCodeSchema, getSQLFileData } from '../database-schema';
 
 export class TreatmentCodes1565631204586 implements MigrationInterface {
 
+    // Schemas
+    mechanicalTreatmentMethodCodeSchema: MechanicalMethodCodeSchema = new MechanicalMethodCodeSchema();
+
+    /**
+     * @description Up method
+     * @param QueryRunner queryRunner
+     * @return Promise<any>
+     */
     public async up(queryRunner: QueryRunner): Promise<any> {
+        // Create Table
+        await queryRunner.query(this.mechanicalTreatmentMethodCodeSchema.migrationSQL);
+
+        // Load data
+        await queryRunner.query(getSQLFileData(this.mechanicalTreatmentMethodCodeSchema.dataSQLPath()));
     }
 
+    /**
+     * @description  down method
+     * @param QueryRunner queryRunner
+     * @return Promise<any>
+     */
     public async down(queryRunner: QueryRunner): Promise<any> {
+        await queryRunner.query(this.mechanicalTreatmentMethodCodeSchema.dropTable());
     }
 
 }

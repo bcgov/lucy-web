@@ -36,7 +36,6 @@ export const sessionFactory = async (login?: RolesCodeValue, noSave?: boolean, i
     // 2. Create
     const session: UserSession = UserSessionDataController.shared.create();
     session.lastActiveAt = faker.date.recent();
-    session.lastActiveAt = faker.date.recent();
     session.token = faker.random.alphaNumeric(150);
     session.tokenExpiry = faker.date.future();
     session.tokenLifeTime = faker.random.number();

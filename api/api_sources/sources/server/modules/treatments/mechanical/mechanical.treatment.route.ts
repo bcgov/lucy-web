@@ -23,6 +23,8 @@
 /**
  * Imports
  */
+import * as assert from 'assert';
+import * as moment from 'moment';
 import { Request, Router } from 'express';
 import {
     SecureRouteController,
@@ -33,12 +35,23 @@ import {
     ValidatorExists,
     ValidatorCheck
 } from '../../../core';
-import { MechanicalTreatmentController, MechanicalTreatmentCreateSpec, ObservationController } from '../../../../database/models';
+import {
+    MechanicalTreatmentController,
+    MechanicalTreatmentCreateSpec,
+    ObservationController,
+    SpeciesController,
+    MechanicalMethodCodeController,
+    SpeciesAgencyCodeController
+} from '../../../../database/models';
 
 const CreateTreatmentValidator = (): any[] => {
     return [
-        ValidatorExists({ observation: ObservationController.shared})
-            .concat(ValidatorCheck({
+        ValidatorExists({
+            observation: ObservationController.shared,
+            species: SpeciesController.shared,
+            speciesAgency: SpeciesAgencyCodeController.shared,
+            mechanicalMethod: MechanicalMethodCodeController.shared
+        }).concat(ValidatorCheck({
                 applicatorFirstName: {
                     validate: validate => validate.isString(),
                     message: 'should be string'
@@ -62,6 +75,19 @@ const CreateTreatmentValidator = (): any[] => {
                 length: {
                     validate: validate => validate.isNumeric(),
                     message: 'should be number'
+                },
+                date: {
+                    validate: validate => validate.isString().custom(async (val: string, {req}) => {
+                        assert(moment(val, 'YYYY-MM-DD').isValid(), `date: should be string in YYYY-MM-DD format`);
+                    }),
+                    message: 'should be string in YYYY-MM-DD format'
+                },
+                paperFileReference: {
+                    validate: validate => validate.isString().isAlphanumeric().optional(),
+                    message: 'should be alphanumeric string'
+                },
+                comment: {
+                    validate: validate => validate.isString().optional()
                 }
             }))
     ];

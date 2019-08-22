@@ -65,7 +65,7 @@ describe('Test for observation routes', () => {
         })
         .then(async (resp: any) => {
             const body = resp.body;
-            await verifySuccessBody(body, (data: any) => {
+            await verifySuccessBody(body, async (data: any) => {
                 should().exist(data.jurisdictionCodes);
                 should().exist(data.speciesList);
                 should().exist(data.speciesDensityCodes);
@@ -78,6 +78,7 @@ describe('Test for observation routes', () => {
                 should().exist(data.slopeCodes);
                 should().exist(data.aspectCodes);
                 should().exist(data.proposedActionCodes);
+                should().exist(data.mechanicalTreatmentMethodsCodes);
             });
             // done();
         });
@@ -115,7 +116,7 @@ describe('Test for observation routes', () => {
         .set('Authorization', `Bearer ${viewerToken()}`)
         .expect(200)
         .then(async (resp) => {
-            await verifySuccessBody(resp.body, (body) => {
+            await verifySuccessBody(resp.body, async (body) => {
                 const results = body as Observation[];
                 expect(results.length).to.be.greaterThan(0);
                 const filtered = results.filter( obj => obj.observation_id === obs.observation_id);
@@ -134,7 +135,7 @@ describe('Test for observation routes', () => {
         .query({ observerFirstName: obs.observerFirstName, observerLastName: obs.observerLastName})
         .expect(200)
         .then(async (resp) => {
-            await verifySuccessBody(resp.body, (body) => {
+            await verifySuccessBody(resp.body, async (body) => {
                 const results = body as Observation[];
                 expect(results.length).to.be.equal(1);
                 const filtered = results.filter( obj => obj.observation_id === obs.observation_id);

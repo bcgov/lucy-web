@@ -168,10 +168,10 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
       return;
     }
 
-    const converted = this.converterService.toUTM(this.observationObject.lat, this.observationObject.long);
-    this.zoneChanged(converted.zoneNum);
-    this.northingsChanged(String(converted.northing.toFixed(0)));
-    this.eastingChanged(String(converted.easting.toFixed(0)));
+    const converted = this.converterService.convertLatLongCoordinateToUTM(this.observationObject.lat, this.observationObject.long);
+    this.zoneChanged(String(converted.zone));
+    this.northingsChanged(String(converted.x.toFixed(0)));
+    this.eastingChanged(String(converted.y.toFixed(0)));
 
     this.setMapToObservationLocation();
   }
@@ -296,7 +296,7 @@ export class AddPlantObservationBasicInformationComponent implements OnInit, Aft
     }
 
     // 2) Convert to lat long
-    const converted = this.converterService.toLatLon(this.eastings, this.northings, this.zone, null, true, false);
+    const converted = this.converterService.convertUTMToLatLongCoordinate(+this.eastings, +this.northings, +this.zone);
 
     // 3) Check if converted lat long are valid
     if (!this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {

@@ -7,8 +7,10 @@
   },
   "scripts": {
     "build": "node build.js",
+    "build-tools": "node buildtools.js",
     "clean": "node clean.js",
     "deploy": "node deploy.js",
+    "deploy-tools": "node deploytools.js",
     "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
   },
   "repository": {

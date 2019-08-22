@@ -18,7 +18,8 @@
     "ts-run": "ts-node",
     "tslint": "tslint",
     "test:lint": "tslint --project .",
-    "snyk-protect": "snyk protect"
+    "snyk-protect": "snyk protect",
+    "sonar-analysis": "sonar-generic-coverage-convertor && sonar-scanner"
   },
   "author": "Pushan Mitra",
   "license": "MIT",
@@ -56,6 +57,8 @@
     "gulp-util": "^3.0.8",
     "nodemon": "^1.19.1",
     "nyc": "^14.1.1",
+    "sonar-js-coverage-convertor": "^0.2.9",
+    "sonarqube-scanner": "^2.5.0",
     "source-map-support": "^0.5.12",
     "supertest": "^4.0.2",
     "ts-mocha": "^6.0.0",
