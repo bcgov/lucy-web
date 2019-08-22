@@ -1,0 +1,8 @@
+table {
+    width: 100%;
+}
+
+.treatment-action-row {
+    /* align-content: flex-end; */
+    text-align: right;
+}

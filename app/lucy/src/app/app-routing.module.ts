@@ -23,6 +23,7 @@ const routes: Routes = [
   { path: AppRoutes.AdminTools , component: AdminToolsComponent },
   { path: AppRoutes.AddEntry , component: AddEntryComponent},
   { path: AppRoutes.AddMechanicalTreatment , component: AddMechanicalTreatmentComponent},
+  { path: AppRoutes.ViewMechanicalTreatment , component: AddMechanicalTreatmentComponent},
   { path: AppRoutes.AddObservation , component: AddPlantObservationComponent},
   { path: AppRoutes.ViewObservation , component: AddPlantObservationComponent},
   { path: AppRoutes.EditObservation , component: AddPlantObservationComponent},

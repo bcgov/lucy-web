@@ -18,6 +18,7 @@ export class SideNavComponent implements OnInit {
 
   basicInfoIsVisible = false;
   advancedDataIsVisible = false;
+  mechanicalTreatmentsSectionVisible = false;
 
   @Input() set visibleClasses(classNames: string[]) {
     this._visibleClasses = classNames;
@@ -48,6 +49,9 @@ export class SideNavComponent implements OnInit {
         } else if (className.toLowerCase().includes(`advanced`)) {
           this.advancedDataIsVisible = true;
           break;
+        } else if (className.toLowerCase().includes(`mechanical-treatments`)) {
+          this.mechanicalTreatmentsSectionVisible = true;
+          break;
         }
       }
     }
@@ -64,5 +68,9 @@ export class SideNavComponent implements OnInit {
 
   advancedSectionSelected() {
     this.sideNavItemClicked.emit(`advanced`);
+  }
+
+  mechanicalTreatmentsSectionSelected() {
+    this.sideNavItemClicked.emit(`mechanical-treatments`);
   }
 }

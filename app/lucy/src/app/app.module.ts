@@ -73,6 +73,7 @@ import { AddMechanicalTreatmentTreatmentDetailsComponent } from './components/Ro
 import { DatePickerComponent } from './components/Input/date-picker/date-picker.component';
 import { InventoryComponent } from './components/Routes/inventory/inventory.component';
 import { ErrorComponent } from './components/Routes/error/error.component';
+import { AddPlantObservationTreatmentsComponent } from './components/Routes/add-plant-observation/add-plant-observation-treatments/add-plant-observation-treatments.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -114,6 +115,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AddMechanicalTreatmentComponent,
     AddMechanicalTreatmentBasicInfoComponent,
     AddMechanicalTreatmentTreatmentDetailsComponent,
+    AddPlantObservationTreatmentsComponent,
   ],
   imports: [
     BrowserModule,
