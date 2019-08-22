@@ -24,7 +24,7 @@
   * Imports
   */
 import * as faker from 'faker';
-import { Create, Destroy } from './helper';
+import { Destroy } from './helper';
 import { MechanicalTreatment,
   MechanicalTreatmentController,
   MechanicalTreatmentCreateSpec,
@@ -35,6 +35,9 @@ import { MechanicalTreatment,
   ObservationController} from '../models';
 import { userFactory } from './userFactory';
 import { observationFactory } from './observationFactory';
+import moment = require('moment');
+import { speciesFactory, speciesAgencyCodeFactory } from './observationCodesFactory';
+import { mechanicalMethodCodeFactory } from './treatmentCodesFactory';
 
 
 /**
@@ -44,11 +47,17 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
   return {
     latitude: parseFloat(faker.address.latitude()) || 0.0,
     longitude: parseFloat(faker.address.longitude()) || 0.0,
-    observation: (await observationFactory()),
     applicatorFirstName: faker.name.firstName(),
     applicatorLastName: faker.name.lastName(),
     width: faker.random.number(),
     length: faker.random.number(),
+    date: `${moment(faker.date.recent()).format('YYYY-MM-DD')}`,
+    paperFileReference: faker.random.alphaNumeric(),
+    comment: faker.random.word(),
+    observation: (await observationFactory()),
+    species: await speciesFactory(),
+    speciesAgency: await speciesAgencyCodeFactory(),
+    mechanicalMethod: await mechanicalMethodCodeFactory()
   };
 };
 
@@ -56,19 +65,8 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
  * @description MechanicalTreatment factory
  */
 export const mechanicalTreatmentFactory = async () => {
-    const creator = Create<MechanicalTreatment, MechanicalTreatmentController>(MechanicalTreatmentController.shared);
-    return creator(async (mechanicalTreatment: MechanicalTreatment) => {
-        const spec = await mechanicalTreatmentCreateSpecFactory();
-        mechanicalTreatment.createdBy = await userFactory();
-        mechanicalTreatment.updatedBy = mechanicalTreatment.createdBy;
-        mechanicalTreatment.latitude = spec.latitude;
-        mechanicalTreatment.longitude = spec.longitude;
-        mechanicalTreatment.width = spec.width;
-        mechanicalTreatment.length = spec.length;
-        mechanicalTreatment.applicatorFirstName = spec.applicatorFirstName;
-        mechanicalTreatment.applicatorLastName = spec.applicatorLastName;
-        mechanicalTreatment.observation = spec.observation;
-    });
+  const spec = await mechanicalTreatmentCreateSpecFactory();
+  return await MechanicalTreatmentController.shared.createNew(spec, await userFactory());
 };
 
 /**

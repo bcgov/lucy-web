@@ -41,4 +41,5 @@ export * from './slope.code';
 export * from './observationAspect.code';
 export * from './proposedAction.code';
 export * from './mechanical.treatment';
+export * from './mechanicalMethod.code';
 // ----------------------------------------------------------------------------------------------------------------

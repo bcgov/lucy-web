@@ -15,13 +15,15 @@ import { Jurisdiction,
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
+import { MechanicalTreatment, MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
+import { ObservationService } from './observation.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DummyService {
 
-  constructor(private codeTables: CodeTableService) { }
+  constructor(private codeTables: CodeTableService, private observationService: ObservationService) { }
 
   /**
    * Return a random jurisdiction
@@ -143,6 +145,43 @@ export class DummyService {
     } else {
       return undefined;
     }
+  }
+
+  public async randomMechanicalMethodCodes(): Promise<MechanicalTreatmentMethodsCodes | undefined> {
+    const codes = await this.codeTables.getMechanicalTreatmentMethodsCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async createDummyMechanicalTreatment(): Promise<MechanicalTreatment> {
+    const invasivePlantSpecies = await this.randomInvasivePlantSpecies();
+    const agency = await this.randomSpeciesAgencyCodes();
+    const mechanicalMethod = await this.randomMechanicalMethodCodes();
+    const observations = await this.observationService.getAll();
+    const observation = observations[1];
+    if (!observation) {
+      return undefined;
+    }
+    const mechanicalTreatment: MechanicalTreatment = {
+      latitude: this.randomLat(),
+      longitude: this.randomLong(),
+      length: this.randomIntFromInterval(4, 20),
+      width: this.randomIntFromInterval(4, 20),
+      applicatorFirstName: faker.name.firstName(),
+      applicatorLastName: faker.name.lastName(),
+      date: this.randomDateString(),
+      paperFileReference: faker.lorem.word(),
+      comment: faker.lorem.sentences(),
+      observation: observation,
+      species: invasivePlantSpecies,
+      speciesAgency: agency,
+      mechanicalMethod: mechanicalMethod,
+    };
+
+    return mechanicalTreatment;
   }
 
   /**

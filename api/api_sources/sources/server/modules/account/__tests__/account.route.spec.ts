@@ -65,7 +65,7 @@ describe('Test account routes', () => {
         .expect(200)
         .then(async (resp) => {
             const body = resp.body;
-            await verifySuccessBody(body, (data: any) => {
+            await verifySuccessBody(body, async (data: any) => {
                 expect(data.email).to.equal('amir@freshworks.io');
             });
             // done();
@@ -79,7 +79,7 @@ describe('Test account routes', () => {
         .expect(200)
         .then(async (resp) => {
             const body = resp.body;
-            await verifySuccessBody(body, (data: any) => {
+            await verifySuccessBody(body, async (data: any) => {
                 expect(data.preferredUsername).to.equal('istest3@idir');
             });
             // done();
@@ -100,7 +100,7 @@ describe('Test account routes', () => {
         })
         .expect(200)
         .then(async (resp) => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 expect(data.firstName).to.equal(fname);
                 expect(data.lastName).equal(lname);
             });
@@ -259,7 +259,7 @@ describe('Test account routes', () => {
             expect: 200,
             token: testIdr3Token()
         }).then(async resp => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 expect(data.roles[0].code).to.be.equal('DAE');
             });
         });
@@ -272,7 +272,7 @@ describe('Test account routes', () => {
             expect: 200,
             token: testIdr1Token()
         }).then(async resp => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 expect(data.roles[0].code).to.be.equal('ADM');
             });
         });
@@ -285,7 +285,7 @@ describe('Test account routes', () => {
             expect: 200,
             token: testIdr2Token()
         }).then(async resp => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 expect(data.roles[0].code).to.be.equal('ADM');
             });
         });

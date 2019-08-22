@@ -1,3 +1,6 @@
+# Sonar
+**/.scannerwork
+**/.sonar
 # Envs
 /env_config/env.local
 .env

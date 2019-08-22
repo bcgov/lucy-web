@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Jurisdiction, InvasivePlantSpecies } from '../models';
 import { CodeTableService } from './code-table.service';
+import { ObservationService } from './observation.service';
 
 export interface DropdownObject {
   name: string;
@@ -25,8 +26,11 @@ export class DropdownService {
   public displayedGroundSlopeField = 'description';
   public displayedGroundAspecField = 'description';
   public displayedProposedActionField = 'description';
+  public displayedMechanicalTreatmentMethodField = 'description';
 
-  constructor(private codeTableService: CodeTableService) { }
+  public displayedObservationField = 'observation_id';
+
+  constructor(private codeTableService: CodeTableService, private observationService: ObservationService) { }
 
   /**
    * Create an array of dropdown objects from an array of objects.
@@ -153,6 +157,24 @@ export class DropdownService {
   public async getGroundAspects(): Promise<DropdownObject[]> {
     const geometry = await this.codeTableService.getGroundAspectCodes();
     return this.createDropdownObjectsFrom(geometry, this.displayedSurveyGeometryField);
+  }
+
+  /**
+   * Fetch Geometry code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalTreatmentMethods(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getMechanicalTreatmentMethodsCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedMechanicalTreatmentMethodField);
+  }
+
+    /**
+   * Fetch Geometry code table, return as array of
+   * deopdown objects
+   */
+  public async getObservations(): Promise<DropdownObject[]> {
+    const observations = await this.observationService.getAll();
+    return this.createDropdownObjectsFrom(observations, this.displayedObservationField);
   }
 
   /**

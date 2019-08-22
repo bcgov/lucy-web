@@ -110,8 +110,13 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              // Get user
              ApplicationAuthMiddleware.logger.info(`${api} | Getting user`);
              let user: User;
-             if (email) {
-                 user = await UserDataController.shared.fetchOne({email: email});
+             if (preferred_username && email) {
+                ApplicationAuthMiddleware.logger.info(`${api} | Fetching using preferred_username => ${preferred_username}`);
+                 user = await UserDataController.shared.fetchOne({preferredUsername: preferred_username});
+                 if (!user) {
+                    ApplicationAuthMiddleware.logger.info(`${api} | Fetching using email => ${email}`);
+                    user = await UserDataController.shared.fetchOne({email: email});
+                 }
              } else {
                  ApplicationAuthMiddleware.logger.info(`${api} | Fetching user by preferredUsername: ${preferred_username}
                   - *** - \n[ISSUE]*: possibly email is missing from payload: \n${JSON.stringify(payload)}`);
@@ -131,8 +136,9 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  await UserDataController.shared.saveInDB(user);
              } else {
                  // Update user data if require
-                 if (user.preferredUsername !== preferred_username) {
-                    user.preferredUsername = preferred_username;
+                 if (user.preferredUsername !== preferred_username || user.email !== email) {
+                    user.preferredUsername = preferred_username || user.preferredUsername;
+                    user.email = email || user.email;
                     user.firstName = given_name;
                     user.lastName = family_name;
                     user.accountStatus = AccountStatus.active;

@@ -1,0 +1,90 @@
+/* Confirmation */
+.entries-added {
+    color: #000000;
+    font-size: 34px;
+    font-weight: bold;
+    line-height: 41px;
+}
+
+.confirmation-divider {
+    height: 1px;
+    width: 342px;
+    background-color: #000000;
+}
+
+.back-to-db {
+    height: 50px;
+    width: 250px;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: -0.32px;
+    line-height: 21px;
+    text-align: center;
+}
+/* End of confirmation */
+
+.sticky {
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.spacer-toolbar {
+    flex: 1 1 auto;
+}
+
+.header-container {
+    background: #002C71;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/****************************************/
+@media (max-width: 768px) {
+
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .header-container-inner {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.view-title {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29px;
+}
+
+.submit-button {
+    height: 42px;
+    width: 250px;
+    color: #234075;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 21px;
+    text-align: center;
+}
+
+.action-buttons {
+    padding: 0 14px;
+}
+
+
+.section-divider {
+    box-sizing: border-box;
+    height: 1px;
+    width: 100%;
+    border: 2px solid #E2A014;
+}
+
+.section-name {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+}

@@ -31,6 +31,9 @@ export class AppConstants {
          return `${AppConstants.API_baseURL}/observation/${id}`;
     }
 
+    // Mechanical Treatment
+    static get API_mechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical`; }
+
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
         const baseAuthEndpoint = `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;

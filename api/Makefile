@@ -32,6 +32,12 @@ local-debug: | setup-local close-local build-local run-debug
 
 schema-spy: | close-local build-local run-local wait-for-app schema-spy-run
 
+deploy-remote: | remote-build remote-deploy
+deploy-api: | build-remote-api deploy-remote-api
+deploy-app: | build-remote-app deploy-remote-app
+remote-build: | build-remote-api build-remote-app
+remote-deploy: | deploy-remote-api deploy-remote-app
+
 
 # ------------------------------------------------------------------------------
 # Status Output
@@ -97,11 +103,40 @@ clean-dev:
 
 clean-remote:
 	@echo "+\n++ Make: Clean Remote Env with pr=$$PR env=$$ENV"
-	@echo "+\n++ Cleanin API"
+	@echo "+\n Cleaning API {Build}"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
+	@echo "+\n++ Cleanin API {Deploy}"
 	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
-	@echo "+\n++ Cleaning App"
+	@echo "+\n++ Cleaning App {Build}"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
+	@echo "+\n++ Cleaning App {Deploy}"
 	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
-
+build-remote-api:
+	@echo "+\n++ Make: Building API with ref = $$PR"
+	@cd ./.pipeline && DEBUG=* npm run build -- --pr=$$PR
+build-remote-app:
+	@echo "+\n++ Make: Building APP with ref = $$PR"
+	@cd ../app/.pipeline && DEBUG=* npm run build -- --pr=$$PR
+deploy-remote-api:
+	@echo "+\n++ Make: Deploying API with ref = $$PR and env=$$ENV"
+	@cd ./.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV
+deploy-remote-app:
+	@echo "+\n++ Make: Deploying APP with ref = $$PR and env=$$ENV"
+	@cd ../app/.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV
+sonarqube:
+	@echo "+\n Make: Sonarqube analysis"
+	@mkdir -p ~/.docker-vol/sonarqube/data
+	@mkdir -p ~/.docker-vol/sonarqube/logs
+	@docker run -d --name sonarqube -p 9090:9000 -v ~/.docker-vol/sonarqube/data:/opt/sonarqube/data -v ~/.docker-vol/sonarqube/logs:/opt/sonarqube/logs sonarqube || echo "Sonar Container is already exists" && docker start sonarqube || "Sonar Container is running"
+	@echo "\n\n Waiting for sonarqube to start .... (90 sec)"
+	@sleep 30
+	@echo "Waiting .... (60 sec)"
+	@sleep 20
+	@echo "Waiting .... (40 sec)"
+	@sleep 20
+	@echo "Waiting .... (20 sec)"
+	@sleep 20
+	@docker-compose run app_api npm run sonar-analysis
 
 
 # ------------------------------------------------------------------------------
