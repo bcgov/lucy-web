@@ -47,7 +47,7 @@ describe('Test miscellaneous routes', () => {
             url: '/api/misc/version',
             expect: 200
         }).then(resp => {
-            verifySuccessBody(resp.body, (data: any) => {
+            verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.version);
             });
         });
@@ -59,7 +59,7 @@ describe('Test miscellaneous routes', () => {
             url: '/api/misc/test-token/admin',
             expect: 200
         }).then(async resp => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.token);
                 expect(data.token).to.be.equal(testIdr1Token());
             });
@@ -72,7 +72,7 @@ describe('Test miscellaneous routes', () => {
             url: '/api/misc/test-token/sme',
             expect: 200
         }).then(async resp => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.token);
                 expect(data.token).to.be.equal(testIdr3Token());
             });
@@ -85,7 +85,7 @@ describe('Test miscellaneous routes', () => {
             url: '/api/misc/test-token/viewer',
             expect: 200
         }).then(async resp => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.token);
                 expect(data.token).to.be.equal(viewerToken());
             });
@@ -98,7 +98,7 @@ describe('Test miscellaneous routes', () => {
             url: '/api/misc/test-token/any',
             expect: 200
         }).then(async resp => {
-            await verifySuccessBody(resp.body, (data: any) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.token);
                 expect(data.token).to.be.equal('');
             });
