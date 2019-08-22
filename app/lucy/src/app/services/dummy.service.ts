@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MapMarker } from '../components/map-preview/map-preview.component';
 import { Jurisdiction,
    InvasivePlantSpecies,
    SpeciesDensityCodes,
@@ -17,6 +16,7 @@ import * as faker from 'faker';
 import * as moment from 'moment';
 import { MechanicalTreatment, MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
 import { ObservationService } from './observation.service';
+import { MapMarker } from '../components/Utilities/map-preview/map-preview.component';
 
 @Injectable({
   providedIn: 'root'
