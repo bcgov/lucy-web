@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
-import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
+import { SideNavComponent } from 'src/app/components/Routes/add-plant-observation/side-nav/side-nav.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormMode, Observation } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
