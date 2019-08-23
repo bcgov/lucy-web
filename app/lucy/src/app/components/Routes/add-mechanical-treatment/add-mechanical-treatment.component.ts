@@ -217,7 +217,8 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
     if (this.viewing) {
       const id = this.idInParams();
       if (!id) {
-        this.errorService.show(ErrorType.NotFound);
+        console.log(`id not found`);
+        // this.errorService.show(ErrorType.NotFound);
       }
       this.mode = FormMode.View;
       this.fetchMechanicalTreatment(this.idInParams());
@@ -246,7 +247,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
 
   idInParams(): number | undefined {
     const current = this.router.current;
-    if (current === AppRoutes.ViewObservation || current === AppRoutes.EditObservation) {
+    if (current === AppRoutes.ViewMechanicalTreatment || current === AppRoutes.EditMechanicalTreatment) {
       const id = this.router.routeId;
       if (id) {
         return id;
@@ -256,10 +257,10 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
   }
 
   async fetchMechanicalTreatment(id: number) {
-    // this.loadingService.add();
-    // const object = await this.observationService.getWithId(id);
-    // this.observationObject = object;
-    // this.loadingService.remove();
+    this.loadingService.add();
+    const object = await this.mechanicalTreatmentService.getWithId(id);
+    this.object = object;
+    this.loadingService.remove();
   }
 
   initializeObjectIfDoesntExist() {
@@ -357,6 +358,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
   async generateForTesting() {
     this.loadingService.add();
     const obj = await this.dummy.createDummyMechanicalTreatment();
+    console.dir(obj);
     this.object = obj;
     this.loadingService.remove();
   }

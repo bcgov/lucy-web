@@ -161,8 +161,9 @@ export class DummyService {
     const agency = await this.randomSpeciesAgencyCodes();
     const mechanicalMethod = await this.randomMechanicalMethodCodes();
     const observations = await this.observationService.getAll();
-    const observation = observations[1];
+    const observation = observations[0];
     if (!observation) {
+      console.log(`could not find observations to generate a treatment`);
       return undefined;
     }
     const mechanicalTreatment: MechanicalTreatment = {

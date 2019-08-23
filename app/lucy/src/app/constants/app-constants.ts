@@ -33,6 +33,9 @@ export class AppConstants {
 
     // Mechanical Treatment
     static get API_mechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical`; }
+    static API_mechanicalTreatmentWith(id: number): string {
+        return `${AppConstants.API_baseURL}/treatment/mechanical/${id}`;
+   }
 
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
