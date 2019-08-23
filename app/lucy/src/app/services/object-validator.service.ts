@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, SlopeCodes, AspectCodes, ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
-import { MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
+import { MechanicalTreatmentMethodsCodes, MechanicalTreatment } from '../models/MechanicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -154,6 +154,15 @@ export class ObjectValidatorService {
   public isGroundSlopeCodesObject(groundSlopeCodes: any): groundSlopeCodes is SlopeCodes {
     if (groundSlopeCodes === undefined || groundSlopeCodes === null) {return false; }
     return (<SlopeCodes>groundSlopeCodes.description) !== undefined;
+  }
+
+   /**
+   * Check if object is MechanicalTreatment
+   * @param mechanicalTreatmentMethodsCodes object
+   */
+  public isMechanicalTreatmentObject(mechanicalTreatment: any): mechanicalTreatment is MechanicalTreatment {
+    if (mechanicalTreatment === undefined || mechanicalTreatment === null) {return false; }
+    return (<MechanicalTreatment>mechanicalTreatment.description) !== undefined;
   }
 
    /**
