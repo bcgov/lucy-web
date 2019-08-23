@@ -11,7 +11,8 @@
     "deploy_run": "ng serve --host 0.0.0.0 --port 3030 --disableHostCheck",
     "deploy_start": "node server",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "sonar-analysis": "sonar-scanner"
   },
   "private": true,
   "dependencies": {
@@ -78,6 +79,7 @@
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.4.0",
+    "sonarqube-scanner": "^2.5.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"
