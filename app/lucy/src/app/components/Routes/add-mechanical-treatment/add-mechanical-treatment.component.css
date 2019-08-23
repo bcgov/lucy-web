@@ -88,3 +88,13 @@
     font-weight: 500;
     line-height: 24px;
 }
+
+.test-btn {
+    align-content: center;
+    text-align: center;
+    background: greenyellow;
+    border-radius: .25rem;
+    position: fixed;
+    bottom: 0;
+    width: 18%;
+}
