@@ -79,7 +79,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
         break;
       }
       case FormMode.Edit: {
-        prefix = `Submit Edits to`;
+        prefix = `Submit Edits`;
         break;
       }
       case FormMode.View: {
@@ -92,7 +92,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
         return `How are you here?`;
     }
     if (prefix) {
-      return `${prefix} ${this.componentName}`;
+      return `${prefix}`;
     } else {
       return ``;
     }
@@ -314,6 +314,32 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
     if (!this.editing) {
       return;
     }
+    const validationMessage = this.validation.isValidMechanicalTreatmentMessage(this.object);
+    if (validationMessage === null) {
+      this.loadingService.add();
+      const changes = await this.mechanicalTreatmentService.diffMechanicalTreatment(this.object);
+      this.loadingService.remove();
+      console.log(changes);
+      if (changes && changes.changed) {
+        const confirmed = await this.alert.showConfirmation(`The following fields will be changed`, changes.diffMessage);
+        if (!confirmed) {
+          return;
+        }
+      } else {
+        this.alert.show(`No Edits found`, `There are no edits to submit`);
+        return;
+      }
+      this.loadingService.add();
+      const success = await this.mechanicalTreatmentService.editObservationChangeOnly(this.object, changes.originalMechanicalTreatment);
+      this.loadingService.remove();
+      if (success) {
+        this.submitted = true;
+      } else {
+        this.alert.show(`Error`, `Edit Submission failed`, null);
+      }
+    } else {
+      this.alert.show(`Incomplete data`, validationMessage, null);
+    }
   }
 
   async createObservation() {
@@ -363,7 +389,16 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
     this.loadingService.remove();
   }
 
+  /////////// Navigation ///////////
   viewInventory() {
     this.router.navigateTo(AppRoutes.Inventory);
   }
+
+  edit() {
+    if (!this.object || !this.viewing) {
+      return;
+    }
+    this.router.navigateTo(AppRoutes.EditMechanicalTreatment, this.object.mechanical_treatment_id);
+  }
+  /////////// End Navigation ///////////
 }
