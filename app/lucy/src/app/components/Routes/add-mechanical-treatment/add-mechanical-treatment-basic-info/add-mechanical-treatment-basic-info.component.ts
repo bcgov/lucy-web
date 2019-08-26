@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { MechanicalTreatment } from 'src/app/models/MechanicalTreatment';
-import { MapMarker, MapPreviewPoint } from '../../map-preview/map-preview.component';
+import { MapMarker, MapPreviewPoint } from '../../../Utilities/map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
 import { ValidationService } from 'src/app/services/validation.service';

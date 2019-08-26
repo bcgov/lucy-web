@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MapMarker } from '../components/map-preview/map-preview.component';
 import { Jurisdiction,
    InvasivePlantSpecies,
    SpeciesDensityCodes,
@@ -17,6 +16,7 @@ import * as faker from 'faker';
 import * as moment from 'moment';
 import { MechanicalTreatment, MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
 import { ObservationService } from './observation.service';
+import { MapMarker } from '../components/Utilities/map-preview/map-preview.component';
 
 @Injectable({
   providedIn: 'root'
@@ -161,11 +161,13 @@ export class DummyService {
     const agency = await this.randomSpeciesAgencyCodes();
     const mechanicalMethod = await this.randomMechanicalMethodCodes();
     const observations = await this.observationService.getAll();
-    const observation = observations[1];
+    const observation = observations[0];
     if (!observation) {
+      console.log(`could not find observations to generate a treatment`);
       return undefined;
     }
     const mechanicalTreatment: MechanicalTreatment = {
+      mechanical_treatment_id: 1,
       latitude: this.randomLat(),
       longitude: this.randomLong(),
       length: this.randomIntFromInterval(4, 20),
@@ -271,6 +273,7 @@ export class DummyService {
       aspectCode: groundAspect,
       slopeCode: groundSlope,
       observationGeometry: geometry,
+      mechanicalTreatments: [],
     };
     return observation;
   }
