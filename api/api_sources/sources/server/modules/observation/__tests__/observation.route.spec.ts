@@ -26,7 +26,9 @@ import { adminToken, viewerToken } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction, testRequest, AuthType, HttpMethodType} from '../../../../test-helpers/testHelpers';
 import {
     ObservationController,
-    Observation
+    Observation,
+    MechanicalTreatment,
+    MechanicalTreatmentCreateSpec
 } from '../../../../database/models';
 import {
     observationFactory,
@@ -173,6 +175,9 @@ describe('Test for observation routes', () => {
             await verifySuccessBody(resp.body, async data => {
                 expect(data.observation_id).to.be.equal(obs.observation_id);
                 expect(data.mechanicalTreatments.length).to.be.equal(1);
+                // Check species prop of fetched obj
+                const mt0: MechanicalTreatmentCreateSpec = data.mechanicalTreatments[0];
+                should().exist(mt0.species);
             });
             await destroyMechanicalTreatment(mt);
         });
