@@ -162,7 +162,7 @@ export class ObjectValidatorService {
    */
   public isMechanicalTreatmentObject(mechanicalTreatment: any): mechanicalTreatment is MechanicalTreatment {
     if (mechanicalTreatment === undefined || mechanicalTreatment === null) {return false; }
-    return (<MechanicalTreatment>mechanicalTreatment.description) !== undefined;
+    return (<MechanicalTreatment>mechanicalTreatment.species) !== undefined;
   }
 
    /**
