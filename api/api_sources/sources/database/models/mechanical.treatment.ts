@@ -26,9 +26,9 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn} from 'typeorm';
 import { MechanicalTreatmentSchema, ObservationSchema, SpeciesSchema, SpeciesAgencyCodeSchema, MechanicalMethodCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
-import { DataModelController } from '../data.model.controller';
+// import { DataModelController } from '../data.model.controller';
 import { Observation } from './observation';
-import { Record, User } from './user';
+import { Record, RecordController } from './user';
 import { Species } from './species';
 import { SpeciesAgencyCode } from './speciesAgency.code';
 import { MechanicalMethodCode } from './mechanicalMethod.code';
@@ -213,7 +213,7 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 /**
  * @description Data Model Controller Class for MechanicalTreatmentSchema and MechanicalTreatment
  */
-export class MechanicalTreatmentController extends DataModelController<MechanicalTreatment> {
+export class MechanicalTreatmentController extends RecordController<MechanicalTreatment> {
 	/**
 	* @description Getter for shared instance
 	*/
@@ -221,29 +221,11 @@ export class MechanicalTreatmentController extends DataModelController<Mechanica
 		return this.sharedInstance<MechanicalTreatment>(MechanicalTreatment, MechanicalTreatmentSchema) as MechanicalTreatmentController;
 	}
 
-	/**
-	 * @description Create New Mechanical treatment
-	 * @param MechanicalTreatmentCreateSpec data: Data To create obj
-	 * @param User creator: Creator of the record
-	 */
-	async createNew(data: MechanicalTreatmentCreateSpec, creator: User): Promise<MechanicalTreatment> {
-		const obj = data as MechanicalTreatment;
-		obj.createdBy = creator;
-		obj.updatedBy = creator;
-		await this.saveInDB(obj);
-		return obj;
-	}
-
-	/**
-	 * @description Update Mechanical treatment
-	 * @param MechanicalTreatment obj: Model object to be updated
-	 * @param MechanicalTreatmentUpdateSpec data: Data to update
-	 * @param User user: Modifier
-	 */
-	async update(obj: MechanicalTreatment, data: MechanicalTreatmentUpdateSpec, user: User): Promise<MechanicalTreatment> {
-		obj.updatedBy = user;
-		return await this.updateObj<MechanicalTreatmentUpdateSpec>(obj, data);
-	}
+	async all(query?: object): Promise<MechanicalTreatment[]> {
+		// console.log('*** 1a');
+		// console.dir(query);
+        return super.all(query);
+    }
 }
 
 // -------------------------------------

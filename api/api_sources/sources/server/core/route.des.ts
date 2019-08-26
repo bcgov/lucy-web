@@ -22,14 +22,75 @@
  */
 import 'reflect-metadata';
 import { RouteDescription, RouteConfig } from './base.route.controller';
+import { ResourceInfo } from './route.const';
 
 const StaticConfig: {[key: string]: RouteConfig[]} = {};
 
 export function Route (des: RouteDescription) {
     return function<T>(obj: Object, prop: string, propDes?: PropertyDescriptor) {
-        const existing: RouteConfig[] = StaticConfig[obj.constructor.name] || [];
+        /*const existing: RouteConfig[] = StaticConfig[obj.constructor.name] || [];
         existing.push({description: des, handler: prop});
-        StaticConfig[obj.constructor.name] = existing;
+        StaticConfig[obj.constructor.name] = existing;*/
+        // console.dir(obj);
+        // console.log(`${typeof obj} | ${obj.constructor.name}`);
+        const existing: {[key: string]: RouteConfig} = obj.constructor.prototype._configMap || {};
+        existing[prop] = {description: des, handler: prop};
+        obj.constructor.prototype._configMap = existing;
+    };
+}
+
+export function ResourceRoute(info: ResourceInfo) {
+    return function(target: Function) {
+        // 1. Check existing
+        const existing: any = target.prototype._routeResourceInfo;
+        info.createMiddleware = existing.createMiddleware || info.createMiddleware;
+        info.updateMiddleware = existing.updateMiddleware || info.updateMiddleware;
+        info.viewMiddleware = existing.viewMiddleware || info.viewMiddleware;
+        target.prototype._routeResourceInfo = info;
+        // console.dir(target);
+        // console.dir(target.prototype);
+    };
+}
+
+export function CreateMiddleware(middleware: () => any[]) {
+    return function(target: Function) {
+        // Get resource info
+        if (target.prototype._routeResourceInfo) {
+            const info: any = target.prototype._routeResourceInfo;
+            info.createMiddleware = middleware;
+        } else {
+            target.prototype._routeResourceInfo = {
+                createMiddleware: middleware
+            };
+        }
+    };
+}
+
+export function UpdateMiddleware(middleware: () => any[]) {
+    return function(target: Function) {
+        // Get resource info
+        if (target.prototype._routeResourceInfo) {
+            const info: any = target.prototype._routeResourceInfo;
+            info.updateMiddleware = middleware;
+        } else {
+            target.prototype._routeResourceInfo = {
+                updateMiddleware: middleware
+            };
+        }
+    };
+}
+
+export function ViewMiddleware(middleware: () => any[]) {
+    return function(target: Function) {
+        // Get resource info
+        if (target.prototype._routeResourceInfo) {
+            const info: any = target.prototype._routeResourceInfo;
+            info.viewMiddleware = middleware;
+        } else {
+            target.prototype._routeResourceInfo = {
+                viewMiddleware: middleware
+            };
+        }
     };
 }
 

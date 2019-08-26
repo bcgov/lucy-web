@@ -27,7 +27,6 @@ import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTe
 import {
     ObservationController,
     Observation,
-    MechanicalTreatment,
     MechanicalTreatmentCreateSpec
 } from '../../../../database/models';
 import {

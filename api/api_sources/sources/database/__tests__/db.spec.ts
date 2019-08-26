@@ -72,14 +72,14 @@ describe('Test for db utilities', () => {
     it('should create table sql', () => {
         const schema = new TestSchema();
         const sql = schema.createTable();
-        console.log(sql);
+        // console.log(sql);
         should().exist(sql);
     });
 
     it('should load and create sql from schema yaml', () => {
         const schema = new Test2Schema();
         const sql = schema.createTable();
-        console.log(sql);
+        // console.log(sql);
         should().exist(sql);
         schema.table.name = 'sample2_table';
         schema.saveSchema();
