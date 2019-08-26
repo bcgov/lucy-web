@@ -65,7 +65,7 @@ describe('Treatment Test', () => {
     it('should create treatment with spec', async () => {
         const f = await mechanicalTreatmentCreateSpecFactory();
         const user = await userFactory();
-        const obj = await MechanicalTreatmentController.shared.createNew(f, user);
+        const obj = await MechanicalTreatmentController.shared.createNewObject(f, user);
         const mt = await MechanicalTreatmentController.shared.findById(obj.mechanical_treatment_id);
         should().exist(mt);
         should().exist(mt.observation);
@@ -78,7 +78,7 @@ describe('Treatment Test', () => {
         const f = await mechanicalTreatmentFactory();
         const user = await userFactory();
         const spec: MechanicalTreatmentUpdateSpec = await mechanicalTreatmentUpdateSpecFactory();
-        await MechanicalTreatmentController.shared.update(f, spec, user);
+        await MechanicalTreatmentController.shared.updateObject(f, spec, user);
         const mt = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
         should().exist(mt);
         should().exist(mt.observation);
@@ -95,7 +95,6 @@ describe('Treatment Test', () => {
         should().exist(f);
         const obs = f.observation;
         should().exist(obs);
-        console.log('1');
         let list: MechanicalTreatment[] = await obs.mechanicalTreatmentsFetcher;
         list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
         expect(list.length).to.be.equal(1);
@@ -112,6 +111,15 @@ describe('Treatment Test', () => {
         let list: MechanicalTreatment[] = fetchObs.mechanicalTreatments || [];
         list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
         expect(list.length).to.be.equal(1);
+        await destroyMechanicalTreatment(f);
+    });
+
+    it('should fetch treatment all', async () => {
+        const f = await mechanicalTreatmentFactory();
+        should().exist(f);
+        const mtArray: MechanicalTreatment[] = await MechanicalTreatmentController.shared.all({});
+        should().exist(mtArray);
+        expect(mtArray.length).to.be.greaterThan(0);
         await destroyMechanicalTreatment(f);
     });
 
