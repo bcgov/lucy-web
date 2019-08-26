@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewChecked, Output, EventEmitter } from '@angular/core';
-import { MapPreviewPoint, MapMarker } from '../../map-preview/map-preview.component';
+import { MapPreviewPoint, MapMarker } from '../../../Utilities/map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/converter.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { FormMode, Observation } from 'src/app/models';

@@ -4,7 +4,6 @@ import { CodeTableService } from 'src/app/services/code-table.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
-import { MapMarker } from '../map-preview/map-preview.component';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DummyService } from 'src/app/services/dummy.service';
 import * as moment from 'moment';
@@ -15,6 +14,7 @@ import { UserService } from 'src/app/services/user.service';
 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 
 @Component({
   selector: 'app-inventory',

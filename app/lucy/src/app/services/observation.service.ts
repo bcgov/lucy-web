@@ -217,6 +217,7 @@ export class ObservationService {
       aspectCode: undefined,
       slopeCode: undefined,
       observationGeometry: undefined,
+      mechanicalTreatments: [],
     };
     return object;
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewChecked, NgZone, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ConverterService } from 'src/app/services/converter.service';
-import { SideNavComponent } from 'src/app/components/add-plant-observation/side-nav/side-nav.component';
+import { SideNavComponent } from 'src/app/components/Routes/add-plant-observation/side-nav/side-nav.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormMode, Observation } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
@@ -31,6 +31,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
    */
   @ViewChild('advanced') advancedSection: ElementRef;
   @ViewChild('basic') basicSection: ElementRef;
+  @ViewChild('treatments') treatmentsSection: ElementRef;
 
   /**
    * User access type
@@ -357,6 +358,8 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
       this.basicSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
     } else if (className === `advanced`) {
       this.advancedSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
+    } else if (className === 'treatments') {
+      this.treatmentsSection.nativeElement.scrollIntoView({ behavior: `smooth`, block: `start` });
     }
   }
 
