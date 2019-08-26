@@ -21,5 +21,12 @@
       Research Elements
     </div>
     <br />
+    <div class="col-12" [ngClass]="treatmentsSectionVisible ? 'on' : 'off'">
+        <div (click)="treatmentsSectionSelected()">
+          <i class="material-icons">crop_square</i>
+          Treatments
+        </div>
+    </div>
+    <br />
   </div>
 </div>

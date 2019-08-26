@@ -11,6 +11,16 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 export class SideNavComponent implements OnInit {
 
+  /**
+   * When user clicks an element,
+   * highlightMenuComponent() may not
+   * pick the same element after scrolling.
+   * we can use this flag to not let
+   * highlightMenuComponent() pick an element
+   * for a short duration
+   */
+  private locked = false;
+
   private _visibleClasses = [];
   get visibleClasses(): string[] {
     return this._visibleClasses;
@@ -18,7 +28,7 @@ export class SideNavComponent implements OnInit {
 
   basicInfoIsVisible = false;
   advancedDataIsVisible = false;
-  mechanicalTreatmentsSectionVisible = false;
+  treatmentsSectionVisible = false;
 
   @Input() set visibleClasses(classNames: string[]) {
     this._visibleClasses = classNames;
@@ -32,26 +42,34 @@ export class SideNavComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Loops though array of
+   * class names and enables
+   * selected styling for the
+   * last element found
+   */
   highlightMenuComponent() {
+    if (this.locked) {
+      return;
+    }
     this.swtichAllOff();
     if (this.visibleClasses.length < 1) {
       return;
     }
-    const first = this.visibleClasses[0];
     for (let _i = 0; _i < this.visibleClasses.length; _i++) {
       if (this.visibleClasses[_i] === ``) {
         continue;
       } else {
         const className = this.visibleClasses[_i];
         if (className.toLowerCase().includes(`basic`)) {
+          this.swtichAllOff();
           this.basicInfoIsVisible = true;
-          break;
         } else if (className.toLowerCase().includes(`advanced`)) {
+          this.swtichAllOff();
           this.advancedDataIsVisible = true;
-          break;
-        } else if (className.toLowerCase().includes(`mechanical-treatments`)) {
-          this.mechanicalTreatmentsSectionVisible = true;
-          break;
+        } else if (className.toLowerCase().includes(`treatments`)) {
+          this.swtichAllOff();
+          this.treatmentsSectionVisible = true;
         }
       }
     }
@@ -60,17 +78,46 @@ export class SideNavComponent implements OnInit {
   swtichAllOff() {
     this.basicInfoIsVisible = false;
     this.advancedDataIsVisible = false;
+    this.treatmentsSectionVisible = false;
   }
 
   basicSectionSelected() {
     this.sideNavItemClicked.emit(`basic`);
+    this.swtichAllOff();
+    this.basicInfoIsVisible = true;
+    this.lockHighlightingShortly();
   }
 
   advancedSectionSelected() {
     this.sideNavItemClicked.emit(`advanced`);
+    this.swtichAllOff();
+    this.advancedDataIsVisible = true;
+    this.lockHighlightingShortly();
   }
 
-  mechanicalTreatmentsSectionSelected() {
-    this.sideNavItemClicked.emit(`mechanical-treatments`);
+  treatmentsSectionSelected() {
+    this.sideNavItemClicked.emit(`treatments`);
+    this.swtichAllOff();
+    this.treatmentsSectionVisible = true;
+    this.lockHighlightingShortly();
+  }
+
+
+  /**
+   * When user clicks an element,
+   * highlightMenuComponent() may not
+   * pick the same element after scrolling.
+   * we can use this function to not let
+   * highlightMenuComponent() pick an element
+   * for a short duration
+   */
+  private async lockHighlightingShortly() {
+    this.locked = true;
+    await this.delay(2000);
+    this.locked = false;
+  }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }
