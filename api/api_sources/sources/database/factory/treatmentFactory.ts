@@ -66,7 +66,7 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
  */
 export const mechanicalTreatmentFactory = async () => {
   const spec = await mechanicalTreatmentCreateSpecFactory();
-  return await MechanicalTreatmentController.shared.createNew(spec, await userFactory());
+  return await MechanicalTreatmentController.shared.createNewObject(spec, await userFactory());
 };
 
 /**

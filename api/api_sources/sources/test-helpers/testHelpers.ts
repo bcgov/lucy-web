@@ -50,6 +50,7 @@ export const verifySuccessBody = async (body: any, otherFieldVerify?: VerifyData
  * @param VerifyData otherFieldVerify
  */
 export const verifyErrorBody = async (body: any, otherFieldVerify?: VerifyData) => {
+    // console.dir(body);
     should().exist(body.errors);
     should().exist(body.message);
     if (otherFieldVerify) {
