@@ -149,11 +149,17 @@ export class Observation extends Record implements ObservationCreateModel {
     @ModelProperty({ type: PropertyType.number})
     long: number;
 
-    @Column({ name: ObservationSchema.columns.width, nullable: false})
+    @Column({ name: ObservationSchema.columns.width,
+        nullable: false,
+        transformer: new NumericTransformer()
+    })
     @ModelProperty({ type: PropertyType.number})
     width: number;
 
-    @Column({ name: ObservationSchema.columns.length, nullable: false})
+    @Column({ name: ObservationSchema.columns.length,
+        nullable: false,
+        transformer: new NumericTransformer()
+    })
     @ModelProperty({ type: PropertyType.number})
     length: number;
 
