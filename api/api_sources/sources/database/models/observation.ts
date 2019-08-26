@@ -341,8 +341,7 @@ export class Observation extends Record implements ObservationCreateModel {
         type => MechanicalTreatment,
         mechanicalTreatment => mechanicalTreatment.observation
     )
-    getMechanicalTreatments: Promise<MechanicalTreatment[]>;
-
+    mechanicalTreatmentsFetcher: Promise<MechanicalTreatment[]>;
     @ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
     mechanicalTreatments?: MechanicalTreatment[];
 
@@ -351,7 +350,6 @@ export class Observation extends Record implements ObservationCreateModel {
      */
     @AfterLoad()
     async entityDidLoad() {
-        this.mechanicalTreatments = await this.getMechanicalTreatments;
     }
 }
 // -------------------------------------------------------------

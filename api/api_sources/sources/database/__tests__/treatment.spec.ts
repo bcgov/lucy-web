@@ -95,9 +95,11 @@ describe('Treatment Test', () => {
         should().exist(f);
         const obs = f.observation;
         should().exist(obs);
-        let list: MechanicalTreatment[] = await obs.getMechanicalTreatments;
+        console.log('1');
+        let list: MechanicalTreatment[] = await obs.mechanicalTreatmentsFetcher;
         list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
         expect(list.length).to.be.equal(1);
+        await destroyMechanicalTreatment(f);
     });
 
     // Test3: Fetch Mechanical Treatments of observation
@@ -110,6 +112,7 @@ describe('Treatment Test', () => {
         let list: MechanicalTreatment[] = fetchObs.mechanicalTreatments || [];
         list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
         expect(list.length).to.be.equal(1);
+        await destroyMechanicalTreatment(f);
     });
 
 });
