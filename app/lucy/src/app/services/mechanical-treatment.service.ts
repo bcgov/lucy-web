@@ -3,6 +3,7 @@ import { ApiService, APIRequestMethod } from './api.service';
 import { MechanicalTreatment } from '../models/MechanicalTreatment';
 import { AppConstants } from '../constants';
 import { ObjectValidatorService } from './object-validator.service';
+import { DummyService } from './dummy.service';
 
 export interface MechanicalTreatmentDiffResult {
   changed: boolean;
@@ -17,7 +18,7 @@ export interface MechanicalTreatmentDiffResult {
 })
 export class MechanicalTreatmentService {
 
-  constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
+  constructor(private api: ApiService, private objectValidator: ObjectValidatorService, private dummyService: DummyService) { }
 
   /**
    * Creates json body for observation creation.
@@ -143,6 +144,7 @@ export class MechanicalTreatmentService {
    * @param id Observation Id
    */
   public async getWithId(id: number): Promise<MechanicalTreatment | undefined> {
+    return this.dummyService.createDummyMechanicalTreatment();
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_mechanicalTreatmentWith(id), null);
     if (response.success && this.objectValidator.isMechanicalTreatmentObject(response.response)) {
       return response.response;
