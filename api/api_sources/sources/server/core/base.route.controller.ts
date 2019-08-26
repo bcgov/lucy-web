@@ -255,6 +255,7 @@ export class BaseRoutController<Controller extends DataController>  {
         return [
             check(paramKey).isInt().custom(async (value: number, {req}) => {
                 const item = await this.dataController.findById(value);
+                assert(item, `[resource-validation]: item does not exists with id: ${value}`);
                 UpdateRequest(req, { id: item});
                 req.resource = item;
             })
@@ -320,8 +321,10 @@ export class BaseRoutController<Controller extends DataController>  {
                 assert(data, `Unexpected request body: tag:${tag}`);
                 const [status, body]  = await handler(data, req, resp);
                 if (status > 0) {
+                    this.logger.info(`${tag}: [DONE]`);
                     return resp.status(status).json(this.successResp(body));
                 } else {
+                    this.logger.error(`${tag}: [FAIL]`);
                     return;
                 }
             } catch (excp) {
