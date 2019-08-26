@@ -6,3 +6,11 @@ table {
     /* align-content: flex-end; */
     text-align: right;
 }
+
+.mat-row:nth-child(even){
+    background-color:white;
+    }
+
+.mat-row:nth-child(odd){
+    background-color:#F7F7F7;
+}

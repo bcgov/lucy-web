@@ -16,6 +16,7 @@ export interface ObservationTreatment {
   date: string;
   method: TreatmentMethod;
   species: InvasivePlantSpecies;
+  paperFileReference: string;
 }
 
 @Component({
@@ -58,7 +59,7 @@ export class AddPlantObservationTreatmentsComponent implements OnInit {
   observationTreatments: ObservationTreatment[] = [];
 
   /************ Material Table ************/
-  displayedColumns: string[] = ['Date', 'Method', 'Species', `Actions`];
+  displayedColumns: string[] = ['Date', 'Method', 'Species', `PaperFileReference`, `Actions`];
   dataSource = new MatTableDataSource<ObservationTreatment>(this.observationTreatments);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   /************ END OF Material Table ************/
@@ -89,7 +90,8 @@ export class AddPlantObservationTreatmentsComponent implements OnInit {
         id: mechanicalTreatment.mechanical_treatment_id,
         date: mechanicalTreatment.date,
         method: TreatmentMethod.Mechanical,
-        species: mechanicalTreatment.species
+        species: mechanicalTreatment.species,
+        paperFileReference: mechanicalTreatment.paperFileReference,
       });
     }
   }
