@@ -44,7 +44,6 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
     return this.roles.canCreateObservation(this.accessType);
   }
 
-
   // State flags
   private submitted = false;
   private inReviewMode = false;
@@ -330,7 +329,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
         return;
       }
       this.loadingService.add();
-      const success = await this.mechanicalTreatmentService.editObservationChangeOnly(this.object, changes.originalMechanicalTreatment);
+      const success = await this.mechanicalTreatmentService.editMechanicalTreatmentChangeOnly(this.object, changes.originalMechanicalTreatment);
       this.loadingService.remove();
       if (success) {
         this.submitted = true;

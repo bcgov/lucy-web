@@ -31,10 +31,10 @@ export class MechanicalTreatmentService {
      * You'll need to create a similar function to "flatten" an observation.
      */
     const body = {
-      latitude: object.latitude,
-      longitude: object.longitude,
-      length: object.length,
-      width: object.width,
+      latitude: +String(object.latitude),
+      longitude: +String(object.longitude),
+      length: +String(object.length),
+      width: +String(object.width),
       applicatorFirstName: object.applicatorFirstName,
       applicatorLastName: object.applicatorLastName,
       date: object.date,
@@ -105,11 +105,11 @@ export class MechanicalTreatmentService {
    * Submit changes for a Mechanical Treatment.
    * Send Only changes
    */
-  public async editObservationChangeOnly(newMechanicalTreatment: MechanicalTreatment, oldMechanicalTreatment: MechanicalTreatment): Promise<boolean> {
+  public async editMechanicalTreatmentChangeOnly(newMechanicalTreatment: MechanicalTreatment, oldMechanicalTreatment: MechanicalTreatment): Promise<boolean> {
     const changes = await this.compare(newMechanicalTreatment, oldMechanicalTreatment);
     console.dir(changes);
     // Make the call
-    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_observationWith(newMechanicalTreatment.mechanical_treatment_id), changes);
+    const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_mechanicalTreatmentWith(newMechanicalTreatment.mechanical_treatment_id), changes);
     if (response.success) {
       const observation_Id = response.response[`mechanical_treatment_id`];
       if (observation_Id) {
@@ -144,9 +144,11 @@ export class MechanicalTreatmentService {
    * @param id Observation Id
    */
   public async getWithId(id: number): Promise<MechanicalTreatment | undefined> {
-    return this.dummyService.createDummyMechanicalTreatment();
+    // return this.dummyService.createDummyMechanicalTreatment();
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_mechanicalTreatmentWith(id), null);
+    console.dir(response);
     if (response.success && this.objectValidator.isMechanicalTreatmentObject(response.response)) {
+      console.dir(response);
       return response.response;
     } else {
       return undefined;
