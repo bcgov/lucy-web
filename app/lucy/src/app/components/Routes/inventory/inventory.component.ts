@@ -35,7 +35,7 @@ export class InventoryComponent implements OnInit {
    * call this.setAccessType().
    */
   public get isDataEditor(): boolean {
-    return this.roles.canCreateObservation(this.accessType);
+    return this.roles.canCreate(this.accessType);
   }
 
   /************ Sorting Variables ************/
