@@ -32,6 +32,7 @@ import { Record, RecordController } from './user';
 import { Species } from './species';
 import { SpeciesAgencyCode } from './speciesAgency.code';
 import { MechanicalMethodCode } from './mechanicalMethod.code';
+import { NumericTransformer } from '../../libs/transformer';
 
 /** Interface **/
 /**
@@ -101,28 +102,36 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_location_latitude}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.latitude})
+	@Column({ name: MechanicalTreatmentSchema.columns.latitude,
+		transformer: new NumericTransformer()
+	})
 	@ModelProperty({type: PropertyType.number})
 	latitude: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_location_longitude}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.longitude})
+	@Column({ name: MechanicalTreatmentSchema.columns.longitude,
+		transformer: new NumericTransformer()
+	})
 	@ModelProperty({type: PropertyType.number})
 	longitude: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_area_width}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.width})
+	@Column({ name: MechanicalTreatmentSchema.columns.width,
+		transformer: new NumericTransformer()
+	})
 	@ModelProperty({type: PropertyType.number})
 	width: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_area_length}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.length})
+	@Column({ name: MechanicalTreatmentSchema.columns.length,
+		transformer: new NumericTransformer()
+	})
 	@ModelProperty({type: PropertyType.number})
 	length: number;
 
