@@ -75,6 +75,7 @@ import { InventoryComponent } from './components/Routes/inventory/inventory.comp
 import { ErrorComponent } from './components/Routes/error/error.component';
 import { AddPlantObservationTreatmentsComponent } from './components/Routes/add-plant-observation/add-plant-observation-treatments/add-plant-observation-treatments.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
+import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-viewer.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -118,6 +119,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AddMechanicalTreatmentTreatmentDetailsComponent,
     AddPlantObservationTreatmentsComponent,
     BaseFormComponent,
+    DiffViewerComponent,
   ],
   imports: [
     BrowserModule,
