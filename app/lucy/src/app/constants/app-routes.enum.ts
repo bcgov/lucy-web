@@ -18,6 +18,8 @@ export enum AppRoutes {
     AddObservation = 'create/observation',
     ViewObservation = 'view/observation/:id',
     EditObservation = 'edit/observation/:id',
+
+    base = 'base',
 }
 
 export enum AppRoutesParams {
