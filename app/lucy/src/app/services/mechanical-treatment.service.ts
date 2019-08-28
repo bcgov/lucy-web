@@ -114,6 +114,7 @@ export class MechanicalTreatmentService {
       const observation_Id = response.response[`mechanical_treatment_id`];
       if (observation_Id) {
         console.log(`Edited successfully`);
+        console.dir(response.response);
         return true;
       } else {
         console.log(`Got a response, but something is off - id is missing`);
@@ -266,7 +267,7 @@ export class MechanicalTreatmentService {
         return obj2;
     }
     Object.keys(obj1 || {}).concat(Object.keys(obj2 || {})).forEach(key => {
-        if(obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+        if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
             result[key] = obj2[key];
         }
         if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
