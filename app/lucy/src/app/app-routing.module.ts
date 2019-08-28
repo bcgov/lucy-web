@@ -15,6 +15,7 @@ import { ErrorComponent } from './components/Routes/error/error.component';
 import { AddEntryComponent } from './components/Routes/add-entry/add-entry.component';
 import { AddMechanicalTreatmentComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment.component';
 import { InventoryComponent } from './components/Routes/inventory/inventory.component';
+import { BaseFormComponent } from './components/base-form/base-form.component';
 
 const routes: Routes = [
   { path: AppRoutes.Login, component: LoginComponent},
@@ -29,7 +30,8 @@ const routes: Routes = [
   { path: AppRoutes.ViewObservation , component: AddPlantObservationComponent},
   { path: AppRoutes.EditObservation , component: AddPlantObservationComponent},
   { path: AppRoutes.Inventory , component: InventoryComponent},
-  { path: AppRoutes.Error , component: ErrorComponent}
+  { path: AppRoutes.Error , component: ErrorComponent},
+  { path: AppRoutes.base , component: BaseFormComponent}
 ];
 
 @NgModule({
