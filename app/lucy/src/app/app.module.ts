@@ -76,6 +76,7 @@ import { ErrorComponent } from './components/Routes/error/error.component';
 import { AddPlantObservationTreatmentsComponent } from './components/Routes/add-plant-observation/add-plant-observation-treatments/add-plant-observation-treatments.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
 import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-viewer.component';
+import { AddMechanicalTreatmentAdvancedComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-advanced/add-mechanical-treatment-advanced.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -120,6 +121,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AddPlantObservationTreatmentsComponent,
     BaseFormComponent,
     DiffViewerComponent,
+    AddMechanicalTreatmentAdvancedComponent,
   ],
   imports: [
     BrowserModule,
