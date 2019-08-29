@@ -27,7 +27,7 @@ import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTe
 import {
     ObservationController,
     Observation,
-    MechanicalTreatmentCreateSpec
+    MechanicalTreatmentSpec
 } from '../../../../database/models';
 import {
     observationFactory,
@@ -175,7 +175,7 @@ describe('Test for observation routes', () => {
                 expect(data.observation_id).to.be.equal(obs.observation_id);
                 expect(data.mechanicalTreatments.length).to.be.equal(1);
                 // Check species prop of fetched obj
-                const mt0: MechanicalTreatmentCreateSpec = data.mechanicalTreatments[0];
+                const mt0: MechanicalTreatmentSpec = data.mechanicalTreatments[0];
                 should().exist(mt0.species);
             });
             await destroyMechanicalTreatment(mt);

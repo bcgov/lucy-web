@@ -27,7 +27,7 @@ import * as faker from 'faker';
 import { Destroy } from './helper';
 import { MechanicalTreatment,
   MechanicalTreatmentController,
-  MechanicalTreatmentCreateSpec,
+  MechanicalTreatmentSpec,
   MechanicalTreatmentUpdateSpec,
   User,
   UserDataController,
@@ -50,7 +50,7 @@ import {
 /**
  * @description Factory to create treatment spec.
  */
-export const mechanicalTreatmentCreateSpecFactory = async (): Promise<MechanicalTreatmentCreateSpec> => {
+export const mechanicalTreatmentCreateSpecFactory = async (): Promise<MechanicalTreatmentSpec> => {
   return {
     latitude: parseFloat(faker.address.latitude()) || 0.0,
     longitude: parseFloat(faker.address.longitude()) || 0.0,
