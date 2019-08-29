@@ -31,19 +31,22 @@ import {
 	SpeciesAgencyCodeSchema,
 	MechanicalMethodCodeSchema,
 	MechanicalDisposalMethodCodeSchema,
-	MechanicalSoilDisturbanceCodeSchema
+	MechanicalSoilDisturbanceCodeSchema,
+	MechanicalRootRemovalCodeSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { RecordController, Record } from './user';
+
 import {
 	Observation,
 	Species,
 	SpeciesAgencyCode,
 	MechanicalMethodCode,
 	MechanicalDisposalMethodCode,
-	MechanicalSoilDisturbanceCode
+	MechanicalSoilDisturbanceCode,
+	MechanicalRootRemovalCode
 } from '../models';
+import { Record, RecordController } from './user';
 
 
 /** Interface **/
@@ -67,6 +70,7 @@ export interface MechanicalTreatmentSpec {
 	mechanicalMethod: MechanicalMethodCode;
 	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
 	soilDisturbance: MechanicalSoilDisturbanceCode;
+	rootRemoval: MechanicalRootRemovalCode;
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -92,6 +96,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	mechanicalMethod?: MechanicalMethodCode;
 	mechanicalDisposalMethod?: MechanicalDisposalMethodCode;
 	soilDisturbance?: MechanicalSoilDisturbanceCode;
+	rootRemoval?: MechanicalRootRemovalCode;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -228,15 +233,22 @@ export class MechanicalTreatment extends Record {
 	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
 
 	/**
-	 * @description Getter/Setter property for column {mechanical_soil_disturbance_code}
+	 * @description Getter/Setter property for column {mechanical_soil_disturbance_code_id}
 	 */
 	@ManyToOne( type => MechanicalSoilDisturbanceCode, { eager: true})
 	@JoinColumn({ name: MechanicalTreatmentSchema.columns.soilDisturbance, referencedColumnName: MechanicalSoilDisturbanceCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	soilDisturbance: MechanicalSoilDisturbanceCode;
 
-}
+	/**
+	 * @description Getter/Setter property for column {mechanical_root_removal_code_id}
+	 */
+	@ManyToOne( type => MechanicalRootRemovalCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.rootRemoval, referencedColumnName: MechanicalRootRemovalCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	rootRemoval: MechanicalRootRemovalCode;
 
+}
 
 // ** DataModel controller of MechanicalTreatment **
 
