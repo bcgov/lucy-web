@@ -25,12 +25,12 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SpeciesAgencyCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './user';
 
 @Entity( { name: SpeciesAgencyCodeSchema.dbTable} )
-@ClassDescription({
+@ModelDescription({
 	description: 'Model class for SpeciesAgencyCodeSchema',
 	schema: SpeciesAgencyCodeSchema,
 	apiResource: false

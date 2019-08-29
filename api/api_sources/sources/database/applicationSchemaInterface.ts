@@ -36,6 +36,8 @@ export interface TableColumnDefinition {
     foreignTable?: string;
     refColumn?: string;
     deleteCascade?: boolean;
+    refModel?: string;
+    refSchema?: string;
 }
 
 
@@ -50,13 +52,23 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     foreignTable?: string;
     refColumn?: string;
     deleteCascade?: boolean;
-    constructor(name: string, comment: string, definition?: string, foreignTable?: string, refColumn?: string, deleteCascade?: boolean) {
+    refSchema?: string;
+    refModel?: string;
+    constructor(name: string, comment: string, definition?: string, foreignTable?: string, refColumn?: string, deleteCascade?: boolean, refSchema?: string, refModel?: string) {
         this.name = name;
         this.comment = comment;
         this.definition = definition;
         this.foreignTable = foreignTable;
         this.refColumn = refColumn;
         this.deleteCascade = deleteCascade;
+        this.refSchema = refSchema;
+        if (refSchema) {
+            this.refModel = refSchema.split('Schema')[0];
+        }
+
+        if (refModel) {
+            this.refModel = refModel;
+        }
     }
 
     ref(reference?: string, refColumn?: string, deleteCascade?: boolean): string {
@@ -95,6 +107,8 @@ export class ApplicationTableColumn implements TableColumnDefinition {
             return 'boolean';
         } else if (def.includes('int') || def.includes('smallint')) {
             return 'number';
+        } else if (def.includes('date') || def.includes('day')) {
+            return 'string';
         } else {
             return 'object';
         }
@@ -152,6 +166,18 @@ export class ApplicationTable {
 
     public isValidColumnName(columnName: string): boolean {
         return _.contains(this.columns, columnName);
+    }
+
+    public get relationSchemas(): string [] {
+        const result: string[] = [];
+        _.each(this.columnsDefinition, def => def.refSchema ? result.push(def.refSchema) : null);
+        return result;
+    }
+
+    public get relationModels(): string [] {
+        const result: string[] = [];
+        _.each(this.columnsDefinition, def => def.refModel ? result.push(def.refModel) : null);
+        return result;
     }
 }
 
@@ -230,7 +256,16 @@ export class  BaseTableSchema {
         table.columnsDefinition = {};
         _.each(def.columns, (value: TableColumnOption, key) => {
             const result = {};
-            result[key] = new ApplicationTableColumn(value.name, value.comment, value.definition, value.foreignTable, value.refColumn, value.deleteCascade);
+            result[key] = new ApplicationTableColumn(
+                value.name,
+                value.comment,
+                value.definition,
+                value.foreignTable,
+                value.refColumn,
+                value.deleteCascade,
+                value.refSchema,
+                value.refModel
+            );
             table.columnsDefinition = {...table.columnsDefinition, ...result};
         });
         assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
@@ -436,7 +471,7 @@ export const defineColumn = (name: string, comment: string, definition?: string,
 };
 
 export interface TableColumnOption extends TableColumnDefinition {
-    refSchema?: BaseTableSchema;
+    refSchemaObject?: BaseTableSchema;
 }
 
 export const createColumn = (option: TableColumnOption): ApplicationTableColumn => {

@@ -51,7 +51,7 @@ export interface ClassInfo {
  * @description Decorator to provide for run time info of class
  * @param ClassInfo info: Information of class
  */
-export function ClassDescription(info: ClassInfo) {
+export function ModelDescription(info: ClassInfo) {
     return function (target: Function) {
         classInfoStorage[target.name] = info;
     };
