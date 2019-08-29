@@ -108,6 +108,13 @@ schemas:
         foreignTable: mechanical_soil_disturbance_code
         refColumn: mechanical_soil_disturbance_code_id
         deleteCascade: false
+      rootRemoval:
+        name: 'mechanical_root_removal_code_id'
+        comment: Foreign key reference to Mechanical Root Removal Code table
+        definition: INT NULL
+        foreignTable: mechanical_root_removal_code
+        refColumn: mechanical_root_removal_code_id
+        deleteCascade: false
   ## --
   ## -- MechanicalMethodCodeSchema
   MechanicalMethodCodeSchema:
