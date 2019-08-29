@@ -1,0 +1,5 @@
+mechanical_root_removal_code,description
+UN,Unknown
+FR,Fully Removed
+MD,Moderate > 50% remaining
+LOW,Low > 90% remaining

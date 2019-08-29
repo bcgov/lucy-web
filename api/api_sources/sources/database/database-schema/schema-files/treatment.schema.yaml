@@ -153,16 +153,16 @@ schemas:
         definition: VARCHAR(6) NOT NULL UNIQUE
   ## --
   ## -- MechanicalRootSystemCodeSchema
-  MechanicalRootSystemCodeSchema:
-    name: mechanical_root_system_code
-    description: 'This table is collection of mechanical root system code for mechanical treatment'
+  MechanicalRootRemovalCodeSchema:
+    name: mechanical_root_removal_code
+    description: 'This table is collection of mechanical root removal code for mechanical treatment'
     columns:
       id: 
-        name: 'mechanical_root_system_code_id'
+        name: 'mechanical_root_removal_code_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
       code: 
-        name: 'mechanical_root_system_code'
+        name: 'mechanical_root_removal_code'
         comment: String encoded enum values for Mechanical root system codes.
         definition: VARCHAR(6) NOT NULL UNIQUE
   ## -- 
