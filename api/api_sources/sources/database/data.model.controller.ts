@@ -123,7 +123,8 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase imp
      * @param number id
      */
     async findById(id: number): Promise<T> {
-        return await this.repo.findOne(this.idQuery(id)) as T;
+        const items: T[] = await this.repo.find(this.idQuery(id)) as T[];
+        return items[0];
     }
 
     async random(): Promise<T> {

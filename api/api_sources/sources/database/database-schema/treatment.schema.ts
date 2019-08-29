@@ -53,5 +53,26 @@ export class MechanicalTreatmentSchema extends TreatmentSchema {}
  * @description Schema Handler for Mechanical Treatment Code
  */
 export class MechanicalMethodCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema Handler for Mechanical Disposal MethodCode
+ */
+export class MechanicalDisposalMethodCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema handler for MechanicalTreatmentDisturbanceCode
+ */
+export class MechanicalTreatmentDisturbanceCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema handler for MechanicalRootSystemCodeS
+ */
+export class MechanicalRootSystemCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema handler for  MechanicalTreatmentIssueCode
+ */
+export class MechanicalTreatmentIssueCodeSchema extends TreatmentCodeSchema {}
+
 // ----------------------------------------------------------
 
