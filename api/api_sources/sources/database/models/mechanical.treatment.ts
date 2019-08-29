@@ -30,18 +30,20 @@ import {
 	SpeciesSchema,
 	SpeciesAgencyCodeSchema,
 	MechanicalMethodCodeSchema,
-	MechanicalDisposalMethodCodeSchema
+	MechanicalDisposalMethodCodeSchema,
+	MechanicalSoilDisturbanceCodeSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
+import { RecordController, Record } from './user';
 import {
 	Observation,
 	Species,
 	SpeciesAgencyCode,
 	MechanicalMethodCode,
-	MechanicalDisposalMethodCode
+	MechanicalDisposalMethodCode,
+	MechanicalSoilDisturbanceCode
 } from '../models';
-import { Record, RecordController } from './user';
 
 
 /** Interface **/
@@ -58,12 +60,13 @@ export interface MechanicalTreatmentCreateSpec {
 	date: string;
 	paperFileReference: string;
 	comment: string;
-	signageOnSiteIndicator?: boolean;
+	signageOnSiteIndicator: boolean;
 	observation: Observation;
 	species: Species;
 	speciesAgency: SpeciesAgencyCode;
 	mechanicalMethod: MechanicalMethodCode;
 	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
+	soilDisturbance: MechanicalSoilDisturbanceCode;
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -88,6 +91,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	speciesAgency?: SpeciesAgencyCode;
 	mechanicalMethod?: MechanicalMethodCode;
 	mechanicalDisposalMethod?: MechanicalDisposalMethodCode;
+	soilDisturbance?: MechanicalSoilDisturbanceCode;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -100,7 +104,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: MechanicalTreatmentSchema.dbTable} )
-export class MechanicalTreatment extends Record implements MechanicalTreatmentCreateSpec {
+export class MechanicalTreatment extends Record {
 
 	/**
 	 * Class Properties
@@ -222,6 +226,14 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	@JoinColumn({ name: MechanicalTreatmentSchema.columns.mechanicalDisposalMethod, referencedColumnName: MechanicalDisposalMethodCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
+
+	/**
+	 * @description Getter/Setter property for column {mechanical_soil_disturbance_code}
+	 */
+	@ManyToOne( type => MechanicalSoilDisturbanceCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.soilDisturbance, referencedColumnName: MechanicalSoilDisturbanceCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	soilDisturbance: MechanicalSoilDisturbanceCode;
 
 }
 
