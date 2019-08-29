@@ -18,6 +18,7 @@ ALTER TABLE mechanical_treatment ADD COLUMN species_id INT NULL REFERENCES speci
 ALTER TABLE mechanical_treatment ADD COLUMN species_agency_code_id INT NULL REFERENCES species_agency_code(species_agency_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_method_code_id INT NULL REFERENCES mechanical_method_code(mechanical_method_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_disposal_method_code_id INT NULL REFERENCES mechanical_disposal_method_code(mechanical_disposal_method_code_id) ON DELETE SET NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_soil_disturbance_code_id INT NULL REFERENCES mechanical_soil_disturbance_code(mechanical_soil_disturbance_code_id) ON DELETE SET NULL;
 
 
         
@@ -41,6 +42,7 @@ COMMENT ON COLUMN mechanical_treatment.species_id IS 'Species associated with a 
 COMMENT ON COLUMN mechanical_treatment.species_agency_code_id IS 'Foreign key reference to Species Agency Code table';
 COMMENT ON COLUMN mechanical_treatment.mechanical_method_code_id IS 'Foreign key reference to Mechanical Method Code table';
 COMMENT ON COLUMN mechanical_treatment.mechanical_disposal_method_code_id IS 'Foreign key reference to Mechanical Disposal Method Code table';
+COMMENT ON COLUMN mechanical_treatment.mechanical_soil_disturbance_code_id IS 'Foreign key reference to Mechanical Soil Disturbance code';
 
 
         

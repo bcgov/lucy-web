@@ -101,6 +101,13 @@ schemas:
         foreignTable: mechanical_disposal_method_code
         refColumn: mechanical_disposal_method_code_id
         deleteCascade: false
+      soilDisturbance:
+        name: 'mechanical_soil_disturbance_code_id'
+        comment: Foreign key reference to Mechanical Soil Disturbance code 
+        definition: INT NULL
+        foreignTable: mechanical_soil_disturbance_code
+        refColumn: mechanical_soil_disturbance_code_id
+        deleteCascade: false
   ## --
   ## -- MechanicalMethodCodeSchema
   MechanicalMethodCodeSchema:
