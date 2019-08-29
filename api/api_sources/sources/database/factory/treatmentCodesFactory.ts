@@ -33,7 +33,9 @@ import {
     MechanicalSoilDisturbanceCode,
     MechanicalSoilDisturbanceCodeController,
     MechanicalRootRemovalCode,
-    MechanicalRootRemovalCodeController
+    MechanicalRootRemovalCodeController,
+    MechanicalTreatmentIssueCode,
+    MechanicalTreatmentIssueCodeController
 } from '../models';
 
 /**
@@ -61,4 +63,11 @@ export const mechanicalSoilDisturbanceCodeFactory =
  */
 export const mechanicalRootRemovalCodeFactory =
     CodeFactory<MechanicalRootRemovalCode, MechanicalRootRemovalCodeController>(MechanicalRootRemovalCodeController.shared);
+
+/**
+ * @description Mechanical Treatment Issue Code Factory
+ * @returns Promise<MechanicalTreatmentIssueCode>
+ */
+export const mechanicalTreatmentIssuesCodeFactory =
+    CodeFactory<MechanicalTreatmentIssueCode, MechanicalTreatmentIssueCodeController>(MechanicalTreatmentIssueCodeController.shared);
 // ----------------------------------------------------------------
