@@ -43,6 +43,7 @@ import {
 import {
   mechanicalMethodCodeFactory,
   mechanicalDisposalMethodCodeFactory,
+  mechanicalSoilDisturbanceCodeFactory,
 } from './treatmentCodesFactory';
 
 
@@ -65,7 +66,8 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
     species: await speciesFactory(),
     speciesAgency: await speciesAgencyCodeFactory(),
     mechanicalMethod: await mechanicalMethodCodeFactory(),
-    mechanicalDisposalMethod: await mechanicalDisposalMethodCodeFactory()
+    mechanicalDisposalMethod: await mechanicalDisposalMethodCodeFactory(),
+    soilDisturbance: await mechanicalSoilDisturbanceCodeFactory()
   };
 };
 

@@ -77,15 +77,17 @@ describe('Test for mechanical treatment', () => {
                 should().exist(data.speciesAgency);
                 should().exist(data.mechanicalMethod);
                 should().exist(data.mechanicalDisposalMethod);
+                should().exist(data.soilDisturbance);
                 expect(data.observation.observation_id).to.be.equal(create.observation.observation_id);
-                expect(data.species.species_id).to.be.equal(create.species.species_id);
-                expect(data.speciesAgency.species_agency_code_id).to.be.equal(create.speciesAgency.species_agency_code_id);
-                expect(data.mechanicalMethod.mechanical_method_code_id).to.be.equal(create.mechanicalMethod.mechanical_method_code_id);
+                expect(data.species.species_id)
+                .to.be.equal(create.species.species_id);
+                expect(data.speciesAgency.species_agency_code_id)
+                .to.be.equal(create.speciesAgency.species_agency_code_id);
+                expect(data.mechanicalMethod.mechanical_method_code_id)
+                .to.be.equal(create.mechanicalMethod.mechanical_method_code_id);
                 expect(data.mechanicalDisposalMethod.mechanical_disposal_method_code_id)
-                .to
-                .be
-                .equal(create.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
-
+                .to.be.equal(create.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
+                expect(data.soilDisturbance.mechanical_soil_disturbance_code_id).to.be.equal(create.soilDisturbance.mechanical_soil_disturbance_code_id);
                 await MechanicalTreatmentController.shared.removeById(data.mechanical_treatment_id);
             });
             await ObservationController.shared.remove(create.observation);
