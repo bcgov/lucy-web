@@ -21,7 +21,7 @@
  */
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, OneToMany } from 'typeorm';
 import { Record } from './user';
-import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
 import { SpeciesAgencyCode } from './speciesAgency.code';
 import { SoilTextureCode } from './soilTexture.code';
@@ -121,7 +121,7 @@ export interface ObservationUpdateModel {
 }
 
 @Entity({ name: ObservationSchema.dbTable})
-@ClassDescription({
+@ModelDescription({
     description: 'Observation Model class',
     schema: ObservationSchema,
     apiResource: true

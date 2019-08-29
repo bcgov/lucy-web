@@ -36,8 +36,14 @@ import { MechanicalTreatment,
 import { userFactory } from './userFactory';
 import { observationFactory } from './observationFactory';
 import moment = require('moment');
-import { speciesFactory, speciesAgencyCodeFactory } from './observationCodesFactory';
-import { mechanicalMethodCodeFactory } from './treatmentCodesFactory';
+import {
+  speciesFactory,
+  speciesAgencyCodeFactory
+} from './observationCodesFactory';
+import {
+  mechanicalMethodCodeFactory,
+  mechanicalDisposalMethodCodeFactory,
+} from './treatmentCodesFactory';
 
 
 /**
@@ -53,11 +59,13 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
     length: faker.random.number(),
     date: `${moment(faker.date.recent()).format('YYYY-MM-DD')}`,
     paperFileReference: faker.random.alphaNumeric(),
+    signageOnSiteIndicator: false,
     comment: faker.random.word(),
     observation: (await observationFactory()),
     species: await speciesFactory(),
     speciesAgency: await speciesAgencyCodeFactory(),
-    mechanicalMethod: await mechanicalMethodCodeFactory()
+    mechanicalMethod: await mechanicalMethodCodeFactory(),
+    mechanicalDisposalMethod: await mechanicalDisposalMethodCodeFactory()
   };
 };
 

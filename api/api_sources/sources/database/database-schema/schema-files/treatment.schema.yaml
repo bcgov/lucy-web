@@ -4,10 +4,13 @@ description: Schema model for various Treatment
 externalTables:
   - name: observation
     description: Observation table described in observation.codes.schema.yaml
+    schema: ObservationSchema
   - name: species
     description: Species table 
+    schema: SpeciesSchema
   - name: species_agency_code
     description: Species agency code table
+    schema: SpeciesAgencyCodeSchema
 schemas:
   ## -- MechanicalTreatmentSchema
   MechanicalTreatmentSchema:
@@ -57,6 +60,11 @@ schemas:
         name: mechanical_treatment_comment
         comment: 'Comment on treatment record'
         definition: VARCHAR(500) NULL
+      # -- Indicators --
+      signageOnSiteIndicator:
+        name: signage_on_site_ind
+        comment: 'Sign collected for on site indicator'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       ## -- Relationship columns
       observation:
         name: 'observation_id'
@@ -86,6 +94,13 @@ schemas:
         foreignTable: mechanical_method_code
         refColumn: mechanical_method_code_id
         deleteCascade: false
+      mechanicalDisposalMethod:
+        name: 'mechanical_disposal_method_code_id'
+        comment: Foreign key reference to Mechanical Disposal Method Code table 
+        definition: INT NULL
+        foreignTable: mechanical_disposal_method_code
+        refColumn: mechanical_disposal_method_code_id
+        deleteCascade: false
   ## --
   ## -- MechanicalMethodCodeSchema
   MechanicalMethodCodeSchema:
@@ -102,4 +117,60 @@ schemas:
         comment: String encoded enum values for Mechanical treatment methods.
         definition: VARCHAR(4) NOT NULL UNIQUE
   ## --
+  ## -- MechanicalDisposalMethodCodeSchema
+  MechanicalDisposalMethodCodeSchema:
+    name: mechanical_disposal_method_code
+    description: 'Mechanical treatment disposal methods code. Indicate disposal method of species treated in mechanical treatment'
+    columns:
+      id: 
+        name: 'mechanical_disposal_method_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_disposal_method_code'
+        comment: String encoded enum values for Mechanical disposal methods.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## --
+  ## -- MechanicalTreatmentDisturbanceCodeSchema
+  MechanicalTreatmentDisturbanceCodeSchema:
+    name: mechanical_treatment_disturbance_code
+    description: 'This table is collection of disturbance code for mechanical treatment'
+    columns:
+      id: 
+        name: 'mechanical_treatment_disturbance_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_treatment_disturbance_code'
+        comment: String encoded enum values for Mechanical treatment disturbance codes.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## --
+  ## -- MechanicalRootSystemCodeSchema
+  MechanicalRootSystemCodeSchema:
+    name: mechanical_root_system_code
+    description: 'This table is collection of mechanical root system code for mechanical treatment'
+    columns:
+      id: 
+        name: 'mechanical_root_system_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_root_system_code'
+        comment: String encoded enum values for Mechanical root system codes.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## -- 
+  ## -- MechanicalTreatmentIssueCodeSchema
+  MechanicalTreatmentIssueCodeSchema:
+    name: mechanical_treatment_issue_code
+    description: 'This table is collection of code related to mechanical treatments'
+    columns:
+      id: 
+        name: 'mechanical_treatment_issue_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_treatment_issue_code'
+        comment: String encoded enum values for issue code related to mechanical treatments.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## -- 
 

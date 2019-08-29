@@ -46,7 +46,8 @@ import {
     ObservationController,
     SpeciesController,
     MechanicalMethodCodeController,
-    SpeciesAgencyCodeController
+    SpeciesAgencyCodeController,
+    MechanicalDisposalMethodCodeController
 } from '../../../../database/models';
 
 const CreateTreatmentValidator = (): any[] => {
@@ -54,7 +55,8 @@ const CreateTreatmentValidator = (): any[] => {
             observation: ObservationController.shared,
             species: SpeciesController.shared,
             speciesAgency: SpeciesAgencyCodeController.shared,
-            mechanicalMethod: MechanicalMethodCodeController.shared
+            mechanicalMethod: MechanicalMethodCodeController.shared,
+            mechanicalDisposalMethod: MechanicalDisposalMethodCodeController.shared
         }).concat(ValidatorCheck({
                 applicatorFirstName: {
                     validate: validate => validate.isString(),
@@ -92,6 +94,9 @@ const CreateTreatmentValidator = (): any[] => {
                 },
                 comment: {
                     validate: validate => validate.isString().optional()
+                },
+                signageOnSiteIndicator: {
+                    validate: validate => validate.isBoolean().optional()
                 }
             }));
 };

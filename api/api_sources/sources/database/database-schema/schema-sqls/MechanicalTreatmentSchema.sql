@@ -12,10 +12,12 @@ ALTER TABLE mechanical_treatment ADD COLUMN applicator_last_name VARCHAR(100) NU
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_date DATE NOT NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_comment VARCHAR(500) NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN signage_on_site_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE mechanical_treatment ADD COLUMN observation_id INT NOT NULL REFERENCES observation(observation_id) ON DELETE CASCADE;
 ALTER TABLE mechanical_treatment ADD COLUMN species_id INT NULL REFERENCES species(species_id) ON DELETE CASCADE;
 ALTER TABLE mechanical_treatment ADD COLUMN species_agency_code_id INT NULL REFERENCES species_agency_code(species_agency_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_method_code_id INT NULL REFERENCES mechanical_method_code(mechanical_method_code_id) ON DELETE SET NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_disposal_method_code_id INT NULL REFERENCES mechanical_disposal_method_code(mechanical_disposal_method_code_id) ON DELETE SET NULL;
 
 
         
@@ -33,10 +35,12 @@ COMMENT ON COLUMN mechanical_treatment.applicator_last_name IS 'Last name of the
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_date IS 'Date of the treatment';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_paper_file_ref IS 'Paper file reference associated with treatment';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_comment IS 'Comment on treatment record';
+COMMENT ON COLUMN mechanical_treatment.signage_on_site_ind IS 'Sign collected for on site indicator';
 COMMENT ON COLUMN mechanical_treatment.observation_id IS 'Observation associated with treatment';
 COMMENT ON COLUMN mechanical_treatment.species_id IS 'Species associated with a treatment';
 COMMENT ON COLUMN mechanical_treatment.species_agency_code_id IS 'Foreign key reference to Species Agency Code table';
 COMMENT ON COLUMN mechanical_treatment.mechanical_method_code_id IS 'Foreign key reference to Mechanical Method Code table';
+COMMENT ON COLUMN mechanical_treatment.mechanical_disposal_method_code_id IS 'Foreign key reference to Mechanical Disposal Method Code table';
 
 
         
