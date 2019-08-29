@@ -42,7 +42,7 @@ import {
 } from '../../../core';
 import {
     MechanicalTreatmentController,
-    MechanicalTreatmentCreateSpec,
+    MechanicalTreatmentSpec,
     ObservationController,
     SpeciesController,
     MechanicalMethodCodeController,
@@ -112,7 +112,7 @@ const CreateTreatmentValidator = (): any[] => {
 })
 @CreateMiddleware(() => [writerOnlyRoute()])
 @UpdateMiddleware(() => [writerOnlyRoute()])
-export class MechanicalTreatmentRouteController extends ResourceRouteController<MechanicalTreatmentController, MechanicalTreatmentCreateSpec, any> {
+export class MechanicalTreatmentRouteController extends ResourceRouteController<MechanicalTreatmentController, MechanicalTreatmentSpec, any> {
     static get shared(): MechanicalTreatmentRouteController {
         return this.sharedInstance<MechanicalTreatmentController>() as MechanicalTreatmentRouteController;
     }
