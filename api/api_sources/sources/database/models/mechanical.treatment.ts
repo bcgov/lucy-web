@@ -50,7 +50,7 @@ import {
 /**
  * @description MechanicalTreatment create interface
  */
-export interface MechanicalTreatmentCreateSpec {
+export interface MechanicalTreatmentSpec {
 	latitude: number;
 	longitude: number;
 	width: number;
