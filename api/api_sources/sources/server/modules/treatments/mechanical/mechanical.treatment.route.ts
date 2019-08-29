@@ -48,7 +48,9 @@ import {
     MechanicalMethodCodeController,
     SpeciesAgencyCodeController,
     MechanicalDisposalMethodCodeController,
-    MechanicalSoilDisturbanceCodeController
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalTreatmentIssueCodeController,
+    MechanicalRootRemovalCodeController
 } from '../../../../database/models';
 
 const CreateTreatmentValidator = (): any[] => {
@@ -58,7 +60,9 @@ const CreateTreatmentValidator = (): any[] => {
             speciesAgency: SpeciesAgencyCodeController.shared,
             mechanicalMethod: MechanicalMethodCodeController.shared,
             mechanicalDisposalMethod: MechanicalDisposalMethodCodeController.shared,
-            soilDisturbance: MechanicalSoilDisturbanceCodeController.shared
+            soilDisturbance: MechanicalSoilDisturbanceCodeController.shared,
+            rootRemoval: MechanicalRootRemovalCodeController.shared,
+            issue: MechanicalTreatmentIssueCodeController.shared
         }).concat(ValidatorCheck({
                 applicatorFirstName: {
                     validate: validate => validate.isString(),
