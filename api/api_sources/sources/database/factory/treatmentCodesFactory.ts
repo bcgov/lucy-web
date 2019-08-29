@@ -29,7 +29,9 @@ import {
     MechanicalMethodCodeController,
     MechanicalMethodCode,
     MechanicalDisposalMethodCode,
-    MechanicalDisposalMethodCodeController
+    MechanicalDisposalMethodCodeController,
+    MechanicalSoilDisturbanceCode,
+    MechanicalSoilDisturbanceCodeController
 } from '../models';
 
 /**
@@ -43,4 +45,11 @@ export const mechanicalMethodCodeFactory = CodeFactory<MechanicalMethodCode, Mec
  * @returns Promise<MechanicalDisposalMethodCode>
  */
 export const mechanicalDisposalMethodCodeFactory = CodeFactory<MechanicalDisposalMethodCode, MechanicalDisposalMethodCodeController>(MechanicalDisposalMethodCodeController.shared);
+
+/**
+ * @description Mechanical Soil Disturbance Code Factory
+ * @returns Promise<MechanicalSoilDisturbanceCode>
+ */
+export const mechanicalSoilDisturbanceCodeFactory =
+    CodeFactory<MechanicalSoilDisturbanceCode, MechanicalSoilDisturbanceCodeController>(MechanicalSoilDisturbanceCodeController.shared);
 // ----------------------------------------------------------------
