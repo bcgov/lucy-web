@@ -65,6 +65,21 @@ export const createInterface = (interfaceName: string, description: string, prop
     return template;
 };
 
+const exportRelatedSchema = (schema: BaseTableSchema) => {
+    const schemas: string[] = schema.table.relationSchemas;
+    let importStmt = '';
+    _.each(schemas, (schemaName: string) => importStmt = importStmt + `\n\t${schemaName},`);
+    importStmt = importStmt.replace(/.$/, '');
+    return `\nimport {${importStmt}\n} from '../database-schema';\n`;
+};
+const exportModel = (schema: BaseTableSchema) => {
+    const models: string[] = schema.table.relationModels;
+    let importStmt = '';
+    _.each(models, (modelName: string) => importStmt = importStmt + `\n\t${modelName},`);
+    importStmt = importStmt.replace(/.$/, '');
+    return `\nimport {${importStmt}\n} from '../models';\n`;
+};
+
 export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     const className = cls || schema.className.split('Schema')[0] || 'SampleClass';
     const schemaName = schema.className;
@@ -77,20 +92,29 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         if (col === 'id') {
             props = `${props}${n}${t}@PrimaryGeneratedColumn()${n}${t}@ModelProperty({type: PropertyType.number})${n}${t}${column.name}: number;${n}`;
         } else {
-            props = `${props}${n}${t}@Column({ name: ${schemaName}.columns.${col}})${n}${t}@ModelProperty({type: PropertyType.${column.type}})${n}${t}${col}: ${column.type};${n}`;
-            propInfo[col] = { type: column.type, optional: false};
+            if (column.foreignTable) {
+                const rel = `${n}${t}@ManyToOne( type => ${column.refModel || '#MODEL'}, { eager: true})`;
+                const jc = `${n}${t}@JoinColumn({ name: ${schemaName}.columns.${col}, referencedColumnName: ${column.refSchema || '#SCHEMA-NAME'}.pk})`;
+                props = `${props}${rel}${jc}${n}${t}@ModelProperty({type: PropertyType.${column.type}})${n}${t}${col}: ${column.refModel || column.type};${n}`;
+            } else {
+                const cols = `${n}${t}@Column({ name: ${schemaName}.columns.${col}})`;
+                props = `${props}${cols}${n}${t}@ModelProperty({type: PropertyType.${column.type}})${n}${t}${col}: ${column.type};${n}`;
+            }
+            propInfo[col] = { type: column.refModel || column.type, optional: false};
         }
     });
     let defClass = ``;
     defClass = defClass + `// ** Model: ${className} from schema ${schemaName} **${n}`;
-    defClass = defClass + `${n}import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';`;
+    defClass = defClass + `${n}import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';`;
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
-    defClass = defClass + `${n}import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';`;
+    defClass = defClass + exportRelatedSchema(schema);
+    defClass = defClass + `${n}import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';`;
     defClass = defClass + `${n}import { DataModelController } from '../data.model.controller';`;
-    defClass = defClass + `${createInterface(`${className}CreateSpec`, `${className} create interface`, propInfo)}`;
+    defClass = defClass + exportModel(schema);
+    defClass = defClass + `${createInterface(`${className}Spec`, `${className} create interface`, propInfo)}`;
     defClass = defClass + `${createInterface(`${className}UpdateSpec`, `${className} update interface`, propInfo, true)}`;
     defClass = addDoc(defClass, `Data Model Class for ${schemaName}`);
-    defClass = defClass + `${n}@ClassDescription({\n\tdescription: 'Data Model Class for ${schemaName}',\n\tschema: ${schemaName},\n\tapiResource: false\n})`;
+    defClass = defClass + `${n}@ModelDescription({\n\tdescription: 'Data Model Class for ${schemaName}',\n\tschema: ${schemaName},\n\tapiResource: false\n})`;
     defClass = defClass + `${n}@Entity( { name: ${schemaName}.dbTable} )\nexport class ${className} {\n${props}\n}\n`;
     let defClassController = `// ** DataModel controller of ${className} **\n`;
     defClassController = addDoc(defClassController, `Data Model Controller Class for ${schemaName} and ${className}`);

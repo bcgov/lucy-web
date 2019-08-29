@@ -25,11 +25,22 @@
  */
 
 import { CodeFactory } from './helper';
-import { MechanicalMethodCodeController, MechanicalMethodCode } from '../models';
+import {
+    MechanicalMethodCodeController,
+    MechanicalMethodCode,
+    MechanicalDisposalMethodCode,
+    MechanicalDisposalMethodCodeController
+} from '../models';
 
 /**
  * @description Mechanical Method Code Factory
  * @returns Promise<MechanicalMethodCode>
  */
 export const mechanicalMethodCodeFactory = CodeFactory<MechanicalMethodCode, MechanicalMethodCodeController>(MechanicalMethodCodeController.shared);
+
+/**
+ * @description Mechanical Disposal Method Code Factory
+ * @returns Promise<MechanicalDisposalMethodCode>
+ */
+export const mechanicalDisposalMethodCodeFactory = CodeFactory<MechanicalDisposalMethodCode, MechanicalDisposalMethodCodeController>(MechanicalDisposalMethodCodeController.shared);
 // ----------------------------------------------------------------

@@ -29,11 +29,25 @@ import {
     mechanicalTreatmentFactory,
     destroyMechanicalTreatment,
     mechanicalTreatmentCreateSpecFactory,
-    userFactory, mechanicalTreatmentUpdateSpecFactory,
-    destroyObservation
+    userFactory,
+    mechanicalTreatmentUpdateSpecFactory,
+    destroyObservation,
+    mechanicalMethodCodeFactory,
+    mechanicalDisposalMethodCodeFactory
 } from '../factory';
-import { MechanicalTreatmentController, MechanicalTreatment, User, UserDataController, MechanicalTreatmentUpdateSpec, ObservationController, Observation } from '../models';
+import {
+    MechanicalTreatmentController,
+    MechanicalTreatment,
+    User,
+    UserDataController,
+    MechanicalTreatmentUpdateSpec,
+    ObservationController,
+    Observation,
+    MechanicalMethodCode,
+    MechanicalDisposalMethodCode
+} from '../models';
 import { Destroy } from '../factory/helper';
+// import { SharedDBManager } from '../dataBaseManager';
 
 describe('Treatment Test', () => {
     before(async () => {
@@ -42,6 +56,16 @@ describe('Treatment Test', () => {
     after(async () => {
         await commonTestTearDownAction();
         return;
+    });
+
+    // Test0: Test Code Factory
+    it('should create code factory', async () => {
+        const mm: MechanicalMethodCode = await mechanicalMethodCodeFactory();
+        should().exist(mm);
+        should().exist(mm.mechanical_method_code_id);
+        const mdc: MechanicalDisposalMethodCode = await mechanicalDisposalMethodCodeFactory();
+        should().exist(mdc);
+        should().exist(mdc.mechanical_disposal_method_code_id);
     });
 
     // Test1: Create Treatment fro factory
@@ -54,10 +78,12 @@ describe('Treatment Test', () => {
         should().exist(mt.species);
         should().exist(mt.speciesAgency);
         should().exist(mt.mechanicalMethod);
+        should().exist(mt.mechanicalDisposalMethod);
         expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
         expect(mt.species.species_id).to.be.equal(f.species.species_id);
         expect(mt.speciesAgency.species_agency_code_id).to.be.equal(f.speciesAgency.species_agency_code_id);
         expect(mt.mechanicalMethod.mechanical_method_code_id).to.be.equal(f.mechanicalMethod.mechanical_method_code_id);
+        expect(mt.mechanicalDisposalMethod.mechanical_disposal_method_code_id).to.be.equal(f.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
         await destroyMechanicalTreatment(mt);
     });
 

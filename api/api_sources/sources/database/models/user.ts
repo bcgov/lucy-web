@@ -162,7 +162,7 @@ export class User extends BaseModel  {
 /**
  * @description Base class for record
  */
-export abstract class Record {
+export abstract class Record extends BaseModel {
     @ManyToOne( type => User, {eager : true})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.createdBy,

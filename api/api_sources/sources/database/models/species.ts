@@ -20,7 +20,7 @@
  * Imports
  */
 import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
-import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { Record } from './user';
 import { SpeciesSchema } from '../database-schema';
 /**
@@ -29,7 +29,7 @@ import { SpeciesSchema } from '../database-schema';
 @Entity({
     name: SpeciesSchema.schema.name
 })
-@ClassDescription({
+@ModelDescription({
     description: 'Data Model Class for SpeciesSchema',
 	schema: SpeciesSchema,
 	apiResource: false
