@@ -6,7 +6,9 @@ import {
     MechanicalDisposalMethodCode,
     MechanicalDisposalMethodCodeController,
     MechanicalSoilDisturbanceCode,
-    MechanicalSoilDisturbanceCodeController
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalRootRemovalCode,
+    MechanicalRootRemovalCodeController
 } from '../models';
 
 describe('Treatment Code Test', () => {
@@ -34,6 +36,13 @@ describe('Treatment Code Test', () => {
         should().exist(sdc);
         expect(sdc.mechanical_soil_disturbance_code_id).to.be.equal(2);
         const random: MechanicalSoilDisturbanceCode = await MechanicalSoilDisturbanceCodeController.shared.random();
+        should().exist(random);
+    });
+
+    it('should fetch mechanical root removal code', async () => {
+        const rrc: MechanicalRootRemovalCode = await MechanicalRootRemovalCodeController.shared.findById(2);
+        should().exist(rrc);
+        const random = await MechanicalRootRemovalCodeController.shared.random();
         should().exist(random);
     });
 });

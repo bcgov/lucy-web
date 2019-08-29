@@ -31,7 +31,9 @@ import {
     MechanicalDisposalMethodCode,
     MechanicalDisposalMethodCodeController,
     MechanicalSoilDisturbanceCode,
-    MechanicalSoilDisturbanceCodeController
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalRootRemovalCode,
+    MechanicalRootRemovalCodeController
 } from '../models';
 
 /**
@@ -52,4 +54,11 @@ export const mechanicalDisposalMethodCodeFactory = CodeFactory<MechanicalDisposa
  */
 export const mechanicalSoilDisturbanceCodeFactory =
     CodeFactory<MechanicalSoilDisturbanceCode, MechanicalSoilDisturbanceCodeController>(MechanicalSoilDisturbanceCodeController.shared);
+
+/**
+ * @description Mechanical Root Removal Code Factory
+ * @returns Promise<MechanicalRootRemovalCode>
+ */
+export const mechanicalRootRemovalCodeFactory =
+    CodeFactory<MechanicalRootRemovalCode, MechanicalRootRemovalCodeController>(MechanicalRootRemovalCodeController.shared);
 // ----------------------------------------------------------------
