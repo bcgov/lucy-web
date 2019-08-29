@@ -20,6 +20,7 @@ ALTER TABLE mechanical_treatment ADD COLUMN mechanical_method_code_id INT NULL R
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_disposal_method_code_id INT NULL REFERENCES mechanical_disposal_method_code(mechanical_disposal_method_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_soil_disturbance_code_id INT NULL REFERENCES mechanical_soil_disturbance_code(mechanical_soil_disturbance_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_root_removal_code_id INT NULL REFERENCES mechanical_root_removal_code(mechanical_root_removal_code_id) ON DELETE SET NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_issue_code_id INT NULL REFERENCES mechanical_treatment_issue_code(mechanical_treatment_issue_code_id) ON DELETE SET NULL;
 
 
         
@@ -45,6 +46,7 @@ COMMENT ON COLUMN mechanical_treatment.mechanical_method_code_id IS 'Foreign key
 COMMENT ON COLUMN mechanical_treatment.mechanical_disposal_method_code_id IS 'Foreign key reference to Mechanical Disposal Method Code table';
 COMMENT ON COLUMN mechanical_treatment.mechanical_soil_disturbance_code_id IS 'Foreign key reference to Mechanical Soil Disturbance code';
 COMMENT ON COLUMN mechanical_treatment.mechanical_root_removal_code_id IS 'Foreign key reference to Mechanical Root Removal Code table';
+COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_issue_code_id IS 'Foreign key reference to Mechanical Treatment Issue Code table';
 
 
         

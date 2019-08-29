@@ -32,7 +32,8 @@ import {
 	MechanicalMethodCodeSchema,
 	MechanicalDisposalMethodCodeSchema,
 	MechanicalSoilDisturbanceCodeSchema,
-	MechanicalRootRemovalCodeSchema
+	MechanicalRootRemovalCodeSchema,
+	MechanicalTreatmentIssueCodeSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -44,7 +45,8 @@ import {
 	MechanicalMethodCode,
 	MechanicalDisposalMethodCode,
 	MechanicalSoilDisturbanceCode,
-	MechanicalRootRemovalCode
+	MechanicalRootRemovalCode,
+	MechanicalTreatmentIssueCode
 } from '../models';
 import { Record, RecordController } from './user';
 
@@ -71,6 +73,7 @@ export interface MechanicalTreatmentSpec {
 	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
 	soilDisturbance: MechanicalSoilDisturbanceCode;
 	rootRemoval: MechanicalRootRemovalCode;
+	issue: MechanicalTreatmentIssueCode;
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -97,6 +100,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	mechanicalDisposalMethod?: MechanicalDisposalMethodCode;
 	soilDisturbance?: MechanicalSoilDisturbanceCode;
 	rootRemoval?: MechanicalRootRemovalCode;
+	issue?: MechanicalTreatmentIssueCode;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -247,6 +251,14 @@ export class MechanicalTreatment extends Record {
 	@JoinColumn({ name: MechanicalTreatmentSchema.columns.rootRemoval, referencedColumnName: MechanicalRootRemovalCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	rootRemoval: MechanicalRootRemovalCode;
+
+	/**
+	 * @description Getter/Setter property for column {mechanical_treatment_issue_code_id}
+	 */
+	@ManyToOne( type => MechanicalTreatmentIssueCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.issue, referencedColumnName: MechanicalTreatmentIssueCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	issue: MechanicalTreatmentIssueCode;
 
 }
 

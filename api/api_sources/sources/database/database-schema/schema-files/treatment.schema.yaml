@@ -115,6 +115,14 @@ schemas:
         foreignTable: mechanical_root_removal_code
         refColumn: mechanical_root_removal_code_id
         deleteCascade: false
+      issue:
+        name: 'mechanical_treatment_issue_code_id'
+        comment: Foreign key reference to Mechanical Treatment Issue Code table
+        definition: INT NULL
+        foreignTable: mechanical_treatment_issue_code
+        refColumn: mechanical_treatment_issue_code_id
+        deleteCascade: false
+
   ## --
   ## -- MechanicalMethodCodeSchema
   MechanicalMethodCodeSchema:
