@@ -132,17 +132,17 @@ schemas:
         definition: VARCHAR(6) NOT NULL UNIQUE
   ## --
   ## -- MechanicalTreatmentDisturbanceCodeSchema
-  MechanicalTreatmentDisturbanceCodeSchema:
-    name: mechanical_treatment_disturbance_code
-    description: 'This table is collection of disturbance code for mechanical treatment'
+  MechanicalSoilDisturbanceCodeSchema:
+    name: mechanical_soil_disturbance_code
+    description: 'This table is collection of soil disturbance code for mechanical treatment'
     columns:
       id: 
-        name: 'mechanical_treatment_disturbance_code_id'
+        name: 'mechanical_soil_disturbance_code_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
       code: 
-        name: 'mechanical_treatment_disturbance_code'
-        comment: String encoded enum values for Mechanical treatment disturbance codes.
+        name: 'mechanical_soil_disturbance_code'
+        comment: String encoded enum values for Mechanical Soil disturbance codes.
         definition: VARCHAR(6) NOT NULL UNIQUE
   ## --
   ## -- MechanicalRootSystemCodeSchema

@@ -43,4 +43,5 @@ export * from './proposedAction.code';
 export * from './mechanical.treatment';
 export * from './mechanicalMethod.code';
 export * from './mechanicalDisposalMethod.code';
+export * from './mechanicalSoilDisturbance.code';
 // ----------------------------------------------------------------------------------------------------------------
