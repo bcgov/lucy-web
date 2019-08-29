@@ -8,7 +8,9 @@ import {
     MechanicalSoilDisturbanceCode,
     MechanicalSoilDisturbanceCodeController,
     MechanicalRootRemovalCode,
-    MechanicalRootRemovalCodeController
+    MechanicalRootRemovalCodeController,
+    MechanicalTreatmentIssueCode,
+    MechanicalTreatmentIssueCodeController
 } from '../models';
 
 describe('Treatment Code Test', () => {
@@ -43,6 +45,13 @@ describe('Treatment Code Test', () => {
         const rrc: MechanicalRootRemovalCode = await MechanicalRootRemovalCodeController.shared.findById(2);
         should().exist(rrc);
         const random = await MechanicalRootRemovalCodeController.shared.random();
+        should().exist(random);
+    });
+
+    it('should fetch mechanical treatment issues code', async () => {
+        const tic: MechanicalTreatmentIssueCode = await MechanicalTreatmentIssueCodeController.shared.findById(2);
+        should().exist(tic);
+        const random = await MechanicalTreatmentIssueCodeController.shared.random();
         should().exist(random);
     });
 });
