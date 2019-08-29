@@ -45,6 +45,7 @@ import {
   mechanicalDisposalMethodCodeFactory,
   mechanicalSoilDisturbanceCodeFactory,
   mechanicalRootRemovalCodeFactory,
+  mechanicalTreatmentIssuesCodeFactory,
 } from './treatmentCodesFactory';
 
 
@@ -69,7 +70,8 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
     mechanicalMethod: await mechanicalMethodCodeFactory(),
     mechanicalDisposalMethod: await mechanicalDisposalMethodCodeFactory(),
     soilDisturbance: await mechanicalSoilDisturbanceCodeFactory(),
-    rootRemoval: await mechanicalRootRemovalCodeFactory()
+    rootRemoval: await mechanicalRootRemovalCodeFactory(),
+    issue: await mechanicalTreatmentIssuesCodeFactory()
   };
 };
 
