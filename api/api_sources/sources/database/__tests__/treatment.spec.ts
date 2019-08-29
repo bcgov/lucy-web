@@ -35,7 +35,8 @@ import {
     mechanicalMethodCodeFactory,
     mechanicalDisposalMethodCodeFactory,
     mechanicalSoilDisturbanceCodeFactory,
-    mechanicalRootRemovalCodeFactory
+    mechanicalRootRemovalCodeFactory,
+    mechanicalTreatmentIssuesCodeFactory
 } from '../factory';
 import {
     MechanicalTreatmentController,
@@ -48,7 +49,8 @@ import {
     MechanicalMethodCode,
     MechanicalDisposalMethodCode,
     MechanicalSoilDisturbanceCode,
-    MechanicalRootRemovalCode
+    MechanicalRootRemovalCode,
+    MechanicalTreatmentIssueCode
 } from '../models';
 import { Destroy } from '../factory/helper';
 // import { SharedDBManager } from '../dataBaseManager';
@@ -74,6 +76,8 @@ describe('Treatment Test', () => {
         should().exist(sdc);
         const rrc: MechanicalRootRemovalCode = await mechanicalRootRemovalCodeFactory();
         should().exist(rrc);
+        const issue: MechanicalTreatmentIssueCode = await mechanicalTreatmentIssuesCodeFactory();
+        should().exist(issue);
     });
 
     // Test1: Create Treatment fro factory
@@ -89,6 +93,7 @@ describe('Treatment Test', () => {
         should().exist(mt.mechanicalDisposalMethod);
         should().exist(mt.soilDisturbance);
         should().exist(mt.rootRemoval);
+        should().exist(mt.issue);
         expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
         expect(mt.species.species_id).to.be.equal(f.species.species_id);
         expect(mt.speciesAgency.species_agency_code_id).to.be.equal(f.speciesAgency.species_agency_code_id);
@@ -96,6 +101,7 @@ describe('Treatment Test', () => {
         expect(mt.mechanicalDisposalMethod.mechanical_disposal_method_code_id).to.be.equal(f.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
         expect(mt.soilDisturbance.mechanical_soil_disturbance_code_id).to.be.equal(f.soilDisturbance.mechanical_soil_disturbance_code_id);
         expect(mt.rootRemoval.mechanical_root_removal_code_id).to.be.equal(f.rootRemoval.mechanical_root_removal_code_id);
+        expect(mt.issue.mechanical_treatment_issue_code_id).to.be.equal(f.issue.mechanical_treatment_issue_code_id);
         await destroyMechanicalTreatment(mt);
     });
 
