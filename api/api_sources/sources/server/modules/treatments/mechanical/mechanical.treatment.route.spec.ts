@@ -46,7 +46,7 @@ import {
 import {
     ObservationController,
     MechanicalTreatmentController,
-    MechanicalTreatmentCreateSpec,
+    MechanicalTreatmentSpec,
     MechanicalTreatmentUpdateSpec
 } from '../../../../database/models';
 
@@ -62,7 +62,7 @@ describe('Test for mechanical treatment', () => {
 
     it('should create mechanical treatment for {admin}', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentCreateSpec>(create);
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
         await testRequest(SharedExpressApp.app , {
             url: '/api/treatment/mechanical/',
             type: HttpMethodType.post,
@@ -96,7 +96,7 @@ describe('Test for mechanical treatment', () => {
 
     it('should not create mechanical treatment for {admin}: missing * fields', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentCreateSpec>(create);
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
         // Removing some required fields
         delete (createReq.longitude);
         delete (createReq.applicatorLastName);
