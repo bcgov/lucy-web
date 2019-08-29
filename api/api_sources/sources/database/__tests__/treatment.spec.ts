@@ -34,7 +34,8 @@ import {
     destroyObservation,
     mechanicalMethodCodeFactory,
     mechanicalDisposalMethodCodeFactory,
-    mechanicalSoilDisturbanceCodeFactory
+    mechanicalSoilDisturbanceCodeFactory,
+    mechanicalRootRemovalCodeFactory
 } from '../factory';
 import {
     MechanicalTreatmentController,
@@ -46,7 +47,8 @@ import {
     Observation,
     MechanicalMethodCode,
     MechanicalDisposalMethodCode,
-    MechanicalSoilDisturbanceCode
+    MechanicalSoilDisturbanceCode,
+    MechanicalRootRemovalCode
 } from '../models';
 import { Destroy } from '../factory/helper';
 // import { SharedDBManager } from '../dataBaseManager';
@@ -70,6 +72,8 @@ describe('Treatment Test', () => {
         should().exist(mdc.mechanical_disposal_method_code_id);
         const sdc: MechanicalSoilDisturbanceCode = await mechanicalSoilDisturbanceCodeFactory();
         should().exist(sdc);
+        const rrc: MechanicalRootRemovalCode = await mechanicalRootRemovalCodeFactory();
+        should().exist(rrc);
     });
 
     // Test1: Create Treatment fro factory
@@ -84,12 +88,14 @@ describe('Treatment Test', () => {
         should().exist(mt.mechanicalMethod);
         should().exist(mt.mechanicalDisposalMethod);
         should().exist(mt.soilDisturbance);
+        should().exist(mt.rootRemoval);
         expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
         expect(mt.species.species_id).to.be.equal(f.species.species_id);
         expect(mt.speciesAgency.species_agency_code_id).to.be.equal(f.speciesAgency.species_agency_code_id);
         expect(mt.mechanicalMethod.mechanical_method_code_id).to.be.equal(f.mechanicalMethod.mechanical_method_code_id);
         expect(mt.mechanicalDisposalMethod.mechanical_disposal_method_code_id).to.be.equal(f.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
         expect(mt.soilDisturbance.mechanical_soil_disturbance_code_id).to.be.equal(f.soilDisturbance.mechanical_soil_disturbance_code_id);
+        expect(mt.rootRemoval.mechanical_root_removal_code_id).to.be.equal(f.rootRemoval.mechanical_root_removal_code_id);
         await destroyMechanicalTreatment(mt);
     });
 
