@@ -65,9 +65,9 @@ export class MechanicalDisposalMethodCodeSchema extends TreatmentCodeSchema {}
 export class MechanicalSoilDisturbanceCodeSchema extends TreatmentCodeSchema {}
 
 /**
- * @description Schema handler for MechanicalRootSystemCodeS
+ * @description Schema handler for MechanicalRootRemovalCodeSchema
  */
-export class MechanicalRootSystemCodeSchema extends TreatmentCodeSchema {}
+export class MechanicalRootRemovalCodeSchema extends TreatmentCodeSchema {}
 
 /**
  * @description Schema handler for  MechanicalTreatmentIssueCode
