@@ -13,7 +13,7 @@ import { ValidationService } from 'src/app/services/validation.service';
 })
 export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
   locationEntryModeLatLong = true;
-  agencies: DropdownObject[] = [];
+  mechanicalTreatmentProviders: DropdownObject[] = [];
 
   // Set the initial view location for map
   public mapCenter: MapPreviewPoint = {
@@ -45,11 +45,11 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
     return ``;
   }
 
-  get organization(): DropdownObject | undefined {
-    if (this.object && this.object.speciesAgency) {
+  get mechanicalTreatmentProvider(): DropdownObject | undefined {
+    if (this.object && this.object.providerContractor) {
       return {
-        name: this.object.speciesAgency[this.dropdownService.displayedAgencyField],
-        object: this.object.speciesAgency,
+        name: this.object.providerContractor[this.dropdownService.displayedMechanicalTreatmentProviderField],
+        object: this.object.providerContractor,
       };
     } else {
       return undefined;
@@ -122,8 +122,8 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
   constructor(private converterService: ConverterService, private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {
-    this.dropdownService.getAgencies().then((result) => {
-      this.agencies = result;
+    this.dropdownService.getMechanicalTreatmentProviders().then((result) => {
+      this.mechanicalTreatmentProviders = result;
     });
   }
 
@@ -167,9 +167,9 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
     this.notifyChangeEvent();
   }
 
-  organizationChanged(value: DropdownObject) {
+  mechanicalTreatmentProviderChanged(value: DropdownObject) {
     if (this.object) {
-      this.object.speciesAgency = value.object;
+      this.object.providerContractor = value.object;
     }
     this.notifyChangeEvent();
   }
