@@ -77,6 +77,17 @@
     <app-add-mechanical-treatment-treatment-details [mode]="mode" [object]="object"
       (treatmentDetailsChanged)='treatmentDetailsChanged($event)'>
     </app-add-mechanical-treatment-treatment-details>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 section-name" #basic>
+          Treatment Details
+          <hr class="section-divider" />
+        </div>
+      </div>
+    </div>
+    <app-add-mechanical-treatment-advanced [mode]="mode" [object]="object"
+    (treatmentDetailsChanged)='advancedDetailsChanged($event)'>
+    </app-add-mechanical-treatment-advanced>
     <br />
     <!-- test btn -->
     <div *ngIf="creating" class="row test-btn">

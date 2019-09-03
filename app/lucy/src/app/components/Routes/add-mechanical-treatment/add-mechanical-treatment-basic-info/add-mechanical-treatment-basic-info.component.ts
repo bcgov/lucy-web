@@ -107,7 +107,7 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
   }
   ////////////////////
 
-  ///// Invasive plant objects
+  ///// Mechanical Treatment object
   private _object: MechanicalTreatment;
   get object(): MechanicalTreatment {
     return this._object;

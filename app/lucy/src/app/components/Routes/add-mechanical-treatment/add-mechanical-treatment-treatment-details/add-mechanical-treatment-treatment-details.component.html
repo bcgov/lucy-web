@@ -9,17 +9,30 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12 col-md-4">
-          <app-field [mode]="mode" [header]="'Paper File Reference'" [value]="paperFileReference"
-            (valueChanged)='paperFileReferenceChanged($event)'>
+          <app-field
+            [mode]="mode"
+            [header]="'Paper File Reference'"
+            [value]="paperFileReference"
+            (valueChanged)="paperFileReferenceChanged($event)"
+          >
           </app-field>
         </div>
         <div class="col-12 col-md-4">
-          <app-date-picker [mode]="mode" [date]="treatmentDate" [header]="'Treatment Date'"
-            (selected)='treatmentDateChanged($event)'></app-date-picker>
+          <app-date-picker
+            [mode]="mode"
+            [date]="treatmentDate"
+            [header]="'Treatment Date'"
+            (selected)="treatmentDateChanged($event)"
+          ></app-date-picker>
         </div>
         <div class="col-12 col-md-4">
-          <app-dropdown [mode]="mode" [items]="agencies" [fieldHeader]="'Completed on behalf of:'"
-            [selectedItem]="organization" (selectionChanged)='organizationChanged($event)'>
+          <app-dropdown
+            [mode]="mode"
+            [items]="agencies"
+            [fieldHeader]="'Completed on behalf of:'"
+            [selectedItem]="organization"
+            (selectionChanged)="organizationChanged($event)"
+          >
           </app-dropdown>
         </div>
       </div>
@@ -29,13 +42,23 @@
           <div class="col-12">
             <div class="row">
               <div class="col-12 col-md-6">
-                <app-dropdown [mode]="mode" [items]="species" [fieldHeader]="'Invasive Plant Species'"
-                  [selectedItem]="selectedSpecies" (selectionChanged)='speciesChanged($event)'>
+                <app-dropdown
+                  [mode]="mode"
+                  [items]="species"
+                  [fieldHeader]="'Invasive Plant Species'"
+                  [selectedItem]="selectedSpecies"
+                  (selectionChanged)="speciesChanged($event)"
+                >
                 </app-dropdown>
               </div>
               <div class="col-12 col-md-6">
-                <app-dropdown [mode]="mode" [items]="mechanicalMethods" [fieldHeader]="'Select Treatment Method'"
-                  [selectedItem]="selectedmechanicalMethod" (selectionChanged)='mechanicalMethodsChanged($event)'>
+                <app-dropdown
+                  [mode]="mode"
+                  [items]="mechanicalMethods"
+                  [fieldHeader]="'Select Treatment Method'"
+                  [selectedItem]="selectedmechanicalMethod"
+                  (selectionChanged)="mechanicalMethodsChanged($event)"
+                >
                 </app-dropdown>
               </div>
             </div>
@@ -44,25 +67,42 @@
           <div class="col-12">
             <div class="row">
               <div class="col-12 col-md-4">
-                <app-field [mode]="mode" [header]="'Treated Area width'" [value]="width"
-                  (valueChanged)='widthChanged($event)'>
+                <app-field
+                  [mode]="mode"
+                  [header]="'Treated Area width'"
+                  [value]="width"
+                  (valueChanged)="widthChanged($event)"
+                >
                 </app-field>
               </div>
               <div class="col-12 col-md-4">
-                <app-field [mode]="mode" [header]="'Treated Area length'" [value]="length"
-                  (valueChanged)='lengthChanged($event)'>
+                <app-field
+                  [mode]="mode"
+                  [header]="'Treated Area length'"
+                  [value]="length"
+                  (valueChanged)="lengthChanged($event)"
+                >
                 </app-field>
               </div>
               <div class="col-12 col-md-4">
-                <app-field [mode]="ViewMode" [header]="'Total Calculated Area'" [value]="calculatedArea">
+                <app-field
+                  [mode]="ViewMode"
+                  [header]="'Total Calculated Area'"
+                  [value]="calculatedArea"
+                >
                 </app-field>
               </div>
             </div>
           </div>
           <!-- Line 3 -->
           <div class="col-12">
-            <app-field [mode]="mode" [multiline]="true" [header]="'Comments'" [value]="comment"
-              (valueChanged)='commentChanged($event)'>
+            <app-field
+              [mode]="mode"
+              [multiline]="true"
+              [header]="'Comments'"
+              [value]="comment"
+              (valueChanged)="commentChanged($event)"
+            >
             </app-field>
             <br />
           </div>
@@ -70,7 +110,7 @@
       </div>
     </div>
   </div>
-  <hr class="divider">
+  <hr class="divider" />
 </div>
 <div class="container">
   <div class="row">
@@ -85,13 +125,18 @@
       <div class="row">
         <div class="row">
           <div class="col-12">
-            <app-dropdown [mode]="mode" [items]="observations" [fieldHeader]="'Observation'"
-              [selectedItem]="observation" (selectionChanged)='observationChanged($event)'>
+            <app-dropdown
+              [mode]="mode"
+              [items]="observations"
+              [fieldHeader]="'Observation'"
+              [selectedItem]="observation"
+              (selectionChanged)="observationChanged($event)"
+            >
             </app-dropdown>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <hr class="divider">
+  <hr class="divider" />
 </div>
