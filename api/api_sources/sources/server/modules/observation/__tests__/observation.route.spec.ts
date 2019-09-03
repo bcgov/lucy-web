@@ -80,6 +80,10 @@ describe('Test for observation routes', () => {
                 should().exist(data.aspectCodes);
                 should().exist(data.proposedActionCodes);
                 should().exist(data.mechanicalTreatmentMethodsCodes);
+                should().exist(data.mechanicalDisposalMethodCodes);
+                should().exist(data.mechanicalSoilDisturbanceCodes);
+                should().exist(data.mechanicalRootRemovalCodes);
+                should().exist(data.mechanicalIssueCodes);
             });
             // done();
         });

@@ -39,6 +39,10 @@ import { ObservationController,
     AspectCodeController,
     ProposedActionCodeController,
     MechanicalMethodCodeController,
+    MechanicalDisposalMethodCodeController,
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalRootRemovalCodeController,
+    MechanicalTreatmentIssueCodeController
 } from '../../../database/models';
 import { SpeciesDensityCodeController, SpeciesDistributionCodeController } from '../../../database/models';
 import { observationModifyRoute } from './observation.species.route';
@@ -97,7 +101,12 @@ export class ObservationRouteController extends SecureRouteController<Observatio
             slopeCodes: await SlopeCodeController.shared.all(),
             aspectCodes: await AspectCodeController.shared.all(),
             proposedActionCodes: await ProposedActionCodeController.shared.all(),
-            mechanicalTreatmentMethodsCodes: await MechanicalMethodCodeController.shared.all()
+            mechanicalTreatmentMethodsCodes: await MechanicalMethodCodeController.shared.all(),
+            mechanicalDisposalMethodCodes: await MechanicalDisposalMethodCodeController.shared.all(),
+            mechanicalSoilDisturbanceCodes: await MechanicalSoilDisturbanceCodeController.shared.all(),
+            mechanicalRootRemovalCodes: await MechanicalRootRemovalCodeController.shared.all(),
+            mechanicalIssueCodes: await MechanicalTreatmentIssueCodeController.shared.all()
+
         }]);
     }
 

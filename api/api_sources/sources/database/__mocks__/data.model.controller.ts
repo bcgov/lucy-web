@@ -21,7 +21,7 @@
  * Mock data model controller
  */
 import { LoggerBase} from '../../server/logger';
-import { ApplicationTable } from '../applicationSchemaInterface';
+import { ApplicationTable } from '../../libs/core-database';
 import { MemoryDataManager } from '../../test-helpers/mock.data.manager';
 
 /**
