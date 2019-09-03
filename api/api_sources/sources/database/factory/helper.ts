@@ -83,7 +83,7 @@ export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec): a
             if (typeof spec[key] === 'object') {
                 const obj: any = spec[key];
                 const info: any = getClassInfo(obj.constructor.name) || {};
-                if (info.schema && info.schema.columns.id) {
+                if (info.schema && info.schema.columns.id && typeof obj[info.schema.columns.id] === 'number') {
                     result[key] = obj[info.schema.columns.id];
                 }
             } else {
