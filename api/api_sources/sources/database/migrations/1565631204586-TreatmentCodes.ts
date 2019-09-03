@@ -28,7 +28,8 @@ import {
     MechanicalDisposalMethodCodeSchema,
     MechanicalSoilDisturbanceCodeSchema,
     MechanicalRootRemovalCodeSchema,
-    MechanicalTreatmentIssueCodeSchema
+    MechanicalTreatmentIssueCodeSchema,
+    TreatmentProviderContractorSchema
 } from '../database-schema';
 
 export class TreatmentCodes1565631204586 implements MigrationInterface {
@@ -39,6 +40,7 @@ export class TreatmentCodes1565631204586 implements MigrationInterface {
     soilDisturbanceCodeSchema: MechanicalSoilDisturbanceCodeSchema = new MechanicalSoilDisturbanceCodeSchema();
     rootRemovalCodeSchema: MechanicalRootRemovalCodeSchema = new MechanicalRootRemovalCodeSchema();
     treatmentIssueSchema: MechanicalTreatmentIssueCodeSchema = new MechanicalTreatmentIssueCodeSchema();
+    contractor: TreatmentProviderContractorSchema = new TreatmentProviderContractorSchema();
 
     /**
      * @description Up method
@@ -52,6 +54,7 @@ export class TreatmentCodes1565631204586 implements MigrationInterface {
         await queryRunner.query(this.soilDisturbanceCodeSchema.migrationSQL);
         await queryRunner.query(this.rootRemovalCodeSchema.migrationSQL);
         await queryRunner.query(this.treatmentIssueSchema.migrationSQL);
+        await queryRunner.query(this.contractor.migrationSQL);
 
         // Load data
         await queryRunner.query(getSQLFileData(this.mechanicalTreatmentMethodCodeSchema.dataSQLPath()));
@@ -59,6 +62,7 @@ export class TreatmentCodes1565631204586 implements MigrationInterface {
         await queryRunner.query(getSQLFileData(this.soilDisturbanceCodeSchema.dataSQLPath()));
         await queryRunner.query(getSQLFileData(this.rootRemovalCodeSchema.dataSQLPath()));
         await queryRunner.query(getSQLFileData(this.treatmentIssueSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.contractor.dataSQLPath()));
     }
 
     /**
@@ -72,6 +76,7 @@ export class TreatmentCodes1565631204586 implements MigrationInterface {
         await queryRunner.query(this.soilDisturbanceCodeSchema.dropTable());
         await queryRunner.query(this.rootRemovalCodeSchema.dropTable());
         await queryRunner.query(this.treatmentIssueSchema.dropTable());
+        await queryRunner.query(this.contractor.dropTable());
     }
 
 }
