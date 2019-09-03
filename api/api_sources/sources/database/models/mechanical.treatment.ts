@@ -50,6 +50,7 @@ import {
 	TreatmentProviderContractor
 } from '../models';
 import { Record, RecordController } from './user';
+import { NumericTransformer } from '../../libs/transformer';
 
 
 /** Interface **/
@@ -136,14 +137,14 @@ export class MechanicalTreatment extends Record {
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_location_latitude}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.latitude})
+	@Column({ name: MechanicalTreatmentSchema.columns.latitude, transformer: new NumericTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	latitude: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_location_longitude}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.longitude})
+	@Column({ name: MechanicalTreatmentSchema.columns.longitude, transformer: new NumericTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	longitude: number;
 
