@@ -84,6 +84,7 @@ describe('Test for observation routes', () => {
                 should().exist(data.mechanicalSoilDisturbanceCodes);
                 should().exist(data.mechanicalRootRemovalCodes);
                 should().exist(data.mechanicalIssueCodes);
+                should().exist(data.mechanicalTreatmentProviders);
             });
             // done();
         });

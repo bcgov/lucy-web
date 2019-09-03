@@ -80,6 +80,7 @@ describe('Test for mechanical treatment', () => {
                 should().exist(data.soilDisturbance);
                 should().exist(data.rootRemoval);
                 should().exist(data.issue);
+                should().exist(data.providerContractor);
                 expect(data.observation.observation_id).to.be.equal(create.observation.observation_id);
                 expect(data.species.species_id)
                 .to.be.equal(create.species.species_id);
@@ -94,6 +95,8 @@ describe('Test for mechanical treatment', () => {
                 .to.be.equal(create.rootRemoval.mechanical_root_removal_code_id);
                 expect(data.issue.mechanical_treatment_issue_code_id)
                 .to.be.equal(create.issue.mechanical_treatment_issue_code_id);
+                expect(data.providerContractor.treatment_provider_contractor_id)
+                .to.be.equal(create.providerContractor.treatment_provider_contractor_id);
                 await MechanicalTreatmentController.shared.removeById(data.mechanical_treatment_id);
             });
             await ObservationController.shared.remove(create.observation);

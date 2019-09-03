@@ -47,6 +47,7 @@ import {
   mechanicalRootRemovalCodeFactory,
   mechanicalTreatmentIssuesCodeFactory,
 } from './treatmentCodesFactory';
+import { treatmentProviderContractorFactory } from './treatmentProviderFactory';
 
 
 /**
@@ -58,6 +59,8 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
     longitude: parseFloat(faker.address.longitude()) || 0.0,
     applicatorFirstName: faker.name.firstName(),
     applicatorLastName: faker.name.lastName(),
+    secondaryApplicatorFirstName: faker.name.firstName(),
+    secondaryApplicatorLastName: faker.name.lastName(),
     width: faker.random.number(),
     length: faker.random.number(),
     date: `${moment(faker.date.recent()).format('YYYY-MM-DD')}`,
@@ -71,7 +74,8 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
     mechanicalDisposalMethod: await mechanicalDisposalMethodCodeFactory(),
     soilDisturbance: await mechanicalSoilDisturbanceCodeFactory(),
     rootRemoval: await mechanicalRootRemovalCodeFactory(),
-    issue: await mechanicalTreatmentIssuesCodeFactory()
+    issue: await mechanicalTreatmentIssuesCodeFactory(),
+    providerContractor: await treatmentProviderContractorFactory()
   };
 };
 

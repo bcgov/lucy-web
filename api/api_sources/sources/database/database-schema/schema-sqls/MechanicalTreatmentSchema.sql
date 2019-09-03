@@ -9,6 +9,8 @@ ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_width NUME
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_length NUMERIC(7, 2) NULL DEFAULT 0.0;
 ALTER TABLE mechanical_treatment ADD COLUMN applicator_first_name VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN applicator_last_name VARCHAR(100) NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN secondary_applicator_first_name VARCHAR(100) NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN secondary_applicator_last_name VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_date DATE NOT NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_comment VARCHAR(500) NULL;
@@ -21,6 +23,7 @@ ALTER TABLE mechanical_treatment ADD COLUMN mechanical_disposal_method_code_id I
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_soil_disturbance_code_id INT NULL REFERENCES mechanical_soil_disturbance_code(mechanical_soil_disturbance_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_root_removal_code_id INT NULL REFERENCES mechanical_root_removal_code(mechanical_root_removal_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_issue_code_id INT NULL REFERENCES mechanical_treatment_issue_code(mechanical_treatment_issue_code_id) ON DELETE SET NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN treatment_provider_contractor_id INT NULL REFERENCES treatment_provider_contractor(treatment_provider_contractor_id) ON DELETE SET NULL;
 
 
         
@@ -35,6 +38,8 @@ COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_width IS 'Width
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_length IS 'Length of the area of treatment';
 COMMENT ON COLUMN mechanical_treatment.applicator_first_name IS 'First name of the applicator';
 COMMENT ON COLUMN mechanical_treatment.applicator_last_name IS 'Last name of the applicator';
+COMMENT ON COLUMN mechanical_treatment.secondary_applicator_first_name IS 'First name of the secondary applicator';
+COMMENT ON COLUMN mechanical_treatment.secondary_applicator_last_name IS 'Last name of the secondary applicator';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_date IS 'Date of the treatment';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_paper_file_ref IS 'Paper file reference associated with treatment';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_comment IS 'Comment on treatment record';
@@ -47,6 +52,7 @@ COMMENT ON COLUMN mechanical_treatment.mechanical_disposal_method_code_id IS 'Fo
 COMMENT ON COLUMN mechanical_treatment.mechanical_soil_disturbance_code_id IS 'Foreign key reference to Mechanical Soil Disturbance code';
 COMMENT ON COLUMN mechanical_treatment.mechanical_root_removal_code_id IS 'Foreign key reference to Mechanical Root Removal Code table';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_issue_code_id IS 'Foreign key reference to Mechanical Treatment Issue Code table';
+COMMENT ON COLUMN mechanical_treatment.treatment_provider_contractor_id IS 'Foreign key reference to Mechanical Treatment Provider Contractor table';
 
 
         
