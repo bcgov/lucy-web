@@ -14,7 +14,7 @@ import { Jurisdiction,
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
-import { MechanicalTreatment, MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes } from '../models/MechanicalTreatment';
+import { MechanicalTreatment, MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { ObservationService } from './observation.service';
 import { MapMarker } from '../components/Utilities/map-preview/map-preview.component';
 
@@ -193,6 +193,15 @@ export class DummyService {
     }
   }
 
+  public async randomProviderContractor(): Promise<MechanicalTreatmentProviders | undefined> {
+    const codes = await this.codeTables.getMechanicalTreatmentProviderCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
   public async createDummyMechanicalTreatment(): Promise<MechanicalTreatment> {
     const invasivePlantSpecies = await this.randomInvasivePlantSpecies();
     const agency = await this.randomSpeciesAgencyCodes();
@@ -202,6 +211,7 @@ export class DummyService {
     const mechanicalSoilDisturbanceCodes = await this.randomMechanicalSoilDisturbanceCodes();
     const mechanicalRootRemovalCodes = await this.randomMechanicalRootRemovalCodes();
     const mechanicalIssueCodes = await this.randomMechanicalIssueCodes();
+    const providerContractor = await this.randomProviderContractor();
 
     const observation = observations[0];
     if (!observation) {
@@ -228,6 +238,7 @@ export class DummyService {
       soilDisturbance: mechanicalSoilDisturbanceCodes,
       rootRemoval: mechanicalRootRemovalCodes,
       issue: mechanicalIssueCodes,
+      providerContractor: providerContractor,
     };
 
     return mechanicalTreatment;

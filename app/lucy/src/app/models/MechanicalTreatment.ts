@@ -8,6 +8,7 @@ export interface MechanicalTreatment {
         width: number;
         applicatorFirstName: string;
         applicatorLastName: string;
+        providerContractor: MechanicalTreatmentProviders;
         date: string;
         paperFileReference: string;
         comment: string;
@@ -58,4 +59,15 @@ export interface MechanicalIssueCodes {
         activeIndicator: boolean;
         mechanical_treatment_issue_code_id: number;
         code: string;
+}
+
+export interface MechanicalTreatmentProviders {
+        treatment_provider_contractor_id: number;
+        registrationNumber: number;
+        businessName: string;
+        category: string;
+        address: string;
+        regions: string;
+        licenceExpiryDate: string;
+        serviceProvideIndicator: boolean;
 }
