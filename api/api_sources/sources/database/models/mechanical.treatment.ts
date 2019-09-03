@@ -151,14 +151,14 @@ export class MechanicalTreatment extends Record {
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_area_width}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.width})
+	@Column({ name: MechanicalTreatmentSchema.columns.width, transformer: new NumericTransformer})
 	@ModelProperty({type: PropertyType.number})
 	width: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_area_length}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.length})
+	@Column({ name: MechanicalTreatmentSchema.columns.length, transformer: new NumericTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	length: number;
 
