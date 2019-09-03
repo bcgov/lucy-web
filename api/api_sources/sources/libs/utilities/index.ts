@@ -23,5 +23,5 @@ export * from './helpers.utilities';
 export * from './bc.helpers';
 export * from './csv';
 export * from './schemaLoader';
-
+export * from './date.utilities';
 // ---------------------------

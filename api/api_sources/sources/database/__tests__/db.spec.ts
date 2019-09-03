@@ -20,7 +20,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { should, expect } from 'chai';
-import { ApplicationTableColumn, defineColumn, createColumn, BaseTableSchema, ApplicationTable} from '../applicationSchemaInterface';
+import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-database';
+import { defineColumn, createColumn, BaseTableSchema} from '../applicationSchemaInterface';
 import { getYAMLFilePath } from '../database-schema/schema-files';
 import { SchemaCache } from '../../libs/utilities';
 

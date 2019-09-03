@@ -24,7 +24,7 @@
 import * as assert from 'assert';
 import * as _ from 'underscore';
 import { yaml, verifyObject } from './helpers.utilities';
-import { TableColumnDefinition } from '../../database/applicationSchemaInterface';
+import { TableColumnDefinition } from '../core-database';
 
 export class SchemaCache {
     static _cached: {[key: string]: SchemaLoader} = {};

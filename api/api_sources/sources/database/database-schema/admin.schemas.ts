@@ -1,6 +1,6 @@
 // Admin related schemas
-
-import { ApplicationTable, BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
+import { ApplicationTable } from '../../libs/core-database';
+import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
 
 /**
  * @description Schema Class to design table for request access level change from a user
