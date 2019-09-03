@@ -48,6 +48,14 @@ schemas:
         name: 'applicator_last_name'
         comment: 'Last name of the applicator'
         definition: VARCHAR(100) NULL
+      secondaryApplicatorFirstName: 
+        name: 'secondary_applicator_first_name'
+        comment: 'First name of the secondary applicator'
+        definition: VARCHAR(100) NULL
+      secondaryApplicatorLastName: 
+        name: 'secondary_applicator_last_name'
+        comment: 'Last name of the secondary applicator'
+        definition: VARCHAR(100) NULL
       date:
         name: mechanical_treatment_date
         comment: 'Date of the treatment'
@@ -121,6 +129,13 @@ schemas:
         definition: INT NULL
         foreignTable: mechanical_treatment_issue_code
         refColumn: mechanical_treatment_issue_code_id
+        deleteCascade: false
+      providerContractor:
+        name: 'treatment_provider_contractor_id'
+        comment: Foreign key reference to Mechanical Treatment Provider Contractor table
+        definition: INT NULL
+        foreignTable: treatment_provider_contractor
+        refColumn: treatment_provider_contractor_id
         deleteCascade: false
 
   ## --

@@ -13,10 +13,10 @@
  * limitations under the License.
  * File: mechanical.treatment.ts
  * Project: lucy
- * File Created: Monday, 12th August 2019 10:27:35 am
+ * File Created: Friday, 12th August 2019 9:38:01 am
  * Author: pushan
  * -----
- * Last Modified: Monday, 12th August 2019 10:38:06 am
+ * Last Modified: Tuesday, 3rd September 2019 12:16:34 pm
  * Modified By: pushan
  * -----
  */
@@ -33,11 +33,11 @@ import {
 	MechanicalDisposalMethodCodeSchema,
 	MechanicalSoilDisturbanceCodeSchema,
 	MechanicalRootRemovalCodeSchema,
-	MechanicalTreatmentIssueCodeSchema
+	MechanicalTreatmentIssueCodeSchema,
+	TreatmentProviderContractorSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-
 import {
 	Observation,
 	Species,
@@ -46,7 +46,8 @@ import {
 	MechanicalDisposalMethodCode,
 	MechanicalSoilDisturbanceCode,
 	MechanicalRootRemovalCode,
-	MechanicalTreatmentIssueCode
+	MechanicalTreatmentIssueCode,
+	TreatmentProviderContractor
 } from '../models';
 import { Record, RecordController } from './user';
 
@@ -62,6 +63,8 @@ export interface MechanicalTreatmentSpec {
 	length: number;
 	applicatorFirstName: string;
 	applicatorLastName: string;
+	secondaryApplicatorFirstName: string;
+	secondaryApplicatorLastName: string;
 	date: string;
 	paperFileReference: string;
 	comment: string;
@@ -74,6 +77,7 @@ export interface MechanicalTreatmentSpec {
 	soilDisturbance: MechanicalSoilDisturbanceCode;
 	rootRemoval: MechanicalRootRemovalCode;
 	issue: MechanicalTreatmentIssueCode;
+	providerContractor: TreatmentProviderContractor;
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -89,6 +93,8 @@ export interface MechanicalTreatmentUpdateSpec {
 	length?: number;
 	applicatorFirstName?: string;
 	applicatorLastName?: string;
+	secondaryApplicatorFirstName?: string;
+	secondaryApplicatorLastName?: string;
 	date?: string;
 	paperFileReference?: string;
 	comment?: string;
@@ -101,6 +107,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	soilDisturbance?: MechanicalSoilDisturbanceCode;
 	rootRemoval?: MechanicalRootRemovalCode;
 	issue?: MechanicalTreatmentIssueCode;
+	providerContractor?: TreatmentProviderContractor;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -167,6 +174,20 @@ export class MechanicalTreatment extends Record {
 	@Column({ name: MechanicalTreatmentSchema.columns.applicatorLastName})
 	@ModelProperty({type: PropertyType.string})
 	applicatorLastName: string;
+
+	/**
+	 * @description Getter/Setter property for column {secondary_applicator_first_name}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.secondaryApplicatorFirstName})
+	@ModelProperty({type: PropertyType.string})
+	secondaryApplicatorFirstName: string;
+
+	/**
+	 * @description Getter/Setter property for column {secondary_applicator_last_name}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.secondaryApplicatorLastName})
+	@ModelProperty({type: PropertyType.string})
+	secondaryApplicatorLastName: string;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_date}
@@ -259,6 +280,14 @@ export class MechanicalTreatment extends Record {
 	@JoinColumn({ name: MechanicalTreatmentSchema.columns.issue, referencedColumnName: MechanicalTreatmentIssueCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	issue: MechanicalTreatmentIssueCode;
+
+	/**
+	 * @description Getter/Setter property for column {treatment_provider_contractor_id}
+	 */
+	@ManyToOne( type => TreatmentProviderContractor, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.providerContractor, referencedColumnName: TreatmentProviderContractorSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	providerContractor: TreatmentProviderContractor;
 
 }
 

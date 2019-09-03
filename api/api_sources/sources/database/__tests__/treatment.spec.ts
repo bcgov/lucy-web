@@ -94,6 +94,7 @@ describe('Treatment Test', () => {
         should().exist(mt.soilDisturbance);
         should().exist(mt.rootRemoval);
         should().exist(mt.issue);
+        should().exist(mt.providerContractor);
         expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
         expect(mt.species.species_id).to.be.equal(f.species.species_id);
         expect(mt.speciesAgency.species_agency_code_id).to.be.equal(f.speciesAgency.species_agency_code_id);
@@ -102,6 +103,7 @@ describe('Treatment Test', () => {
         expect(mt.soilDisturbance.mechanical_soil_disturbance_code_id).to.be.equal(f.soilDisturbance.mechanical_soil_disturbance_code_id);
         expect(mt.rootRemoval.mechanical_root_removal_code_id).to.be.equal(f.rootRemoval.mechanical_root_removal_code_id);
         expect(mt.issue.mechanical_treatment_issue_code_id).to.be.equal(f.issue.mechanical_treatment_issue_code_id);
+        expect(mt.providerContractor.treatment_provider_contractor_id).to.be.equal(f.providerContractor.treatment_provider_contractor_id);
         await destroyMechanicalTreatment(mt);
     });
 
