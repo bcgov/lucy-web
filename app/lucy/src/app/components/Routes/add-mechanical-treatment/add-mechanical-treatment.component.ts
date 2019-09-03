@@ -165,7 +165,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
   //   return this.observationObject.speciesObservations;
   // }
 
-  ///// Invasive plant objects
+  ///// Mechanical Treatment object
   private _object: MechanicalTreatment;
   // Get
   get object(): MechanicalTreatment {

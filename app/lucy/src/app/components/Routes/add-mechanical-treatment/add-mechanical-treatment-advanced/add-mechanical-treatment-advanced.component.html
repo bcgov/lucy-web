@@ -1,3 +1,70 @@
-<p>
-  add-mechanical-treatment-advanced works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-12 section-title">
+      Treatment Related
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-12 col-md-4">
+      <app-dropdown
+        [mode]="mode"
+        [items]="issueswithTreatment"
+        [fieldHeader]="'Issues with Treatment'"
+        [selectedItem]="issuewithTreatment"
+        (selectionChanged)="issueswithTreatmentChanged($event)"
+      >
+      </app-dropdown>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <app-dropdown
+        [mode]="mode"
+        [items]="disposalMethods"
+        [fieldHeader]="'Disposal Methods'"
+        [selectedItem]="disposalMethod"
+        (selectionChanged)="disposalMethodsChanged($event)"
+      >
+      </app-dropdown>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <app-dropdown
+        [mode]="mode"
+        [items]="disturbanceIssues"
+        [fieldHeader]="'Disturbance Issues'"
+        [selectedItem]="disturbanceIssue"
+        (selectionChanged)="disturbanceIssuestChanged($event)"
+      >
+      </app-dropdown>
+    </div>
+  </div>
+  <hr class="divider" />
+  <div class="row">
+    <div class="col-12 section-title">
+      Location Related
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-12 col-md-4">
+      <app-checkbox
+        [mode]="mode"
+        [header]="'Signage On Site'"
+        [value]="signageOnSiteIndicator"
+        (selectionChanged)="signageOnSiteIndicatorChanged($event)"
+      >
+      </app-checkbox>
+    </div>
+    <div class="col-12 col-md-4">
+      <app-dropdown
+        [mode]="mode"
+        [items]="rootSystems"
+        [fieldHeader]="'Root Systems'"
+        [selectedItem]="rootSystem"
+        (selectionChanged)="rootSystemChanged($event)"
+      >
+      </app-dropdown>
+    </div>
+  </div>
+</div>

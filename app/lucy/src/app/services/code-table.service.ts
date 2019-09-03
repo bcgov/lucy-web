@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { ObjectValidatorService } from './object-validator.service';
 import { AppConstants } from '../constants';
-import { Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes,
-   SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes,
-   SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
-   ProposedActionCodes, AspectCodes, SlopeCodes } from '../models';
-import { MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
+import {
+  Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes,
+  SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes,
+  SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
+  ProposedActionCodes, AspectCodes, SlopeCodes
+} from '../models';
+import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes } from '../models/MechanicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +31,12 @@ export class CodeTableService {
   private groundSlope: SlopeCodes[];
 
   private mechanicalTreatmentMethodsCodes: MechanicalTreatmentMethodsCodes[];
+  private mechanicalDisposalMethodCodes: MechanicalDisposalMethodsCodes[];
+  private mechanicalSoilDisturbanceCodes: MechanicalSoilDisturbanceCodes[];
+  private mechanicalRootRemovalCodes: MechanicalRootRemovalCodes[];
+  private mechanicalIssueCodes: MechanicalIssueCodes[];
 
-  private codeTables: any| null = null;
+  private codeTables: any | null = null;
 
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
@@ -60,17 +66,17 @@ export class CodeTableService {
    * Result is cached and returned next time the function is called.
    */
   public async getJuristictions(): Promise<Jurisdiction[]> {
-    if (this.juristictions && this.juristictions.length > 0 ) {
+    if (this.juristictions && this.juristictions.length > 0) {
       return this.juristictions;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const juristictionCodes = codes.jurisdictionCodes;
-    if ( juristictionCodes && (Array.isArray(juristictionCodes) && this.objectValidator.isJurisdictionObject(juristictionCodes[0]))) {
+    if (juristictionCodes && (Array.isArray(juristictionCodes) && this.objectValidator.isJurisdictionObject(juristictionCodes[0]))) {
       this.juristictions = juristictionCodes;
       return this.juristictions;
     }
@@ -84,17 +90,17 @@ export class CodeTableService {
    * Result is cached and returned next time the function is called.
    */
   public async getInvasivePlantSpecies(): Promise<InvasivePlantSpecies[]> {
-    if (this.invasivePlantSpecies && this.invasivePlantSpecies.length > 0 ) {
+    if (this.invasivePlantSpecies && this.invasivePlantSpecies.length > 0) {
       return this.invasivePlantSpecies;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const speciesCodes = codes.speciesList;
-    if ( speciesCodes && (Array.isArray(speciesCodes) && this.objectValidator.isInvasivePlantSpeciesObject(speciesCodes[0]))) {
+    if (speciesCodes && (Array.isArray(speciesCodes) && this.objectValidator.isInvasivePlantSpeciesObject(speciesCodes[0]))) {
       this.invasivePlantSpecies = speciesCodes;
       return speciesCodes;
     }
@@ -102,17 +108,17 @@ export class CodeTableService {
   }
 
   public async getDensityCodes(): Promise<SpeciesDensityCodes[]> {
-    if (this.density && this.density.length > 0 ) {
+    if (this.density && this.density.length > 0) {
       return this.density;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const densityCodes = codes.speciesDensityCodes;
-    if ( densityCodes && (Array.isArray(densityCodes) && this.objectValidator.isSpeciesDensityCodeObject(densityCodes[0]))) {
+    if (densityCodes && (Array.isArray(densityCodes) && this.objectValidator.isSpeciesDensityCodeObject(densityCodes[0]))) {
       this.density = densityCodes;
       return densityCodes;
     }
@@ -120,17 +126,17 @@ export class CodeTableService {
   }
 
   public async getDistributionCodes(): Promise<SpeciesDistributionCodes[]> {
-    if (this.distributions && this.distributions.length > 0 ) {
+    if (this.distributions && this.distributions.length > 0) {
       return this.distributions;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const distributionCodes = codes.speciesDistributionCodes;
-    if ( distributionCodes && (Array.isArray(distributionCodes) && this.objectValidator.isSpeciesDistributionCodeObject(distributionCodes[0]))) {
+    if (distributionCodes && (Array.isArray(distributionCodes) && this.objectValidator.isSpeciesDistributionCodeObject(distributionCodes[0]))) {
       this.distributions = distributionCodes;
       return distributionCodes;
     }
@@ -138,17 +144,17 @@ export class CodeTableService {
   }
 
   public async getSpeciesAgencyCodes(): Promise<SpeciesAgencyCodes[]> {
-    if (this.agencies && this.agencies.length > 0 ) {
+    if (this.agencies && this.agencies.length > 0) {
       return this.agencies;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const agencies = codes.speciesAgencyCodes;
-    if ( agencies && (Array.isArray(agencies) && this.objectValidator.isSpeciesAgencyCodeObject(agencies[0]))) {
+    if (agencies && (Array.isArray(agencies) && this.objectValidator.isSpeciesAgencyCodeObject(agencies[0]))) {
       this.agencies = agencies;
       return agencies;
     }
@@ -156,17 +162,17 @@ export class CodeTableService {
   }
 
   public async observationTypeCodes(): Promise<ObservationTypeCodes[]> {
-    if (this.surveyTypes && this.surveyTypes.length > 0 ) {
+    if (this.surveyTypes && this.surveyTypes.length > 0) {
       return this.surveyTypes;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const surveyTypes = codes.observationTypeCodes;
-    if ( surveyTypes && (Array.isArray(surveyTypes) && this.objectValidator.isObservationTypeCodesObject(surveyTypes[0]))) {
+    if (surveyTypes && (Array.isArray(surveyTypes) && this.objectValidator.isObservationTypeCodesObject(surveyTypes[0]))) {
       this.surveyTypes = surveyTypes;
       return surveyTypes;
     }
@@ -174,17 +180,17 @@ export class CodeTableService {
   }
 
   public async getSoilTextureCodes(): Promise<SoilTextureCodes[]> {
-    if (this.soilTextures && this.soilTextures.length > 0 ) {
+    if (this.soilTextures && this.soilTextures.length > 0) {
       return this.soilTextures;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const soilTextures = codes.soilTextureCodes;
-    if ( soilTextures && (Array.isArray(soilTextures) && this.objectValidator.isSoilTextureCodesObject(soilTextures[0]))) {
+    if (soilTextures && (Array.isArray(soilTextures) && this.objectValidator.isSoilTextureCodesObject(soilTextures[0]))) {
       this.soilTextures = soilTextures;
       return soilTextures;
     }
@@ -192,17 +198,17 @@ export class CodeTableService {
   }
 
   public async observationGeometryCodes(): Promise<ObservationGeometryCodes[]> {
-    if (this.geometries && this.geometries.length > 0 ) {
+    if (this.geometries && this.geometries.length > 0) {
       return this.geometries;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const geometries = codes.observationGeometryCodes;
-    if ( geometries && (Array.isArray(geometries) && this.objectValidator.isObservationGeometryCodesObject(geometries[0]))) {
+    if (geometries && (Array.isArray(geometries) && this.objectValidator.isObservationGeometryCodesObject(geometries[0]))) {
       this.geometries = geometries;
       return geometries;
     }
@@ -210,17 +216,17 @@ export class CodeTableService {
   }
 
   public async getSpecificUseCodes(): Promise<SpecificUseCodes[]> {
-    if (this.useCodes && this.useCodes.length > 0 ) {
+    if (this.useCodes && this.useCodes.length > 0) {
       return this.useCodes;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const useCodes = codes.specificUseCodes;
-    if ( useCodes && (Array.isArray(useCodes) && this.objectValidator.isSpecificUseCodesObject(useCodes[0]))) {
+    if (useCodes && (Array.isArray(useCodes) && this.objectValidator.isSpecificUseCodesObject(useCodes[0]))) {
       this.useCodes = useCodes;
       return useCodes;
     }
@@ -228,17 +234,17 @@ export class CodeTableService {
   }
 
   public async getProposedActionCodes(): Promise<ProposedActionCodes[]> {
-    if (this.proposedActions && this.proposedActions.length > 0 ) {
+    if (this.proposedActions && this.proposedActions.length > 0) {
       return this.proposedActions;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const proposedActions = codes.proposedActionCodes;
-    if ( proposedActions && (Array.isArray(proposedActions) && this.objectValidator.isProposedActionCodesObject(proposedActions[0]))) {
+    if (proposedActions && (Array.isArray(proposedActions) && this.objectValidator.isProposedActionCodesObject(proposedActions[0]))) {
       this.proposedActions = proposedActions;
       return proposedActions;
     }
@@ -246,13 +252,13 @@ export class CodeTableService {
   }
 
   public async getMechanicalTreatmentMethodsCodes(): Promise<MechanicalTreatmentMethodsCodes[]> {
-    if (this.mechanicalTreatmentMethodsCodes && this.mechanicalTreatmentMethodsCodes.length > 0 ) {
+    if (this.mechanicalTreatmentMethodsCodes && this.mechanicalTreatmentMethodsCodes.length > 0) {
       return this.mechanicalTreatmentMethodsCodes;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const mechanicalTreatmentMethodsCodes = codes.mechanicalTreatmentMethodsCodes;
@@ -264,13 +270,13 @@ export class CodeTableService {
   }
 
   public async getGroundSlopeCodes(): Promise<SlopeCodes[]> {
-    if (this.groundSlope && this.groundSlope.length > 0 ) {
+    if (this.groundSlope && this.groundSlope.length > 0) {
       return this.groundSlope;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const groundSlope = codes.slopeCodes;
@@ -282,20 +288,94 @@ export class CodeTableService {
   }
 
   public async getGroundAspectCodes(): Promise<AspectCodes[]> {
-    if (this.groundAspects && this.groundAspects.length > 0 ) {
+    if (this.groundAspects && this.groundAspects.length > 0) {
       return this.groundAspects;
     }
 
     const codes = await this.getCodes();
     if (codes === null) {
-       return [];
+      return [];
     }
 
     const groundAspects = codes.aspectCodes;
-    if ( groundAspects && (Array.isArray(groundAspects) && this.objectValidator.isGroundAspectCodesObject(groundAspects[0]))) {
+    if (groundAspects && (Array.isArray(groundAspects) && this.objectValidator.isGroundAspectCodesObject(groundAspects[0]))) {
       this.groundAspects = groundAspects;
       return groundAspects;
     }
     return this.groundAspects;
   }
+
+
+  public async getMechanicalDisposalMethodCodes(): Promise<MechanicalDisposalMethodsCodes[]> {
+    if (this.mechanicalDisposalMethodCodes && this.mechanicalDisposalMethodCodes.length > 0) {
+      return this.mechanicalDisposalMethodCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const mechanicalDisposalMethods = codes.mechanicalDisposalMethodCodes;
+    if (mechanicalDisposalMethods && (Array.isArray(mechanicalDisposalMethods) && this.objectValidator.isMechanicalDisposalMethodCodesObject(mechanicalDisposalMethods[0]))) {
+      this.mechanicalDisposalMethodCodes = mechanicalDisposalMethods;
+      return mechanicalDisposalMethods;
+    }
+    return this.mechanicalDisposalMethodCodes;
+  }
+
+  public async getMechanicalSoilDisturbanceCodes(): Promise<MechanicalSoilDisturbanceCodes[]> {
+    if (this.mechanicalSoilDisturbanceCodes && this.mechanicalSoilDisturbanceCodes.length > 0) {
+      return this.mechanicalSoilDisturbanceCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const mechanicalSoilDisturbanceCodes = codes.mechanicalSoilDisturbanceCodes;
+    if (mechanicalSoilDisturbanceCodes && (Array.isArray(mechanicalSoilDisturbanceCodes) && this.objectValidator.isMechanicalSoilDisturbanceCodesObject(mechanicalSoilDisturbanceCodes[0]))) {
+      this.mechanicalSoilDisturbanceCodes = mechanicalSoilDisturbanceCodes;
+      return mechanicalSoilDisturbanceCodes;
+    }
+    return this.mechanicalSoilDisturbanceCodes;
+  }
+
+  public async getsMechanicalRootRemovalCodesCodes(): Promise<MechanicalRootRemovalCodes[]> {
+    if (this.mechanicalRootRemovalCodes && this.mechanicalRootRemovalCodes.length > 0) {
+      return this.mechanicalRootRemovalCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const mechanicalRootRemovalCodes = codes.mechanicalRootRemovalCodes;
+    if (mechanicalRootRemovalCodes && (Array.isArray(mechanicalRootRemovalCodes) && this.objectValidator.isMechanicalRootRemovalCodesObject(mechanicalRootRemovalCodes[0]))) {
+      this.mechanicalRootRemovalCodes = mechanicalRootRemovalCodes;
+      return mechanicalRootRemovalCodes;
+    }
+    return this.mechanicalRootRemovalCodes;
+  }
+
+  public async getMechanicalIssueCodesCodes(): Promise<MechanicalIssueCodes[]> {
+    if (this.mechanicalIssueCodes && this.mechanicalIssueCodes.length > 0) {
+      return this.mechanicalIssueCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const mechanicalIssueCodes = codes.mechanicalIssueCodes;
+    if (mechanicalIssueCodes && (Array.isArray(mechanicalIssueCodes) && this.objectValidator.isMechanicalIssueCodesObject(mechanicalIssueCodes[0]))) {
+      this.mechanicalIssueCodes = mechanicalIssueCodes;
+      return mechanicalIssueCodes;
+    }
+    return this.mechanicalIssueCodes;
+  }
+
 }
