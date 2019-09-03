@@ -44,6 +44,11 @@ export class MechanicalTreatmentService {
       species: object.species.species_id,
       speciesAgency: object.speciesAgency.species_agency_code_id,
       mechanicalMethod: object.mechanicalMethod.mechanical_method_code_id,
+      mechanicalDisposalMethod: object.mechanicalDisposalMethod.mechanical_disposal_method_code_id,
+      soilDisturbance: object.soilDisturbance.mechanical_soil_disturbance_code_id,
+      rootRemoval: object.rootRemoval.mechanical_root_removal_code_id,
+      issue: object.issue.mechanical_treatment_issue_code_id,
+      signageOnSiteIndicator: object.signageOnSiteIndicator,
     };
 
     return body;
@@ -172,6 +177,11 @@ export class MechanicalTreatmentService {
       species: undefined,
       speciesAgency: undefined,
       mechanicalMethod: undefined,
+      mechanicalDisposalMethod: undefined,
+      soilDisturbance: undefined,
+      rootRemoval: undefined,
+      issue: undefined,
+      signageOnSiteIndicator: false,
     };
     return object;
   }

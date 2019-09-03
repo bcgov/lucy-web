@@ -15,6 +15,13 @@ export interface MechanicalTreatment {
         species: InvasivePlantSpecies;
         speciesAgency: SpeciesAgencyCodes;
         mechanicalMethod: MechanicalTreatmentMethodsCodes;
+
+        signageOnSiteIndicator: boolean;
+
+        mechanicalDisposalMethod: MechanicalDisposalMethodsCodes;
+        soilDisturbance: MechanicalSoilDisturbanceCodes;
+        rootRemoval: MechanicalRootRemovalCodes;
+        issue: MechanicalIssueCodes;
 }
 
 
@@ -22,5 +29,33 @@ export interface MechanicalTreatmentMethodsCodes {
         description: string;
         activeIndicator: boolean;
         mechanical_method_code_id: number;
+        code: string;
+}
+
+export interface MechanicalDisposalMethodsCodes {
+        description: string;
+        activeIndicator: boolean;
+        mechanical_disposal_method_code_id: number;
+        code: string;
+}
+
+export interface MechanicalSoilDisturbanceCodes {
+        description: string;
+        activeIndicator: boolean;
+        mechanical_soil_disturbance_code_id: number;
+        code: string;
+}
+
+export interface MechanicalRootRemovalCodes {
+        description: string;
+        activeIndicator: boolean;
+        mechanical_root_removal_code_id: number;
+        code: string;
+}
+
+export interface MechanicalIssueCodes {
+        description: string;
+        activeIndicator: boolean;
+        mechanical_treatment_issue_code_id: number;
         code: string;
 }
