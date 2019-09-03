@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, SlopeCodes, AspectCodes, ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
-import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes } from '../models/MechanicalTreatment';
+import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -208,5 +208,14 @@ export class ObjectValidatorService {
   public isMechanicalTreatmentMethodsCodes(mechanicalTreatmentMethodsCodes: any): mechanicalTreatmentMethodsCodes is MechanicalTreatmentMethodsCodes {
     if (mechanicalTreatmentMethodsCodes === undefined || mechanicalTreatmentMethodsCodes === null) {return false; }
     return (<MechanicalTreatmentMethodsCodes>mechanicalTreatmentMethodsCodes.description) !== undefined;
+  }
+
+   /**
+   * Check if object is MechanicalTreatmentProviders
+   * @param mechanicalTreatmentMethodsCodes object
+   */
+  public isMechanicalTreatmentProvidersObject(mechanicalTreatmentProviders: any): mechanicalTreatmentProviders is MechanicalTreatmentProviders {
+    if (mechanicalTreatmentProviders === undefined || mechanicalTreatmentProviders === null) {return false; }
+    return (<MechanicalTreatmentProviders>mechanicalTreatmentProviders.registrationNumber) !== undefined;
   }
 }

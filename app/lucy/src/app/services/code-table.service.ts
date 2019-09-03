@@ -8,7 +8,7 @@ import {
   SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
   ProposedActionCodes, AspectCodes, SlopeCodes
 } from '../models';
-import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes } from '../models/MechanicalTreatment';
+import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,7 @@ export class CodeTableService {
   private mechanicalSoilDisturbanceCodes: MechanicalSoilDisturbanceCodes[];
   private mechanicalRootRemovalCodes: MechanicalRootRemovalCodes[];
   private mechanicalIssueCodes: MechanicalIssueCodes[];
+  private mechanicalTreatmentProviders: MechanicalTreatmentProviders[];
 
   private codeTables: any | null = null;
 
@@ -376,6 +377,24 @@ export class CodeTableService {
       return mechanicalIssueCodes;
     }
     return this.mechanicalIssueCodes;
+  }
+
+  public async getMechanicalTreatmentProviderCodes(): Promise<MechanicalTreatmentProviders[]> {
+    if (this.mechanicalTreatmentProviders && this.mechanicalTreatmentProviders.length > 0) {
+      return this.mechanicalTreatmentProviders;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const mechanicalTreatmentProviders = codes.mechanicalTreatmentProviders;
+    if (mechanicalTreatmentProviders && (Array.isArray(mechanicalTreatmentProviders) && this.objectValidator.isMechanicalTreatmentProvidersObject(mechanicalTreatmentProviders[0]))) {
+      this.mechanicalTreatmentProviders = mechanicalTreatmentProviders;
+      return mechanicalTreatmentProviders;
+    }
+    return this.mechanicalTreatmentProviders;
   }
 
 }
