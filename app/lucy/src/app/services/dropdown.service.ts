@@ -31,6 +31,7 @@ export class DropdownService {
   public displayedMechanicalDisposalMethodField = 'description';
   public displayedSoilDisturbanceField = 'description';
   public displayedRootRemovalField = 'description';
+  public displayedMechanicalTreatmentProviderField = 'businessName';
 
   public displayedObservationField = 'observation_id';
 
@@ -215,6 +216,16 @@ export class DropdownService {
   public async getObservations(): Promise<DropdownObject[]> {
     const observations = await this.observationService.getAll();
     return this.createDropdownObjectsFrom(observations, this.displayedObservationField);
+  }
+
+
+   /**
+   * Fetch MechanicalTreatmentProviders code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalTreatmentProviders(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getMechanicalTreatmentProviderCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedMechanicalTreatmentProviderField);
   }
 
   /**
