@@ -46,4 +46,5 @@ export * from './mechanicalDisposalMethod.code';
 export * from './mechanicalSoilDisturbance.code';
 export * from './mechanicalRootRemoval.code';
 export * from './mechanicalTreatmentIssue.code';
+export * from './treatmentProviderContractor';
 // ----------------------------------------------------------------------------------------------------------------
