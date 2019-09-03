@@ -12,10 +12,24 @@
         <!-- Input mode switch  -->
         <div class="col-12 input-mode">
           <div class="input-mode-container">
-            <button class="btn switch-btn" [ngClass]="!locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'"
-              (click)="switchInputUTM()">UTM</button>
-            <button class="btn switch-btn" [ngClass]="locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'"
-              (click)="switchInputLatLong()">Lat / Long</button>
+            <button
+              class="btn switch-btn"
+              [ngClass]="
+                !locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'
+              "
+              (click)="switchInputUTM()"
+            >
+              UTM
+            </button>
+            <button
+              class="btn switch-btn"
+              [ngClass]="
+                locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'
+              "
+              (click)="switchInputLatLong()"
+            >
+              Lat / Long
+            </button>
           </div>
         </div>
       </div>
@@ -23,15 +37,25 @@
       <div *ngIf="locationEntryModeLatLong">
         <div class="row">
           <div class="full-width">
-            <app-field [mode]="mode" [header]="'Latitude'" [value]="lat"
-              [validationFunc]="validation.isValidLatitude.bind(validation)" (valueChanged)='latChanged($event)'>
+            <app-field
+              [mode]="mode"
+              [header]="'Latitude'"
+              [value]="lat"
+              [validationFunc]="validation.isValidLatitude.bind(validation)"
+              (valueChanged)="latChanged($event)"
+            >
             </app-field>
           </div>
         </div>
         <div class="row">
           <div class="full-width">
-            <app-field [mode]="mode" [header]="'Longitude'" [value]="long"
-              [validationFunc]="validation.isValidLongitude.bind(validation)" (valueChanged)='longChanged($event)'>
+            <app-field
+              [mode]="mode"
+              [header]="'Longitude'"
+              [value]="long"
+              [validationFunc]="validation.isValidLongitude.bind(validation)"
+              (valueChanged)="longChanged($event)"
+            >
             </app-field>
           </div>
         </div>
@@ -40,23 +64,37 @@
       <div *ngIf="!locationEntryModeLatLong">
         <div class="row">
           <div class="full-width">
-            <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings"
-              [validationFunc]="validation.isValidUTMEastings.bind(validation)" (valueChanged)='eastingChanged($event)'>
+            <app-field
+              [mode]="mode"
+              [header]="'Eastings'"
+              [value]="eastings"
+              [validationFunc]="validation.isValidUTMEastings.bind(validation)"
+              (valueChanged)="eastingChanged($event)"
+            >
             </app-field>
           </div>
         </div>
         <div class="row">
           <div class="full-width">
-            <app-field [mode]="mode" [header]="'Northings'" [value]="northings"
+            <app-field
+              [mode]="mode"
+              [header]="'Northings'"
+              [value]="northings"
               [validationFunc]="validation.isValidUTMNorthings.bind(validation)"
-              (valueChanged)='northingsChanged($event)'>
+              (valueChanged)="northingsChanged($event)"
+            >
             </app-field>
           </div>
         </div>
         <div class="row">
           <div class="full-width">
-            <app-field [mode]="mode" [header]="'Zone'" [value]="zone"
-              [validationFunc]="validation.isValidInteger.bind(validation)" (valueChanged)='zoneChanged($event)'>
+            <app-field
+              [mode]="mode"
+              [header]="'Zone'"
+              [value]="zone"
+              [validationFunc]="validation.isValidInteger.bind(validation)"
+              (valueChanged)="zoneChanged($event)"
+            >
             </app-field>
           </div>
         </div>
@@ -64,15 +102,19 @@
     </div>
     <!-- Map -->
     <div class="col-12 col-md-8 leaf">
-      <app-map-preview (centerPointChanged)='mapCenterChanged($event)' [cluster]="false" [center]="mapCenter"
-        [markers]="markers">
+      <app-map-preview
+        (centerPointChanged)="mapCenterChanged($event)"
+        [cluster]="false"
+        [center]="mapCenter"
+        [markers]="markers"
+      >
       </app-map-preview>
     </div>
     <!-- Observer Information  -->
     <div class="col-12">
       <div class="row">
         <div class="col-12 section-title">
-          <hr class="divider">
+          <hr class="divider" />
           Applicator information
         </div>
       </div>
@@ -80,18 +122,31 @@
       <div class="row">
         <div class="row">
           <div class="col-12 col-md-4">
-            <app-field [mode]="mode" [header]="'First Name'" [value]="applicatorFirstName"
-              (valueChanged)='applicatorFirstNameChanged($event)'>
+            <app-field
+              [mode]="mode"
+              [header]="'First Name'"
+              [value]="applicatorFirstName"
+              (valueChanged)="applicatorFirstNameChanged($event)"
+            >
             </app-field>
           </div>
           <div class="col-12 col-md-4">
-            <app-field [mode]="mode" [header]="'Last Name'" [value]="applicatorLastName"
-              (valueChanged)='applicatorLastNameChanged($event)'>
+            <app-field
+              [mode]="mode"
+              [header]="'Last Name'"
+              [value]="applicatorLastName"
+              (valueChanged)="applicatorLastNameChanged($event)"
+            >
             </app-field>
           </div>
           <div class="col-12 col-md-8">
-            <app-dropdown [mode]="mode" [items]="agencies" [fieldHeader]="'Employer'" [selectedItem]="organization"
-              (selectionChanged)='organizationChanged($event)'>
+            <app-dropdown
+              [mode]="mode"
+              [items]="agencies"
+              [fieldHeader]="'Employer'"
+              [selectedItem]="organization"
+              (selectionChanged)="organizationChanged($event)"
+            >
             </app-dropdown>
           </div>
         </div>
@@ -99,5 +154,5 @@
       <!-- Date -->
     </div>
   </div>
-  <hr class="divider">
+  <hr class="divider" />
 </div>
