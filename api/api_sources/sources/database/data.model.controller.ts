@@ -22,7 +22,7 @@
 import {Connection, getConnection, Repository, ObjectLiteral, QueryRunner} from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager} from './dataBaseManager';
-import { ApplicationTable } from './applicationSchemaInterface';
+import { ApplicationTable } from '../libs/core-database';
 
 
 export interface DataController {
