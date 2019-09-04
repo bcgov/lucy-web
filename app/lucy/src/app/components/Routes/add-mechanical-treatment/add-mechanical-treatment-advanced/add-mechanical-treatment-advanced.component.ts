@@ -50,7 +50,7 @@ export class AddMechanicalTreatmentAdvancedComponent implements OnInit {
   }
 
   get rootSystem(): DropdownObject {
-    if (this.object && this.object.soilDisturbance) {
+    if (this.object && this.object.rootRemoval) {
       return {
         name: this.object.rootRemoval[this.dropdownService.displayedRootRemovalField],
         object: this.object.rootRemoval,
