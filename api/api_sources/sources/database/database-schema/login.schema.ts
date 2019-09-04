@@ -1,7 +1,7 @@
 // Application Login Schemas
 
-
-import { ApplicationTable, BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
+import { ApplicationTable } from '../../libs/core-database';
+import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
 
 /**
  * @description Schema Class to design role code table

@@ -19,7 +19,8 @@
 /**
  * Imports
  */
-import { ApplicationTable, defineColumn} from '../applicationSchemaInterface';
+import { ApplicationTable } from '../../libs/core-database';
+import { defineColumn} from '../applicationSchemaInterface';
 import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
 import { getYAMLFilePath } from './schema-files';
 import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData, SpeciesDensityCodeCSVData, CodeCSVData } from '../pre.load';

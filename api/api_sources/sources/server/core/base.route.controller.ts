@@ -30,7 +30,7 @@ import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { RolesCodeValue, UserDataController } from '../../database/models';
 import { DataController} from '../../database/data.model.controller';
-import { getRouteConfigs } from './route.des';
+// import { getRouteConfigs } from './route.des';
 
 /**
  * Common Message for API success
@@ -140,6 +140,8 @@ export class BaseRoutController<Controller extends DataController>  {
     // Configs
     private configs: RouteConfig[];
 
+    _configMap: {[key: string]: RouteConfig} = {};
+
     /**
      * @description Getter for share instance
      */
@@ -155,12 +157,16 @@ export class BaseRoutController<Controller extends DataController>  {
         this.logger = new Logger(this.constructor.name);
     }
 
+    get className(): string {
+        return this.constructor.name;
+    }
+
     /**
      * @description Adding config values
      */
     applyRouteConfig() {
         // Get config
-        this.configs = getRouteConfigs(this) || [];
+        this.configs = _.map(this.constructor.prototype._configMap, (val: RouteConfig) => val);
 
         // Local compare method for sorting
         const compare = (x: number, y: number): number => {
@@ -249,7 +255,9 @@ export class BaseRoutController<Controller extends DataController>  {
         return [
             check(paramKey).isInt().custom(async (value: number, {req}) => {
                 const item = await this.dataController.findById(value);
+                assert(item, `[resource-validation]: item does not exists with id: ${value}`);
                 UpdateRequest(req, { id: item});
+                req.resource = item;
             })
         ];
     }
@@ -264,6 +272,30 @@ export class BaseRoutController<Controller extends DataController>  {
             result = result.concat(item);
         }
         return result;
+    }
+
+    /**
+     * @description Passport JWT middleware
+     * @returns RouteMiddlewareHandler
+     */
+    get authHandle(): RouteMiddlewareHandler {
+        return async (req: express.Request, resp: express.Response, next: any) => {
+            try {
+                passport.authenticate('jwt', {session: false}, (err, user) => {
+                    if (err) {
+                        const msg = `Authorization fail with error ${err}`;
+                        this.commonError(401, 'authHandle', err, resp, msg);
+                    } else if (!user) {
+                        this.commonError(401, 'authHandle', 'Un-authorize access', resp, 'Un-authorize access');
+                    } else {
+                        req.user = user;
+                        next();
+                    }
+                })(req, resp, next);
+            } catch (excp) {
+                this.commonError(500, 'authHandler', excp, resp);
+            }
+        };
     }
 
 
@@ -289,8 +321,10 @@ export class BaseRoutController<Controller extends DataController>  {
                 assert(data, `Unexpected request body: tag:${tag}`);
                 const [status, body]  = await handler(data, req, resp);
                 if (status > 0) {
+                    this.logger.info(`${tag}: [DONE]`);
                     return resp.status(status).json(this.successResp(body));
                 } else {
+                    this.logger.error(`${tag}: [FAIL]`);
                     return;
                 }
             } catch (excp) {
@@ -310,30 +344,6 @@ export class SecureRouteController<T extends DataController> extends BaseRoutCon
         // Register auth middleware
         // this.router.use(passport.authenticate('jwt', {session : false}));
         this.router.use(this.authHandle);
-    }
-
-    /**
-     * @description Passport JWT middleware
-     * @returns RouteMiddlewareHandler
-     */
-    get authHandle(): RouteMiddlewareHandler {
-        return async (req: express.Request, resp: express.Response, next: any) => {
-            try {
-                passport.authenticate('jwt', {session: false}, (err, user) => {
-                    if (err) {
-                        const msg = `Authorization fail with error ${err}`;
-                        this.commonError(401, 'authHandle', err, resp, msg);
-                    } else if (!user) {
-                        this.commonError(401, 'authHandle', 'Un-authorize access', resp, 'Un-authorize access');
-                    } else {
-                        req.user = user;
-                        next();
-                    }
-                })(req, resp, next);
-            } catch (excp) {
-                this.commonError(500, 'authHandler', excp, resp);
-            }
-        };
     }
 }
 

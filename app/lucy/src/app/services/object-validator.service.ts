@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, SlopeCodes, AspectCodes, ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
-import { MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
+import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -147,6 +147,42 @@ export class ObjectValidatorService {
     return (<AspectCodes>groundAspectCodes.description) !== undefined;
   }
 
+  /**
+   * Check if object is MechanicalDisposalMethodsCodes
+   * @param MechanicalDisposalMethodsCodes object
+   */
+  public isMechanicalDisposalMethodCodesObject(mechanicalDisposalMethodCodes: any): mechanicalDisposalMethodCodes is MechanicalDisposalMethodsCodes {
+    if (mechanicalDisposalMethodCodes === undefined || mechanicalDisposalMethodCodes === null) {return false; }
+    return (<MechanicalDisposalMethodsCodes>mechanicalDisposalMethodCodes.description) !== undefined;
+  }
+
+  /**
+   * Check if object is SoilDisturbanceCodes
+   * @param SoilDisturbanceCodes object
+   */
+  public isMechanicalSoilDisturbanceCodesObject(mechanicalSoilDisturbanceCodes: any): mechanicalSoilDisturbanceCodes is MechanicalSoilDisturbanceCodes {
+    if (mechanicalSoilDisturbanceCodes === undefined || mechanicalSoilDisturbanceCodes === null) {return false; }
+    return (<MechanicalSoilDisturbanceCodes>mechanicalSoilDisturbanceCodes.description) !== undefined;
+  }
+
+  /**
+   * Check if object is RootRemovalCodes
+   * @param RootRemovalCodes object
+   */
+  public isMechanicalRootRemovalCodesObject(mechanicalRootRemovalCodes: any): mechanicalRootRemovalCodes is MechanicalRootRemovalCodes {
+    if (mechanicalRootRemovalCodes === undefined || mechanicalRootRemovalCodes === null) {return false; }
+    return (<MechanicalRootRemovalCodes>mechanicalRootRemovalCodes.description) !== undefined;
+  }
+
+   /**
+   * Check if object is IssueCodes
+   * @param IssueCodes object
+   */
+  public isMechanicalIssueCodesObject(mechanicalIssueCodes: any): mechanicalIssueCodes is MechanicalIssueCodes {
+    if (mechanicalIssueCodes === undefined || mechanicalIssueCodes === null) {return false; }
+    return (<MechanicalIssueCodes>mechanicalIssueCodes.description) !== undefined;
+  }
+
    /**
    * Check if object is GroundSlopeCodes
    * @param groundSlopeCodes object
@@ -157,11 +193,29 @@ export class ObjectValidatorService {
   }
 
    /**
+   * Check if object is MechanicalTreatment
+   * @param mechanicalTreatmentMethodsCodes object
+   */
+  public isMechanicalTreatmentObject(mechanicalTreatment: any): mechanicalTreatment is MechanicalTreatment {
+    if (mechanicalTreatment === undefined || mechanicalTreatment === null) {return false; }
+    return (<MechanicalTreatment>mechanicalTreatment.species) !== undefined;
+  }
+
+   /**
    * Check if object is MechanicalTreatmentMethodsCodes
    * @param mechanicalTreatmentMethodsCodes object
    */
   public isMechanicalTreatmentMethodsCodes(mechanicalTreatmentMethodsCodes: any): mechanicalTreatmentMethodsCodes is MechanicalTreatmentMethodsCodes {
     if (mechanicalTreatmentMethodsCodes === undefined || mechanicalTreatmentMethodsCodes === null) {return false; }
     return (<MechanicalTreatmentMethodsCodes>mechanicalTreatmentMethodsCodes.description) !== undefined;
+  }
+
+   /**
+   * Check if object is MechanicalTreatmentProviders
+   * @param mechanicalTreatmentMethodsCodes object
+   */
+  public isMechanicalTreatmentProvidersObject(mechanicalTreatmentProviders: any): mechanicalTreatmentProviders is MechanicalTreatmentProviders {
+    if (mechanicalTreatmentProviders === undefined || mechanicalTreatmentProviders === null) {return false; }
+    return (<MechanicalTreatmentProviders>mechanicalTreatmentProviders.registrationNumber) !== undefined;
   }
 }

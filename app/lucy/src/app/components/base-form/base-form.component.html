@@ -1,0 +1,69 @@
+  <!-- Header Section  -->
+  <div class="container-fluid header-container sticky">
+    <div class="container header-container-inner">
+      <mat-toolbar color="primary">
+        <mat-toolbar-row>
+          <span class="view-title"> {{config["title"]}}</span>
+          <span class="spacer-toolbar"></span>
+          <!-- Submit button -->
+          <button *ngIf="!readonly || inReviewMode" type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons" (click)="submitAction()">
+            {{submitBtnName}}
+          </button>
+          <!-- ---- -->
+          <!-- Edit button for review -->
+          <button (click)="exitReviewMode()" *ngIf="inReviewMode" type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons" (click)="exitReviewMode()">
+            Edit
+          </button>
+          <!-- ---- -->
+          <!-- Edit Button for when in view mode and user is data editor -->
+          <button (click)="edit()" *ngIf="isDataEditor && viewing" type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons">
+            Edit
+            <i class="material-icons action-icon">
+              edit
+            </i>
+          </button>
+          <!-- ---- -->
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+  </div>
+  <!-- -------------------- -->
+  <div class="container">
+    <br />
+    <div *ngFor="let section of config.sections; let i = index" class="container">
+      <div class="row">
+        <div class="col-12 section-title">
+          {{section["title"]}}
+          <hr class="section-divider" />
+        </div>
+      </div>
+      <div *ngFor="let subSection of section.subSections; let j = index" class="row">
+        <div class="col-12 sub-section-title">
+          {{subSection["title"]}}
+        </div>
+        <div class="col-12" [ngClass]="subSection.boxed ? 'boxed' : ''">
+          <div *ngFor="let field of subSection.fields; let j = index">
+
+            <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]=""
+            (valueChanged)='fieldChanged(field, $event)'>
+            </app-field>
+            
+            <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [fieldHeader]="field.header"
+            [selectedItem]="organization" (selectionChanged)='fieldChanged(field, $event)'>
+            </app-dropdown>
+
+            <app-checkbox
+                *ngIf="field.isCheckbox"
+                [mode]="mode"
+                [header]="field.header"
+                [value]=""
+                (selectionChanged)='fieldChanged(field, $event)'>
+            </app-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

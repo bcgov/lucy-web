@@ -25,11 +25,49 @@
  */
 
 import { CodeFactory } from './helper';
-import { MechanicalMethodCodeController, MechanicalMethodCode } from '../models';
+import {
+    MechanicalMethodCodeController,
+    MechanicalMethodCode,
+    MechanicalDisposalMethodCode,
+    MechanicalDisposalMethodCodeController,
+    MechanicalSoilDisturbanceCode,
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalRootRemovalCode,
+    MechanicalRootRemovalCodeController,
+    MechanicalTreatmentIssueCode,
+    MechanicalTreatmentIssueCodeController
+} from '../models';
 
 /**
  * @description Mechanical Method Code Factory
  * @returns Promise<MechanicalMethodCode>
  */
 export const mechanicalMethodCodeFactory = CodeFactory<MechanicalMethodCode, MechanicalMethodCodeController>(MechanicalMethodCodeController.shared);
+
+/**
+ * @description Mechanical Disposal Method Code Factory
+ * @returns Promise<MechanicalDisposalMethodCode>
+ */
+export const mechanicalDisposalMethodCodeFactory = CodeFactory<MechanicalDisposalMethodCode, MechanicalDisposalMethodCodeController>(MechanicalDisposalMethodCodeController.shared);
+
+/**
+ * @description Mechanical Soil Disturbance Code Factory
+ * @returns Promise<MechanicalSoilDisturbanceCode>
+ */
+export const mechanicalSoilDisturbanceCodeFactory =
+    CodeFactory<MechanicalSoilDisturbanceCode, MechanicalSoilDisturbanceCodeController>(MechanicalSoilDisturbanceCodeController.shared);
+
+/**
+ * @description Mechanical Root Removal Code Factory
+ * @returns Promise<MechanicalRootRemovalCode>
+ */
+export const mechanicalRootRemovalCodeFactory =
+    CodeFactory<MechanicalRootRemovalCode, MechanicalRootRemovalCodeController>(MechanicalRootRemovalCodeController.shared);
+
+/**
+ * @description Mechanical Treatment Issue Code Factory
+ * @returns Promise<MechanicalTreatmentIssueCode>
+ */
+export const mechanicalTreatmentIssuesCodeFactory =
+    CodeFactory<MechanicalTreatmentIssueCode, MechanicalTreatmentIssueCodeController>(MechanicalTreatmentIssueCodeController.shared);
 // ----------------------------------------------------------------

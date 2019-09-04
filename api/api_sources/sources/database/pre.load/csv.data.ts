@@ -20,6 +20,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { CSV} from '../../libs/utilities';
+import { ObjectLiteral } from 'typeorm';
 export const getDataFilePath = (fileName: string) => path.resolve(__dirname, `./csv/${fileName}`);
 export const getFileData = (fileName: string) => fs.readFileSync(getDataFilePath(fileName), 'utf8')
 ;
@@ -33,6 +34,16 @@ export interface SpeciesCSV {
     Genus: string;
     Common: string;
     Latin: string;
+}
+
+export interface TreatmentProviderCSV extends ObjectLiteral {
+    registration_number: number;
+    business_name: string;
+    category: string;
+    address: string;
+    region_operation: string;
+    license_expiry_date: string;
+    service_provide_ind: string;
 }
 
 export interface Code {
@@ -69,5 +80,10 @@ export class SpeciesDensityCodeCSVData extends CSV<Code> {
     }
 }
 
+export class TreatmentProviderCSVData extends CSV<TreatmentProviderCSV> {
+    constructor() {
+        super(getDataFilePath('TreatmentProvider.csv'));
+    }
+}
 
 // ---------------------------------------------------------------------------------------------------

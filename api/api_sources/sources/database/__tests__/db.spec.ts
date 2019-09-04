@@ -20,7 +20,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { should, expect } from 'chai';
-import { ApplicationTableColumn, defineColumn, createColumn, BaseTableSchema, ApplicationTable} from '../applicationSchemaInterface';
+import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-database';
+import { defineColumn, createColumn, BaseTableSchema} from '../applicationSchemaInterface';
 import { getYAMLFilePath } from '../database-schema/schema-files';
 import { SchemaCache } from '../../libs/utilities';
 
@@ -72,14 +73,14 @@ describe('Test for db utilities', () => {
     it('should create table sql', () => {
         const schema = new TestSchema();
         const sql = schema.createTable();
-        console.log(sql);
+        // console.log(sql);
         should().exist(sql);
     });
 
     it('should load and create sql from schema yaml', () => {
         const schema = new Test2Schema();
         const sql = schema.createTable();
-        console.log(sql);
+        // console.log(sql);
         should().exist(sql);
         schema.table.name = 'sample2_table';
         schema.saveSchema();

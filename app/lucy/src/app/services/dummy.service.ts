@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MapMarker } from '../components/map-preview/map-preview.component';
 import { Jurisdiction,
    InvasivePlantSpecies,
    SpeciesDensityCodes,
@@ -15,8 +14,9 @@ import { Jurisdiction,
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
 import * as moment from 'moment';
-import { MechanicalTreatment, MechanicalTreatmentMethodsCodes } from '../models/MechanicalTreatment';
+import { MechanicalTreatment, MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { ObservationService } from './observation.service';
+import { MapMarker } from '../components/Utilities/map-preview/map-preview.component';
 
 @Injectable({
   providedIn: 'root'
@@ -156,16 +156,70 @@ export class DummyService {
     }
   }
 
+  //---
+  public async randomMechanicalDisposalMethodsCodes(): Promise<MechanicalDisposalMethodsCodes | undefined> {
+    const codes = await this.codeTables.getMechanicalDisposalMethodCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomMechanicalSoilDisturbanceCodes(): Promise<MechanicalSoilDisturbanceCodes | undefined> {
+    const codes = await this.codeTables.getMechanicalSoilDisturbanceCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomMechanicalRootRemovalCodes(): Promise<MechanicalRootRemovalCodes | undefined> {
+    const codes = await this.codeTables.getsMechanicalRootRemovalCodesCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomMechanicalIssueCodes(): Promise<MechanicalIssueCodes | undefined> {
+    const codes = await this.codeTables.getMechanicalIssueCodesCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
+  public async randomProviderContractor(): Promise<MechanicalTreatmentProviders | undefined> {
+    const codes = await this.codeTables.getMechanicalTreatmentProviderCodes();
+    if (codes.length > 0) {
+      return codes[this.randomIntFromInterval(0, codes.length - 1)];
+    } else {
+      return undefined;
+    }
+  }
+
   public async createDummyMechanicalTreatment(): Promise<MechanicalTreatment> {
     const invasivePlantSpecies = await this.randomInvasivePlantSpecies();
     const agency = await this.randomSpeciesAgencyCodes();
     const mechanicalMethod = await this.randomMechanicalMethodCodes();
     const observations = await this.observationService.getAll();
-    const observation = observations[1];
+    const mechanicalDisposalMethodsCodes = await this.randomMechanicalDisposalMethodsCodes();
+    const mechanicalSoilDisturbanceCodes = await this.randomMechanicalSoilDisturbanceCodes();
+    const mechanicalRootRemovalCodes = await this.randomMechanicalRootRemovalCodes();
+    const mechanicalIssueCodes = await this.randomMechanicalIssueCodes();
+    const providerContractor = await this.randomProviderContractor();
+
+    const observation = observations[0];
     if (!observation) {
+      console.log(`could not find observations to generate a treatment`);
       return undefined;
     }
     const mechanicalTreatment: MechanicalTreatment = {
+      mechanical_treatment_id: 1,
       latitude: this.randomLat(),
       longitude: this.randomLong(),
       length: this.randomIntFromInterval(4, 20),
@@ -179,6 +233,12 @@ export class DummyService {
       species: invasivePlantSpecies,
       speciesAgency: agency,
       mechanicalMethod: mechanicalMethod,
+      signageOnSiteIndicator: faker.random.boolean(),
+      mechanicalDisposalMethod: mechanicalDisposalMethodsCodes,
+      soilDisturbance: mechanicalSoilDisturbanceCodes,
+      rootRemoval: mechanicalRootRemovalCodes,
+      issue: mechanicalIssueCodes,
+      providerContractor: providerContractor,
     };
 
     return mechanicalTreatment;
@@ -271,6 +331,7 @@ export class DummyService {
       aspectCode: groundAspect,
       slopeCode: groundSlope,
       observationGeometry: geometry,
+      mechanicalTreatments: [],
     };
     return observation;
   }

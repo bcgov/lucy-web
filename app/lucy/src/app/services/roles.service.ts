@@ -49,48 +49,48 @@ export class RolesService {
     }
   }
 
-  public canCreateObservation(accessType: UserAccessType) {
+  public canCreate(accessType: UserAccessType) {
     return (accessType === UserAccessType.Admin ||
       accessType === UserAccessType.DataEditor);
   }
 
-  public canEditObservation(accessType: UserAccessType) {
-    return this.canCreateObservation(accessType);
+  public canEdit(accessType: UserAccessType) {
+    return this.canCreate(accessType);
   }
 
   private getDummyRoles(): Role[] {
-    var roles: Role[] = [
+    const roles: Role[] = [
       {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 1,
-        code: "ADM",
-        role: "Admin",
-        description: "Overall SEISM Access",
+        code: `ADM`,
+        role: `Admin`,
+        description: `Overall SEISM Access`,
     },
     {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 2,
-        code: "DAV",
-        role: "Data Viewer",
-        description: "General data view access",
+        code: `DAV`,
+        role: `Data Viewer`,
+        description: `General data view access`,
     },
     {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 3,
-        code: "DAE",
-        role: "Data Editor",
-        description: "General access",
+        code: `DAE`,
+        role: `Data Editor`,
+        description: `General access`,
     },
     {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 4,
-        code: "SUP",
-        role: "Super User",
-        description: "Lead admin for each of the taxonomic components",
+        code: `SUP`,
+        role: `Super User`,
+        description: `Lead admin for each of the taxonomic components`,
     }
     ]
     return roles;

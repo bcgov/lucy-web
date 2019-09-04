@@ -22,7 +22,7 @@
 import {Connection, getConnection, Repository, ObjectLiteral, QueryRunner} from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager} from './dataBaseManager';
-import { ApplicationTable } from './applicationSchemaInterface';
+import { ApplicationTable } from '../libs/core-database';
 
 
 export interface DataController {
@@ -34,6 +34,8 @@ export interface DataController {
     create(): any;
     saveInDB(obj: any): Promise<any>;
     random(): Promise<any>;
+    createNewObject(newObj: any, creator: any, ...others: any[]): Promise<any>;
+    updateObject(existing: any, update: any, modifier: any, ...others: any[]): Promise<any>;
 }
 
 /**
@@ -121,7 +123,8 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase imp
      * @param number id
      */
     async findById(id: number): Promise<T> {
-        return await this.repo.findOne(this.idQuery(id)) as T;
+        const items: T[] = await this.repo.find(this.idQuery(id)) as T[];
+        return items[0];
     }
 
     async random(): Promise<T> {
@@ -201,6 +204,14 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase imp
         }
         await this.saveInDB(obj);
         return obj;
+    }
+
+    async createNewObject(newObj: any, creator: any): Promise<T> {
+        return newObj;
+    }
+
+    async updateObject(existing: any, update: any, modifier: any): Promise<T> {
+        return update;
     }
 }
 // --------------------------------------------------------------------------------------------

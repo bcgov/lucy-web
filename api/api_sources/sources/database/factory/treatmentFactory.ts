@@ -27,7 +27,7 @@ import * as faker from 'faker';
 import { Destroy } from './helper';
 import { MechanicalTreatment,
   MechanicalTreatmentController,
-  MechanicalTreatmentCreateSpec,
+  MechanicalTreatmentSpec,
   MechanicalTreatmentUpdateSpec,
   User,
   UserDataController,
@@ -36,28 +36,46 @@ import { MechanicalTreatment,
 import { userFactory } from './userFactory';
 import { observationFactory } from './observationFactory';
 import moment = require('moment');
-import { speciesFactory, speciesAgencyCodeFactory } from './observationCodesFactory';
-import { mechanicalMethodCodeFactory } from './treatmentCodesFactory';
+import {
+  speciesFactory,
+  speciesAgencyCodeFactory
+} from './observationCodesFactory';
+import {
+  mechanicalMethodCodeFactory,
+  mechanicalDisposalMethodCodeFactory,
+  mechanicalSoilDisturbanceCodeFactory,
+  mechanicalRootRemovalCodeFactory,
+  mechanicalTreatmentIssuesCodeFactory,
+} from './treatmentCodesFactory';
+import { treatmentProviderContractorFactory } from './treatmentProviderFactory';
 
 
 /**
  * @description Factory to create treatment spec.
  */
-export const mechanicalTreatmentCreateSpecFactory = async (): Promise<MechanicalTreatmentCreateSpec> => {
+export const mechanicalTreatmentCreateSpecFactory = async (): Promise<MechanicalTreatmentSpec> => {
   return {
     latitude: parseFloat(faker.address.latitude()) || 0.0,
     longitude: parseFloat(faker.address.longitude()) || 0.0,
     applicatorFirstName: faker.name.firstName(),
     applicatorLastName: faker.name.lastName(),
+    secondaryApplicatorFirstName: faker.name.firstName(),
+    secondaryApplicatorLastName: faker.name.lastName(),
     width: faker.random.number(),
     length: faker.random.number(),
     date: `${moment(faker.date.recent()).format('YYYY-MM-DD')}`,
     paperFileReference: faker.random.alphaNumeric(),
+    signageOnSiteIndicator: false,
     comment: faker.random.word(),
     observation: (await observationFactory()),
     species: await speciesFactory(),
     speciesAgency: await speciesAgencyCodeFactory(),
-    mechanicalMethod: await mechanicalMethodCodeFactory()
+    mechanicalMethod: await mechanicalMethodCodeFactory(),
+    mechanicalDisposalMethod: await mechanicalDisposalMethodCodeFactory(),
+    soilDisturbance: await mechanicalSoilDisturbanceCodeFactory(),
+    rootRemoval: await mechanicalRootRemovalCodeFactory(),
+    issue: await mechanicalTreatmentIssuesCodeFactory(),
+    providerContractor: await treatmentProviderContractorFactory()
   };
 };
 
@@ -66,7 +84,7 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
  */
 export const mechanicalTreatmentFactory = async () => {
   const spec = await mechanicalTreatmentCreateSpecFactory();
-  return await MechanicalTreatmentController.shared.createNew(spec, await userFactory());
+  return await MechanicalTreatmentController.shared.createNewObject(spec, await userFactory());
 };
 
 /**

@@ -21,7 +21,7 @@
  */
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, OneToMany } from 'typeorm';
 import { Record } from './user';
-import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
 import { SpeciesAgencyCode } from './speciesAgency.code';
 import { SoilTextureCode } from './soilTexture.code';
@@ -121,7 +121,7 @@ export interface ObservationUpdateModel {
 }
 
 @Entity({ name: ObservationSchema.dbTable})
-@ClassDescription({
+@ModelDescription({
     description: 'Observation Model class',
     schema: ObservationSchema,
     apiResource: true
@@ -149,11 +149,17 @@ export class Observation extends Record implements ObservationCreateModel {
     @ModelProperty({ type: PropertyType.number})
     long: number;
 
-    @Column({ name: ObservationSchema.columns.width, nullable: false})
+    @Column({ name: ObservationSchema.columns.width,
+        nullable: false,
+        transformer: new NumericTransformer()
+    })
     @ModelProperty({ type: PropertyType.number})
     width: number;
 
-    @Column({ name: ObservationSchema.columns.length, nullable: false})
+    @Column({ name: ObservationSchema.columns.length,
+        nullable: false,
+        transformer: new NumericTransformer()
+    })
     @ModelProperty({ type: PropertyType.number})
     length: number;
 
@@ -341,8 +347,7 @@ export class Observation extends Record implements ObservationCreateModel {
         type => MechanicalTreatment,
         mechanicalTreatment => mechanicalTreatment.observation
     )
-    getMechanicalTreatments: Promise<MechanicalTreatment[]>;
-
+    mechanicalTreatmentsFetcher: Promise<MechanicalTreatment[]>;
     @ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
     mechanicalTreatments?: MechanicalTreatment[];
 
@@ -351,7 +356,6 @@ export class Observation extends Record implements ObservationCreateModel {
      */
     @AfterLoad()
     async entityDidLoad() {
-        this.mechanicalTreatments = await this.getMechanicalTreatments;
     }
 }
 // -------------------------------------------------------------

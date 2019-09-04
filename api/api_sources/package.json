@@ -19,6 +19,7 @@
     "tslint": "tslint",
     "test:lint": "tslint --project .",
     "snyk-protect": "snyk protect",
+    "merge-report": "",
     "sonar-analysis": "sonar-generic-coverage-convertor && sonar-scanner"
   },
   "author": "Pushan Mitra",
