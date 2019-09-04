@@ -3,3 +3,6 @@ swagger/
 .nvm
 .DS_Store
 *.swp
+**/.scannerwork/
+**/.node-*/
+

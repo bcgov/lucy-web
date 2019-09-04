@@ -20,7 +20,7 @@
  * Imports
  */
 import { DataModelController } from '../data.model.controller';
-import { Observation, Species, JurisdictionCode, User, ObservationCreateModel, ObservationUpdateModel } from '../models';
+import { Observation, Species, JurisdictionCode, User, ObservationCreateModel, ObservationUpdateModel, MechanicalTreatmentController, MechanicalTreatment } from '../models';
 import { ObservationSchema, SpeciesSchema, JurisdictionCodeSchema } from '../database-schema';
 import { ifDefined, setNull } from '../../libs/utilities';
 
@@ -37,6 +37,26 @@ export class ObservationController extends DataModelController<Observation> {
      */
     public static get shared(): ObservationController {
         return this.sharedInstance<Observation>(Observation, ObservationSchema) as ObservationController;
+    }
+
+    public async findById(id: number): Promise<Observation> {
+        const item: Observation = await super.findById(id) as Observation;
+        if (item) {
+            const mts = await item.mechanicalTreatmentsFetcher || [];
+            const newItems: MechanicalTreatment[] = [];
+            if (mts.length > 0) {
+                const newMts = await mts.map(async (mt) => {
+                    return MechanicalTreatmentController.shared.findById(mt.mechanical_treatment_id);
+                });
+                for (let i = 0; i < newMts.length; i++) {
+                    const mtFull = await newMts[i];
+                    delete(mtFull.observation);
+                    newItems.push(mtFull);
+                }
+                item.mechanicalTreatments = newItems;
+            }
+        }
+        return item;
     }
 
     /**

@@ -24,7 +24,7 @@
 import * as assert from 'assert';
 import * as _ from 'underscore';
 import { yaml, verifyObject } from './helpers.utilities';
-import { TableColumnDefinition } from '../../database/applicationSchemaInterface';
+import { TableColumnDefinition } from '../core-database';
 
 export class SchemaCache {
     static _cached: {[key: string]: SchemaLoader} = {};
@@ -51,9 +51,14 @@ const ValidName = {
     sqlName: /[a-z][a-z0-9_]*/gm,
 };
 
+interface TableSchemaInfo {
+    schema: string;
+    columns: string[];
+}
+
 export class SchemaLoader {
     schemaFileObj: any;
-    tables: {[key: string]: string[]} = {};
+    tables: {[key: string]: TableSchemaInfo} = {};
     constructor(input: string | any) {
         let schemaFileObj: any;
         if (typeof input === 'string') {
@@ -86,7 +91,7 @@ export class SchemaLoader {
         const tableName = schema.name;
         assert(tableName.match(ValidName.sqlName) !== null, new Error(`SchemaLoader(v): Schema ${schemaName} table name ${tableName} is invalid`));
         const obj = {};
-        obj[tableName] = [];
+        obj[tableName] = { schema: schemaName, columns: []};
         this.tables = { ...this.tables, ...obj};
         _.each(schema.columns, (column, key: string) => this.verifyColumn(column, key, tableName));
         return;
@@ -114,7 +119,7 @@ export class SchemaLoader {
 
 
         // Adding column to table
-        this.tables[table].push(name);
+        this.tables[table].columns.push(name);
     }
 
     verifyForeignTable() {
@@ -130,16 +135,19 @@ export class SchemaLoader {
         if (ft) {
             // Checking Foreign table
             // 1. Check for external tables
-            const ftExists = _.some(this.schemaFileObj.externalTables || [], (ext: any) => ext.name === ft);
-            if (!ftExists) {
+            const filter = _.filter(this.schemaFileObj.externalTables || [], (ext: any) => ext.name === ft);
+            if (filter.length === 0) {
                 assert(this.tables[ft], new Error(`SchemaLoader(vfc): No foreign Table ${ft} for column ${columnKey}:${column.name}`));
 
                 // Checking Ref column
                 const rc = column.refColumn || '';
                 if (rc) {
-                    const columns = this.tables[ft];
+                    const columns = this.tables[ft].columns;
                     assert(columns.includes(rc) === true, new Error(`SchemaLoader(vfc): no ref column ${rc} for ${column}:${column.name} with foreign table ${ft}`));
                 }
+                column.refSchema = this.tables[ft].schema;
+            } else {
+                column.refSchema = filter[0].schema;
             }
         }
     }

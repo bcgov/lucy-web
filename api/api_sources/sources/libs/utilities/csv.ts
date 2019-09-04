@@ -21,8 +21,10 @@
  */
 import * as assert from 'assert';
 import * as csv from 'csvtojson';
+import * as _ from 'underscore';
 import { ObjectLiteral } from 'typeorm';
 
+export type CSVFieldTransformer = (value: any, key?: string) => any;
 
 export class CSV<T extends ObjectLiteral> {
     private _data: T[];
@@ -32,7 +34,9 @@ export class CSV<T extends ObjectLiteral> {
         this.filePath = filePath;
     }
 
-    async load(): Promise<T[]> {
+
+
+    async load(transform?: {[key: string]: CSVFieldTransformer}): Promise<T[]> {
         assert(this.filePath, `No File path for csv in ${this.filePath}`);
         // Loading data from file
         this._data = await csv().fromFile(this.filePath) || [];
@@ -40,6 +44,19 @@ export class CSV<T extends ObjectLiteral> {
         if (this._data.length > 0) {
             const item = this._data[0];
             this._headers = Object.keys(item);
+        }
+        if (transform) {
+            const transformObj = transform || {};
+            const newData = _.map(this._data, (item: T) => {
+                for (const key in item) {
+                    if (item.hasOwnProperty(key) && transformObj[key]) {
+                        const keyTransformer = transformObj[key];
+                        item[key] = keyTransformer(item[key], key);
+                    }
+                }
+                return item;
+            });
+            this._data = newData;
         }
         return this._data;
     }

@@ -25,32 +25,46 @@
  */
 import * as assert from 'assert';
 import * as moment from 'moment';
-import { Request, Router } from 'express';
+import { Router } from 'express';
 import {
-    SecureRouteController,
-    RouteHandler,
-    Route,
-    HTTPMethod,
-    writerOnlyRoute,
+    // SecureRouteController,
+    ResourceRoute,
+    CreateMiddleware,
+    // RouteHandler,
+    // Route,
+    // HTTPMethod,
+    // writerOnlyRoute,
     ValidatorExists,
-    ValidatorCheck
+    ValidatorCheck,
+    ResourceRouteController,
+    writerOnlyRoute,
+    UpdateMiddleware
 } from '../../../core';
 import {
     MechanicalTreatmentController,
-    MechanicalTreatmentCreateSpec,
+    MechanicalTreatmentSpec,
     ObservationController,
     SpeciesController,
     MechanicalMethodCodeController,
-    SpeciesAgencyCodeController
+    SpeciesAgencyCodeController,
+    MechanicalDisposalMethodCodeController,
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalTreatmentIssueCodeController,
+    MechanicalRootRemovalCodeController,
+    TreatmentProviderContractorController
 } from '../../../../database/models';
 
 const CreateTreatmentValidator = (): any[] => {
-    return [
-        ValidatorExists({
+    return ValidatorExists({
             observation: ObservationController.shared,
             species: SpeciesController.shared,
             speciesAgency: SpeciesAgencyCodeController.shared,
-            mechanicalMethod: MechanicalMethodCodeController.shared
+            mechanicalMethod: MechanicalMethodCodeController.shared,
+            mechanicalDisposalMethod: MechanicalDisposalMethodCodeController.shared,
+            soilDisturbance: MechanicalSoilDisturbanceCodeController.shared,
+            rootRemoval: MechanicalRootRemovalCodeController.shared,
+            issue: MechanicalTreatmentIssueCodeController.shared,
+            providerContractor: TreatmentProviderContractorController.shared
         }).concat(ValidatorCheck({
                 applicatorFirstName: {
                     validate: validate => validate.isString(),
@@ -88,50 +102,25 @@ const CreateTreatmentValidator = (): any[] => {
                 },
                 comment: {
                     validate: validate => validate.isString().optional()
+                },
+                signageOnSiteIndicator: {
+                    validate: validate => validate.isBoolean().optional()
                 }
-            }))
-    ];
+            }));
 };
 
-export class MechanicalTreatmentRouteController extends SecureRouteController<MechanicalTreatmentController> {
+@ResourceRoute({
+    path: 'api/treatment/mechanical/#',
+    description: 'API route controller for mechanical treatment',
+    dataController: MechanicalTreatmentController.shared,
+    validators: CreateTreatmentValidator,
+    secure: true
+})
+@CreateMiddleware(() => [writerOnlyRoute()])
+@UpdateMiddleware(() => [writerOnlyRoute()])
+export class MechanicalTreatmentRouteController extends ResourceRouteController<MechanicalTreatmentController, MechanicalTreatmentSpec, any> {
     static get shared(): MechanicalTreatmentRouteController {
         return this.sharedInstance<MechanicalTreatmentController>() as MechanicalTreatmentRouteController;
-    }
-
-    constructor() {
-        super();
-        this.dataController = MechanicalTreatmentController.shared;
-        this.applyRouteConfig();
-    }
-
-    @Route({
-        path: 'api/treatment/mechanical#/',
-        description: 'Create API for Mechanical Treatment',
-        method: HTTPMethod.post,
-        validators: CreateTreatmentValidator,
-        middleware: () => {
-            return [writerOnlyRoute()];
-        },
-        responses: {
-        '200': {
-            description: 'Mechanical Treatment: Record creation success',
-            schema: {
-                type: 'object'
-            }
-        },
-        '500': {
-            description: 'Mechanical Treatment: Record creation error',
-            schema: {
-                type: 'object',
-                $ref: '#/definitions/Error'
-            }
-        }
-    }})
-    get create(): RouteHandler {
-        return this.routeConfig<MechanicalTreatmentCreateSpec>('create', async (data: MechanicalTreatmentCreateSpec, req: Request ) => {
-            const mt = await this.dataController.createNew(data, req.user);
-            return [200, mt];
-        });
     }
 }
 

@@ -29,11 +29,31 @@ import {
     mechanicalTreatmentFactory,
     destroyMechanicalTreatment,
     mechanicalTreatmentCreateSpecFactory,
-    userFactory, mechanicalTreatmentUpdateSpecFactory,
-    destroyObservation
+    userFactory,
+    mechanicalTreatmentUpdateSpecFactory,
+    destroyObservation,
+    mechanicalMethodCodeFactory,
+    mechanicalDisposalMethodCodeFactory,
+    mechanicalSoilDisturbanceCodeFactory,
+    mechanicalRootRemovalCodeFactory,
+    mechanicalTreatmentIssuesCodeFactory
 } from '../factory';
-import { MechanicalTreatmentController, MechanicalTreatment, User, UserDataController, MechanicalTreatmentUpdateSpec, ObservationController, Observation } from '../models';
+import {
+    MechanicalTreatmentController,
+    MechanicalTreatment,
+    User,
+    UserDataController,
+    MechanicalTreatmentUpdateSpec,
+    ObservationController,
+    Observation,
+    MechanicalMethodCode,
+    MechanicalDisposalMethodCode,
+    MechanicalSoilDisturbanceCode,
+    MechanicalRootRemovalCode,
+    MechanicalTreatmentIssueCode
+} from '../models';
 import { Destroy } from '../factory/helper';
+// import { SharedDBManager } from '../dataBaseManager';
 
 describe('Treatment Test', () => {
     before(async () => {
@@ -42,6 +62,22 @@ describe('Treatment Test', () => {
     after(async () => {
         await commonTestTearDownAction();
         return;
+    });
+
+    // Test0: Test Code Factory
+    it('should create code factory', async () => {
+        const mm: MechanicalMethodCode = await mechanicalMethodCodeFactory();
+        should().exist(mm);
+        should().exist(mm.mechanical_method_code_id);
+        const mdc: MechanicalDisposalMethodCode = await mechanicalDisposalMethodCodeFactory();
+        should().exist(mdc);
+        should().exist(mdc.mechanical_disposal_method_code_id);
+        const sdc: MechanicalSoilDisturbanceCode = await mechanicalSoilDisturbanceCodeFactory();
+        should().exist(sdc);
+        const rrc: MechanicalRootRemovalCode = await mechanicalRootRemovalCodeFactory();
+        should().exist(rrc);
+        const issue: MechanicalTreatmentIssueCode = await mechanicalTreatmentIssuesCodeFactory();
+        should().exist(issue);
     });
 
     // Test1: Create Treatment fro factory
@@ -54,10 +90,20 @@ describe('Treatment Test', () => {
         should().exist(mt.species);
         should().exist(mt.speciesAgency);
         should().exist(mt.mechanicalMethod);
+        should().exist(mt.mechanicalDisposalMethod);
+        should().exist(mt.soilDisturbance);
+        should().exist(mt.rootRemoval);
+        should().exist(mt.issue);
+        should().exist(mt.providerContractor);
         expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
         expect(mt.species.species_id).to.be.equal(f.species.species_id);
         expect(mt.speciesAgency.species_agency_code_id).to.be.equal(f.speciesAgency.species_agency_code_id);
         expect(mt.mechanicalMethod.mechanical_method_code_id).to.be.equal(f.mechanicalMethod.mechanical_method_code_id);
+        expect(mt.mechanicalDisposalMethod.mechanical_disposal_method_code_id).to.be.equal(f.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
+        expect(mt.soilDisturbance.mechanical_soil_disturbance_code_id).to.be.equal(f.soilDisturbance.mechanical_soil_disturbance_code_id);
+        expect(mt.rootRemoval.mechanical_root_removal_code_id).to.be.equal(f.rootRemoval.mechanical_root_removal_code_id);
+        expect(mt.issue.mechanical_treatment_issue_code_id).to.be.equal(f.issue.mechanical_treatment_issue_code_id);
+        expect(mt.providerContractor.treatment_provider_contractor_id).to.be.equal(f.providerContractor.treatment_provider_contractor_id);
         await destroyMechanicalTreatment(mt);
     });
 
@@ -65,7 +111,7 @@ describe('Treatment Test', () => {
     it('should create treatment with spec', async () => {
         const f = await mechanicalTreatmentCreateSpecFactory();
         const user = await userFactory();
-        const obj = await MechanicalTreatmentController.shared.createNew(f, user);
+        const obj = await MechanicalTreatmentController.shared.createNewObject(f, user);
         const mt = await MechanicalTreatmentController.shared.findById(obj.mechanical_treatment_id);
         should().exist(mt);
         should().exist(mt.observation);
@@ -78,7 +124,7 @@ describe('Treatment Test', () => {
         const f = await mechanicalTreatmentFactory();
         const user = await userFactory();
         const spec: MechanicalTreatmentUpdateSpec = await mechanicalTreatmentUpdateSpecFactory();
-        await MechanicalTreatmentController.shared.update(f, spec, user);
+        await MechanicalTreatmentController.shared.updateObject(f, spec, user);
         const mt = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
         should().exist(mt);
         should().exist(mt.observation);
@@ -95,9 +141,10 @@ describe('Treatment Test', () => {
         should().exist(f);
         const obs = f.observation;
         should().exist(obs);
-        let list: MechanicalTreatment[] = await obs.getMechanicalTreatments;
+        let list: MechanicalTreatment[] = await obs.mechanicalTreatmentsFetcher;
         list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
         expect(list.length).to.be.equal(1);
+        await destroyMechanicalTreatment(f);
     });
 
     // Test3: Fetch Mechanical Treatments of observation
@@ -110,6 +157,16 @@ describe('Treatment Test', () => {
         let list: MechanicalTreatment[] = fetchObs.mechanicalTreatments || [];
         list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
         expect(list.length).to.be.equal(1);
+        await destroyMechanicalTreatment(f);
+    });
+
+    it('should fetch treatment all', async () => {
+        const f = await mechanicalTreatmentFactory();
+        should().exist(f);
+        const mtArray: MechanicalTreatment[] = await MechanicalTreatmentController.shared.all({});
+        should().exist(mtArray);
+        expect(mtArray.length).to.be.greaterThan(0);
+        await destroyMechanicalTreatment(f);
     });
 
 });

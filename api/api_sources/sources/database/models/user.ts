@@ -20,7 +20,7 @@
  * Imports
  */
  // Lib Import
-import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn, AfterLoad} from 'typeorm';
+import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn, AfterLoad, ObjectLiteral} from 'typeorm';
 
 // Local Import
 import { BaseModel } from './baseModel';
@@ -162,7 +162,7 @@ export class User extends BaseModel  {
 /**
  * @description Base class for record
  */
-export abstract class Record {
+export abstract class Record extends BaseModel {
     @ManyToOne( type => User, {eager : true})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.createdBy,
@@ -186,6 +186,22 @@ export abstract class ApplicationCode extends Record {
     @Column({ name: CodeTableSchema.codeColumns.activeIndicator, nullable: false})
     @ModelProperty({type: PropertyType.boolean})
     activeIndicator: boolean;
+}
+
+export class RecordController<T extends Record> extends DataModelController<T> {
+    async createNewObject(spec: any, creator: User, ...other: any[]): Promise<T> {
+        const newObj: T = spec as T;
+        newObj.createdBy = creator;
+        newObj.updatedBy = creator;
+        await this.saveInDB(newObj);
+        return newObj;
+    }
+
+    async updateObject(existing: T, update: ObjectLiteral, modifier: User): Promise<T> {
+        existing.updatedBy = modifier;
+        await this.updateObj<ObjectLiteral>(existing, update);
+        return existing;
+    }
 }
 
 /**

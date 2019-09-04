@@ -39,13 +39,17 @@ import {
 } from '../../../../test-helpers/testHelpers';
 import {
     mechanicalTreatmentCreateSpecFactory,
-    RequestFactory
+    RequestFactory,
+    mechanicalTreatmentFactory,
+    destroyMechanicalTreatment
 } from '../../../../database/factory';
 import {
     ObservationController,
     MechanicalTreatmentController,
-    MechanicalTreatmentCreateSpec
+    MechanicalTreatmentSpec,
+    MechanicalTreatmentUpdateSpec
 } from '../../../../database/models';
+
 
 describe('Test for mechanical treatment', () => {
     before(async () => {
@@ -58,25 +62,41 @@ describe('Test for mechanical treatment', () => {
 
     it('should create mechanical treatment for {admin}', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentCreateSpec>(create);
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
         await testRequest(SharedExpressApp.app , {
             url: '/api/treatment/mechanical/',
             type: HttpMethodType.post,
-            expect: 200,
+            expect: 201,
             auth: AuthType.admin,
             send: createReq
         })
         .then(async (resp) => {
             await verifySuccessBody(resp.body, async (data: any) => {
-                // console.dir(data);
                 should().exist(data.mechanical_treatment_id);
                 should().exist(data.species);
                 should().exist(data.speciesAgency);
                 should().exist(data.mechanicalMethod);
+                should().exist(data.mechanicalDisposalMethod);
+                should().exist(data.soilDisturbance);
+                should().exist(data.rootRemoval);
+                should().exist(data.issue);
+                should().exist(data.providerContractor);
                 expect(data.observation.observation_id).to.be.equal(create.observation.observation_id);
-                expect(data.species.species_id).to.be.equal(create.species.species_id);
-                expect(data.speciesAgency.species_agency_code_id).to.be.equal(create.speciesAgency.species_agency_code_id);
-                expect(data.mechanicalMethod.mechanical_method_code_id).to.be.equal(create.mechanicalMethod.mechanical_method_code_id);
+                expect(data.species.species_id)
+                .to.be.equal(create.species.species_id);
+                expect(data.speciesAgency.species_agency_code_id)
+                .to.be.equal(create.speciesAgency.species_agency_code_id);
+                expect(data.mechanicalMethod.mechanical_method_code_id)
+                .to.be.equal(create.mechanicalMethod.mechanical_method_code_id);
+                expect(data.mechanicalDisposalMethod.mechanical_disposal_method_code_id)
+                .to.be.equal(create.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
+                expect(data.soilDisturbance.mechanical_soil_disturbance_code_id).to.be.equal(create.soilDisturbance.mechanical_soil_disturbance_code_id);
+                expect(data.rootRemoval.mechanical_root_removal_code_id)
+                .to.be.equal(create.rootRemoval.mechanical_root_removal_code_id);
+                expect(data.issue.mechanical_treatment_issue_code_id)
+                .to.be.equal(create.issue.mechanical_treatment_issue_code_id);
+                expect(data.providerContractor.treatment_provider_contractor_id)
+                .to.be.equal(create.providerContractor.treatment_provider_contractor_id);
                 await MechanicalTreatmentController.shared.removeById(data.mechanical_treatment_id);
             });
             await ObservationController.shared.remove(create.observation);
@@ -85,7 +105,7 @@ describe('Test for mechanical treatment', () => {
 
     it('should not create mechanical treatment for {admin}: missing * fields', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentCreateSpec>(create);
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
         // Removing some required fields
         delete (createReq.longitude);
         delete (createReq.applicatorLastName);
@@ -114,6 +134,69 @@ describe('Test for mechanical treatment', () => {
         .then(async (resp) => {
             await verifyErrorBody(resp.body);
             await ObservationController.shared.remove(create.observation);
+        });
+    });
+
+    it('should fetch mechanical treatments {all} for any user', async () => {
+        const mt = await mechanicalTreatmentFactory();
+        await testRequest(SharedExpressApp.app , {
+            url: `/api/treatment/mechanical/`,
+            type: HttpMethodType.get,
+            expect: 200,
+            auth: AuthType.viewer
+        })
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body, async data => {
+                expect(data.length).to.be.greaterThan(0);
+                const filtered = data.filter( (obj: any) => obj.mechanical_treatment_id === mt.mechanical_treatment_id);
+                expect(filtered.length === 1).to.be.equal(true);
+            });
+            await destroyMechanicalTreatment(mt);
+        });
+    });
+
+    it('should fetch mechanical treatments {single} for any user', async () => {
+        const mt = await mechanicalTreatmentFactory();
+        await testRequest(SharedExpressApp.app , {
+            url: `/api/treatment/mechanical/${mt.mechanical_treatment_id}`,
+            type: HttpMethodType.get,
+            expect: 200,
+            auth: AuthType.viewer
+        })
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body, async data => {
+                expect(data.mechanical_treatment_id).to.be.equal(mt.mechanical_treatment_id);
+            });
+            await destroyMechanicalTreatment(mt);
+        });
+    });
+
+    it('should update mechanical treatment for {admin}', async () => {
+        const mt = await mechanicalTreatmentFactory();
+        const create = await mechanicalTreatmentCreateSpecFactory();
+        delete create.latitude;
+        delete create.species;
+        await ObservationController.shared.remove(create.observation);
+        delete create.observation;
+        delete create.applicatorLastName;
+        const updateReq = RequestFactory<MechanicalTreatmentUpdateSpec>(create);
+        await testRequest(SharedExpressApp.app , {
+            url: `/api/treatment/mechanical/${mt.mechanical_treatment_id}`,
+            type: HttpMethodType.put,
+            expect: 200,
+            auth: AuthType.admin,
+            send: updateReq
+        })
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body, async (data: any) => {
+                should().exist(data.mechanical_treatment_id);
+                expect(data.mechanical_treatment_id).to.be.equal(mt.mechanical_treatment_id);
+                expect(data.observation.observation_id).to.be.equal(mt.observation.observation_id);
+                expect(data.species.species_id).to.be.equal(mt.species.species_id);
+                expect(data.speciesAgency.species_agency_code_id).to.be.equal(updateReq.speciesAgency);
+                expect(data.mechanicalMethod.mechanical_method_code_id).to.be.equal(updateReq.mechanicalMethod);
+            });
+            await destroyMechanicalTreatment(mt);
         });
     });
 });

@@ -1,6 +1,6 @@
 import { storiesOf, moduleMetadata } from '@storybook/angular';
 import { action } from '@storybook/addon-actions';
-import { LoginComponent } from '../app/components/login/login.component';
+import { LoginComponent } from '../app/components/Routes/login/login.component';
 
 
 

@@ -23,8 +23,10 @@
 /**
  * Imports
  */
-import { RecordTableSchema, CodeTableSchema } from './base.record.schema';
+import { RecordTableSchema, CodeTableSchema, } from './base.record.schema';
 import { getYAMLFilePath } from './schema-files';
+import { TreatmentProviderCSVData } from '../pre.load';
+import { convertDateString } from '../../libs/utilities';
 
 /**
  * @description Treatment base schema class which includes schema file name
@@ -53,5 +55,45 @@ export class MechanicalTreatmentSchema extends TreatmentSchema {}
  * @description Schema Handler for Mechanical Treatment Code
  */
 export class MechanicalMethodCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema Handler for Mechanical Disposal MethodCode
+ */
+export class MechanicalDisposalMethodCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema handler for MechanicalTreatmentDisturbanceCode
+ */
+export class MechanicalSoilDisturbanceCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema handler for MechanicalRootRemovalCodeSchema
+ */
+export class MechanicalRootRemovalCodeSchema extends TreatmentCodeSchema {}
+
+/**
+ * @description Schema handler for  MechanicalTreatmentIssueCode
+ */
+export class MechanicalTreatmentIssueCodeSchema extends TreatmentCodeSchema {}
+
+export class TreatmentProviderContractorSchema extends TreatmentSchema {
+    csvData(): Promise<any> {
+        const csv = new TreatmentProviderCSVData();
+        return csv.load({
+            license_expiry_date: (value: string) => convertDateString(value, 'DD-MMM-YY', 'YYYY-MM-DD')
+        });
+    }
+
+    entryString(input?: string, context?: string): string {
+        const columns = this.table.columns;
+        return `${columns.registrationNumber},` +
+        `${columns.businessName},` +
+        `${columns.category},${columns.address},` +
+        `${columns.regions},` +
+        `${columns.licenceExpiryDate},` +
+        `${columns.serviceProvideIndicator}`;
+    }
+}
+
 // ----------------------------------------------------------
 

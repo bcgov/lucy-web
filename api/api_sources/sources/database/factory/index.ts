@@ -27,5 +27,6 @@ export * from './observationFactory';
 export * from './treatmentFactory';
 export * from './treatmentCodesFactory';
 export * from './helper';
+export * from './treatmentProviderFactory';
 // ----------------------------------------------------------------------------------------------------------------
 

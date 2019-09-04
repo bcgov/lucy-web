@@ -13,46 +13,74 @@
  * limitations under the License.
  * File: mechanical.treatment.ts
  * Project: lucy
- * File Created: Monday, 12th August 2019 10:27:35 am
+ * File Created: Friday, 12th August 2019 9:38:01 am
  * Author: pushan
  * -----
- * Last Modified: Monday, 12th August 2019 10:38:06 am
+ * Last Modified: Tuesday, 3rd September 2019 12:16:34 pm
  * Modified By: pushan
  * -----
  */
 
 // ** Model: MechanicalTreatment from schema MechanicalTreatmentSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn} from 'typeorm';
-import { MechanicalTreatmentSchema, ObservationSchema, SpeciesSchema, SpeciesAgencyCodeSchema, MechanicalMethodCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType, ClassDescription } from '../../libs/core-model';
-import { DataModelController } from '../data.model.controller';
-import { Observation } from './observation';
-import { Record, User } from './user';
-import { Species } from './species';
-import { SpeciesAgencyCode } from './speciesAgency.code';
-import { MechanicalMethodCode } from './mechanicalMethod.code';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
+import { MechanicalTreatmentSchema } from '../database-schema';
+import {
+	ObservationSchema,
+	SpeciesSchema,
+	SpeciesAgencyCodeSchema,
+	MechanicalMethodCodeSchema,
+	MechanicalDisposalMethodCodeSchema,
+	MechanicalSoilDisturbanceCodeSchema,
+	MechanicalRootRemovalCodeSchema,
+	MechanicalTreatmentIssueCodeSchema,
+	TreatmentProviderContractorSchema
+} from '../database-schema';
+
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
+import {
+	Observation,
+	Species,
+	SpeciesAgencyCode,
+	MechanicalMethodCode,
+	MechanicalDisposalMethodCode,
+	MechanicalSoilDisturbanceCode,
+	MechanicalRootRemovalCode,
+	MechanicalTreatmentIssueCode,
+	TreatmentProviderContractor
+} from '../models';
+import { Record, RecordController } from './user';
+import { NumericTransformer } from '../../libs/transformer';
+
 
 /** Interface **/
 /**
  * @description MechanicalTreatment create interface
  */
-export interface MechanicalTreatmentCreateSpec {
+export interface MechanicalTreatmentSpec {
 	latitude: number;
 	longitude: number;
 	width: number;
 	length: number;
 	applicatorFirstName: string;
 	applicatorLastName: string;
+	secondaryApplicatorFirstName: string;
+	secondaryApplicatorLastName: string;
 	date: string;
 	paperFileReference: string;
 	comment: string;
+	signageOnSiteIndicator: boolean;
 	observation: Observation;
 	species: Species;
 	speciesAgency: SpeciesAgencyCode;
 	mechanicalMethod: MechanicalMethodCode;
+	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
+	soilDisturbance: MechanicalSoilDisturbanceCode;
+	rootRemoval: MechanicalRootRemovalCode;
+	issue: MechanicalTreatmentIssueCode;
+	providerContractor: TreatmentProviderContractor;
 }
-// -- End: MechanicalTreatmentCreateSpec --
+// -- End: MechanicalTreatmentSpec --
 
 
 /** Interface **/
@@ -66,32 +94,40 @@ export interface MechanicalTreatmentUpdateSpec {
 	length?: number;
 	applicatorFirstName?: string;
 	applicatorLastName?: string;
+	secondaryApplicatorFirstName?: string;
+	secondaryApplicatorLastName?: string;
 	date?: string;
 	paperFileReference?: string;
 	comment?: string;
+	signageOnSiteIndicator?: boolean;
 	observation?: Observation;
 	species?: Species;
 	speciesAgency?: SpeciesAgencyCode;
 	mechanicalMethod?: MechanicalMethodCode;
+	mechanicalDisposalMethod?: MechanicalDisposalMethodCode;
+	soilDisturbance?: MechanicalSoilDisturbanceCode;
+	rootRemoval?: MechanicalRootRemovalCode;
+	issue?: MechanicalTreatmentIssueCode;
+	providerContractor?: TreatmentProviderContractor;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
 /**
  * @description Data Model Class for MechanicalTreatmentSchema
  */
-@Entity( { name: MechanicalTreatmentSchema.dbTable} )
-@ClassDescription({
-    description: 'Mechanical Treatment Record model class',
-    schema: MechanicalTreatmentSchema,
-    apiResource: true
+@ModelDescription({
+	description: 'Data Model Class for MechanicalTreatmentSchema',
+	schema: MechanicalTreatmentSchema,
+	apiResource: false
 })
-export class MechanicalTreatment extends Record implements MechanicalTreatmentCreateSpec, MechanicalTreatmentUpdateSpec {
+@Entity( { name: MechanicalTreatmentSchema.dbTable} )
+export class MechanicalTreatment extends Record {
 
 	/**
 	 * Class Properties
 	 */
 
-	 /**
+	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_id}
 	 */
 	@PrimaryGeneratedColumn()
@@ -101,28 +137,28 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_location_latitude}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.latitude})
+	@Column({ name: MechanicalTreatmentSchema.columns.latitude, transformer: new NumericTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	latitude: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_location_longitude}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.longitude})
+	@Column({ name: MechanicalTreatmentSchema.columns.longitude, transformer: new NumericTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	longitude: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_area_width}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.width})
+	@Column({ name: MechanicalTreatmentSchema.columns.width, transformer: new NumericTransformer})
 	@ModelProperty({type: PropertyType.number})
 	width: number;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_area_length}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.length})
+	@Column({ name: MechanicalTreatmentSchema.columns.length, transformer: new NumericTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	length: number;
 
@@ -139,6 +175,20 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	@Column({ name: MechanicalTreatmentSchema.columns.applicatorLastName})
 	@ModelProperty({type: PropertyType.string})
 	applicatorLastName: string;
+
+	/**
+	 * @description Getter/Setter property for column {secondary_applicator_first_name}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.secondaryApplicatorFirstName})
+	@ModelProperty({type: PropertyType.string})
+	secondaryApplicatorFirstName: string;
+
+	/**
+	 * @description Getter/Setter property for column {secondary_applicator_last_name}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.secondaryApplicatorLastName})
+	@ModelProperty({type: PropertyType.string})
+	secondaryApplicatorLastName: string;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_date}
@@ -162,58 +212,92 @@ export class MechanicalTreatment extends Record implements MechanicalTreatmentCr
 	comment: string;
 
 	/**
+	 * @description Getter/Setter property for column {signage_on_site_ind}
+	 */
+	@Column({ name: MechanicalTreatmentSchema.columns.signageOnSiteIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	signageOnSiteIndicator: boolean;
+
+	/**
 	 * @description Getter/Setter property for column {observation_id}
 	 */
-	@ManyToOne( type => Observation, {eager: true})
-	@JoinColumn({
-		name: MechanicalTreatmentSchema.columns.observation,
-		referencedColumnName: ObservationSchema.columns.id
-	})
+	@ManyToOne( type => Observation, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.observation, referencedColumnName: ObservationSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	observation: Observation;
 
 	/**
 	 * @description Getter/Setter property for column {species_id}
 	 */
-	@ManyToOne( type => Species, {eager: true})
-	@JoinColumn({
-		name: MechanicalTreatmentSchema.columns.species,
-		referencedColumnName: SpeciesSchema.columns.id
-	})
+	@ManyToOne( type => Species, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.species, referencedColumnName: SpeciesSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	species: Species;
 
 	/**
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
-	@ManyToOne( type => SpeciesAgencyCode, {eager: true})
-	@JoinColumn({
-		name: MechanicalTreatmentSchema.columns.speciesAgency,
-		referencedColumnName: SpeciesAgencyCodeSchema.pk
-	})
+	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.speciesAgency, referencedColumnName: SpeciesAgencyCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	speciesAgency: SpeciesAgencyCode;
 
 	/**
-	 * @description Getter/Setter property for column {species_agency_code_id}
+	 * @description Getter/Setter property for column {mechanical_method_code_id}
 	 */
-	@ManyToOne( type => MechanicalMethodCode, {eager: true})
-	@JoinColumn({
-		name: MechanicalTreatmentSchema.columns.mechanicalMethod,
-		referencedColumnName: MechanicalMethodCodeSchema.pk
-	})
+	@ManyToOne( type => MechanicalMethodCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.mechanicalMethod, referencedColumnName: MechanicalMethodCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	mechanicalMethod: MechanicalMethodCode;
 
-}
+	/**
+	 * @description Getter/Setter property for column {mechanical_disposal_method_code_id}
+	 */
+	@ManyToOne( type => MechanicalDisposalMethodCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.mechanicalDisposalMethod, referencedColumnName: MechanicalDisposalMethodCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
 
+	/**
+	 * @description Getter/Setter property for column {mechanical_soil_disturbance_code_id}
+	 */
+	@ManyToOne( type => MechanicalSoilDisturbanceCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.soilDisturbance, referencedColumnName: MechanicalSoilDisturbanceCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	soilDisturbance: MechanicalSoilDisturbanceCode;
+
+	/**
+	 * @description Getter/Setter property for column {mechanical_root_removal_code_id}
+	 */
+	@ManyToOne( type => MechanicalRootRemovalCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.rootRemoval, referencedColumnName: MechanicalRootRemovalCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	rootRemoval: MechanicalRootRemovalCode;
+
+	/**
+	 * @description Getter/Setter property for column {mechanical_treatment_issue_code_id}
+	 */
+	@ManyToOne( type => MechanicalTreatmentIssueCode, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.issue, referencedColumnName: MechanicalTreatmentIssueCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	issue: MechanicalTreatmentIssueCode;
+
+	/**
+	 * @description Getter/Setter property for column {treatment_provider_contractor_id}
+	 */
+	@ManyToOne( type => TreatmentProviderContractor, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.providerContractor, referencedColumnName: TreatmentProviderContractorSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	providerContractor: TreatmentProviderContractor;
+
+}
 
 // ** DataModel controller of MechanicalTreatment **
 
 /**
  * @description Data Model Controller Class for MechanicalTreatmentSchema and MechanicalTreatment
  */
-export class MechanicalTreatmentController extends DataModelController<MechanicalTreatment> {
+export class MechanicalTreatmentController extends RecordController<MechanicalTreatment> {
 	/**
 	* @description Getter for shared instance
 	*/
@@ -221,29 +305,11 @@ export class MechanicalTreatmentController extends DataModelController<Mechanica
 		return this.sharedInstance<MechanicalTreatment>(MechanicalTreatment, MechanicalTreatmentSchema) as MechanicalTreatmentController;
 	}
 
-	/**
-	 * @description Create New Mechanical treatment
-	 * @param MechanicalTreatmentCreateSpec data: Data To create obj
-	 * @param User creator: Creator of the record
-	 */
-	async createNew(data: MechanicalTreatmentCreateSpec, creator: User): Promise<MechanicalTreatment> {
-		const obj = data as MechanicalTreatment;
-		obj.createdBy = creator;
-		obj.updatedBy = creator;
-		await this.saveInDB(obj);
-		return obj;
-	}
-
-	/**
-	 * @description Update Mechanical treatment
-	 * @param MechanicalTreatment obj: Model object to be updated
-	 * @param MechanicalTreatmentUpdateSpec data: Data to update
-	 * @param User user: Modifier
-	 */
-	async update(obj: MechanicalTreatment, data: MechanicalTreatmentUpdateSpec, user: User): Promise<MechanicalTreatment> {
-		obj.updatedBy = user;
-		return await this.updateObj<MechanicalTreatmentUpdateSpec>(obj, data);
-	}
+	async all(query?: object): Promise<MechanicalTreatment[]> {
+		// console.log('*** 1a');
+		// console.dir(query);
+        return super.all(query);
+    }
 }
 
 // -------------------------------------

@@ -27,6 +27,11 @@ export class DropdownService {
   public displayedGroundAspecField = 'description';
   public displayedProposedActionField = 'description';
   public displayedMechanicalTreatmentMethodField = 'description';
+  public displayedMechanicalIssueField = 'description';
+  public displayedMechanicalDisposalMethodField = 'description';
+  public displayedSoilDisturbanceField = 'description';
+  public displayedRootRemovalField = 'description';
+  public displayedMechanicalTreatmentProviderField = 'businessName';
 
   public displayedObservationField = 'observation_id';
 
@@ -133,7 +138,7 @@ export class DropdownService {
   }
 
   /**
-   * Fetch Geometry code table, return as array of
+   * Fetch ProposedActions code table, return as array of
    * deopdown objects
    */
   public async getProposedActions(): Promise<DropdownObject[]> {
@@ -142,7 +147,7 @@ export class DropdownService {
   }
 
   /**
-   * Fetch Geometry code table, return as array of
+   * Fetch GroundSlopes code table, return as array of
    * deopdown objects
    */
   public async getGroundSlopes(): Promise<DropdownObject[]> {
@@ -151,7 +156,7 @@ export class DropdownService {
   }
 
   /**
-   * Fetch Geometry code table, return as array of
+   * Fetch GroundAspects code table, return as array of
    * deopdown objects
    */
   public async getGroundAspects(): Promise<DropdownObject[]> {
@@ -160,7 +165,7 @@ export class DropdownService {
   }
 
   /**
-   * Fetch Geometry code table, return as array of
+   * Fetch MechanicalTreatment code table, return as array of
    * deopdown objects
    */
   public async getMechanicalTreatmentMethods(): Promise<DropdownObject[]> {
@@ -168,13 +173,59 @@ export class DropdownService {
     return this.createDropdownObjectsFrom(methods, this.displayedMechanicalTreatmentMethodField);
   }
 
+   /**
+   * Fetch MechanicalDisposal code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalDisposalMethods(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getMechanicalDisposalMethodCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedMechanicalDisposalMethodField);
+  }
+
+   /**
+   * Fetch mechanicalIssue code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalIssues(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getMechanicalIssueCodesCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedMechanicalIssueField);
+  }
+
+   /**
+   * Fetch mechanicalSoilDisturbance code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalSoilDisturbances(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getMechanicalSoilDisturbanceCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedSoilDisturbanceField);
+  }
+
+   /**
+   * Fetch mechanicalRootRemoval code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalRootRemovals(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getsMechanicalRootRemovalCodesCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedRootRemovalField);
+  }
+
     /**
-   * Fetch Geometry code table, return as array of
+   * Fetch Observation code table, return as array of
    * deopdown objects
    */
   public async getObservations(): Promise<DropdownObject[]> {
     const observations = await this.observationService.getAll();
     return this.createDropdownObjectsFrom(observations, this.displayedObservationField);
+  }
+
+
+   /**
+   * Fetch MechanicalTreatmentProviders code table, return as array of
+   * deopdown objects
+   */
+  public async getMechanicalTreatmentProviders(): Promise<DropdownObject[]> {
+    const methods = await this.codeTableService.getMechanicalTreatmentProviderCodes();
+    return this.createDropdownObjectsFrom(methods, this.displayedMechanicalTreatmentProviderField);
   }
 
   /**
