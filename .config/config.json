@@ -9,19 +9,19 @@
     },
     "version": "1.0.0",
     "module": {
-        "app": "lucy-app",
-        "api": "lucy-api"
+        "app": "invasivebc-app",
+        "api": "invasivebc-api"
     },
     "staticBranches": ["dev", "staging", "prod"],
     "staticUrls": {
-        "dev": "seism-dev-8ecbmv.dev.pathfinder.gov.bc.ca",
-        "staging": "seism-test-8ecbmv.dev.pathfinder.gov.bc.ca",
-        "prod": "seism-8ecbmv.dev.pathfinder.gov.bc.ca"
+        "dev": "invasivebc-dev-8ecbmv.dev.pathfinder.gov.bc.ca",
+        "staging": "invasivebc-test-8ecbmv.dev.pathfinder.gov.bc.ca",
+        "prod": "invasivebc-8ecbmv.dev.pathfinder.gov.bc.ca"
     },
     "staticUrlsAPI": {
-        "dev": "seism-dev-8ecbmv.api.dev.pathfinder.gov.bc.ca",
-        "staging": "seism-test-8ecbmv.api.dev.pathfinder.gov.bc.ca",
-        "prod": "seism-8ecbmv.dev.api.pathfinder.gov.bc.ca"
+        "dev": "invasivebc-dev-8ecbmv.api.dev.pathfinder.gov.bc.ca",
+        "staging": "invasivebc-test-8ecbmv.api.dev.pathfinder.gov.bc.ca",
+        "prod": "invasivebc-8ecbmv.dev.api.pathfinder.gov.bc.ca"
     }
     
 }
