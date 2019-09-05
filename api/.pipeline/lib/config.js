@@ -9,12 +9,9 @@ const staticUrlsAPI = config.staticUrlsAPI || {};
 const deployType = options.type || '';
 
 const isStaticDeployment = () => {
-  return staticBranches.includes(changeId);
+  return staticBranches.includes(changeId) || deployType === 'static';
 };
 
-const isStaticHost = () => {
-  return isStaticDeployment() || deployType === 'static';
-};
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const defaultHost = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca';
 
@@ -38,7 +35,7 @@ const phases = {
     instance: `${name}-dev-${deployChangeId}`  ,
     version:`${deployChangeId}-${changeId}`,
     tag:`dev-${version}-${deployChangeId}`, 
-    host: isStaticHost() ? (staticUrlsAPI['dev'] || defaultHost) : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`},
+    host: isStaticDeployment() ? (staticUrlsAPI['dev'] || defaultHost) : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`},
   test: {
     namespace:'8ecbmv-test',
     name: `${name}`,
