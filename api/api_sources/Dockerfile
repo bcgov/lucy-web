@@ -6,9 +6,10 @@ ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/o
 ENV PORT 3001
 ENV HOME /opt/app-root/src
 
-# RUN set -x \
-
+# Updating NPM
+USER 0
 RUN npm install -g npm
+USER 1001
 
 # Create app directory
 
