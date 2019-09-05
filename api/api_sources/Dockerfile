@@ -4,6 +4,9 @@ FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 ENV PORT 3001
 ENV HOME /opt/app-root/src
 
+# Setting Path
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 # Print NODE Version
 RUN node -v
 
@@ -12,7 +15,7 @@ USER 0
 # Updating NPM
 RUN npm install npm@6.0.1 -g
 
-# Setting Path
+# Setting Path with npm
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/.npm-global/lib/node_modules/npm/bin/
 
 # Print NPM Version
