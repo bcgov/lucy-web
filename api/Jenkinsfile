@@ -5,9 +5,9 @@ pipeline {
     }
     stages {
         stage('Build') {
-            agent { label 'build' }
             parallel {
                 stage('Build API') {
+                    agent { label 'build' }
                     steps {
                         sh 'printenv'
                         script {
@@ -31,6 +31,7 @@ pipeline {
 
                 }
                 stage('Build APP') {
+                    agent { label 'build' }
                     steps {
                         script {
                             echo "App Build Pipeline"
