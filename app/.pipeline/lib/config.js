@@ -9,12 +9,18 @@ const apiName = (config.module || {}).api || 'lucy-api';
 const staticBranches = config.staticBranches || [];
 const staticUrls = config.staticUrls || {};
 const staticUrlsAPI = config.staticUrlsAPI || {};
+const deployType = options.type || '';
+
 const isStaticDeployment = () => {
   return staticBranches.includes(changeId);
 };
+
+const isStaticHost = () => {
+  return isStaticDeployment() || deployType === 'static';
+};
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
-const defaultHost = 'seism-8ecbmv-dev.pathfinder.gov.bc.ca';
-const defaultHostAPI = 'seism-8ecbmv-api.dev.pathfinder.gov.bc.ca'
+const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
+const defaultHostAPI = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca'
 
 const phases = {
   build: {
@@ -35,8 +41,8 @@ const phases = {
     instance: `${name}-dev-${deployChangeId}`  , 
     version:`${version}-${deployChangeId}`, 
     tag:`dev-${version}-${deployChangeId}`, 
-    host: isStaticDeployment() ? staticUrls[changeId] || defaultHost : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`, 
-    apiHost:isStaticDeployment() ? staticUrlsAPI[changeId] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`},
+    host: isStaticHost() ? staticUrls['dev'] || defaultHost : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`, 
+    apiHost: isStaticHost() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`},
   test: {
     namespace:'8ecbmv-test'    , 
     name: `${name}`, 
@@ -46,7 +52,7 @@ const phases = {
     instance: `${name}-test`  , 
     version:`${version}`, 
     tag:`test-${version}`, 
-    host: `${name}-8ecbmv-dev.pathfinder.gov.bc.ca/${changeId}`},
+    host: staticUrlsAPI['staging']},
   prod: {
     namespace:'8ecbmv-prod'    , 
     name: `${name}`, phase: 'prod'  , 
@@ -54,7 +60,7 @@ const phases = {
     instance: `${name}-prod`  , 
     version:`${version}`, 
     tag:`prod-${version}`, 
-    host: `${name}--8ecbmv-dev.pathfinder.gov.bc.ca/${changeId}`},
+    host: staticUrlsAPI['prod']},
 };
 
 // This callback forces the node process to exit as failure.
