@@ -12,7 +12,7 @@ RUN node -v
 # Using root user to build and run the app
 USER 0
 # Updating NPM
-RUN npm install -g npm
+RUN npm install npm@latest -g
 
 
 # Print NPM Version
