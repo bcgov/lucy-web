@@ -47,7 +47,7 @@ pipeline {
             }
             steps {
                 echo "Deploying [dev] Branch ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=dev --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
             }
         }
         stage('Deploy (TEST)') {
