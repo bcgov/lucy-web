@@ -17,7 +17,7 @@ RUN echo ' --- BUILD START --- '
 COPY ./package*.json ./
 
 # INSATLL NODE DEPENDENCIES
-RUN npm install
+RUN npm ci
 
 # Copy All the sources
 COPY ./ .

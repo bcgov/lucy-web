@@ -8,7 +8,7 @@ ENV HOME /opt/app-root/src
 
 # RUN set -x \
 
-RUN npm install -g npm
+# RUN npm install -g npm
 
 # Create app directory
 
@@ -26,7 +26,7 @@ RUN echo ' --- BUILD START --- '
 # RUN npm install --only=production
 COPY ./package*.json ./
 
-RUN npm install
+RUN npm ci
 
 # If you are building your code for production, copy all files
 COPY ./ .
