@@ -3,10 +3,14 @@ FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 # RUN mkdir -p /opt/app-root/app
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-# Updating NPM
+# Print NODE Version
+RUN node -v
 USER 0
+# Updating NPM
 RUN npm install -g npm
-USER 1001
+
+# Print NPM Version
+RUN npm -v
 
 # Create app directory
 
@@ -34,6 +38,8 @@ RUN npm run build
 RUN echo ' --- BUILD SUCCESS: [DONE] --- '
 
 EXPOSE 3030
+
+USER 1001
 
 # RUN APP
 CMD ["npm", "run", "deploy_start"]

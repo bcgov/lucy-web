@@ -6,10 +6,17 @@ ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/o
 ENV PORT 3001
 ENV HOME /opt/app-root/src
 
-# Updating NPM
+# Print NODE Version
+RUN node -v
+
+# Using root user to build and run the app
 USER 0
+# Updating NPM
 RUN npm install -g npm
-USER 1001
+
+
+# Print NPM Version
+RUN npm -v
 
 # Create app directory
 
@@ -54,5 +61,8 @@ EXPOSE 3001
 
 # Logging in Build Console Build DONE
 RUN echo ' --- BUILD SUCCESS: DONE --- '
+
+# Switch back gen user
+USER 1001
 
 CMD ["npm", "run", "deploy_run"]
