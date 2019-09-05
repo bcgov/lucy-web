@@ -9,9 +9,6 @@ ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/o
 
 # Print NODE Version
 RUN node -v
-
-# Using root user to build and run the app
-USER 0
 # Updating NPM
 RUN npm install npm@6.0.1 -g
 
@@ -61,8 +58,5 @@ EXPOSE 3001
 
 # Logging in Build Console Build DONE
 RUN echo ' --- BUILD SUCCESS: DONE --- '
-
-# Switch back gen user
-USER 1001
 
 CMD ["npm", "run", "deploy_run"]
