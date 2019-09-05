@@ -7,7 +7,7 @@ ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/o
 RUN node -v
 USER 0
 # Updating NPM
-RUN npm install -g npm
+RUN npm install npm@latest -g
 
 # Print NPM Version
 RUN npm -v
