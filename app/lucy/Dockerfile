@@ -3,13 +3,17 @@ FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 # RUN mkdir -p /opt/app-root/app
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+# Updating NPM
+USER 0
+RUN npm install -g npm
+USER 1001
+
 # Create app directory
 
 WORKDIR /opt/app-root/src
 
 # Logging in Build Console
 RUN echo ' --- BUILD START --- '
-RUN npm install -g npm
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
