@@ -6,9 +6,15 @@ const version = config.version || '1.0.0';
 const name = (config.module || {}).api || 'lucy-api';
 const staticBranches = config.staticBranches || [];
 const staticUrlsAPI = config.staticUrlsAPI || {};
+const deployType = options.type || '';
 
 const isStaticDeployment = () => {
-  return staticBranches.includes(changeId);
+  if (staticBranches.includes(changeId)) {
+    return true;
+  } else if (deployType === 'static') {
+    return true;
+  }
+  return false;
 };
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const defaultHost = 'seism-8ecbmv-api.dev.pathfinder.gov.bc.ca';

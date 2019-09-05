@@ -6,9 +6,6 @@ pipeline {
     stages {
         stage('Build') {
             agent { label 'build' }
-            when {
-                environment name : 'CHANGE_TARGET', value: 'dev'
-            }
             steps {
                 sh 'printenv'
                 script {
@@ -46,11 +43,11 @@ pipeline {
                 label 'deploy'
             }
             when {
-                branch 'dev'
+                environment name : 'CHANGE_TARGET', value: 'dev'
             }
             steps {
                 echo "Deploying [dev] Branch ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=dev --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=dev --env=dev --type=static"
             }
         }
         stage('Deploy (TEST)') {
