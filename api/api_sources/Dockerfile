@@ -8,7 +8,7 @@ ENV HOME /opt/app-root/src
 
 # RUN set -x \
 
-# RUN npm install -g npm
+RUN npm install -g npm
 
 # Create app directory
 

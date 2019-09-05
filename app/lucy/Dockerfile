@@ -9,6 +9,7 @@ WORKDIR /opt/app-root/src
 
 # Logging in Build Console
 RUN echo ' --- BUILD START --- '
+RUN npm install -g npm
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
