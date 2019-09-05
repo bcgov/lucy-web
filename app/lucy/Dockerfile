@@ -10,10 +10,6 @@ USER 0
 RUN npm install npm@6.0.1 -g
 USER 1001
 
-
-# Setting Path with npm
-ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/.npm-global/lib/node_modules/npm/bin/
-
 # Print NPM Version
 RUN npm -v
 
@@ -31,7 +27,7 @@ RUN echo ' --- BUILD START --- '
 COPY ./package*.json ./
 
 # INSATLL NODE DEPENDENCIES
-RUN npm ci
+RUN npm install
 
 # Copy All the sources
 COPY ./ .
