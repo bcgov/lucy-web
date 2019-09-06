@@ -42,6 +42,6 @@ module.exports = (settings)=>{
     }
   }));
 
-  oc.applyRecommendedLabels(objects, `${name}`, phase, phases[phase].changeId, phases[phases].instance)
+  oc.applyRecommendedLabels(objects, `${name}`, phase, phases[phase].changeId, phases[phase].instance)
   oc.applyAndBuild(objects)
 }
