@@ -15,6 +15,11 @@ RUN npm install npm@6.0.1 -g
 # Print NPM Version
 RUN npm -v
 
+# Give Write permission to root
+USER 1
+RUN chmod a+rwx ${HOME}
+USER 1001
+
 # Create app directory
 
 WORKDIR ${HOME}

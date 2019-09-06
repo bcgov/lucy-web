@@ -51,7 +51,7 @@ objects:
         containers:
         - env:
           - name: DB_HOST
-            value: lucy-db
+            value: ${DB_SERVICE_NAME}
           - name: DB_USER
             valueFrom:
               secretKeyRef:
@@ -147,7 +147,7 @@ objects:
   kind: Secret
   metadata:
     annotations:
-      as-copy-of: lucy-db
+      as-copy-of: ${DB_SERVICE_NAME}
     creationTimestamp: null
     name: ${NAME}${SUFFIX}
   type: Opaque
@@ -206,3 +206,6 @@ parameters:
 - name: HOST
 - name: CHANGE_ID
   value: "0"
+- name: DB_SERVICE_NAME
+  description: 'Database service name associated  with deployment'
+  required: true
