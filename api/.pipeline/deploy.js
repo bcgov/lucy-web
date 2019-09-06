@@ -1,5 +1,11 @@
 'use strict';
-const settings = require('./lib/config.js')
-const task = require('./lib/deploy.js')
+// Imports/require
+const settings = require('./lib/config.js');
+const taskDeployDB = require('./lib/deploy.db.js');
+const taskDeployAPI = require('./lib/deploy.js');
 
-task(Object.assign(settings, { phase: settings.options.env}));
+// Deploying DB
+taskDeployDB(Object.assign(settings, { phase: settings.options.env}));
+
+// Deploying API app
+taskDeployAPI(Object.assign(settings, { phase: settings.options.env}));

@@ -11,12 +11,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: deploy.schemaspy.js
+ * File: deploy.db.js
  * Project: pipeline
- * File Created: Monday, 19th August 2019 10:27:44 am
+ * File Created: Friday, 6th September 2019 10:57:44 am
  * Author: pushan (you@you.you)
  * -----
- * Last Modified: Monday, 19th August 2019 10:27:47 am
+ * Last Modified: Friday, 6th September 2019 10:58:11 am
  * Modified By: pushan (you@you.you>)
  * -----
  */
@@ -28,20 +28,22 @@ module.exports = (settings) => {
   const phases = settings.phases
   const options= settings.options
   const phase = options.env
-  const changeId = phases[phase].changeId || 'dev-tools'
+  const changeId = phases[phase].changeId
   const oc= new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
-  const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift/tools'))
-  var objects = [];
-  const instance = phases[phases].instance;
-  const name = `${phases[phases].name}-schemaspy`;
+  const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
+  var objects = []
+
   // The deployment of your cool app goes here ▼▼▼
-  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.dc.yaml`, {
+  const name = `${phases[phase].name}-db`;
+  const instance = `${phases[phase].instance}`;
+  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/db.dc.yaml`, {
     'param':{
-      'NAME': `${name}`,
-      'SUFFIX': phases[phase].suffix,
-      'VERSION': phases[phase].tag,
-      'APPLICATION_DOMAIN': `seism.schemaspy.${phases[phase].namespace}.pathfinder.gov.bc.ca`,
-      'BACKEND_HOST': phases[phase].host
+      'NAME': name,
+      'DATABASE_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
+      'IMAGE_STREAM_NAME': name,
+      'IMAGE_STREAM_VERSION': phases.build.tag,
+      'POSTGRESQL_DATABASE': 'InvasiveBC',
+      'IMAGE_STREAM_NAMESPACE': phases.build.namespace
     }
   }))
   

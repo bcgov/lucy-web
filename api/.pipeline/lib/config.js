@@ -56,11 +56,6 @@ const phases = {
     version:`${version}`, 
     tag:`prod-${version}`,
     host: staticUrlsAPI['prod']
-  },
-  schemaSpy: {
-    instance: `schema-spy-${changeId}`,
-    changeId: changeId,
-    name: 'schema-spy'
   }
 };
 
