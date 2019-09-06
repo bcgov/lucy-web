@@ -40,8 +40,9 @@ module.exports = (settings) => {
       'NAME': `${name}`,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
-      'APPLICATION_DOMAIN': `seism.schemaspy.${phases[phase].namespace}.pathfinder.gov.bc.ca`,
-      'BACKEND_HOST': phases[phase].host
+      'APPLICATION_DOMAIN': `invasivebc.schemaspy.${phases[phase].namespace}.pathfinder.gov.bc.ca`,
+      'BACKEND_HOST': phases[phase].host,
+      'DB_HOST': `${phases[phase].name}-postgresql${phases[phase].suffix}`
     }
   }))
   
