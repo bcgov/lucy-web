@@ -17,7 +17,7 @@ RUN npm -v
 
 # Give Write permission to root
 USER 1
-RUN chmod a+rwx ${HOME}
+RUN chmod a+rw /opt/app-root/src
 USER 1001
 
 # Create app directory
