@@ -32,8 +32,8 @@ module.exports = (settings) => {
   const oc= new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift/tools'))
   var objects = [];
-  const instance = phases[phases].instance;
-  const name = `${phases[phases].name}-schemaspy`;
+  const instance = phases[phase].instance;
+  const name = `${phases[phase].name}-schemaspy`;
   // The deployment of your cool app goes here ▼▼▼
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.dc.yaml`, {
     'param':{
