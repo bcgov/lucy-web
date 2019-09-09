@@ -6,7 +6,7 @@ ENV HOME /opt/app-root/src/app
 
 # Creating HOME
 RUN mkdir -p ${HOME}
-# RUN chmod a+rwx /opt/app-root/src/app
+RUN chmod a+rwx /opt/app-root/src/app
 
 # Setting Path
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/app/node_modules/.bin:/opt/app-root/src/app/app.npm-global/bin

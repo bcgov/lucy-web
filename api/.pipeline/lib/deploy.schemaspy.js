@@ -34,13 +34,14 @@ module.exports = (settings) => {
   var objects = [];
   const instance = phases[phase].instance;
   const name = `${phases[phase].name}-schemaspy`;
+  const host = changeId !== undefined ? `invasivebc.schemaspy-${changeId}.${phases[phase].namespace}.pathfinder.gov.bc.ca` : `invasivebc.schemaspy.${phases[phase].namespace}.pathfinder.gov.bc.ca`;
   // The deployment of your cool app goes here ▼▼▼
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.dc.yaml`, {
     'param':{
       'NAME': `${name}`,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
-      'APPLICATION_DOMAIN': `invasivebc.schemaspy.${phases[phase].namespace}.pathfinder.gov.bc.ca`,
+      'APPLICATION_DOMAIN': host,
       'BACKEND_HOST': phases[phase].host,
       'DB_HOST': `${phases[phase].name}-postgresql${phases[phase].suffix}`
     }

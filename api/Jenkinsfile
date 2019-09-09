@@ -26,7 +26,7 @@ pipeline {
                         }
                         echo "Building ..."
                         sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID}"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build-tools"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build-tools --pr=${CHANGE_ID}"
                     }
 
                 }
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 echo "Deploying API..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --pr=${CHANGE_ID} --env=dev"
             }
         }
         stage('Deploy (DEV) APP') {
@@ -79,6 +79,7 @@ pipeline {
             steps {
                 echo "Deploying [dev] Branch ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static"
             }
         }
         stage('Deploy (DEV) APP Static link') {
