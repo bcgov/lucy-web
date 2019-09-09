@@ -11,6 +11,7 @@
     "clean": "node clean.js",
     "deploy": "node deploy.js",
     "deploy-tools": "node deploytools.js",
+    "test": "node test.js",
     "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
   },
   "repository": {
