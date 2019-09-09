@@ -58,7 +58,7 @@ ENV NODE_PATH ${HOME}
 RUN ls -a
 
 # Allow all user and app to update few folders
-RUN chmod 777 ${HOME}}/node_modules
+RUN chmod 777 ${HOME}/node_modules
 RUN mkdir -p ${HOME}/.config
 RUN chmod -R 766 ${HOME}/.config
 
