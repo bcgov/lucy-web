@@ -5,9 +5,8 @@ ENV PORT 3001
 ENV HOME /opt/app-root/src/app
 
 # Creating HOME
-USER 0
 RUN mkdir -p ${HOME}
-RUN chmod a+rwx /opt/app-root/src/app
+# RUN chmod a+rwx /opt/app-root/src/app
 
 # Setting Path
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/app/node_modules/.bin:/opt/app-root/src/app/app.npm-global/bin
@@ -21,7 +20,7 @@ RUN npm install npm@6.0.1 -g
 RUN npm -v
 
 # Setting Default user
-USER 1001
+# USER 1001
 
 # Create app directory
 
