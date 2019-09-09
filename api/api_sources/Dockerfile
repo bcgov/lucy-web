@@ -2,10 +2,13 @@ FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 
 
 ENV PORT 3001
-ENV HOME /opt/app-root/src
+ENV HOME /opt/app-root/src/app
+
+# Creating HOME
+RUN mkdir -p ${HOME}
 
 # Setting Path
-ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/app/node_modules/.bin:/opt/app-root/src/app/app.npm-global/bin
 
 # Print NODE Version
 RUN node -v
@@ -17,7 +20,7 @@ RUN npm -v
 
 # Give Write permission to root
 USER 1
-RUN chmod a+rw /opt/app-root/src
+RUN chmod a+rw /opt/app-root/src/app
 USER 1001
 
 # Create app directory
