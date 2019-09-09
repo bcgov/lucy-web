@@ -33,7 +33,7 @@ module.exports = (settings)=>{
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift/tools'))
 
   // The building of your cool app goes here ▼▼▼
-  const name = `${phases[phases].name}-schemaspy`;
+  const name = `${phases[phase].name}-schemaspy`;
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.bc.json`, {
     'param':{
       'NAME': `${name}`,
