@@ -44,8 +44,7 @@ COPY ./ .
 # Cleaning any existing generated file
 RUN rm -rf ./dist-server
 
-# Allow all user and app to update node_modules
-RUN chmod -R 777 /opt/app-root/src/app
+
 
 
 # Building App
@@ -57,6 +56,11 @@ ENV NODE_PATH ${HOME}
 
 # Showing Dir Struct
 RUN ls -a
+
+# Allow all user and app to update few folders
+RUN chmod 777 ${HOME}}/node_modules
+RUN mkdir -p ${HOME}/.config
+RUN chmod -R 766 ${HOME}/.config
 
 # Application VOLUME
 VOLUME ${HOME}
