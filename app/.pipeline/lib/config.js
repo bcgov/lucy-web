@@ -50,7 +50,7 @@ const phases = {
     version:`${version}`, 
     tag:`test-${version}`, 
     host: staticUrlsAPI['staging']},
-    apiHost: staticUrlsAPI['test'] || defaultHostAPI,
+    apiHost: staticUrlsAPI['staging'] || defaultHostAPI,
   prod: {
     namespace:'8ecbmv-prod'    , 
     name: `${name}`, phase: 'prod'  , 
