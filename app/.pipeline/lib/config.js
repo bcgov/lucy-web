@@ -50,6 +50,7 @@ const phases = {
     version:`${version}`, 
     tag:`test-${version}`, 
     host: staticUrlsAPI['staging']},
+    apiHost: staticUrlsAPI['test'] || defaultHostAPI,
   prod: {
     namespace:'8ecbmv-prod'    , 
     name: `${name}`, phase: 'prod'  , 
@@ -58,6 +59,7 @@ const phases = {
     version:`${version}`, 
     tag:`prod-${version}`, 
     host: staticUrlsAPI['prod']},
+    apiHost: staticUrlsAPI['prod'] || defaultHostAPI
 };
 
 // This callback forces the node process to exit as failure.
