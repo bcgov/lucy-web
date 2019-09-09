@@ -48,6 +48,6 @@ module.exports = (settings) => {
   }))
   
   oc.applyRecommendedLabels(objects, name, phase, `${changeId}`, instance)
-  oc.importImageStreams(objects, phases[phase].tag, phases.build.namespace, phases.build.tag)
+  oc.importImageStreams(objects, phases[phase].tag, phases.build.namespace, 'build-1.0.0-dev')
   oc.applyAndDeploy(objects, instance)
 }
