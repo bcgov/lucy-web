@@ -6,8 +6,8 @@ ENV HOME /opt/app-root/src/app
 
 # Creating HOME
 USER 1
-RUN mkdir -p ${HOME} && \
-    groupadd -r default -f -g 1001 && \
+RUN mkdir -p ${HOME}
+RUN groupadd -r default -f -g 1001 && \
     useradd -u 1001 -r -g default -d ${HOME} -s /sbin/nologin \
     -c "Default Application User" default && \
     chown -R 1001:1001 /opt/app-root/src/app && \
@@ -54,18 +54,17 @@ RUN rm -rf ./dist-server
 # Building App
 RUN npm run build
 
+# Setting NODE_PATH
 ENV NODE_PATH ${HOME}
 
-RUN mkdir ./schemaspy
-COPY ./resources/archives/schemaspy.tar.gz ./schemaspy.tar.gz
-RUN tar -zxf ./schemaspy.tar.gz -C ./schemaspy
-ENV SCHEMASPY_PATH=${HOME}/schemaspy
 
+# Showing Dir Struct
 RUN ls -a
 
-
+# Application VOLUME
 VOLUME ${HOME}
 
+# Application Port
 EXPOSE 3001
 
 # Logging in Build Console Build DONE
