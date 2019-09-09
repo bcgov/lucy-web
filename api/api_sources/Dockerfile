@@ -5,7 +5,13 @@ ENV PORT 3001
 ENV HOME /opt/app-root/src/app
 
 # Creating HOME
-RUN mkdir -p ${HOME}
+USER 1
+RUN mkdir -p ${HOME} && \
+    groupadd -r default -f -g 1001 && \
+    useradd -u 1001 -r -g default -d ${HOME} -s /sbin/nologin \
+    -c "Default Application User" default && \
+    chown -R 1001:1001 /opt/app-root/src/app && \
+    chmod u+x /opt/app-root/src/app
 
 # Setting Path
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/app/node_modules/.bin:/opt/app-root/src/app/app.npm-global/bin
@@ -18,9 +24,7 @@ RUN npm install npm@6.0.1 -g
 # Print NPM Version
 RUN npm -v
 
-# Give Write permission to root
-USER 1
-RUN chmod a+rw /opt/app-root/src/app
+# Setting Default user
 USER 1001
 
 # Create app directory
