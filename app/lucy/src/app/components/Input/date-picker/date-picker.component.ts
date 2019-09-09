@@ -16,6 +16,12 @@ export class DatePickerComponent implements OnInit {
   // Optional Input
   @Input() editable = true;
 
+  pastAndPresentDatesOnlyFilter = (d: Date): boolean => {
+    let currentDate = new Date();
+    // prevent dates in future from being selected
+    return currentDate >= d;
+  }
+
   get readonly(): boolean {
     if (this.mode === FormMode.View) {
       return true;
