@@ -1,14 +1,24 @@
 FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
 
-# RUN mkdir -p /opt/app-root/app
-ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ENV PORT 3001
-ENV HOME /opt/app-root/src
+ENV HOME /opt/app-root/src/app
 
-# RUN set -x \
+# Creating HOME
+RUN mkdir -p ${HOME}
+RUN chmod 777 ${HOME}
 
-RUN npm install -g npm
+# Setting Path
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/app/node_modules/.bin:/opt/app-root/src/app/app.npm-global/bin
+
+# Print NODE Version
+RUN node -v
+
+# Print NPM Version
+RUN npm -v
+
+# Setting Default user
+# USER 1001
 
 # Create app directory
 
@@ -34,21 +44,28 @@ COPY ./ .
 # Cleaning any existing generated file
 RUN rm -rf ./dist-server
 
+
+
+
 # Building App
 RUN npm run build
 
+# Setting NODE_PATH
 ENV NODE_PATH ${HOME}
 
-RUN mkdir ./schemaspy
-COPY ./resources/archives/schemaspy.tar.gz ./schemaspy.tar.gz
-RUN tar -zxf ./schemaspy.tar.gz -C ./schemaspy
-ENV SCHEMASPY_PATH=${HOME}/schemaspy
 
+# Showing Dir Struct
 RUN ls -a
 
+# Allow all user and app to update few folders
+RUN chmod 777 ${HOME}/node_modules
+RUN mkdir -p ${HOME}/.config
+RUN chmod -R 766 ${HOME}/.config
 
+# Application VOLUME
 VOLUME ${HOME}
 
+# Application Port
 EXPOSE 3001
 
 # Logging in Build Console Build DONE

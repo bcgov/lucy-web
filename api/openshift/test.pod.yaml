@@ -1,0 +1,72 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: sonar
+  creationTimestamp: null
+parameters:
+- name: NAME
+  value: api-test
+- name: SUFFIX
+  value: "-dev"
+- name: VERSION
+  value: "1.0.0"
+- name: DB_SERVICE_NAME
+  description: 'Database service name associated  with deployment'
+  required: true
+- name: IMAGE
+  description: 'Image for pod'
+  required: true
+- name: CHANGE_ID
+  value: "0"
+objects:
+- kind: Pod
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+    creationTimestamp: 
+    labels: {}
+  spec:
+    containers:
+    - name: test
+      image: "${IMAGE}"
+      command:
+      - container-entrypoint
+      - bash
+      - "-c"
+      - "npm run test:all"
+      resources:
+        limits:
+          cpu: '1'
+          memory: 1.5Gi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      env:
+      - name: DB_HOST
+        value: ${DB_SERVICE_NAME}
+      - name: DB_USER
+        valueFrom:
+          secretKeyRef:
+            key: database-user
+            name: ${DB_SERVICE_NAME}
+      - name: DB_PASS
+        valueFrom:
+          secretKeyRef:
+            key: database-password
+            name: ${DB_SERVICE_NAME}
+      - name: DB_DATABASE
+        valueFrom:
+          secretKeyRef:
+            key: database-name
+            name: ${DB_SERVICE_NAME}
+      - name: DB_PORT
+        value: "5432"
+      - name: APP_CERTIFICATE_URL
+        value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+      - name: CHANGE_VERSION
+        value: ${CHANGE_ID}
+      imagePullPolicy: Always
+    restartPolicy: Never
+    activeDeadlineSeconds: 900
+    dnsPolicy: ClusterFirst
+  status: {}

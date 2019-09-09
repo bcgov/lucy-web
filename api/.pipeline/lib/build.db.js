@@ -11,12 +11,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: build.schemaSpu.js
+ * File: build.db.js
  * Project: pipeline
- * File Created: Monday, 19th August 2019 10:15:10 am
+ * File Created: Friday, 6th September 2019 10:22:18 am
  * Author: pushan
  * -----
- * Last Modified: Monday, 19th August 2019 10:15:14 am
+ * Last Modified: Friday, 6th September 2019 10:22:22 am
  * Modified By: pushan
  * -----
  */
@@ -30,15 +30,15 @@ module.exports = (settings)=>{
   const oc=new OpenShiftClientX(Object.assign({'namespace':phases.build.namespace}, options));
   const phase='build'
   let objects = []
-  const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift/tools'))
+  const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
 
+  const name = `${phases[phase].name}-db`
   // The building of your cool app goes here ▼▼▼
-  const name = `${phases[phase].name}-schemaspy`;
-  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.bc.json`, {
+  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/db.bc.yaml`, {
     'param':{
       'NAME': `${name}`,
-      'SUFFIX': `${phases[phase].suffix}`,
-      'VERSION': `${phases[phase].tag}`
+      'NAME_SUFFIX': `${phases[phase].suffix}`,
+      'TAG_NAME': `${phases[phase].tag}`
     }
   }));
 

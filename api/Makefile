@@ -137,7 +137,9 @@ sonarqube:
 	@echo "Waiting .... (20 sec)"
 	@sleep 20
 	@docker-compose run app_api npm run sonar-analysis
-
+test-remote-api:
+	@echo "+\n Make: Test Remote API"
+	@cd ./.pipeline && DEBUG=* npm run test -- --pr=$$PR --env=$$ENV
 
 # ------------------------------------------------------------------------------
 # Helper Commands
