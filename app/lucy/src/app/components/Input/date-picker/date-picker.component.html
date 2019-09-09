@@ -3,6 +3,7 @@
         <input 
           matInput
           [matDatepicker]="datePicker"
+          [matDatepickerFilter]="pastAndPresentDatesOnlyFilter"
           placeholder="{{header}}"
           [value]="_date"
           (dateChange)="dateChanged($event)"
