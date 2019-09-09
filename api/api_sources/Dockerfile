@@ -44,6 +44,9 @@ COPY ./ .
 # Cleaning any existing generated file
 RUN rm -rf ./dist-server
 
+# Allow all user and app to update node_modules
+RUN chmod a+rwx /opt/app-root/src/app/node_modules
+
 # Building App
 RUN npm run build
 
