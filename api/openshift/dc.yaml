@@ -111,8 +111,8 @@ objects:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
-          - mountPath: /opt/app-root/app
-            name: lucy-api-test-1
+          - mountPath: /opt/app-root/src/app
+            name: ${NAME}${SUFFIX}
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
