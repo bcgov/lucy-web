@@ -19,6 +19,8 @@ const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
 const defaultHostAPI = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca'
 
+console.dir(staticUrlsAPI);
+
 const phases = {
   build: {
     namespace:'8ecbmv-tools'    ,
@@ -49,8 +51,9 @@ const phases = {
     instance: `${name}-test`  , 
     version:`${version}`, 
     tag:`test-${version}`, 
-    host: staticUrlsAPI['staging']},
+    host: staticUrls['staging'],
     apiHost: staticUrlsAPI['staging'] || defaultHostAPI,
+  },
   prod: {
     namespace:'8ecbmv-prod'    , 
     name: `${name}`, phase: 'prod'  , 
