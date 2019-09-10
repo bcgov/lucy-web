@@ -14,8 +14,8 @@
     },
     "staticBranches": ["dev", "staging", "prod"],
     "staticUrls": {
-        "dev": "invasivebc-dev-8ecbmv.dev.pathfinder.gov.bc.ca",
-        "staging": "invasivebc-test-8ecbmv.dev.pathfinder.gov.bc.ca",
+        "dev": "dev.invasivesbc.pathfinder.gov.bc.ca",
+        "staging": "test.invasivesbc.pathfinder.gov.bc.ca",
         "prod": "invasivebc-8ecbmv.dev.pathfinder.gov.bc.ca"
     },
     "staticUrlsAPI": {
