@@ -4,9 +4,9 @@
     "metadata": {
         "creationTimestamp": null,
         "labels": {
-            "build": "lucy-app"
+            "build": "invasivebc-app"
         },
-        "name": "lucy-app"
+        "name": "invasivebc-app"
     },
     "parameters": [
         {
@@ -128,7 +128,7 @@
                 "postCommit": {},
                 "resources": {
                     "limits": {
-                        "cpu": "500m",
+                        "cpu": "1250m",
                         "memory": "2Gi"
                     },
                     "requests": {

@@ -4,9 +4,9 @@
     "metadata": {
         "creationTimestamp": null,
         "labels": {
-            "build": "lucy-api"
+            "build": "invasivebc-api"
         },
-        "name": "lucy-api"
+        "name": "invasivebc-api"
     },
     "parameters": [
         {
