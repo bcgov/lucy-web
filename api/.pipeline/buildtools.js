@@ -2,4 +2,5 @@
 const task = require('./lib/build.schemaspy.js')
 const settings = require('./lib/config.js')
 
-task(Object.assign(settings, { phase: 'build'}))
+console.log('Not building schemaspy');
+// task(Object.assign(settings, { phase: 'build'}))
