@@ -19,10 +19,24 @@
 /**
  * Imports
  */
-import {Connection, getConnection, Repository, ObjectLiteral} from 'typeorm';
+import {Connection, getConnection, Repository, ObjectLiteral, QueryRunner} from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager} from './dataBaseManager';
-import { ApplicationTable } from './applicationSchemaInterface';
+import { ApplicationTable } from '../libs/core-database';
+
+
+export interface DataController {
+    schema: ApplicationTable;
+    findById(id: number): Promise<any>;
+    remove(object: any): Promise<void>;
+    removeById( id: number): Promise<void>;
+    all(filter: any): Promise<any>;
+    create(): any;
+    saveInDB(obj: any): Promise<any>;
+    random(): Promise<any>;
+    createNewObject(newObj: any, creator: any, ...others: any[]): Promise<any>;
+    updateObject(existing: any, update: any, modifier: any, ...others: any[]): Promise<any>;
+}
 
 /**
  * @description Base DataModelController. This class provides -
@@ -31,7 +45,7 @@ import { ApplicationTable } from './applicationSchemaInterface';
  *  3. Generic in nature associated with model and schema
  * @export class DataModelController<T>
  */
-export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
+export class DataModelController<T extends ObjectLiteral> extends LoggerBase implements DataController {
     // Shared instance: Managed by subclasses
     protected static shareInstance: any;
 
@@ -100,6 +114,8 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
      * @param number id
      */
     async removeById( id: number): Promise<void> {
+        await this.repo.delete(id);
+        return;
     }
 
     /**
@@ -107,7 +123,12 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
      * @param number id
      */
     async findById(id: number): Promise<T> {
-        return await this.repo.findOne(this.idQuery(id)) as T;
+        const items: T[] = await this.repo.find(this.idQuery(id)) as T[];
+        return items[0];
+    }
+
+    async random(): Promise<T> {
+        return this.findById(1);
     }
 
     /**
@@ -165,6 +186,32 @@ export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
 
     get schema(): ApplicationTable {
         return this.schemaInterface.schema;
+    }
+
+    async runQuery(query: string): Promise<void> {
+        const queryRunner: QueryRunner = this.connection.createQueryRunner();
+        await queryRunner.query(query);
+    }
+
+    async updateObj<U extends ObjectLiteral>(obj: T, update: U): Promise<T> {
+        const o: any = obj;
+        for (const key in o) {
+            if (obj.hasOwnProperty(key) && update.hasOwnProperty(key)) {
+                if (update[key] && typeof obj[key] === typeof update[key]) {
+                    o[key as keyof T] = update[key];
+                }
+            }
+        }
+        await this.saveInDB(obj);
+        return obj;
+    }
+
+    async createNewObject(newObj: any, creator: any): Promise<T> {
+        return newObj;
+    }
+
+    async updateObject(existing: any, update: any, modifier: any): Promise<T> {
+        return update;
     }
 }
 // --------------------------------------------------------------------------------------------

@@ -33,7 +33,7 @@ export enum SSOLoginProvider {
 export class SsoService {
   private static instance: SsoService;
 
-  private code: string = "";
+  private code = ``;
   private refreshTimer = null;
   private bearerToken: string | null = null;
   private tokenExpiery: Date | null;
@@ -414,20 +414,21 @@ export class SsoService {
   /**
    * Store access token in cookies
    * Also store token's expiery time in UTC format.
-   * @param token 
-   * @param expiery 
+   * @param token
+   * @param expiery
    */
   private storeAccessToken(token: string, expiery: number) {
     this.bearerToken = token;
-    console.log("Storing new token:");
+    console.log(`Storing new token:`);
     console.dir(this.bearerToken);
-    console.log("////////////////////////////");
+    console.log(`////`);
+    console.log(this.getTokenInformation());
+    console.log(`////////////////////////////`);
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
     const expieryDateUTC = expieryDate.toUTCString();
     this.cookieService.set('accessToken', token, expieryDate);
     this.cookieService.set('accessTokenExpiery', expieryDateUTC, expieryDate);
-    
     // TODO: consider using this.beginTokeRefreshTimer()
   }
 
@@ -509,7 +510,7 @@ export class SsoService {
   /**
    * Decode JWT token and return result
    */
-  private getTokenInformation() {
+  public getTokenInformation() {
     const token = this.getAccessToken();
     if (token == "") { return null };
     return jwtDecode(token);

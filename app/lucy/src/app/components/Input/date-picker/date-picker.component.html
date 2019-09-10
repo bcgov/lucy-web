@@ -1,0 +1,23 @@
+<div *ngIf="!readonly" class="col-12 field">
+    <mat-form-field [attr.id]="'date'">
+        <input 
+          matInput
+          [matDatepicker]="datePicker"
+          [matDatepickerFilter]="pastAndPresentDatesOnlyFilter"
+          placeholder="{{header}}"
+          [value]="_date"
+          (dateChange)="dateChanged($event)"
+          (click)="datePicker.open()"
+          (keydown)="false">
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+    </mat-form-field>
+</div>
+<div *ngIf="readonly">
+  <app-field
+  [mode]="mode" 
+  [header]="header"
+  [value]="date">
+</app-field>
+
+</div>

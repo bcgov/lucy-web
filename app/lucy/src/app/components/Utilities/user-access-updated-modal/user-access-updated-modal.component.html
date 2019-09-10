@@ -1,0 +1,58 @@
+  <ng-template #userAccessMessageModal let-modal>
+    <!-- Modal Title -->
+    <div class="modal-header text-center">
+        <div class="col">
+            <h5>{{messageTitle}}</h5>
+          </div>
+     
+    </div>
+    <!-- Modal Body -->
+    <div class="modal-body text-center">
+      <div class="row">
+        <div class="col-12">
+          <h5>{{userFullName}}</h5>
+        </div>
+        <br/>
+        <div class="col-12 role">
+            {{userRoleAndOrganization}}
+        </div>
+        <br/>
+        <div class="col-12  text-center">
+            <div class="user-access-level">
+                <i class="material-icons">info</i>
+                {{accessTypeMessage}}
+              </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="col-12 access-message">
+          {{roleMessage}}
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-12 access-response-header">
+          Access Request Response:
+        </div>
+        <br/>
+        <br/>
+        <div class="col-12 access-response-body">
+          {{messageBody}}
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer text-center">
+      <div class="col">
+        <button type="button" class="btn button-hollow msg-modal-btn" (click)="removeModal()">
+          Show me later
+        </button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn button-fill msg-modal-btn" (click)="markAsRead()">
+          Finish
+        </button>
+      </div>
+
+    </div>
+  </ng-template>

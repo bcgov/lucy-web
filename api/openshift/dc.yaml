@@ -33,7 +33,13 @@ objects:
       activeDeadlineSeconds: 21600
       recreateParams:
         timeoutSeconds: 600
-      resources: {}
+      resources: 
+        limits:
+          cpu: 750m
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 1Gi
       type: Recreate
     template:
       metadata:
@@ -45,7 +51,7 @@ objects:
         containers:
         - env:
           - name: DB_HOST
-            value: lucy-db
+            value: ${DB_SERVICE_NAME}
           - name: DB_USER
             valueFrom:
               secretKeyRef:
@@ -75,12 +81,38 @@ objects:
             protocol: TCP
           - containerPort: 8080
             protocol: TCP
-          resources: {}
+          resources: 
+            limits:
+              cpu: 750m
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /api/misc/version
+              port: 3001
+              scheme: HTTP
+            initialDelaySeconds: 140
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 20
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /api/misc/version
+              port: 3001
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 20
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
           - mountPath: /opt/app-root/app
-            name: lucy-api-test-1
+            name: ${NAME}${SUFFIX}
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -88,7 +120,7 @@ objects:
         terminationGracePeriodSeconds: 30
         volumes:
         - emptyDir: {}
-          name: lucy-api-test-1
+          name: ${NAME}${SUFFIX}
     test: false
     triggers:
     - imageChangeParams:
@@ -115,7 +147,7 @@ objects:
   kind: Secret
   metadata:
     annotations:
-      as-copy-of: lucy-db
+      as-copy-of: ${DB_SERVICE_NAME}
     creationTimestamp: null
     name: ${NAME}${SUFFIX}
   type: Opaque
@@ -128,14 +160,14 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     ports:
-    - name: 3001-tcp
-      port: 3001
-      protocol: TCP
-      targetPort: 3001
-    - name: 8080-tcp
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
+      - name: 3001-tcp
+        port: 3001
+        protocol: TCP
+        targetPort: 3001
+      - name: 8080-tcp
+        port: 8080
+        protocol: TCP
+        targetPort: 8080
     selector:
       deploymentconfig: ${NAME}${SUFFIX}
     sessionAffinity: None
@@ -166,7 +198,7 @@ metadata:
   selfLink: ""
 parameters:
 - name: NAME
-  value: lucy-api
+  value: invasivesbc-api
 - name: SUFFIX
   value: "-dev"
 - name: VERSION
@@ -174,3 +206,6 @@ parameters:
 - name: HOST
 - name: CHANGE_ID
   value: "0"
+- name: DB_SERVICE_NAME
+  description: 'Database service name associated  with deployment'
+  required: true

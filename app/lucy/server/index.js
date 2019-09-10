@@ -21,6 +21,7 @@
  */
 const express = require('express');
 const path = require('path');
+const request = require('request');
 
 /**
  * @description Bootstrap script to start app web server
@@ -42,6 +43,29 @@ const path = require('path');
         };
         resp.status(200).json(config);
     });
+    // Health check
+    app.use('/healthcheck', (_, resp) => {
+        // Request server api
+        const host = process.env.API_HOST || process.env.LOCAL_API_HOST || 'localhost'
+        request(`http://${host}/api/misc/version`, (err, res) => {
+            if (err) {
+                console.log(`Error: ${err}, host: ${host}`);
+                resp.status(404).json({error: `${JSON.stringify(err)}`, host: host});
+            } else {
+                if (res.statusCode === 200) {
+                    resp.status(200).json({ success: true});
+                } else {
+                    resp.status(404).json({ error: 'API not responding'});
+                }
+            }
+        });
+    });
+
+    // All routes
+    const route = express.Router();
+    route.all('*', express.static(resourcePath));
+    app.use('*', route);
+
     // Logging
     console.log(`Stating express web server on port with resource path => ${port}: ${resourcePath}`);
     // Listing to port
