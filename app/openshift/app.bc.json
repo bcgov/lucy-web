@@ -14,7 +14,7 @@
           "displayName": "Name",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-app"
+          "value": "invasivebc-app"
         },
         {
           "name": "SUFFIX",

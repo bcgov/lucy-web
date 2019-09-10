@@ -14,14 +14,14 @@
           "displayName": "Name",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-api"
+          "value": "invasivebc-api"
         },
         {
           "name": "SUFFIX",
           "displayName": "Name Suffix",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-api"
+          "value": "-dev"
         },
         {
           "name": "VERSION",

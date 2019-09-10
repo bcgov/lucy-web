@@ -120,7 +120,7 @@ objects:
         terminationGracePeriodSeconds: 30
         volumes:
         - emptyDir: {}
-          name: lucy-api-test-1
+          name: ${NAME}${SUFFIX}
     test: false
     triggers:
     - imageChangeParams:
@@ -198,7 +198,7 @@ metadata:
   selfLink: ""
 parameters:
 - name: NAME
-  value: lucy-api
+  value: invasivesbc-api
 - name: SUFFIX
   value: "-dev"
 - name: VERSION
