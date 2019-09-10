@@ -42,5 +42,26 @@ export const viewerToken = (): string => {
 export const editorToken = (): string => {
     return fs.readFileSync(path.join(__dirname, 'editor.token'), 'utf8');
 };
+
+/**
+ * @description Getter: idr3 token
+ */
+export const testIdr3Token = (): string => {
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr3.token'), 'utf8');
+};
+
+/**
+ * @description Getter: idr1 token
+ */
+export const testIdr1Token = (): string => {
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr1.token'), 'utf8');
+};
+
+/**
+ * @description Getter: idr2 token
+ */
+export const testIdr2Token = (): string => {
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr2.token'), 'utf8');
+};
 // -----------------------------------------------------------------------------------------------------------
 

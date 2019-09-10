@@ -19,12 +19,17 @@
 /**
  * Imports
  */
+import * as request from 'supertest';
+import { should } from 'chai';
 import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
+import { action } from '../libs/utilities';
+import { SharedDBManager } from '../database/dataBaseManager';
+import { adminToken, editorToken, viewerToken } from './token';
 
 /**
  * @description Closure type to verify any data
  */
-export type VerifyData = (data: any) => void;
+export type VerifyData = (data: any) => Promise<void>;
 
 /**
  * @description Check Success json structure of any test
@@ -32,8 +37,8 @@ export type VerifyData = (data: any) => void;
  * @param VerifyData otherFieldVerify
  */
 export const verifySuccessBody = async (body: any, otherFieldVerify?: VerifyData) => {
-    expect(body.data).toBeDefined();
-    expect(body.message).toBeDefined();
+    should().exist(body.data);
+    should().exist(body.message);
     if (otherFieldVerify) {
         await otherFieldVerify(body.data);
     }
@@ -45,8 +50,9 @@ export const verifySuccessBody = async (body: any, otherFieldVerify?: VerifyData
  * @param VerifyData otherFieldVerify
  */
 export const verifyErrorBody = async (body: any, otherFieldVerify?: VerifyData) => {
-    expect(body.errors).toBeDefined();
-    expect(body.message).toBeDefined();
+    // console.dir(body);
+    should().exist(body.errors);
+    should().exist(body.message);
     if (otherFieldVerify) {
         await otherFieldVerify(body.errors);
     }
@@ -57,14 +63,140 @@ export const verifyErrorBody = async (body: any, otherFieldVerify?: VerifyData) 
  * @returns Promise<User>
  */
 export const createAdmin = async (): Promise<User> => {
+    const existing = await UserDataController.shared.findById(1);
+    if (existing) {
+        return existing;
+    }
     const admin = await UserDataController.shared.create();
     admin.email = 'amir@freshworks.io';
     admin.preferredUsername = 'ashayega@idir';
     admin.firstName = 'Amir';
     admin.lastName = 'Shyega';
     admin.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.admin)];
-    UserDataController.shared.saveInDB(admin);
+    await UserDataController.shared.saveInDB(admin);
     return admin;
 };
+
+/**
+ * @description Check add call mock setup as per env
+ * @param action setup Closure
+ * @param boolean immediately Boolean flag to run setup action immediately
+ */
+export const runMockSetup = async (setup: action, immediately?: boolean): Promise<void> => {
+    if (process.env.DB_MOCK) {
+        if (immediately) {
+            setup();
+        } else {
+            await setup();
+        }
+    }
+};
+
+/**
+ * @description Check call no mock setup
+ * @param action setup Closure
+ * @param boolean immediately Boolean flag to run setup action immediately
+ */
+export const runNoMockSetup = async (setup: action, immediately?: boolean): Promise<void> => {
+    if (!process.env.DB_MOCK) {
+        if (immediately) {
+            setup();
+        } else {
+            await setup();
+        }
+    }
+};
+
+/**
+ * @description Common test setup for each test suit
+ */
+export const commonTestSetupAction = async (): Promise<any> => {
+    const resp: any = {};
+    if (process.env.DB_MOCK) {
+        const admin = await createAdmin();
+        resp.admin = admin;
+    } else {
+        await SharedDBManager.connect();
+    }
+    return resp;
+};
+
+/**
+ * @description Common test tear down action for each test suit
+ */
+export const commonTestTearDownAction = async (): Promise<void> => {
+    if (!process.env.DB_MOCK) {
+        await SharedDBManager.close();
+    }
+};
+
+/**
+ * @description AuthType of request
+ */
+export const enum AuthType {
+    admin = 1,
+    viewer = 2,
+    sme = 3,
+    noAuth = 4,
+    token = 0
+}
+
+export const enum HttpMethodType {
+    get = 'get',
+    post = 'post',
+    put = 'put',
+    delete = 'delete'
+}
+
+export interface TestSetup {
+    type: HttpMethodType;
+    url: string;
+    expect: number;
+    auth?: AuthType;
+    send?: any;
+    token?: string;
+}
+
+/**
+ * @description Generic test request creation
+ * @param app Express App
+ * @param callback Callback to customize request
+ * @param except Expected status
+ * @param auth  auth type
+ * @param send send data
+ */
+export const testRequest = (app: any, setup: TestSetup) => {
+    const actualAuth: number = (setup.auth || AuthType.token) as number;
+    let token: string;
+    switch (actualAuth) {
+        case 1:
+            // console.log('here....');
+            token = adminToken();
+            break;
+        case 3:
+            token = editorToken();
+            break;
+        case 2:
+            token = viewerToken();
+            break;
+        case 4:
+            token = '';
+            break;
+        default:
+            token = setup.token || '';
+            break;
+    }
+    if (token && token !== '') {
+        return request(app)[setup.type](setup.url)
+        .set('Authorization', `Bearer ${token}`)
+        .send(setup.send)
+        .expect(setup.expect);
+    } else {
+        return request(app)[setup.type](setup.url)
+        .send(setup.send)
+        .expect(setup.expect);
+    }
+};
+
 // -----------------------------------------------------------------------------------------------------------
 

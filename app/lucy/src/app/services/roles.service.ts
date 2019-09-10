@@ -14,74 +14,83 @@ export class RolesService {
 
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
-  async getRoles(): Promise<Role[] | null> {
+  public async getRoles(): Promise<Role[] | null> {
     if (this.roles !== null) {
-      return this.roles
+      return this.roles;
     }
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_refrenceData.roles, null);
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Roles, null);
     if (response.success) {
       if ((Array.isArray(response.response) && this.objectValidator.isRoleObject(response.response[0]))) {
         this.roles = response.response;
-        return response.response
+        return response.response;
       } else {
-        return null
+        return null;
       }
     } else {
       return null;
     }
   }
 
-  async getDataEntryRole(): Promise<Role | null> {
+  public async getDataEntryRole(): Promise<Role | null> {
     const allRoles = await this.getRoles();
-    return allRoles !== null ? allRoles.find(i => i.code === "DAE") : null;
+    return allRoles !== null ? allRoles.find(i => i.code === `DAE`) : null;
   }
 
   public roleToAccessType(role: Role): UserAccessType {
     switch (role.code) {
-      case "ADM":
+      case `ADM`:
         return UserAccessType.Admin;
-      case "DAV":
+      case `DAV`:
         return UserAccessType.DataViewer;
-      case "DAE":
+      case `DAE`:
         return UserAccessType.DataEditor;
-      case "SUP":
+      case `SUP`:
         return UserAccessType.SuperUser;
     }
   }
 
+  public canCreate(accessType: UserAccessType) {
+    return (accessType === UserAccessType.Admin ||
+      accessType === UserAccessType.DataEditor);
+  }
+
+  public canEdit(accessType: UserAccessType) {
+    return this.canCreate(accessType);
+  }
+
   private getDummyRoles(): Role[] {
-    var roles: Role[] = [
+    const roles: Role[] = [
       {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 1,
-        code: "ADM",
-        role: "Admin",
-        description: "Overall SEISM Access",
+        code: `ADM`,
+        role: `Admin`,
+        description: `Overall SEISM Access`,
     },
     {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 2,
-        code: "DAV",
-        role: "Data Viewer",
-        description: "General data view access",
+        code: `DAV`,
+        role: `Data Viewer`,
+        description: `General data view access`,
     },
     {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 3,
-        code: "DAE",
-        role: "Data Editor",
-        description: "General access",
+        code: `DAE`,
+        role: `Data Editor`,
+        description: `General access`,
     },
     {
-        createdAt: "2019-06-11T12:10:12.495Z",
-        updateAt: "2019-06-11T12:10:12.495Z",
+        createdAt: `2019-06-11T12:10:12.495Z`,
+        updateAt: `2019-06-11T12:10:12.495Z`,
         role_code_id: 4,
-        code: "SUP",
-        role: "Super User",
-        description: "Lead admin for each of the taxonomic components",
+        code: `SUP`,
+        role: `Super User`,
+        description: `Lead admin for each of the taxonomic components`,
     }
     ]
     return roles;

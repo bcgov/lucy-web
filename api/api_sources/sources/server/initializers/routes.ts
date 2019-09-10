@@ -19,9 +19,13 @@
 /**
  * Imports
  */
-import { Application} from 'express';
-import { accountRoute, requestAccessRoutes} from '../modules';
-import { defaultRoute} from '../modules';
+import { Application } from 'express';
+import { accountRoute,
+    requestAccessRoutes,
+    observationRoute,
+    mechanicalTreatmentRoute
+} from '../modules';
+import { defaultRoute, miscellaneousRouter } from '../modules';
 
 /**
  * @description Configuring main app routes
@@ -29,10 +33,19 @@ import { defaultRoute} from '../modules';
  */
 export const routes = (app: Application) => {
     // Add account
-    app.use('/api/v1/account', accountRoute());
+    app.use('/api/account', accountRoute());
 
     // Request Access routes
-    app.use('/api/v1/request-access', requestAccessRoutes());
+    app.use('/api/request-access', requestAccessRoutes());
+
+    // Observation
+    app.use('/api/observation', observationRoute());
+
+    // Mechanical Treatment
+    app.use('/api/treatment/mechanical', mechanicalTreatmentRoute());
+
+    // Miscellaneous
+    app.use('/api/misc', miscellaneousRouter());
 
     // Default Route
     app.use('*', defaultRoute());

@@ -22,5 +22,11 @@
 export * from './userFactory';
 export * from './userSessionFactory';
 export * from './requestAccessFactory';
+export * from './observationCodesFactory';
+export * from './observationFactory';
+export * from './treatmentFactory';
+export * from './treatmentCodesFactory';
+export * from './helper';
+export * from './treatmentProviderFactory';
 // ----------------------------------------------------------------------------------------------------------------
 

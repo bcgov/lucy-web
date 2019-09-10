@@ -18,9 +18,9 @@ services:
     - DB_PORT=${DB_PORT}
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
+    - VERSION=${VERSION}
   volumes:
-    - ./api_sources:/home/nodejs/app
-
+    - ./api_sources:/opt/app-root/src
   networks:
   - local-network
   links:
@@ -37,7 +37,7 @@ services:
     context: ./.docker/db
     dockerfile: Dockerfile.local
   ports:
-    - 5435:5432
+    - 5432:5432
   environment:
     - POSTGRES_USER=${DB_USER}
     - POSTGRES_PASSWORD=${DB_PASS}
@@ -70,6 +70,7 @@ services:
     dockerfile: .build/Dockerfile.local
   ports:
     - ${APP_PORT}:${APP_PORT}
+    - 3030:3030
   volumes: 
    - ../app/lucy/src:/opt/app-root/src/src
   networks:
@@ -78,6 +79,8 @@ services:
     - nginx
   environment:
     - APP_PORT=${APP_PORT}
+    - LOCAL_API_HOST=app_api:${API_PORT}
+    
 # Application Local docker network
 networks:
  local-network:

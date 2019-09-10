@@ -1,5 +1,5 @@
-# Lucy - Invasive species management tools (ISMT)
-
+# invasiveBC - Invasive species management tools (ISMT) - API
+This is application source code for Restful API of Invasive species database.
 
 
 # Set-up
@@ -27,3 +27,4 @@
 * DEBUG APP: make local_debug
 * Stop App: make close_local
 * Clean App: make clean_local
+* Clean Remote: make clean-remote PR={PR_NUM | static deployment name like dev/staging/prod} ENV={dev | test | prod}

@@ -1,0 +1,18 @@
+.access-reaquest-reasons {
+  color: #333333;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.header-container {
+  background: #002C71;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.view-title {
+  color: #FFFFFF;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29px;
+}

@@ -4,9 +4,9 @@
     "metadata": {
         "creationTimestamp": null,
         "labels": {
-            "build": "lucy-api"
+            "build": "invasivebc-api"
         },
-        "name": "lucy-api"
+        "name": "invasivebc-api"
     },
     "parameters": [
         {
@@ -14,14 +14,14 @@
           "displayName": "Name",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-api"
+          "value": "invasivebc-api"
         },
         {
           "name": "SUFFIX",
           "displayName": "Name Suffix",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-api"
+          "value": "-dev"
         },
         {
           "name": "VERSION",
@@ -118,7 +118,7 @@
                 "postCommit": {},
                 "resources": {
                     "limits": {
-                        "cpu": "1",
+                        "cpu": "1250m",
                         "memory": "2Gi"
                     },
                     "requests": {
@@ -126,7 +126,7 @@
                         "memory": "1Gi"
                     }
                 },
-                "runPolicy": "Serial",
+                "runPolicy": "SerialLatestOnly",
                 "source": {
                     "contextDir": "${SOURCE_CONTEXT_DIR}",
                     "git": {

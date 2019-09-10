@@ -1,0 +1,181 @@
+.header-container {
+    background: #002C71;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.spacer-toolbar {
+    flex: 1 1 auto;
+}
+
+.action-buttons {
+    padding: 0 14px;
+}
+
+.view-title {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29px;
+}
+
+.view-title-detail {
+    color: #FAFAFA;
+}
+
+.submit-button {
+    height: 42px;
+    width: 250px;
+    color: #234075;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 21px;
+    text-align: center;
+}
+
+.subsection-title {
+    color: #000000;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 26px;
+    padding-top: 16px;
+
+}
+
+.seperator {
+    border-left: 1px solid black;
+    margin-top: -1px;
+    padding-top: 1px;
+    align-content: center;
+    vertical-align: middle;
+    /* display: table; */
+}
+
+.separator-inner {
+    vertical-align: middle;
+    align-content: center;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.test-btn {
+    align-content: center;
+    text-align: center;
+    background: greenyellow;
+    border-radius: .25rem;
+    position: fixed;
+    bottom: 0;
+    width: 18%;
+}
+
+/* HANDELING SIDE NAV ON SCREEN SIZE CHANGE */
+@media (min-width: 992px) {
+
+    /* CSS that should be displayed if width is equal to or greater than 992px goes here */
+
+    /* Floating */
+    .nav-barrr {
+        display: flex;
+        height: 50%;
+        width: 260px;
+        /* Set the width of the sidebar */
+        position: fixed;
+        /* Fixed Sidebar (stay in place on scroll) */
+        overflow-x: hidden;
+        /* Disable horizontal scroll */
+        padding-top: 0px;
+        z-index: 1;
+        border-radius: 5px;
+        box-shadow: 0 2px 12px 0 rgba(35, 64, 117, 0.3);
+    }
+
+    /* Stick to top */
+    .nav-bar {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 90px;
+        z-index: 1;
+        width: 260px;
+        border-radius: 5px;
+        box-shadow: 0 2px 12px 0 rgba(35, 64, 117, 0.3);
+        height: 500px;
+    }
+
+    .content {
+        /* Uncomment if using Floating navbar */
+        /* margin-left: 260px; */ 
+        /* Same as the width of the sidebar */
+    }
+}
+
+@media (max-width: 992px) {
+
+    /* CSS that should be displayed if width is equal to or smaller than 992px goes here */
+    .nav-bar {
+        /* hide sidebar */
+        display: none;
+    }
+}
+
+/****************************************/
+@media (max-width: 768px) {
+
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .header-container-inner {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Confirmation */
+.entries-added {
+    color: #000000;
+    font-size: 34px;
+    font-weight: bold;
+    line-height: 41px;
+}
+
+.back-to-db {
+    height: 50px;
+    width: 250px;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: -0.32px;
+    line-height: 21px;
+    text-align: center;
+}
+
+.confirmation-divider {
+    height: 1px;
+    width: 342px;
+    background-color: #000000;
+}
+
+.section-name {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.section-divider {
+    box-sizing: border-box;
+    height: 1px;
+    width: 100%;
+    border: 2px solid #E2A014;
+}
+
+.sticky {
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+
+.action-icon {
+    font-size: 17px;
+}

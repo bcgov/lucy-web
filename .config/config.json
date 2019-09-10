@@ -1,5 +1,5 @@
 {
-    "name": "lucy",
+    "name": "invasivesbc",
     "namespaceSuffix": "8ecbmv",
     "namespace": {
         "tools": "tools",
@@ -9,7 +9,19 @@
     },
     "version": "1.0.0",
     "module": {
-        "app": "lucy-app",
-        "api": "lucy-api"
+        "app": "invasivesbc-app",
+        "api": "invasivesbc-api"
+    },
+    "staticBranches": ["dev", "staging", "prod"],
+    "staticUrls": {
+        "dev": "dev.invasivesbc.pathfinder.gov.bc.ca",
+        "staging": "test.invasivesbc.pathfinder.gov.bc.ca",
+        "prod": "invasivesbc.gov.bc.ca"
+    },
+    "staticUrlsAPI": {
+        "dev": "api.dev.invasivesbc.8ecbmv.pathfinder.gov.bc.ca",
+        "staging": "api.test.invasivesbc.8ecbmv.pathfinder.gov.bc.ca",
+        "prod": "api.invasivesbc.gov.bc.ca"
     }
+    
 }

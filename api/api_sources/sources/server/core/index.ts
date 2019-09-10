@@ -23,4 +23,7 @@ export * from './base.route.controller';
 export * from './retry.manager';
 export * from './auth.middleware';
 export * from './common.error.handler';
+export * from './route.des';
+export * from './route.const';
+export * from './resource.controller';
 // -----------------------------------------------------------------------------------------------------------

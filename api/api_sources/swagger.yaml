@@ -1,0 +1,1072 @@
+swagger: '2.0'
+info:
+  description: API server for Lucy-
+  version: '1.0.0'
+  title: Lucy-API
+  contact:
+    email: pushan@freshworks.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: pathfinder.bc.gov
+basePath: /pathfinder.bc.gov/api/1.0.0
+tags:
+  - name: api
+    description: Secure API description for Lucy
+  - name: developers
+    description: Operations available to regular developers
+  - name: users
+    description: Users of lucy
+  - name: admin
+    description: Admin of Lucy
+  - name: observation
+    description: Observation endpoints
+  - name: sme
+    description: Subject matter expert
+schemes:
+  - https
+  - http
+paths:
+  /api/me:
+    get:
+      summary: User information
+      description: API to get user profile information
+      operationId: me
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          type: string
+          description: JWT Token
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation/codes:
+    get:
+      parameters:
+        - in: header
+          name: token
+          type: string
+          description: JWT Token
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ObservationCodesResp'
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/observation:
+    parameters:
+      - in: header
+        name: token
+        type: string
+        description: JWT Token
+        required: true
+    post:
+      summary: Create Observation
+      description: >-
+        API to create observation model and return newly created model with
+        database id (observation id)
+      operationId: observation
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: Create Body
+          schema:
+            $ref: '#/definitions/ObservationCreateRequestBody'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Observation'
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: Validation error - no observation with id
+          schema:
+            type: object
+            $ref: '#/definitions/Error'
+    get:
+      summary: Fetch all observation
+      responses:
+        '200':
+          description: Fetched
+          schema:
+            type: object
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+  '/api/observation/{ObservationId}':
+    get:
+      summary: Get single observation
+      parameters:
+        - in: path
+          required: true
+          name: ObservationId
+          type: number
+      responses:
+        '200':
+          description: Fetch observation with id
+          schema:
+            type: object
+            $ref: '#/definitions/Observation'
+        '422':
+          description: Validation error - no observation with id
+          schema:
+            type: object
+            $ref: '#/definitions/Error'
+definitions:
+  User:
+    type: object
+    required:
+      - user_id
+      - email
+      - firstName
+      - lastName
+      - preferredUsername
+      - currentSessionId
+      - accountStatus
+      - roles
+      - isAdmin
+      - updateAt
+      - createdAt
+    properties:
+      existingRequestAccess:
+        type: object
+        $ref: '#/definitions/RequestAccess'
+      user_id:
+        type: number
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      preferredUsername:
+        type: string
+      currentSessionId:
+        type: number
+      accountStatus:
+        type: number
+      roles:
+        type: object
+      isAdmin:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ApplicationCode:
+    type: object
+    required:
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  UserSession:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  RolesCode:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SessionActivityCode:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SessionActivity:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  RequestAccess:
+    type: object
+    required:
+      - updateAt
+      - createdAt
+    properties:
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  UserMessage:
+    type: object
+    required:
+      - message_id
+      - type
+      - status
+      - receiver
+      - creator
+      - updateAt
+      - createdAt
+    properties:
+      message_id:
+        type: number
+      title:
+        type: string
+      body:
+        type: string
+      type:
+        type: number
+      status:
+        type: number
+      receiver:
+        type: object
+        $ref: '#/definitions/User'
+      creator:
+        type: object
+        $ref: '#/definitions/User'
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Species:
+    type: object
+    required:
+      - species_id
+      - mapCode
+      - earlyDetection
+      - containmentSpecies
+      - containmentSpacialRef
+      - species
+      - genus
+      - commonName
+      - latinName
+      - updateAt
+      - createdAt
+    properties:
+      species_id:
+        type: number
+      mapCode:
+        type: string
+      earlyDetection:
+        type: boolean
+      containmentSpecies:
+        type: number
+      containmentSpacialRef:
+        type: number
+      species:
+        type: string
+      genus:
+        type: string
+      commonName:
+        type: string
+      latinName:
+        type: string
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  JurisdictionCode:
+    type: object
+    required:
+      - jurisdiction_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      jurisdiction_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Observation:
+    type: object
+    required:
+      - observation_id
+      - date
+      - lat
+      - long
+      - width
+      - length
+      - accessDescription
+      - observerFirstName
+      - observerLastName
+      - sampleIdentifier
+      - rangeUnitNumber
+      - legacySiteIndicator
+      - edrrIndicator
+      - researchIndicator
+      - sampleTakenIndicator
+      - wellIndicator
+      - specialCareIndicator
+      - biologicalIndicator
+      - aquaticIndicator
+      - species
+      - jurisdiction
+      - density
+      - distribution
+      - observationType
+      - speciesAgency
+      - soilTexture
+      - observationGeometry
+      - specificUseCode
+      - slopeCode
+      - aspectCode
+      - proposedAction
+      - updateAt
+      - createdAt
+    properties:
+      observation_id:
+        type: number
+      date:
+        type: string
+      lat:
+        type: number
+      long:
+        type: number
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      observerFirstName:
+        type: string
+      observerLastName:
+        type: string
+      sampleIdentifier:
+        type: string
+      rangeUnitNumber:
+        type: string
+      legacySiteIndicator:
+        type: boolean
+      edrrIndicator:
+        type: boolean
+      researchIndicator:
+        type: boolean
+      sampleTakenIndicator:
+        type: boolean
+      wellIndicator:
+        type: boolean
+      specialCareIndicator:
+        type: boolean
+      biologicalIndicator:
+        type: boolean
+      aquaticIndicator:
+        type: boolean
+      species:
+        type: object
+      jurisdiction:
+        type: object
+      density:
+        type: object
+      distribution:
+        type: object
+      observationType:
+        type: object
+      speciesAgency:
+        type: object
+      soilTexture:
+        type: object
+      observationGeometry:
+        type: object
+      specificUseCode:
+        type: object
+      slopeCode:
+        type: object
+      aspectCode:
+        type: object
+      proposedAction:
+        type: object
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationCreateSpec:
+    type: object
+    required:
+      - observation_id
+      - date
+      - lat
+      - long
+      - width
+      - length
+      - accessDescription
+      - observerFirstName
+      - observerLastName
+      - sampleIdentifier
+      - rangeUnitNumber
+      - legacySiteIndicator
+      - edrrIndicator
+      - researchIndicator
+      - sampleTakenIndicator
+      - wellIndicator
+      - specialCareIndicator
+      - biologicalIndicator
+      - aquaticIndicator
+      - species
+      - jurisdiction
+      - density
+      - distribution
+      - observationType
+      - speciesAgency
+      - soilTexture
+      - observationGeometry
+      - specificUseCode
+      - slopeCode
+      - aspectCode
+      - proposedAction
+      - updateAt
+      - createdAt
+    properties:
+      observation_id:
+        type: number
+      date:
+        type: string
+      lat:
+        type: number
+      long:
+        type: number
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      observerFirstName:
+        type: string
+      observerLastName:
+        type: string
+      sampleIdentifier:
+        type: string
+      rangeUnitNumber:
+        type: string
+      legacySiteIndicator:
+        type: boolean
+      edrrIndicator:
+        type: boolean
+      researchIndicator:
+        type: boolean
+      sampleTakenIndicator:
+        type: boolean
+      wellIndicator:
+        type: boolean
+      specialCareIndicator:
+        type: boolean
+      biologicalIndicator:
+        type: boolean
+      aquaticIndicator:
+        type: boolean
+      species:
+        type: number
+      jurisdiction:
+        type: number
+      density:
+        type: number
+      distribution:
+        type: number
+      observationType:
+        type: number
+      speciesAgency:
+        type: number
+      soilTexture:
+        type: number
+      observationGeometry:
+        type: number
+      specificUseCode:
+        type: number
+      slopeCode:
+        type: number
+      aspectCode:
+        type: number
+      proposedAction:
+        type: number
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationUpdateSpec:
+    type: object
+    properties:
+      observation_id:
+        type: number
+      date:
+        type: string
+      lat:
+        type: number
+      long:
+        type: number
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      observerFirstName:
+        type: string
+      observerLastName:
+        type: string
+      sampleIdentifier:
+        type: string
+      rangeUnitNumber:
+        type: string
+      legacySiteIndicator:
+        type: boolean
+      edrrIndicator:
+        type: boolean
+      researchIndicator:
+        type: boolean
+      sampleTakenIndicator:
+        type: boolean
+      wellIndicator:
+        type: boolean
+      specialCareIndicator:
+        type: boolean
+      biologicalIndicator:
+        type: boolean
+      aquaticIndicator:
+        type: boolean
+      species:
+        type: number
+      jurisdiction:
+        type: number
+      density:
+        type: number
+      distribution:
+        type: number
+      observationType:
+        type: number
+      speciesAgency:
+        type: number
+      soilTexture:
+        type: number
+      observationGeometry:
+        type: number
+      specificUseCode:
+        type: number
+      slopeCode:
+        type: number
+      aspectCode:
+        type: number
+      proposedAction:
+        type: number
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpeciesDensityCode:
+    type: object
+    required:
+      - species_density_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_density_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpeciesDistributionCode:
+    type: object
+    required:
+      - species_distribution_code_id
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_distribution_code_id:
+        type: number
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpeciesAgencyCode:
+    type: object
+    required:
+      - species_agency_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_agency_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SoilTextureCode:
+    type: object
+    required:
+      - soil_texture_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      soil_texture_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SpecificUseCode:
+    type: object
+    required:
+      - specific_use_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      specific_use_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationTypeCode:
+    type: object
+    required:
+      - observation_type_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_type_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationGeometryCode:
+    type: object
+    required:
+      - observation_geometry_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_geometry_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SlopeCode:
+    type: object
+    required:
+      - observation_slope_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_slope_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  AspectCode:
+    type: object
+    required:
+      - observation_aspect_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_aspect_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ProposedActionCode:
+    type: object
+    required:
+      - observation_proposed_action_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_proposed_action_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  Error:
+    required:
+      - message
+      - errors
+    properties:
+      message:
+        type: string
+      errors:
+        type: array
+  UserInfo:
+    required:
+      - message
+      - data
+    properties:
+      message:
+        type: string
+      data:
+        type: object
+        $ref: '#/definitions/User'
+  ObservationSpecies:
+    type: object
+    required:
+      - observation_species_id
+      - width
+      - length
+      - accessDescription
+      - surveyorFirstName
+      - surveyorLastName
+      - species
+      - jurisdiction
+      - density
+      - distribution
+      - surveyType
+      - speciesAgency
+      - observation
+      - soilTexture
+      - surveyGeometry
+      - specificUseCode
+      - updateAt
+      - createdAt
+    properties:
+      observation_species_id:
+        type: number
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      surveyorFirstName:
+        type: string
+      surveyorLastName:
+        type: string
+      species:
+        type: object
+      jurisdiction:
+        type: object
+      density:
+        type: object
+      distribution:
+        type: object
+      surveyType:
+        type: object
+      speciesAgency:
+        type: object
+      observation:
+        type: object
+      soilTexture:
+        type: object
+      surveyGeometry:
+        type: object
+      specificUseCode:
+        type: object
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  SurveyTypeCode:
+    type: object
+    required:
+      - survey_type_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      survey_type_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+  ObservationCodes:
+    required:
+      - jurisdictionCodes
+      - speciesList
+      - speciesDensityCodes
+      - speciesDistributionCodes
+      - speciesAgencyCodes
+      - observationTypeCodes
+      - soilTextureCodes
+      - observationGeometryCodes
+      - specificUseCodes
+      - slopeCodes
+      - aspectCodes
+      - proposedActionCodes
+    properties:
+      jurisdictionCodes:
+        type: array
+        $ref: '#/definitions/JurisdictionCode'
+      speciesList:
+        type: array
+        $ref: '#/definitions/Species'
+      speciesDensityCodes:
+        type: array
+        $ref: '#/definitions/SpeciesDensityCode'
+      speciesDistributionCodes:
+        type: array
+        $ref: '#/definitions/SpeciesDistributionCode'
+      speciesAgencyCodes:
+        type: array
+        $ref: '#/definitions/SpeciesAgencyCode'
+      observationTypeCodes:
+        type: array
+        $ref: '#/definitions/ObservationTypeCode'
+      soilTextureCodes:
+        type: array
+        $ref: '#/definitions/SoilTextureCode'
+      observationGeometryCodes:
+        type: array
+        $ref: '#/definitions/ObservationGeometryCode'
+      specificUseCodes:
+        type: array
+        $ref: '#/definitions/SpecificUseCode'
+      slopeCodes:
+        type: array
+        $ref: '#/definitions/SlopeCode'
+      aspectCodes:
+        type: array
+        $ref: '#/definitions/AspectCode'
+      proposedActionCodes:
+        type: array
+        $ref: '#/definitions/ProposedActionCode'
+  ObservationCodesResp:
+    required:
+      - message
+      - data
+    properties:
+      message:
+        type: string
+      data:
+        type: object
+        $ref: '#/definitions/ObservationCodes'
+  ObservationCreateRequestBody:
+    type: object
+    required:
+      - lat
+      - long
+      - date
+      - width
+      - length
+      - accessDescription
+      - surveyorFirstName
+      - surveyorLastName
+      - species
+      - jurisdiction
+      - density
+      - distribution
+      - observationType
+      - speciesAgency
+      - soilTexture
+      - observationGeometry
+      - specificUseCode
+      - slopeCode
+      - aspectCode
+      - proposedAction
+    properties:
+      lat:
+        type: number
+      long:
+        type: number
+      date:
+        type: string
+        description: Date in YYYY-MM-DD format
+      width:
+        type: number
+      length:
+        type: number
+      accessDescription:
+        type: string
+      surveyorFirstName:
+        type: string
+      surveyorLastName:
+        type: string
+      species:
+        type: number
+      jurisdiction:
+        type: number
+      density:
+        type: number
+      distribution:
+        type: number
+      observationType:
+        type: number
+      speciesAgency:
+        type: number
+      soilTexture:
+        type: number
+      observationGeometry:
+        type: number
+      specificUseCode:
+        type: number
+      slopeCode:
+        type: number
+      aspectCode:
+        type: number
+      proposedAction:
+        type: number
+      sampleIdentifier:
+        type: string
+      rangeUnitNumber:
+        type: string
+      legacySiteIndicator:
+        type: boolean
+      edrrIndicator:
+        type: boolean
+      researchIndicator:
+        type: boolean
+      sampleTakenIndicator:
+        type: boolean
+      wellIndicator:
+        type: boolean
+      specialCareIndicator:
+        type: boolean
+      biologicalIndicator:
+        type: boolean
+      aquaticIndicator:
+        type: boolean

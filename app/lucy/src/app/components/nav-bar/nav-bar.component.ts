@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { AppRoutes, AppRoutesParams} from '../../constants/app-routes.enum';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import { AppRoutes, AppRoutesParams } from '../../constants/app-routes.enum';
 import { SsoService } from '../../services/sso.service';
 import { UserService } from '../../services/user.service';
 import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
 import { UserAccessType } from 'src/app/models/Role';
+import { RolesService } from 'src/app/services/roles.service';
 
 declare const location: any;
 
@@ -13,7 +14,7 @@ declare const location: any;
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css']
 })
-export class NavBarComponent implements OnInit, OnDestroy {
+export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * User initials
@@ -40,9 +41,17 @@ export class NavBarComponent implements OnInit, OnDestroy {
   /**
    * Used for Highlighting element in
    * navigation bar when route is active
-   */ 
+   */
   public get isAdminToolsActive(): boolean {
     return this.routerService.current === AppRoutes.AdminTools;
+  }
+
+  /**
+   * Used for Highlighting element in
+   * navigation bar when route is active
+   */
+  public get isAddEntryActive(): boolean {
+    return this.routerService.current === AppRoutes.AddEntry;
   }
 
   /**
@@ -54,20 +63,47 @@ export class NavBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Show/Hide Admin Tools Button.
-   * This value will only change 
+  * Used for Highlighting element in
+  * navigation bar when route is active
+  */
+  public get isInventoryActive(): boolean {
+    return this.routerService.current === AppRoutes.Inventory;
+  }
+
+  /**
+   * Used for Highlighting element in
+   * navigation bar when route is active
+   */
+  public get isAddObservationActive(): boolean {
+    return this.routerService.current === AppRoutes.AddObservation;
+  }
+
+  /**
+   * Show/Hide Add new observation button
+   * This value will only change
    * when is called ngOnInit().
    * if you wish to manually refresh,
-   * call this.setAccessType(). 
+   * call this.setAccessType().
+   */
+  public get isDataEditor(): boolean {
+    return this.roles.canCreate(this.accessType);
+  }
+
+  /**
+   * Show/Hide Admin Tools Button.
+   * This value will only change
+   * when is called ngAfterViewInit().
+   * if you wish to manually refresh,
+   * call this.setAccessType().
    */
   public get isAdmin(): boolean {
-    return (this.accessType == UserAccessType.Admin);
+    return (this.accessType === UserAccessType.Admin);
   }
 
   /**
    * Show/Hide Add observation button
-   * This value will only change 
-   * when is called ngOnInit().
+   * This value will only change
+   * when is called ngAfterViewInit().
    * * If you wish to manually refresh,
    * call this.setAccessType().
    * * If you wish to refresh often:
@@ -76,23 +112,21 @@ export class NavBarComponent implements OnInit, OnDestroy {
    */
   public get hasDataEntryAccess(): boolean {
     return (
-      this.accessType == UserAccessType.Admin ||
-      this.accessType == UserAccessType.DataEditor
-      );
+      this.accessType === UserAccessType.Admin ||
+      this.accessType === UserAccessType.DataEditor
+    );
   }
 
-  constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService) { }
+  constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService, private roles: RolesService) { }
 
   ngOnInit() {
-    
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.setInitials();
     this.setAccessType();
     this.listenForRouteChanges();
   }
-
 
   ngOnDestroy() {
     this.endRouteEventsListener();
@@ -100,9 +134,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   /**
    * For refreshing navbar content that
-   * may change based on user's 
+   * may change based on user's
    * interactions with the app
-   */ 
+   */
   private listenForRouteChanges() {
     this.routeEventsListener = this.routerService.events.subscribe((val) => {
       this.setInitials();
@@ -118,31 +152,24 @@ export class NavBarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Setting User's initials in 
+   * Setting User's initials in
    * userInitials to be consumed by HTML
    */
-  private setInitials() {
-    this.userService.getInitials().then((value) => {
-      this.userInitials = value;
-      }
-    );
+  private async setInitials() {
+    this.userInitials = await this.userService.getInitials();
   }
 
   /**
-   * Setting User's initials in 
-   * userInitials to be consumed by HTML
+   * Setting User's access type
    */
-  private setAccessType() {
-    this.userService.getAccess().then((value) => {
-      this.accessType = value;
-      }
-    );
+  private async setAccessType() {
+    this.accessType = await this.userService.getAccess();
   }
 
   /**
-   * SSO's logout function will 
-   * Remove cookies, 
-   * end refresh timer, 
+   * SSO's logout function will
+   * Remove cookies,
+   * end refresh timer,
    * and end keycloak session
    * by redirecting to an external
    * and redirecting back.
@@ -165,8 +192,24 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.routerService.navigateTo(AppRoutes.AdminTools);
   }
 
-  navigateToNewObservation() {
-    
+  /**
+   * Navigate to Add Observation Component
+   */
+  navigateToAddEntry() {
+    this.routerService.navigateTo(AppRoutes.AddEntry);
   }
 
+  /**
+   * Navigate to Add Observation Component
+   */
+  navigateToAddObservation() {
+    this.routerService.navigateTo(AppRoutes.AddObservation);
+  }
+
+  /**
+   * Navigate to Inventory Component
+   */
+  navigateToInventory() {
+    this.routerService.navigateTo(AppRoutes.Inventory);
+  }
 }
