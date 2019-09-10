@@ -164,7 +164,7 @@ metadata:
   selfLink: ""
 parameters:
 - name: NAME
-  value: lucy-app
+  value: invasivebc-app
 - name: SUFFIX
   value: "dev"
 - name: VERSION
