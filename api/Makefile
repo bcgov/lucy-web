@@ -122,7 +122,7 @@ deploy-remote-api:
 	@cd ./.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV
 deploy-remote-app:
 	@echo "+\n++ Make: Deploying APP with ref = $$PR and env=$$ENV"
-	@cd ../app/.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV
+	@cd ../app/.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV --type=static
 sonarqube:
 	@echo "+\n Make: Sonarqube analysis"
 	@mkdir -p ~/.docker-vol/sonarqube/data
