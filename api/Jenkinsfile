@@ -52,6 +52,13 @@ pipeline {
                 }
             }
         }
+        stage('Pre Deploy (Dev)') {
+            agent { label 'deploy' }
+            steps {
+                echo "Deploying Postgress DB"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev"
+            }
+        }
         stage('Deploy (DEV) API') {
             agent { label 'deploy' }
             steps {
@@ -69,7 +76,7 @@ pipeline {
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
             }
         }
-        stage('Deploy (Dev) API Static link') {
+        stage('Pre-Deploy (Dev) Static link') {
             agent {
                 label 'deploy'
             }
@@ -77,12 +84,11 @@ pipeline {
                 environment name : 'CHANGE_TARGET', value: 'dev'
             }
             steps {
-                echo "Deploying [dev] Branch ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static"
+                echo "Deploying Postgress [STATIC] ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
             }
         }
-        stage('Deploy (DEV) APP Static link') {
+        stage('Deploy (Dev) API/APP Static link') {
             agent {
                 label 'deploy'
             }
@@ -90,8 +96,24 @@ pipeline {
                 environment name : 'CHANGE_TARGET', value: 'dev'
             }
             steps {
-                echo "Deploying APP..."
+                echo "Deploying API [dev] Branch ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                echo "Deploying dev tools"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static"
+                echo "Deploying APP[dev]..."
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+            }
+        }
+        stage('Pre-Deploy (Test)') {
+            agent {
+                label 'deploy'
+            }
+            when {
+                environment name : 'CHANGE_TARGET', value: 'staging'
+            }
+            steps {
+                echo "Deploying Postgress [TEST] ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
             }
         }
         stage('Deploy (TEST) API/APP') {
