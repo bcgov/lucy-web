@@ -118,8 +118,9 @@ build-remote-app:
 	@echo "+\n++ Make: Building APP with ref = $$PR"
 	@cd ../app/.pipeline && DEBUG=* npm run build -- --pr=$$PR
 deploy-remote-api:
-	@echo "+\n++ Make: Deploying API with ref = $$PR and env=$$ENV"
-	@cd ./.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV
+	@echo "+\n++ Make: Deploying API with ref = $$PR and env=$$ENV type=$$TYPE"
+	@cd ./.pipeline && DEBUG=* npm run pre-deploy -- --pr=$$PR --env=$$ENV
+	@cd ./.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV --type=static
 deploy-remote-app:
 	@echo "+\n++ Make: Deploying APP with ref = $$PR and env=$$ENV"
 	@cd ../app/.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV --type=static
