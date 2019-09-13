@@ -94,7 +94,7 @@ export class UserSessionDataController extends DataModelController<UserSession> 
      * @description Getter for shared instance
      */
     public static get shared(): UserSessionDataController {
-        return this.sharedInstance<UserSession>(UserSession, UserSessionSchema);
+        return this.sharedInstance<UserSession>(UserSession, UserSessionSchema) as UserSessionDataController;
     }
 }
 

@@ -20,7 +20,7 @@
  * Imports
  */
 import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
-import { ApplicationCode } from './user';
+import { ApplicationCode } from './generic.data.models';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { JurisdictionCodeSchema } from '../database-schema';
 

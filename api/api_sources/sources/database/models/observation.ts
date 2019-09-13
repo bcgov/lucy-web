@@ -20,7 +20,7 @@
  * Imports
  */
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, OneToMany } from 'typeorm';
-import { Record } from './user';
+import { Record } from './generic.data.models';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
 import { SpeciesAgencyCode } from './speciesAgency.code';

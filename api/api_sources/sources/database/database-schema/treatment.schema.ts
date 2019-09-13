@@ -84,6 +84,10 @@ export class TreatmentProviderContractorSchema extends TreatmentSchema {
         });
     }
 
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+
     entryString(input?: string, context?: string): string {
         const columns = this.table.columns;
         return `${columns.registrationNumber},` +

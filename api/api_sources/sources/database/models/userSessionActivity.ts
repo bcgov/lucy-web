@@ -126,7 +126,7 @@ export class SessionActivityController extends DataModelController<SessionActivi
      * @description Getter for shared instance
      */
     public static get shared(): SessionActivityController {
-        return this.sharedInstance<SessionActivity>(SessionActivity, SessionActivitySchema);
+        return this.sharedInstance<SessionActivity>(SessionActivity, SessionActivitySchema) as SessionActivityController;
     }
 }
 // ----------------------------------------------------------------------------------------------------------------

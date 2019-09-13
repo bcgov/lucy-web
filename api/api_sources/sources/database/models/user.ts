@@ -20,7 +20,16 @@
  * Imports
  */
  // Lib Import
-import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn, AfterLoad, ObjectLiteral} from 'typeorm';
+import {
+    Column,
+    Entity,
+    OneToMany,
+    JoinTable,
+    PrimaryGeneratedColumn,
+    ManyToMany,
+    OneToOne,
+    AfterLoad
+} from 'typeorm';
 
 // Local Import
 import { BaseModel } from './baseModel';
@@ -31,7 +40,6 @@ import { UserSchema, RolesCodeTableSchema} from '../database-schema';
 import { UserMessage } from './userMessage';
 import { RequestAccess } from './requestAccess';
 import {  ModelProperty, PropertyType } from '../../libs/core-model';
-import { RecordTableSchema, CodeTableSchema } from '../database-schema/base.record.schema';
 
 
 /**
@@ -156,51 +164,6 @@ export class User extends BaseModel  {
     @AfterLoad()
     async entityDidLoad() {
         this.existingRequestAccess = await this.requestAccess;
-    }
-}
-
-/**
- * @description Base class for record
- */
-export abstract class Record extends BaseModel {
-    @ManyToOne( type => User, {eager : true})
-    @JoinColumn({
-        name: RecordTableSchema.auditColumns.createdBy,
-        referencedColumnName: UserSchema.schema.columns.id
-    })
-    createdBy: User;
-
-    @ManyToOne( type => User, { eager: true})
-    @JoinColumn({
-        name: RecordTableSchema.auditColumns.updatedBy,
-        referencedColumnName: UserSchema.schema.columns.id
-    })
-    updatedBy: User;
-}
-
-export abstract class ApplicationCode extends Record {
-    @Column({ name: CodeTableSchema.codeColumns.description, nullable: true })
-    @ModelProperty({type: PropertyType.string})
-    description: string;
-
-    @Column({ name: CodeTableSchema.codeColumns.activeIndicator, nullable: false})
-    @ModelProperty({type: PropertyType.boolean})
-    activeIndicator: boolean;
-}
-
-export class RecordController<T extends Record> extends DataModelController<T> {
-    async createNewObject(spec: any, creator: User, ...other: any[]): Promise<T> {
-        const newObj: T = spec as T;
-        newObj.createdBy = creator;
-        newObj.updatedBy = creator;
-        await this.saveInDB(newObj);
-        return newObj;
-    }
-
-    async updateObject(existing: T, update: ObjectLiteral, modifier: User): Promise<T> {
-        existing.updatedBy = modifier;
-        await this.updateObj<ObjectLiteral>(existing, update);
-        return existing;
     }
 }
 

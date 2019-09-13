@@ -321,7 +321,7 @@ export class BaseRoutController<Controller extends DataController>  {
                 assert(data, `Unexpected request body: tag:${tag}`);
                 const [status, body]  = await handler(data, req, resp);
                 if (status > 0) {
-                    this.logger.info(`${tag}: [DONE]`);
+                    this.logger.info(`${tag}: [DONE]: ${status}`);
                     return resp.status(status).json(this.successResp(body));
                 } else {
                     this.logger.error(`${tag}: [FAIL]`);

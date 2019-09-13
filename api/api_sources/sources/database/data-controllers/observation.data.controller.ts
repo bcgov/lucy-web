@@ -20,8 +20,21 @@
  * Imports
  */
 import { DataModelController } from '../data.model.controller';
-import { Observation, Species, JurisdictionCode, User, ObservationCreateModel, ObservationUpdateModel, MechanicalTreatmentController, MechanicalTreatment } from '../models';
-import { ObservationSchema, SpeciesSchema, JurisdictionCodeSchema } from '../database-schema';
+import {
+    Observation,
+    Species,
+    JurisdictionCode,
+    User,
+    ObservationCreateModel,
+    ObservationUpdateModel,
+    MechanicalTreatmentController,
+    MechanicalTreatment
+} from '../models';
+import {
+    ObservationSchema,
+    SpeciesSchema,
+    JurisdictionCodeSchema
+} from '../database-schema';
 import { ifDefined, setNull } from '../../libs/utilities';
 
 /**
@@ -67,7 +80,7 @@ export class ObservationController extends DataModelController<Observation> {
      */
     async createObservation(createModel: ObservationCreateModel, user: User): Promise<Observation> {
         // Create new observation
-        const observation: Observation = createModel as Observation;
+        const observation: Observation = this.newObject(createModel);
 
         // Saving audit
         observation.createdBy = user;
