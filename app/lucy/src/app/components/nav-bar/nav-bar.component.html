@@ -32,11 +32,11 @@
         <!-- Other Navar elements  -->
         <!-- View Database -->
         <li *ngIf="( isAuthenticated && isProfileActive )" class="nav-item">
-          <a class="nav-link" [ngClass]="isInventoryActive ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToInventory()">View Database</a>
+          <a class="nav-link" [ngClass]="( isInventoryActive && isProfileActive ) ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToInventory()">View Database</a>
         </li>
         <!-- Admin Tools -->
         <li *ngIf="isAdmin" class="nav-item">
-          <a class="nav-link" [ngClass]="isAdminToolsActive ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToAdminTools()">Admin Tools</a>
+          <a class="nav-link" [ngClass]="( isAdminToolsActive && isProfileActive ) ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToAdminTools()">Admin Tools</a>
         </li>
         <!-- Create Observation  -->
         <li *ngIf="isDataEditor" class="nav-item" [class.active]="isAddObservationActive">
@@ -44,12 +44,12 @@
         </li>
       </ul>
       <!-- User Menu for FULL SIZE NAVBAR-->
-      <ul *ngIf="( isAuthenticated && isProfileActive )" class="navbar-nav">
+      <ul *ngIf="isAuthenticated" class="navbar-nav">
         <li class="nav-item">
           <div class="user-actions-large">
             <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item class="btn-with-icon"  [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'" 
+              <button mat-menu-item class="btn-with-icon"  
               (click)="navigateToProfile()">
                 Profile 
                 <i class="material-icons">account_circle</i>
