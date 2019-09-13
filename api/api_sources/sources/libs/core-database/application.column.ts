@@ -1,3 +1,5 @@
+import { schemaForTable } from './schema.storage';
+
 /*
  * Copyright © 2019 Province of British Columbia
  * Licensed under the Apache License, Version 2.0 (the "License")
@@ -45,6 +47,7 @@ export interface TableColumnDefinition {
     deleteCascade?: boolean;
     refModel?: string;
     refSchema?: string;
+    required?: boolean;
 }
 
 
@@ -61,7 +64,17 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     deleteCascade?: boolean;
     refSchema?: string;
     refModel?: string;
-    constructor(name: string, comment: string, definition?: string, foreignTable?: string, refColumn?: string, deleteCascade?: boolean, refSchema?: string, refModel?: string) {
+    required = true;
+    constructor(
+        name: string,
+        comment: string,
+        definition?: string,
+        foreignTable?: string,
+        refColumn?: string,
+        deleteCascade?: boolean,
+        refSchema?: string,
+        refModel?: string,
+        required?: boolean) {
         this.name = name;
         this.comment = comment;
         this.definition = definition;
@@ -69,6 +82,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         this.refColumn = refColumn;
         this.deleteCascade = deleteCascade;
         this.refSchema = refSchema;
+        this.required = required || true;
         if (refSchema) {
             this.refModel = refSchema.split('Schema')[0];
         }
@@ -122,33 +136,58 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     }
 
     get typeDetails(): any {
-        if (this.foreignTable) {
-            return {
-                type: 'object',
-                schema: this.refSchema
-            };
-        }
+        let typeInfo: any = {};
         let def = this.definition || '';
         def = def.toLowerCase();
         if (def.includes('varchar')) {
             // Method to extract size
-            // var regx = /^varchar\([0-9]+\)/g;
-            // var regx1 = /^\([0-9]+\)/g;
+            const regx = /^varchar\([0-9]+\)/g;
+            const regx1 = /^\([0-9]+\)/g;
+            const match = def.match(regx) || [''];
+            const matchSize = match[0].match(regx1) || ['50'];
             // var ch = (ip) => { const m1 = ip.match(regx)[0]; return m1.match(regx1)[0];};
-            return {
-                type: 'string'
+            typeInfo = {
+                type: typeof def,
+                size: parseInt(matchSize[0], undefined)
             };
         } else if (def.includes('serial') || def.includes('numeric')) {
-            return 'number';
+            typeInfo = {
+                type: typeof 1.0,
+                subType: 'numeric'
+            };
         } else if (def.includes('boolean')) {
-            return 'boolean';
+            typeInfo = {
+                type: typeof true
+            };
         } else if (def.includes('int') || def.includes('smallint')) {
-            return 'number';
+            typeInfo = {
+                type: typeof 1,
+                subType: 'int'
+            };
         } else if (def.includes('date') || def.includes('day')) {
-            return 'string';
+            typeInfo = {
+                type: typeof 'str',
+                subType: 'date',
+                isDate: true
+            };
         } else {
-            return 'object';
+            typeInfo = {
+                type: 'object',
+                info: 'unknown'
+            };
         }
+
+        if (this.foreignTable) {
+            typeInfo = {
+                type: 'object',
+                schema: this.refSchema || schemaForTable(this.foreignTable)
+            };
+        }
+
+        typeInfo.required = this.required;
+        return typeInfo;
     }
 
 }
+
+// --------------------------------------------------------------------------------

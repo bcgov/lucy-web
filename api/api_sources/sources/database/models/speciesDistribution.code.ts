@@ -26,7 +26,7 @@ import { Column, Entity, PrimaryColumn} from 'typeorm';
 import { SpeciesDistributionCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
-import { ApplicationCode } from './user';
+import { ApplicationCode } from './generic.data.models';
 
 /**
  * @description Species Distribution Code data model

@@ -6,9 +6,11 @@ schemas:
     columns:
       id:
         comment: Sample column pk
+        required: true
         name: sample_id
         definition: SERIAL PRIMARY KEY
       name:
         comment: Name of the sample
+        required: true
         name: sample_name
         definition: VARCHAR(20) NULL

@@ -49,7 +49,7 @@ import {
 	MechanicalTreatmentIssueCode,
 	TreatmentProviderContractor
 } from '../models';
-import { Record, RecordController } from './user';
+import { Record } from './generic.data.models';
 import { NumericTransformer } from '../../libs/transformer';
 
 
@@ -297,19 +297,19 @@ export class MechanicalTreatment extends Record {
 /**
  * @description Data Model Controller Class for MechanicalTreatmentSchema and MechanicalTreatment
  */
-export class MechanicalTreatmentController extends RecordController<MechanicalTreatment> {
-	/**
-	* @description Getter for shared instance
-	*/
-	public static get shared(): MechanicalTreatmentController {
-		return this.sharedInstance<MechanicalTreatment>(MechanicalTreatment, MechanicalTreatmentSchema) as MechanicalTreatmentController;
-	}
+// export class MechanicalTreatmentController extends RecordController<MechanicalTreatment> {
+// 	/**
+// 	* @description Getter for shared instance
+// 	*/
+// 	public static get shared(): MechanicalTreatmentController {
+// 		return this.sharedInstance<MechanicalTreatment>(MechanicalTreatment, MechanicalTreatmentSchema) as MechanicalTreatmentController;
+// 	}
 
-	async all(query?: object): Promise<MechanicalTreatment[]> {
-		// console.log('*** 1a');
-		// console.dir(query);
-        return super.all(query);
-    }
-}
+// 	async all(query?: object): Promise<MechanicalTreatment[]> {
+// 		// console.log('*** 1a');
+// 		// console.dir(query);
+//         return super.all(query);
+//     }
+// }
 
 // -------------------------------------

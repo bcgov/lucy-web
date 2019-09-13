@@ -27,7 +27,7 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ProposedActionCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
-import { ApplicationCode } from './user';
+import { ApplicationCode } from './generic.data.models';
 /**
  * @description Data Model Class for ProposedActionCodeSchema
  */

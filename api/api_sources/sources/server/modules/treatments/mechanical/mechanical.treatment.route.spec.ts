@@ -27,6 +27,7 @@ import {
     should,
     expect
 } from 'chai';
+import * as request from 'supertest';
 import { SharedExpressApp } from '../../../initializers';
 import {
     verifySuccessBody,
@@ -49,6 +50,8 @@ import {
     MechanicalTreatmentSpec,
     MechanicalTreatmentUpdateSpec
 } from '../../../../database/models';
+import { viewerToken } from '../../../../test-helpers/token';
+// import { request } from 'http';
 
 
 describe('Test for mechanical treatment', () => {
@@ -71,6 +74,7 @@ describe('Test for mechanical treatment', () => {
             send: createReq
         })
         .then(async (resp) => {
+            // console.dir(resp.body);
             await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.mechanical_treatment_id);
                 should().exist(data.species);
@@ -155,22 +159,6 @@ describe('Test for mechanical treatment', () => {
         });
     });
 
-    it('should fetch mechanical treatments {single} for any user', async () => {
-        const mt = await mechanicalTreatmentFactory();
-        await testRequest(SharedExpressApp.app , {
-            url: `/api/treatment/mechanical/${mt.mechanical_treatment_id}`,
-            type: HttpMethodType.get,
-            expect: 200,
-            auth: AuthType.viewer
-        })
-        .then(async (resp) => {
-            await verifySuccessBody(resp.body, async data => {
-                expect(data.mechanical_treatment_id).to.be.equal(mt.mechanical_treatment_id);
-            });
-            await destroyMechanicalTreatment(mt);
-        });
-    });
-
     it('should update mechanical treatment for {admin}', async () => {
         const mt = await mechanicalTreatmentFactory();
         const create = await mechanicalTreatmentCreateSpecFactory();
@@ -198,6 +186,26 @@ describe('Test for mechanical treatment', () => {
             });
             await destroyMechanicalTreatment(mt);
         });
+    });
+
+    it('should fetch mechanical treatments {single} for any user', async () => {
+        let mt: any;
+        try {
+            mt = await mechanicalTreatmentFactory();
+        } catch (excp) {
+            console.log(`${excp}`);
+        }
+
+        await request(SharedExpressApp.app)
+            .get(`/api/treatment/mechanical/${mt.mechanical_treatment_id}`)
+            .set('Authorization', `Bearer ${viewerToken()}`)
+            .expect(200)
+            .then(async (resp) => {
+                await verifySuccessBody(resp.body, async data => {
+                    expect(data.mechanical_treatment_id).to.be.equal(mt.mechanical_treatment_id);
+                });
+                await destroyMechanicalTreatment(mt);
+            });
     });
 });
 

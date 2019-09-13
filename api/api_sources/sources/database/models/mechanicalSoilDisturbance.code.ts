@@ -5,6 +5,7 @@ import { MechanicalSoilDisturbanceCodeSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
+import { Record } from './generic.data.models';
 
 
 /** Interface **/
@@ -39,7 +40,7 @@ export interface MechanicalSoilDisturbanceCodeUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: MechanicalSoilDisturbanceCodeSchema.dbTable} )
-export class MechanicalSoilDisturbanceCode {
+export class MechanicalSoilDisturbanceCode extends Record {
 
 	/**
 	 * Class Properties

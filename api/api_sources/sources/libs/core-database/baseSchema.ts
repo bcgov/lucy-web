@@ -36,6 +36,7 @@ import {
     TableColumnDefinition
 } from './application.column';
 import { ApplicationTable } from './application.table';
+import { registerSchema } from './schema.storage';
 
 export interface TableColumnOption extends TableColumnDefinition {
     refSchemaObject?: BaseSchema;
@@ -76,8 +77,32 @@ export class  BaseSchema {
         return '';
     }
 
+    /**
+     * className
+     * @description Class name of schema
+     */
     public get className(): string {
         return this.constructor.name;
+    }
+
+    /**
+     * modelName
+     * @description Model class name related to schema
+     */
+    public get modelName(): string {
+        return this.className.split('Schema')[0];
+    }
+
+    public get hasDefaultValues(): boolean {
+        return false;
+    }
+
+    /**
+     * tableName
+     * @description Table name related to schema
+     */
+    public get tableName(): string {
+        return this.table.name;
     }
 
     /**
@@ -85,17 +110,20 @@ export class  BaseSchema {
      */
     constructor() {
         let loadedFromFile = false;
+        // Load from file
         if (this.schemaFilePath && this.schemaFilePath !== '' && fs.existsSync(this.schemaFilePath)) {
             loadedFromFile = this.loadSchema();
         }
 
+        // Load from define table
         if (!loadedFromFile) {
             this.table = this.defineTable();
             this.joinTables = this.defineJoinTable();
         }
         assert(this.table.id, `No {id} column for schema ${this.table.name}`);
-        // Check table name
 
+        // Register schema
+        registerSchema(this);
     }
 
     loadSchema(): boolean {

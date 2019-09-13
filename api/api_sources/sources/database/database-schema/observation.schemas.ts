@@ -48,6 +48,10 @@ export class SpeciesSchema extends RecordTableSchema {
         return table;
     }
 
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+
     csvData(): Promise<any> {
         const csvData = new SpeciesCSVData();
         return csvData.load();
