@@ -30,13 +30,19 @@ import { ApplicationTable } from './application.table';
 import { BaseSchema } from './baseSchema';
 import { registerDataModelController } from './schema.storage';
 
+export interface ControllerMetaData {
+    modelName: string;
+    schemaName: string;
+}
 export interface BaseDataController {
     schema: ApplicationTable;
+    schemaObject: BaseSchema;
     dependencies: any[];
+    meta: ControllerMetaData;
     findById(id: number): Promise<any>;
     remove(object: any): Promise<void>;
     removeById( id: number): Promise<void>;
-    all(filter: any): Promise<any>;
+    all(filter?: any): Promise<any>;
     create(): any;
     saveInDB(obj: any): Promise<any>;
     random(): Promise<any>;
@@ -44,6 +50,8 @@ export interface BaseDataController {
     updateObject(existing: any, update: any, modifier: any, ...others: any[]): Promise<any>;
     factory (): Promise<any>;
 }
+
+
 
 /**
  * @description Base DataModelController. This class provides -
@@ -212,7 +220,14 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
     }
 
     get schemaObject(): BaseSchema {
-        return this.schemaInterface as BaseSchema;
+        return this.schemaInterface.shareInstance as BaseSchema;
+    }
+
+    get meta(): ControllerMetaData {
+        return {
+            modelName: this.schemaObject.modelName,
+            schemaName: this.schemaObject.className
+        };
     }
 
     async runQuery(query: string): Promise<void> {

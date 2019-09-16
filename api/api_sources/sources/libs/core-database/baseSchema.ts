@@ -36,7 +36,7 @@ import {
     TableColumnDefinition
 } from './application.column';
 import { ApplicationTable } from './application.table';
-import { registerSchema } from './schema.storage';
+import { registerSchema, schemaWithName } from './schema.storage';
 
 export interface TableColumnOption extends TableColumnDefinition {
     refSchemaObject?: BaseSchema;
@@ -138,9 +138,11 @@ export class  BaseSchema {
         table.name = def.name;
         table.description = def.description;
         table.columnsDefinition = {};
+        table.layout = def.layout;
+        table.meta = def.meta;
         _.each(def.columns, (value: TableColumnOption, key) => {
             const result = {};
-            result[key] = new ApplicationTableColumn(
+            const column: ApplicationTableColumn = new ApplicationTableColumn(
                 value.name,
                 value.comment,
                 value.definition,
@@ -148,8 +150,12 @@ export class  BaseSchema {
                 value.refColumn,
                 value.deleteCascade,
                 value.refSchema,
-                value.refModel
+                value.refModel,
             );
+            column.columnVerification = value.columnVerification;
+            column.meta = value.meta;
+            column.layout = value.layout;
+            result[key] = column;
             table.columnsDefinition = {...table.columnsDefinition, ...result};
         });
         assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
@@ -262,6 +268,47 @@ export class  BaseSchema {
 
     async csvData(context?: any): Promise<any> {
         throw new Error('Subclass must override');
+    }
+
+    config(skipDetail?: boolean): any {
+        const result: any = {};
+        result.schemaName = this.className;
+        result.modelName = this.modelName;
+        result.description = this.table.description;
+        result.meta = this.table.meta || {};
+        result.idKey = this.table.id;
+        if (skipDetail) {
+            return result;
+        }
+        result.layout = this.table.layout || {};
+        result.fields = [];
+        _.each(this.table.columnsDefinition, (col: ApplicationTableColumn, key: string) => {
+            if (key === 'id') {
+                return;
+            }
+            const typeDetails = col.typeDetails;
+            const verification = col.columnVerification || {};
+            const refSchema = col.refSchema || '';
+            const schemaObj: BaseSchema = schemaWithName(refSchema) || { config: () => {}};
+            const layout = col.layout || {};
+            verification.size = typeDetails.size;
+            verification.isDate = typeDetails.isDate;
+            layout.description = layout.description || col.comment;
+            layout.header = layout.header || key;
+
+            const field = {
+                key: key,
+                layout: layout,
+                meta: col.meta || {},
+                type: typeDetails.type || '',
+                verification: verification,
+                idKey: col.refColumn,
+                refSchema: schemaObj.config(true),
+                required: col.required || true
+            };
+            result.fields.push(field);
+        });
+        return result;
     }
 
     /**
