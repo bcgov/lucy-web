@@ -25,6 +25,9 @@ schemas:
     description: 'An observation describing the nature and extent of the species on the landscape. It may be collected by 1) an individual (a scientist or citizen) at the location, 2) a digital tracking device (airborne or ground based), or 3) an inferred analysis based on surrounding data.  An observation location provides an historical record of all surveys done regarding a particular species of invasive plant on the site. Provides a chronological recording of the change in distribution and density of invasive plants on the site.
     An area with confirmed ground sightings of invasive alien plants. This may be terrestrial (invasive plants on the ground) or aquatic (invasive plants in lakes, streams or other water-bodies). Within this inventory area, all roads accessible by a four-wheel drive vehicle that cross potential habitat will be checked for occurrences of invasive plants. Plants on both sides of the road will be identified as far as can be seen from the road, or as defined for specific inventory projects. In addition, all major disturbances including but not limited to landings, log sort yards, burned areas, gravel pits, air strips, landfills, parking lots, construction or maintenance sites and recreational sites and trails within the potential habitat will be checked.'
     baseSchema: RecordSchema
+    meta: 
+      resource: true
+      api: api/observation
     columns: 
       # -- Regular Columns
       id: 
