@@ -25,6 +25,9 @@ import * as schemas from './database-schema';
 
 let _schemaMap: any;
 
+/**
+ * @description Load all schema into a map
+ */
 export const appSchemaMap = () => {
     if (_schemaMap) {
         return _schemaMap;
