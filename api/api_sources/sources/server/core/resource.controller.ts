@@ -97,8 +97,6 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
 
             // Configuring Update Route
             this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
-
-            
         }
     }
 
