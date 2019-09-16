@@ -207,6 +207,26 @@ describe('Test for mechanical treatment', () => {
                 await destroyMechanicalTreatment(mt);
             });
     });
+
+    it('should fetch mechanical treatment resource config', async () => {
+        await testRequest(SharedExpressApp.app, {
+            url: `/api/treatment/mechanical/config`,
+            type: HttpMethodType.get,
+            expect: 200,
+            auth: AuthType.viewer
+        })
+        .then(async (resp) => {
+            verifySuccessBody(resp.body, async data => {
+                should().exist(data.idKey);
+                should().exist(data.layout);
+                should().exist(data.meta);
+                should().exist(data.fields);
+                should().exist(data.schemaName);
+                should().exist(data.modelName);
+                should().exist(data.description);
+            });
+        });
+    });
 });
 
 // -----------------------------------------------------------------

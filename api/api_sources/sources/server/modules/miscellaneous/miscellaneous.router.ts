@@ -74,7 +74,7 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
         }
     })
     get version(): RouteHandler {
-        return this.routeConfig<any>('version', async () => [200, { version: process.env.VERSION || `0.-1`}]);
+        return this.routeConfig<any>('version', async () => [200, { version: process.env.VERSION || `0.0.1`}]);
     }
 
     @Route({

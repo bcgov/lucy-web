@@ -18,6 +18,64 @@ schemas:
     description: 'An application of a mechanical or cultural control. Mechanical weed control employs various implements and techniques to physically disturb weeds or to interrupt their reproduction by depleting root reserves through repeated defoliation of the plant. Mechanical control includes the mowing, ploughing, chopping, and crushing of weeds.
     Cultural control includes selective grazing, irrigation and deliberate flooding, mulching, hand pulling, and burning. Strategies and timing should depend on the weed species and its location in the province.'
     baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: api/treatment/mechanical
+    layout:
+      title: 'Mechanical Treatment'
+      sections: 
+        - title: 'Basic Elements'
+          groups:
+            - title: Location
+              fields: 
+                - latitude
+                - latitude
+              style: {}
+            - title: Applicator Information
+              fields:
+                - applicatorFirstName
+                - applicatorLastName
+                - secondaryApplicatorFirstName
+                - secondaryApplicatorLastName
+                - providerContractor
+              style: {}
+            - title: Time and Reference
+              fields: 
+                - date
+                - paperFileReference
+              style: {}
+            - title: Geometry
+              fields:
+                - width
+                - length
+              style: {}
+        # End-Section
+        - title: 'Treatment Details'
+          groups:
+            - title: Species 
+              fields: 
+                - species
+                - speciesAgency
+                - observation
+              style: {}
+            - title: Method and techniques
+              fields:
+                - mechanicalMethod
+                - mechanicalDisposalMethod
+                - rootRemoval
+              style: {}
+            - title: Issues
+              fields:
+                - soilDisturbance
+                - issue
+              style: {}
+            - title: Additional Information
+              fields:
+                - signageOnSiteIndicator
+                - comment
+              style: {}
+        # End-Section
+    # End Of Layouts
     columns: 
       # -- Data Columns
       id: 
@@ -28,51 +86,112 @@ schemas:
         name: 'mechanical_treatment_location_latitude'
         comment: 'Latitude of treatment  location'
         definition: NUMERIC(8, 6) NOT NULL
+        meta: {}
+        layout:
+          header: 'Latitude'
+          description: ''
+          classes:
+            - none
       longitude:
         name: 'mechanical_treatment_location_longitude'
         comment: 'Longitude of treatment location'
         definition: NUMERIC(9, 6) NOT NULL
+        meta: {}
+        layout:
+          header: 'Longitude'
+          classes:
+            - none
       width:
         name: 'mechanical_treatment_area_width'
         comment: 'Width of the area of treatment'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        meta: {}
+        layout:
+          header: 'Width'
+          classes:
+            - none
       length:
         name: 'mechanical_treatment_area_length'
         comment: 'Length of the area of treatment'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        meta: {}
+        layout:
+          header: 'Length'
+          classes:
+            - none
       applicatorFirstName: 
         name: 'applicator_first_name'
         comment: 'First name of the applicator'
         definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 'Applicator First Name'
+          classes:
+            - none
       applicatorLastName: 
         name: 'applicator_last_name'
         comment: 'Last name of the applicator'
         definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 'Applicator Last Name'
+          classes:
+            - none
       secondaryApplicatorFirstName: 
         name: 'secondary_applicator_first_name'
         comment: 'First name of the secondary applicator'
         definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 'Secondary Applicator First Name'
+          classes:
+            - none
       secondaryApplicatorLastName: 
         name: 'secondary_applicator_last_name'
         comment: 'Last name of the secondary applicator'
         definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 'Secondary Applicator Last Name'
+          classes:
+            - none
       date:
         name: mechanical_treatment_date
         comment: 'Date of the treatment'
         definition: DATE NOT NULL
+        meta: {}
+        layout:
+          header: 'Date'
+          classes:
+            - none
       paperFileReference:
         name: mechanical_treatment_paper_file_ref
         comment: 'Paper file reference associated with treatment'
         definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 'Paper File Ref'
+          classes:
+            - none
       comment:
         name: mechanical_treatment_comment
         comment: 'Comment on treatment record'
         definition: VARCHAR(500) NULL
+        meta: {}
+        layout:
+          header: 'Comment'
+          classes:
+            - none
       # -- Indicators --
       signageOnSiteIndicator:
         name: signage_on_site_ind
         comment: 'Sign collected for on site indicator'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        meta: {}
+        layout:
+          header: 'Sign collected'
+          classes:
+            - none
       ## -- Relationship columns
       observation:
         name: 'observation_id'
@@ -81,6 +200,11 @@ schemas:
         foreignTable: observation
         refColumn: observation_id
         deleteCascade: true
+        meta: {}
+        layout:
+          header: 'Observation'
+          classes:
+            - none
       species:
         name: 'species_id'
         comment: 'Species associated with a treatment'
@@ -88,6 +212,11 @@ schemas:
         foreignTable: species
         refColumn: species_id
         deleteCascade: true
+        meta: {}
+        layout:
+          header: 'Species'
+          classes:
+            - none
       speciesAgency:
         name: 'species_agency_code_id'
         comment: Foreign key reference to Species Agency Code table 
@@ -95,6 +224,11 @@ schemas:
         foreignTable: species_agency_code
         refColumn: species_agency_code_id
         deleteCascade: false
+        meta: {}
+        layout:
+          header: 'Species Agency'
+          classes:
+            - none
       mechanicalMethod:
         name: 'mechanical_method_code_id'
         comment: Foreign key reference to Mechanical Method Code table 
@@ -102,6 +236,11 @@ schemas:
         foreignTable: mechanical_method_code
         refColumn: mechanical_method_code_id
         deleteCascade: false
+        meta: {}
+        layout:
+          header: 'Mechanical Method'
+          classes:
+            - none
       mechanicalDisposalMethod:
         name: 'mechanical_disposal_method_code_id'
         comment: Foreign key reference to Mechanical Disposal Method Code table 
@@ -109,6 +248,11 @@ schemas:
         foreignTable: mechanical_disposal_method_code
         refColumn: mechanical_disposal_method_code_id
         deleteCascade: false
+        meta: {}
+        layout:
+          header: 'Mechanical Disposal Methods'
+          classes:
+            - none
       soilDisturbance:
         name: 'mechanical_soil_disturbance_code_id'
         comment: Foreign key reference to Mechanical Soil Disturbance code 
@@ -116,6 +260,11 @@ schemas:
         foreignTable: mechanical_soil_disturbance_code
         refColumn: mechanical_soil_disturbance_code_id
         deleteCascade: false
+        meta: {}
+        layout:
+          header: 'Mechanical Soil Disturbance'
+          classes:
+            - none
       rootRemoval:
         name: 'mechanical_root_removal_code_id'
         comment: Foreign key reference to Mechanical Root Removal Code table
@@ -123,6 +272,11 @@ schemas:
         foreignTable: mechanical_root_removal_code
         refColumn: mechanical_root_removal_code_id
         deleteCascade: false
+        meta: {}
+        layout:
+          header: 'Root Removal'
+          classes:
+            - none
       issue:
         name: 'mechanical_treatment_issue_code_id'
         comment: Foreign key reference to Mechanical Treatment Issue Code table
@@ -130,6 +284,11 @@ schemas:
         foreignTable: mechanical_treatment_issue_code
         refColumn: mechanical_treatment_issue_code_id
         deleteCascade: false
+        meta: {}
+        layout:
+          header: 'Issue'
+          classes:
+            - none
       providerContractor:
         name: 'treatment_provider_contractor_id'
         comment: Foreign key reference to Mechanical Treatment Provider Contractor table
@@ -137,6 +296,11 @@ schemas:
         foreignTable: treatment_provider_contractor
         refColumn: treatment_provider_contractor_id
         deleteCascade: false
+        meta: {}
+        layout:
+          header: 'Contractor'
+          classes:
+            - none
 
   ## --
   ## -- MechanicalMethodCodeSchema

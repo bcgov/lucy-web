@@ -33,8 +33,9 @@ export interface TableColumnVerification {
     regx?: string;
     max?: number;
     min?: number;
-    date?: boolean;
     dateFormat?: string;
+    size?: number;
+    isDate?: boolean;
 }
 
 
@@ -48,6 +49,9 @@ export interface TableColumnDefinition {
     refModel?: string;
     refSchema?: string;
     required?: boolean;
+    columnVerification?: TableColumnVerification;
+    meta?: any;
+    layout?: any;
 }
 
 
@@ -65,6 +69,9 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     refSchema?: string;
     refModel?: string;
     required = true;
+    columnVerification?: TableColumnVerification;
+    meta?: any;
+    layout?: any;
     constructor(
         name: string,
         comment: string,
@@ -142,7 +149,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         if (def.includes('varchar')) {
             // Method to extract size
             const regx = /^varchar\([0-9]+\)/g;
-            const regx1 = /^\([0-9]+\)/g;
+            const regx1 = /[0-9]+/g;
             const match = def.match(regx) || [''];
             const matchSize = match[0].match(regx1) || ['50'];
             // var ch = (ip) => { const m1 = ip.match(regx)[0]; return m1.match(regx1)[0];};

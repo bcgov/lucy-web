@@ -89,11 +89,16 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
             // Configuring View all Route with filter
             this.router.get(`/`, this.combineValidator(viewMiddleware), this.index);
 
+            // Configuring config route
+            this.router.get(`/config`, viewMiddleware, this.config);
+
             // Configuring View {single} Route
             this.router.get(`/:id`, this.combineValidator(this.idValidation(), viewMiddleware) , this.index);
 
             // Configuring Update Route
             this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
+
+            
         }
     }
 
@@ -111,6 +116,11 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
     get index(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: index`, async (d: any, req: any) => {
             return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
+        });
+    }
+    get config(): RouteHandler {
+        return this.routeConfig<any>(`${this.className}: config`, async () => {
+            return [200, this.dataController.schemaObject.config()];
         });
     }
 
