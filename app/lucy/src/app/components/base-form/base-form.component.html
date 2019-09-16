@@ -1,7 +1,8 @@
+   <div class="form-bg">
   <!-- Header Section  -->
   <div class="container-fluid header-container sticky">
     <div class="container header-container-inner">
-      <mat-toolbar color="primary">
+      <mat-toolbar>
         <mat-toolbar-row>
           <span class="view-title"> {{config["title"]}}</span>
           <span class="spacer-toolbar"></span>
@@ -31,9 +32,9 @@
     </div>
   </div>
   <!-- -------------------- -->
-  <div class="container">
-    <br />
-    <div *ngFor="let section of config.sections; let i = index" class="container">
+  <br/>
+   <div class="container form-body" *ngFor="let section of config.sections; let i = index">
+   <br/>
       <div class="row">
         <div class="col-12 section-title">
           {{section["title"]}}
@@ -44,26 +45,33 @@
         <div class="col-12 sub-section-title">
           {{subSection["title"]}}
         </div>
-        <div class="col-12" [ngClass]="subSection.boxed ? 'boxed' : ''">
-          <div *ngFor="let field of subSection.fields; let j = index">
-
-            <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]=""
-            (valueChanged)='fieldChanged(field, $event)'>
-            </app-field>
-            
-            <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [fieldHeader]="field.header"
-            [selectedItem]="organization" (selectionChanged)='fieldChanged(field, $event)'>
-            </app-dropdown>
-
-            <app-checkbox
-                *ngIf="field.isCheckbox"
-                [mode]="mode"
-                [header]="field.header"
-                [value]=""
-                (selectionChanged)='fieldChanged(field, $event)'>
-            </app-checkbox>
+        <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
+          <div class="row">
+            <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index">
+                <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]='field' (locationChanged)='fieldChanged(field, $event)'>
+                </app-location-input>
+                 <!-- Input field  -->
+                <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]=""
+                  (valueChanged)='fieldChanged(field, $event)'>
+                </app-field>
+                <!-- dropdown --->
+                <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [fieldHeader]="field.header"
+                [selectedItem]="organization" (selectionChanged)='fieldChanged(field, $event)'>
+                </app-dropdown>
+                <!-- checkbox -->
+                <div class="col">
+                <app-checkbox
+                    *ngIf="field.isCheckbox"
+                    [mode]="mode"
+                    [header]="field.header"
+                    [value]=""
+                    (selectionChanged)='fieldChanged(field, $event)'>
+                </app-checkbox>
+                </div>
+                
+              </div> 
           </div>
         </div>
       </div>
-    </div>
+   </div>
   </div>

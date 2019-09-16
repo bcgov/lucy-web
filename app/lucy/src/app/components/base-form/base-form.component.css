@@ -19,3 +19,64 @@
     width: 100%;
     border: 2px solid #E2A014;
 }
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+.sticky {
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.mat-toolbar {
+  background-color:rgba(0, 0, 0, 0);
+  color: #fff;
+}
+
+.header-container {
+    /* background: #002C71; */
+    margin: 0 auto;
+    width: 100%;
+    background: linear-gradient(135deg, #0053A4 0%, #002C71 100%);
+    box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+}
+
+.spacer-toolbar {
+    flex: 1 1 auto;
+}
+
+/* HANDELING SIDE NAV ON SCREEN SIZE CHANGE */
+@media (min-width: 992px) {
+
+}
+
+@media (max-width: 992px) {
+
+}
+
+/****************************************/
+@media (max-width: 768px) {
+
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .header-container-inner {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.form-bg {
+    background: #F5F6FA;
+    height: 100%;
+}
+
+.form-body {
+	border-radius: 5px;
+	background-color: #FFFFFF;
+	box-shadow: 0 0 5px 0 #E5E9F2;
+}
