@@ -17,17 +17,18 @@ import { AlertService } from "src/app/services/alert.service";
 import { RouterService } from "src/app/services/router.service";
 import { LoadingService } from "src/app/services/loading.service";
 import { DummyService } from "src/app/services/dummy.service";
-import { UserAccessType } from "src/app/models/Role";
-import { AppRoutes } from "src/app/constants";
+import { UserAccessType } from 'src/app/models/Role';
+import { AppRoutes } from 'src/app/constants';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 
 @Component({
-  selector: "app-base-form",
-  templateUrl: "./base-form.component.html",
-  styleUrls: ["./base-form.component.css"]
+  selector: 'app-base-form',
+  templateUrl: './base-form.component.html',
+  styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
   public componentName = ` `;
+  private responseBody = {};
 
   /**
    * User access type
@@ -215,6 +216,27 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.config = await this.createUIConfig();
   }
 
+  fieldChanged(field, event) {
+    if (field.isLocationField) {
+      // If its a location field
+      this.responseBody[field.latitude.key] = event.latitude.value;
+      this.responseBody[field.latitude.key] = event.longitude.value;
+    } else if (field.isDropdown) {
+      // If its a dropdown field
+      console.log(event.object);
+      for (const key in event.object) {
+        if (key.toLowerCase().indexOf('id') !== -1) {
+          this.responseBody[field.key] = event.object[key];
+        }
+      }
+    } else {
+      // Store key / value for regular field
+      this.responseBody[field.key] = event;
+    }
+
+    console.log(this.responseBody);
+  }
+
   private async createUIConfig(): Promise<any> {
     const serverMessage = this.getTestFormConfig();
     const sections = serverMessage['sections'];
@@ -228,8 +250,32 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       const subSections: any[] = [];
       for (const group of groups) {
         const subSectionFields: any[] = [];
+        let cachedLatOrLongField: any;
         for (const field of group.fields) {
-          subSectionFields.push(await this.configField(field, fields));
+          // Add type flags to field (to help with html generation)
+          const newField = await this.configField(field, fields);
+          if (newField.isLocationLatitudeField || newField.isLocationLongitudeField) {
+            // if its a latitude or logitude field, and we havent cached such field before, cache it
+            // if its already chached, generate special location field to add to subsection
+            if (cachedLatOrLongField) {
+              const cachedFieldIsLatitude = cachedLatOrLongField.isLocationLatitudeField === true;
+              const locationField = {
+                key: `location`,
+                isLocationField: true,
+                latitude: cachedFieldIsLatitude ? cachedLatOrLongField : newField,
+                longitude: cachedFieldIsLatitude ? newField : cachedLatOrLongField
+              };
+              subSectionFields.push(locationField);
+              console.log(`created locaction field`);
+              console.log(locationField);
+            } else {
+              cachedLatOrLongField = newField;
+            }
+          } else {
+
+            subSectionFields.push(newField);
+          }
+
         }
         subSections.push({
           title: group.title,
@@ -250,9 +296,21 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const field of fields) {
       if (field['key'] === key) {
         const response = field;
-        response.isDropdown = field.type === 'code';
-        response.isCheckbox = field.type === 'boolean';
-        response.isInputField = field.type === 'string' || field.type === 'number';
+        response.value = undefined;
+        // Handle location differently
+        response.isLocationLatitudeField = (field.key.toLowerCase() === 'lat' || field.key.toLowerCase() === 'latitude');
+        response.isLocationLongitudeField = (field.key.toLowerCase() === 'long' || field.key.toLowerCase() === 'longitude');
+        // If its not a location field, proceed
+        if (!response.isLocationLatitudeField && !response.isLocationLongitudeField) {
+          response.isDropdown = field.type === 'code';
+          response.isCheckbox = field.type === 'boolean';
+          response.isInputField = field.type === 'string' || field.type === 'number';
+        } else {
+          // if its a location field, set other field type flags to false.
+          response.isDropdown = false;
+          response.isCheckbox = false;
+          response.isInputField = false;
+        }
         if (response.isDropdown) {
           response.dropdown = await this.dropdownfor(field.codeTable);
         }
