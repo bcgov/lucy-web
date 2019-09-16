@@ -156,7 +156,7 @@ export class UserService {
   public async getOranization(): Promise<string> {
     // const user = await this.getUser();
     // return user.organization;
-    return `Ministry of Transportation`;
+    return `Ministry of Tranaportation`;
   }
 
   /**
