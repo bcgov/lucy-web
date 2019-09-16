@@ -22,7 +22,6 @@
  */
 
 import * as schemas from './database-schema';
-import { BaseSchema } from '../libs/core-database';
 
 let _schemaMap: any;
 
