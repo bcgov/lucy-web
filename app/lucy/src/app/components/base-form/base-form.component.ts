@@ -3,24 +3,17 @@ import {
   OnInit,
   Input,
   AfterViewChecked,
-  NgZone,
-  EventEmitter,
-  ViewChild,
-  ElementRef
 } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ErrorService, ErrorType } from 'src/app/services/error.service';
 import { UserService } from 'src/app/services/user.service';
 import { RolesService } from 'src/app/services/roles.service';
-import { ValidationService } from 'src/app/services/validation.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { RouterService } from 'src/app/services/router.service';
-import { LoadingService } from 'src/app/services/loading.service';
-import { DummyService } from 'src/app/services/dummy.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { AppRoutes } from 'src/app/constants';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
-import { FormService, FormConfigField } from 'src/app/services/form/form.service';
+import { FormService} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
 
 @Component({
