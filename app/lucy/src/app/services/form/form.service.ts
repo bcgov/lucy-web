@@ -6,15 +6,15 @@ import { DropdownObject, DropdownService } from '../dropdown.service';
 
 export interface FormConfigField {
   key: string;
-      header: string;
-      description: string;
-      required: boolean;
-      type: string;
-      verification: any;
-      meta: any;
-      cssClasses: string;
-      codeTable: string;
-      condition: string;
+  header: string;
+  description: string;
+  required: boolean;
+  type: string;
+  verification: any;
+  meta: any;
+  cssClasses: string;
+  codeTable: string;
+  condition: string;
 }
 
 export interface FormConfig {
@@ -38,17 +38,17 @@ export interface FormConfig {
     }[];
   };
   fields: {
-      key: string,
-      layout: {
-        header: string,
-        description: string,
-        classes: string[];
-      },
-      meta: {},
-      type: number,
-      verification: {},
-      required: true
-    }[];
+    key: string,
+    layout: {
+      header: string,
+      description: string,
+      classes: string[];
+    },
+    meta: {},
+    type: number,
+    verification: {},
+    required: true
+  }[];
 }
 
 @Injectable({
@@ -169,7 +169,7 @@ export class FormService {
         // Handle location differently
         fieldOfInterest.isLocationLatitudeField = (field.key.toLowerCase() === 'lat' || field.key.toLowerCase() === 'latitude');
         fieldOfInterest.isLocationLongitudeField = (field.key.toLowerCase() === 'long' || field.key.toLowerCase() === 'longitude');
-        
+
         // If its not a location field, proceed
         if (!fieldOfInterest.isLocationLatitudeField && !fieldOfInterest.isLocationLongitudeField) {
           // Set field type flag
@@ -214,7 +214,7 @@ export class FormService {
         }
         // if its a dropdown, grab its code table
         if (fieldOfInterest.isDropdown) {
-          fieldOfInterest.dropdown = await this.dropdownfor(field.codeTable);
+          fieldOfInterest.dropdown = await this.dropdownfor(fieldOfInterest.codeTable);
         }
         return fieldOfInterest;
       }
@@ -233,7 +233,7 @@ export class FormService {
     let codeTable = '';
     if (field.type === 'object') {
       isCodeTable = true;
-      codeTable = field.refSchema.schemaName;
+      codeTable = field.refSchema.modelName;
       // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
     }
     let cssClasses = ``;
@@ -260,11 +260,49 @@ export class FormService {
    * @param code table name
    */
   private async dropdownfor(code: string): Promise<DropdownObject[]> {
-    switch (code) {
-      case 'SpeciesAgencyCodes':
+    if (!code) {
+      return [];
+    }
+    switch (code.toLowerCase()) {
+      case 'speciesagencycode':
         return await this.dropdownService.getAgencies();
-      default:
+      case 'jurisdictioncode':
+        return await this.dropdownService.getJuristictions();
+      case 'species':
         return await this.dropdownService.getInvasivePlantSpecies();
+      case 'speciesdistributioncode':
+        return await this.dropdownService.getDistributions();
+      case 'observationtypecode':
+        return await this.dropdownService.getObservationType();
+      case 'soiltexturecode':
+        return await this.dropdownService.getSoilTextureCodes();
+      case 'observationgeometrycode':
+        return await this.dropdownService.getGeometry();
+      case 'specificusecode':
+        return await this.dropdownService.getSpecificUseCodes();
+      case 'slopecode':
+        return await this.dropdownService.getGroundSlopes();
+      case 'aspectcode':
+        return await this.dropdownService.getGroundAspects();
+      case 'proposedactioncode':
+        return await this.dropdownService.getProposedActions();
+      case 'mechanicalmethodcode':
+        return await this.dropdownService.getMechanicalTreatmentMethods();
+      case 'mechanicaldisposalmethodcode':
+        return await this.dropdownService.getMechanicalDisposalMethods();
+      case 'mechanicalsoildisturbancecode':
+        return await this.dropdownService.getMechanicalSoilDisturbances();
+      case 'mechanicalrootremovalcode':
+        return await this.dropdownService.getMechanicalRootRemovals();
+      case 'mechanicaltreatmentissuecode':
+        return await this.dropdownService.getMechanicalIssues();
+      case 'treatmentprovidercontractor':
+        return await this.dropdownService.getMechanicalTreatmentProviders();
+      case 'observation':
+        return await this.dropdownService.getObservations();
+      default:
+        console.log(`Code Table is not handled ${code}`);
+        return [];
     }
   }
 }
