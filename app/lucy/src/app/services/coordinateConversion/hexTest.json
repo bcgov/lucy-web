@@ -1,1 +1,322 @@
-[{"latitude":"53.615360","longitude":"-132.306680","hexID":"536154323071","strataID":"967","albersX":"584282","albersY":"975215"},{"latitude":"53.659460","longitude":"-132.196890","hexID":"536597321977","strataID":"984","albersX":"591930","albersY":"979478"},{"latitude":"53.600200","longitude":"-132.159430","hexID":"535997321594","strataID":"902","albersX":"593816","albersY":"972675"},{"latitude":"54.010090","longitude":"-132.135820","hexID":"540102321355","strataID":"963","albersX":"599329","albersY":"1018112"},{"latitude":"53.252550","longitude":"-132.130000","hexID":"532530321297","strataID":"991","albersX":"592397","albersY":"933860"},{"latitude":"53.829440","longitude":"-132.095520","hexID":"538298320957","strataID":"994","albersX":"600220","albersY":"997797"},{"latitude":"53.895640","longitude":"-132.084850","hexID":"538957320840","strataID":"953","albersX":"601553","albersY":"1005098"},{"latitude":"53.251530","longitude":"-132.057730","hexID":"532516320583","strataID":"967","albersX":"597181","albersY":"933333"},{"latitude":"53.051980","longitude":"-132.026940","hexID":"530523320265","strataID":"985","albersX":"597331","albersY":"910976"},{"latitude":"53.248000","longitude":"-132.000860","hexID":"532478320010","strataID":"934","albersX":"600920","albersY":"932618"},{"latitude":"53.249730","longitude":"-131.996860","hexID":"532497319964","strataID":"955","albersX":"601202","albersY":"932788"},{"latitude":"53.578780","longitude":"-131.927420","hexID":"535788319269","strataID":"954","albersX":"608880","albersY":"968987"},{"latitude":"53.429900","longitude":"-131.918030","hexID":"534295319180","strataID":"905","albersX":"608111","albersY":"952380"},{"latitude":"53.237600","longitude":"-131.869100","hexID":"532377318684","strataID":"961","albersX":"609567","albersY":"930727"},{"latitude":"53.167650","longitude":"-131.796450","hexID":"531677317957","strataID":"953","albersX":"613750","albersY":"922551"},{"latitude":"53.120420","longitude":"-131.749870","hexID":"531206317497","strataID":"964","albersX":"616420","albersY":"917046"},{"latitude":"54.533560","longitude":"-128.595210","hexID":"545336285947","strataID":"954","albersX":"832499","albersY":"1062235"},{"latitude":"50.597630","longitude":"-127.586250","hexID":"505973275863","strataID":"917","albersX":"887772","albersY":"621541"},{"latitude":"50.726850","longitude":"-127.505420","hexID":"507271275056","strataID":"989","albersX":"893796","albersY":"635798"},{"latitude":"59.425890","longitude":"-126.100910","hexID":"594256261001","strataID":"921","albersX":"994263","albersY":"1604714"},{"latitude":"53.972130","longitude":"-125.953320","hexID":"539724259532","strataID":"987","albersX":"1003055","albersY":"996501"},{"latitude":"54.053630","longitude":"-125.918760","hexID":"540533259193","strataID":"920","albersX":"1005306","albersY":"1005599"},{"latitude":"49.300070","longitude":"-124.289810","hexID":"492998242897","strataID":"924","albersX":"1124481","albersY":"477473"},{"latitude":"49.644880","longitude":"-124.046160","hexID":"496449240455","strataID":"961","albersX":"1141154","albersY":"516242"},{"latitude":"49.572230","longitude":"-123.997620","hexID":"495720239981","strataID":"935","albersX":"1144888","albersY":"508267"},{"latitude":"49.242280","longitude":"-123.003530","hexID":"492424230032","strataID":"971","albersX":"1218334","albersY":"474170"},{"latitude":"49.258000","longitude":"-122.987440","hexID":"492579229867","strataID":"937","albersX":"1219432","albersY":"475965"},{"latitude":"49.257130","longitude":"-122.982260","hexID":"492569229816","strataID":"929","albersX":"1219813","albersY":"475884"},{"latitude":"51.010030","longitude":"-120.196380","hexID":"510097201967","strataID":"911","albersX":"1406423","albersY":"682870"},{"latitude":"51.028200","longitude":"-120.173290","hexID":"510278201735","strataID":"906","albersX":"1407870","albersY":"685019"},{"latitude":"51.245670","longitude":"-119.983000","hexID":"512457199825","strataID":"962","albersX":"1419103","albersY":"710268"},{"latitude":"50.846260","longitude":"-119.770140","hexID":"508459197704","strataID":"911","albersX":"1437801","albersY":"667240"},{"latitude":"50.771240","longitude":"-119.510310","hexID":"507715195106","strataID":"975","albersX":"1456775","albersY":"660562"},{"latitude":"50.769440","longitude":"-119.501530","hexID":"507693195018","strataID":"934","albersX":"1457409","albersY":"660420"},{"latitude":"50.777550","longitude":"-119.474830","hexID":"507778194745","strataID":"979","albersX":"1459200","albersY":"661492"},{"latitude":"50.117140","longitude":"-117.901240","hexID":"501172179018","strataID":"960","albersX":"1577893","albersY":"599907"},{"latitude":"49.033170","longitude":"-117.603240","hexID":"490332176025","strataID":"961","albersX":"1613318","albersY":"482734"},{"latitude":"49.472630","longitude":"-117.289480","hexID":"494723172895","strataID":"925","albersX":"1630129","albersY":"533962"},{"latitude":"51.306330","longitude":"-116.986860","hexID":"513065169868","strataID":"973","albersX":"1625995","albersY":"739108"},{"latitude":"51.291330","longitude":"-116.972570","hexID":"512910169721","strataID":"922","albersX":"1627194","albersY":"737577"}]
+[
+  {
+    "latitude": "53.615360",
+    "longitude": "-132.306680",
+    "hexID": "536154323071",
+    "strataID": "967",
+    "albersX": "584282",
+    "albersY": "975215"
+  },
+  {
+    "latitude": "53.659460",
+    "longitude": "-132.196890",
+    "hexID": "536597321977",
+    "strataID": "984",
+    "albersX": "591930",
+    "albersY": "979478"
+  },
+  {
+    "latitude": "53.600200",
+    "longitude": "-132.159430",
+    "hexID": "535997321594",
+    "strataID": "902",
+    "albersX": "593816",
+    "albersY": "972675"
+  },
+  {
+    "latitude": "54.010090",
+    "longitude": "-132.135820",
+    "hexID": "540102321355",
+    "strataID": "963",
+    "albersX": "599329",
+    "albersY": "1018112"
+  },
+  {
+    "latitude": "53.252550",
+    "longitude": "-132.130000",
+    "hexID": "532530321297",
+    "strataID": "991",
+    "albersX": "592397",
+    "albersY": "933860"
+  },
+  {
+    "latitude": "53.829440",
+    "longitude": "-132.095520",
+    "hexID": "538298320957",
+    "strataID": "994",
+    "albersX": "600220",
+    "albersY": "997797"
+  },
+  {
+    "latitude": "53.895640",
+    "longitude": "-132.084850",
+    "hexID": "538957320840",
+    "strataID": "953",
+    "albersX": "601553",
+    "albersY": "1005098"
+  },
+  {
+    "latitude": "53.251530",
+    "longitude": "-132.057730",
+    "hexID": "532516320583",
+    "strataID": "967",
+    "albersX": "597181",
+    "albersY": "933333"
+  },
+  {
+    "latitude": "53.051980",
+    "longitude": "-132.026940",
+    "hexID": "530523320265",
+    "strataID": "985",
+    "albersX": "597331",
+    "albersY": "910976"
+  },
+  {
+    "latitude": "53.248000",
+    "longitude": "-132.000860",
+    "hexID": "532478320010",
+    "strataID": "934",
+    "albersX": "600920",
+    "albersY": "932618"
+  },
+  {
+    "latitude": "53.249730",
+    "longitude": "-131.996860",
+    "hexID": "532497319964",
+    "strataID": "955",
+    "albersX": "601202",
+    "albersY": "932788"
+  },
+  {
+    "latitude": "53.578780",
+    "longitude": "-131.927420",
+    "hexID": "535788319269",
+    "strataID": "954",
+    "albersX": "608880",
+    "albersY": "968987"
+  },
+  {
+    "latitude": "53.429900",
+    "longitude": "-131.918030",
+    "hexID": "534295319180",
+    "strataID": "905",
+    "albersX": "608111",
+    "albersY": "952380"
+  },
+  {
+    "latitude": "53.237600",
+    "longitude": "-131.869100",
+    "hexID": "532377318684",
+    "strataID": "961",
+    "albersX": "609567",
+    "albersY": "930727"
+  },
+  {
+    "latitude": "53.167650",
+    "longitude": "-131.796450",
+    "hexID": "531677317957",
+    "strataID": "953",
+    "albersX": "613750",
+    "albersY": "922551"
+  },
+  {
+    "latitude": "53.120420",
+    "longitude": "-131.749870",
+    "hexID": "531206317497",
+    "strataID": "964",
+    "albersX": "616420",
+    "albersY": "917046"
+  },
+  {
+    "latitude": "54.533560",
+    "longitude": "-128.595210",
+    "hexID": "545336285947",
+    "strataID": "954",
+    "albersX": "832499",
+    "albersY": "1062235"
+  },
+  {
+    "latitude": "50.597630",
+    "longitude": "-127.586250",
+    "hexID": "505973275863",
+    "strataID": "917",
+    "albersX": "887772",
+    "albersY": "621541"
+  },
+  {
+    "latitude": "50.726850",
+    "longitude": "-127.505420",
+    "hexID": "507271275056",
+    "strataID": "989",
+    "albersX": "893796",
+    "albersY": "635798"
+  },
+  {
+    "latitude": "59.425890",
+    "longitude": "-126.100910",
+    "hexID": "594256261001",
+    "strataID": "921",
+    "albersX": "994263",
+    "albersY": "1604714"
+  },
+  {
+    "latitude": "53.972130",
+    "longitude": "-125.953320",
+    "hexID": "539724259532",
+    "strataID": "987",
+    "albersX": "1003055",
+    "albersY": "996501"
+  },
+  {
+    "latitude": "54.053630",
+    "longitude": "-125.918760",
+    "hexID": "540533259193",
+    "strataID": "920",
+    "albersX": "1005306",
+    "albersY": "1005599"
+  },
+  {
+    "latitude": "49.300070",
+    "longitude": "-124.289810",
+    "hexID": "492998242897",
+    "strataID": "924",
+    "albersX": "1124481",
+    "albersY": "477473"
+  },
+  {
+    "latitude": "49.644880",
+    "longitude": "-124.046160",
+    "hexID": "496449240455",
+    "strataID": "961",
+    "albersX": "1141154",
+    "albersY": "516242"
+  },
+  {
+    "latitude": "49.572230",
+    "longitude": "-123.997620",
+    "hexID": "495720239981",
+    "strataID": "935",
+    "albersX": "1144888",
+    "albersY": "508267"
+  },
+  {
+    "latitude": "49.242280",
+    "longitude": "-123.003530",
+    "hexID": "492424230032",
+    "strataID": "971",
+    "albersX": "1218334",
+    "albersY": "474170"
+  },
+  {
+    "latitude": "49.258000",
+    "longitude": "-122.987440",
+    "hexID": "492579229867",
+    "strataID": "937",
+    "albersX": "1219432",
+    "albersY": "475965"
+  },
+  {
+    "latitude": "49.257130",
+    "longitude": "-122.982260",
+    "hexID": "492569229816",
+    "strataID": "929",
+    "albersX": "1219813",
+    "albersY": "475884"
+  },
+  {
+    "latitude": "51.010030",
+    "longitude": "-120.196380",
+    "hexID": "510097201967",
+    "strataID": "911",
+    "albersX": "1406423",
+    "albersY": "682870"
+  },
+  {
+    "latitude": "51.028200",
+    "longitude": "-120.173290",
+    "hexID": "510278201735",
+    "strataID": "906",
+    "albersX": "1407870",
+    "albersY": "685019"
+  },
+  {
+    "latitude": "51.245670",
+    "longitude": "-119.983000",
+    "hexID": "512457199825",
+    "strataID": "962",
+    "albersX": "1419103",
+    "albersY": "710268"
+  },
+  {
+    "latitude": "50.846260",
+    "longitude": "-119.770140",
+    "hexID": "508459197704",
+    "strataID": "911",
+    "albersX": "1437801",
+    "albersY": "667240"
+  },
+  {
+    "latitude": "50.771240",
+    "longitude": "-119.510310",
+    "hexID": "507715195106",
+    "strataID": "975",
+    "albersX": "1456775",
+    "albersY": "660562"
+  },
+  {
+    "latitude": "50.769440",
+    "longitude": "-119.501530",
+    "hexID": "507693195018",
+    "strataID": "934",
+    "albersX": "1457409",
+    "albersY": "660420"
+  },
+  {
+    "latitude": "50.777550",
+    "longitude": "-119.474830",
+    "hexID": "507778194745",
+    "strataID": "979",
+    "albersX": "1459200",
+    "albersY": "661492"
+  },
+  {
+    "latitude": "50.117140",
+    "longitude": "-117.901240",
+    "hexID": "501172179018",
+    "strataID": "960",
+    "albersX": "1577893",
+    "albersY": "599907"
+  },
+  {
+    "latitude": "49.033170",
+    "longitude": "-117.603240",
+    "hexID": "490332176025",
+    "strataID": "961",
+    "albersX": "1613318",
+    "albersY": "482734"
+  },
+  {
+    "latitude": "49.472630",
+    "longitude": "-117.289480",
+    "hexID": "494723172895",
+    "strataID": "925",
+    "albersX": "1630129",
+    "albersY": "533962"
+  },
+  {
+    "latitude": "51.306330",
+    "longitude": "-116.986860",
+    "hexID": "513065169868",
+    "strataID": "973",
+    "albersX": "1625995",
+    "albersY": "739108"
+  },
+  {
+    "latitude": "51.291330",
+    "longitude": "-116.972570",
+    "hexID": "512910169721",
+    "strataID": "922",
+    "albersX": "1627194",
+    "albersY": "737577"
+  }
+]

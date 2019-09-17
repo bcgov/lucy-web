@@ -494,7 +494,6 @@ export class ConverterService {
     targetLong = +String(targetLong).substring(0, 6);
     const targetId = +`${targetLat}${targetLong}`;
     target.BCHexID = targetId;
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* Part 3 find the 18 surrounding cells to the target (optional)
 		The closest 19 hexagon cells fall with 230m of the ceter of the target cell
@@ -641,7 +640,7 @@ export class ConverterService {
   }
 
   getHexRules(): any[] {
-    return hexRules;
+    return JSON.parse(JSON.stringify(hexRules)).default;
   }
 
 }
