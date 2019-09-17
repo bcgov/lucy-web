@@ -80,3 +80,7 @@
 	background-color: #FFFFFF;
 	box-shadow: 0 0 5px 0 #E5E9F2;
 }
+
+.mat-toolbar-row {
+    padding: 0 !important;
+}
