@@ -267,9 +267,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
           // Add type flags to field (to help with html generation)
           const newField = await this.configField(field, fields);
           // set column size:
-          // if more than 3 elements
-          if (group.fields.length >= 3 && i % 3 === 0) {
+          if (group.fields.length >= 3 && i % 3 === 0 && !newField.isTextAreaField) {
+            // if group has more than 3 elements, make sure we dont have more than 3 elements per row
+            // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
             newField.cssClasses = newField.cssClasses + ' col col-md-4';
+          } else if (newField.isTextAreaField) {
+            // Comment fields should take the whole row
+            newField.cssClasses = newField.cssClasses + ' col-12';
           }
           if (newField.isLocationLatitudeField || newField.isLocationLongitudeField) {
             // if its a latitude or logitude field, and we havent cached such field before, cache it
