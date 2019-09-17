@@ -49,7 +49,6 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
     return this.roles.canCreate(this.accessType);
   }
 
-
   // State flags
   private submitted = false;
   private inReviewMode = false;

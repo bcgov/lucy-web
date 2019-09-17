@@ -29,10 +29,17 @@ import * as moment from 'moment';
   styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
-  formLoadingIconLoop = true;
-  formLoadingIcon = 'https://assets2.lottiefiles.com/datafiles/qq04nAXfKjPV6ju/data.json';
   public componentName = ` `;
   private responseBody = {};
+
+
+  // Lottie Animation
+  isLoading = false;
+  public lottieConfig: Object;
+  private anim: any;
+  private animationSpeed = 1;
+  private formLoadingIcon = 'https://assets7.lottiefiles.com/datafiles/AX0rqrGV5ahKpWr/data.json';
+  /////////////////
 
   /**
    * User access type
@@ -69,12 +76,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     }
     return ``;
   }
-
-  // Lottie Animation
-  public lottieConfig: Object;
-  private anim: any;
-  private animationSpeed = 1;
-  /////////////////
 
   /**
    * submit button title for different states
@@ -140,7 +141,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /* ***** */
 
   ///// Form Mode
-  private _mode: FormMode = FormMode.Edit;
+  private _mode: FormMode = FormMode.Create;
   // Get
   get mode(): FormMode {
     return this._mode;
@@ -184,20 +185,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private errorService: ErrorService,
     private userService: UserService,
     private roles: RolesService,
-    private validation: ValidationService,
     private alert: AlertService,
     private router: RouterService,
-    private loadingService: LoadingService,
-    private dummy: DummyService,
     private dropdownService: DropdownService,
     private formService: FormService
   ) {
     this.lottieConfig = {
-      path:
-        "https://assets4.lottiefiles.com/datafiles/jEgAWaDrrm6qdJx/data.json",
-      renderer: "canvas",
+      path: this.formLoadingIcon,
+      renderer: 'canvas',
       autoplay: true,
-      loop: false
+      loop: true
     };
   }
 
@@ -207,18 +204,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void { }
 
-  /**
-   * Setting User's access type
-   */
-  private async setAccessType() {
-    this.loadingService.add();
-    this.accessType = await this.userService.getAccess();
-    this.loadingService.remove();
-  }
-
   async initialize() {
-    await this.setAccessType();
+    this.isLoading = true;
+    this.accessType = await this.userService.getAccess();
     this.config = await this.formService.getMechanicalTreatmentUIConfig();
+    this.isLoading = false;
   }
 
   fieldChanged(field: any, event: any) {
@@ -247,4 +237,28 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
     console.log(this.responseBody);
   }
+
+  /////////// Lottie ///////////
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
+
+  /////////// End Lottie ///////////
 }
