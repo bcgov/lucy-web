@@ -198,7 +198,7 @@ export class AddPlantObservationInvasivePlantSpeciesCellComponent implements OnI
     });
 
     this.loadingService.add();
-    this.dropdownService.getSurveyModes().then((result) => {
+    this.dropdownService.getObservationType().then((result) => {
       this.surveyModes = result;
       this.loadingService.remove();
     });
