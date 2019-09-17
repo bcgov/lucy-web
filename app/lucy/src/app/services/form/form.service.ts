@@ -159,11 +159,17 @@ export class FormService {
   private async configField(key: string, fields: any[]): Promise<any> {
     for (const field of fields) {
       if (field['key'] === key) {
+        // convert server config field
         const fieldOfInterest: any = this.processFieldConfig(field);
+        // initialize value field
         fieldOfInterest.value = undefined;
+
+        // Set field type flag
+
         // Handle location differently
         fieldOfInterest.isLocationLatitudeField = (field.key.toLowerCase() === 'lat' || field.key.toLowerCase() === 'latitude');
         fieldOfInterest.isLocationLongitudeField = (field.key.toLowerCase() === 'long' || field.key.toLowerCase() === 'longitude');
+        
         // If its not a location field, proceed
         if (!fieldOfInterest.isLocationLatitudeField && !fieldOfInterest.isLocationLongitudeField) {
           // Set field type flag
