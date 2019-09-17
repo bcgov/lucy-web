@@ -254,7 +254,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       for (const group of groups) {
         const subSectionFields: any[] = [];
         let cachedLatOrLongField: any;
-        for (const i in group.fields) {
+        for (let i = 0; i < group.fields.length; i++) {
           const field = group.fields[i];
           // Add type flags to field (to help with html generation)
           const newField = await this.configField(field, fields);
