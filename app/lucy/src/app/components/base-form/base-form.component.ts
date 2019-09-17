@@ -28,6 +28,8 @@ import { FormService, FormConfigField } from 'src/app/services/form/form.service
   styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
+  formLoadingIconLoop = true;
+  formLoadingIcon = 'https://assets2.lottiefiles.com/datafiles/qq04nAXfKjPV6ju/data.json';
   public componentName = ` `;
   private responseBody = {};
 

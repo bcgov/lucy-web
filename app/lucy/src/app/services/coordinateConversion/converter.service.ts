@@ -370,7 +370,7 @@ export class ConverterService {
 
   // MARK: HEX Calculation
 
-  calcCell(latitude: number, longitude: number) {
+  public getHexId(latitude: number, longitude: number): any {
     const e271 = 2.718282;
     const k0 = 0.9996;
     const k1 = 0.9992;
@@ -435,7 +435,7 @@ export class ConverterService {
           yAlb0: tempy,
           xLon0: newLatLong.longitude,
           yLat0: newLatLong.latitude,
-        })
+        });
       }
     }
 
@@ -482,11 +482,6 @@ export class ConverterService {
       yLat0: hexagonTarget.yLat0
     };
     /* determine HexID as a composite of the lat/long */
-
-    // const HexID2 = (Math.round(target.yLat0) * 10000 + Math.round((target.yLat0 - Math.round(target.yLat0)) * 10000));
-    // const HexID1 = HexID2 * 1000000;
-    // const HexID =  Math.round(HexID1 + (( Math.round(-1 * target.xLon0)) - 100) * 10000 + (-1 * target.xLon0 -  Math.round(-1 * target.xLon0)) * 10000);
-    // target.BCHexID = HexID;
 
     // Same result as above, but with string concat
     let targetLat = target.yLat0;
