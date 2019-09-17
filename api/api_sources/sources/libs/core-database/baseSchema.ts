@@ -150,7 +150,7 @@ export class  BaseSchema {
                 value.refColumn,
                 value.deleteCascade,
                 value.refSchema,
-                value.refModel,
+                value.refModel
             );
             column.columnVerification = value.columnVerification;
             column.meta = value.meta;

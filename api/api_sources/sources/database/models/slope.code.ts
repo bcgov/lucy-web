@@ -25,13 +25,17 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SlopeCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { Record } from './generic.data.models';
 /**
  * @description Data Model Class for SlopeCodeSchema
  */
 @Entity( { name: SlopeCodeSchema.dbTable} )
+@ModelDescription({
+	description: '',
+	schema: SlopeCodeSchema
+})
 export class SlopeCode extends Record {
 
 	/**
