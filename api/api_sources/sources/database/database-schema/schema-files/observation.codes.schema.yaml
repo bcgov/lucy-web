@@ -28,7 +28,7 @@ schemas:
     baseSchema: RecordSchema
     meta: 
       resource: true
-      api: api/observation
+      api: /observation
     layout:
       title: 
         key: '' 

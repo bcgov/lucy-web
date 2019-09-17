@@ -20,7 +20,7 @@ schemas:
     baseSchema: RecordSchema
     meta:
       resource: true
-      api: api/treatment/mechanical
+      api: /treatment/mechanical
     layout:
       title: 
         key: '' 
@@ -35,7 +35,7 @@ schemas:
                 default: Location
               fields: 
                 - latitude
-                - latitude
+                - longitude
               style: {}
             - title: 
                 key: '' 
