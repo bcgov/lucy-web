@@ -21,6 +21,7 @@ import { UserAccessType } from 'src/app/models/Role';
 import { AppRoutes } from 'src/app/constants';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 import { FormService, FormConfigField } from 'src/app/services/form/form.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-base-form',
@@ -233,6 +234,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
           this.responseBody[field.key] = event.object[key];
         }
       }
+    } else if (field.isDateField) {
+      if (event) {
+        const formatted = moment(event).format('YYYY-MM-DD');
+        this.responseBody[field.key] = formatted;
+      }
     } else {
       // Store key / value for regular field
       this.responseBody[field.key] = event;
@@ -306,27 +312,58 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   private async configField(key: string, fields: any[]): Promise<any> {
     for (const field of fields) {
       if (field['key'] === key) {
-        const response: any = this.processFieldConfig(field);
-        response.value = undefined;
+        const fieldOfInterest: any = this.processFieldConfig(field);
+        fieldOfInterest.value = undefined;
         // Handle location differently
-        response.isLocationLatitudeField = (field.key.toLowerCase() === 'lat' || field.key.toLowerCase() === 'latitude');
-        response.isLocationLongitudeField = (field.key.toLowerCase() === 'long' || field.key.toLowerCase() === 'longitude');
+        fieldOfInterest.isLocationLatitudeField = (field.key.toLowerCase() === 'lat' || field.key.toLowerCase() === 'latitude');
+        fieldOfInterest.isLocationLongitudeField = (field.key.toLowerCase() === 'long' || field.key.toLowerCase() === 'longitude');
         // If its not a location field, proceed
-        if (!response.isLocationLatitudeField && !response.isLocationLongitudeField) {
-          response.isDropdown = field.type === 'object';
-          response.isCheckbox = field.type === 'boolean';
-          response.isInputField = field.type === 'string' || field.type === 'number';
+        if (!fieldOfInterest.isLocationLatitudeField && !fieldOfInterest.isLocationLongitudeField) {
+          // Set field type flag
+          switch (field.type) {
+            case 'object': {
+              // Object is code table
+              fieldOfInterest.isDropdown = true;
+              break;
+            }
+            case 'boolean': {
+              // Booleans is checkbox
+              fieldOfInterest.isCheckbox = true;
+              break;
+            }
+            case 'number': {
+              // Number is input field
+              fieldOfInterest.isInputField = true;
+              break;
+            }
+            case 'string': {
+              // String can be a simple input field, comment field, or date
+              if (fieldOfInterest.verification.isDate) {
+                fieldOfInterest.isDateField = true;
+              } else if (fieldOfInterest.verification.size && fieldOfInterest.verification.size > 100) {
+                fieldOfInterest.isTextAreaField = true;
+              } else {
+                fieldOfInterest.isInputField = true;
+              }
+              break;
+            }
+            default: {
+
+              break;
+            }
+          }
+
         } else {
           // if its a location field, set other field type flags to false.
-          response.isDropdown = false;
-          response.isCheckbox = false;
-          response.isInputField = false;
+          fieldOfInterest.isDropdown = false;
+          fieldOfInterest.isCheckbox = false;
+          fieldOfInterest.isInputField = false;
         }
         // if its a dropdown, grab its code table
-        if (response.isDropdown) {
-          response.dropdown = await this.dropdownfor(field.codeTable);
+        if (fieldOfInterest.isDropdown) {
+          fieldOfInterest.dropdown = await this.dropdownfor(field.codeTable);
         }
-        return response;
+        return fieldOfInterest;
       }
     }
     return null;

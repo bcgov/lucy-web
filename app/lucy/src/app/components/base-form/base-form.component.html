@@ -39,43 +39,51 @@
      <!-- -------------------- -->
      <br />
      <div class="container form-body">
-     <div class="container-fluid" *ngFor="let section of config.sections; let i = index">
-       <br />
-       <div class="row">
-         <div class="col-12 section-title">
-           {{section["title"]}}
-           <hr class="section-divider" />
+       <div class="container-fluid" *ngFor="let section of config.sections; let i = index">
+         <br />
+         <div class="row">
+           <div class="col-12 section-title">
+             {{section["title"]}}
+             <hr class="section-divider" />
+           </div>
          </div>
-       </div>
-       <div *ngFor="let subSection of section.subSections; let j = index" class="row">
-         <div class="col-12 sub-section-title">
-           {{subSection["title"]}}
-         </div>
-         <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
-           <div class="row">
-             <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index" [ngClass]="field.cssClasses">
-               <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]='field'
-                 (locationChanged)='fieldChanged(field, $event)'>
-               </app-location-input>
-               <!-- Input field  -->
-               <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]=""
-                 (valueChanged)='fieldChanged(field, $event)'>
-               </app-field>
-               <!-- dropdown --->
-               <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown"
-                 [fieldHeader]="field.header" [selectedItem]="organization"
-                 (selectionChanged)='fieldChanged(field, $event)'>
-               </app-dropdown>
-               <!-- checkbox -->
-               <div class="col">
-                 <app-checkbox *ngIf="field.isCheckbox" [mode]="mode" [header]="field.header" [value]=""
-                   (selectionChanged)='fieldChanged(field, $event)'>
-                 </app-checkbox>
+         <div *ngFor="let subSection of section.subSections; let j = index" class="row">
+           <div class="col-12 sub-section-title">
+             {{subSection["title"]}}
+           </div>
+           <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
+             <div class="row">
+               <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index"
+                 [ngClass]="field.cssClasses">
+                 <!-- Location Field -->
+                 <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]='field'
+                   (locationChanged)='fieldChanged(field, $event)'>
+                 </app-location-input>
+                 <!-- Input field  -->
+                 <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]=""
+                   (valueChanged)='fieldChanged(field, $event)'>
+                 </app-field>
+                 <!-- Text Area field -->
+                 <app-field *ngIf="field.isTextAreaField" [mode]="mode" [multiline]="true" [header]="field.header"
+                   [value]="" (valueChanged)='fieldChanged(field, $event)'>
+                 </app-field>
+                 <!-- Date Field -->
+                 <app-date-picker *ngIf="field.isDateField" [mode]="mode" [date]="" [header]="field.header"
+                   (selected)='fieldChanged(field, $event)'></app-date-picker>
+                 <!-- Dropdown --->
+                 <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown"
+                   [fieldHeader]="field.header" [selectedItem]="" (selectionChanged)='fieldChanged(field, $event)'>
+                 </app-dropdown>
+                 <!-- Checkbox -->
+                 <div class="col">
+                   <app-checkbox *ngIf="field.isCheckbox" [mode]="mode" [header]="field.header" [value]=""
+                     (selectionChanged)='fieldChanged(field, $event)'>
+                   </app-checkbox>
+                 </div>
                </div>
              </div>
            </div>
          </div>
        </div>
      </div>
-    </div>
    </div>
