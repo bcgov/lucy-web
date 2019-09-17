@@ -1,89 +1,156 @@
-   <div>
-     <app-lottie [path]='formLoadingIcon' [loop]='formLoadingIconLoop'>
-
-     </app-lottie>
-   </div>
-   <div class="form-bg">
-     <!-- Header Section  -->
-     <div class="container-fluid header-container sticky">
-       <div class="container header-container-inner">
-         <mat-toolbar>
-           <mat-toolbar-row>
-             <span class="view-title"> {{config["title"]}}</span>
-             <span class="spacer-toolbar"></span>
-             <!-- Submit button -->
-             <button *ngIf="!readonly || inReviewMode" type="button"
-               class="btn btn-secondary submit-button button-hollow action-buttons" (click)="submitAction()">
-               {{submitBtnName}}
-             </button>
-             <!-- ---- -->
-             <!-- Edit button for review -->
-             <button (click)="exitReviewMode()" *ngIf="inReviewMode" type="button"
-               class="btn btn-secondary submit-button button-hollow action-buttons" (click)="exitReviewMode()">
-               Edit
-             </button>
-             <!-- ---- -->
-             <!-- Edit Button for when in view mode and user is data editor -->
-             <button (click)="edit()" *ngIf="isDataEditor && viewing" type="button"
-               class="btn btn-secondary submit-button button-hollow action-buttons">
-               Edit
-               <i class="material-icons action-icon">
-                 edit
-               </i>
-             </button>
-             <!-- ---- -->
-           </mat-toolbar-row>
-         </mat-toolbar>
-       </div>
-     </div>
-     <!-- -------------------- -->
-     <br />
-     <div class="container form-body">
-       <div class="container-fluid" *ngFor="let section of config.sections; let i = index">
-         <br />
-         <div class="row">
-           <div class="col-12 section-title">
-             {{section["title"]}}
-             <hr class="section-divider" />
-           </div>
-         </div>
-         <div *ngFor="let subSection of section.subSections; let j = index" class="row">
-           <div class="col-12 sub-section-title">
-             {{subSection["title"]}}
-           </div>
-           <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
-             <div class="row">
-               <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index"
-                 [ngClass]="field.cssClasses">
-                 <!-- Location Field -->
-                 <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]='field'
-                   (locationChanged)='fieldChanged(field, $event)'>
-                 </app-location-input>
-                 <!-- Input field  -->
-                 <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]=""
-                   (valueChanged)='fieldChanged(field, $event)'>
-                 </app-field>
-                 <!-- Text Area field -->
-                 <app-field *ngIf="field.isTextAreaField" [mode]="mode" [multiline]="true" [header]="field.header"
-                   [value]="" (valueChanged)='fieldChanged(field, $event)'>
-                 </app-field>
-                 <!-- Date Field -->
-                 <app-date-picker *ngIf="field.isDateField" [mode]="mode" [date]="" [header]="field.header"
-                   (selected)='fieldChanged(field, $event)'></app-date-picker>
-                 <!-- Dropdown --->
-                 <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown"
-                   [fieldHeader]="field.header" [selectedItem]="" (selectionChanged)='fieldChanged(field, $event)'>
-                 </app-dropdown>
-                 <!-- Checkbox -->
-                 <div class="col">
-                   <app-checkbox *ngIf="field.isCheckbox" [mode]="mode" [header]="field.header" [value]=""
-                     (selectionChanged)='fieldChanged(field, $event)'>
-                   </app-checkbox>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
+<div *ngIf="isLoading" class="form-bg">
+  <!-- Header Section  -->
+  <div class="container-fluid header-container sticky">
+    <div class="container header-container-inner">
+      <mat-toolbar>
+        <mat-toolbar-row> </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+  </div>
+  <br />
+  <div class="container form-body">
+    <br />
+    <lottie-animation-view
+      [options]="lottieConfig"
+      (animCreated)="handleAnimation($event)"
+    >
+    </lottie-animation-view>
+  </div>
+</div>
+<div *ngIf="!isLoading" class="form-bg">
+  <!-- Header Section  -->
+  <div class="container-fluid header-container sticky">
+    <div class="container header-container-inner">
+      <mat-toolbar>
+        <mat-toolbar-row>
+          <span class="view-title"> {{ config["title"] }}</span>
+          <span class="spacer-toolbar"></span>
+          <!-- Submit button -->
+          <button
+            *ngIf="!readonly || inReviewMode"
+            type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons"
+            (click)="submitAction()"
+          >
+            {{ submitBtnName }}
+          </button>
+          <!-- ---- -->
+          <!-- Edit button for review -->
+          <button
+            (click)="exitReviewMode()"
+            *ngIf="inReviewMode"
+            type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons"
+            (click)="exitReviewMode()"
+          >
+            Edit
+          </button>
+          <!-- ---- -->
+          <!-- Edit Button for when in view mode and user is data editor -->
+          <button
+            (click)="edit()"
+            *ngIf="isDataEditor && viewing"
+            type="button"
+            class="btn btn-secondary submit-button button-hollow action-buttons"
+          >
+            Edit
+            <i class="material-icons action-icon">
+              edit
+            </i>
+          </button>
+          <!-- ---- -->
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+  </div>
+  <!-- -------------------- -->
+  <br />
+  <div class="container form-body">
+    <div
+      class="container-fluid"
+      *ngFor="let section of config.sections; let i = index"
+    >
+      <br />
+      <div class="row">
+        <div class="col-12 section-title">
+          {{ section["title"] }}
+          <hr class="section-divider" />
+        </div>
+      </div>
+      <div
+        *ngFor="let subSection of section.subSections; let j = index"
+        class="row"
+      >
+        <div class="col-12 sub-section-title">
+          {{ subSection["title"] }}
+        </div>
+        <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
+          <div class="row">
+            <div
+              class="col nopadding"
+              *ngFor="let field of subSection.fields; let j = index"
+              [ngClass]="field.cssClasses"
+            >
+              <!-- Location Field -->
+              <app-location-input
+                *ngIf="field.isLocationField"
+                [mode]="mode"
+                [object]="field"
+                (locationChanged)="fieldChanged(field, $event)"
+              >
+              </app-location-input>
+              <!-- Input field  -->
+              <app-field
+                *ngIf="field.isInputField"
+                [mode]="mode"
+                [header]="field.header"
+                [value]=""
+                (valueChanged)="fieldChanged(field, $event)"
+              >
+              </app-field>
+              <!-- Text Area field -->
+              <app-field
+                *ngIf="field.isTextAreaField"
+                [mode]="mode"
+                [multiline]="true"
+                [header]="field.header"
+                [value]=""
+                (valueChanged)="fieldChanged(field, $event)"
+              >
+              </app-field>
+              <!-- Date Field -->
+              <app-date-picker
+                *ngIf="field.isDateField"
+                [mode]="mode"
+                [date]=""
+                [header]="field.header"
+                (selected)="fieldChanged(field, $event)"
+              ></app-date-picker>
+              <!-- Dropdown --->
+              <app-dropdown
+                *ngIf="field.isDropdown"
+                [mode]="mode"
+                [items]="field.dropdown"
+                [fieldHeader]="field.header"
+                [selectedItem]=""
+                (selectionChanged)="fieldChanged(field, $event)"
+              >
+              </app-dropdown>
+              <!-- Checkbox -->
+              <div class="col">
+                <app-checkbox
+                  *ngIf="field.isCheckbox"
+                  [mode]="mode"
+                  [header]="field.header"
+                  [value]=""
+                  (selectionChanged)="fieldChanged(field, $event)"
+                >
+                </app-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
