@@ -9,6 +9,13 @@ schemas:
         required: true
         name: sample_id
         definition: SERIAL PRIMARY KEY
+        meta: {}
+        layout:
+          header:
+            key: ''
+            default: ''
+          classes:
+            - none
       name:
         comment: Name of the sample
         required: true
