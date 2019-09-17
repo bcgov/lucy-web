@@ -108,7 +108,7 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
     return async (): Promise<any> => {
         const obj: any = {};
         const fetchList: any[] = [];
-        console.log(`${controller.constructor.name}: `);
+        // console.log(`${controller.constructor.name}: `);
         _.each(controller.schema.columnsDefinition, async (column: ApplicationTableColumn, key: string) => {
             if (key === 'id') {
                 return;
@@ -120,7 +120,7 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                     if (typeInfo.isDate) {
                         obj[key] = `${moment(faker.date.recent()).format('YYYY-MM-DD')}`;
                     } else {
-                        console.log(`${key}:${JSON.stringify(typeInfo)}`);
+                        // console.log(`${key}:${JSON.stringify(typeInfo)}`);
                         if (keyname.includes('firstname')) {
                             obj[key] = faker.name.firstName();
                         } else if (keyname.includes('lastname')) {

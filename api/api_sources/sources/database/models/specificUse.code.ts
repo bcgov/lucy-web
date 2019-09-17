@@ -25,7 +25,7 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { SpecificUseCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './generic.data.models';
 
@@ -33,6 +33,10 @@ import { ApplicationCode } from './generic.data.models';
  * @description Specific Use Code Model for Observation
  */
 @Entity( { name: SpecificUseCodeSchema.dbTable} )
+@ModelDescription({
+	description: '',
+	schema: SpecificUseCodeSchema
+})
 export class SpecificUseCode extends ApplicationCode {
 
 	/**

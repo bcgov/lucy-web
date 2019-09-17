@@ -25,13 +25,17 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ProposedActionCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './generic.data.models';
 /**
  * @description Data Model Class for ProposedActionCodeSchema
  */
 @Entity( { name: ProposedActionCodeSchema.dbTable} )
+@ModelDescription({
+	description: '',
+	schema: ProposedActionCodeSchema
+})
 export class ProposedActionCode extends ApplicationCode {
 
 	/**

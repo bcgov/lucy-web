@@ -2,6 +2,7 @@ version: '1.0'
 externalTables:
   - name: species
     description: Species table
+    schema: SpeciesSchema
   - name: application_user
     description: User table
 schemas: 
@@ -70,10 +71,18 @@ schemas:
         name: 'sample_identifier'
         comment: Identifier for sample taken.
         definition: VARCHAR(50) NULL
+        columnVerification: 
+          regx:
+            re: '[a-zA-Z0-9]+'
+            flag: 'gm'
       rangeUnitNumber:
         name: 'range_unit_number'
         comment: Identifier/Number of range unit associated with observation.
         definition: VARCHAR(50) NULL
+        columnVerification: 
+          regx:
+            re: '^[a-zA-Z0-9]+'
+            flag: 'gm'
       # --
       # -- Indicators --
       legacySiteIndicator:
