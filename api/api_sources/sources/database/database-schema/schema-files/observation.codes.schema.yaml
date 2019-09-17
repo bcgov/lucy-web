@@ -29,6 +29,84 @@ schemas:
     meta: 
       resource: true
       api: api/observation
+    layout:
+      title: 
+        key: '' 
+        default: Observation
+      sections:
+        # Section 
+        - title:
+            key: 'generic.location'
+            default: 'Location'
+          groups:
+            - title: 
+                key: 'location' 
+                default: Location
+              fields:
+                - lat
+                - long
+            # End-group(Location)
+            - title: 
+                key: 'geometry' 
+                default: Geometry  
+              fields:
+                - width
+                - length
+                - observationGeometry
+                - accessDescription
+            # End-group(Geometry)
+            - title: 
+                key: 'observerInformation' 
+                default: Observer Information  
+              fields:
+                - observerFirstName
+                - observerLastName
+            # End-group(Observer Information)
+            - title: 
+                key: 'speciesInformationAndObservation' 
+                default: Species Information and Observation 
+              fields:
+                - species
+                - speciesAgency
+                - jurisdiction
+                - observationType
+                - density
+                - distribution
+                - soilTexture
+                - specificUseCode
+            # End-group(Observer Information)
+          # End- groups
+        # End-Section
+        - title: 
+            key: '' 
+            default: Advance Data Element
+          groups:
+            - title: 
+                key: 'indicators' 
+                default: Indicators  
+              fields:
+                - legacySiteIndicator
+                - edrrIndicator
+                - researchIndicator
+                - sampleTakenIndicator
+                - wellIndicator
+                - specialCareIndicator
+                - biologicalIndicator
+                - aquaticIndicator
+            # End-group(Indicators)
+            - title: 
+                key: 'furtherObservation' 
+                default: Further Observation  
+              fields:
+                - slopeCode
+                - aspectCode
+                - proposedAction
+                - rangeUnitNumber
+                - sampleIdentifier
+            # End-group(Further Observation)
+          # End-groups
+        # End-Section
+    # End-layout
     columns: 
       # -- Regular Columns
       id: 
@@ -39,38 +117,93 @@ schemas:
         name: 'observation_date'
         comment: 'The Observation Date is the date that the invasive species occurrence was observed by the submitter.'
         definition: DATE NULL
+        meta: {}
+        layout:
+          header:
+            key: 'observation.date'
+            default: 'Observation Date'
+          classes:
+            - none
       lat:
         name: 'observation_location_lat'
         comment: 'Latitude of observation location'
         definition: NUMERIC(8, 6) NOT NULL
+        layout:
+          header:
+            key: 'generic.latitude'
+            default: 'Observation Latitude'
+          classes:
+            - none
       long:
         name: 'observation_location_long'
         comment: 'Longitude of observation location'
         definition: NUMERIC(9, 6) NOT NULL
+        layout:
+          header:
+            key: 'generic.longitude'
+            default: 'Observation Longitude'
+          classes:
+            - none
       width:
         name: 'area_width'
         comment: 'Width of the area observed'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        layout:
+          header:
+            key: 'generic.width'
+            default: 'Width'
+          classes:
+            - none
       length:
         name: 'area_length'
         comment: 'Length of the area observed'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        layout:
+          header:
+            key: 'generic.length'
+            default: 'Length'
+          classes:
+            - none
       accessDescription:
         name: 'access_description'
         comment: Note to specify how to access the location
         definition: VARCHAR(500) NULL
+        layout:
+          header:
+            key: 'observation.accessDescription'
+            default: 'Access description'
+          classes:
+            - none
       observerFirstName: 
         name: 'observer_first_name'
         comment: First name of the observer of the observation
         definition: VARCHAR(100) NULL
+        layout:
+          header:
+            key: 'observation.observerFirstName'
+            default: 'Observer First Name'
+          classes:
+            - none
       observerLastName:
         name: 'observer_last_name'
         comment: Last name of the observer of the observation
         definition: VARCHAR(100) NULL
+        layout:
+          header:
+            key: 'observation.observerLastName'
+            default: 'Observer Last Name'
+          classes:
+            - none
       sampleIdentifier:
         name: 'sample_identifier'
         comment: Identifier for sample taken.
         definition: VARCHAR(50) NULL
+        layout:
+          header:
+            key: 'observation.sampleIdentifier'
+            default: 'Sample Identifier'
+          classes:
+            - none
         columnVerification: 
           regx:
             re: '[a-zA-Z0-9]+'
@@ -79,6 +212,12 @@ schemas:
         name: 'range_unit_number'
         comment: Identifier/Number of range unit associated with observation.
         definition: VARCHAR(50) NULL
+        layout:
+          header:
+            key: 'observation.rangeUnitNumber'
+            default: 'Range Unit Number'
+          classes:
+            - none
         columnVerification: 
           regx:
             re: '^[a-zA-Z0-9]+'
@@ -89,34 +228,82 @@ schemas:
         name: 'legacy_site_ind'
         comment: This indicator used to indicate the observation site is legacy site or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.legacySiteIndicator'
+            default: 'Legacy Site Indicator'
+          classes:
+            - none
       edrrIndicator:
         name: 'early_detection_rapid_resp_ind'
         comment: Indicator for early detection and rapid response for observed species.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.edrrIndicator'
+            default: 'Early Detection Indicator'
+          classes:
+            - none
       researchIndicator:
         name: 'research_detection_ind'
         comment: Values of this column indicates this observation is research purpose or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.researchIndicator'
+            default: 'Research Indicator'
+          classes:
+            - none
       sampleTakenIndicator:
         name: 'sample_taken_ind'
         comment: 'This field specify any sample is taken from observed area, if this indicator is true, observer must specify sample id.'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.sampleTakenIndicator'
+            default: 'Sample Taken'
+          classes:
+            - none
       wellIndicator:
         name: 'well_ind'
         comment: 'This field indicates well proximity of the observed location. If this indicator is true, observer should specify well proximity values and API will connect to GWELL service to fetch more information'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.wellIndicator'
+            default: 'Well Indicator'
+          classes:
+            - none
       specialCareIndicator:
         name: 'special_care_ind'
         comment: This field indicates, the requirement of special care.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.specialCareIndicator'
+            default: 'Special Care Indicator'
+          classes:
+            - none
       biologicalIndicator:
         name: 'biological_ind'
         comment: This field indicates, observation is biological or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.biologicalIndicator'
+            default: 'Biological Indicator'
+          classes:
+            - none
       aquaticIndicator:
         name: 'aquatic_ind'
         comment: This field indicates, observation is for aquatic element or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        layout:
+          header:
+            key: 'observation.aquaticIndicator'
+            default: 'Aquatic Indicator'
+          classes:
+            - none
       # --
       # -- Code Table Relations --
       species:
@@ -126,6 +313,12 @@ schemas:
         foreignTable: 'species'
         refColumn: species_id
         deleteCascade: true
+        layout:
+          header:
+            key: 'species'
+            default: 'Species'
+          classes:
+            - none
       jurisdiction:
         name: 'jurisdiction_code_id'
         comment: Foreign key reference to Jurisdiction code table 
@@ -133,6 +326,12 @@ schemas:
         foreignTable: 'jurisdiction_code'
         refColumn: jurisdiction_code_id
         deleteCascade: true
+        layout:
+          header:
+            key: 'jurisdiction'
+            default: 'Jurisdiction'
+          classes:
+            - none
       density:
         name: 'species_density_code_id'
         comment: Foreign key reference to species density code table 
@@ -140,6 +339,12 @@ schemas:
         foreignTable: species_density_code
         refColumn: species_density_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'density'
+            default: 'Species Density'
+          classes:
+            - none
       distribution:
         name: 'species_distribution_code_id'
         comment: Foreign key reference to observation table 
@@ -147,6 +352,12 @@ schemas:
         foreignTable: species_distribution_code
         refColumn: species_distribution_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'distribution'
+            default: 'Species Distribution'
+          classes:
+            - none
       observationType:
         name: 'observation_type_code_id'
         comment: Foreign key reference to observation type code table 
@@ -154,6 +365,12 @@ schemas:
         foreignTable: observation_type_code
         refColumn: observation_type_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'distribution'
+            default: 'Species Distribution'
+          classes:
+            - none
       speciesAgency:
         name: 'species_agency_code_id'
         comment: Foreign key reference to Species Agency code table 
@@ -161,6 +378,12 @@ schemas:
         foreignTable: species_agency_code
         refColumn: species_agency_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'speciesAgency'
+            default: 'Complete Behalf of'
+          classes:
+            - none
       soilTexture: 
         name: 'soil_texture_code_id'
         comment: Foreign key reference to Soil Texture code table 
@@ -168,6 +391,12 @@ schemas:
         foreignTable: soil_texture_code
         refColumn: soil_texture_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'soilTexture'
+            default: 'Soil Texture'
+          classes:
+            - none
       observationGeometry:
         name: 'observation_geometry_code_id'
         comment: Foreign key reference to observation geometry code table 
@@ -175,6 +404,12 @@ schemas:
         foreignTable: observation_geometry_code
         refColumn: observation_geometry_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'observationGeometry'
+            default: 'Geometry'
+          classes:
+            - none
       specificUseCode:
         name: 'specific_use_code_id'
         comment: Foreign key reference to Specific use code table 
@@ -182,6 +417,12 @@ schemas:
         foreignTable: specific_use_code
         refColumn: specific_use_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'specificUseCode'
+            default: 'Specific Use Code'
+          classes:
+            - none
       slopeCode:
         name: 'observation_slope_code_id'
         comment: Foreign key reference to observation slope code table 
@@ -189,6 +430,12 @@ schemas:
         foreignTable: observation_slope_code
         refColumn: observation_slope_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'slopeCode'
+            default: 'Slope Code'
+          classes:
+            - none
       aspectCode: 
         name: 'observation_aspect_code_id'
         comment: Foreign key reference to observation directional aspect code table 
@@ -196,6 +443,12 @@ schemas:
         foreignTable: observation_aspect_code
         refColumn: observation_aspect_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'aspectCode'
+            default: 'Aspect Code'
+          classes:
+            - none
       proposedAction:
         name: 'observation_proposed_action_code_id'
         comment: Foreign key reference to observation proposed action codes 
@@ -203,6 +456,12 @@ schemas:
         foreignTable: observation_proposed_action_code
         refColumn: observation_proposed_action_code_id
         deleteCascade: false
+        layout:
+          header:
+            key: 'proposedAction'
+            default: 'Proposed Action'
+          classes:
+            - none
   # --
   # -- SpeciesDistributionCode
   SpeciesDistributionCodeSchema:
