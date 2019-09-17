@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from '../api.service';
 import { AppConstants } from 'src/app/constants';
 import { DropdownObject, DropdownService } from '../dropdown.service';
+import { DummyService } from '../dummy.service';
 
 
 export interface FormConfigField {
@@ -56,7 +57,7 @@ export interface FormConfig {
 })
 export class FormService {
 
-  constructor(private api: ApiService, private dropdownService: DropdownService) {
+  constructor(private api: ApiService, private dropdownService: DropdownService, private dummyService: DummyService) {
   }
 
   public async getMechanicalTreatmentUIConfig(): Promise<any> {
@@ -92,9 +93,12 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const configObject: any = {
+      api: serverConfig.meta.api,
       title: serverConfig.layout.title,
       sections: [],
+      requiredFieldKeys: []
     };
+    const requiredFieldKeys: string[] = [];
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
@@ -105,6 +109,9 @@ export class FormService {
           const field = group.fields[i];
           // Add type flags to field (to help with html generation)
           const newField = await this.configField(field, fields);
+          if (newField.required) {
+            requiredFieldKeys.push(newField.key);
+          }
           // set column size:
           if (group.fields.length >= 3 && i % 3 === 0 && !newField.isTextAreaField) {
             // if group has more than 3 elements, make sure we dont have more than 3 elements per row
@@ -126,8 +133,6 @@ export class FormService {
                 longitude: cachedFieldIsLatitude ? newField : cachedLatOrLongField
               };
               subSectionFields.push(locationField);
-              console.log(`created locaction field`);
-              console.log(locationField);
             } else {
               cachedLatOrLongField = newField;
             }
@@ -148,6 +153,7 @@ export class FormService {
         subSections: subSections
       });
     }
+    configObject.requiredFieldKeys = requiredFieldKeys;
     console.dir(configObject);
     return configObject;
   }
@@ -304,5 +310,39 @@ export class FormService {
         console.log(`Code Table is not handled ${code}`);
         return [];
     }
+  }
+
+  public async generateMechanicalTreatmentTest(config: any): Promise<any> {
+    const dummy =  await this.dummyService.createDummyMechanicalTreatment();
+    return this.merge(config, dummy);
+  }
+
+  public merge(config: any, object: any): any {
+    console.dir(config);
+    console.dir(object);
+    const configuration = config;
+    /*
+      Yes, big O of n^3 is really bad,
+      but we're still coming up with the form builder
+      so things are too complicated for us to figure this out right now.
+    */
+    // TODO: Refactor
+    for (const section of configuration.sections) {
+      for (const subSection of section.subSections) {
+        for (const field of subSection.fields) {
+          if (field.isLocationField) {
+            console.log('should handle location field');
+          } else {
+            if (object[field.key]) {
+              field.value = object[field.key];
+            } else {
+              console.log(`key ${field.key} does not exist in generated object`);
+            }
+          }
+        }
+      }
+    }
+    console.dir(configuration);
+    return configuration;
   }
 }

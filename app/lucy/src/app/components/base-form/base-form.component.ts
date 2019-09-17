@@ -11,10 +11,11 @@ import { RolesService } from 'src/app/services/roles.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { RouterService } from 'src/app/services/router.service';
 import { UserAccessType } from 'src/app/models/Role';
-import { AppRoutes } from 'src/app/constants';
+import { AppRoutes, AppConstants } from 'src/app/constants';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 import { FormService} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
+import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-base-form',
@@ -173,6 +174,20 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   private config: any = {};
 
+  get canSubmit(): boolean {
+    if (!this.config || !this.responseBody) {
+      return false;
+    }
+    let requiredFieldsExist = true;
+    for (const key of this.config.requiredFieldKeys) {
+      if (!this.responseBody[key]) {
+        console.log(`${key} is missing`);
+        requiredFieldsExist = false;
+      }
+    }
+    return requiredFieldsExist;
+  }
+
   constructor(
     // private mechanicalTreatmentService: MechanicalTreatmentService,
     private errorService: ErrorService,
@@ -181,7 +196,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private alert: AlertService,
     private router: RouterService,
     private dropdownService: DropdownService,
-    private formService: FormService
+    private formService: FormService,
+    private api: ApiService
   ) {
     this.lottieConfig = {
       path: this.formLoadingIcon,
@@ -201,20 +217,21 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.isLoading = true;
     this.accessType = await this.userService.getAccess();
     this.config = await this.formService.getMechanicalTreatmentUIConfig();
+    // const x = await this.formService.generateMechanicalTreatmentTest(this.config);
     this.isLoading = false;
   }
 
   fieldChanged(field: any, event: any) {
     if (field.isLocationField) {
       // location field
-      this.responseBody[field.latitude.key] = event.latitude.value;
-      this.responseBody[field.latitude.key] = event.longitude.value;
+      this.responseBody[field.latitude.key] = +event.latitude.value;
+      this.responseBody[field.longitude.key] = +event.longitude.value;
     } else if (field.isDropdown) {
       // dropdown field
-      console.log(event.object);
       for (const key in event.object) {
         if (key.toLowerCase().indexOf('id') !== -1) {
           this.responseBody[field.key] = event.object[key];
+          break;
         }
       }
     } else if (field.isDateField) {
@@ -227,8 +244,24 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       // Store key / value for regular field
       this.responseBody[field.key] = event;
     }
+  }
 
-    console.log(this.responseBody);
+  async submitAction() {
+    const ep = this.config.api.replace('api', '');
+    const endpoint = `${AppConstants.API_baseURL}${ep}`;
+    if (!this.canSubmit) {
+      this.alert.show('Missing fields', 'Please fill all required fields');
+    } else {
+      this.isLoading = true;
+      const result = await this.api.request(APIRequestMethod.POST, endpoint, this.responseBody);
+      console.log(result);
+      if (result.success) {
+        this.router.navigateTo(AppRoutes.Inventory);
+      } else {
+        this.isLoading = false;
+        this.alert.show('error', 'There was an error');
+      }
+    }
   }
 
   /////////// Lottie ///////////
@@ -252,6 +285,5 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.animationSpeed = speed;
     this.anim.setSpeed(speed);
   }
-
   /////////// End Lottie ///////////
 }

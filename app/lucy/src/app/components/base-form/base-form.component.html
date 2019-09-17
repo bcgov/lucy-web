@@ -81,7 +81,9 @@
         *ngFor="let subSection of section.subSections; let j = index"
         class="row"
       >
+      
         <div class="col-12 sub-section-title">
+            <br/>
           {{ subSection["title"] }}
         </div>
         <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
@@ -104,7 +106,7 @@
                 *ngIf="field.isInputField"
                 [mode]="mode"
                 [header]="field.header"
-                [value]=""
+                [value]="field.value"
                 (valueChanged)="fieldChanged(field, $event)"
               >
               </app-field>
@@ -114,7 +116,7 @@
                 [mode]="mode"
                 [multiline]="true"
                 [header]="field.header"
-                [value]=""
+                [value]="field.value"
                 (valueChanged)="fieldChanged(field, $event)"
               >
               </app-field>
@@ -122,7 +124,7 @@
               <app-date-picker
                 *ngIf="field.isDateField"
                 [mode]="mode"
-                [date]=""
+                [date]="field.value"
                 [header]="field.header"
                 (selected)="fieldChanged(field, $event)"
               ></app-date-picker>
@@ -132,7 +134,7 @@
                 [mode]="mode"
                 [items]="field.dropdown"
                 [fieldHeader]="field.header"
-                [selectedItem]=""
+                [selectedItem]="field.value"
                 (selectionChanged)="fieldChanged(field, $event)"
               >
               </app-dropdown>
@@ -142,7 +144,7 @@
                   *ngIf="field.isCheckbox"
                   [mode]="mode"
                   [header]="field.header"
-                  [value]=""
+                  [value]="field.value"
                   (selectionChanged)="fieldChanged(field, $event)"
                 >
                 </app-checkbox>
