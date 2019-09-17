@@ -257,6 +257,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         for (const field of group.fields) {
           // Add type flags to field (to help with html generation)
           const newField = await this.configField(field, fields);
+          // set column size:
+          // if more than 3 elements
+          if (group.fields.length >= 3) {
+            newField.cssClasses = newField.cssClasses + ' col col-md-4';
+          }
           if (newField.isLocationLatitudeField || newField.isLocationLongitudeField) {
             // if its a latitude or logitude field, and we havent cached such field before, cache it
             // if its already chached, generate special location field to add to subsection
@@ -314,6 +319,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
           response.isCheckbox = false;
           response.isInputField = false;
         }
+        // if its a dropdown, grab its code table
         if (response.isDropdown) {
           response.dropdown = await this.dropdownfor(field.codeTable);
         }
@@ -331,6 +337,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       codeTable = field.refSchema.schemaName;
       // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
     }
+    let cssClasses = ``;
+    const classes = field.layout.classes;
+    for (const item of classes) {
+      cssClasses = cssClasses + ` `;
+    }
     return {
       key: field.key,
       header: field.layout.header,
@@ -339,7 +350,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       type: field.type,
       verification: field.verification,
       meta: field.meta,
-      cssClasses: field.layout.classes,
+      cssClasses: cssClasses,
       codeTable: codeTable,
       condition: ''
     };
