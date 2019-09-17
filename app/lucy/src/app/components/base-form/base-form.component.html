@@ -48,7 +48,7 @@
          </div>
          <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
            <div class="row">
-             <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index">
+             <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index" [ngClass]="field.cssClasses">
                <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]='field'
                  (locationChanged)='fieldChanged(field, $event)'>
                </app-location-input>

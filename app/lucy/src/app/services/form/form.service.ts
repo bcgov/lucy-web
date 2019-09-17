@@ -11,7 +11,7 @@ export interface FormConfigField {
       type: string;
       verification: any;
       meta: any;
-      cssClasses: string[];
+      cssClasses: string;
       codeTable: string;
       condition: string;
 }
