@@ -254,12 +254,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       for (const group of groups) {
         const subSectionFields: any[] = [];
         let cachedLatOrLongField: any;
-        for (const field of group.fields) {
+        for (const i in group.fields) {
+          const field = group.fields[i];
           // Add type flags to field (to help with html generation)
           const newField = await this.configField(field, fields);
           // set column size:
           // if more than 3 elements
-          if (group.fields.length >= 3) {
+          if (group.fields.length >= 3 && i % 3 === 0) {
             newField.cssClasses = newField.cssClasses + ' col col-md-4';
           }
           if (newField.isLocationLatitudeField || newField.isLocationLongitudeField) {
