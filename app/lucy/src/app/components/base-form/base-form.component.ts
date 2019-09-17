@@ -20,6 +20,7 @@ import { DummyService } from "src/app/services/dummy.service";
 import { UserAccessType } from 'src/app/models/Role';
 import { AppRoutes } from 'src/app/constants';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
+import { FormService, FormConfigField } from 'src/app/services/form/form.service';
 
 @Component({
   selector: 'app-base-form',
@@ -185,7 +186,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private router: RouterService,
     private loadingService: LoadingService,
     private dummy: DummyService,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    private formService: FormService
   ) {
     this.lottieConfig = {
       path:
@@ -200,7 +202,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.initialize();
   }
 
-  ngAfterViewChecked(): void {}
+  ngAfterViewChecked(): void { }
 
   /**
    * Setting User's access type
@@ -238,11 +240,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   private async createUIConfig(): Promise<any> {
-    const serverMessage = this.getTestFormConfig();
-    const sections = serverMessage['sections'];
-    const fields = serverMessage['fields'];
+    // const serverMessage = this.getTestFormConfig();
+    const serverMessage = await this.formService.getMechanicalTreatmentConfig();
+    const sections = serverMessage.layout.sections;
+    const fields = serverMessage.fields;
     const configObject: any = {
-      title: serverMessage.title,
+      title: serverMessage.layout.title,
       sections: [],
     };
     for (const section of sections) {
@@ -295,14 +298,14 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   private async configField(key: string, fields: any[]): Promise<any> {
     for (const field of fields) {
       if (field['key'] === key) {
-        const response = field;
+        const response: any = this.processFieldConfig(field);
         response.value = undefined;
         // Handle location differently
         response.isLocationLatitudeField = (field.key.toLowerCase() === 'lat' || field.key.toLowerCase() === 'latitude');
         response.isLocationLongitudeField = (field.key.toLowerCase() === 'long' || field.key.toLowerCase() === 'longitude');
         // If its not a location field, proceed
         if (!response.isLocationLatitudeField && !response.isLocationLongitudeField) {
-          response.isDropdown = field.type === 'code';
+          response.isDropdown = field.type === 'object';
           response.isCheckbox = field.type === 'boolean';
           response.isInputField = field.type === 'string' || field.type === 'number';
         } else {
@@ -320,9 +323,31 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return null;
   }
 
+  processFieldConfig(field: any): FormConfigField {
+    let isCodeTable = false;
+    let codeTable = '';
+    if (field.type === 'object') {
+      isCodeTable = true;
+      codeTable = field.refSchema.schemaName;
+      // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
+    }
+    return {
+      key: field.key,
+      header: field.layout.header,
+      description: field.layout.description,
+      required: field.required,
+      type: field.type,
+      verification: field.verification,
+      meta: field.meta,
+      cssClasses: field.layout.classes,
+      codeTable: codeTable,
+      condition: ''
+    };
+  }
+
   private async dropdownfor(code: string): Promise<DropdownObject[]> {
     switch (code) {
-      case 'speciesAgencyCodes':
+      case 'SpeciesAgencyCodes':
         return await this.dropdownService.getAgencies();
       default:
         return await this.dropdownService.getInvasivePlantSpecies();

@@ -22,6 +22,9 @@ export class AppConstants {
     static get API_messages(): string { return `${AppConstants.API_baseURL}/account/message`; }
     static get API_allUsers(): string { return `${AppConstants.API_baseURL}/account/users`; }
 
+    // Form Config
+    static get API_Form_MechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical/config`; }
+
     // Observation
     static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }
     static get API_observationSpecies(): string { return `${AppConstants.API_baseURL}/observation/species`; }

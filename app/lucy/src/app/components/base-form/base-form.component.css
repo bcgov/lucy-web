@@ -72,7 +72,7 @@
 
 .form-bg {
     background: #F5F6FA;
-    height: 100%;
+    min-height: 100%;
 }
 
 .form-body {
