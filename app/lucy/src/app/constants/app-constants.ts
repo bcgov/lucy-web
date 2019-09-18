@@ -24,11 +24,15 @@ export class AppConstants {
 
     // Form Config
     static get API_Form_MechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical/config`; }
+    // Form Config
+    static get API_Form_Observation(): string { return `${AppConstants.API_baseURL}/observation/config`; }
 
     // Observation
     static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }
     static get API_observationSpecies(): string { return `${AppConstants.API_baseURL}/observation/species`; }
-    static get API_observationCodes(): string { return `${AppConstants.API_baseURL}/observation/codes`; }
+
+    // Code Tables
+    static get API_CodeTables(): string { return `${AppConstants.API_baseURL}/codes`; }
 
     static API_observationWith(id: number): string {
          return `${AppConstants.API_baseURL}/observation/${id}`;

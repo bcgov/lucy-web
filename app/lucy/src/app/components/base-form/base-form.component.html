@@ -1,3 +1,26 @@
+<div *ngIf="!formType">
+<br />
+<br />
+<br />
+  <div class="container container-fluid form-options">
+    <div class="row">
+      <mat-card>
+      <div class="col-12">
+        Choose form configuration
+      </div>
+      <br/>
+      <div class="col-12 form-option-button">
+        <button mat-raised-button color="primary" (click)="selectedMechanicalTreatmentFormType()"> Mechanical Treatment Form</button>
+      </div>
+      <br/>
+      <div class="col-12 form-option-button">
+        <button mat-raised-button color="primary" (click)="selectedObservationFormType()"> Observation Form</button>
+      </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="isLoading" class="form-bg">
   <!-- Header Section  -->
   <div class="container-fluid header-container sticky">
@@ -17,7 +40,7 @@
     </lottie-animation-view>
   </div>
 </div>
-<div *ngIf="!isLoading" class="form-bg">
+<div *ngIf="!isLoading && formType" class="form-bg">
   <!-- Header Section  -->
   <div class="container-fluid header-container sticky">
     <div class="container header-container-inner">
@@ -73,7 +96,7 @@
       <br />
       <div class="row">
         <div class="col-12 section-title">
-          {{ section["title"] }}
+          {{ section["title"].default }}
           <hr class="section-divider" />
         </div>
       </div>
@@ -84,7 +107,7 @@
       
         <div class="col-12 sub-section-title">
             <br/>
-          {{ subSection["title"] }}
+          {{ subSection["title"].default }}
         </div>
         <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
           <div class="row">

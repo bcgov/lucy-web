@@ -17,15 +17,25 @@ import { FormService} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
 import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 
+export enum FormType {
+  Observation,
+  MechanicalTreeatment
+}
 @Component({
   selector: 'app-base-form',
   templateUrl: './base-form.component.html',
   styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
+  _formType: FormType;
+  get formType(): FormType | undefined {
+    return this._formType;
+  }
+  set formType(type: FormType) {
+    this._formType = type;
+  }
   public componentName = ` `;
   private responseBody = {};
-
 
   // Lottie Animation
   isLoading = false;
@@ -172,7 +182,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     );
   }
 
-  private config: any = {};
+  private _config: any = {};
+
+  private get config(): any {
+    return this._config;
+  }
+
+  private set config(object: any) {
+    this._config = object;
+  }
 
   get canSubmit(): boolean {
     if (!this.config || !this.responseBody) {
@@ -214,11 +232,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked(): void { }
 
   async initialize() {
-    this.isLoading = true;
+    // this.isLoading = true;
     this.accessType = await this.userService.getAccess();
-    this.config = await this.formService.getMechanicalTreatmentUIConfig();
-    // const x = await this.formService.generateMechanicalTreatmentTest(this.config);
-    this.isLoading = false;
+    // this.isLoading = false;
   }
 
   fieldChanged(field: any, event: any) {
@@ -247,8 +263,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   async submitAction() {
-    const ep = this.config.api.replace('api', '');
-    const endpoint = `${AppConstants.API_baseURL}${ep}`;
+    const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.alert.show('Missing fields', 'Please fill all required fields');
     } else {
@@ -286,4 +301,23 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.anim.setSpeed(speed);
   }
   /////////// End Lottie ///////////
+
+  async selectedMechanicalTreatmentFormType() {
+    this.formType = FormType.MechanicalTreeatment;
+    this.isLoading = true;
+    console.log('Getting mechanical treatment');
+    this.config = await this.formService.getMechanicalTreatmentUIConfig();
+    console.log('done');
+    this.isLoading = false;
+    // const x = await this.formService.generateMechanicalTreatmentTest(this.config);
+  }
+
+  async selectedObservationFormType() {
+    this.formType = FormType.MechanicalTreeatment;
+    this.isLoading = true;
+    console.log('Getting observation');
+    this.config = await this.formService.getObservationUIConfig();
+    console.log('done');
+    this.isLoading = false;
+  }
 }

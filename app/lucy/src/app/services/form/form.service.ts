@@ -65,11 +65,37 @@ export class FormService {
     return await this.createUIConfig(serverConfig);
   }
 
+  public async getObservationUIConfig(): Promise<any> {
+    const serverConfig = await this.getObservationConfig();
+    return await this.createUIConfig(serverConfig);
+  }
+
   /**
    * Fetch and return configuration json for Mechanical treatment page
    */
   private async getMechanicalTreatmentConfig(): Promise<FormConfig> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Form_MechanicalTreatment, undefined);
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(`Got a response, but something is off - modelName is missing`);
+        console.dir(response);
+        return undefined;
+      }
+    } else {
+      console.log(`observation creation failed`);
+      console.dir(response);
+      return undefined;
+    }
+  }
+
+  /**
+   * Fetch and return configuration json for Observation page
+   */
+  private async getObservationConfig(): Promise<FormConfig> {
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Form_Observation, undefined);
     if (response.success) {
       const modelName = response.response[`modelName`];
       if (modelName) {
@@ -94,7 +120,7 @@ export class FormService {
     const fields = serverConfig.fields;
     const configObject: any = {
       api: serverConfig.meta.api,
-      title: serverConfig.layout.title,
+      title: serverConfig.layout.title.default,
       sections: [],
       requiredFieldKeys: []
     };
@@ -113,7 +139,7 @@ export class FormService {
             requiredFieldKeys.push(newField.key);
           }
           // set column size:
-          if (group.fields.length >= 3 && i % 3 === 0 && !newField.isTextAreaField) {
+          if (group.fields.length >= 3 && (i % 3 === 0  || (i + 1) % 3 === 0) && !newField.isTextAreaField) {
             // if group has more than 3 elements, make sure we dont have more than 3 elements per row
             // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
             newField.cssClasses = newField.cssClasses + ' col col-md-4';
@@ -249,7 +275,7 @@ export class FormService {
     }
     return {
       key: field.key,
-      header: field.layout.header,
+      header: field.layout.header.default,
       description: field.layout.description,
       required: field.required,
       type: field.type,
@@ -306,6 +332,8 @@ export class FormService {
         return await this.dropdownService.getMechanicalTreatmentProviders();
       case 'observation':
         return await this.dropdownService.getObservations();
+      case 'speciesdensitycode':
+        return await this.dropdownService.getDensities();
       default:
         console.log(`Code Table is not handled ${code}`);
         return [];
