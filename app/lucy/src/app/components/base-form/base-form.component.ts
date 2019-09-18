@@ -309,7 +309,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.config = await this.formService.getMechanicalTreatmentUIConfig();
     console.log('done');
     this.isLoading = false;
-    // const x = await this.formService.generateMechanicalTreatmentTest(this.config);
+    const x = await this.formService.generateMechanicalTreatmentTest(this.config);
   }
 
   async selectedObservationFormType() {
