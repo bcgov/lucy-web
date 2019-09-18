@@ -65,3 +65,10 @@
   color: #333333;
   font-weight: normal;
 }
+
+.user-icon {
+  border: 1px solid #CCCCCC;
+  background-color: #F2F2F2;
+  color: #002C71;
+  box-shadow: none !important;
+}
