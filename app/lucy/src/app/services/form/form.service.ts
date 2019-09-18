@@ -125,6 +125,8 @@ export class FormService {
       requiredFieldKeys: []
     };
     const requiredFieldKeys: string[] = [];
+    // if you think this is O N^3, you're wrong. it O N^4!
+    // But this generated structure makes if easy for the view to display
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
@@ -224,8 +226,10 @@ export class FormService {
             case 'string': {
               // String can be a simple input field, comment field, or date
               if (fieldOfInterest.verification.isDate) {
+                // Date is Date FIeld
                 fieldOfInterest.isDateField = true;
               } else if (fieldOfInterest.verification.size && fieldOfInterest.verification.size > 100) {
+                // Comment is textAreaField (still input field)
                 fieldOfInterest.isTextAreaField = true;
               } else {
                 fieldOfInterest.isInputField = true;
