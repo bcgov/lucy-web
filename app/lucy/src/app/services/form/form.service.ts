@@ -141,7 +141,7 @@ export class FormService {
             requiredFieldKeys.push(newField.key);
           }
           // set column size:
-          if (group.fields.length >= 3 && (i % 3 === 0  || (i + 1) % 3 === 0) && !newField.isTextAreaField) {
+          if (group.fields.length >= 3 && (i % 3 === 0 || (i + 1) % 3 === 0) && !newField.isTextAreaField) {
             // if group has more than 3 elements, make sure we dont have more than 3 elements per row
             // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
             newField.cssClasses = newField.cssClasses + ' col col-md-4';
@@ -344,17 +344,39 @@ export class FormService {
     }
   }
 
-  public async generateMechanicalTreatmentTest(config: any): Promise<any> {
-    const dummy =  await this.dummyService.createDummyMechanicalTreatment();
-    return this.merge(config, dummy);
+  private async getDropdownObjectWithId(codeTableName: string, selectedObject: any): Promise<DropdownObject> {
+    const dropdowns = await this.dropdownfor(codeTableName);
+    let selectedID : number;
+    for (const key in selectedObject) {
+      if ((key.toLowerCase().indexOf('id') !== -1)) {
+        selectedID = selectedObject[key];
+        break;
+      }
+    }
+    if (selectedID === undefined) {
+      return undefined;
+    }
+    for (const item of dropdowns) {
+      const dropdown = item.object;
+      for (const key in dropdown) {
+        if ((key.toLowerCase().indexOf('id') !== -1) && dropdown[key] === selectedID) {
+          return item;
+        }
+      }
+    }
+    return undefined;
   }
 
-  public merge(config: any, object: any): any {
-    console.dir(config);
-    console.dir(object);
+  public async generateMechanicalTreatmentTest(config: any): Promise<any> {
+    const dummy = await this.dummyService.createDummyMechanicalTreatment();
+    return await this.merge(config, dummy);
+  }
+
+  private async merge(config: any, object: any): Promise<any> {
     const configuration = config;
     /*
-      Yes, big O of n^3 is really bad,
+      Yes, big O of n^3 is really bad
+      (its actually way, way worse if you look deeper)
       but we're still coming up with the form builder
       so things are too complicated for us to figure this out right now.
     */
@@ -363,18 +385,24 @@ export class FormService {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
           if (field.isLocationField) {
-            console.log('should handle location field');
+            field.latitude.value = object[field.latitude.key];
+            field.longitude.value = object[field.longitude.key];
           } else {
             if (object[field.key]) {
-              field.value = object[field.key];
+              const key = object[field.key];
+              if (typeof key === 'object' && key !== null) {
+                const codeTableName = field.codeTable;
+                field.value = await this.getDropdownObjectWithId(codeTableName, object[field.key]);
+              } else {
+                field.value = object[field.key];
+              }
             } else {
-              console.log(`key ${field.key} does not exist in generated object`);
+              console.log(`**** key ${field.key} does not exist in generated object`);
             }
           }
         }
       }
     }
-    console.dir(configuration);
     return configuration;
   }
 }

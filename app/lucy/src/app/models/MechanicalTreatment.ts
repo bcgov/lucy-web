@@ -8,6 +8,8 @@ export interface MechanicalTreatment {
         width: number;
         applicatorFirstName: string;
         applicatorLastName: string;
+        secondaryApplicatorFirstName: string;
+        secondaryApplicatorLastName: string;
         providerContractor: MechanicalTreatmentProviders;
         date: string;
         paperFileReference: string;
