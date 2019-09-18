@@ -9,12 +9,11 @@ schemas:
         required: true
         name: sample_id
         definition: SERIAL PRIMARY KEY
-        
       name:
-        name: sample_name
         comment: Name of the sample
-        definition: VARCHAR(20) NULL
         required: true
+        name: sample_name
+        definition: VARCHAR(20) NULL
         meta: {}
         layout:
           header:
