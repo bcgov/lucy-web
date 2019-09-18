@@ -6,6 +6,7 @@ import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
 import { UserAccessType } from 'src/app/models/Role';
 import { RolesService } from 'src/app/services/roles.service';
+import { StringConstants } from 'src/app/constants/string-constants';
 
 declare const location: any;
 
@@ -25,6 +26,21 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * User access type
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
+
+  /**
+   * String representation of user's access (based on role)
+   */
+  public accessTypeMessage = ``;
+
+  /**
+   * Title of user's role within associated organization
+   */
+  public role = ``;    // TODO may need to be updated once Role implemented in API
+
+  /**
+   * Title of user's organization
+   */
+  public organization = ``;    // TODO may need to be updated once Organization implemented in API
 
   /**
    * Listener for route events
@@ -125,6 +141,9 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.setInitials();
     this.setAccessType();
+    this.setAccessTypeMessage();
+    this.setRole();
+    this.setOrganization();
     this.listenForRouteChanges();
   }
 
@@ -141,6 +160,9 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.routeEventsListener = this.routerService.events.subscribe((val) => {
       this.setInitials();
       this.setAccessType();
+      this.setAccessTypeMessage();
+      this.setRole();
+      this.setOrganization();
     });
   }
 
@@ -164,6 +186,36 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private async setAccessType() {
     this.accessType = await this.userService.getAccess();
+  }
+
+  private async setAccessTypeMessage() {
+
+    this.userService.getAccess().then((value) => {
+      this.accessType = value;
+      switch (value) {
+        case UserAccessType.DataEditor:
+          this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
+          break;
+        case UserAccessType.DataViewer:
+          this.accessTypeMessage = StringConstants.databaseAccess_View_Badge;
+          break;
+        case UserAccessType.Admin:
+          this.accessTypeMessage = StringConstants.databaseAccess_Admin_Badge;
+          break;
+      }
+    });
+  }
+
+  /**
+   * Setting User's role (String value)
+   * to be consumed by HTML
+   */
+  private async setRole() {
+    this.role = await this.userService.getRole();
+  }
+
+  private async setOrganization() {
+    this.organization = await this.userService.getOrganization();
   }
 
   /**

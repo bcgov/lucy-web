@@ -49,11 +49,18 @@
           <div class="user-actions-large">
             <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item class="btn-with-icon"  [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'" 
+              <!-- User access preview (non-clickable) -->
+              <mat-card>
+                <mat-card-title>{{ role }}</mat-card-title>
+                <mat-card-subtitle>{{ organization }}</mat-card-subtitle>
+                <mat-card-content>{{ accessTypeMessage }}</mat-card-content>
+              </mat-card>
+              <!-- the buttons in the menu -->
+              <a class="nav-link" mat-menu-item class="btn-with-icon"  [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'" 
               (click)="navigateToProfile()">
                 Profile 
                 <i class="material-icons">account_circle</i>
-              </button>
+            </a>
               <button mat-menu-item class="btn-with-icon" (click)="logout()">
                 Logout <i class="material-icons">input</i>
               </button>

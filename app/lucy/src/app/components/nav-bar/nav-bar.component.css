@@ -13,6 +13,10 @@
   flex: 1 1 auto;
 }
 
+.mat-card-title {
+  font-size: 16px;
+}
+
 .navbar-nav > li{
   margin-left:5px;
   margin-right:5px;
