@@ -47,7 +47,7 @@
       <ul *ngIf="isAuthenticated" class="navbar-nav">
         <li class="nav-item">
           <div class="user-actions-large">
-            <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
+            <button mat-fab [matMenuTriggerFor]="menu" class="user-icon">{{userInitials}}</button>
             <mat-menu #menu="matMenu">
               <button mat-menu-item class="btn-with-icon"  [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'" 
               (click)="navigateToProfile()">
