@@ -9,8 +9,8 @@
 .sub-section-title {
     color: #000000;
     font-size: 17px;
-	font-weight: bold;
-	line-height: 22px;
+    font-weight: bold;
+    line-height: 22px;
 }
 
 .section-divider {
@@ -21,8 +21,8 @@
 }
 
 .nopadding {
-   padding: 0 !important;
-   margin: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .sticky {
@@ -34,8 +34,8 @@
 }
 
 .mat-toolbar {
-  background-color:rgba(0, 0, 0, 0);
-  color: #fff;
+    background-color: rgba(0, 0, 0, 0);
+    color: #fff;
 }
 
 .header-container {
@@ -43,7 +43,7 @@
     margin: 0 auto;
     width: 100%;
     background: linear-gradient(135deg, #0053A4 0%, #002C71 100%);
-    box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+    box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
 }
 
 .spacer-toolbar {
@@ -51,13 +51,9 @@
 }
 
 /* HANDELING SIDE NAV ON SCREEN SIZE CHANGE */
-@media (min-width: 992px) {
+@media (min-width: 992px) {}
 
-}
-
-@media (max-width: 992px) {
-
-}
+@media (max-width: 992px) {}
 
 /****************************************/
 @media (max-width: 768px) {
@@ -76,11 +72,21 @@
 }
 
 .form-body {
-	border-radius: 5px;
-	background-color: #FFFFFF;
-	box-shadow: 0 0 5px 0 #E5E9F2;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 5px 0 #E5E9F2;
 }
 
 .mat-toolbar-row {
     padding: 0 !important;
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-option-button {
+    width: 100%;
 }
