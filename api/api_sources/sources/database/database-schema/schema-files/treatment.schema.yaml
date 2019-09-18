@@ -96,8 +96,21 @@ schemas:
                 - signageOnSiteIndicator
                 - comment
               style: {}
-        # End-Section
+      # End-Section
     # End Of Layouts
+    # Computed fields
+    computedFields:
+      observationArea:
+        header:
+          key: observationArea
+          default: Observed area
+        computationRules:
+          - name: Compute Area
+            keys:
+              - width
+              - length
+            method: calculateArea
+    # End - Computed fields
     columns: 
       # -- Data Columns
       id: 
@@ -246,7 +259,15 @@ schemas:
         foreignTable: observation
         refColumn: observation_id
         deleteCascade: true
-        meta: {}
+        meta: 
+          filters:
+            location:
+              note: Fetch relationship data based on location
+              keys:
+                - key: latitude
+                  refKey: lat
+                - key: longitude
+                  refKey: long
         layout:
           header: 
             key: 'observation' 

@@ -50,9 +50,10 @@ schemas:
                 key: 'geometry' 
                 default: Geometry  
               fields:
+                - observationGeometry
                 - width
                 - length
-                - observationGeometry
+                - observationArea
                 - accessDescription
             # End-group(Geometry)
             - title: 
@@ -105,8 +106,22 @@ schemas:
                 - sampleIdentifier
             # End-group(Further Observation)
           # End-groups
-        # End-Section
+      # End-Section
     # End-layout
+    # Computed fields
+    computedFields:
+      observationArea:
+        header:
+          key: observationArea
+          default: Observed area
+        computationRules:
+          - name: Compute Area
+            keys:
+              - width
+              - length
+              - observationGeometry
+            method: calculateArea
+    # End - Computed fields
     columns: 
       # -- Regular Columns
       id: 
@@ -198,6 +213,12 @@ schemas:
         name: 'sample_identifier'
         comment: Identifier for sample taken.
         definition: VARCHAR(50) NULL
+        required: false
+        meta:
+          dependencies:
+            - key: sampleTakenIndicator
+              requiredValues:
+                - true
         layout:
           header:
             key: 'observation.sampleIdentifier'
