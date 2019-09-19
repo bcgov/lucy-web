@@ -175,7 +175,8 @@ export class UserService {
     }
     return (
       (user.firstName !== ``) &&
-      (user.lastName !== ``)
+      (user.lastName !== ``) &&
+      (user.email !== ``)
     );
   }
   /*------------------------------------END OF GETs------------------------------------*/
