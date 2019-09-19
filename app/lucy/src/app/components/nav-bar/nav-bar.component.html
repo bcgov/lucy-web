@@ -31,15 +31,15 @@
         </li>
         <!-- Other Navar elements  -->
         <!-- View Database -->
-        <li class="nav-item">
+        <li *ngIf="!isInfo" class="nav-item">
           <a class="nav-link" [ngClass]="isInventoryActive ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToInventory()">View Database</a>
         </li>
         <!-- Admin Tools -->
-        <li *ngIf="isAdmin" class="nav-item">
+        <li *ngIf="isAdmin && !isInfo" class="nav-item">
           <a class="nav-link" [ngClass]="isAdminToolsActive ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToAdminTools()">Admin Tools</a>
         </li>
         <!-- Create Observation  -->
-        <li *ngIf="isDataEditor" class="nav-item" [class.active]="isAddObservationActive">
+        <li *ngIf="isDataEditor && !isInfo" class="nav-item" [class.active]="isAddObservationActive">
           <button class="btn button-fill" [disabled]="isAddEntryActive" (click)="navigateToAddEntry()">+ Add Entry</button>
         </li>
       </ul>
@@ -49,7 +49,7 @@
           <div class="user-actions-large">
             <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item class="btn-with-icon"  [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'" 
+              <button mat-menu-item class="btn-with-icon"  [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off' "
               (click)="navigateToProfile()">
                 Profile 
                 <i class="material-icons">account_circle</i>
