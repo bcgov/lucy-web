@@ -25,7 +25,7 @@ objects:
     labels: null
     name: ${NAME}${SUFFIX}
   spec:
-    replicas: 1
+    replicas: ${REPLICAS}
     revisionHistoryLimit: 10
     selector:
       deploymentConfig: ${NAME}${SUFFIX}
@@ -70,29 +70,33 @@ objects:
           - name: DB_PORT
             value: "5432"
           - name: APP_CERTIFICATE_URL
-            value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+            value: ${CERTIFICATE_URL}
           - name: CHANGE_VERSION
             value: ${CHANGE_ID}
+          - name: ENVIRONMENT
+            value: ${ENVIRONMENT}
+          - name: VERSION
+            value: ${VERSION}
           image: " "
           imagePullPolicy: Always
           name: api
           ports:
-          - containerPort: 3001
+          - containerPort: ${PORT}
             protocol: TCP
           - containerPort: 8080
             protocol: TCP
           resources: 
             limits:
-              cpu: 750m
-              memory: 2Gi
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
             requests:
-              cpu: 500m
-              memory: 1Gi
+              cpu: ${CPU_REQ}
+              memory: ${MEMORY_REQ}
           readinessProbe:
             failureThreshold: 10
             httpGet:
               path: /api/misc/version
-              port: 3001
+              port: ${PORT}
               scheme: HTTP
             initialDelaySeconds: 140
             periodSeconds: 30
@@ -102,7 +106,7 @@ objects:
             failureThreshold: 10
             httpGet:
               path: /api/misc/version
-              port: 3001
+              port: ${PORT}
               scheme: HTTP
             initialDelaySeconds: 90
             periodSeconds: 30
@@ -160,10 +164,10 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     ports:
-      - name: 3001-tcp
-        port: 3001
+      - name: ${PORT}-tcp
+        port: ${PORT}
         protocol: TCP
-        targetPort: 3001
+        targetPort:  ${PORT}
       - name: 8080-tcp
         port: 8080
         protocol: TCP
@@ -184,7 +188,7 @@ objects:
   spec:
     host: ${HOST}
     port:
-      targetPort: 3001-tcp
+      targetPort: ${PORT}-tcp
     to:
       kind: Service
       name: ${NAME}${SUFFIX}
@@ -202,10 +206,37 @@ parameters:
 - name: SUFFIX
   value: "-dev"
 - name: VERSION
+  description: Version of the application
   value: "1.0.0"
 - name: HOST
+  description: Host name of the application
+  required: true
 - name: CHANGE_ID
+  description: Change id of the project. This will help to pull image stream
+  required: true
   value: "0"
 - name: DB_SERVICE_NAME
   description: 'Database service name associated  with deployment'
   required: true
+- name: ENVIRONMENT
+  description: Application Environment type variable
+  required: true
+  value: 'dev'
+- name: PORT
+  description: Application Port
+  required: true
+  value: "3001"
+- name: CERTIFICATE_URL
+  description: Authentication certificate urls
+  required: true
+  value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+- name: CPU_REQ
+  value: '500m'
+- name: CPU_LIMIT
+  value: '750m'
+- name: MEMORY_REQ
+  value: '1Gi'
+- name: MEMORY_LIMIT
+  value: '2Gi'
+- name: REPLICAS
+  value: '1'

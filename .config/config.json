@@ -8,6 +8,8 @@
         "prod": "prod"
     },
     "version": "1.0.0",
+    "previousVersion": "NA",
+    "olderVersions": [],
     "module": {
         "app": "invasivesbc-app",
         "api": "invasivesbc-api"

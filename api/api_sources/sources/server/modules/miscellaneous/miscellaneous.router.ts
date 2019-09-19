@@ -60,6 +60,10 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
         this.applyRouteConfig();
     }
 
+    get versionString(): string {
+        return `${process.env.ENVIRONMENT || 'default'}-${process.env.VERSION || '0.0'}-${process.env.CHANGE_ID || '0'}`;
+    }
+
     @Route({
         path: 'api/misc#/version',
         description: 'Version API for app',
@@ -74,7 +78,11 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
         }
     })
     get version(): RouteHandler {
-        return this.routeConfig<any>('version', async () => [200, { version: process.env.VERSION || `0.-1`}]);
+        return this.routeConfig<any>('version', async () => [200, {
+            version: process.env.VERSION || '0.0',
+            env: process.env.ENVIRONMENT || 'default',
+            changeId: process.env.CHANGE_ID || 'NA'
+        }]);
     }
 
     @Route({
