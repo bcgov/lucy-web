@@ -1,0 +1,82 @@
+# User Table Schema 
+version: '1.0'
+externalTables: []
+schemas: 
+  # -- UserSchema --
+  UserSchema:
+    name: application_user
+    description: 'User of the application is a person with valid IDR or BCeID. Default role of the user is Viewer of InvasiveBC data records. Other typical user types are admin, subject matter expert (sme/ or data editor)'
+    columns:
+      id: 
+        name: user_id
+        comment: 'Auto generated primary key. Uniquely identify user'
+        definition: SERIAL PRIMARY KEY
+      firstName:
+        name: first_name
+        comment: First name of the user
+        definition: VARCHAR(100) NULL
+      lastName: 
+        name: last_name
+        comment: Last name of the user
+        definition: VARCHAR(100) NULL
+      email:
+        name: email
+        comment: Email address of user
+        definition: VARCHAR(300) NOT NULL UNIQUE
+      preferredUsername:
+        name: preferred_username
+        comment: IDR of BCeID associated with user
+        definition: VARCHAR(300) NOT NULL UNIQUE
+      accountStatus:
+        name: account_status
+        comment: 'Status of user account. This application level enum flag values. 0 => Inactive, 1 => Active, 2 => Suspended. Currently this values are managed by application, no code table for business'
+        definition: SMALLINT DEFAULT 1
+      expiryDate:
+        name: expiry_date
+        comment: Expiry date of the account
+        definition: DATE NULL
+      activation:
+        name: activation_status
+        comment: Flag to check account is active or not
+        definition: SMALLINT DEFAULT 1
+      refCurrentSession:
+        name: current_session_id
+        comment: Reference to current session id. relationship will be removed
+        definition: INT NULL
+  # --
+  ## -- RolesCodeTableSchema 
+  RolesCodeTableSchema:
+    name: app_role_code
+    description: 'Code table to store different roles enum values. Different application user role and code related those roles will be managed in this table. This is code table will be managed by business for long term and cross product usage'
+    columns:
+      id: 
+        name: role_code_id
+        comment: 'Auto generated primary key. Uniquely identify user'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'role_code'
+        comment: 'String encoded enum values for different roles. Typical example are like ADM => Admin, DAV => Data Viewer, DAE => Data Editor (SME)'
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## --
+  ## -- UserRoleSchema
+  UserRoleSchema:
+    name: user_role
+    description: This is join (pivot) table for to store different role associated with an account user. The relation between user and roles are many to many in nature.
+    columns:
+      id:
+        name: user_role_id
+        comment: 'Auto generated primary key.'
+        definition: SERIAL PRIMARY KEY
+      user:
+        name: user_id
+        comment: 'Foreign key reference to user table'
+        definition: INT NOT NULL
+        foreignTable: application_user
+        refColumn: user_id
+      role:
+        name: role_id
+        comment: 'Foreign key reference to role code table'
+        definition: INT NOT NULL
+        foreignTable: app_role_code
+        refColumn: role_code_id
+  ## --

@@ -29,7 +29,6 @@ export * from './userMessage';
 export * from './species';
 export * from './observation.codes';
 export * from './observation';
-export * from '../data-controllers';
 export * from './speciesDensity.code';
 export * from './speciesDistribution.code';
 export * from './speciesAgency.code';
@@ -41,7 +40,6 @@ export * from './slope.code';
 export * from './observationAspect.code';
 export * from './proposedAction.code';
 export * from './mechanical.treatment';
-export * from './controllers/mechanicalTreatment.controller';
 export * from './mechanicalMethod.code';
 export * from './mechanicalDisposalMethod.code';
 export * from './mechanicalSoilDisturbance.code';
@@ -49,4 +47,7 @@ export * from './mechanicalRootRemoval.code';
 export * from './mechanicalTreatmentIssue.code';
 export * from './treatmentProviderContractor';
 export * from './generic.data.models';
+
+export * from './controllers/mechanicalTreatment.controller';
+export * from './controllers/observation.data.controller';
 // ----------------------------------------------------------------------------------------------------------------

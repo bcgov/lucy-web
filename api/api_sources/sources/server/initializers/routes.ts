@@ -23,7 +23,8 @@ import { Application } from 'express';
 import { accountRoute,
     requestAccessRoutes,
     observationRoute,
-    mechanicalTreatmentRoute
+    mechanicalTreatmentRoute,
+    CodeTableRouteController
 } from '../modules';
 import { defaultRoute, miscellaneousRouter } from '../modules';
 
@@ -43,6 +44,9 @@ export const routes = (app: Application) => {
 
     // Mechanical Treatment
     app.use('/api/treatment/mechanical', mechanicalTreatmentRoute());
+
+    // Codes
+    app.use('/api/codes', CodeTableRouteController.shared.router);
 
     // Miscellaneous
     app.use('/api/misc', miscellaneousRouter());

@@ -184,4 +184,10 @@ export const ifDefined = (value: any, defaultValue: any) => {
  */
 export function setNull<T> (obj: T, key: keyof T) { (obj[key as string] = null); }
 
+/**
+ * @description Check any object is empty or not
+ * @param any obj : any object
+ */
+export const isEmpty = (obj: any) => (obj !== undefined && Object.keys(obj).length === 0);
+
 // -------------------------------

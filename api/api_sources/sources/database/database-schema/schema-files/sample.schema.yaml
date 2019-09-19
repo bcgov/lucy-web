@@ -14,3 +14,10 @@ schemas:
         required: true
         name: sample_name
         definition: VARCHAR(20) NULL
+        meta: {}
+        layout:
+          header:
+            key: ''
+            default: ''
+          classes:
+            - none

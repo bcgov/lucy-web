@@ -29,8 +29,13 @@ export interface TableColumnStruct {
     definition?: string;
 }
 
+export interface ColumnRegxInfo {
+    re: string;
+    flag?: string;
+}
+
 export interface TableColumnVerification {
-    regx?: string;
+    regx?: ColumnRegxInfo;
     max?: number;
     min?: number;
     dateFormat?: string;
