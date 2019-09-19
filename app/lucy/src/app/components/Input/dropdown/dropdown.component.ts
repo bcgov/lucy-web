@@ -64,6 +64,9 @@ export class DropdownComponent implements OnInit {
   @Input() set selectedItem(item: DropdownObject) {
     if (!item) { return; }
     this._selectedItem = item;
+    if (item) {
+      this.selectionChanged.emit(item);
+    }
   }
   ////////////////////
 
