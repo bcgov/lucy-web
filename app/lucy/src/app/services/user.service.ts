@@ -156,7 +156,7 @@ export class UserService {
   public async getOranization(): Promise<string> {
     // const user = await this.getUser();
     // return user.organization;
-    return `Ministry of Tranaportation`;
+    return `Ministry of Transportation`;
   }
 
   /**
@@ -170,7 +170,8 @@ export class UserService {
     }
     return (
       (user.firstName !== ``) &&
-      (user.lastName !== ``)
+      (user.lastName !== ``) &&
+      (user.email !== ``)
     );
   }
   /*------------------------------------END OF GETs------------------------------------*/
