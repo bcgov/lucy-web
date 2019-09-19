@@ -22,10 +22,12 @@
  */
 
 import * as schemas from './database-schema';
-import { BaseSchema } from '../libs/core-database';
 
 let _schemaMap: any;
 
+/**
+ * @description Load all schema into a map
+ */
 export const appSchemaMap = () => {
     if (_schemaMap) {
         return _schemaMap;

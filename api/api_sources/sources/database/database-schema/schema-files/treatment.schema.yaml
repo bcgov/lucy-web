@@ -20,18 +20,26 @@ schemas:
     baseSchema: RecordSchema
     meta:
       resource: true
-      api: api/treatment/mechanical
+      api: /treatment/mechanical
     layout:
-      title: 'Mechanical Treatment'
+      title: 
+        key: '' 
+        default: 'Mechanical Treatment'
       sections: 
-        - title: 'Basic Elements'
+        - title: 
+            key: '' 
+            default: 'Basic Elements'
           groups:
-            - title: Location
+            - title: 
+                key: '' 
+                default: Location
               fields: 
                 - latitude
-                - latitude
+                - longitude
               style: {}
-            - title: Applicator Information
+            - title: 
+                key: '' 
+                default: Applicator Information
               fields:
                 - applicatorFirstName
                 - applicatorLastName
@@ -39,43 +47,70 @@ schemas:
                 - secondaryApplicatorLastName
                 - providerContractor
               style: {}
-            - title: Time and Reference
+            - title: 
+                key: '' 
+                default: Time and Reference
               fields: 
                 - date
                 - paperFileReference
               style: {}
-            - title: Geometry
+            - title: 
+                key: '' 
+                default: Geometry
               fields:
                 - width
                 - length
               style: {}
         # End-Section
-        - title: 'Treatment Details'
+        - title: 
+            key: '' 
+            default: 'Treatment Details'
           groups:
-            - title: Species 
+            - title: 
+                key: '' 
+                default: Species 
               fields: 
                 - species
                 - speciesAgency
                 - observation
               style: {}
-            - title: Method and techniques
+            - title: 
+                key: '' 
+                default: Method and techniques
               fields:
                 - mechanicalMethod
                 - mechanicalDisposalMethod
                 - rootRemoval
               style: {}
-            - title: Issues
+            - title: 
+                key: '' 
+                default: Issues
               fields:
                 - soilDisturbance
                 - issue
               style: {}
-            - title: Additional Information
+            - title: 
+                key: '' 
+                default: Additional Information
               fields:
                 - signageOnSiteIndicator
                 - comment
               style: {}
-        # End-Section
+      # End-Section
     # End Of Layouts
+    # Computed fields
+    computedFields:
+      observationArea:
+        header:
+          key: observationArea
+          default: Observed area
+        computationRules:
+          - name: Compute Area
+            keys:
+              - width
+              - length
+            method: calculateArea
+    # End - Computed fields
     columns: 
       # -- Data Columns
       id: 
@@ -88,7 +123,9 @@ schemas:
         definition: NUMERIC(8, 6) NOT NULL
         meta: {}
         layout:
-          header: 'Latitude'
+          header: 
+            key: 'latitude' 
+            default: 'Latitude'
           description: ''
           classes:
             - none
@@ -98,7 +135,9 @@ schemas:
         definition: NUMERIC(9, 6) NOT NULL
         meta: {}
         layout:
-          header: 'Longitude'
+          header: 
+            key: 'longitude' 
+            default: 'Longitude'
           classes:
             - none
       width:
@@ -107,7 +146,9 @@ schemas:
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         meta: {}
         layout:
-          header: 'Width'
+          header: 
+            key: 'width' 
+            default: 'Width'
           classes:
             - none
       length:
@@ -116,7 +157,9 @@ schemas:
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         meta: {}
         layout:
-          header: 'Length'
+          header: 
+            key: 'length' 
+            default: 'Length'
           classes:
             - none
       applicatorFirstName: 
@@ -125,7 +168,9 @@ schemas:
         definition: VARCHAR(100) NULL
         meta: {}
         layout:
-          header: 'Applicator First Name'
+          header: 
+            key: 'applicatorFirstName' 
+            default: 'Applicator First Name'
           classes:
             - none
       applicatorLastName: 
@@ -134,7 +179,9 @@ schemas:
         definition: VARCHAR(100) NULL
         meta: {}
         layout:
-          header: 'Applicator Last Name'
+          header: 
+            key: 'applicatorLastName' 
+            default: 'Applicator Last Name'
           classes:
             - none
       secondaryApplicatorFirstName: 
@@ -143,7 +190,9 @@ schemas:
         definition: VARCHAR(100) NULL
         meta: {}
         layout:
-          header: 'Secondary Applicator First Name'
+          header: 
+            key: 'secondaryApplicatorFirstName' 
+            default: 'Secondary Applicator First Name'
           classes:
             - none
       secondaryApplicatorLastName: 
@@ -152,7 +201,9 @@ schemas:
         definition: VARCHAR(100) NULL
         meta: {}
         layout:
-          header: 'Secondary Applicator Last Name'
+          header: 
+            key: 'secondaryApplicatorLastName' 
+            default: 'Secondary Applicator Last Name'
           classes:
             - none
       date:
@@ -161,7 +212,9 @@ schemas:
         definition: DATE NOT NULL
         meta: {}
         layout:
-          header: 'Date'
+          header: 
+            key: 'date' 
+            default: 'Date'
           classes:
             - none
       paperFileReference:
@@ -170,7 +223,9 @@ schemas:
         definition: VARCHAR(100) NULL
         meta: {}
         layout:
-          header: 'Paper File Ref'
+          header: 
+            key: 'paperFileReference' 
+            default: 'Paper File Ref'
           classes:
             - none
       comment:
@@ -179,7 +234,9 @@ schemas:
         definition: VARCHAR(500) NULL
         meta: {}
         layout:
-          header: 'Comment'
+          header: 
+            key: 'comment' 
+            default: 'Comment'
           classes:
             - none
       # -- Indicators --
@@ -189,7 +246,9 @@ schemas:
         definition: BOOLEAN NOT NULL DEFAULT FALSE
         meta: {}
         layout:
-          header: 'Sign collected'
+          header: 
+            key: 'signageOnSiteIndicator' 
+            default: 'Sign collected'
           classes:
             - none
       ## -- Relationship columns
@@ -200,9 +259,19 @@ schemas:
         foreignTable: observation
         refColumn: observation_id
         deleteCascade: true
-        meta: {}
+        meta: 
+          filters:
+            location:
+              note: Fetch relationship data based on location
+              keys:
+                - key: latitude
+                  refKey: lat
+                - key: longitude
+                  refKey: long
         layout:
-          header: 'Observation'
+          header: 
+            key: 'observation' 
+            default: 'Observation'
           classes:
             - none
       species:
@@ -214,7 +283,9 @@ schemas:
         deleteCascade: true
         meta: {}
         layout:
-          header: 'Species'
+          header: 
+            key: 'species' 
+            default: 'Species'
           classes:
             - none
       speciesAgency:
@@ -226,7 +297,9 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-          header: 'Species Agency'
+          header: 
+            key: 'speciesAgency' 
+            default:  'Species Agency'
           classes:
             - none
       mechanicalMethod:
@@ -238,7 +311,9 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-          header: 'Mechanical Method'
+          header: 
+            key: 'mechanicalMethod' 
+            default: 'Mechanical Method'
           classes:
             - none
       mechanicalDisposalMethod:
@@ -250,7 +325,9 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-          header: 'Mechanical Disposal Methods'
+          header: 
+            key: 'mechanicalDisposalMethod' 
+            default: 'Mechanical Disposal Methods'
           classes:
             - none
       soilDisturbance:
@@ -262,7 +339,9 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-          header: 'Mechanical Soil Disturbance'
+          header: 
+            key: 'soilDisturbance' 
+            default: 'Mechanical Soil Disturbance'
           classes:
             - none
       rootRemoval:
@@ -274,7 +353,9 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-          header: 'Root Removal'
+          header: 
+            key: 'rootRemoval' 
+            default: 'Root Removal'
           classes:
             - none
       issue:
@@ -286,7 +367,9 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-          header: 'Issue'
+          header: 
+            key: 'issue' 
+            default: 'Issue'
           classes:
             - none
       providerContractor:
@@ -298,7 +381,9 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-          header: 'Contractor'
+          header: 
+            key: 'providerContractor' 
+            default: 'Contractor'
           classes:
             - none
 

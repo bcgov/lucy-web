@@ -21,7 +21,7 @@
  * -----
  */
 
-import { BaseRoutController, RouteHandler } from '../../core';
+import { RouteHandler, Route, SecureRouteController, HTTPMethod } from '../../core';
 import {
     JurisdictionCodeController,
     SpeciesController,
@@ -37,11 +37,14 @@ import {
     ProposedActionCodeController,
     MechanicalMethodCodeController,
     MechanicalDisposalMethodCodeController,
-    MechanicalSoilDisturbanceCodeController
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalRootRemovalCodeController,
+    MechanicalTreatmentIssueCodeController,
+    TreatmentProviderContractorController
 } from '../../../database/models';
 import { DataController } from '../../../database/data.model.controller';
 
-export class CodeTableRouteController extends BaseRoutController<any> {
+export class CodeTableRouteController extends SecureRouteController<any> {
     static get shared(): CodeTableRouteController {
         return this.sharedInstance<CodeTableRouteController>() as CodeTableRouteController;
     }
@@ -51,12 +54,13 @@ export class CodeTableRouteController extends BaseRoutController<any> {
         this.applyRouteConfig();
     }
 
-    codeTableObj: any = {}
+    codeTableObj: any;
 
     private async  addCodes(controller: DataController) {
         this.codeTableObj[controller.meta.modelName] = await controller.all();
     }
     async codeTables(): Promise<void> {
+        this.codeTableObj = {};
         await this.addCodes(JurisdictionCodeController.shared);
         await this.addCodes(SpeciesController.shared);
         await this.addCodes(SpeciesAgencyCodeController.shared);
@@ -72,12 +76,28 @@ export class CodeTableRouteController extends BaseRoutController<any> {
         await this.addCodes(MechanicalMethodCodeController.shared);
         await this.addCodes(MechanicalDisposalMethodCodeController.shared);
         await this.addCodes(MechanicalSoilDisturbanceCodeController.shared);
-
-        return;
+        await this.addCodes(MechanicalRootRemovalCodeController.shared);
+        await this.addCodes(MechanicalTreatmentIssueCodeController.shared);
+        await this.addCodes(TreatmentProviderContractorController.shared);
+        return this.codeTableObj;
     }
 
+    @Route({
+        path: 'api/codes#/',
+        description: 'API to fetch all application codes',
+        method: HTTPMethod.get,
+        responses: {
+            200: {
+                description: 'Success',
+                schema: {
+                    type: 'object'
+                }
+            }
+        }
+    })
     get codes(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: codes`, async () => [200, await this.codeTables()]);
     }
 }
+
 // --------------------------------------------------------

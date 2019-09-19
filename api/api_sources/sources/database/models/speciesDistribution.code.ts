@@ -24,7 +24,7 @@
 // ** Model  SpeciesDistributionCode from schema SpeciesDistributionCodeSchema **
 import { Column, Entity, PrimaryColumn} from 'typeorm';
 import { SpeciesDistributionCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './generic.data.models';
 
@@ -32,6 +32,10 @@ import { ApplicationCode } from './generic.data.models';
  * @description Species Distribution Code data model
  */
 @Entity( { name: SpeciesDistributionCodeSchema.dbTable} )
+@ModelDescription({
+	description: '',
+	schema: SpeciesDistributionCodeSchema
+})
 export class SpeciesDistributionCode extends  ApplicationCode {
 
 	/**

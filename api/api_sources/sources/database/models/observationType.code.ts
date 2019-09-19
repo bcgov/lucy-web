@@ -25,13 +25,18 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ObservationTypeCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
 import { Record } from './generic.data.models';
 /**
  * @description Data Model Class for ObservationTypeCodeSchema
  */
 @Entity( { name: ObservationTypeCodeSchema.dbTable} )
+@ModelDescription({
+	description: 'Data model for ObservationTypeCode',
+	schema: ObservationTypeCodeSchema,
+	apiResource: false
+})
 export class ObservationTypeCode extends Record {
 
 	/**

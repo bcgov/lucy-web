@@ -140,6 +140,7 @@ export class  BaseSchema {
         table.columnsDefinition = {};
         table.layout = def.layout;
         table.meta = def.meta;
+        table.computedFields = def.computedFields;
         _.each(def.columns, (value: TableColumnOption, key) => {
             const result = {};
             const column: ApplicationTableColumn = new ApplicationTableColumn(
@@ -150,11 +151,12 @@ export class  BaseSchema {
                 value.refColumn,
                 value.deleteCascade,
                 value.refSchema,
-                value.refModel,
+                value.refModel
             );
             column.columnVerification = value.columnVerification;
             column.meta = value.meta;
             column.layout = value.layout;
+            column.required = (value.required !== undefined) ? value.required : true;
             result[key] = column;
             table.columnsDefinition = {...table.columnsDefinition, ...result};
         });
@@ -281,6 +283,7 @@ export class  BaseSchema {
             return result;
         }
         result.layout = this.table.layout || {};
+        result.computedFields = this.table.computedFields || {};
         result.fields = [];
         _.each(this.table.columnsDefinition, (col: ApplicationTableColumn, key: string) => {
             if (key === 'id') {
@@ -304,7 +307,7 @@ export class  BaseSchema {
                 verification: verification,
                 idKey: col.refColumn,
                 refSchema: schemaObj.config(true),
-                required: col.required || true
+                required: col.required
             };
             result.fields.push(field);
         });

@@ -97,8 +97,6 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
 
             // Configuring Update Route
             this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
-
-            
         }
     }
 
@@ -146,7 +144,8 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
                             validate: validate => validate.isString().custom(async (val: string, {req}) => {
                                 assert(moment(val, 'YYYY-MM-DD').isValid(), `${key}: should be string in YYYY-MM-DD format`);
                             }),
-                            message: 'should be string in YYYY-MM-DD format'
+                            message: 'should be string in YYYY-MM-DD format',
+                            optional: !column.required
                         };
                     } else {
                         validateKey[key] = {
@@ -155,21 +154,29 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
                                 assert(value, `${key}: Value must be defined`);
                                 assert(value.length < typeInfo.size, `${key}: Exceed maximum size ${typeInfo.size}`);
                                 // 2. Regx check
+                                const verification = column.columnVerification || {};
+                                if (verification.regx) {
+                                    const regx = new RegExp(verification.regx.re, verification.regx.flag || 'gm');
+                                    assert(value.match(regx), `${key}: should match regx: ${regx}`);
+                                }
                             }),
-                            message: 'should be string'
+                            message: 'should be string',
+                            optional: !column.required
                         };
                     }
                     break;
                 case 'number':
                     validateKey[key] = {
                         validate: validate => validate.isNumeric(),
-                        message: 'should be number'
+                        message: 'should be number',
+                        optional: !column.required
                     };
                     break;
                 case 'boolean':
                     validateKey[key] = {
                         validate: validate => validate.isBoolean(),
-                        message: 'should be boolean'
+                        message: 'should be boolean',
+                        optional: !column.required
                     };
                     break;
                 case 'object':
@@ -192,7 +199,8 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
                                     }
                                     req.body[key] = item;
                                 }
-                            })
+                            }),
+                            optional: !column.required
                         };
                     }
                     break;
