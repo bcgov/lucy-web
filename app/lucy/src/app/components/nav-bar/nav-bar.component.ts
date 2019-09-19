@@ -6,6 +6,7 @@ import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
 import { UserAccessType } from 'src/app/models/Role';
 import { RolesService } from 'src/app/services/roles.service';
+import { StringConstants } from 'src/app/constants/string-constants';
 
 declare const location: any;
 
@@ -15,6 +16,11 @@ declare const location: any;
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  /**
+   * Title of application to be displayed in header
+   */
+  public appTitle = ``;
 
   /**
    * User initials
@@ -128,9 +134,11 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService, private roles: RolesService) { }
 
   ngOnInit() {
+    this.setAppTitle();
   }
 
   ngAfterViewInit() {
+    this.setAppTitle();
     this.setInitials();
     this.setAccessType();
     this.listenForRouteChanges();
@@ -149,6 +157,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.routeEventsListener = this.routerService.events.subscribe((val) => {
       this.setInitials();
       this.setAccessType();
+      this.setAppTitle();
     });
   }
 
@@ -157,6 +166,10 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private endRouteEventsListener() {
     this.routeEventsListener.unsubscribe();
+  }
+
+  private setAppTitle() {
+    this.appTitle = StringConstants.app_Title;
   }
 
   /**

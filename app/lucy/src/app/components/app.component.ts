@@ -10,12 +10,16 @@ import { AlertModel, AlertService } from '../services/alert.service';
 import { Subscription } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
+import { StringConstants } from 'src/app/constants/string-constants';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+  public appTitle = ``;
+
   private authStatusIsLoading: boolean | null = null;
 
   public get isAuthenticated(): boolean {
@@ -55,6 +59,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
+    this.setAppTitle();
   }
 
   ngOnInit() {
@@ -153,6 +158,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return isAuthenticated;
+  }
+
+  private setAppTitle() {
+    this.appTitle = StringConstants.app_Title;
+    document.title = this.appTitle;
   }
   /******** End Auth and Routing ********/
 
