@@ -71,6 +71,14 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Used for displaying/hiding menu items in
+   * navigation bar when Info route is active
+   */
+  public get isInfo(): boolean {
+    return this.routerService.current === AppRoutes.UserInfo;
+  }
+
+  /**
    * Used for Highlighting element in
    * navigation bar when route is active
    */
