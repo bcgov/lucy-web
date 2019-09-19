@@ -19,6 +19,7 @@ services:
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
     - VERSION=${VERSION}
+    - ENVIRONMENT=local
   volumes:
     - ./api_sources:/opt/app-root/src
   networks:

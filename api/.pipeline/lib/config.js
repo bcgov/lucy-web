@@ -35,7 +35,9 @@ const phases = {
     instance: `${name}-dev-${deployChangeId}`  ,
     version:`${deployChangeId}-${changeId}`,
     tag:`dev-${version}-${deployChangeId}`, 
-    host: isStaticDeployment() ? (staticUrlsAPI['dev'] || defaultHost) : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`},
+    host: isStaticDeployment() ? (staticUrlsAPI['dev'] || defaultHost) : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
+    env: 'dev'
+  },
   test: {
     namespace:'8ecbmv-test',
     name: `${name}`,
@@ -43,9 +45,12 @@ const phases = {
     changeId: deployChangeId,
     suffix: `-test`, 
     instance: `${name}-test`, 
-    version:`${version}`, 
+    version:`${version}`,
+    previousVersion: config.previousVersion || 'NA',
     tag:`test-${version}`, 
-    host: staticUrlsAPI['staging']},
+    host: staticUrlsAPI['staging'],
+    env: 'test'
+  },
   prod: {
     namespace:'8ecbmv-prod'    , 
     name: `${name}`, 
@@ -54,8 +59,10 @@ const phases = {
     suffix: `-prod`  , 
     instance: `${name}-prod`  , 
     version:`${version}`, 
+    previousVersion: config.previousVersion || 'NA',
     tag:`prod-${version}`,
-    host: staticUrlsAPI['prod']
+    host: staticUrlsAPI['prod'],
+    env: 'prod'
   }
 };
 
