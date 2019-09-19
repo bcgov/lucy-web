@@ -123,7 +123,8 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
 
   ngOnInit() {
     this.dropdownService.getMechanicalTreatmentProviders().then((result) => {
-      this.mechanicalTreatmentProviders = result;
+      // reverse array so that list ordering matches order of CSV file
+      this.mechanicalTreatmentProviders = result.reverse();
     });
   }
 

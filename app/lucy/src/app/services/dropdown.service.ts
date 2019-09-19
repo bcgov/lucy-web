@@ -53,8 +53,6 @@ export class DropdownService {
         object: object,
       });
     }
-    // reverse array so objects are in original order
-    dropdownObjects.reverse();
     return dropdownObjects;
   }
 
