@@ -64,7 +64,7 @@
             (click)="navigateToAdminTools()">Admin Tools</a>
         </li>
         <!-- Create Observation  -->
-        <li *ngIf="isDataEditor" class="nav-item" [class.active]="isAddObservationActive">
+        <li *ngIf="isDataEditor && !isInfo" class="nav-item" [class.active]="isAddObservationActive">
           <button class="btn button-fill" [disabled]="isAddEntryActive" (click)="navigateToAddEntry()">+ Add Entry</button>
         </li>
       </ul>
