@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppRoutes, AppRoutesParams } from '../../constants/app-routes.enum';
+import { StringConstants } from 'src/app/constants/string-constants';
 import { SsoService } from '../../services/sso.service';
 import { UserService } from '../../services/user.service';
 import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
 import { UserAccessType } from 'src/app/models/Role';
 import { RolesService } from 'src/app/services/roles.service';
-import { StringConstants } from 'src/app/constants/string-constants';
 
 declare const location: any;
 
@@ -18,9 +18,10 @@ declare const location: any;
 export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
-   * User initials
+   * User initials & full name
    */
   public userInitials = ``;
+  public fullName = ``;
 
   /**
    * User access type
@@ -32,7 +33,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   public accessTypeMessage = ``;
 
-  /**
+    /**
    * Title of user's role within associated organization
    */
   public role = ``;    // TODO may need to be updated once Role implemented in API
@@ -140,10 +141,11 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.setInitials();
+    this.setFullName();
     this.setAccessType();
-    this.setAccessTypeMessage();
-    this.setRole();
     this.setOrganization();
+    this.setRole();
+    this.setAccessTypeMessage();
     this.listenForRouteChanges();
   }
 
@@ -159,10 +161,11 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   private listenForRouteChanges() {
     this.routeEventsListener = this.routerService.events.subscribe((val) => {
       this.setInitials();
+      this.setFullName();
       this.setAccessType();
-      this.setAccessTypeMessage();
-      this.setRole();
       this.setOrganization();
+      this.setRole();
+      this.setAccessTypeMessage();
     });
   }
 
@@ -182,12 +185,32 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Setting User's full name
+   * to be consumed by HTML
+   */
+  private async setFullName() {
+    this.fullName = await this.userService.getFullName();
+  }
+
+  /**
    * Setting User's access type
    */
   private async setAccessType() {
     this.accessType = await this.userService.getAccess();
   }
 
+  /**
+   * Setting User's role (String value)
+   * to be consumed by HTML
+   */
+  private async setRole() {
+    this.role = await this.userService.getRole();
+  }
+
+  private async setOrganization() {
+    this.organization = await this.userService.getOrganization();
+  }
+  
   private async setAccessTypeMessage() {
 
     this.userService.getAccess().then((value) => {
@@ -204,18 +227,6 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
       }
     });
-  }
-
-  /**
-   * Setting User's role (String value)
-   * to be consumed by HTML
-   */
-  private async setRole() {
-    this.role = await this.userService.getRole();
-  }
-
-  private async setOrganization() {
-    this.organization = await this.userService.getOrganization();
   }
 
   /**
