@@ -17,7 +17,7 @@
 //
 // Created by Pushan Mitra on 2019-07-04.
 //
-import * as path from 'path';
+// import * as path from 'path';
 // import * as fs from 'fs';
 import { should, expect } from 'chai';
 import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-database';
