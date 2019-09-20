@@ -111,7 +111,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       return 'Add New'
     }
     return ``;
-    
   }
   /* ***** */
 
