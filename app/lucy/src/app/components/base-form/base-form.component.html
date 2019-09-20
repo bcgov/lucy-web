@@ -106,7 +106,7 @@
       <app-diff-viewer (diffObject)="diffObject"></app-diff-viewer>
   </div>
   <br />
-  <div class="container form-body animated" [ngClass]="inReviewMode ? 'fadeIn' : 'fadeInUp'">
+  <div class="container form-body animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInUp'">
     <div
       class="container-fluid"
       *ngFor="let section of config.sections; let i = index"
