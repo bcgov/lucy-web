@@ -137,6 +137,9 @@ export class FormService {
           const field = group.fields[i];
           // Add type flags to field (to help with html generation)
           const newField = await this.configField(field, fields);
+          if (!newField) {
+            continue;
+          }
           if (newField.required) {
             requiredFieldKeys.push(newField.key);
           }
