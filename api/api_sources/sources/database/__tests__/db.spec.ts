@@ -18,7 +18,7 @@
 // Created by Pushan Mitra on 2019-07-04.
 //
 import * as path from 'path';
-import * as fs from 'fs';
+// import * as fs from 'fs';
 import { should, expect } from 'chai';
 import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-database';
 import { defineColumn, createColumn, BaseTableSchema} from '../applicationSchemaInterface';
@@ -39,11 +39,11 @@ class TestSchema extends BaseTableSchema {
     }
 }
 
-class Test2Schema extends BaseTableSchema {
+/*class Test2Schema extends BaseTableSchema {
     get schemaFilePath(): string {
         return path.resolve(__dirname, '../database-schema/schema-files/sample.schema.yaml');
     }
-}
+}*/
 
 describe('Test for db utilities', () => {
     it('should return column create sql', () => {
