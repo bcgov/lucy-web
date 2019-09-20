@@ -30,7 +30,9 @@ const phases = {
     suffix: `-build-${changeId}`  , 
     instance: `${name}-build-${changeId}`  , 
     version:`${version}-${changeId}`, 
-    tag:`build-${version}-${changeId}`},
+    tag:`build-${version}-${changeId}`,
+    env: 'build'
+  },
   dev: {
     namespace:'8ecbmv-dev'    , 
     name: `${name}`, 
@@ -41,7 +43,9 @@ const phases = {
     version:`${version}-${deployChangeId}`, 
     tag:`dev-${version}-${deployChangeId}`, 
     host: isStaticDeployment() ? staticUrls['dev'] || defaultHost : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`, 
-    apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`},
+    apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
+    env: 'dev'
+  },
   test: {
     namespace:'8ecbmv-test'    , 
     name: `${name}`, 
@@ -53,6 +57,7 @@ const phases = {
     tag:`test-${version}`, 
     host: staticUrls['staging'],
     apiHost: staticUrlsAPI['staging'] || defaultHostAPI,
+    env: 'test'
   },
   prod: {
     namespace:'8ecbmv-prod'    , 
@@ -62,7 +67,8 @@ const phases = {
     version:`${version}`, 
     tag:`prod-${version}`, 
     host: staticUrlsAPI['prod']},
-    apiHost: staticUrlsAPI['prod'] || defaultHostAPI
+    apiHost: staticUrlsAPI['prod'] || defaultHostAPI,
+    env: 'prod'
 };
 
 // This callback forces the node process to exit as failure.

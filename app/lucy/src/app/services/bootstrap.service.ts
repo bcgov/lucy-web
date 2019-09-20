@@ -17,6 +17,8 @@ export class AppBootService {
                 const baseURL = `http://${host}/api`;
                 // Setting base url to API const
                 AppConstants.API_baseURL = baseURL;
+                // Saving remote Config in app
+                AppConstants.CONFIG = result;
                 res();
             } catch (excp) {
                 console.log(`Unable to load config due to excp ${excp}. Will use default config`);

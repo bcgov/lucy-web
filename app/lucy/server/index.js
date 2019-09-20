@@ -39,7 +39,9 @@ const request = require('request');
     app.use('/config', (req, resp) => {
         const config = {
             apiHost: process.env.API_HOST || 'localhost',
-            changeVersion: process.env.CHANGE_VERSION || ''
+            changeVersion: process.env.CHANGE_VERSION || 'NA',
+            env: process.env.ENVIRONMENT || 'dev',
+            version: process.env.VERSION || 'NA'
         };
         resp.status(200).json(config);
     });
