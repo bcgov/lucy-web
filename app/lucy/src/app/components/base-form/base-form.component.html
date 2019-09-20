@@ -23,7 +23,7 @@
 
 <div *ngIf="isLoading" class="form-bg">
   <!-- Header Section  -->
-  <div class="container-fluid header-container sticky">
+  <div class="container-fluid header-container-loading sticky">
     <div class="container header-container-inner">
       <mat-toolbar>
         <mat-toolbar-row> </mat-toolbar-row>
@@ -42,7 +42,7 @@
 </div>
 <div *ngIf="!isLoading" class="form-bg">
   <!-- Header Section  -->
-  <div class="container-fluid header-container sticky" [ngClass]="inReviewMode ? 'header-container-review' : 'header-container'">
+  <div class="container-fluid header-container sticky animated" [ngClass]="inReviewMode ? 'header-container-review pulse' : 'header-container slideInLeft'">
     <div class="container header-container-inner">
       <mat-toolbar>
         <mat-toolbar-row>
@@ -101,11 +101,12 @@
   </div>
   <!-- -------------------- -->
   <br />
-  <div *ngIf="showdiffViewer" class="container form-body diff-container">
+  <!-- Diff Viewer -->
+  <div *ngIf="showdiffViewer" class="container form-body diff-container animated fadeInDown">
       <app-diff-viewer (diffObject)="diffObject"></app-diff-viewer>
   </div>
   <br />
-  <div class="container form-body">
+  <div class="container form-body animated" [ngClass]="inReviewMode ? 'fadeIn' : 'fadeInUp'">
     <div
       class="container-fluid"
       *ngFor="let section of config.sections; let i = index"

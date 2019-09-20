@@ -46,18 +46,25 @@
 }
 
 .header-container {
-    /* background: #002C71; */
     margin: 0 auto;
     width: 100%;
     background: linear-gradient(135deg, #0053A4 0%, #002C71 100%);
     box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
+    animation-duration: 0.5s;
+}
+
+.header-container-loading {
+    margin: 0 auto;
+    width: 100%;
+    background: transparent;
 }
 
 .header-container-review {
     margin: 0 auto;
     width: 100%;
     background: linear-gradient(135deg, #EA8B0F 0%, #F1AC24 100%);
-	box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+    box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+    animation-duration: 0.5s;
 }
 
 .spacer-toolbar {
@@ -89,6 +96,7 @@
     border-radius: 5px;
     background-color: #FFFFFF;
     box-shadow: 0 0 5px 0 #E5E9F2;
+    animation-duration: 0.5s;
 }
 
 .mat-toolbar-row {
@@ -134,4 +142,6 @@
     width: 100%;
     padding-left: 0;
     padding-right: 0;
+    animation-duration: 0.5s;
+    animation-delay: 0s;
 }
