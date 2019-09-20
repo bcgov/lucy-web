@@ -25,7 +25,7 @@ objects:
     labels: null
     name: ${NAME}${SUFFIX}
   spec:
-    replicas: ${REPLICAS}
+    replicas: "${{REPLICAS}}"
     revisionHistoryLimit: 10
     selector:
       deploymentConfig: ${NAME}${SUFFIX}
@@ -81,7 +81,7 @@ objects:
           imagePullPolicy: Always
           name: api
           ports:
-          - containerPort: ${PORT}
+          - containerPort: "${{PORT}}"
             protocol: TCP
           - containerPort: 8080
             protocol: TCP
@@ -96,7 +96,7 @@ objects:
             failureThreshold: 10
             httpGet:
               path: /api/misc/version
-              port: ${PORT}
+              port: 3001
               scheme: HTTP
             initialDelaySeconds: 140
             periodSeconds: 30
@@ -106,7 +106,7 @@ objects:
             failureThreshold: 10
             httpGet:
               path: /api/misc/version
-              port: ${PORT}
+              port: 3001
               scheme: HTTP
             initialDelaySeconds: 90
             periodSeconds: 30
@@ -164,11 +164,11 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     ports:
-      - name: ${PORT}-tcp
-        port: ${PORT}
+      - name: ${NAME}-${APP_PORT_DEFAULT}
+        port: "${{PORT}}"
         protocol: TCP
-        targetPort:  ${PORT}
-      - name: 8080-tcp
+        targetPort: "${{PORT}}"
+      - name: ${APP_PORT_OTHER}
         port: 8080
         protocol: TCP
         targetPort: 8080
@@ -188,7 +188,7 @@ objects:
   spec:
     host: ${HOST}
     port:
-      targetPort: ${PORT}-tcp
+      targetPort: ${NAME}-${APP_PORT_DEFAULT}
     to:
       kind: Service
       name: ${NAME}${SUFFIX}
@@ -222,10 +222,6 @@ parameters:
   description: Application Environment type variable
   required: true
   value: 'dev'
-- name: PORT
-  description: Application Port
-  required: true
-  value: "3001"
 - name: CERTIFICATE_URL
   description: Authentication certificate urls
   required: true
@@ -240,3 +236,9 @@ parameters:
   value: '2Gi'
 - name: REPLICAS
   value: '1'
+- name: APP_PORT_DEFAULT
+  value: '3001-tcp'
+- name: APP_PORT_OTHER
+  value: '8080-tcp'
+- name: PORT
+  value: '3001'
