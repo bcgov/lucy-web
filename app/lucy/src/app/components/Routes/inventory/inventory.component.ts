@@ -11,6 +11,7 @@ import { ValidationService } from 'src/app/services/validation.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
+import { StringConstants } from 'src/app/constants/string-constants';
 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -27,6 +28,12 @@ export class InventoryComponent implements OnInit {
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
 
+   /**
+   * Name of database
+   * to be consumed by HTML
+   */
+  public databaseTitle = ``;
+  
   /**
    * Show/Hide Add edit observation button
    * This value will only change
@@ -88,6 +95,7 @@ export class InventoryComponent implements OnInit {
   ngOnInit() {
     this.fetchObservations();
     this.setAccessType();
+    this.setDatabaseTitle();
   }
 
   private initMaterialTable() {
@@ -122,6 +130,10 @@ export class InventoryComponent implements OnInit {
         observation: object,
       });
     }
+  }
+
+  private setDatabaseTitle() {
+    this.databaseTitle = StringConstants.database_Title;
   }
 
   switchShowMap() {
