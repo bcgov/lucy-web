@@ -1,5 +1,5 @@
 // Core
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 
 // Others
@@ -157,6 +157,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     CookieService,
     SsoService,
     RouterService,
+    Title,
     AppBootService,
     {
       provide: APP_INITIALIZER,

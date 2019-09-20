@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { SsoService } from '../services/sso.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
@@ -11,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
 import { StringConstants } from 'src/app/constants/string-constants';
+import '@bcgov/bc-sans/css/BCSans.css';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +20,6 @@ import { StringConstants } from 'src/app/constants/string-constants';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
-  public appTitle = ``;
-
   private authStatusIsLoading: boolean | null = null;
 
   public get isAuthenticated(): boolean {
@@ -56,10 +56,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private messageService: MessageService,
     private alertService: AlertService,
     private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private titleService: Title) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
-    this.setAppTitle();
+    this.setTitle();
   }
 
   ngOnInit() {
@@ -160,9 +161,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     return isAuthenticated;
   }
 
-  private setAppTitle() {
-    this.appTitle = StringConstants.app_Title;
-    document.title = this.appTitle;
+  public setTitle( ) {
+    this.titleService.setTitle( StringConstants.app_Title );
   }
   /******** End Auth and Routing ********/
 
