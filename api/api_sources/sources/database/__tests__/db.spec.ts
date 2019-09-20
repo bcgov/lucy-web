@@ -77,7 +77,7 @@ describe('Test for db utilities', () => {
         should().exist(sql);
     });
 
-    if (process.env.ENVIRONMENT === 'local') {
+    /*if (process.env.ENVIRONMENT === 'local') {
         it('should load and create sql from schema yaml', () => {
             const schema = new Test2Schema();
             const sql = schema.createTable();
@@ -89,7 +89,7 @@ describe('Test for db utilities', () => {
             fs.unlinkSync(path.resolve(__dirname, '../database-schema/schema-sqls/sample.sql'));
             // schema.saveSchema(path.resolve(__dirname, '../database-schema/schema-files/sample2.schema.yaml'));
         });
-    }
+    }*/
 
     it('should load schema', () => {
         const pathOfSchema = getYAMLFilePath('observation.codes.schema.yaml');
