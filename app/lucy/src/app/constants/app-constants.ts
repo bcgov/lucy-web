@@ -20,7 +20,7 @@ export class AppConstants {
     static CONFIG = {
         apiHost: 'localhost',
         changeVersion: 'NA',
-        env: 'dev',
+        env: 'local',
         version: 'NA'
     };
 
