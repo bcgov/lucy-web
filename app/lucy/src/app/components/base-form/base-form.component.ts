@@ -16,6 +16,7 @@ import { DropdownObject, DropdownService } from 'src/app/services/dropdown.servi
 import { FormService} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
 import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 export enum FormType {
   Observation,
@@ -27,13 +28,13 @@ export enum FormType {
   styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
-  _formType: FormType;
-  get formType(): FormType | undefined {
-    return this._formType;
-  }
-  set formType(type: FormType) {
-    this._formType = type;
-  }
+  // _formType: FormType;
+  // get formType(): FormType | undefined {
+  //   return this._formType;
+  // }
+  // set formType(type: FormType) {
+  //   this._formType = type;
+  // }
   public componentName = ` `;
   private responseBody = {};
 
@@ -159,27 +160,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   ///// States Baed on Routes
   private get viewing() {
-    const current = this.router.current;
-    return (
-      current === AppRoutes.ViewMechanicalTreatment ||
-      current === AppRoutes.ViewObservation
-    );
+    return this.router.isViewRoute;
   }
 
   private get creating() {
-    const current = this.router.current;
-    return (
-      current === AppRoutes.AddMechanicalTreatment ||
-      current === AppRoutes.AddObservation
-    );
+    return this.router.isCreateRoute;
   }
 
   private get editing() {
-    const current = this.router.current;
-    return (
-      current === AppRoutes.EditMechanicalTreatment ||
-      current === AppRoutes.EditObservation
-    );
+    return this.router.isEditRoute;
   }
 
   private _config: any = {};
@@ -215,7 +204,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private router: RouterService,
     private dropdownService: DropdownService,
     private formService: FormService,
-    private api: ApiService
+    private api: ApiService,
+    private loadingService: LoadingService,
   ) {
     this.lottieConfig = {
       path: this.formLoadingIcon,
@@ -231,13 +221,33 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void { }
 
-  async initialize() {
-    // this.isLoading = true;
+  private async initialize() {
+    this.isLoading = true;
+    this.setFormMode();
     this.accessType = await this.userService.getAccess();
-    // this.isLoading = false;
+    this.config = await this.formService.getFormConfigForCurrentRoute();
+    this.isLoading = false;
   }
 
-  fieldChanged(field: any, event: any) {
+  /**
+   *  Set view / create / edit mode based on route
+   * */ 
+  private setFormMode() {
+    if (this.router.isCreateRoute) {
+      this.mode = FormMode.Create
+    } else if (this.router.isViewRoute) {
+      this.mode = FormMode.View
+    } else if (this.router.isEditRoute) {
+      this.mode = FormMode.Edit
+    }
+  }
+
+  /**
+   * handle field change
+   * @param field 
+   * @param event 
+   */
+  private fieldChanged(field: any, event: any) {
     if (field.isLocationField) {
       // location field
       this.responseBody[field.latitude.key] = +event.latitude.value;
@@ -262,7 +272,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  async submitAction() {
+  /**
+   * Form submission
+   */
+  private async submitAction() {
     const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.alert.show('Missing fields', 'Please fill all required fields');
@@ -302,22 +315,34 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   /////////// End Lottie ///////////
 
-  async selectedMechanicalTreatmentFormType() {
-    this.formType = FormType.MechanicalTreeatment;
-    this.isLoading = true;
-    console.log('Getting mechanical treatment');
-    this.config = await this.formService.getMechanicalTreatmentUIConfig();
-    console.log('done');
-    this.isLoading = false;
-    const x = await this.formService.generateMechanicalTreatmentTest(this.config);
-  }
+  // private async selectedMechanicalTreatmentFormType() {
+  //   this.formType = FormType.MechanicalTreeatment;
+  //   this.isLoading = true;
+  //   console.log('Getting mechanical treatment');
+  //   this.config = await this.formService.getMechanicalTreatmentUIConfig();
+  //   console.log('done');
+  //   this.isLoading = false;
+  //   const x = await this.formService.generateMechanicalTreatmentTest(this.config);
+  // }
 
-  async selectedObservationFormType() {
-    this.formType = FormType.MechanicalTreeatment;
-    this.isLoading = true;
-    console.log('Getting observation');
-    this.config = await this.formService.getObservationUIConfig();
-    console.log('done');
-    this.isLoading = false;
+  // private async selectedObservationFormType() {
+  //   this.formType = FormType.MechanicalTreeatment;
+  //   this.isLoading = true;
+  //   console.log('Getting observation');
+  //   this.config = await this.formService.getObservationUIConfig();
+  //   console.log('done');
+  //   this.isLoading = false;
+  // }
+
+  async generateForTesting() {
+    this.loadingService.add();
+    if (this.router.current === AppRoutes.AddMechanicalTreatment) {
+      this.config = await this.formService.generateMechanicalTreatmentTest(this.config);
+    } else if (this.router.current === AppRoutes.AddObservation) {
+      this.config = await this.formService.generateObservationTest(this.config);
+    } else {
+      this.alert.show('Form not supported yet',`Test generatgion for this form type is not implemented yet`);
+    }
+    this.loadingService.remove();
   }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="!formType">
+<!-- <div *ngIf="!formType">
 <br />
 <br />
 <br />
@@ -19,7 +19,7 @@
       </mat-card>
     </div>
   </div>
-</div>
+</div> -->
 
 <div *ngIf="isLoading" class="form-bg">
   <!-- Header Section  -->
@@ -40,7 +40,7 @@
     </lottie-animation-view>
   </div>
 </div>
-<div *ngIf="!isLoading && formType" class="form-bg">
+<div *ngIf="!isLoading" class="form-bg">
   <!-- Header Section  -->
   <div class="container-fluid header-container sticky">
     <div class="container header-container-inner">
@@ -178,4 +178,12 @@
       </div>
     </div>
   </div>
+  <!-- test btn -->
+  <div *ngIf="creating" class="row test-btn">
+    <div class="col-12">
+      <button class="btn" (click)="generateForTesting()">Generate for testing</button>
+    </div>
+  </div>
+  <br />
+  <!-- -------------------- -->
 </div>
