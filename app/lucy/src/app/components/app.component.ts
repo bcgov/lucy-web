@@ -12,7 +12,6 @@ import { Subscription } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
 import { StringConstants } from 'src/app/constants/string-constants';
-import '@bcgov/bc-sans/css/BCSans.css';
 
 @Component({
   selector: 'app-root',
