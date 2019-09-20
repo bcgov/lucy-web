@@ -8,6 +8,7 @@ ENV HOME /opt/app-root/src/app
 USER 0
 RUN mkdir -p ${HOME}
 RUN chmod -R 777 ${HOME}
+RUN chown -R 1001 ${HOME}
 USER 1001
 
 # Setting Path
