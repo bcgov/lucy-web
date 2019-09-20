@@ -19,7 +19,7 @@ export class RequestAccessTableSchema extends BaseTableSchema {
             refApprover: defineColumn('ref_approver_id', 'Approver id. FOREIGN KEY reference to user table.'),
             status: defineColumn('status', 'Status of the request. Integer value'),
             approverNote: defineColumn('approver_note', 'Note from approver'),
-            updateAt: defineColumn(BaseTableSchema.timestampColumns.updatedAt, 'Row update timestamp'),
+            updateAt: defineColumn(BaseTableSchema.timestampColumns.updatedAt, 'Row update timestamp'), 
             createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
         };
         return table;

@@ -65,6 +65,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   // State flags
   private submitted = false;
   private inReviewMode = false;
+  private showdiffViewer = false;
   get readonly(): boolean {
     return this.mode === FormMode.View;
   }
@@ -85,63 +86,32 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /**
    * submit button title for different states
    */
-  get submitBtnName(): string {
+  get submitButtonPrefix(): string {
     let prefix: string;
-    switch (this.mode) {
-      case FormMode.Create: {
-        prefix = `Submit`;
-        break;
-      }
-      case FormMode.Edit: {
-        prefix = `Submit Edits`;
-        break;
-      }
-      case FormMode.View: {
-        if (this.inReviewMode) {
-          prefix = `Confirm`;
-        }
-        break;
-      }
-      default:
-        return `How are you here?`;
+    if (this.creating && !this.inReviewMode) {
+      return 'Submit'
     }
-    if (prefix) {
-      return `${prefix}`;
-    } else {
-      return ``;
+    if (this.creating && this.inReviewMode) {
+      return 'Create';
     }
+    if (this.editing && this.inReviewMode) {
+      return 'Commit';
+    }
+    return ``;
   }
   /* ***** */
 
-  /**
-   * Page title for different states
-   */
-  get pageTitle(): string {
+  // Add prefix based on state
+  get pageTitlePrefix(): string {
     let prefix: string;
-    switch (this.mode) {
-      case FormMode.Create: {
-        prefix = `Add`;
-        break;
-      }
-      case FormMode.Edit: {
-        prefix = `Edit`;
-        break;
-      }
-      case FormMode.View: {
-        if (this.inReviewMode) {
-          prefix = `Confirm`;
-        }
-        prefix = `View`;
-        break;
-      }
-      default:
-        return `How are you here?`;
+    if (this.creating && this.inReviewMode) {
+      return 'Review';
     }
-    if (prefix) {
-      return `${prefix} ${this.componentName}`;
-    } else {
-      return ``;
+    if (this.creating && !this.inReviewMode) {
+      return 'Add New'
     }
+    return ``;
+    
   }
   /* ***** */
 
@@ -276,10 +246,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * Form submission
    */
   private async submitAction() {
+    console.dir(this.responseBody);
     const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.alert.show('Missing fields', 'Please fill all required fields');
     } else {
+      if (!this.inReviewMode) {
+        this.changeToReviewMode();
+        return;
+      }
       this.isLoading = true;
       const result = await this.api.request(APIRequestMethod.POST, endpoint, this.responseBody);
       console.log(result);
@@ -290,6 +265,24 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         this.alert.show('error', 'There was an error');
       }
     }
+  }
+
+  changeToReviewMode() {
+    // if NOT in create mode (route), don't continue
+    if (!this.creating) {
+      return;
+    }
+    this.inReviewMode = true;
+    this.mode = FormMode.View;
+    // If in edit mode, show diff viewer component
+    if (this.editing) {
+      this.showdiffViewer = true;
+    }
+  }
+
+  exitReviewMode() {
+    this.inReviewMode = false;
+    this.setFormMode();
   }
 
   /////////// Lottie ///////////
@@ -345,4 +338,5 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     }
     this.loadingService.remove();
   }
+  
 }

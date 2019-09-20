@@ -46,6 +46,11 @@ schemas:
                 - lat
                 - long
             # End-group(Location)
+            - title:
+                key: 'date' 
+                default: Date  
+              fields:
+                - date
             - title: 
                 key: 'geometry' 
                 default: Geometry  
