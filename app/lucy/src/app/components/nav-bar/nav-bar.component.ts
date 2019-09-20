@@ -7,7 +7,6 @@ import { RouterService } from '../../services/router.service';
 import { Subscription } from 'rxjs';
 import { UserAccessType } from 'src/app/models/Role';
 import { RolesService } from 'src/app/services/roles.service';
-import { StringConstants } from 'src/app/constants/string-constants';
 
 declare const location: any;
 
