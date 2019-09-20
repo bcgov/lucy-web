@@ -42,7 +42,7 @@
 </div>
 <div *ngIf="!isLoading" class="form-bg">
   <!-- Header Section  -->
-  <div class="container-fluid header-container sticky animated" [ngClass]="inReviewMode ? 'header-container-review pulse' : 'header-container slideInLeft'">
+  <div class="container-fluid header-container sticky animated" [ngClass]="inReviewMode ? 'header-container-review pulse' : 'header-container slideInRight'">
     <div class="container header-container-inner">
       <mat-toolbar>
         <mat-toolbar-row>
@@ -71,7 +71,7 @@
             (click)="exitReviewMode()"
             *ngIf="inReviewMode"
             type="button"
-            class="btn btn-secondary edit-button"
+            class="btn btn-secondary edit-button animated fadeIn"
             (click)="exitReviewMode()"
           >
           <i class="material-icons action-icon">
@@ -85,7 +85,7 @@
             (click)="edit()"
             *ngIf="isDataEditor && viewing"
             type="button"
-            class="btn btn-secondary edit-button"
+            class="btn btn-secondary edit-button animated fadeIn"
           >
             
             <i class="material-icons action-icon">
@@ -106,7 +106,7 @@
       <app-diff-viewer (diffObject)="diffObject"></app-diff-viewer>
   </div>
   <br />
-  <div class="container form-body animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInUp'">
+  <div class="container form-body animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'">
     <div
       class="container-fluid"
       *ngFor="let section of config.sections; let i = index"
