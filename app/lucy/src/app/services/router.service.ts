@@ -26,6 +26,30 @@ export class RouterService {
     }
   }
 
+  public get isCreateRoute(): boolean {
+    return (this.getFirstRouteParam() === 'create');
+  }
+
+  public get isEditRoute(): boolean {
+    return (this.getFirstRouteParam() === 'edit');
+
+  }
+
+  public get isViewRoute(): boolean {
+    return (this.getFirstRouteParam() === 'view');
+  }
+
+  private getFirstRouteParam(): string {
+    const temp1 = this.router.url.substring(1);
+    // is it a route with params
+    if ( temp1 .indexOf(`/`) !== -1) {
+      const temp2 =  temp1.slice(0,  temp1.indexOf(`/`));
+      return temp2;
+    } else {
+      return undefined;
+    }
+  }
+
   private resolveRoute(route: string): AppRoutes {
     const routeType = route.slice(0, route.indexOf(`/`));
     switch (routeType.toLowerCase()) {

@@ -23,15 +23,15 @@ const routes: Routes = [
   { path: AppRoutes.UserInfo, component: UserInformationComponent},
   { path: AppRoutes.AdminTools , component: AdminToolsComponent },
   { path: AppRoutes.AddEntry , component: AddEntryComponent},
-  { path: AppRoutes.AddMechanicalTreatment , component: AddMechanicalTreatmentComponent},
-  { path: AppRoutes.ViewMechanicalTreatment , component: AddMechanicalTreatmentComponent},
-  { path: AppRoutes.EditMechanicalTreatment , component: AddMechanicalTreatmentComponent},
-  { path: AppRoutes.AddObservation , component: AddPlantObservationComponent},
-  { path: AppRoutes.ViewObservation , component: AddPlantObservationComponent},
-  { path: AppRoutes.EditObservation , component: AddPlantObservationComponent},
+  { path: AppRoutes.AddMechanicalTreatment , component: BaseFormComponent},
+  { path: AppRoutes.ViewMechanicalTreatment , component: BaseFormComponent},
+  { path: AppRoutes.EditMechanicalTreatment , component: BaseFormComponent},
+  { path: AppRoutes.AddObservation , component: BaseFormComponent},
+  { path: AppRoutes.ViewObservation , component: BaseFormComponent},
+  { path: AppRoutes.EditObservation , component: BaseFormComponent},
+  { path: AppRoutes.base , component: BaseFormComponent},
   { path: AppRoutes.Inventory , component: InventoryComponent},
   { path: AppRoutes.Error , component: ErrorComponent},
-  { path: AppRoutes.base , component: BaseFormComponent}
 ];
 
 @NgModule({

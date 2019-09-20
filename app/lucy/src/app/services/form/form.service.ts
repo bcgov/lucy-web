@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from '../api.service';
-import { AppConstants } from 'src/app/constants';
+import { AppConstants, AppRoutes } from 'src/app/constants';
 import { DropdownObject, DropdownService } from '../dropdown.service';
 import { DummyService } from '../dummy.service';
+import { RouterService } from '../router.service';
+import { ErrorService, ErrorType } from '../error.service';
+import { MechanicalTreatmentService } from '../mechanical-treatment.service';
+import { ObservationService } from '../observation.service';
 
 
 export interface FormConfigField {
@@ -57,23 +61,23 @@ export interface FormConfig {
 })
 export class FormService {
 
-  constructor(private api: ApiService, private dropdownService: DropdownService, private dummyService: DummyService) {
+  constructor(private api: ApiService, private dropdownService: DropdownService, private dummyService: DummyService, private router: RouterService, private errorService: ErrorService, private observationService: ObservationService, private mechanicalTreatmentService: MechanicalTreatmentService) {
   }
 
   public async getMechanicalTreatmentUIConfig(): Promise<any> {
-    const serverConfig = await this.getMechanicalTreatmentConfig();
+    const serverConfig = await this.getMechanicalTreatmentServerConfig();
     return await this.createUIConfig(serverConfig);
   }
 
   public async getObservationUIConfig(): Promise<any> {
-    const serverConfig = await this.getObservationConfig();
+    const serverConfig = await this.getObservationServerConfig();
     return await this.createUIConfig(serverConfig);
   }
 
   /**
    * Fetch and return configuration json for Mechanical treatment page
    */
-  private async getMechanicalTreatmentConfig(): Promise<FormConfig> {
+  private async getMechanicalTreatmentServerConfig(): Promise<FormConfig> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Form_MechanicalTreatment, undefined);
     if (response.success) {
       const modelName = response.response[`modelName`];
@@ -94,7 +98,7 @@ export class FormService {
   /**
    * Fetch and return configuration json for Observation page
    */
-  private async getObservationConfig(): Promise<FormConfig> {
+  private async getObservationServerConfig(): Promise<FormConfig> {
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Form_Observation, undefined);
     if (response.success) {
       const modelName = response.response[`modelName`];
@@ -109,6 +113,71 @@ export class FormService {
       console.log(`observation creation failed`);
       console.dir(response);
       return undefined;
+    }
+  }
+
+  public async getFormConfigForCurrentRoute(): Promise<any> {
+    switch (this.router.current) {
+      case (AppRoutes.ViewObservation): {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const observation = this.observationService.getWithId(id);
+        if (configFile && observation) {
+          return this.merge(configFile, observation);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case (AppRoutes.EditObservation): {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const observation = this.observationService.getWithId(id);
+        if (configFile && observation) {
+          return this.merge(configFile, observation);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case (AppRoutes.AddObservation): {
+        const configFile = await this.getObservationUIConfig();
+        return configFile;
+        break;
+      }
+      case (AppRoutes.ViewMechanicalTreatment): {
+        const id = this.router.routeId;
+        const configFile = await this.getMechanicalTreatmentUIConfig();
+        const treatment = this.mechanicalTreatmentService.getWithId(id);
+        if (configFile && treatment) {
+          return this.merge(configFile, treatment);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case (AppRoutes.EditMechanicalTreatment): {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const treatment = this.mechanicalTreatmentService.getWithId(id);
+        if (configFile && treatment) {
+          return this.merge(configFile, treatment);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case (AppRoutes.AddMechanicalTreatment): {
+        const configFile = await this.getMechanicalTreatmentUIConfig();
+        return configFile;
+        break;
+      }
+      default: {
+        console.log("**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**")
+        this.errorService.show(ErrorType.NotFound);
+        return undefined;
+        break;
+      }
     }
   }
 
@@ -149,7 +218,7 @@ export class FormService {
             // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
             newField.cssClasses = newField.cssClasses + ' col col-md-4';
           } else if (newField.isTextAreaField) {
-            // Comment fields should take the whole row
+            // Comment fields should take the whole row 
             newField.cssClasses = newField.cssClasses + ' col-12';
           }
           if (newField.isLocationLatitudeField || newField.isLocationLongitudeField) {
@@ -372,6 +441,11 @@ export class FormService {
 
   public async generateMechanicalTreatmentTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyMechanicalTreatment();
+    return await this.merge(config, dummy);
+  }
+
+  public async generateObservationTest(config: any): Promise<any> {
+    const dummy = await this.dummyService.createDummyObservation([]);
     return await this.merge(config, dummy);
   }
 

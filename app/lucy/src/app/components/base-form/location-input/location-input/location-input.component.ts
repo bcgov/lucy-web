@@ -103,7 +103,6 @@ export class LocationInputComponent implements OnInit {
 
   private notifyChangeEvent() {
     if (this.object && !this.isViewMode) {
-      console.log('nofifying');
       this.locationChanged.emit(this.object);
     }
   }
