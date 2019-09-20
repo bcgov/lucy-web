@@ -7,6 +7,7 @@ ENV HOME /opt/app-root/src/app
 # Creating HOME
 RUN mkdir -p ${HOME}
 RUN chmod 777 ${HOME}
+RUN useradd -u 1001 -r -g default -d ${HOME} -s /sbin/nologin
 RUN chown -R 1001:1001 ${HOME}
 USER 1001
 
