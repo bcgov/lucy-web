@@ -56,6 +56,8 @@ objects:
             value: ${API_HOST}
           - name: ENVIRONMENT
             value: ${ENVIRONMENT}
+          - name: VERSION
+            value: ${VERSION}
           image: " "
           imagePullPolicy: Always
           name: app
