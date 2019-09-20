@@ -27,7 +27,7 @@ module.exports = (settings) => {
 
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/test.pod.yaml`, {
     'param':{
-      'NAME': name,
+      'NAME': `${phases[phase].name}-test`,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'CHANGE_ID': phases[phase].changeId,
