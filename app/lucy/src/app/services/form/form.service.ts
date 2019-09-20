@@ -116,6 +116,21 @@ export class FormService {
     }
   }
 
+  public editCurrent() {
+    const current = this.router.current;
+    switch (current) {
+      case AppRoutes.ViewMechanicalTreatment: {
+        return this.router.navigateTo(AppRoutes.EditMechanicalTreatment, this.router.routeId)
+      } 
+      case AppRoutes.ViewObservation: {
+        return this.router.navigateTo(AppRoutes.EditObservation, this.router.routeId)
+      }
+      default: {
+        console.log('Case not handled');
+      }
+    }
+  }
+
   public async getFormConfigForCurrentRoute(): Promise<any> {
     switch (this.router.current) {
       case (AppRoutes.ViewObservation): {

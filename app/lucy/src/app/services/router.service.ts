@@ -27,16 +27,16 @@ export class RouterService {
   }
 
   public get isCreateRoute(): boolean {
-    return (this.getFirstRouteParam() === 'create');
+    return (this.getFirstRouteParam().toLowerCase() === 'create');
   }
 
   public get isEditRoute(): boolean {
-    return (this.getFirstRouteParam() === 'edit');
+    return (this.getFirstRouteParam().toLowerCase() === 'edit');
 
   }
 
   public get isViewRoute(): boolean {
-    return (this.getFirstRouteParam() === 'view');
+    return (this.getFirstRouteParam().toLowerCase() === 'view');
   }
 
   private getFirstRouteParam(): string {
