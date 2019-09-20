@@ -5,6 +5,7 @@ ENV PORT 3001
 ENV HOME /opt/app-root/src/app
 
 # Creating HOME
+USER 0
 RUN mkdir -p ${HOME}
 RUN chmod 777 ${HOME}
 RUN groupadd -r default -f -g 1001
