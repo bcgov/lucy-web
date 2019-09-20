@@ -57,6 +57,7 @@ pipeline {
             steps {
                 echo "Deploying Postgress DB"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev"
             }
         }
         stage('Test API (Dev)') {
@@ -93,6 +94,7 @@ pipeline {
             steps {
                 echo "Deploying Postgress [STATIC] ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev"
             }
         }
         stage('Deploy (Dev) API/APP [Static]') {
@@ -121,6 +123,7 @@ pipeline {
             steps {
                 echo "Deploying Postgress [TEST] ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev"
             }
         }
         stage('Deploy (TEST) API/APP') {
