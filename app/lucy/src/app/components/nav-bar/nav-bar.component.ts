@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppRoutes, AppRoutesParams } from '../../constants/app-routes.enum';
+import { StringConstants } from 'src/app/constants/string-constants';
 import { SsoService } from '../../services/sso.service';
 import { UserService } from '../../services/user.service';
 import { RouterService } from '../../services/router.service';
@@ -17,14 +18,30 @@ declare const location: any;
 export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
-   * User initials
+   * User initials & full name
    */
   public userInitials = ``;
+  public fullName = ``;
 
   /**
    * User access type
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
+
+  /**
+   * String representation of user's access (based on role)
+   */
+  public accessTypeMessage = ``;
+
+    /**
+   * Title of user's role within associated organization
+   */
+  public role = ``;    // TODO may need to be updated once Role implemented in API
+
+  /**
+   * Title of user's organization
+   */
+  public organization = ``;    // TODO may need to be updated once Organization implemented in API
 
   /**
    * Listener for route events
@@ -132,7 +149,11 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.setInitials();
+    this.setFullName();
     this.setAccessType();
+    this.setOrganization();
+    this.setRole();
+    this.setAccessTypeMessage();
     this.listenForRouteChanges();
   }
 
@@ -148,7 +169,11 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   private listenForRouteChanges() {
     this.routeEventsListener = this.routerService.events.subscribe((val) => {
       this.setInitials();
+      this.setFullName();
       this.setAccessType();
+      this.setOrganization();
+      this.setRole();
+      this.setAccessTypeMessage();
     });
   }
 
@@ -168,10 +193,48 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Setting User's full name
+   * to be consumed by HTML
+   */
+  private async setFullName() {
+    this.fullName = await this.userService.getFullName();
+  }
+
+  /**
    * Setting User's access type
    */
   private async setAccessType() {
     this.accessType = await this.userService.getAccess();
+  }
+
+  /**
+   * Setting User's role (String value)
+   * to be consumed by HTML
+   */
+  private async setRole() {
+    this.role = await this.userService.getRole();
+  }
+
+  private async setOrganization() {
+    this.organization = await this.userService.getOrganization();
+  }
+  
+  private async setAccessTypeMessage() {
+
+    this.userService.getAccess().then((value) => {
+      this.accessType = value;
+      switch (value) {
+        case UserAccessType.DataEditor:
+          this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
+          break;
+        case UserAccessType.DataViewer:
+          this.accessTypeMessage = StringConstants.databaseAccess_View_Badge;
+          break;
+        case UserAccessType.Admin:
+          this.accessTypeMessage = StringConstants.databaseAccess_Admin_Badge;
+          break;
+      }
+    });
   }
 
   /**
