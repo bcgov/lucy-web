@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: test
+  name: migration
   creationTimestamp: null
 parameters:
 - name: IMAGE

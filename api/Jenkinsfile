@@ -59,6 +59,13 @@ pipeline {
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev"
             }
         }
+        stage('Test API (Dev)') {
+            agent { label 'deploy' }
+            steps {
+                echo "Testing app"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run test -- --pr=${CHANGE_ID} --env=dev"
+            }
+        }
         stage('Deploy (DEV) API') {
             agent { label 'deploy' }
             steps {
