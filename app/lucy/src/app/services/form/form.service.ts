@@ -7,7 +7,7 @@ import { RouterService } from '../router.service';
 import { ErrorService, ErrorType } from '../error.service';
 import { MechanicalTreatmentService } from '../mechanical-treatment.service';
 import { ObservationService } from '../observation.service';
-
+import * as moment from 'moment';
 
 export interface FormConfigField {
   key: string;
@@ -454,6 +454,19 @@ export class FormService {
     console.log(`merging`);
     console.dir(config);
     console.dir(object);
+
+    // set id & date
+    for (const key in object) {
+      if (key.toLowerCase().indexOf('id') !== -1) {
+        configuration['objectId'] = object[key]; 
+      } else if (key.toLowerCase().indexOf('date') !== -1) {
+        configuration['objectDate'] = moment(moment(object[key], 'YYYY-MM-DD').toDate()).format('dddd MMM DD YYYY');
+      }
+      if (configuration['objectId'] !== undefined && configuration['objectDate'] !== undefined) {
+        break;
+      }
+    }
+    
     /*
       Yes, big O of n^3 is really bad
       (its actually way, way worse if you look deeper)

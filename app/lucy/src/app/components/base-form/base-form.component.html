@@ -46,7 +46,15 @@
     <div class="container header-container-inner">
       <mat-toolbar>
         <mat-toolbar-row>
-          <span class="view-title">{{pageTitlePrefix}} {{ config["title"] }}</span>
+          <div class="row">
+            <div class="col-12">
+                <span class="view-title">{{pageTitlePrefix}} {{ config["title"] }}</span>
+            </div>
+            <div *ngIf="config['objectId']" class="col-12 sub-header">
+                ID: {{config['objectId']}} | {{config['objectDate']}}
+            </div>
+          </div>
+          
           <span class="spacer-toolbar"></span>
           <!-- Submit button -->
           <button

@@ -5,6 +5,13 @@
     line-height: 24px;
 }
 
+.sub-header {
+	color: #FFFFFF;
+	font-size: 14px;
+	letter-spacing: -0.05px;
+	line-height: 18px;
+}
+
 
 .sub-section-title {
     color: #000000;
