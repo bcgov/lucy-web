@@ -46,6 +46,13 @@
     box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
 }
 
+.header-container-review {
+    margin: 0 auto;
+    width: 100%;
+    background: linear-gradient(135deg, #EA8B0F 0%, #F1AC24 100%);
+	box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+}
+
 .spacer-toolbar {
     flex: 1 1 auto;
 }
@@ -99,4 +106,18 @@
     position: fixed;
     bottom: 0;
     width: 18%;
+}
+
+.submit-button {
+    background-color: white;
+    border-color: white;
+    color: #234075;
+    margin-left: 20px;
+}
+
+.edit-button {
+    background: transparent;
+    border: 1px solid white !important;
+    color: white;
+    margin-left: 20px;
 }

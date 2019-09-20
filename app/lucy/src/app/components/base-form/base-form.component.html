@@ -42,20 +42,20 @@
 </div>
 <div *ngIf="!isLoading" class="form-bg">
   <!-- Header Section  -->
-  <div class="container-fluid header-container sticky">
+  <div class="container-fluid header-container sticky" [ngClass]="inReviewMode ? 'header-container-review' : 'header-container'">
     <div class="container header-container-inner">
       <mat-toolbar>
         <mat-toolbar-row>
-          <span class="view-title"> {{ config["title"] }}</span>
+          <span class="view-title">{{pageTitlePrefix}} {{ config["title"] }}</span>
           <span class="spacer-toolbar"></span>
           <!-- Submit button -->
           <button
             *ngIf="!readonly || inReviewMode"
             type="button"
-            class="btn btn-secondary submit-button button-hollow action-buttons"
+            class="btn btn-secondary submit-button"
             (click)="submitAction()"
           >
-            {{ submitBtnName }}
+            {{ submitButtonPrefix }} {{ config["title"] }}
           </button>
           <!-- ---- -->
           <!-- Edit button for review -->
@@ -63,10 +63,13 @@
             (click)="exitReviewMode()"
             *ngIf="inReviewMode"
             type="button"
-            class="btn btn-secondary submit-button button-hollow action-buttons"
+            class="btn btn-secondary edit-button"
             (click)="exitReviewMode()"
           >
-            Edit
+          <i class="material-icons action-icon">
+              edit
+            </i>
+            Make changes
           </button>
           <!-- ---- -->
           <!-- Edit Button for when in view mode and user is data editor -->
@@ -74,13 +77,15 @@
             (click)="edit()"
             *ngIf="isDataEditor && viewing"
             type="button"
-            class="btn btn-secondary submit-button button-hollow action-buttons"
+            class="btn btn-secondary edit-button"
           >
-            Edit
+            
             <i class="material-icons action-icon">
               edit
             </i>
+            Make changes
           </button>
+          
           <!-- ---- -->
         </mat-toolbar-row>
       </mat-toolbar>

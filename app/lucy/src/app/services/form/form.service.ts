@@ -121,7 +121,7 @@ export class FormService {
       case (AppRoutes.ViewObservation): {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
-        const observation = this.observationService.getWithId(id);
+        const observation = await this.observationService.getWithId(id);
         if (configFile && observation) {
           return this.merge(configFile, observation);
         } else {
@@ -132,7 +132,7 @@ export class FormService {
       case (AppRoutes.EditObservation): {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
-        const observation = this.observationService.getWithId(id);
+        const observation = await this.observationService.getWithId(id);
         if (configFile && observation) {
           return this.merge(configFile, observation);
         } else {
@@ -148,7 +148,7 @@ export class FormService {
       case (AppRoutes.ViewMechanicalTreatment): {
         const id = this.router.routeId;
         const configFile = await this.getMechanicalTreatmentUIConfig();
-        const treatment = this.mechanicalTreatmentService.getWithId(id);
+        const treatment = await this.mechanicalTreatmentService.getWithId(id);
         if (configFile && treatment) {
           return this.merge(configFile, treatment);
         } else {
@@ -159,7 +159,7 @@ export class FormService {
       case (AppRoutes.EditMechanicalTreatment): {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
-        const treatment = this.mechanicalTreatmentService.getWithId(id);
+        const treatment = await this.mechanicalTreatmentService.getWithId(id);
         if (configFile && treatment) {
           return this.merge(configFile, treatment);
         } else {
@@ -451,6 +451,9 @@ export class FormService {
 
   private async merge(config: any, object: any): Promise<any> {
     const configuration = config;
+    console.log(`merging`);
+    console.dir(config);
+    console.dir(object);
     /*
       Yes, big O of n^3 is really bad
       (its actually way, way worse if you look deeper)
@@ -474,7 +477,7 @@ export class FormService {
                 field.value = object[field.key];
               }
             } else {
-              console.log(`**** key ${field.key} does not exist in generated object`);
+              console.log(`**** config key ${field.key} does not exist in object`);
             }
           }
         }
