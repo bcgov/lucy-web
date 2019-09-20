@@ -9,7 +9,7 @@ USER 0
 RUN mkdir -p ${HOME}
 RUN chmod 777 ${HOME}
 RUN groupadd -r default -f -g 1001
-RUN useradd -u 1001 -r -g default -d ${HOME} -s /sbin/nologin
+# RUN useradd -u 1001 -r -g default -d ${HOME} -s /sbin/nologin
 RUN chown -R 1001:1001 ${HOME}
 USER 1001
 
