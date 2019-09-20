@@ -35,11 +35,11 @@ objects:
         timeoutSeconds: 600
       resources: 
         limits:
-          cpu: 500m
-          memory: 2Gi
+          cpu: ${CPU_LIMIT}
+          memory: ${MEMORY_LIMIT}
         requests:
-          cpu: 200m
-          memory: 1Gi
+          cpu: ${CPU_REQUEST}
+          memory: ${MEMORY_REQUEST}
       type: Recreate
     template:
       metadata:
@@ -54,26 +54,28 @@ objects:
             value: ${CHANGE_ID}
           - name: API_HOST
             value: ${API_HOST}
+          - name: ENVIRONMENT
+            value: ${ENVIRONMENT}
           image: " "
           imagePullPolicy: Always
           name: app
           ports:
-          - containerPort: 3030
+          - containerPort: ${{APP_PORT_DEFAULT}}
             protocol: TCP
-          - containerPort: 7070
+          - containerPort: ${{APP_PORT_OTHER}}
             protocol: TCP
           resources: 
             limits:
-              cpu: 500m
-              memory: 2Gi
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
             requests:
-              cpu: 200m
-              memory: 1Gi
+              cpu: ${CPU_REQUEST}
+              memory: ${MEMORY_REQUEST}
           readinessProbe:
             failureThreshold: 10
             httpGet:
               path: /healthcheck
-              port: 3030
+              port: ${{APP_PORT_DEFAULT}}
               scheme: HTTP
             initialDelaySeconds: 65
             periodSeconds: 20
@@ -83,7 +85,7 @@ objects:
             failureThreshold: 10
             httpGet:
               path: /healthcheck
-              port: 3030
+              port: ${{APP_PORT_DEFAULT}}
               scheme: HTTP
             initialDelaySeconds: 65
             periodSeconds: 30
@@ -126,14 +128,14 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     ports:
-    - name: 3030-tcp
-      port: 3030
+    - name: ${NAME}-${APP_PORT_DEFAULT_NAME}
+      port: ${{APP_PORT_DEFAULT}}
       protocol: TCP
-      targetPort: 3030
-    - name: 8088-tcp
-      port: 8088
+      targetPort: ${{APP_PORT_DEFAULT}}
+    - name: ${NAME}-${APP_PORT_OTHER_NAME}
+      port: ${{APP_PORT_OTHER}}
       protocol: TCP
-      targetPort: 8088
+      targetPort: ${{APP_PORT_OTHER}}
     selector:
       deploymentconfig: ${NAME}${SUFFIX}
     sessionAffinity: None
@@ -150,7 +152,7 @@ objects:
   spec:
     host: ${HOST}
     port:
-      targetPort: 3030-tcp
+      targetPort: ${NAME}-${APP_PORT_DEFAULT_NAME}
     to:
       kind: Service
       name: ${NAME}${SUFFIX}
@@ -173,4 +175,32 @@ parameters:
 - name: CHANGE_ID
   value: "0"
 - name: API_HOST
+  description: API host for application backend
   value: ""
+- name: ENVIRONMENT
+  description: ENVIRONMENT specification variable
+  value: 'dev'
+- name: APP_PORT_DEFAULT
+  description: Application default port
+  value: '3030'
+- name: APP_PORT_DEFAULT_NAME
+  description: Default port resource name
+  value: '3030-tcp'
+- name: APP_PORT_OTHER
+  description: Other reserved port of the application
+  value: '8088'
+- name: APP_PORT_OTHER_NAME
+  description: Other reserved port resource name
+  value: '8088-tcp'
+- name: CPU_REQUEST
+  description: CPU REQUEST for deployment config
+  value: '200m'
+- name: CPU_LIMIT
+  description: CPU LIMIT for dc
+  value: '500m'
+- name: MEMORY_REQUEST
+  description: MEMORY REQUEST for dc
+  value: '1Gi'
+- name: MEMORY_LIMIT
+  description: MEMORY LIMIT for dc
+  value: '2Gi'

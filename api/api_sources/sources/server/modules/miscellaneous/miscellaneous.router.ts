@@ -81,7 +81,7 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
         return this.routeConfig<any>('version', async () => [200, {
             version: process.env.VERSION || '0.0',
             env: process.env.ENVIRONMENT || 'default',
-            changeId: process.env.CHANGE_ID || 'NA'
+            changeId: process.env.CHANGE_VERSION || 'NA'
         }]);
     }
 

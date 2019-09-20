@@ -81,7 +81,8 @@ services:
   environment:
     - APP_PORT=${APP_PORT}
     - LOCAL_API_HOST=app_api:${API_PORT}
-    
+    - ENVIRONMENT=local
+    - VERSION=${VERSION}
 # Application Local docker network
 networks:
  local-network:
