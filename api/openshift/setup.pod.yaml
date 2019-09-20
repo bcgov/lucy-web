@@ -101,3 +101,15 @@ objects:
     activeDeadlineSeconds: 900
     dnsPolicy: ClusterFirst
   status: {}
+- apiVersion: v1
+  stringData:
+    database-name: ""
+    database-password: ""
+    database-user: ""
+  kind: Secret
+  metadata:
+    annotations:
+      as-copy-of: ${DB_SERVICE_NAME}
+    creationTimestamp: null
+    name: ${NAME}${SUFFIX}
+  type: Opaque
