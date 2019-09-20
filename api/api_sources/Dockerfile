@@ -61,6 +61,8 @@ RUN ls -a
 RUN chmod 777 ${HOME}/node_modules
 RUN mkdir -p ${HOME}/.config
 RUN chmod -R 766 ${HOME}/.config
+RUN chown -R 1001:1001 ${HOME}
+USER 1001
 
 # Application VOLUME
 VOLUME ${HOME}
