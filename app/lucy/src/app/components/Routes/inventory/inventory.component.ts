@@ -28,6 +28,12 @@ export class InventoryComponent implements OnInit {
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
 
+   /**
+   * Name of database
+   * to be consumed by HTML
+   */
+  public databaseTitle = ``;
+  
   /**
    * Show/Hide Add edit observation button
    * This value will only change
