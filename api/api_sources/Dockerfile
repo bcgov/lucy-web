@@ -7,10 +7,7 @@ ENV HOME /opt/app-root/src/app
 # Creating HOME
 USER 0
 RUN mkdir -p ${HOME}
-RUN chmod 777 ${HOME}
-RUN groupadd -r default -f -g 1001
-# RUN useradd -u 1001 -r -g default -d ${HOME} -s /sbin/nologin
-RUN chown -R 1001:1001 ${HOME}
+RUN chmod -R 777 ${HOME}
 USER 1001
 
 # Setting Path
@@ -64,8 +61,9 @@ RUN ls -a
 
 # Allow all user and app to update few folders
 RUN chmod 777 ${HOME}/node_modules
-RUN mkdir -p ${HOME}/.config
-RUN chmod -R 766 ${HOME}/.config
+RUN mkdir -p ${HOME}/.config/configstore
+RUN chmod -R 777 ${HOME}/.config
+RUN chmod -R 777 ${HOME}/.config/configstore
 
 # Application VOLUME
 VOLUME ${HOME}
