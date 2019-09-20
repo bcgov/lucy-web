@@ -128,3 +128,10 @@
     color: white;
     margin-left: 20px;
 }
+
+.diff-container {
+    background-color: purple;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}

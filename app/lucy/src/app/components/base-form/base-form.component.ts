@@ -17,6 +17,7 @@ import { FormService} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
 import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { DiffResult } from 'src/app/services/diff.service';
 
 export enum FormType {
   Observation,
@@ -97,6 +98,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     if (this.editing && this.inReviewMode) {
       return 'Commit';
     }
+    if (this.editing && !this.inReviewMode) {
+      return 'Review';
+    }
     return ``;
   }
   /* ***** */
@@ -140,16 +144,17 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return this.router.isEditRoute;
   }
 
+  // Config
   private _config: any = {};
-
   private get config(): any {
     return this._config;
   }
-
   private set config(object: any) {
     this._config = object;
   }
 
+  diffObject: DiffResult;
+  
   get canSubmit(): boolean {
     if (!this.config || !this.responseBody) {
       return false;
@@ -251,7 +256,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       this.alert.show('Missing fields', 'Please fill all required fields');
     } else {
       if (!this.inReviewMode) {
-        this.changeToReviewMode();
+        this.enterReviewMode();
         return;
       }
       this.isLoading = true;
@@ -266,9 +271,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  changeToReviewMode() {
-    // if NOT in create mode (route), don't continue
-    if (!this.creating) {
+  private edit() {
+    if (!this.viewing) {
+      return;
+    }
+    this.formService.editCurrent();
+  }
+
+  enterReviewMode() {
+    // if NOT in create mode (route) or edit mode, don't continue
+    if (!this.creating && !this.editing) {
       return;
     }
     this.inReviewMode = true;
@@ -281,6 +293,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   exitReviewMode() {
     this.inReviewMode = false;
+    this.showdiffViewer = false;
     this.setFormMode();
   }
 

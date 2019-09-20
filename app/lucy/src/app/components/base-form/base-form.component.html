@@ -101,6 +101,10 @@
   </div>
   <!-- -------------------- -->
   <br />
+  <div *ngIf="showdiffViewer" class="container form-body diff-container">
+      <app-diff-viewer (diffObject)="diffObject"></app-diff-viewer>
+  </div>
+  <br />
   <div class="container form-body">
     <div
       class="container-fluid"
