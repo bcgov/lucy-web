@@ -15,7 +15,7 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
             console.log('Unable to fetch API resource');
             process.exit(0);
         }
-        console.dir(data); 
+        console.log(JSON.stringify(data, null, 2)); 
     };
 
     setTimeout(check, 5000);
