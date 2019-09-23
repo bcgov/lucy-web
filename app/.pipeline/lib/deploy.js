@@ -18,7 +18,8 @@ module.exports = (settings)=>{
       'VERSION': phases[phase].tag,
       'HOST': phases[phase].host,
       'CHANGE_ID': phases[phase].changeId,
-      'API_HOST': phases[phase].apiHost
+      'API_HOST': phases[phase].apiHost,
+      'ENVIRONMENT':  phases[phase].env || 'dev'
     }
   }))
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, phases[phase].instance)
