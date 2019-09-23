@@ -6,6 +6,7 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
     const count = countArg || 10;
     const phases = settings.phases
     const options= settings.options
+    const phase = options.env
     const oc = new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
     
     const check = () => {
