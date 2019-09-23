@@ -42,5 +42,5 @@ module.exports = (settings) => {
   
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
-  oc.raw('wait', `${phases[phase].name}${phases[phase].suffix}-setup --timeout=100`)
+  oc.raw('wait', `${phases[phase].name}${phases[phase].suffix}-setup --for condition=Completed --timeout=200`)
 }
