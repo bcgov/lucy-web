@@ -20,7 +20,8 @@
     "test:lint": "tslint --project .",
     "snyk-protect": "snyk protect",
     "merge-report": "",
-    "sonar-analysis": "sonar-generic-coverage-convertor && sonar-scanner"
+    "sonar-analysis": "sonar-generic-coverage-convertor && sonar-scanner",
+    "remote:test": "npm run test:all && npm run sonar-analysis"
   },
   "author": "Pushan Mitra",
   "license": "MIT",

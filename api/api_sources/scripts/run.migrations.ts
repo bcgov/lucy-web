@@ -32,6 +32,7 @@ import { AppDatabaseMigrationManager } from '../sources/database/migration.helpe
  */
 (() => {
     // Refreshing database: Drop all existing migration and re
+    throw new Error('Migration Fail');
     AppDatabaseMigrationManager.shared.refresh();
     // AppDatabaseMigrationManager.shared.migrate();
 })();
