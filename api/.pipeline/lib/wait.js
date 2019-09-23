@@ -10,55 +10,60 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
     const oc = new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
     
     const check = () => {
-        console.log(`Getting resource ${resourceName}`)
-        const list = oc.get(resourceName) || [];
-        // console.log(`${list.length}:${JSON.stringify(list, null, 2)}`)
-        if (list.length === 0) {
-            console.log(`Unable to fetch API resource: ${resourceName}`);
-            throw new Error(`Unable to fetch API resource: ${resourceName}`)
-        }
-        // console.log(JSON.stringify(data, null, 2));
-        // Get Status
-        const data = list[0];
-        const status = data.status || { conditions: [], containerStatuses: []};
-        if (status.conditions.length === 0 && status.containerStatuses.length === 0) {
-            console.log(`Unable to fetch API resource: ${resourceName} status`);
-            console.log(`${JSON.stringify(data)}`)
-            throw new Error(`Unable to fetch API resource: ${resourceName} status`);
-        }
-
-        const containerStatus = status.containerStatuses[0] || {};
-        if (!containerStatus.state) {
-            console.log(`Unable to fetch API resource: ${resourceName} container state`);
-            console.log(`${JSON.stringify(data)}`)
-            throw new Error(`Unable to fetch API resource: ${resourceName} container state`);
-        }
-        const state = containerStatus.state || {};
-        if (state.terminated) {
-            if (state.terminated.reason.toLowerCase() === 'completed') {
-                console.log(`${resourceName}: Finished [Successfully]`)
-                console.log(`${resourceName}: Deleting`)
-                // Remove Pod
-                oc.delete([resourceName], {'ignore-not-found':'true', 'wait':'true'})
-                return;
-            } else {
-                console.log(`Unable to fetch API resource: ${resourceName} terminated with error`);
-                console.log(JSON.stringify(data.status, null, 2));
-                throw new Error(`Unable to fetch API resource: ${resourceName} terminated with error`)
+        try {
+            console.log(`Getting resource ${resourceName}`)
+            const list = oc.get(resourceName) || [];
+            // console.log(`${list.length}:${JSON.stringify(list, null, 2)}`)
+            if (list.length === 0) {
+                console.log(`Unable to fetch API resource: ${resourceName}`);
+                throw new Error(`Unable to fetch API resource: ${resourceName}`)
             }
-        } else {
-            if (count > 0) {
-                console.log(`Waiting for resource: ${resourceName} to finish ... ${count}`)
-                count = count - 1;
-                setTimeout(check, timeout);
-            } else {
-                console.log(`Wait time exceed for resource: ${resourceName}`);
+            // console.log(JSON.stringify(data, null, 2));
+            // Get Status
+            const data = list[0];
+            const status = data.status || { conditions: [], containerStatuses: []};
+            if (status.conditions.length === 0 || status.containerStatuses.length === 0) {
+                console.log(`Unable to fetch API resource: ${resourceName} status`);
                 console.log(`${JSON.stringify(data)}`)
-                throw new Error(`Wait time exceed for resource: ${resourceName}`);
+                throw new Error(`Unable to fetch API resource: ${resourceName} status`);
             }
+
+            const containerStatus = status.containerStatuses[0] || {};
+            if (!containerStatus.state) {
+                console.log(`Unable to fetch API resource: ${resourceName} container state`);
+                console.log(`${JSON.stringify(data)}`)
+                throw new Error(`Unable to fetch API resource: ${resourceName} container state`);
+            }
+            const state = containerStatus.state || {};
+            if (state.terminated) {
+                if (state.terminated.reason.toLowerCase() === 'completed') {
+                    console.log(`${resourceName}: Finished [Successfully]`)
+                    console.log(`${resourceName}: Deleting`)
+                    // Remove Pod
+                    oc.delete([resourceName], {'ignore-not-found':'true', 'wait':'true'})
+                    return;
+                } else {
+                    console.log(`Unable to fetch API resource: ${resourceName} terminated with error`);
+                    console.log(JSON.stringify(data.status, null, 2));
+                    throw new Error(`Unable to fetch API resource: ${resourceName} terminated with error`)
+                }
+            } else {
+                if (count > 0) {
+                    console.log(`Waiting for resource: ${resourceName} to finish ... ${count}`)
+                    count = count - 1;
+                    setTimeout(check, timeout);
+                } else {
+                    console.log(`Wait time exceed for resource: ${resourceName}`);
+                    console.log(`${JSON.stringify(data)}`)
+                    throw new Error(`Wait time exceed for resource: ${resourceName}`);
+                }
+            }
+        } catch (excp) {
+            console.log(`Pod (${resourceName}) Wait: Exception  ${excp}`)
+            throw excp;
         }
         
     };
 
-    setTimeout(check, timeout);
+    setTimeout(check, (timeout + 10000));
 };
