@@ -16,6 +16,14 @@ export class AppConstants {
     // API
     static API_baseURL = 'http://localhost:80/api';
 
+    // Default Config
+    static CONFIG = {
+        apiHost: 'localhost',
+        changeVersion: 'NA',
+        env: 'local',
+        version: 'NA'
+    };
+
     // API authenticated user endpoints
     static get API_me(): string { return `${AppConstants.API_baseURL}/account/me`; }
     static get API_DataEntryAccessRequest(): string { return `${AppConstants.API_baseURL}/request-access`; }
