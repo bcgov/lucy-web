@@ -31,8 +31,7 @@ import { AppDatabaseMigrationManager } from '../sources/database/migration.helpe
  * Script
  */
 (() => {
-    // Refreshing database: Drop all existing migration and re
-    throw new Error('Migration Fail');
+    // Refreshing database: Drop all existing migration and refresh
     AppDatabaseMigrationManager.shared.refresh();
     // AppDatabaseMigrationManager.shared.migrate();
 })();
