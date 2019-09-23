@@ -1,6 +1,7 @@
 'use strict';
 const {OpenShiftClientX} = require('pipeline-cli')
 const path = require('path');
+const wait = require('./wait');
 
 module.exports = (settings) => {
   const phases = settings.phases
@@ -23,10 +24,11 @@ module.exports = (settings) => {
     process.exit(0);
   }
   const imageStream = data[0];
+  const podName = `${phases[phase].name}${phases[phase].suffix}-test`;
 
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/test.pod.yaml`, {
     'param':{
-      'NAME': `${phases[phase].name}${phases[phase].suffix}-test`,
+      'NAME': podName,
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'CHANGE_ID': phases[phase].changeId,
@@ -38,4 +40,5 @@ module.exports = (settings) => {
   
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
+  wait(`pod/${podName}`, settings);
 }
