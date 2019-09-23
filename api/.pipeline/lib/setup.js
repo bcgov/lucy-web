@@ -1,6 +1,7 @@
 'use strict';
 const {OpenShiftClientX} = require('pipeline-cli')
 const {OpenShiftClient} = require('pipeline-cli')
+const wait = require('./wait');
 const path = require('path');
 
 module.exports = (settings) => {
@@ -42,5 +43,5 @@ module.exports = (settings) => {
   
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
-  oc.raw('wait', `${phases[phase].name}${phases[phase].suffix}-setup --for condition=Completed --timeout=200`)
+  
 }
