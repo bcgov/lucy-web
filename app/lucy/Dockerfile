@@ -15,9 +15,6 @@ ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/o
 
 WORKDIR /opt/app-root/src
 
-# Logging in Build Console
-RUN echo ' --- BUILD START --- '
-
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
@@ -32,9 +29,6 @@ COPY ./ .
 
 # BUILD APP
 RUN npm run build
-
-# Logging in Build Console Build DONE
-RUN echo ' --- BUILD SUCCESS: [DONE] --- '
 
 EXPOSE 3030
 
