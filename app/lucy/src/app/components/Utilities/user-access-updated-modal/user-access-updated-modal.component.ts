@@ -82,7 +82,7 @@ export class UserAccessUpdatedModalComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.userService.getOranizarionAndRole().then((value) => {
+    this.userService.getOrganizationAndRole().then((value) => {
       this.userRoleAndOrganization = value;
     });
   }

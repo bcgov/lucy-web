@@ -10,6 +10,7 @@
     "build-tools": "node buildtools.js",
     "clean": "node clean.js",
     "pre-deploy": "node pre.deploy.js",
+    "setup": "node setup.js",
     "deploy": "node deploy.js",
     "deploy-tools": "node deploytools.js",
     "test": "node test.js",
