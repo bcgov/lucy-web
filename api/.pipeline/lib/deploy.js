@@ -19,11 +19,16 @@ module.exports = (settings) => {
       'VERSION': phases[phase].tag,
       'HOST': phases[phase].host,
       'CHANGE_ID': phases[phase].changeId,
+      'ENVIRONMENT': phases[phase].env || 'dev',
       'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`
     }
   }))
   
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, phases[phase].instance)
   oc.importImageStreams(objects, phases[phase].tag, phases.build.namespace, phases.build.tag)
+  if (settings.ignoreDeploy === true) {
+    console.log(` **** IGNORING DEPLOY ****`);
+    return;
+  }
   oc.applyAndDeploy(objects, phases[phase].instance)
 }
