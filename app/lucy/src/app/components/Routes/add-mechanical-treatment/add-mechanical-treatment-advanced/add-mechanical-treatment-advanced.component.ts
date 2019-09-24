@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
 import { FormMode } from 'src/app/models';
 import { MechanicalTreatment } from 'src/app/models/MechanicalTreatment';
-import { ConverterService } from 'src/app/services/converter.service';
+import { ConverterService } from 'src/app/services/coordinateConversion/location.service';
 
 @Component({
   selector: 'app-add-mechanical-treatment-advanced',

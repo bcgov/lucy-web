@@ -77,6 +77,7 @@ import { AddPlantObservationTreatmentsComponent } from './components/Routes/add-
 import { BaseFormComponent } from './components/base-form/base-form.component';
 import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-viewer.component';
 import { AddMechanicalTreatmentAdvancedComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-advanced/add-mechanical-treatment-advanced.component';
+import { LocationInputComponent } from './components/base-form/location-input/location-input/location-input.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -122,6 +123,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     BaseFormComponent,
     DiffViewerComponent,
     AddMechanicalTreatmentAdvancedComponent,
+    LocationInputComponent,
   ],
   imports: [
     BrowserModule,

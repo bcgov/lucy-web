@@ -1,0 +1,17 @@
+.after-box {
+    opacity: 0.15;
+    background-color: #16C92E 15%;
+}
+
+.before-box {
+    opacity: 0.15;
+    background-color: #FF534A 15%;
+}
+
+.before {
+    color: #FF534A;
+}
+
+.after {
+    color: #16C92E;
+}

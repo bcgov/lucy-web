@@ -55,6 +55,7 @@ export class DatePickerComponent implements OnInit {
   @Input() set date(date: string) {
     if (date) {
       this._date = moment(date, 'YYYY-MM-DD').toDate();
+      this.emitSelection();
     }
   }
   ////////////////////

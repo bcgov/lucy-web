@@ -3,31 +3,49 @@ import {
   OnInit,
   Input,
   AfterViewChecked,
-  NgZone,
-  EventEmitter,
-  ViewChild,
-  ElementRef
-} from "@angular/core";
-import { FormMode } from "src/app/models";
-import { ErrorService, ErrorType } from "src/app/services/error.service";
-import { UserService } from "src/app/services/user.service";
-import { RolesService } from "src/app/services/roles.service";
-import { ValidationService } from "src/app/services/validation.service";
-import { AlertService } from "src/app/services/alert.service";
-import { RouterService } from "src/app/services/router.service";
-import { LoadingService } from "src/app/services/loading.service";
-import { DummyService } from "src/app/services/dummy.service";
-import { UserAccessType } from "src/app/models/Role";
-import { AppRoutes } from "src/app/constants";
+} from '@angular/core';
+import { FormMode } from 'src/app/models';
+import { ErrorService, ErrorType } from 'src/app/services/error.service';
+import { UserService } from 'src/app/services/user.service';
+import { RolesService } from 'src/app/services/roles.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { RouterService } from 'src/app/services/router.service';
+import { UserAccessType } from 'src/app/models/Role';
+import { AppRoutes, AppConstants } from 'src/app/constants';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
+import { FormService} from 'src/app/services/form/form.service';
+import * as moment from 'moment';
+import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { DiffResult } from 'src/app/services/diff.service';
 
+export enum FormType {
+  Observation,
+  MechanicalTreeatment
+}
 @Component({
-  selector: "app-base-form",
-  templateUrl: "./base-form.component.html",
-  styleUrls: ["./base-form.component.css"]
+  selector: 'app-base-form',
+  templateUrl: './base-form.component.html',
+  styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
+  // _formType: FormType;
+  // get formType(): FormType | undefined {
+  //   return this._formType;
+  // }
+  // set formType(type: FormType) {
+  //   this._formType = type;
+  // }
   public componentName = ` `;
+  private responseBody = {};
+
+  // Lottie Animation
+  isLoading = false;
+  public lottieConfig: Object;
+  private anim: any;
+  private animationSpeed = 1;
+  private formLoadingIcon = 'https://assets7.lottiefiles.com/datafiles/AX0rqrGV5ahKpWr/data.json';
+  /////////////////
 
   /**
    * User access type
@@ -48,6 +66,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   // State flags
   private submitted = false;
   private inReviewMode = false;
+  private showdiffViewer = false;
   get readonly(): boolean {
     return this.mode === FormMode.View;
   }
@@ -65,77 +84,42 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return ``;
   }
 
-  // Lottie Animation
-  public lottieConfig: Object;
-  private anim: any;
-  private animationSpeed = 1;
-  /////////////////
-
   /**
    * submit button title for different states
    */
-  get submitBtnName(): string {
+  get submitButtonPrefix(): string {
     let prefix: string;
-    switch (this.mode) {
-      case FormMode.Create: {
-        prefix = `Submit`;
-        break;
-      }
-      case FormMode.Edit: {
-        prefix = `Submit Edits`;
-        break;
-      }
-      case FormMode.View: {
-        if (this.inReviewMode) {
-          prefix = `Confirm`;
-        }
-        break;
-      }
-      default:
-        return `How are you here?`;
+    if (this.creating && !this.inReviewMode) {
+      return 'Submit'
     }
-    if (prefix) {
-      return `${prefix}`;
-    } else {
-      return ``;
+    if (this.creating && this.inReviewMode) {
+      return 'Create';
     }
+    if (this.editing && this.inReviewMode) {
+      return 'Commit';
+    }
+    if (this.editing && !this.inReviewMode) {
+      return 'Review';
+    }
+    return ``;
   }
   /* ***** */
 
-  /**
-   * Page title for different states
-   */
-  get pageTitle(): string {
+  // Add prefix based on state
+  get pageTitlePrefix(): string {
     let prefix: string;
-    switch (this.mode) {
-      case FormMode.Create: {
-        prefix = `Add`;
-        break;
-      }
-      case FormMode.Edit: {
-        prefix = `Edit`;
-        break;
-      }
-      case FormMode.View: {
-        if (this.inReviewMode) {
-          prefix = `Confirm`;
-        }
-        prefix = `View`;
-        break;
-      }
-      default:
-        return `How are you here?`;
+    if (this.creating && this.inReviewMode) {
+      return 'Review';
     }
-    if (prefix) {
-      return `${prefix} ${this.componentName}`;
-    } else {
-      return ``;
+    if (this.creating && !this.inReviewMode) {
+      return 'Add New'
     }
+    return ``;
   }
   /* ***** */
 
   ///// Form Mode
-  private _mode: FormMode = FormMode.Edit;
+  private _mode: FormMode = FormMode.Create;
   // Get
   get mode(): FormMode {
     return this._mode;
@@ -149,49 +133,59 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   ///// States Baed on Routes
   private get viewing() {
-    const current = this.router.current;
-    return (
-      current === AppRoutes.ViewMechanicalTreatment ||
-      current === AppRoutes.ViewObservation
-    );
+    return this.router.isViewRoute;
   }
 
   private get creating() {
-    const current = this.router.current;
-    return (
-      current === AppRoutes.AddMechanicalTreatment ||
-      current === AppRoutes.AddObservation
-    );
+    return this.router.isCreateRoute;
   }
 
   private get editing() {
-    const current = this.router.current;
-    return (
-      current === AppRoutes.EditMechanicalTreatment ||
-      current === AppRoutes.EditObservation
-    );
+    return this.router.isEditRoute;
   }
 
-  private config: any = {};
+  // Config
+  private _config: any = {};
+  private get config(): any {
+    return this._config;
+  }
+  private set config(object: any) {
+    this._config = object;
+  }
+
+  diffObject: DiffResult;
+  
+  get canSubmit(): boolean {
+    if (!this.config || !this.responseBody) {
+      return false;
+    }
+    let requiredFieldsExist = true;
+    for (const key of this.config.requiredFieldKeys) {
+      if (!this.responseBody[key]) {
+        console.log(`${key} is missing`);
+        requiredFieldsExist = false;
+      }
+    }
+    return requiredFieldsExist;
+  }
 
   constructor(
     // private mechanicalTreatmentService: MechanicalTreatmentService,
     private errorService: ErrorService,
     private userService: UserService,
     private roles: RolesService,
-    private validation: ValidationService,
     private alert: AlertService,
     private router: RouterService,
+    private dropdownService: DropdownService,
+    private formService: FormService,
+    private api: ApiService,
     private loadingService: LoadingService,
-    private dummy: DummyService,
-    private dropdownService: DropdownService
   ) {
     this.lottieConfig = {
-      path:
-        "https://assets4.lottiefiles.com/datafiles/jEgAWaDrrm6qdJx/data.json",
-      renderer: "canvas",
+      path: this.formLoadingIcon,
+      renderer: 'canvas',
       autoplay: true,
-      loop: false
+      loop: true
     };
   }
 
@@ -199,302 +193,178 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.initialize();
   }
 
-  ngAfterViewChecked(): void {}
+  ngAfterViewChecked(): void { }
+
+  private async initialize() {
+    this.isLoading = true;
+    this.setFormMode();
+    this.accessType = await this.userService.getAccess();
+    this.config = await this.formService.getFormConfigForCurrentRoute();
+    this.isLoading = false;
+  }
 
   /**
-   * Setting User's access type
+   *  Set view / create / edit mode based on route
+   * */ 
+  private setFormMode() {
+    if (this.router.isCreateRoute) {
+      this.mode = FormMode.Create
+    } else if (this.router.isViewRoute) {
+      this.mode = FormMode.View
+    } else if (this.router.isEditRoute) {
+      this.mode = FormMode.Edit
+    }
+  }
+
+  /**
+   * handle field change
+   * @param field 
+   * @param event 
    */
-  private async setAccessType() {
+  private fieldChanged(field: any, event: any) {
+    if (field.isLocationField) {
+      // location field
+      this.responseBody[field.latitude.key] = +event.latitude.value;
+      this.responseBody[field.longitude.key] = +event.longitude.value;
+    } else if (field.isDropdown) {
+      // dropdown field
+      for (const key in event.object) {
+        if (key.toLowerCase().indexOf('id') !== -1) {
+          this.responseBody[field.key] = event.object[key];
+          break;
+        }
+      }
+    } else if (field.isDateField) {
+      // date field
+      if (event) {
+        const formatted = moment(event).format('YYYY-MM-DD');
+        this.responseBody[field.key] = formatted;
+      }
+    } else {
+      // Store key / value for regular field
+      this.responseBody[field.key] = event;
+    }
+  }
+
+  /**
+   * Form submission
+   */
+  private async submitAction() {
+    console.dir(this.responseBody);
+    const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
+    if (!this.canSubmit) {
+      this.alert.show('Missing fields', 'Please fill all required fields');
+    } else {
+      if (!this.inReviewMode) {
+        this.enterReviewMode();
+        return;
+      }
+      this.isLoading = true;
+      const result = await this.api.request(APIRequestMethod.POST, endpoint, this.responseBody);
+      console.log(result);
+      if (result.success) {
+        this.router.navigateTo(AppRoutes.Inventory);
+      } else {
+        this.isLoading = false;
+        this.alert.show('error', 'There was an error');
+      }
+    }
+  }
+
+  private edit() {
+    if (!this.viewing) {
+      return;
+    }
+    this.formService.editCurrent();
+  }
+
+  enterReviewMode() {
+    // if NOT in create mode (route) or edit mode, don't continue
+    if (!this.creating && !this.editing) {
+      return;
+    }
+    this.inReviewMode = true;
+    this.mode = FormMode.View;
+    // If in edit mode, show diff viewer component
+    if (this.editing) {
+      this.showdiffViewer = true;
+      this.createDiffMessage();
+    }
+  }
+
+  exitReviewMode() {
+    this.inReviewMode = false;
+    this.showdiffViewer = false;
+    this.setFormMode();
+  }
+
+  /////////// Lottie ///////////
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
+  /////////// End Lottie ///////////
+
+  // private async selectedMechanicalTreatmentFormType() {
+  //   this.formType = FormType.MechanicalTreeatment;
+  //   this.isLoading = true;
+  //   console.log('Getting mechanical treatment');
+  //   this.config = await this.formService.getMechanicalTreatmentUIConfig();
+  //   console.log('done');
+  //   this.isLoading = false;
+  //   const x = await this.formService.generateMechanicalTreatmentTest(this.config);
+  // }
+
+  // private async selectedObservationFormType() {
+  //   this.formType = FormType.MechanicalTreeatment;
+  //   this.isLoading = true;
+  //   console.log('Getting observation');
+  //   this.config = await this.formService.getObservationUIConfig();
+  //   console.log('done');
+  //   this.isLoading = false;
+  // }
+
+  async generateForTesting() {
     this.loadingService.add();
-    this.accessType = await this.userService.getAccess();
+    if (this.router.current === AppRoutes.AddMechanicalTreatment) {
+      this.config = await this.formService.generateMechanicalTreatmentTest(this.config);
+    } else if (this.router.current === AppRoutes.AddObservation) {
+      this.config = await this.formService.generateObservationTest(this.config);
+    } else {
+      this.alert.show('Form not supported yet',`Test generatgion for this form type is not implemented yet`);
+    }
     this.loadingService.remove();
   }
-
-  async initialize() {
-    await this.setAccessType();
-    this.config = await this.createUIConfig();
-  }
-
-  private async createUIConfig(): Promise<any> {
-    const serverMessage = this.getTestFormConfig();
-    const sections = serverMessage['sections'];
-    const fields = serverMessage['fields'];
-    const configObject: any = {
-      title: serverMessage.title,
-      sections: [],
-    };
-    for (const section of sections) {
-      const groups = section.groups;
-      const subSections: any[] = [];
-      for (const group of groups) {
-        const subSectionFields: any[] = [];
-        for (const field of group.fields) {
-          subSectionFields.push(await this.configField(field, fields));
-        }
-        subSections.push({
-          title: group.title,
-          boxed: false,
-          fields: subSectionFields,
-        });
-      }
-      configObject.sections.push({
-        title: section.title,
-        subSections: subSections
-      });
+  
+  async createDiffMessage() {
+    const current = this.router.current;
+    switch (current) {
+      case (AppRoutes.EditMechanicalTreatment): 
+        this.loadingService.add();
+        this.diffObject = await this.formService.diffMechanicalTreatment(this.responseBody);
+        this.loadingService.remove();
+        break;
+      case (AppRoutes.EditObservation):
+        this.loadingService.add();
+        this.diffObject = await this.formService.diffObservation(this.responseBody);
+        this.loadingService.remove();
+        break;
     }
-    console.dir(configObject);
-    return configObject;
-  }
-
-  private async configField(key: string, fields: any[]): Promise<any> {
-    for (const field of fields) {
-      if (field['key'] === key) {
-        const response = field;
-        response.isDropdown = field.type === 'code';
-        response.isCheckbox = field.type === 'boolean';
-        response.isInputField = field.type === 'string' || field.type === 'number';
-        if (response.isDropdown) {
-          response.dropdown = await this.dropdownfor(field.codeTable);
-        }
-        return response;
-      }
-    }
-    return null;
-  }
-
-  private async dropdownfor(code: string): Promise<DropdownObject[]> {
-    switch (code) {
-      case 'speciesAgencyCodes':
-        return await this.dropdownService.getAgencies();
-      default:
-        return await this.dropdownService.getInvasivePlantSpecies();
-    }
-  }
-
-  private getTestUIConfig(): any {
-    const config: any = {
-      title: "Create Observation",
-      sections: [
-        {
-          title: "Basic Observation Data",
-          subSections: [
-            {
-              title: "Location",
-              boxed: false,
-              fields: [
-                {
-                  header: "Latitude",
-                  key: "lat",
-                  required: true,
-                  type: "number",
-                  regex: "",
-                  codeTable: "",
-                  class: "col-12 col-md-4",
-                  condition: ""
-                },
-                {
-                  header: "Longitude",
-                  key: "long",
-                  required: true,
-                  type: "number",
-                  regex: "",
-                  codeTable: "",
-                  class: "col-12 col-md-4",
-                  condition: ""
-                }
-              ]
-            },
-            {
-              title: "Observer Information",
-              boxed: false,
-              fields: [
-                {
-                  header: "First Name",
-                  key: "observerFirstName",
-                  required: true,
-                  type: "string",
-                  regex: "",
-                  codeTable: "",
-                  class: "col-12 col-md-4",
-                  condition: ""
-                },
-                {
-                  header: "Last Name",
-                  key: "observerLastName",
-                  required: true,
-                  type: "string",
-                  regex: "",
-                  codeTable: "",
-                  class: "col-12 col-md-4",
-                  condition: ""
-                },
-                {
-                  header: "Completed on Behalf of",
-                  key: "speciesAgency",
-                  required: true,
-                  type: "code",
-                  codeTable: "speciesAgencyCodes",
-                  regex: "",
-                  class: "col-12 col-md-4",
-                  condition: ""
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: "Advanced Data Elements",
-          subSections: [
-            {
-              title: "Indicators",
-              boxed: true,
-              fields: [
-                {
-                  header: "Sample Taken",
-                  key: "sampleTakenIndicator",
-                  required: true,
-                  type: "boolean",
-                  regex: "",
-                  codeTable: "",
-                  class: "col-12 col-md-6",
-                  condition: ""
-                },
-                {
-                  header: "Well Indicator",
-                  key: "wellIndicator",
-                  required: true,
-                  type: "boolean",
-                  regex: "",
-                  codeTable: "",
-                  class: "col-12 col-md-6",
-                  condition: ""
-                },
-                {
-                  header: "Sample Identifier",
-                  key: "sampleIdentifier",
-                  required: true,
-                  type: "string",
-                  regex: "",
-                  codeTable: "",
-                  class: "col-12 col-md-6",
-                  condition: "sampleTakenIndicator === true"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    };
-    return config;
-  }
-
-  private getTestFormConfig() {
-    const config: any = {
-      title: "Create Observation",
-      sections: [
-        {
-          title: "Basic Observation Data",
-          groups: [
-            {
-              title: "Location",
-              fields: ["lat", "long"]
-            },
-            {
-              title: "Observer Information",
-              fields: ["observerFirstName", "observerLastName", "speciesAgency"]
-            }
-          ]
-        },
-        {
-          title: "Advanced Data Elements",
-          groups: [
-            {
-              title: "Indicators",
-              fields: [
-                "sampleTakenIndicator",
-                "wellIndicator",
-                "sampleIdentifier"
-              ]
-            }
-          ]
-        }
-      ],
-      fields: [
-        {
-          key: "lat",
-          header: "Latitude",
-          required: true,
-          type: "number",
-          regex: "",
-          codeTable: "",
-          condition: ""
-        },
-        {
-          key: "long",
-          header: "Longitude",
-          required: true,
-          type: "number",
-          regex: "",
-          codeTable: "",
-          condition: ""
-        },
-        {
-          key: "observerFirstName",
-          header: "First Name",
-          required: true,
-          type: "string",
-          regex: "",
-          codeTable: "",
-          condition: ""
-        },
-        {
-          key: "observerLastName",
-          header: "Last Name",
-          required: true,
-          type: "string",
-          regex: "",
-          codeTable: "",
-          condition: ""
-        },
-        {
-          key: "speciesAgency",
-          header: "Completed on Behalf of",
-          required: true,
-          type: "code",
-          codeTable: "speciesAgencyCodes",
-          regex: "",
-          condition: ""
-        },
-        {
-          key: "sampleTakenIndicator",
-          header: "Sample Taken",
-          required: true,
-          type: "boolean",
-          regex: "",
-          codeTable: "",
-          condition: ""
-        },
-        {
-          key: "wellIndicator",
-          header: "Well Indicator",
-          required: true,
-          type: "boolean",
-          regex: "",
-          codeTable: "",
-          condition: ""
-        },
-        {
-          key: "sampleIdentifier",
-          header: "Sample Identifier",
-          required: true,
-          type: "string",
-          regex: "",
-          codeTable: "",
-          condition: "sampleTakenIndicator"
-        }
-      ]
-    };
-
-    return config;
   }
 }
