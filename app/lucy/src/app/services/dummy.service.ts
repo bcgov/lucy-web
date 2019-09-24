@@ -226,6 +226,8 @@ export class DummyService {
       width: this.randomIntFromInterval(4, 20),
       applicatorFirstName: faker.name.firstName(),
       applicatorLastName: faker.name.lastName(),
+      secondaryApplicatorFirstName: faker.name.firstName(),
+      secondaryApplicatorLastName: faker.name.lastName(),
       date: this.randomDateString(),
       paperFileReference: faker.lorem.word(),
       comment: faker.lorem.sentences(),
@@ -283,9 +285,9 @@ export class DummyService {
     let sampleIdentifier = faker.lorem.word();
     const rangeUnitNumber = String(faker.random.number());
 
-    if (!sampleTakenIndicator) {
-      sampleIdentifier = undefined;
-    }
+    // if (!sampleTakenIndicator) {
+    //   sampleIdentifier = undefined;
+    // }
 
     if (!jurisdiction || ! invasivePlantSpecies) {
       return undefined;

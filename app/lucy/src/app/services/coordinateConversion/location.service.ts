@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as hexRules from './hexRules.json';
 
 export interface UTMCoordinate {
   x: number;
@@ -366,4 +367,280 @@ export class ConverterService {
       longitude: NewLong
     };
   }
+
+  // MARK: HEX Calculation
+
+  public getHexId(latitude: number, longitude: number): any {
+    const e271 = 2.718282;
+    const k0 = 0.9996;
+    const k1 = 0.9992;
+    const r3 = Math.pow(3, 0.5);
+    const radiusO = Math.pow(((10000 * 2) / (3 * (r3))), 0.5);
+    const radiusI = radiusO / 2 * r3;
+    const yheight = radiusO / 2;
+    const yheight2 = radiusO + yheight;
+    const xWidth2 = radiusO * r3;
+    const hexPTS: any[] = this.getHexRules();
+    // Local variables
+    let gridID = 0;
+    const hexagons: any[] = [];
+    let target: any;
+    const target19: any[] = [];
+    // Center of the province
+    const startX = -126;
+    const startY = 54;
+    // Convert center to albers
+    const albersResult = this.latLongCoordinateToAlbers(startY, startX);
+    let albersX0 = albersResult.x;
+    let albersY0 = albersResult.y;
+    // Convert target lat long to albers
+    const albersTargetResult = this.latLongCoordinateToAlbers(latitude, longitude);
+    const albersX0new = albersTargetResult.x;
+    const albersY0new = albersTargetResult.y;
+    // Find Target relative to center
+    const deltaX = albersX0new - albersX0;
+    const deltaY = albersY0new - albersY0;
+    const ticX = Math.round(deltaX / xWidth2);
+    let ticY = Math.round(deltaY / yheight2);
+
+    if ((ticY % 2) !== 0) {
+      ticY = ticY - 1;
+    }
+
+    let ticXlow = ticX - 4;
+    let ticXhigh = ticX + 8;
+    let ticYlow = 0;
+    let ticYhigh = 0;
+    if (ticY > 0) {
+      ticYlow = -2;
+      ticYhigh = 6;
+    } else {
+      ticYlow = -4;
+      ticYhigh = 4;
+    }
+
+    /* Part 1 Create set of hexagons cells centered around the target (patch) */
+    albersX0 = albersX0 + ticX * radiusI;
+    albersY0 = albersY0 + ticY * yheight2;
+
+    for (let iy = ticYlow; iy <= ticYhigh; iy += 2) {
+      for (let ix = ticXlow; ix <= ticXhigh; ix += 2) {
+        const tempx = albersX0 + (ix * radiusI);
+        const tempy = albersY0 + (iy * yheight2);
+        gridID = gridID + 1;
+        const newLatLong = this.albersToLatLongCoordinate(tempx, tempy);
+        hexagons.push({
+          hexID: gridID,
+          xAlb0: tempx,
+          yAlb0: tempy,
+          xLon0: newLatLong.longitude,
+          yLat0: newLatLong.latitude,
+        });
+      }
+    }
+
+    for (let iy = ticYlow + 1; iy <= ticYhigh; iy += 2) {
+      for (let ix = ticXlow - 1; ix <= ticXhigh; ix += 2) {
+        const tempx = albersX0 + (ix * radiusI);
+        const tempy = albersY0 + (iy * yheight2);
+        gridID = gridID + 1;
+        const newLatLong = this.albersToLatLongCoordinate(tempx, tempy);
+        hexagons.push({
+
+          hexID: gridID,
+          xAlb0: tempx,
+          yAlb0: tempy,
+          xLon0: newLatLong.longitude,
+          yLat0: newLatLong.latitude,
+        })
+      }
+    }
+
+    const totalHEX = gridID;
+
+    /* Part 2 Cycle through the patch and find the cell center closest to the raw target */
+    let dxyOLD = 999999;
+    let targetID = 0;
+    for (let i = 1; i <= totalHEX; i++) {
+      const hexagon = hexagons.find(item => item.hexID === i);
+      const dxy = Math.pow((Math.pow((hexagon.xAlb0 - albersX0new), 2) + Math.pow((hexagon.yAlb0 - albersY0new), 2)), 0.5);
+      if (dxy < dxyOLD) {
+        dxyOLD = dxy;
+        targetID = i;
+      }
+    }
+    /*
+		Populate the target(1) array with the key attibutes
+		Target(1) is the key element determined from this entire application.
+		*/
+    const hexagonTarget = hexagons.find(item => item.hexID === targetID);
+    target = {
+      hexID: 1,
+      xAlb0: hexagonTarget.xAlb0,
+      yAlb0: hexagonTarget.yAlb0,
+      xLon0: hexagonTarget.xLon0,
+      yLat0: hexagonTarget.yLat0
+    };
+    /* determine HexID as a composite of the lat/long */
+
+    // Same result as above, but with string concat
+    let targetLat = target.yLat0;
+    let targetLong = target.xLon0;
+    targetLong = Math.abs(targetLong);
+    targetLong = +String(targetLong).substring(1);
+    targetLong = +String(targetLong).replace('.', '');
+    targetLat = +String(targetLat).replace('.', '');
+    targetLat = +String(targetLat).substring(0, 6);
+    targetLong = +String(targetLong).substring(0, 6);
+    const targetId = +`${targetLat}${targetLong}`;
+    target.BCHexID = targetId;
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* Part 3 find the 18 surrounding cells to the target (optional)
+		The closest 19 hexagon cells fall with 230m of the ceter of the target cell
+		Assign “keep=1” to those patch cells proximal to the target */
+    for (let i = 1; i <= totalHEX; i++) {
+      const hexagon = hexagons.find(item => item.hexID === i);
+      const dxy = Math.pow((Math.pow((hexagon.xAlb0 - target.xAlb0), 2) + Math.pow((target.yAlb0 - target.yAlb0), 2)), 0.5);
+      if (dxy < 230) {
+        hexagon.keep = 1;
+      }
+    }
+    let kk = 0;
+    for (let i = 1; i <= totalHEX; i++) {
+      const hexagon = hexagons.find(item => item.hexID === i);
+      let newTarget: any;
+      newTarget = {
+        index: i
+      };
+      if (hexagon.keep === 1) {
+        kk = kk + 1
+        newTarget.targetID = kk;
+        newTarget.xAlb0 = hexagon.xAlb0;
+        newTarget.yAlb0 = hexagon.yAlb0;
+        newTarget.xLon0 = hexagon.xLon0;
+        newTarget.yLat0 = hexagon.yLat0;
+
+        for (let j = 1; j <= 6; j++) {
+          const nx = 30 + (j - 1) * 60;
+          let xC1 = Math.cos(nx / 180 * this.pi) * radiusO;
+          let yC1 = Math.sin(nx / 180 * this.pi) * radiusO;
+          const xC0 = xC1;
+          const yC0 = yC1;
+          xC1 = xC0 * Math.cos((-60) / 180 * this.pi) - yC0 * Math.sin((-60) / 180 * this.pi);
+          yC1 = xC0 * Math.sin((-60) / 180 * this.pi) + yC0 * Math.cos((-60) / 180 * this.pi);
+
+          switch (j) {
+            case 1: {
+              newTarget.xAlb1 = hexagon.xAlb0 + xC1;
+              newTarget.yAlb1 = hexagon.yAlb0 + yC1;
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb1, newTarget.yAlb1);
+              newTarget.xLon1 = temp1.longitude;
+              newTarget.yLat1 = temp1.latitude;
+              hexagon.xLon1 = temp1.longitude;
+              hexagon.yLat1 = temp1.latitude;
+              break;
+            }
+            case 2: {
+              newTarget.xAlb2 = hexagon.xAlb0 + xC1;
+              newTarget.yAlb2 = hexagon.yAlb0 + yC1;
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb2, newTarget.yAlb2);
+              newTarget.xLon2 = temp1.longitude;
+              newTarget.yLat2 = temp1.latitude;
+              hexagon.xLon2 = temp1.longitude;
+              hexagon.yLat2 = temp1.latitude;
+              break;
+            }
+            case 3: {
+              newTarget.xAlb3 = hexagon.xAlb0 + xC1;
+              newTarget.yAlb3 = hexagon.yAlb0 + yC1;
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb3, newTarget.yAlb3)
+              newTarget.xLon3 = temp1.longitude;
+              newTarget.yLat3 = temp1.latitude;
+              hexagon.xLon3 = temp1.longitude;
+              hexagon.yLat3 = temp1.latitude;
+              break;
+            }
+            case 4: {
+              newTarget.xAlb4 = hexagon.xAlb0 + xC1;
+              newTarget.yAlb4 = hexagon.yAlb0 + yC1;
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb4, newTarget.yAlb4)
+              newTarget.xLon4 = temp1.longitude;
+              newTarget.yLat4 = temp1.latitude;
+              hexagon.xLon4 = temp1.longitude;
+              hexagon.yLat4 = temp1.latitude;
+              break;
+            }
+            case 5: {
+              newTarget.xAlb5 = hexagon.xAlb0 + xC1;
+              newTarget.yAlb5 = hexagon.yAlb0 + yC1;
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb5, newTarget.yAlb5)
+              newTarget.xLon5 = temp1.longitude;
+              newTarget.yLat5 = temp1.latitude;
+              hexagon.xLon5 = temp1.longitude;
+              hexagon.yLat5 = temp1.latitude;
+              break;
+            }
+            case 6: {
+              newTarget.xAlb6 = hexagon.xAlb0 + xC1;
+              newTarget.yAlb6 = hexagon.yAlb0 + yC1;
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb6, newTarget.yAlb6);
+              newTarget.xLon6 = temp1.longitude;
+              newTarget.yLat6 = temp1.latitude;
+              hexagon.xLon6 = temp1.longitude;
+              hexagon.yLat6 = temp1.latitude;
+              break;
+            }
+            default: {
+              break;
+            }
+          }
+        }
+      }
+      target19.push(newTarget);
+    }
+    /* Part 3 Determine the StrataID of the raw within the hexagon */
+    for (let j = 1; j <= 19; j++) {
+      for (let i = 1; i <= 157; i++) {
+        const currentTarget19 = target19.find(item => item.index === j);
+        const hexaPT = hexPTS.find(item => item.index === i);
+        hexaPT.absX = currentTarget19.xAlb0 + hexaPT.offX;
+        hexaPT.absY = currentTarget19.yAlb0 + hexaPT.offY;
+      }
+    }
+
+    for (let i = 1; i <= 157; i++) {
+      const hexaPT = hexPTS.find(item => item.index === i);
+      hexaPT.absX = target.xAlb0 + hexaPT.offX;
+      hexaPT.absY = target.yAlb0 + hexaPT.offY;
+    }
+
+    /* find closest strata point */
+    dxyOLD = 1000;
+    let dxyID = 0;
+    for (let i = 62; i <= 157; i++) {
+      const hexaPT = hexPTS.find(item => item.index == i);
+
+      hexaPT.absX = target.xAlb0 + hexaPT.offX;
+      hexaPT.absY = target.yAlb0 + hexaPT.offY;
+
+      const dxy = Math.pow((Math.pow((hexaPT.absX - albersX0new), 2) + Math.pow((hexaPT.absY - albersY0new), 2)), 0.5);
+      if (dxy < dxyOLD) {
+        dxyOLD = dxy;
+        dxyID = i;
+      }
+    }
+
+    const hexPT = hexPTS.find(item => item.index == dxyID);
+    const strataID = hexPT.ptID;
+
+    return {
+      target: target,
+      strataID: strataID
+    };
+  }
+
+  getHexRules(): any[] {
+    return JSON.parse(JSON.stringify(hexRules)).default;
+  }
+
 }

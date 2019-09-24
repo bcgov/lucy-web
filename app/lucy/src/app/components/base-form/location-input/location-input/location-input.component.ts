@@ -1,21 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormMode } from 'src/app/models';
-import { MechanicalTreatment } from 'src/app/models/MechanicalTreatment';
-import { MapMarker, MapPreviewPoint } from '../../../Utilities/map-preview/map-preview.component';
+import { MapPreviewPoint, MapMarker } from 'src/app/components/Utilities/map-preview/map-preview.component';
 import { ConverterService } from 'src/app/services/coordinateConversion/location.service';
-import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
 import { ValidationService } from 'src/app/services/validation.service';
+import { DropdownService } from 'src/app/services/dropdown.service';
 
 @Component({
-  selector: 'app-add-mechanical-treatment-basic-info',
-  templateUrl: './add-mechanical-treatment-basic-info.component.html',
-  styleUrls: ['./add-mechanical-treatment-basic-info.component.css']
+  selector: 'app-location-input',
+  templateUrl: './location-input.component.html',
+  styleUrls: ['./location-input.component.css']
 })
-export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
-  locationEntryModeLatLong = true;
-  mechanicalTreatmentProviders: DropdownObject[] = [];
-
-  // Set the initial view location for map
+export class LocationInputComponent implements OnInit {
+   // Set the initial view location for map
   public mapCenter: MapPreviewPoint = {
     latitude: 52.068508,
     longitude: -123.288152,
@@ -25,49 +21,47 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
   // Markers shown on map
   private markers: MapMarker[] = [];
 
+  // Entry mode flag
+  locationEntryModeLatLong = true;
   // UTM
   eastings: string;
   northings: string;
   zone: string;
   minUTMDecimals = 2;
 
-  get applicatorFirstName(): string {
-    if (this.object) {
-      return this.object.applicatorFirstName;
-    }
-    return ``;
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  get mode(): FormMode {
+    return this._mode;
   }
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+  }
+  ////////////////////
 
-  get applicatorLastName(): string {
-    if (this.object) {
-      return this.object.applicatorLastName;
-    }
-    return ``;
+  ///// Mechanical Treatment object
+  private _object: any;
+  get object(): any {
+    return this._object;
   }
-
-  get mechanicalTreatmentProvider(): DropdownObject | undefined {
-    if (this.object && this.object.providerContractor) {
-      return {
-        name: this.object.providerContractor[this.dropdownService.displayedMechanicalTreatmentProviderField],
-        object: this.object.providerContractor,
-      };
-    } else {
-      return undefined;
-    }
+  @Input() set object(object: any) {
+    this._object = object;
+    // this.autofill();
   }
+  ////////////////////
 
   // Lat Long
   get lat(): string {
-    if (this.object && this.object.latitude) {
-      return String(this.object.latitude);
+    if (this.object && this.object.latitude.value) {
+      return String(this.object.latitude.value);
     } else {
       return ``;
     }
   }
 
   get long(): string {
-    if (this.object && this.object.longitude) {
-      return String(this.object.longitude);
+    if (this.object && this.object.longitude.value) {
+      return String(this.object.longitude.value);
     } else {
       return ``;
     }
@@ -97,82 +91,33 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
     return this.mode === FormMode.View;
   }
 
-  ///// Form Mode
-  private _mode: FormMode = FormMode.View;
-  get mode(): FormMode {
-    return this._mode;
-  }
-  @Input() set mode(mode: FormMode) {
-    this._mode = mode;
-  }
-  ////////////////////
-
-  ///// Mechanical Treatment object
-  private _object: MechanicalTreatment;
-  get object(): MechanicalTreatment {
-    return this._object;
-  }
-  @Input() set object(object: MechanicalTreatment) {
-    this._object = object;
-    this.autofill();
-  }
-  ////////////////////
-
-  @Output() basicInfoChanged = new EventEmitter<MechanicalTreatment>();
+  @Output() locationChanged = new EventEmitter<any>();
   constructor(private converterService: ConverterService, private validation: ValidationService, private dropdownService: DropdownService) { }
 
   ngOnInit() {
-    this.dropdownService.getMechanicalTreatmentProviders().then((result) => {
-      // reverse array so that list ordering matches order of CSV file
-      this.mechanicalTreatmentProviders = result.reverse();
-    });
-  }
-
-  ngAfterViewChecked(): void {
-  }
-
-  private notifyChangeEvent() {
-    if (this.object && !this.isViewMode) {
-      this.basicInfoChanged.emit(this.object);
-    }
   }
 
   autofill() {
     this.setUTMFromObservationLatLong();
   }
 
+  private notifyChangeEvent() {
+    if (this.object && !this.isViewMode) {
+      this.locationChanged.emit(this.object);
+    }
+  }
+
   setUTMFromObservationLatLong() {
-    if (!this.object || !this.validation.isValidLatitude(String(this.object.latitude)) || !this.validation.isValidLongitude(String(this.object.longitude))) {
+    if (!this.object || !this.validation.isValidLatitude(String(this.object.latitude.value)) || !this.validation.isValidLongitude(String(this.object.longitude.value))) {
       return;
     }
 
-    const converted = this.converterService.convertLatLongCoordinateToUTM(this.object.latitude, this.object.longitude);
+    const converted = this.converterService.convertLatLongCoordinateToUTM(this.object.latitude.value, this.object.longitude.value);
     this.zoneChanged(String(converted.zone));
     this.northingsChanged(String(converted.x.toFixed(0)));
     this.eastingChanged(String(converted.y.toFixed(0)));
 
     this.setMapToObservationLocation();
-  }
-
-  applicatorLastNameChanged(value: string) {
-    if (this.object) {
-      this.object.applicatorLastName = value;
-    }
-    this.notifyChangeEvent();
-  }
-
-  applicatorFirstNameChanged(value: string) {
-    if (this.object) {
-      this.object.applicatorFirstName = value;
-    }
-    this.notifyChangeEvent();
-  }
-
-  mechanicalTreatmentProviderChanged(value: DropdownObject) {
-    if (this.object) {
-      this.object.providerContractor = value.object;
-    }
-    this.notifyChangeEvent();
   }
 
   private utmCoordinatesAreValid(): boolean {
@@ -194,9 +139,9 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
   latChanged(value: string) {
     if (this.object) {
       if (this.validation.isValidLatitude(value)) {
-        this.object.latitude = +value;
+        this.object.latitude.value = +value;
       } else {
-        this.object.latitude = undefined;
+        this.object.latitude.value = undefined;
       }
     }
     this.latLongChanged();
@@ -209,9 +154,9 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
   longChanged(value: string) {
     if (this.object) {
       if (this.validation.isValidLongitude(value)) {
-        this.object.longitude = +value;
+        this.object.longitude.value = +value;
       } else {
-        this.object.longitude = undefined;
+        this.object.longitude.value = undefined;
       }
     }
     this.latLongChanged();
@@ -287,7 +232,7 @@ export class AddMechanicalTreatmentBasicInfoComponent implements OnInit {
    * Show map and add pin at the current observation lat/long
    */
   private setMapToObservationLocation() {
-    this.setMapTo(this.object.latitude, this.object.longitude);
+    this.setMapTo(this.object.latitude.value, this.object.longitude.value);
   }
 
   /**

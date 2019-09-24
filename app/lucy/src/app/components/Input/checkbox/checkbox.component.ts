@@ -11,6 +11,7 @@ export class CheckboxComponent implements OnInit {
   @Input() header = '';
   @Input() set value(checked: boolean) {
     this._checked = checked;
+    this.emit();
   }
   
   // Optional Input
@@ -53,7 +54,6 @@ export class CheckboxComponent implements OnInit {
   }
 
   private emit() {
-    console.log('emitting');
     this.selectionChanged.emit(this.checked);
   }
 
