@@ -14,7 +14,7 @@ module.exports = (settings)=>{
   
 
   // The building of your cool app goes here ▼▼▼
-  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/api.bc.json`, {
+  objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/api.bc.yaml`, {
     'param':{
       'NAME': phases[phase].name,
       'SUFFIX': phases[phase].suffix,

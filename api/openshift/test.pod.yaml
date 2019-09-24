@@ -60,7 +60,7 @@ objects:
       - container-entrypoint
       - bash
       - "-c"
-      - "npm run test:all"
+      - "npm run remote:test"
       resources:
         limits:
           cpu: '1'

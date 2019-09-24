@@ -26,5 +26,9 @@ module.exports = (settings) => {
   
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, phases[phase].instance)
   oc.importImageStreams(objects, phases[phase].tag, phases.build.namespace, phases.build.tag)
+  if (settings.ignoreDeploy === true) {
+    console.log(` **** IGNORING DEPLOY ****`);
+    return;
+  }
   oc.applyAndDeploy(objects, phases[phase].instance)
 }
