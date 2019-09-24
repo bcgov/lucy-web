@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { SsoService } from '../services/sso.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
@@ -10,6 +11,8 @@ import { AlertModel, AlertService } from '../services/alert.service';
 import { Subscription } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
+import { StringConstants } from 'src/app/constants/string-constants';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -52,9 +55,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private messageService: MessageService,
     private alertService: AlertService,
     private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private titleService: Title) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
+    this.setTitle();
   }
 
   ngOnInit() {
@@ -153,6 +158,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return isAuthenticated;
+  }
+
+  public setTitle( ) {
+    this.titleService.setTitle( StringConstants.app_Title );
   }
   /******** End Auth and Routing ********/
 

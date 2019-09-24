@@ -1,5 +1,6 @@
 import { AppPage } from './app.po';
 import { browser, logging } from 'protractor';
+import { StringConstants } from 'src/app/constants/string-constants';
 
 describe('workspace-project App', () => {
   let page: AppPage;
@@ -10,7 +11,8 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to lucy!');
+    var expectedTitleText = 'Welcome to ' + StringConstants.app_Title + '!';
+    expect(page.getTitleText()).toEqual(expectedTitleText);
   });
 
   afterEach(async () => {
