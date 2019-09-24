@@ -40,11 +40,7 @@ RUN rm -rf ./dist-server
 RUN npm run build
 
 # Setting NODE_PATH
-ENV NODE_PATH ${HOME}
-
-
-# Showing Dir Struct
-RUN ls -a
+ENV NODE_PATH ${HOME}/node_modules
 
 # Allow all user and app to update few folders
 RUN chmod 777 ${HOME}/node_modules
