@@ -19,9 +19,12 @@
          [attr.id]="fieldId"
          [formControl]="fieldFormControl"
          [errorStateMatcher]="matcher">
-          <mat-error *ngIf="fieldFormControl.hasError('required')">
-              {{header}} is <strong>required</strong>
-          </mat-error>
+         <mat-error *ngIf="fieldFormControl.hasError('maxLength')">
+          You've entered too many characters.
+        </mat-error>
+        <mat-error *ngIf="fieldFormControl.hasError('required')">
+            {{header}} is <strong>required</strong>
+        </mat-error>
     </mat-form-field>
     
   <!-- multiLine -->

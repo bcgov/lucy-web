@@ -148,6 +148,8 @@
                 [mode]="mode"
                 [header]="field.header"
                 [value]="field.value"
+                [verification]="field.verification"
+                [required]="field.required"
                 (valueChanged)="fieldChanged(field, $event)"
               >
               </app-field>
@@ -158,6 +160,8 @@
                 [multiline]="true"
                 [header]="field.header"
                 [value]="field.value"
+                [verification]="field.verification"
+                [required]="field.required"
                 (valueChanged)="fieldChanged(field, $event)"
               >
               </app-field>
