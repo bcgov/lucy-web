@@ -288,6 +288,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // If in edit mode, show diff viewer component
     if (this.editing) {
       this.showdiffViewer = true;
+      this.createDiffMessage();
     }
   }
 
@@ -351,4 +352,19 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.loadingService.remove();
   }
   
+  async createDiffMessage() {
+    const current = this.router.current;
+    switch (current) {
+      case (AppRoutes.EditMechanicalTreatment): 
+        this.loadingService.add();
+        this.diffObject = await this.formService.diffMechanicalTreatment(this.responseBody);
+        this.loadingService.remove();
+        break;
+      case (AppRoutes.EditObservation):
+        this.loadingService.add();
+        this.diffObject = await this.formService.diffObservation(this.responseBody);
+        this.loadingService.remove();
+        break;
+    }
+  }
 }
