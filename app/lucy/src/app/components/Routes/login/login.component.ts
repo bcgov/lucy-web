@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SsoService, SSOLoginProvider } from '../../../services/sso.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { StringConstants } from 'src/app/constants/string-constants';
 
 @Component({
   selector: 'app-login',
@@ -9,9 +10,12 @@ import { LoadingService } from 'src/app/services/loading.service';
 })
 export class LoginComponent implements OnInit {
 
+  public appTitle = ``;
+
   constructor(private loadingService: LoadingService, private ssoService?: SsoService) { }
 
   ngOnInit() {
+    this.setAppTitle();
   }
 
   loginWithBCeID() {
@@ -19,6 +23,10 @@ export class LoginComponent implements OnInit {
       this.loadingService.add();
       this.ssoService.login(SSOLoginProvider.BCeID);
     }
+  }
+
+  private async setAppTitle() {
+    this.appTitle = StringConstants.app_Title;
   }
 
   loginWithIDIR() {
