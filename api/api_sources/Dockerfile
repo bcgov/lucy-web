@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
+FROM node:10
 
 
 ENV PORT 3001
@@ -39,7 +39,7 @@ RUN echo ' --- BUILD START --- '
 # RUN npm install --only=production
 COPY ./package*.json ./
 
-RUN npm install
+RUN npm ci
 
 # If you are building your code for production, copy all files
 COPY ./ .
