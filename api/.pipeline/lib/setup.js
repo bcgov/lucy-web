@@ -1,7 +1,7 @@
 'use strict';
 const {OpenShiftClientX} = require('pipeline-cli')
-const {OpenShiftClient} = require('pipeline-cli')
 const wait = require('./wait');
+const deploy = require('./deploy')
 const path = require('path');
 
 module.exports = (settings) => {
@@ -12,14 +12,16 @@ module.exports = (settings) => {
   const oc= new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
   var objects = []
-
+  
   // The deployment of your cool app goes here ▼▼▼
   const name = `${phases[phase].name}-test`;
   const instance = `${name}-${changeId}`;
   const image = `${phases[phase].name}:${phases[phase].tag}`;
 
-  // Import image to the name space
-  oc.importImageStreams(objects, phases[phase].tag, phases.build.namespace, phases.build.tag)
+  // Import image to the name space with dc
+  settings.ignoreDeploy = true;
+  deploy(settings);
+  
   
   // Get API image stream
   const data = oc.get(`istag/${image}`) || [];
