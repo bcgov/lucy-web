@@ -368,13 +368,28 @@ export class FormService {
     for (const item of classes) {
       cssClasses = cssClasses + ` `;
     }
+
+    // BEGIN Tweak verifical object received.
+    let verification = field.verification;
+    if (!verification) {
+      verification = {};
+    }
+
+    if (field.required) {
+      verification.required = true;
+    }
+
+    if (field.type.toLowerCase() === 'number') {
+      verification.positiveNumber = true;
+    }
+    ///// END Tweak verifical object received
     return {
       key: field.key,
       header: field.layout.header.default,
       description: field.layout.description,
       required: field.required,
       type: field.type,
-      verification: field.verification,
+      verification: verification,
       meta: field.meta,
       cssClasses: cssClasses,
       codeTable: codeTable,

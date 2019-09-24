@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
-import {FormControl, FormGroupDirective, NgForm, Validators, ValidatorFn} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
+import { FormControl, FormGroupDirective, NgForm, Validators, ValidatorFn } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -25,22 +25,21 @@ export class FieldComponent implements OnInit, AfterViewInit {
   // Optional Input
   @Input() editable = true;
   // Optional Input
-  @Input() validationFunc: any;
-  // Optional Input
   @Input() multiline = false;
   // Field header
   @Input() header = '';
 
+  ///// Verification
   private _verification: any;
-  @Input() set verification(object: any) {
-    this._verification = object;
-    console.log(object);
-    this.setMaterialVerifications();
-  }
+  // Get
   get verification(): any {
     return this._verification;
   }
-
+  // Set
+  @Input() set verification(object: any) {
+    this._verification = object;
+    this.setMaterialVerifications();
+  }
 
   private _required = false;
   get required(): boolean {
@@ -49,8 +48,6 @@ export class FieldComponent implements OnInit, AfterViewInit {
   @Input() set required(value: boolean) {
     if (value) {
       this._required = value;
-      console.log(value);
-      this.setMaterialVerifications();
     }
   }
 
@@ -101,21 +98,19 @@ export class FieldComponent implements OnInit, AfterViewInit {
     if (this.value === undefined || this.value === ``) {
       return true;
     }
-    if (this.validationFunc) {
-      const result = this.validationFunc(this.value);
-      return result;
-    } else {
-      return true;
-    }
   }
 
+  ///// Form Control
   private _fieldFormControl: FormControl;
-  set fieldFormControl(object: FormControl) {
-    this._fieldFormControl = object;
-  }
+  // Get
   get fieldFormControl(): FormControl {
     return this._fieldFormControl;
   }
+  // Set
+  set fieldFormControl(object: FormControl) {
+    this._fieldFormControl = object;
+  }
+
   matcher = new MyErrorStateMatcher();
 
   constructor(private validation: ValidationService) {
@@ -125,23 +120,44 @@ export class FieldComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-  //  this.setMaterialVerifications();
   }
 
   private setMaterialVerifications() {
-    console.log(`ring ring`);
     const validatorOptions: ValidatorFn[] = [];
-    if (this.verification !== undefined && this.verification.size) {
-      console.log('adding max size');
-      validatorOptions.push(Validators.maxLength(this.verification.size));
-    } else {
-      console.log(this.verification);
+    if (this.verification === undefined) {
+      return;
     }
-    if (this.required) {
-      console.log('adding is required');
+    // Max char length
+    if (this.verification.size) {
+      validatorOptions.push(Validators.maxLength(this.verification.size));
+    }
+    // Positive numbers
+    if (this.verification.positiveNumber) {
+      validatorOptions.push(this.positiveNumber);
+    }
+    // Required field
+    if (this.verification.required !== undefined) {
       validatorOptions.push(Validators.required);
     }
+    // regex
+    if (this.verification.regx !== undefined) {
+      console.log(this.verification.regx);
+      validatorOptions.push(Validators.pattern(this.verification.regx.re));
+    }
     this.fieldFormControl = new FormControl('', validatorOptions);
+  }
+
+  /**
+   * Custom Form Control validation fucntion
+   * Validate Positive numbers greater than 0
+   * @param control FormControl
+   */
+  positiveNumber(control: FormControl): { [key: string]: any; } {
+    if (Number(control.value) <= 0 || !Number(control.value)) {
+      return { positiveNumber: true };
+    } else {
+      return null;
+    }
   }
 
 }
