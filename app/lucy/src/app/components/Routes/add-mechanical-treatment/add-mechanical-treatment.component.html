@@ -1,101 +1,94 @@
 <!-- Submission message -->
 <div *ngIf="submitted">
-  <div class="container text-center">
-    <div class="row">
-      <div class="col-12">
-        <lottie-animation-view [options]="lottieConfig" [width]="200" [height]="200"
-          (animCreated)="handleAnimation($event)">
-        </lottie-animation-view>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12  entries-added">
-        {{submitedMessage}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <hr class="confirmation-divider">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <button type="button" class="btn btn-secondary back-to-db button-hollow" (click)="viewInventory()">Back to
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-12">
+                <lottie-animation-view [options]="lottieConfig" [width]="200" [height]="200" (animCreated)="handleAnimation($event)">
+                </lottie-animation-view>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12  entries-added">
+                {{submitedMessage}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr class="confirmation-divider">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-secondary back-to-db button-hollow" (click)="viewInventory()">Back to
           Database</button>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!-- Entry Form  -->
 <div *ngIf="!submitted">
-  <!-- Header Section  -->
-  <div class="container-fluid header-container sticky">
-    <div class="container header-container-inner">
-      <mat-toolbar color="primary">
-        <mat-toolbar-row>
-          <span class="view-title"> {{pageTitle}}</span>
-          <span class="spacer-toolbar"></span>
-          <!-- Submit button -->
-          <button *ngIf="!readonly || inReviewMode" type="button"
-            class="btn btn-secondary submit-button button-hollow action-buttons" (click)="submitAction()">
+    <!-- Header Section  -->
+    <div class="container-fluid header-container sticky">
+        <div class="container header-container-inner">
+            <mat-toolbar color="primary">
+                <mat-toolbar-row>
+                    <span class="view-title"> {{pageTitle}}</span>
+                    <span class="spacer-toolbar"></span>
+                    <!-- Submit button -->
+                    <button *ngIf="!readonly || inReviewMode" type="button" class="btn btn-secondary submit-button button-hollow action-buttons" (click)="submitAction()">
             {{submitBtnName}}
           </button>
-          <!-- ---- -->
-          <!-- Edit button for review -->
-          <button (click)="exitReviewMode()" *ngIf="inReviewMode" type="button"
-            class="btn btn-secondary submit-button button-hollow action-buttons" (click)="exitReviewMode()">
+                    <!-- ---- -->
+                    <!-- Edit button for review -->
+                    <button (click)="exitReviewMode()" *ngIf="inReviewMode" type="button" class="btn btn-secondary submit-button button-hollow action-buttons" (click)="exitReviewMode()">
             Edit
           </button>
-          <!-- ---- -->
-          <!-- Edit Button for when in view mode and user is data editor -->
-          <button (click)="edit()" *ngIf="isDataEditor && viewing" type="button"
-            class="btn btn-secondary submit-button button-hollow action-buttons">
+                    <!-- ---- -->
+                    <!-- Edit Button for when in view mode and user is data editor -->
+                    <button (click)="edit()" *ngIf="isDataEditor && viewing" type="button" class="btn btn-secondary submit-button button-hollow action-buttons">
             Edit
             <i class="material-icons action-icon">
               edit
             </i>
           </button>
-          <!-- ---- -->
-        </mat-toolbar-row>
-      </mat-toolbar>
-    </div>
-  </div>
-  <!-- -------------------- -->
-  <div class="container">
-    <br />
-    <div class="container">
-      <div class="row">
-        <div class="col-12 section-name" #basic>
-          Mechanical Treatment Information
-          <hr class="section-divider" />
+                    <!-- ---- -->
+                </mat-toolbar-row>
+            </mat-toolbar>
         </div>
-      </div>
     </div>
-    <app-add-mechanical-treatment-basic-info [mode]="mode" [object]="object"
-      (basicInfoChanged)='basicInfoChanged($event)'>
-    </app-add-mechanical-treatment-basic-info>
-    <app-add-mechanical-treatment-treatment-details [mode]="mode" [object]="object"
-      (treatmentDetailsChanged)='treatmentDetailsChanged($event)'>
-    </app-add-mechanical-treatment-treatment-details>
-    <div class="container">
-      <div class="row">
-        <div class="col-12 section-name" #basic>
-          Treatment Details
-          <hr class="section-divider" />
-        </div>
-      </div>
-    </div>
-    <app-add-mechanical-treatment-advanced [mode]="mode" [object]="object"
-    (treatmentDetailsChanged)='advancedDetailsChanged($event)'>
-    </app-add-mechanical-treatment-advanced>
-    <br />
-    <!-- test btn -->
-    <div *ngIf="creating" class="row test-btn">
-      <div class="col-12">
-        <button class="btn" (click)="generateForTesting()">Generate for testing</button>
-      </div>
-    </div>
-    <br />
     <!-- -------------------- -->
-  </div>
+    <div class="container">
+        <br />
+        <div class="container">
+            <div class="row">
+                <div class="col-12 section-name" #basic>
+                    Mechanical Treatment Information
+                    <hr class="section-divider" />
+                </div>
+            </div>
+        </div>
+        <app-add-mechanical-treatment-basic-info [mode]="mode" [object]="object" (basicInfoChanged)='basicInfoChanged($event)'>
+        </app-add-mechanical-treatment-basic-info>
+        <app-add-mechanical-treatment-treatment-details [mode]="mode" [object]="object" (treatmentDetailsChanged)='treatmentDetailsChanged($event)'>
+        </app-add-mechanical-treatment-treatment-details>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 section-name" #basic>
+                    Treatment Details
+                    <hr class="section-divider" />
+                </div>
+            </div>
+        </div>
+        <app-add-mechanical-treatment-advanced [mode]="mode" [object]="object" (treatmentDetailsChanged)='advancedDetailsChanged($event)'>
+        </app-add-mechanical-treatment-advanced>
+        <br />
+        <!-- test btn -->
+        <div *ngIf="creating && !isProd" class="row test-btn">
+            <div class="col-12">
+                <button class="btn" (click)="generateForTesting()">Generate for testing</button>
+            </div>
+        </div>
+        <br />
+        <!-- -------------------- -->
+    </div>
 </div>
