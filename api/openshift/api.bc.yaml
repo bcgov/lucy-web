@@ -28,12 +28,20 @@ parameters:
 - name: SOURCE_REPOSITORY_REF
   required: false
   value: dev
-- name: BASE_IMAGE
+- name: BASE_IMAGE_URL
+  required: true
+  value: registry.access.redhat.com/ubi8/nodejs-10:1-41
+- name: SOURCE_IMAGE_NAME
+  required: true
+  value: redhat-ubi-node-10
+- name: SOURCE_IMAGE_TAG
+  required: true
+  value: 1-41
 objects:
 - kind: ImageStream
   apiVersion: v1
   metadata:
-    name: redhat-ubi-node-10
+    name: ${SOURCE_IMAGE_NAME}
     creationTimestamp: null
     annotations:
       description: Nodejs Base Image
@@ -43,11 +51,11 @@ objects:
     lookupPolicy:
       local: false
     tags:
-    - name: 1-41
-      annotations: 
+    - name: ${SOURCE_IMAGE_TAG}
+      annotations: null
       from:
         kind: DockerImage
-        name: registry.access.redhat.com/ubi8/nodejs-10:1-41
+        name: ${BASE_IMAGE_URL}
       importPolicy: {}
       referencePolicy:
         type: Local
@@ -96,7 +104,7 @@ objects:
       dockerStrategy:
         from:
           kind: ImageStreamTag
-          name: redhat-ubi-node-10:1-41
+          name: ${SOURCE_IMAGE_NAME}:${SOURCE_IMAGE_TAG}
       type: Docker
     successfulBuildsHistoryLimit: 5
     triggers:

@@ -52,7 +52,7 @@ objects:
       local: false
     tags:
     - name: ${SOURCE_IMAGE_TAG}
-      annotations: 
+      annotations: null
       from:
         kind: DockerImage
         name: ${BASE_IMAGE_URL}

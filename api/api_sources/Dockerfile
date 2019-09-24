@@ -14,21 +14,10 @@ USER 1001
 # Setting Path
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/app/node_modules/.bin:/opt/app-root/src/app/app.npm-global/bin
 
-# Print NODE Version
-#RUN node -v
-
-# Print NPM Version
-#RUN npm -v
-
-# Setting Default user
-# USER 1001
-
 # Create app directory
 
 WORKDIR ${HOME}
 
-# Logging in Build Console
-RUN echo ' --- BUILD START --- '
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -46,9 +35,6 @@ COPY ./ .
 
 # Cleaning any existing generated file
 RUN rm -rf ./dist-server
-
-
-
 
 # Building App
 RUN npm run build
@@ -72,7 +58,5 @@ VOLUME ${HOME}
 # Application Port
 EXPOSE 3001
 
-# Logging in Build Console Build DONE
-RUN echo ' --- BUILD SUCCESS: DONE --- '
-
+# Application Entry point
 CMD ["npm", "run", "deploy_run"]
