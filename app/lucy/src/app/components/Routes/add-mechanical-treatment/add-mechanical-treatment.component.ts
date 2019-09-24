@@ -12,6 +12,9 @@ import { UserAccessType } from 'src/app/models/Role';
 import { AppRoutes } from 'src/app/constants';
 import { MechanicalTreatment } from 'src/app/models/MechanicalTreatment';
 import { MechanicalTreatmentService } from 'src/app/services/mechanical-treatment.service';
+import { AppConstants } from 'src/app/constants/app-constants';
+
+declare const process: any;
 
 @Component({
   selector: 'app-add-mechanical-treatment',
@@ -32,6 +35,12 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
    * User access type
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
+
+  /**
+   * Boolean to indicate whether app is running in 
+   * production environment
+   */
+  public isProd: boolean = false;
 
   /**
    * Show/Hide Add edit button
@@ -138,6 +147,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
   }
   // Set
   @Input() set mode(mode: FormMode) {
+    console.log(`App constants config environment: ${ AppConstants.CONFIG.env }`);
     console.log(`Form mode is ${mode}`);
     this._mode = mode;
   }
@@ -213,6 +223,7 @@ export class AddMechanicalTreatmentComponent implements OnInit, AfterViewChecked
 
   private async initialize() {
     await this.setAccessType();
+    this.isProd = AppConstants.CONFIG.env == `prod` ? true : false;
     if (this.viewing) {
       const id = this.idInParams();
       if (!id) {
