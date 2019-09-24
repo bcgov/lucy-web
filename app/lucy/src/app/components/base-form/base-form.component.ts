@@ -218,8 +218,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   /**
    * handle field change
-   * @param field 
-   * @param event 
+   * @param field chnged field object
+   * @param event change event emitted
    */
   private fieldChanged(field: any, event: any) {
     if (field.isLocationField) {

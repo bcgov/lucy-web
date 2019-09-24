@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
-import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {FormControl, FormGroupDirective, NgForm, Validators, ValidatorFn} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 
 /** Error when invalid control is dirty, touched, or submitted. */
@@ -18,7 +18,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./field.component.css']
 })
 
-export class FieldComponent implements OnInit {
+export class FieldComponent implements OnInit, AfterViewInit {
+
   // Output
   @Output() valueChanged = new EventEmitter<string>();
   // Optional Input
@@ -30,6 +31,16 @@ export class FieldComponent implements OnInit {
   // Field header
   @Input() header = '';
 
+  private _verification: any;
+  @Input() set verification(object: any) {
+    this._verification = object;
+    console.log(object);
+    this.setMaterialVerifications();
+  }
+  get verification(): any {
+    return this._verification;
+  }
+
 
   private _required = false;
   get required(): boolean {
@@ -37,11 +48,10 @@ export class FieldComponent implements OnInit {
   }
   @Input() set required(value: boolean) {
     if (value) {
-      this.fieldFormControl = new FormControl('', [
-        Validators.required,
-      ]);
+      this._required = value;
+      console.log(value);
+      this.setMaterialVerifications();
     }
-    this._required = value;
   }
 
   get fieldId(): string {
@@ -99,11 +109,39 @@ export class FieldComponent implements OnInit {
     }
   }
 
-  fieldFormControl: FormControl;
+  private _fieldFormControl: FormControl;
+  set fieldFormControl(object: FormControl) {
+    this._fieldFormControl = object;
+  }
+  get fieldFormControl(): FormControl {
+    return this._fieldFormControl;
+  }
+  matcher = new MyErrorStateMatcher();
 
-  constructor(private validation: ValidationService) { }
+  constructor(private validation: ValidationService) {
+  }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit(): void {
+  //  this.setMaterialVerifications();
+  }
+
+  private setMaterialVerifications() {
+    console.log(`ring ring`);
+    const validatorOptions: ValidatorFn[] = [];
+    if (this.verification !== undefined && this.verification.size) {
+      console.log('adding max size');
+      validatorOptions.push(Validators.maxLength(this.verification.size));
+    } else {
+      console.log(this.verification);
+    }
+    if (this.required) {
+      console.log('adding is required');
+      validatorOptions.push(Validators.required);
+    }
+    this.fieldFormControl = new FormControl('', validatorOptions);
   }
 
 }
