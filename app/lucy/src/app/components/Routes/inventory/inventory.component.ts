@@ -15,6 +15,10 @@ import { UserService } from 'src/app/services/user.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
+import { AppConstants } from 'src/app/constants/app-constants';
+
+
+declare const process: any;
 
 @Component({
   selector: 'app-inventory',
@@ -26,6 +30,12 @@ export class InventoryComponent implements OnInit {
    * User access type
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
+
+  /**
+   * Boolean to indicate whether app is running in 
+   * production environment
+   */
+  public isProd: boolean = false;
 
   /**
    * Show/Hide Add edit observation button
@@ -86,6 +96,7 @@ export class InventoryComponent implements OnInit {
     private dummy: DummyService) { }
 
   ngOnInit() {
+    this.isProd = AppConstants.CONFIG.env == `prod` ? true : false;
     this.fetchObservations();
     this.setAccessType();
   }

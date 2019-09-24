@@ -1,23 +1,50 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: sonar
+  name: test
   creationTimestamp: null
 parameters:
-- name: NAME
-  value: api-test
-- name: SUFFIX
-  value: "-dev"
-- name: VERSION
-  value: "1.0.0"
-- name: DB_SERVICE_NAME
-  description: 'Database service name associated  with deployment'
-  required: true
 - name: IMAGE
   description: 'Image for pod'
   required: true
+- name: NAME
+  value: invasivesbc-api
+- name: SUFFIX
+  value: "-dev"
+- name: VERSION
+  description: Version of the application
+  value: "1.0.0"
 - name: CHANGE_ID
+  description: Change id of the project. This will help to pull image stream
+  required: true
   value: "0"
+- name: DB_SERVICE_NAME
+  description: 'Database service name associated  with deployment'
+  required: true
+- name: ENVIRONMENT
+  description: Application Environment type variable
+  required: true
+  value: 'dev'
+- name: CERTIFICATE_URL
+  description: Authentication certificate urls
+  required: true
+  value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+- name: CPU_REQ
+  value: '500m'
+- name: CPU_LIMIT
+  value: '750m'
+- name: MEMORY_REQ
+  value: '1Gi'
+- name: MEMORY_LIMIT
+  value: '2Gi'
+- name: REPLICAS
+  value: '1'
+- name: APP_PORT_DEFAULT
+  value: '3001-tcp'
+- name: APP_PORT_OTHER
+  value: '8080-tcp'
+- name: PORT
+  value: '3001'
 objects:
 - kind: Pod
   apiVersion: v1
@@ -33,7 +60,7 @@ objects:
       - container-entrypoint
       - bash
       - "-c"
-      - "npm run test:all"
+      - "npm run remote:test"
       resources:
         limits:
           cpu: '1'
@@ -48,25 +75,41 @@ objects:
         valueFrom:
           secretKeyRef:
             key: database-user
-            name: ${DB_SERVICE_NAME}
+            name: ${NAME}${SUFFIX}
       - name: DB_PASS
         valueFrom:
           secretKeyRef:
             key: database-password
-            name: ${DB_SERVICE_NAME}
+            name: ${NAME}${SUFFIX}
       - name: DB_DATABASE
         valueFrom:
           secretKeyRef:
             key: database-name
-            name: ${DB_SERVICE_NAME}
+            name: ${NAME}${SUFFIX}
       - name: DB_PORT
         value: "5432"
       - name: APP_CERTIFICATE_URL
-        value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+        value: ${CERTIFICATE_URL}
       - name: CHANGE_VERSION
         value: ${CHANGE_ID}
+      - name: ENVIRONMENT
+        value: ${ENVIRONMENT}
+      - name: VERSION
+        value: ${VERSION}
       imagePullPolicy: Always
     restartPolicy: Never
     activeDeadlineSeconds: 900
     dnsPolicy: ClusterFirst
   status: {}
+- apiVersion: v1
+  stringData:
+    database-name: ""
+    database-password: ""
+    database-user: ""
+  kind: Secret
+  metadata:
+    annotations:
+      as-copy-of: ${DB_SERVICE_NAME}
+    creationTimestamp: null
+    name: ${NAME}${SUFFIX}
+  type: Opaque

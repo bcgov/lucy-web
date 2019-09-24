@@ -19,6 +19,7 @@ services:
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
     - VERSION=${VERSION}
+    - ENVIRONMENT=local
   volumes:
     - ./api_sources:/opt/app-root/src
   networks:
@@ -80,7 +81,8 @@ services:
   environment:
     - APP_PORT=${APP_PORT}
     - LOCAL_API_HOST=app_api:${API_PORT}
-    
+    - ENVIRONMENT=local
+    - VERSION=${VERSION}
 # Application Local docker network
 networks:
  local-network:

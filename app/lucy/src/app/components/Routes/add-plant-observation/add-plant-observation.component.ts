@@ -14,6 +14,10 @@ import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { ErrorService, ErrorType } from 'src/app/services/error.service';
+import { AppConstants } from 'src/app/constants/app-constants';
+
+
+declare const process: any;
 
 @Component({
   selector: 'app-add-plant-observation',
@@ -37,6 +41,12 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
    * User access type
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
+
+  /**
+   * Boolean to indicate whether app is running
+   * in production environment
+   */
+  public isProd: boolean = false;
 
   /**
    * Show/Hide Add edit observation button
@@ -217,6 +227,7 @@ export class AddPlantObservationComponent implements OnInit, AfterViewChecked {
 
   private async initialize() {
     await this.setAccessType();
+    this.isProd = AppConstants.CONFIG.env == `prod` ? true : false;
     if (this.viewing) {
       const id = this.idInParams();
       if (!id) {
