@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
+FROM node:10
 
 # Setting Path
 ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -15,9 +15,6 @@ ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/o
 
 WORKDIR /opt/app-root/src
 
-# Logging in Build Console
-RUN echo ' --- BUILD START --- '
-
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
@@ -25,16 +22,13 @@ RUN echo ' --- BUILD START --- '
 COPY ./package*.json ./
 
 # INSATLL NODE DEPENDENCIES
-RUN npm install
+RUN npm ci
 
 # Copy All the sources
 COPY ./ .
 
 # BUILD APP
 RUN npm run build
-
-# Logging in Build Console Build DONE
-RUN echo ' --- BUILD SUCCESS: [DONE] --- '
 
 EXPOSE 3030
 
