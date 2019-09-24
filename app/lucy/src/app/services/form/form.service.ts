@@ -8,6 +8,7 @@ import { ErrorService, ErrorType } from '../error.service';
 import { MechanicalTreatmentService } from '../mechanical-treatment.service';
 import { ObservationService } from '../observation.service';
 import * as moment from 'moment';
+import { DiffResult } from '../diff.service';
 
 export interface FormConfigField {
   key: string;
@@ -116,6 +117,9 @@ export class FormService {
     }
   }
 
+  /**
+   * Switch current form to edit mode
+   */
   public editCurrent() {
     const current = this.router.current;
     switch (current) {
@@ -513,4 +517,55 @@ export class FormService {
     }
     return configuration;
   }
+
+  async diffObservation(bodyPre: any): Promise<DiffResult> {
+      const body = bodyPre
+      body.observation_id = this.router.routeId;
+      const diff = await this.observationService.diffObservation(body);
+      if (!diff) {
+        return undefined
+      }
+      console.dir(diff);
+      return {
+        changed: diff.changed,
+        newObject: diff.newObervation,
+        originalObject: diff.originalObservation,
+        diffMessage: diff.diffMessage,
+        changes: diff.changes
+      }
+  }
+
+  async diffMechanicalTreatment(bodyPre: any): Promise<DiffResult> {
+    const body = bodyPre
+    body.mechanical_treatment_id = this.router.routeId;
+    const diff = await this.mechanicalTreatmentService.diffMechanicalTreatment(body);
+    if (!diff) {
+      return undefined
+    }
+    console.dir(diff);
+    return {
+      changed: diff.changed,
+      newObject: diff.newMechanicalTreatment,
+      originalObject: diff.originalMechanicalTreatment,
+      diffMessage: diff.diffMessage,
+      changes: diff.changes
+    }
+  }
 }
+
+
+// export interface ObservationDiffResult {
+//   changed: boolean;
+//   newObervation: Observation;
+//   originalObservation: Observation;
+//   diffMessage: string;
+//   changes: Object;
+// }
+
+// export interface DiffResult {
+//   changed: boolean;
+//   newObject: Object;
+//   originalObject: Object;
+//   diffMessage: string;
+//   changes: Object;
+// }
