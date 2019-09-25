@@ -13,8 +13,7 @@ module.exports = (settings) => {
   var objects = []
 
   // The deployment of your cool app goes here ▼▼▼
-  const name = `${phases[phase].name}-test`;
-  const instance = `${name}-${changeId}`;
+  const instance = `${phases[phase].name}-${changeId}`;
   const image = `${phases[phase].name}:${phases[phase].tag}-setup`;
 
   // Get API image stream
