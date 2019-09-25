@@ -1,7 +1,6 @@
 'use strict';
 const {OpenShiftClientX} = require('pipeline-cli')
 const wait = require('./wait');
-const deploy = require('./deploy')
 const path = require('path');
 
 module.exports = (settings) => {
@@ -12,16 +11,24 @@ module.exports = (settings) => {
   const oc= new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
   var objects = []
+  var is = [];
   
   // The deployment of your cool app goes here ▼▼▼
-  const name = `${phases[phase].name}-test`;
+  const isName = `${phases[phase].name}`
   const instance = `${name}-${changeId}`;
-  const image = `${phases[phase].name}:${phases[phase].tag}`;
+  const setupTag = `${phases[phase].tag}-setup`
+  const image = `${isName}:${setupTag}`;
 
-  // Import image to the name space with dc
-  settings.ignoreDeploy = true;
-  deploy(settings);
-  
+  // Creating image stream for setup
+  is.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/is.api.yaml`, {
+    'param': {
+      'NAME': `${isName}`
+    }
+  }))
+
+  oc.applyRecommendedLabels(is,phases[phase].name, phase, `${changeId}`, instance)
+  oc.importImageStreams(is, setupTag, phases.build.namespace, phases.build.tag)
+
   
   // Get API image stream
   const data = oc.get(`istag/${image}`) || [];
