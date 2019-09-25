@@ -9,7 +9,7 @@
     "app": "ts-node sources",
     "docker_start": "npm-run-all -p hotload watch",
     "deploy_run": "npm run app",
-    "hotload": "npm install && npm run migration && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
+    "hotload": "npm run migration && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
     "watch": "gulp watch",
     "test:all": "nyc ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 8000",
     "migration": "ts-node scripts/run.migrations.ts",
