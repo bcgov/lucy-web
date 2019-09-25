@@ -16,12 +16,6 @@ export class DatePickerComponent implements OnInit {
   // Optional Input
   @Input() editable = true;
 
-  pastAndPresentDatesOnlyFilter = (d: Date): boolean => {
-    let currentDate = new Date();
-    // prevent dates in future from being selected
-    return currentDate >= d;
-  }
-
   get readonly(): boolean {
     if (this.mode === FormMode.View) {
       return true;
@@ -67,6 +61,12 @@ export class DatePickerComponent implements OnInit {
   ngOnInit() {
   }
 
+  pastAndPresentDatesOnlyFilter = (d: Date): boolean => {
+    const currentDate = new Date();
+    // prevent dates in future from being selected
+    return currentDate >= d;
+  }
+
   dateChanged(event: MatDatepickerInputEvent<Date>) {
     if (this._date !== event.value) {
         this._date = event.value;
@@ -75,7 +75,6 @@ export class DatePickerComponent implements OnInit {
   }
 
   emitSelection() {
-    console.dir(this._date);
     this.selected.emit(this._date);
   }
 
