@@ -38,7 +38,7 @@ export class FieldComponent implements OnInit, AfterViewInit {
   // Set
   @Input() set verification(object: any) {
     this._verification = object;
-    this.setMaterialVerifications();
+    this.setFormControlVerification();
   }
 
   private _required = false;
@@ -120,10 +120,13 @@ export class FieldComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setMaterialVerifications();
+    this.setFormControlVerification();
   }
 
-  private setMaterialVerifications() {
+  /**
+   * Set FormControl's Validation criteria for this field.
+   */
+  private setFormControlVerification() {
     const validatorOptions: ValidatorFn[] = [];
     if (this.verification === undefined) {
       return;
@@ -161,8 +164,11 @@ export class FieldComponent implements OnInit, AfterViewInit {
    * @param control FormControl
    */
   positiveNumber(control: FormControl): { [key: string]: any; } {
-    if (Number(control.value) <= 0 || !Number(control.value)) {
-      return { positiveNumber: true };
+    if (!Number(control.value)) {
+      return { positiveNumber: true, positiveNumberError: 'Not a valid number'};
+    }
+    if (Number(control.value) <= 0) {
+      return { positiveNumber: true, positiveNumberError: 'Must be a positive number' };
     } else {
       return null;
     }
@@ -176,19 +182,19 @@ export class FieldComponent implements OnInit, AfterViewInit {
   validLatitude(control: FormControl): { [key: string]: any; } {
     // Must be a number
     if (!Number(control.value)) {
-      return { validLatitude: true };
+      return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number'};
     }
     // Must have at least 5 decimal places
     const separated = control.value.split('.');
     if (separated.length > 2) {
-      return { validLatitude: true };
+      return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number'};
+    }
+     // Must be between 48 and 61
+     if (!(Number(separated[0]) >= 48 && Number(separated[0]) <= 61)) {
+      return { invalidLatitude: true, invalidLatitudeError: 'Must be between 48 and 61'};
     }
     if (!separated[1] || separated[1].length < 5) {
-      return { validLatitude: true };
-    }
-    // Must be between 48 and 61
-    if (!(Number(separated[0]) >= 48 && Number(separated[0]) <= 61)) {
-      return { validLatitude: true };
+      return { invalidLatitude: true, invalidLatitudeError: 'Must have at least 5 decimal places'};
     }
     return null;
   }
@@ -201,64 +207,20 @@ export class FieldComponent implements OnInit, AfterViewInit {
   validLongitude(control: FormControl): { [key: string]: any; } {
        // Must be a number
        if (!Number(control.value)) {
-        return { validLongitude: true };
+        return { validLongitude: true, invalidLongitudeError: 'Not a valid number'};
       }
       // Must have at least 5 decimal places
       const separated = control.value.split('.');
       if (separated.length > 2) {
-        return { validLongitude: true };
-      }
-      if (!separated[1] || separated[1].length < 5) {
-        return { validLongitude: true };
+        return { validLongitude: true, invalidLongitudeError: 'Not a valid number' };
       }
       // Must be between 48 and 61
       if (!(Number(separated[0]) >= -139 && Number(separated[0]) <= -114)) {
-        return { validLongitude: true };
+        return { validLongitude: true, invalidLongitudeError: 'Must be between -139 and -114' };
+      }
+      if (!separated[1] || separated[1].length < 5) {
+        return { validLongitude: true, invalidLongitudeError: 'Must have at least 5 decimal places' };
       }
       return null;
-  }
-
-  /**
-   * TODO: Refactor/ find better validation
-   * Allow 5 or more decimal place
-   * @param latitude string - * use String(number) if needed.
-   */
-  public isValidLatitude(latitude: string) {
-    if (!this.hasMinDecimalPlaces(latitude, 5)) {
-      return false;
-    }
-    return +latitude >= 48 && +latitude <= 61;
-  }
-
-  /**
-   * TODO: Refactor/ find better validation
-   * Allow 5 or more decimal places
-   * @param longitude string - * use String(number) if needed.
-   */
-  public isValidLongitude(longitude: string) {
-    if (!this.hasMinDecimalPlaces(longitude, 5)) {
-      return false;
-    }
-    return +longitude >= -139 && +longitude <= -114;
-  }
-
-  /**
-   * TODO: Refactor
-   * From:
-   * https://stackoverflow.com/questions/9539513/is-there-a-reliable-way-in-javascript-to-obtain-the-number-of-decimal-places-of
-   * @param n number of decimals
-   */
-  private decimalPlaces(n: any) {
-    const s = `` + (+n);
-    const match = /(?:\.(\d+))?(?:[eE]([+\-]?\d+))?$/.exec(s);
-    if (!match) { return 0; }
-    return Math.max(0,
-      (match[1] === '0' ? 0 : (match[1] || '').length)
-      - (+match[2] || 0));
-  }
-
-  public hasMinDecimalPlaces(number: any, minDecimals: number): boolean {
-    const numberOfDecimals = this.decimalPlaces(number);
-    return numberOfDecimals >= minDecimals;
   }
 }

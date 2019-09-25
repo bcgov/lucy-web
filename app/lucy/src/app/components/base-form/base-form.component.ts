@@ -154,7 +154,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   diffObject: DiffResult;
-  
+
   get canSubmit(): boolean {
     if (!this.config || !this.responseBody) {
       return false;
@@ -208,11 +208,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * */ 
   private setFormMode() {
     if (this.router.isCreateRoute) {
-      this.mode = FormMode.Create
+      this.mode = FormMode.Create;
     } else if (this.router.isViewRoute) {
-      this.mode = FormMode.View
+      this.mode = FormMode.View;
     } else if (this.router.isEditRoute) {
-      this.mode = FormMode.Edit
+      this.mode = FormMode.Edit;
     }
   }
 
@@ -355,7 +355,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   async createDiffMessage() {
     const current = this.router.current;
     switch (current) {
-      case (AppRoutes.EditMechanicalTreatment): 
+      case (AppRoutes.EditMechanicalTreatment):
         this.loadingService.add();
         this.diffObject = await this.formService.diffMechanicalTreatment(this.responseBody);
         this.loadingService.remove();
@@ -363,6 +363,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       case (AppRoutes.EditObservation):
         this.loadingService.add();
         this.diffObject = await this.formService.diffObservation(this.responseBody);
+        console.log(this.diffObject);
         this.loadingService.remove();
         break;
     }
