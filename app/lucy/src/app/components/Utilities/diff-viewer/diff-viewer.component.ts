@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DiffResult } from 'src/app/services/diff.service';
+import { AppConstants } from 'src/app/constants';
 
+declare const process: any;
 
 interface ChangedField {
   name: string;
@@ -14,6 +16,12 @@ interface ChangedField {
   styleUrls: ['./diff-viewer.component.css']
 })
 export class DiffViewerComponent implements OnInit {
+
+  /**
+   * Boolean value to indicate whether app is running
+   * in production environment
+   */
+  public isProd: boolean = false;
 
   get changes(): ChangedField[] {
     if (!this.diffObject) {
@@ -42,6 +50,7 @@ export class DiffViewerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.isProd = AppConstants.CONFIG.env == `prod` ? true : false;
   }
 
 }

@@ -61,24 +61,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     });
 
     this.loadingService.add();
-    this.userService.getAccess().then((value) => {
-      this.userAccessType = value;
-      switch (value) {
-        case UserAccessType.DataEditor:
-          this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
-          break;
-        case UserAccessType.DataViewer:
-          this.accessTypeMessage = StringConstants.databaseAccess_View_Badge;
-          break;
-        case UserAccessType.Admin:
-          this.accessTypeMessage = StringConstants.databaseAccess_Admin_Badge;
-          break;
-      }
-      this.loadingService.remove();
-    });
-
-    this.loadingService.add();
-    this.userService.getOranizarionAndRole().then((value) => {
+    this.userService.getOrganizationAndRole().then((value) => {
       this.userRoleAndOrganization = value;
       this.loadingService.remove();
     });

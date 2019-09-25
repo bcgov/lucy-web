@@ -146,17 +146,22 @@ export class UserService {
   }
 
   // TODO: Does not exist in api yet
-  public async getOranizarionAndRole(): Promise<string> {
+  public async getOrganizationAndRole(): Promise<string> {
     // const user = await this.getUser();
     // return (user.roleInOrganization + ", " + user.organization);
     return `Invasive Plant Specialist, Ministry of Transportation`;
   }
 
   // TODO: Does not exist in api yet
-  public async getOranization(): Promise<string> {
+  public async getRole(): Promise<string> {
+    return 'Invasive Plant Specialist';
+  }
+
+  // TODO: Does not exist in api yet
+  public async getOrganization(): Promise<string> {
     // const user = await this.getUser();
     // return user.organization;
-    return `Ministry of Tranaportation`;
+    return `Ministry of Transportation`;
   }
 
   /**
@@ -170,7 +175,8 @@ export class UserService {
     }
     return (
       (user.firstName !== ``) &&
-      (user.lastName !== ``)
+      (user.lastName !== ``) &&
+      (user.email !== ``)
     );
   }
   /*------------------------------------END OF GETs------------------------------------*/
