@@ -21,6 +21,10 @@ schemas:
     meta:
       resource: true
       api: /treatment/mechanical
+    # End-meta
+    displayLayout:
+      fields:
+        - species.commonName
     layout:
       title: 
         key: '' 
