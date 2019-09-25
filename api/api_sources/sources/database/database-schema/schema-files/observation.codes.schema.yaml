@@ -274,6 +274,7 @@ schemas:
         name: 'legacy_site_ind'
         comment: This indicator used to indicate the observation site is legacy site or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.legacySiteIndicator'
@@ -284,6 +285,7 @@ schemas:
         name: 'early_detection_rapid_resp_ind'
         comment: Indicator for early detection and rapid response for observed species.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.edrrIndicator'
@@ -294,6 +296,7 @@ schemas:
         name: 'research_detection_ind'
         comment: Values of this column indicates this observation is research purpose or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.researchIndicator'
@@ -304,6 +307,7 @@ schemas:
         name: 'sample_taken_ind'
         comment: 'This field specify any sample is taken from observed area, if this indicator is true, observer must specify sample id.'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.sampleTakenIndicator'
@@ -314,6 +318,7 @@ schemas:
         name: 'well_ind'
         comment: 'This field indicates well proximity of the observed location. If this indicator is true, observer should specify well proximity values and API will connect to GWELL service to fetch more information'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.wellIndicator'
@@ -324,6 +329,7 @@ schemas:
         name: 'special_care_ind'
         comment: This field indicates, the requirement of special care.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.specialCareIndicator'
@@ -334,6 +340,7 @@ schemas:
         name: 'biological_ind'
         comment: This field indicates, observation is biological or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.biologicalIndicator'
@@ -344,6 +351,7 @@ schemas:
         name: 'aquatic_ind'
         comment: This field indicates, observation is for aquatic element or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
         layout:
           header:
             key: 'observation.aquaticIndicator'
