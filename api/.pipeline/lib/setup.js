@@ -15,7 +15,7 @@ module.exports = (settings) => {
   
   // The deployment of your cool app goes here ▼▼▼
   const isName = `${phases[phase].name}`
-  const instance = `${name}-${changeId}`;
+  const instance = `${isName}-${changeId}`;
   const setupTag = `${phases[phase].tag}-setup`
   const image = `${isName}:${setupTag}`;
 
