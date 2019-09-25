@@ -292,8 +292,8 @@ export class FormService {
         // Set field type flag
 
         // Handle location differently
-        fieldOfInterest.isLocationLatitudeField = (field.key.toLowerCase() === 'lat' || field.key.toLowerCase() === 'latitude');
-        fieldOfInterest.isLocationLongitudeField = (field.key.toLowerCase() === 'long' || field.key.toLowerCase() === 'longitude');
+        fieldOfInterest.isLocationLatitudeField = this.isLatitude(field.key);
+        fieldOfInterest.isLocationLongitudeField = this.isLongitude(field.key);
 
         // If its not a location field, proceed
         if (!fieldOfInterest.isLocationLatitudeField && !fieldOfInterest.isLocationLongitudeField) {
@@ -379,9 +379,20 @@ export class FormService {
       verification.required = true;
     }
 
-    if (field.type.toLowerCase() === 'number') {
+    if (this.isLongitude(field.key)) {
+      console.log("is lon");
+      verification.isLongitude = true;
+    }
+
+    if (this.isLatitude(field.key)) {
+      console.log("is lat");
+      verification.isLatitude = true;
+    }
+
+    if (field.type.toLowerCase() === 'number' && (!verification.isLatitude && !verification.isLongitude)) {
       verification.positiveNumber = true;
     }
+
     ///// END Tweak verifical object received
     return {
       key: field.key,
@@ -395,6 +406,14 @@ export class FormService {
       codeTable: codeTable,
       condition: ''
     };
+  }
+
+  private isLatitude(headerOrKey: string): boolean {
+    return headerOrKey.toLocaleLowerCase() === 'lat' || headerOrKey.toLocaleLowerCase() === 'latitude';
+  }
+
+  private isLongitude(headerOrKey: string): boolean {
+    return headerOrKey.toLocaleLowerCase() === 'long' || headerOrKey.toLocaleLowerCase() === 'longitude' || headerOrKey.toLocaleLowerCase() === 'lon';
   }
 
   /**
