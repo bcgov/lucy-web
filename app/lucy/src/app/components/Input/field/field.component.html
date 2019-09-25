@@ -70,9 +70,9 @@
     <mat-label>{{ header }}</mat-label>
     <textarea
       matInput
+      rows="4"
       [attr.id]="fieldId"
       [(ngModel)]="value"
-      rows="4"
       [formControl]="fieldFormControl"
       [errorStateMatcher]="matcher"
     ></textarea>

@@ -265,10 +265,10 @@ export class FormService {
           ) {
             // if group has more than 3 elements, make sure we dont have more than 3 elements per row
             // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
-            newField.cssClasses = newField.cssClasses + " col col-md-4";
+            newField.cssClasses = newField.cssClasses + ' col col-md-4';
           } else if (newField.isTextAreaField) {
             // Comment fields should take the whole row
-            newField.cssClasses = newField.cssClasses + " col-12";
+            newField.cssClasses = newField.cssClasses + ' col-12';
           }
           if (
             newField.isLocationLatitudeField ||
@@ -319,7 +319,7 @@ export class FormService {
    */
   private async configField(key: string, fields: any[]): Promise<any> {
     for (const field of fields) {
-      if (field["key"] === key) {
+      if (field['key'] === key) {
         // convert server config field
         const fieldOfInterest: any = this.processFieldConfig(field);
         // initialize value field
@@ -338,22 +338,22 @@ export class FormService {
         ) {
           // Set field type flag
           switch (field.type) {
-            case "object": {
+            case 'object': {
               // Object is code table
               fieldOfInterest.isDropdown = true;
               break;
             }
-            case "boolean": {
+            case 'boolean': {
               // Booleans is checkbox
               fieldOfInterest.isCheckbox = true;
               break;
             }
-            case "number": {
+            case 'number': {
               // Number is input field
               fieldOfInterest.isInputField = true;
               break;
             }
-            case "string": {
+            case 'string': {
               // String can be a simple input field, comment field, or date
               if (fieldOfInterest.verification.isDate) {
                 // Date is Date FIeld
@@ -398,8 +398,8 @@ export class FormService {
    */
   private processFieldConfig(field: any): FormConfigField {
     let isCodeTable = false;
-    let codeTable = "";
-    if (field.type === "object") {
+    let codeTable = '';
+    if (field.type === 'object') {
       isCodeTable = true;
       codeTable = field.refSchema.modelName;
       // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
@@ -421,17 +421,15 @@ export class FormService {
     }
 
     if (this.isLongitude(field.key)) {
-      console.log("is lon");
       verification.isLongitude = true;
     }
 
     if (this.isLatitude(field.key)) {
-      console.log("is lat");
       verification.isLatitude = true;
     }
 
     if (
-      field.type.toLowerCase() === "number" &&
+      field.type.toLowerCase() === 'number' &&
       (!verification.isLatitude && !verification.isLongitude)
     ) {
       verification.positiveNumber = true;
@@ -448,7 +446,7 @@ export class FormService {
       meta: field.meta,
       cssClasses: cssClasses,
       codeTable: codeTable,
-      condition: ""
+      condition: ''
     };
   }
 
@@ -561,9 +559,6 @@ export class FormService {
 
   private async merge(config: any, object: any): Promise<any> {
     const configuration = config;
-    console.log(`merging`);
-    console.dir(config);
-    console.dir(object);
 
     // set id & date
     for (const key in object) {
@@ -598,7 +593,7 @@ export class FormService {
           } else {
             if (object[field.key]) {
               const key = object[field.key];
-              if (typeof key === "object" && key !== null) {
+              if (typeof key === 'object' && key !== null) {
                 const codeTableName = field.codeTable;
                 field.value = await this.getDropdownObjectWithId(
                   codeTableName,
@@ -619,6 +614,148 @@ export class FormService {
     return configuration;
   }
 
+  private generateBodyForMergedConfig(config: any): JSON {
+    const body = {};
+    for (const section of config.sections) {
+      for (const subSection of section.subSections) {
+        for (const field of subSection.fields) {
+          // if its a dropdown
+          if (field.isDropdown) {
+            // Find the id of the value
+            for (const key in field.value.object) {
+              if (key.toLowerCase().indexOf('id') !== -1) {
+                body[field.key] = field.value.object[key];
+                break;
+              }
+            }
+          } else if (field.isLocationField) {
+            // If its a location field
+            body[field.latitude.key] = field.latitude.value;
+            body[field.longitude.key] = field.longitude.value;
+          } else if (field.isDateField) {
+            // if its a date (needs to be formatted)
+            body[field.key] = moment(field.value).format('YYYY-MM-DD');
+          } else {
+            // for all other types just grab the value
+            body[field.key] = field.value;
+          }
+        }
+      }
+    }
+    return JSON.parse(JSON.stringify(body));
+  }
+
+  //////////////////////////////////// ********* ////////////////////////////////////
+  async diffObject(newBody: JSON, config: any): Promise<DiffResult> {
+    const currentId = this.router.routeId;
+    const endpoint = config.api;
+    // 1) Fetch the latest original object
+    const original = await this.getObjectWithId(endpoint, currentId);
+    // 2) fetch the config
+    const serverConfig = await this.getConfig(endpoint);
+    // 3) generate ui config
+    const uiConfig = await this.createUIConfig(serverConfig);
+    // 4) if any of the first 3 steps failed, return undefined
+    if (!original || !serverConfig || !uiConfig) {
+      console.log(`something went wrong in setup`);
+      return undefined;
+    }
+    // 5) merge original object with config & return undefined if failed
+    const mergedUIConfig = await this.merge(uiConfig, original);
+    if (!mergedUIConfig) {
+      console.log(`something went wrong in merging`);
+      return undefined;
+    }
+    // 6) get json body for merged ui condig
+    const originalJSONBody = this.generateBodyForMergedConfig(mergedUIConfig);
+    // 7) diff with body in params
+    const diffResult = this.diff(originalJSONBody, newBody);
+    if (!diffResult) {
+      console.log(`Couldnt diff`);
+      return undefined;
+    }
+    // 8) generate response
+    // Convert keys from camel case:
+    const keys =  Object.keys(diffResult).map(x => {
+      const fromCamel = x.replace( /([A-Z])/g, ` $1` );
+      return fromCamel.charAt(0).toUpperCase() + fromCamel.slice(1);
+    });
+    const changedKeys = keys.join(`, `);
+    const changed = changedKeys.length > 1;
+    return {
+      changed: changed,
+      newObject: newBody,
+      originalObject: originalJSONBody,
+      diffMessage: changedKeys,
+      changes: diffResult
+    };
+  }
+
+  private async getObjectWithId(endpoint: string, id: number): Promise<any> {
+    const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
+    const response = await this.api.request(APIRequestMethod.GET, endpointWithId, null);
+    if (response.success) {
+      return response.response;
+    } else {
+      return undefined;
+    }
+  }
+
+  private async getConfig(endpoint: string) {
+    const configEndpoint = `${AppConstants.API_baseURL}${endpoint}/config`;
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      configEndpoint,
+      undefined
+    );
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
+        console.dir(response);
+        return undefined;
+      }
+    } else {
+      console.log(`getConfig failed`);
+      console.dir(response);
+      return undefined;
+    }
+  }
+  /**
+   * Compare 2 JSON object and
+   * return Object containing differences
+   * between the two.
+   * * Note: Keys should be in the same order
+   * @param obj1 JSON object
+   * @param obj2 JSON object
+   */
+  private diff(obj1: JSON, obj2: JSON): any {
+    const result = {};
+    if (Object.is(obj1, obj2)) {
+        return undefined;
+    }
+    if (!obj2 || typeof obj2 !== 'object') {
+        return obj2;
+    }
+    Object.keys(obj1 || {}).concat(Object.keys(obj2 || {})).forEach(key => {
+        if(obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+            result[key] = obj2[key];
+        }
+        if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+            const value = this.diff(obj1[key], obj2[key]);
+            if (value !== undefined) {
+                result[key] = value;
+            }
+        }
+    });
+    return result;
+  }
+
+  //////////////////////////////////// ********* ////////////////////////////////////
   async diffObservation(bodyPre: any): Promise<DiffResult> {
     const body = bodyPre;
     body.observation_id = this.router.routeId;

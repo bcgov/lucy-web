@@ -205,7 +205,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   /**
    *  Set view / create / edit mode based on route
-   * */ 
+   *
+   */
   private setFormMode() {
     if (this.router.isCreateRoute) {
       this.mode = FormMode.Create;
@@ -353,19 +354,23 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   
   async createDiffMessage() {
-    const current = this.router.current;
-    switch (current) {
-      case (AppRoutes.EditMechanicalTreatment):
-        this.loadingService.add();
-        this.diffObject = await this.formService.diffMechanicalTreatment(this.responseBody);
-        this.loadingService.remove();
-        break;
-      case (AppRoutes.EditObservation):
-        this.loadingService.add();
-        this.diffObject = await this.formService.diffObservation(this.responseBody);
-        console.log(this.diffObject);
-        this.loadingService.remove();
-        break;
-    }
+    this.loadingService.add();
+    this.diffObject = await this.formService.diffObject(JSON.parse(JSON.stringify(this.responseBody)), this.config);
+    console.dir(this.diffObject);
+    this.loadingService.remove();
+    // const current = this.router.current;
+    // switch (current) {
+    //   case (AppRoutes.EditMechanicalTreatment):
+    //     this.loadingService.add();
+    //     this.diffObject = await this.formService.diffMechanicalTreatment(this.responseBody);
+    //     this.loadingService.remove();
+    //     break;
+    //   case (AppRoutes.EditObservation):
+    //     this.loadingService.add();
+    //     this.diffObject = await this.formService.diffObservation(this.responseBody);
+    //     console.log(this.diffObject);
+    //     this.loadingService.remove();
+    //     break;
+    // }
   }
 }
