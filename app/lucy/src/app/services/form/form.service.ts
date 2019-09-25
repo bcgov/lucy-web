@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { ApiService, APIRequestMethod } from '../api.service';
-import { AppConstants, AppRoutes } from 'src/app/constants';
-import { DropdownObject, DropdownService } from '../dropdown.service';
-import { DummyService } from '../dummy.service';
-import { RouterService } from '../router.service';
-import { ErrorService, ErrorType } from '../error.service';
-import { MechanicalTreatmentService } from '../mechanical-treatment.service';
-import { ObservationService } from '../observation.service';
-import * as moment from 'moment';
-import { DiffResult } from '../diff.service';
+import { Injectable } from "@angular/core";
+import { ApiService, APIRequestMethod } from "../api.service";
+import { AppConstants, AppRoutes } from "src/app/constants";
+import { DropdownObject, DropdownService } from "../dropdown.service";
+import { DummyService } from "../dummy.service";
+import { RouterService } from "../router.service";
+import { ErrorService, ErrorType } from "../error.service";
+import { MechanicalTreatmentService } from "../mechanical-treatment.service";
+import { ObservationService } from "../observation.service";
+import * as moment from "moment";
+import { DiffResult } from "../diff.service";
 
 export interface FormConfigField {
   key: string;
@@ -44,26 +44,32 @@ export interface FormConfig {
     }[];
   };
   fields: {
-    key: string,
+    key: string;
     layout: {
-      header: string,
-      description: string,
+      header: string;
+      description: string;
       classes: string[];
-    },
-    meta: {},
-    type: number,
-    verification: {},
-    required: true
+    };
+    meta: {};
+    type: number;
+    verification: {};
+    required: true;
   }[];
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class FormService {
-
-  constructor(private api: ApiService, private dropdownService: DropdownService, private dummyService: DummyService, private router: RouterService, private errorService: ErrorService, private observationService: ObservationService, private mechanicalTreatmentService: MechanicalTreatmentService) {
-  }
+  constructor(
+    private api: ApiService,
+    private dropdownService: DropdownService,
+    private dummyService: DummyService,
+    private router: RouterService,
+    private errorService: ErrorService,
+    private observationService: ObservationService,
+    private mechanicalTreatmentService: MechanicalTreatmentService
+  ) {}
 
   public async getMechanicalTreatmentUIConfig(): Promise<any> {
     const serverConfig = await this.getMechanicalTreatmentServerConfig();
@@ -79,13 +85,19 @@ export class FormService {
    * Fetch and return configuration json for Mechanical treatment page
    */
   private async getMechanicalTreatmentServerConfig(): Promise<FormConfig> {
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Form_MechanicalTreatment, undefined);
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_Form_MechanicalTreatment,
+      undefined
+    );
     if (response.success) {
       const modelName = response.response[`modelName`];
       if (modelName) {
         return response.response;
       } else {
-        console.log(`Got a response, but something is off - modelName is missing`);
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
         console.dir(response);
         return undefined;
       }
@@ -100,13 +112,19 @@ export class FormService {
    * Fetch and return configuration json for Observation page
    */
   private async getObservationServerConfig(): Promise<FormConfig> {
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_Form_Observation, undefined);
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_Form_Observation,
+      undefined
+    );
     if (response.success) {
       const modelName = response.response[`modelName`];
       if (modelName) {
         return response.response;
       } else {
-        console.log(`Got a response, but something is off - modelName is missing`);
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
         console.dir(response);
         return undefined;
       }
@@ -124,20 +142,26 @@ export class FormService {
     const current = this.router.current;
     switch (current) {
       case AppRoutes.ViewMechanicalTreatment: {
-        return this.router.navigateTo(AppRoutes.EditMechanicalTreatment, this.router.routeId)
-      } 
+        return this.router.navigateTo(
+          AppRoutes.EditMechanicalTreatment,
+          this.router.routeId
+        );
+      }
       case AppRoutes.ViewObservation: {
-        return this.router.navigateTo(AppRoutes.EditObservation, this.router.routeId)
+        return this.router.navigateTo(
+          AppRoutes.EditObservation,
+          this.router.routeId
+        );
       }
       default: {
-        console.log('Case not handled');
+        console.log("Case not handled");
       }
     }
   }
 
   public async getFormConfigForCurrentRoute(): Promise<any> {
     switch (this.router.current) {
-      case (AppRoutes.ViewObservation): {
+      case AppRoutes.ViewObservation: {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
         const observation = await this.observationService.getWithId(id);
@@ -148,7 +172,7 @@ export class FormService {
         }
         break;
       }
-      case (AppRoutes.EditObservation): {
+      case AppRoutes.EditObservation: {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
         const observation = await this.observationService.getWithId(id);
@@ -159,12 +183,12 @@ export class FormService {
         }
         break;
       }
-      case (AppRoutes.AddObservation): {
+      case AppRoutes.AddObservation: {
         const configFile = await this.getObservationUIConfig();
         return configFile;
         break;
       }
-      case (AppRoutes.ViewMechanicalTreatment): {
+      case AppRoutes.ViewMechanicalTreatment: {
         const id = this.router.routeId;
         const configFile = await this.getMechanicalTreatmentUIConfig();
         const treatment = await this.mechanicalTreatmentService.getWithId(id);
@@ -175,7 +199,7 @@ export class FormService {
         }
         break;
       }
-      case (AppRoutes.EditMechanicalTreatment): {
+      case AppRoutes.EditMechanicalTreatment: {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
         const treatment = await this.mechanicalTreatmentService.getWithId(id);
@@ -186,13 +210,15 @@ export class FormService {
         }
         break;
       }
-      case (AppRoutes.AddMechanicalTreatment): {
+      case AppRoutes.AddMechanicalTreatment: {
         const configFile = await this.getMechanicalTreatmentUIConfig();
         return configFile;
         break;
       }
       default: {
-        console.log("**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**")
+        console.log(
+          "**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**"
+        );
         this.errorService.show(ErrorType.NotFound);
         return undefined;
         break;
@@ -232,39 +258,49 @@ export class FormService {
             requiredFieldKeys.push(newField.key);
           }
           // set column size:
-          if (group.fields.length >= 3 && (i % 3 === 0 || (i + 1) % 3 === 0) && !newField.isTextAreaField) {
+          if (
+            group.fields.length >= 3 &&
+            (i % 3 === 0 || (i + 1) % 3 === 0) &&
+            !newField.isTextAreaField
+          ) {
             // if group has more than 3 elements, make sure we dont have more than 3 elements per row
             // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
-            newField.cssClasses = newField.cssClasses + ' col col-md-4';
+            newField.cssClasses = newField.cssClasses + " col col-md-4";
           } else if (newField.isTextAreaField) {
-            // Comment fields should take the whole row 
-            newField.cssClasses = newField.cssClasses + ' col-12';
+            // Comment fields should take the whole row
+            newField.cssClasses = newField.cssClasses + " col-12";
           }
-          if (newField.isLocationLatitudeField || newField.isLocationLongitudeField) {
+          if (
+            newField.isLocationLatitudeField ||
+            newField.isLocationLongitudeField
+          ) {
             // if its a latitude or logitude field, and we havent cached such field before, cache it
             // if its already chached, generate special location field to add to subsection
             if (cachedLatOrLongField) {
-              const cachedFieldIsLatitude = cachedLatOrLongField.isLocationLatitudeField === true;
+              const cachedFieldIsLatitude =
+                cachedLatOrLongField.isLocationLatitudeField === true;
               const locationField = {
                 key: `location`,
                 isLocationField: true,
-                latitude: cachedFieldIsLatitude ? cachedLatOrLongField : newField,
-                longitude: cachedFieldIsLatitude ? newField : cachedLatOrLongField
+                latitude: cachedFieldIsLatitude
+                  ? cachedLatOrLongField
+                  : newField,
+                longitude: cachedFieldIsLatitude
+                  ? newField
+                  : cachedLatOrLongField
               };
               subSectionFields.push(locationField);
             } else {
               cachedLatOrLongField = newField;
             }
           } else {
-
             subSectionFields.push(newField);
           }
-
         }
         subSections.push({
           title: group.title,
           boxed: false,
-          fields: subSectionFields,
+          fields: subSectionFields
         });
       }
       configObject.sections.push({
@@ -283,7 +319,7 @@ export class FormService {
    */
   private async configField(key: string, fields: any[]): Promise<any> {
     for (const field of fields) {
-      if (field['key'] === key) {
+      if (field["key"] === key) {
         // convert server config field
         const fieldOfInterest: any = this.processFieldConfig(field);
         // initialize value field
@@ -296,30 +332,36 @@ export class FormService {
         fieldOfInterest.isLocationLongitudeField = this.isLongitude(field.key);
 
         // If its not a location field, proceed
-        if (!fieldOfInterest.isLocationLatitudeField && !fieldOfInterest.isLocationLongitudeField) {
+        if (
+          !fieldOfInterest.isLocationLatitudeField &&
+          !fieldOfInterest.isLocationLongitudeField
+        ) {
           // Set field type flag
           switch (field.type) {
-            case 'object': {
+            case "object": {
               // Object is code table
               fieldOfInterest.isDropdown = true;
               break;
             }
-            case 'boolean': {
+            case "boolean": {
               // Booleans is checkbox
               fieldOfInterest.isCheckbox = true;
               break;
             }
-            case 'number': {
+            case "number": {
               // Number is input field
               fieldOfInterest.isInputField = true;
               break;
             }
-            case 'string': {
+            case "string": {
               // String can be a simple input field, comment field, or date
               if (fieldOfInterest.verification.isDate) {
                 // Date is Date FIeld
                 fieldOfInterest.isDateField = true;
-              } else if (fieldOfInterest.verification.size && fieldOfInterest.verification.size > 100) {
+              } else if (
+                fieldOfInterest.verification.size &&
+                fieldOfInterest.verification.size > 100
+              ) {
                 // Comment is textAreaField (still input field)
                 fieldOfInterest.isTextAreaField = true;
               } else {
@@ -328,11 +370,9 @@ export class FormService {
               break;
             }
             default: {
-
               break;
             }
           }
-
         } else {
           // if its a location field, set other field type flags to false.
           fieldOfInterest.isDropdown = false;
@@ -341,14 +381,15 @@ export class FormService {
         }
         // if its a dropdown, grab its code table
         if (fieldOfInterest.isDropdown) {
-          fieldOfInterest.dropdown = await this.dropdownfor(fieldOfInterest.codeTable);
+          fieldOfInterest.dropdown = await this.dropdownfor(
+            fieldOfInterest.codeTable
+          );
         }
         return fieldOfInterest;
       }
     }
     return null;
   }
-
 
   /**
    * Convert a server generated field object to one that
@@ -357,8 +398,8 @@ export class FormService {
    */
   private processFieldConfig(field: any): FormConfigField {
     let isCodeTable = false;
-    let codeTable = '';
-    if (field.type === 'object') {
+    let codeTable = "";
+    if (field.type === "object") {
       isCodeTable = true;
       codeTable = field.refSchema.modelName;
       // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
@@ -389,7 +430,10 @@ export class FormService {
       verification.isLatitude = true;
     }
 
-    if (field.type.toLowerCase() === 'number' && (!verification.isLatitude && !verification.isLongitude)) {
+    if (
+      field.type.toLowerCase() === "number" &&
+      (!verification.isLatitude && !verification.isLongitude)
+    ) {
       verification.positiveNumber = true;
     }
 
@@ -404,16 +448,23 @@ export class FormService {
       meta: field.meta,
       cssClasses: cssClasses,
       codeTable: codeTable,
-      condition: ''
+      condition: ""
     };
   }
 
   private isLatitude(headerOrKey: string): boolean {
-    return headerOrKey.toLocaleLowerCase() === 'lat' || headerOrKey.toLocaleLowerCase() === 'latitude';
+    return (
+      headerOrKey.toLocaleLowerCase() === "lat" ||
+      headerOrKey.toLocaleLowerCase() === "latitude"
+    );
   }
 
   private isLongitude(headerOrKey: string): boolean {
-    return headerOrKey.toLocaleLowerCase() === 'long' || headerOrKey.toLocaleLowerCase() === 'longitude' || headerOrKey.toLocaleLowerCase() === 'lon';
+    return (
+      headerOrKey.toLocaleLowerCase() === "long" ||
+      headerOrKey.toLocaleLowerCase() === "longitude" ||
+      headerOrKey.toLocaleLowerCase() === "lon"
+    );
   }
 
   /**
@@ -425,43 +476,43 @@ export class FormService {
       return [];
     }
     switch (code.toLowerCase()) {
-      case 'speciesagencycode':
+      case "speciesagencycode":
         return await this.dropdownService.getAgencies();
-      case 'jurisdictioncode':
+      case "jurisdictioncode":
         return await this.dropdownService.getJuristictions();
-      case 'species':
+      case "species":
         return await this.dropdownService.getInvasivePlantSpecies();
-      case 'speciesdistributioncode':
+      case "speciesdistributioncode":
         return await this.dropdownService.getDistributions();
-      case 'observationtypecode':
+      case "observationtypecode":
         return await this.dropdownService.getObservationType();
-      case 'soiltexturecode':
+      case "soiltexturecode":
         return await this.dropdownService.getSoilTextureCodes();
-      case 'observationgeometrycode':
+      case "observationgeometrycode":
         return await this.dropdownService.getGeometry();
-      case 'specificusecode':
+      case "specificusecode":
         return await this.dropdownService.getSpecificUseCodes();
-      case 'slopecode':
+      case "slopecode":
         return await this.dropdownService.getGroundSlopes();
-      case 'aspectcode':
+      case "aspectcode":
         return await this.dropdownService.getGroundAspects();
-      case 'proposedactioncode':
+      case "proposedactioncode":
         return await this.dropdownService.getProposedActions();
-      case 'mechanicalmethodcode':
+      case "mechanicalmethodcode":
         return await this.dropdownService.getMechanicalTreatmentMethods();
-      case 'mechanicaldisposalmethodcode':
+      case "mechanicaldisposalmethodcode":
         return await this.dropdownService.getMechanicalDisposalMethods();
-      case 'mechanicalsoildisturbancecode':
+      case "mechanicalsoildisturbancecode":
         return await this.dropdownService.getMechanicalSoilDisturbances();
-      case 'mechanicalrootremovalcode':
+      case "mechanicalrootremovalcode":
         return await this.dropdownService.getMechanicalRootRemovals();
-      case 'mechanicaltreatmentissuecode':
+      case "mechanicaltreatmentissuecode":
         return await this.dropdownService.getMechanicalIssues();
-      case 'treatmentprovidercontractor':
+      case "treatmentprovidercontractor":
         return await this.dropdownService.getMechanicalTreatmentProviders();
-      case 'observation':
+      case "observation":
         return await this.dropdownService.getObservations();
-      case 'speciesdensitycode':
+      case "speciesdensitycode":
         return await this.dropdownService.getDensities();
       default:
         console.log(`Code Table is not handled ${code}`);
@@ -469,11 +520,14 @@ export class FormService {
     }
   }
 
-  private async getDropdownObjectWithId(codeTableName: string, selectedObject: any): Promise<DropdownObject> {
+  private async getDropdownObjectWithId(
+    codeTableName: string,
+    selectedObject: any
+  ): Promise<DropdownObject> {
     const dropdowns = await this.dropdownfor(codeTableName);
-    let selectedID : number;
+    let selectedID: number;
     for (const key in selectedObject) {
-      if ((key.toLowerCase().indexOf('id') !== -1)) {
+      if (key.toLowerCase().indexOf("id") !== -1) {
         selectedID = selectedObject[key];
         break;
       }
@@ -484,7 +538,10 @@ export class FormService {
     for (const item of dropdowns) {
       const dropdown = item.object;
       for (const key in dropdown) {
-        if ((key.toLowerCase().indexOf('id') !== -1) && dropdown[key] === selectedID) {
+        if (
+          key.toLowerCase().indexOf("id") !== -1 &&
+          dropdown[key] === selectedID
+        ) {
           return item;
         }
       }
@@ -510,16 +567,21 @@ export class FormService {
 
     // set id & date
     for (const key in object) {
-      if (key.toLowerCase().indexOf('id') !== -1) {
-        configuration['objectId'] = object[key]; 
-      } else if (key.toLowerCase().indexOf('date') !== -1) {
-        configuration['objectDate'] = moment(moment(object[key], 'YYYY-MM-DD').toDate()).format('dddd MMM DD YYYY');
+      if (key.toLowerCase().indexOf("id") !== -1) {
+        configuration["objectId"] = object[key];
+      } else if (key.toLowerCase().indexOf("date") !== -1) {
+        configuration["objectDate"] = moment(
+          moment(object[key], "YYYY-MM-DD").toDate()
+        ).format("dddd MMM DD YYYY");
       }
-      if (configuration['objectId'] !== undefined && configuration['objectDate'] !== undefined) {
+      if (
+        configuration["objectId"] !== undefined &&
+        configuration["objectDate"] !== undefined
+      ) {
         break;
       }
     }
-    
+
     /*
       Yes, big O of n^3 is really bad
       (its actually way, way worse if you look deeper)
@@ -536,14 +598,19 @@ export class FormService {
           } else {
             if (object[field.key]) {
               const key = object[field.key];
-              if (typeof key === 'object' && key !== null) {
+              if (typeof key === "object" && key !== null) {
                 const codeTableName = field.codeTable;
-                field.value = await this.getDropdownObjectWithId(codeTableName, object[field.key]);
+                field.value = await this.getDropdownObjectWithId(
+                  codeTableName,
+                  object[field.key]
+                );
               } else {
                 field.value = object[field.key];
               }
             } else {
-              console.log(`**** config key ${field.key} does not exist in object`);
+              console.log(
+                `**** config key ${field.key} does not exist in object`
+              );
             }
           }
         }
@@ -553,28 +620,30 @@ export class FormService {
   }
 
   async diffObservation(bodyPre: any): Promise<DiffResult> {
-      const body = bodyPre
-      body.observation_id = this.router.routeId;
-      const diff = await this.observationService.diffObservation(body);
-      if (!diff) {
-        return undefined
-      }
-      console.dir(diff);
-      return {
-        changed: diff.changed,
-        newObject: diff.newObervation,
-        originalObject: diff.originalObservation,
-        diffMessage: diff.diffMessage,
-        changes: diff.changes
-      }
+    const body = bodyPre;
+    body.observation_id = this.router.routeId;
+    const diff = await this.observationService.diffObservation(body);
+    if (!diff) {
+      return undefined;
+    }
+    console.dir(diff);
+    return {
+      changed: diff.changed,
+      newObject: diff.newObervation,
+      originalObject: diff.originalObservation,
+      diffMessage: diff.diffMessage,
+      changes: diff.changes
+    };
   }
 
   async diffMechanicalTreatment(bodyPre: any): Promise<DiffResult> {
-    const body = bodyPre
+    const body = bodyPre;
     body.mechanical_treatment_id = this.router.routeId;
-    const diff = await this.mechanicalTreatmentService.diffMechanicalTreatment(body);
+    const diff = await this.mechanicalTreatmentService.diffMechanicalTreatment(
+      body
+    );
     if (!diff) {
-      return undefined
+      return undefined;
     }
     console.dir(diff);
     return {
@@ -583,10 +652,9 @@ export class FormService {
       originalObject: diff.originalMechanicalTreatment,
       diffMessage: diff.diffMessage,
       changes: diff.changes
-    }
+    };
   }
 }
-
 
 // export interface ObservationDiffResult {
 //   changed: boolean;
