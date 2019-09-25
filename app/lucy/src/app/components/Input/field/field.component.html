@@ -23,21 +23,54 @@
       [errorStateMatcher]="matcher"
     />
     <!-- ERROR MESSAGES  -->
-    <!-- Over max size  -->
-    <mat-error *ngIf="fieldFormControl.hasError('requiredLength')">
-      Too many characters.
-    </mat-error>
     <!-- Required  -->
     <mat-error *ngIf="fieldFormControl.hasError('required')">
-      {{ header }} is <strong>required</strong>
+      <strong>required</strong>
+    </mat-error>
+    <!-- Over max size  -->
+    <mat-error
+      *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('requiredLength')
+      "
+    >
+      Too many characters.
     </mat-error>
     <!-- Positive Number  -->
-    <mat-error *ngIf="fieldFormControl.hasError('positiveNumber')">
+    <mat-error
+      *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('positiveNumber')
+      "
+    >
       Must be a positive number.
     </mat-error>
     <!-- Regex  -->
-    <mat-error *ngIf="fieldFormControl.hasError('requiredPattern')">
+    <mat-error
+      *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('requiredPattern')
+      "
+    >
       Invalid characters
+    </mat-error>
+    <!-- Latitude -->
+    <mat-error
+      *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('validLatitude')
+      "
+    >
+      Latitude must be between 48 and 61 and have at least 5 decimal places.
+    </mat-error>
+    <!-- Longitude -->
+    <mat-error
+      *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('validLongitude')
+      "
+    >
+      Longitude must be between -139 and -114 and have at least 5 decimals.
     </mat-error>
   </mat-form-field>
 

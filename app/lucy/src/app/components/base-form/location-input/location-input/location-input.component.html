@@ -33,9 +33,10 @@
           <div class="full-width">
             <app-field
               [mode]="mode"
-              [header]="'Latitude'"
+              [header]="object.latitude.header"
               [value]="lat"
-              [validationFunc]="validation.isValidLatitude.bind(validation)"
+              [verification]="object.latitude.verification"
+              [required]="object.latitude.required"
               (valueChanged)="latChanged($event)"
             >
             </app-field>
@@ -45,9 +46,10 @@
           <div class="full-width">
             <app-field
               [mode]="mode"
-              [header]="'Longitude'"
+              [header]="object.longitude.header"
               [value]="long"
-              [validationFunc]="validation.isValidLongitude.bind(validation)"
+              [verification]="object.longitude.verification"
+              [required]="object.longitude.required"
               (valueChanged)="longChanged($event)"
             >
             </app-field>
