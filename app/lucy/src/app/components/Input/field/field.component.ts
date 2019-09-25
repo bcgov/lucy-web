@@ -84,18 +84,18 @@ export class FieldComponent implements OnInit, AfterViewInit {
   // Set
   @Input() set value(value: string) {
     this._value = value;
+    console.log(value);
     this.valueChanged.emit(value);
   }
   ////////////////////
 
   /**
-   * If a validation function has been
-   * passed to @Input validationFunc, the result
-   * will be used.
-   * Otherwise returns true.
+   * Used in Multi-line
    */
   get isValid(): boolean {
     if (this.value === undefined || this.value === ``) {
+      return false;
+    } else {
       return true;
     }
   }
