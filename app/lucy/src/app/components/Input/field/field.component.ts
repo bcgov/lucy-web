@@ -152,7 +152,7 @@ export class FieldComponent implements OnInit, AfterViewInit {
     if (this.verification.isLongitude) {
       validatorOptions.push(this.validLongitude);
     }
-    this.fieldFormControl = new FormControl('', validatorOptions);
+    this.fieldFormControl = new FormControl(this.value, validatorOptions);
   }
 
   /**
