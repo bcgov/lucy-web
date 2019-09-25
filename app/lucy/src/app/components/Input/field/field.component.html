@@ -71,6 +71,7 @@
     <textarea
       matInput
       [attr.id]="fieldId"
+      [(ngModel)]="value"
       rows="4"
       [formControl]="fieldFormControl"
       [errorStateMatcher]="matcher"
