@@ -73,7 +73,7 @@ export class UserInformationComponent implements OnInit {
     this.userService.getLastName().then((value) => {
       this.lastName = value;
     });
-    this.userService.getOranization().then((value) => {
+    this.userService.getOrganization().then((value) => {
       this.organization = value;
     });
     this.userService.getEmail().then((value) => {

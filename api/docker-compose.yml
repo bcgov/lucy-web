@@ -2,6 +2,14 @@ version: "3.5"
 
 services:
 # Application API Container and service
+ app_dependency:
+  image: ${PROJECT_NAME}-${TAG}-api-dep-img
+  container_name: ${PROJECT_NAME}-${TAG}-api-dep
+  build:
+   context: ./api_sources
+   dockerfile: .build/Dockerfile.node
+  volumes:
+    - npmcache:/opt/app-root/src/node_modules
  app_api:
   image: ${PROJECT_NAME}-${TAG}-api-img
   container_name: ${PROJECT_NAME}-${TAG}-api
@@ -19,14 +27,17 @@ services:
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
     - VERSION=${VERSION}
+    - ENVIRONMENT=local
   volumes:
     - ./api_sources:/opt/app-root/src
+    - npmcache:/opt/app-root/src/node_modules
   networks:
   - local-network
   links:
     - db
   depends_on:
     - db
+    - app_dependency
   restart: always
   command: ["npm", "run", "hotload"]
 # Application Local Database Container and service
@@ -80,7 +91,8 @@ services:
   environment:
     - APP_PORT=${APP_PORT}
     - LOCAL_API_HOST=app_api:${API_PORT}
-    
+    - ENVIRONMENT=local
+    - VERSION=${VERSION}
 # Application Local docker network
 networks:
  local-network:
@@ -89,4 +101,6 @@ networks:
 volumes:
   postgres:
     name: ${PROJECT_NAME}-${TAG}-vol-postgres
+  npmcache: 
+    name: ${PROJECT_NAME}-${TAG}-vol-npmcache
  

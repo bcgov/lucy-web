@@ -120,6 +120,8 @@ build-remote-app:
 deploy-remote-api:
 	@echo "+\n++ Make: Deploying API with ref = $$PR and env=$$ENV type=$$TYPE"
 	@cd ./.pipeline && DEBUG=* npm run pre-deploy -- --pr=$$PR --env=$$ENV
+	@cd ./.pipeline && DEBUG=* npm run setup -- --pr=$$PR --env=$$ENV
+	@cd ./.pipeline && DEBUG=* npm run test -- --pr=$$PR --env=$$ENV
 	@cd ./.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV --type=static
 deploy-remote-app:
 	@echo "+\n++ Make: Deploying APP with ref = $$PR and env=$$ENV"
