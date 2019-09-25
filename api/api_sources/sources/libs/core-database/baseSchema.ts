@@ -141,6 +141,7 @@ export class  BaseSchema {
         table.layout = def.layout;
         table.meta = def.meta;
         table.computedFields = def.computedFields;
+        table.relations = def.relations || {};
         _.each(def.columns, (value: TableColumnOption, key) => {
             const result = {};
             const column: ApplicationTableColumn = new ApplicationTableColumn(
@@ -274,16 +275,31 @@ export class  BaseSchema {
 
     config(skipDetail?: boolean): any {
         const result: any = {};
+        const layout: any = this.table.layout || {};
         result.schemaName = this.className;
         result.modelName = this.modelName;
-        result.description = this.table.description;
+        result.description = {
+            key: this.modelName.toLocaleLowerCase(),
+            default: this.table.description
+        };
         result.meta = this.table.meta || {};
         result.idKey = this.table.id;
+        result.displayLayout = this.table.displayLayout || {};
+        result.displayLayout = { ...result.displayLayout, title: layout.title } || {};
         if (skipDetail) {
             return result;
         }
-        result.layout = this.table.layout || {};
+        result.layout = layout;
         result.computedFields = this.table.computedFields || {};
+        result.relations = {};
+        _.each(this.table.relations, (rel: any, key: string) => {
+            const schema = rel.schema || '';
+            const schemaObj = schemaWithName(schema) || { config: () => {}};
+            rel.refSchema = schemaObj.config(true);
+            const updatedRel = {};
+            updatedRel[key] = rel;
+            result.relations = {...result.relations, ...updatedRel};
+        });
         result.fields = [];
         _.each(this.table.columnsDefinition, (col: ApplicationTableColumn, key: string) => {
             if (key === 'id') {
@@ -293,15 +309,18 @@ export class  BaseSchema {
             const verification = col.columnVerification || {};
             const refSchema = col.refSchema || '';
             const schemaObj: BaseSchema = schemaWithName(refSchema) || { config: () => {}};
-            const layout = col.layout || {};
+            const fieldLayout = col.layout || {};
             verification.size = typeDetails.size;
             verification.isDate = typeDetails.isDate;
-            layout.description = layout.description || col.comment;
+            layout.description = layout.description || {
+                key: `${this.modelName}.${key}`,
+                default: col.comment
+            };
             layout.header = layout.header || key;
 
             const field = {
                 key: key,
-                layout: layout,
+                layout: fieldLayout,
                 meta: col.meta || {},
                 type: typeDetails.type || '',
                 verification: verification,
