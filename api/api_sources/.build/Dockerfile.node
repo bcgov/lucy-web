@@ -17,17 +17,11 @@ WORKDIR $HOME
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
+COPY ./package*.json ./
 
-# Bundle app source
-COPY ./ .
+# If you are building your code for production
+# RUN npm install --only=production
+RUN npm set progress=false && npm ci
 
-# Cleaning any existing generated file
-
-
-VOLUME ${HOME}
-
-
-#ENTRYPOINT [ "npm", "run", "docker_start" ]
-
-CMD [ "npm", "run", "hotload" ]
-#ENTRYPOINT /usr/bin/tail -f /dev/null
+VOLUME ${HOME}/node_modules
+ENTRYPOINT /usr/bin/tail -f /dev/null
