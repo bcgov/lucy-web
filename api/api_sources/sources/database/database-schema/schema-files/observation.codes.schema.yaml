@@ -29,6 +29,13 @@ schemas:
     meta: 
       resource: true
       api: /observation
+    # End-meta
+    displayLayout:
+      fields:
+        - species.commonName
+        - lat
+        - long
+    # End-displayLayout  
     layout:
       title: 
         key: '' 
@@ -127,6 +134,19 @@ schemas:
               - observationGeometry
             method: calculateArea
     # End - Computed fields
+    # Relationship
+    relations:
+      mechanicalTreatments:
+        header:
+          key: 'observation.mechanicalTreatments'
+          default: Mechanical Treatments
+        description: 
+          key: 'observation.mechanicalTreatments.description'
+          default: 'Mechanical treatments performed on observation'
+        type: array
+        relationshipType: many-to-one
+        schema: MechanicalTreatmentSchema
+    # End - Relation
     columns: 
       # -- Regular Columns
       id: 
@@ -232,7 +252,7 @@ schemas:
             - none
         columnVerification: 
           regx:
-            re: '[a-zA-Z0-9]+'
+            re: '^[a-zA-Z0-9]+'
             flag: 'gm'
       rangeUnitNumber:
         name: 'range_unit_number'
