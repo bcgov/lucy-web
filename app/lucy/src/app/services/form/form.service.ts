@@ -230,6 +230,9 @@ export class FormService {
    * generate and return Form Configuration file
    */
   private async createUIConfig(serverConfig: any): Promise<any> {
+    if (!serverConfig) {
+      return undefined;
+    }
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const configObject: any = {
