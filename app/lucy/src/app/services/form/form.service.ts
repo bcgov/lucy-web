@@ -239,6 +239,7 @@ export class FormService {
       requiredFieldKeys: []
     };
     const requiredFieldKeys: string[] = [];
+    let fieldCount = 0;
     // if you think this is O N^3, you're wrong. it O N^4!
     // But this generated structure makes if easy for the view to display
     for (const section of sections) {
@@ -251,6 +252,8 @@ export class FormService {
           const field = group.fields[i];
           // Add type flags to field (to help with html generation)
           const newField = await this.configField(field, fields);
+          // newField.tabindex = fieldCount;
+          fieldCount++;
           if (!newField) {
             continue;
           }
@@ -547,16 +550,14 @@ export class FormService {
     return undefined;
   }
 
-  public async generateMechanicalTreatmentTest(config: any): Promise<any> {
-    const dummy = await this.dummyService.createDummyMechanicalTreatment();
-    return await this.merge(config, dummy);
-  }
-
-  public async generateObservationTest(config: any): Promise<any> {
-    const dummy = await this.dummyService.createDummyObservation([]);
-    return await this.merge(config, dummy);
-  }
-
+  /**
+   * Merge a config object with an object that contains the values
+   * Example: merge Observation config with observation object to
+   * add the values from the observation object to the fields in the config
+   * @param config Object (UIConfig not server)
+   * @param object Object that contains values
+   * @return UIConfig object with values for fields
+   */
   private async merge(config: any, object: any): Promise<any> {
     const configuration = config;
 
@@ -588,8 +589,8 @@ export class FormService {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
           if (field.isLocationField) {
-            field.latitude.value = object[field.latitude.key];
-            field.longitude.value = object[field.longitude.key];
+            field.latitude.value = this.formatLatLongForDisplay(object[field.latitude.key]);
+            field.longitude.value = this.formatLatLongForDisplay(object[field.longitude.key]);
           } else {
             if (object[field.key]) {
               const key = object[field.key];
@@ -614,7 +615,41 @@ export class FormService {
     return configuration;
   }
 
-  private generateBodyForMergedConfig(config: any): JSON {
+  private formatLatLongForDisplay(value: number): string {
+    // If its undefined or not a number, return empty string
+    if (value === undefined || !Number(value)) {
+      return '';
+    }
+    // If it doesnt have a decimap point, add 5 zeros
+    if (String(value).indexOf('.') === -1) {
+      return `${String(value)}.00000`;
+    }
+    // Split by decimal point
+    const separated = String(value).split('.');
+    let decimals = separated[1];
+    // If it has multiple decimal points, return empty string
+    if (separated.length > 2) {
+      return '';
+    }
+    // If there are less than 5 chars after decimal
+    if (separated[1].length < 5) {
+      // add trailing zeros
+      while (decimals.length < 5) {
+        decimals = `${decimals}0`;
+      }
+      return `${separated[0]}${decimals}`;
+    }
+
+    // at this point it should be fine as is
+    return String(value);
+
+  }
+
+  /**
+   * Generate json body from UIConfig
+   * @param config UIConfig
+   */
+  public generateBodyForMergedConfig(config: any): JSON {
     const body = {};
     for (const section of config.sections) {
       for (const subSection of section.subSections) {
@@ -645,11 +680,37 @@ export class FormService {
     return JSON.parse(JSON.stringify(body));
   }
 
+  /**
+   * Return all fields in condig
+   * @param uiConfig object
+   * @returns fields Array
+   */
+  private getFieldsInConfig(uiConfig: any): any[] {
+    const fields: any[] = [];
+    for (const section of uiConfig.sections) {
+      for (const subSection of section.subSections) {
+        for (const field of subSection.fields) {
+          if (field.isLocationField) {
+            fields.push(field.longitude);
+            fields.push(field.latitude);
+          } else {
+            fields.push(field);
+          }
+        }
+      }
+    }
+    return fields;
+  }
+
   //////////////////////////////////// DIFF ////////////////////////////////////
 
   async diffObject(newBody: JSON, config: any): Promise<DiffResult> {
+    // Setup
     const currentId = this.router.routeId;
     const endpoint = config.api;
+    // clean body will cast the correct type on the fields
+    const cleanNewBody = this.cleanBodyForSubmission(newBody, config);
+    console.dir(cleanNewBody);
     // 1) Fetch the latest original object
     const original = await this.getObjectWithId(endpoint, currentId);
     // 2) fetch the config
@@ -670,7 +731,7 @@ export class FormService {
     // 6) get json body for merged ui condig
     const originalJSONBody = this.generateBodyForMergedConfig(mergedUIConfig);
     // 7) diff with body in params
-    const diffResult = this.diff(originalJSONBody, newBody);
+    const diffResult = this.diff(originalJSONBody, cleanNewBody);
     if (!diffResult) {
       console.log(`Couldnt diff`);
       return undefined;
@@ -685,7 +746,7 @@ export class FormService {
     const changed = changedKeys.length > 1;
     return {
       changed: changed,
-      newObject: newBody,
+      newObject: cleanNewBody,
       originalObject: originalJSONBody,
       diffMessage: changedKeys,
       changes: diffResult
@@ -757,4 +818,70 @@ export class FormService {
   }
 
   //////////////////////////////////// END DIFF ////////////////////////////////////
+
+  //////////////////////////////////// SUBMISSION ////////////////////////////////////
+  /**
+   * Converts body fields to the types specified in the config.
+   * Use this before sumbitting body to server.
+   * @param body json
+   * @param uiConfig object
+   */
+  public cleanBodyForSubmission(body: JSON, uiConfig: any): JSON {
+    const cleanBody = {};
+    const configFilds = this.getFieldsInConfig(uiConfig);
+    for (const field of configFilds) {
+      switch (field.type.toLowerCase()) {
+        case 'string':
+            cleanBody[field.key] = String(body[field.key]);
+            break;
+        case 'number':
+            cleanBody[field.key] = Number(body[field.key]);
+            break;
+        default:
+            cleanBody[field.key] = body[field.key];
+            break;
+      }
+    }
+    return JSON.parse(JSON.stringify(cleanBody));
+  }
+
+  public async submit(body: JSON, uiConfig: any): Promise<boolean> {
+    const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
+    console.dir(cleanBody);
+    if (this.router.isEditRoute) {
+      const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
+      const result = await this.api.request(APIRequestMethod.PUT, endpoint, cleanBody);
+      // console.log(result);
+      if (result.success) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (this.router.isCreateRoute) {
+      const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
+      const result = await this.api.request(APIRequestMethod.POST, endpoint, cleanBody);
+      // console.log(result);
+      if (result.success) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log('Not a route that can submit');
+      return false;
+    }
+  }
+  //////////////////////////////////// END SUBMISSION ////////////////////////////////////
+
+  //////////////////////////////////// TESTS ////////////////////////////////////
+  public async generateMechanicalTreatmentTest(config: any): Promise<any> {
+    const dummy = await this.dummyService.createDummyMechanicalTreatment();
+    return await this.merge(config, dummy);
+  }
+
+  public async generateObservationTest(config: any): Promise<any> {
+    const dummy = await this.dummyService.createDummyObservation([]);
+    return await this.merge(config, dummy);
+  }
+  //////////////////////////////////// END TESTS ////////////////////////////////////
 }

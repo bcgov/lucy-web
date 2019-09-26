@@ -207,6 +207,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.setFormMode();
     this.accessType = await this.userService.getAccess();
     this.config = await this.formService.getFormConfigForCurrentRoute();
+    if (this.router.isEditRoute) {
+      this.responseBody = await this.formService.generateBodyForMergedConfig(this.config);
+    }
     this.isLoading = false;
   }
 
@@ -232,8 +235,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   private fieldChanged(field: any, event: any) {
     if (field.isLocationField) {
       // location field
-      this.responseBody[field.latitude.key] = +event.latitude.value;
-      this.responseBody[field.longitude.key] = +event.longitude.value;
+      this.responseBody[field.latitude.key] = event.latitude.value;
+      this.responseBody[field.longitude.key] = event.longitude.value;
     } else if (field.isDropdown) {
       // dropdown field
       for (const key in event.object) {
@@ -257,9 +260,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /**
    * Form submission
    */
-  private async submitAction() {
+  async submitAction() {
     console.dir(this.responseBody);
-    const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
+    // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.alert.show('Missing fields', 'Please fill all required fields');
     } else {
@@ -267,19 +270,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         this.enterReviewMode();
         return;
       }
-      this.isLoading = true;
-      const result = await this.api.request(APIRequestMethod.POST, endpoint, this.responseBody);
-      console.log(result);
-      if (result.success) {
+      const submitted = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
+      if (submitted) {
         this.router.navigateTo(AppRoutes.Inventory);
       } else {
-        this.isLoading = false;
         this.alert.show('error', 'There was an error');
       }
     }
   }
 
-  private edit() {
+  edit() {
     if (!this.viewing) {
       return;
     }
@@ -329,54 +329,23 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   /////////// End Lottie ///////////
 
-  // private async selectedMechanicalTreatmentFormType() {
-  //   this.formType = FormType.MechanicalTreeatment;
-  //   this.isLoading = true;
-  //   console.log('Getting mechanical treatment');
-  //   this.config = await this.formService.getMechanicalTreatmentUIConfig();
-  //   console.log('done');
-  //   this.isLoading = false;
-  //   const x = await this.formService.generateMechanicalTreatmentTest(this.config);
-  // }
-
-  // private async selectedObservationFormType() {
-  //   this.formType = FormType.MechanicalTreeatment;
-  //   this.isLoading = true;
-  //   console.log('Getting observation');
-  //   this.config = await this.formService.getObservationUIConfig();
-  //   console.log('done');
-  //   this.isLoading = false;
-  // }
-
   async generateForTesting() {
     this.loadingService.add();
     if (this.router.current === AppRoutes.AddMechanicalTreatment) {
       this.config = await this.formService.generateMechanicalTreatmentTest(this.config);
+      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else if (this.router.current === AppRoutes.AddObservation) {
       this.config = await this.formService.generateObservationTest(this.config);
+      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else {
-      this.alert.show('Form not supported yet',`Test generatgion for this form type is not implemented yet`);
+      this.alert.show('Form not supported yet', `Test generatgion for this form type is not implemented yet`);
     }
     this.loadingService.remove();
   }
-  
+
   async createDiffMessage() {
     this.loadingService.add();
     this.diffObject = await this.formService.diffObject(JSON.parse(JSON.stringify(this.responseBody)), this.config);
     this.loadingService.remove();
-    // const current = this.router.current;
-    // switch (current) {
-    //   case (AppRoutes.EditMechanicalTreatment):
-    //     this.loadingService.add();
-    //     this.diffObject = await this.formService.diffMechanicalTreatment(this.responseBody);
-    //     this.loadingService.remove();
-    //     break;
-    //   case (AppRoutes.EditObservation):
-    //     this.loadingService.add();
-    //     this.diffObject = await this.formService.diffObservation(this.responseBody);
-    //     console.log(this.diffObject);
-    //     this.loadingService.remove();
-    //     break;
-    // }
   }
 }

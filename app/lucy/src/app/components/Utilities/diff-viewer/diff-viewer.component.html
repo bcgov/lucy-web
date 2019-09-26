@@ -12,7 +12,7 @@
       <mat-list-item *ngFor="let change of changes; let j = index">
         <div class="container" [ngClass]="j % 2 === 0 ? 'even' : 'odd'">
           <div class="row">
-            <div class="col-6">{{ change.prettyName }}</div>
+            <div class="col-6 field-name">{{ change.prettyName }}</div>
             <div class="col-6">
               <div class="row">
                 <div class="before sign col-1">−</div>

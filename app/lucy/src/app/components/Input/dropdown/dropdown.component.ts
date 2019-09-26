@@ -140,7 +140,7 @@ export class DropdownComponent implements OnInit {
     this.filteredItems = [];
     console.log(`searching`);
     for (const item of this.items) {
-      if (item.name.toLowerCase().includes(search.toLowerCase())) {
+      if (item.name !== undefined && String(item.name).toLowerCase().includes(search.toLowerCase())) {
         this.filteredItems.push(item);
       }
     }

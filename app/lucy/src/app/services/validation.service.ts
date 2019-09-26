@@ -79,9 +79,6 @@ export class ValidationService {
    * @param latitude string - * use String(number) if needed.
    */
   public isValidLatitude(latitude: string) {
-    if (!this.hasMinDecimalPlaces(latitude, 5)) {
-      return false;
-    }
     return +latitude >= 48 && +latitude <= 61;
   }
 
@@ -91,9 +88,6 @@ export class ValidationService {
    * @param longitude string - * use String(number) if needed.
    */
   public isValidLongitude(longitude: string) {
-    if (!this.hasMinDecimalPlaces(longitude, 5)) {
-      return false;
-    }
     return +longitude >= -139 && +longitude <= -114;
   }
 
