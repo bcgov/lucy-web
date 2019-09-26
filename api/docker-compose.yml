@@ -1,12 +1,21 @@
 version: "3.5"
 
 services:
+# Application API Container and service
+ app_dependency:
+  image: ${PROJECT_NAME}-${TAG}-api-dep-img
+  container_name: ${PROJECT_NAME}-${TAG}-api-dep
+  build:
+   context: ./api_sources
+   dockerfile: .build/Dockerfile.node
+  volumes:
+    - npmcache:/opt/app-root/src/node_modules
  app_api:
   image: ${PROJECT_NAME}-${TAG}-api-img
   container_name: ${PROJECT_NAME}-${TAG}-api
   build:
    context: ./api_sources
-   dockerfile: Dockerfile.local
+   dockerfile: .build/Dockerfile.local
   ports:
    - ${API_PORT}:${API_PORT}
   environment:
@@ -17,17 +26,21 @@ services:
     - DB_PORT=${DB_PORT}
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
+    - VERSION=${VERSION}
+    - ENVIRONMENT=local
   volumes:
-    - ./api_sources:/home/nodejs/app
-
+    - ./api_sources:/opt/app-root/src
+    - npmcache:/opt/app-root/src/node_modules
   networks:
   - local-network
   links:
     - db
   depends_on:
     - db
+    - app_dependency
   restart: always
   command: ["npm", "run", "hotload"]
+# Application Local Database Container and service
  db:
   image: ${PROJECT_NAME}-${TAG}-postgress-img
   container_name: ${PROJECT_NAME}-${TAG}-db
@@ -35,7 +48,7 @@ services:
     context: ./.docker/db
     dockerfile: Dockerfile.local
   ports:
-    - 5435:5432
+    - 5432:5432
   environment:
     - POSTGRES_USER=${DB_USER}
     - POSTGRES_PASSWORD=${DB_PASS}
@@ -44,6 +57,7 @@ services:
     - local-network
   volumes:
     - postgres:/var/lib/postgresql/data
+# Application Local NGINX Service
  nginx:
   image: ${PROJECT_NAME}-${TAG}-nginx-img
   container_name: ${PROJECT_NAME}-${TAG}-nginx
@@ -58,6 +72,28 @@ services:
     - app_api
   networks:
     - local-network
+# Application Web component
+ app:
+  image: ${PROJECT_NAME}-${TAG}-app-img
+  container_name: ${PROJECT_NAME}-${TAG}-app
+  build:
+    context: ../app/lucy
+    dockerfile: .build/Dockerfile.local
+  ports:
+    - ${APP_PORT}:${APP_PORT}
+    - 3030:3030
+  volumes: 
+   - ../app/lucy/src:/opt/app-root/src/src
+  networks:
+    - local-network
+  depends_on:
+    - nginx
+  environment:
+    - APP_PORT=${APP_PORT}
+    - LOCAL_API_HOST=app_api:${API_PORT}
+    - ENVIRONMENT=local
+    - VERSION=${VERSION}
+# Application Local docker network
 networks:
  local-network:
   driver: bridge
@@ -65,4 +101,6 @@ networks:
 volumes:
   postgres:
     name: ${PROJECT_NAME}-${TAG}-vol-postgres
+  npmcache: 
+    name: ${PROJECT_NAME}-${TAG}-vol-npmcache
  

@@ -1,0 +1,21 @@
+.section-title {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+
+.sub-section-title {
+    color: #000000;
+    font-size: 17px;
+	font-weight: bold;
+	line-height: 22px;
+}
+
+.section-divider {
+    box-sizing: border-box;
+    height: 1px;
+    width: 100%;
+    border: 2px solid #E2A014;
+}

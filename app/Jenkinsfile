@@ -7,54 +7,75 @@ pipeline {
         stage('Build') {
             agent { label 'build' }
             steps {
-                script {
-                    echo "App {Changes}"
-                    def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -v '^/app/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
-                    echo "Change - $filesInThisCommitAsString"
+                echo "Empty steps"
+                /*script {
+                    echo "App Build Pipeline"
+                    def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^/app/|^app/|^api/|^/api/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
                     def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
-                    echo "${filesInThisCommitAsString}:${hasChangesInPath}"
                     if (!currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause') && !hasChangesInPath){
                         currentBuild.rawBuild.delete()
                         error("No changes detected in the path ('^app/')")
                     }
-                   
                 }
                 echo "Aborting all running jobs ..."
                 script {
                     abortAllPreviousBuildInProgress(currentBuild)
                 }
                 echo "Building ..."
-                sh "cd app/.pipeline && ./npmw ci && ./npmw run build -- --pr=${CHANGE_ID}"
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID}"*/
             }
         }
         stage('Deploy (DEV)') {
             agent { label 'deploy' }
             steps {
-                echo "Deploying ..."
-                sh "cd app/.pipeline && ./npmw ci && ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
+                echo "Empty stesp"
+                /*echo "Deploying ..."
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"*/
             }
         }
         stage('Deploy (TEST)') {
             agent { label 'deploy' }
-            input {
+            when {
+                branch 'staging'
+            }
+            steps {
+                echo "Empty steps"
+                /*echo "Deploying in TEST ..."
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"*/
+            }
+            /*input {
                 message "Should we continue with deployment to TEST?"
                 ok "Yes!"
             }
             steps {
                 echo "Deploying ..."
-                sh "cd app/.pipeline && ./npmw ci && ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
-            }
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
+            }*/
         }
         stage('Deploy (PROD)') {
             agent { label 'deploy' }
-            input {
+            when {
+                branch 'prod'
+            }
+            steps {
+                script {
+                    def IS_APPROVED = input(message: "Deploy to PROD?", ok: "yes", parameters: [string(name: 'IS_APPROVED', defaultValue: 'yes', description: 'Deploy to PROD?')])
+                    if (IS_APPROVED != 'yes') {
+                        currentBuild.result = "ABORTED"
+                        error "User cancelled"
+                    }
+                    echo "Deploying in PROD ..."
+                    sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
+                } 
+            }
+            /*input {
                 message "Should we continue with deployment to TEST?"
                 ok "Yes!"
             }
             steps {
                 echo "Deploying ..."
-                sh "cd app/.pipeline && ./npmw ci && ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
-            }
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
+            }*/
         }
     }
 }

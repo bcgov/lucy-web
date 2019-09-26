@@ -1,9 +1,30 @@
+# Sonar
+**/.scannerwork
+**/.sonar
+
+# Generated Swagger file
+**/swagger.raw.yaml
+swagger.raw.yaml
+
+# Sample file gen
+sample.sql
+sample-*.sql
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Dist
+**/.DS_Store
+.config
 .DS_Store
 dist-server/
 dist/
 _app_data/
+.temp/
+**/.temp/
+**/schemaspy
+
+# Node Demon
+**/.config/
+.config/
 
 
 **/dits-server
@@ -13,6 +34,8 @@ _app_data/
 coverage/
 **/coverage
 /www
+.nyc_output
+**/.nyc_output
 ### Windows template
 # Windows thumbnail cache files
 Thumbs.db

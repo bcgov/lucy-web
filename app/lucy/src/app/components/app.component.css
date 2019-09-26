@@ -1,3 +1,22 @@
 body {
   padding: 5px 2px 2px 2px;
 }
+
+
+.overlay{
+  background-color: rgba(255, 255, 255, 0.4);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+}
+
+.loading-icon-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}

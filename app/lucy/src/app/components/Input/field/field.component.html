@@ -1,0 +1,43 @@
+<!-- Editable -->
+<div *ngIf="!readonly" class="col-12 field">
+  <label *ngIf="multiline" class="field-header">{{header}}</label>
+
+    <!-- Single field - Not required -->
+    <mat-form-field *ngIf="!multiline && !required">
+        <input 
+         matInput placeholder="{{header}}"
+         [(ngModel)]="value"
+         [attr.id]="fieldId"
+         >
+    </mat-form-field>
+
+    <!-- Single field - Required -->
+    <mat-form-field *ngIf="!multiline && required">
+        <input 
+         matInput placeholder="{{header}}"
+         [(ngModel)]="value"
+         [attr.id]="fieldId"
+         [formControl]="fieldFormControl"
+         [errorStateMatcher]="matcher">
+          <mat-error *ngIf="fieldFormControl.hasError('required')">
+              {{header}} is <strong>required</strong>
+          </mat-error>
+    </mat-form-field>
+    
+  <!-- multiLine -->
+  <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control" [attr.id]="fieldId"
+    [ngClass]="isValid ? 'valid' : 'invalid'"
+    [readonly]="readonly"></textarea>
+</div>
+
+<!-- Read only -->
+<div *ngIf="readonly" class="col-12 field">
+  <label class="field-header">{{header}}</label>
+
+  <!-- Single Field -->
+  <input *ngIf="!multiline" type="text" [(ngModel)]="value" class="form-control view" [attr.id]="fieldId"
+    [readonly]="readonly"/>
+  <!-- multiLine -->
+  <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control" [attr.id]="fieldId"
+  [readonly]="readonly"></textarea>
+</div>

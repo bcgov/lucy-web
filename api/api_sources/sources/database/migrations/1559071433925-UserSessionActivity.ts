@@ -1,10 +1,39 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+//
+// Migration file for Session activity tables
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-05-20.
+/**
+ * Imports
+ */
+import { MigrationInterface, QueryRunner } from 'typeorm';
 import { DatabaseMigrationHelper } from '../migration.helpers';
 import { DefaultSessionActivityCodes} from '../initial-data';
-import { SessionActivitySchema, SessionActivityCodeSchema, UserSessionSchema} from '../database-schema'
+import { SessionActivitySchema, SessionActivityCodeSchema, UserSessionSchema} from '../database-schema';
 
+/**
+ * @description Generated Migration file for creation of Session activity table
+ * @export class UserSessionActivity1559071433925
+ */
 export class UserSessionActivity1559071433925 extends SessionActivitySchema implements MigrationInterface {
-
+    /**
+     * @description Up method
+     * @param QueryRunner queryRunner
+     * @return Promise<any>
+     */
     public async up(queryRunner: QueryRunner): Promise<any> {
         // Creating table session_activity_codes
         await queryRunner.query(`CREATE TABLE ${SessionActivityCodeSchema.schema.name} (
@@ -20,7 +49,7 @@ export class UserSessionActivity1559071433925 extends SessionActivitySchema impl
 
         // Put default values
         for (const code of DefaultSessionActivityCodes) {
-            await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB('session_activity_code',code));
+            await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB('session_activity_code', code));
         }
 
         // Create table Session activity
@@ -51,9 +80,16 @@ export class UserSessionActivity1559071433925 extends SessionActivitySchema impl
         ON DELETE CASCADE;`);
     }
 
+    /**
+     * @description  down method
+     * @param QueryRunner queryRunner
+     * @return Promise<any>
+     */
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(this.dropTable());
         await queryRunner.query(SessionActivityCodeSchema.shared.dropTable());
     }
-
 }
+
+// ----------------------------------------------------------------------------------------------------------------
+

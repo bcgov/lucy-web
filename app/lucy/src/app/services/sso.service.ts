@@ -33,8 +33,10 @@ export enum SSOLoginProvider {
 export class SsoService {
   private static instance: SsoService;
 
-  private code: string = "";
+  private code = ``;
   private refreshTimer = null;
+  private bearerToken: string | null = null;
+  private tokenExpiery: Date | null;
 
   constructor(private cookieService: CookieService, private httpClient: HttpClient, private activatedRoute: ActivatedRoute, private router: Router) {
     // If user is not authenticated, listen to route changes
@@ -140,17 +142,16 @@ export class SsoService {
    * Check if access token OR exiery token exist
    */
   public isAuthenticated(): boolean {
+    // console.log("\nChcecking is authenticated.\n")
     return (this.cookieService.check('accessToken') || this.cookieService.check('refreshToken'));
   }
 
   /**
-   * NOTE: This one is currently not used.
-   * 
    * Check if access token exists
    * otherwise check if it can be refreshed
    * 
    */
-  private async isAuthenticated2(): Promise<boolean> {
+  public async isAuthenticatedAsync(): Promise<boolean> {
     if (!this.cookieService.check('accessToken')) {
       // If access token is expired, check if the refresh token is still valid
       if (!this.cookieService.check('refreshToken')) {
@@ -172,18 +173,19 @@ export class SsoService {
    * @param provider SSOLoginProvider
    */
   public login(provider: SSOLoginProvider) {
-    switch(provider) { 
-      case SSOLoginProvider.idir: { 
-         window.open(this.SSO_idirLoginEndpoint(), "_self");
-         break; 
+    switch(provider) {
+      case SSOLoginProvider.idir: {
+         window.open(this.SSO_idirLoginEndpoint(), `_self`);
+         break;
       } 
-      case SSOLoginProvider.BCeID: { 
-         window.open(this.SSO_BCeidLoginEndpoint(), "_self");
-         break; 
-      } 
-      default: { 
-         window.open(this.SSO_LoginEndpoint(), "_self");
-         break; 
+      case SSOLoginProvider.BCeID: {
+         window.open(this.SSO_BCeidLoginEndpoint(), `_self`);
+         break;
+      }
+      default: {
+        console.log(`where am i`);
+         window.open(this.SSO_LoginEndpoint(), `_self`);
+         break;
       } 
    } 
   }
@@ -213,14 +215,14 @@ export class SsoService {
   /**
    * End session on Keycloak
    */
-  endKeycloakSession() {
+  private endKeycloakSession() {
     window.open(this.SSO_LogoutEndpoint(), "_self");
   }
 
   /**
    * Refresh Access token using refresh token
    */
-  private async refreshToken(): Promise<boolean> {
+  public async refreshToken(): Promise<boolean> {
     const result = await this.getAccessTokenFromRefreshToken(this.getRefreshToken());
     if (result.success) {
       this.storeAccessToken(result.accessToken, result.accessTokenExpiery);
@@ -412,13 +414,19 @@ export class SsoService {
   /**
    * Store access token in cookies
    * Also store token's expiery time in UTC format.
-   * @param token 
-   * @param expiery 
+   * @param token
+   * @param expiery
    */
   private storeAccessToken(token: string, expiery: number) {
+    this.bearerToken = token;
+    console.log(`Storing new token:`);
+    console.dir(this.bearerToken);
+    console.log(`////`);
+    console.log(this.getTokenInformation());
+    console.log(`////////////////////////////`);
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
-    const expieryDate = new Date(tokenExpieryInSconds)
-    const expieryDateUTC = expieryDate.toUTCString()
+    const expieryDate = new Date(tokenExpieryInSconds);
+    const expieryDateUTC = expieryDate.toUTCString();
     this.cookieService.set('accessToken', token, expieryDate);
     this.cookieService.set('accessTokenExpiery', expieryDateUTC, expieryDate);
     // TODO: consider using this.beginTokeRefreshTimer()
@@ -439,11 +447,15 @@ export class SsoService {
    * Return empty string if doesnt exist.
    */
   private getAccessToken(): string {
+    if (this.bearerToken !== null) {
+      return this.bearerToken;
+    }
     const token = this.cookieService.get('accessToken');
     if (token == undefined) {
       return "";
     } else {
-      return token
+      this.bearerToken = (token);
+      return token;
     }
   }
 
@@ -469,7 +481,7 @@ export class SsoService {
    */
   private convertUTCDateStringToMillisecondsFromNow(dateUTCString): number {
     if (dateUTCString == "") {
-      return -1
+      return -1;
     }
     const expieryDate = new Date(Date.parse(dateUTCString));
     return expieryDate.getTime() - new Date().getTime();
@@ -484,12 +496,12 @@ export class SsoService {
     if (token == undefined) {
       return "";
     } else {
-      return token
+      return token;
     }
   }
 
   /**
-   * Return qccess token with 'bearer' appended
+   * Return access token with 'bearer' appended
    */
   public getBearerAccessToken(): string {
     return ("Bearer " + this.getAccessToken());
@@ -498,7 +510,7 @@ export class SsoService {
   /**
    * Decode JWT token and return result
    */
-  private getTokenInformation() {
+  public getTokenInformation() {
     const token = this.getAccessToken();
     if (token == "") { return null };
     return jwtDecode(token);
@@ -510,7 +522,7 @@ export class SsoService {
   public getUsername(): string {
     const jwtDecoded = this.getTokenInformation();
     if (jwtDecoded == null) {
-      return undefined
+      return undefined;
     }
     const username = jwtDecoded['preferred_username'];
     return username;

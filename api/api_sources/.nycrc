@@ -1,0 +1,33 @@
+{
+    "all": true,
+    "cache": true,
+    "exclude": [
+        "coverage",
+        "**/editor.js",
+        "**/gulpfile.js",
+        "**/tasks.js",
+        "**/test/**",
+        "**/*_test.js",
+        "**/*.spec.ts",
+        "dist-server",
+        "**/__mock__",
+        "**/*.js",
+        "**/migrations",
+        "**/scripts",
+        "sources/database/migrations/*.ts"
+    ],
+    "extension": [
+        ".ts"
+    ],
+    "report-dir": "./coverage",
+    "reporter": [
+        "cobertura",
+        "html",
+        "text",
+        "text-summary",
+        "lcov",
+        "json",
+        "clover"
+    ],
+    "temp-directory": "./coverage/.nyc_output"
+}

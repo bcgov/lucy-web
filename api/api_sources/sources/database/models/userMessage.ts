@@ -1,10 +1,30 @@
+//
+// UserMessage DataModel
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-06-02.
 /**
- * User Message Model
+ * Imports
  */
 import {Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
 import { UserMessagesSchema, UserSchema } from '../database-schema';
 import { User } from './user';
 import { DataModelController } from '../data.model.controller';
+import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { BaseModel } from './baseModel';
 
 /**
  * @description Status of message
@@ -22,26 +42,38 @@ export enum UserMessageStatus {
 @Entity({
     name: UserMessagesSchema.schema.name
 })
-export class UserMessage {
+export class UserMessage extends BaseModel {
+    /**
+     * Columns
+     */
     @PrimaryGeneratedColumn()
+    @ModelProperty({type: PropertyType.number})
     message_id: number;
+
     @Column({
         name: UserMessagesSchema.schema.columns.title,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string, optional: true})
     title?: string;
+
     @Column({
         name: UserMessagesSchema.schema.columns.body,
         nullable: true
     })
+    @ModelProperty({type: PropertyType.string, optional: true})
     body?: string;
+
     @Column({
         name: UserMessagesSchema.schema.columns.type
     })
+    @ModelProperty({type: PropertyType.number})
     type: number;
+
     @Column({
         name: UserMessagesSchema.schema.columns.status
     })
+    @ModelProperty({type: PropertyType.number})
     status: number;
 
     // Relationship
@@ -51,6 +83,7 @@ export class UserMessage {
         name: UserMessagesSchema.schema.columns.refReceiverId,
         referencedColumnName: UserSchema.schema.columns.id
     })
+    @ModelProperty({type: PropertyType.object, ref: `User`})
     receiver: User;
 
     // Creator
@@ -59,6 +92,7 @@ export class UserMessage {
         name: UserMessagesSchema.schema.columns.refCreatorId,
         referencedColumnName: UserSchema.schema.columns.id
     })
+    @ModelProperty({type: PropertyType.object,  ref: `User`})
     creator: User;
 
 }
@@ -67,7 +101,12 @@ export class UserMessage {
  * @export class UserMessageController
  */
 export class UserMessageController extends DataModelController<UserMessage> {
+    /**
+     * @description Getter for shared instance
+     */
     public static get shared(): UserMessageController {
         return this.sharedInstance<UserMessage>(UserMessage, UserMessagesSchema) as UserMessageController;
     }
 }
+// ----------------------------------------------------------------------------------------------------------------
+
