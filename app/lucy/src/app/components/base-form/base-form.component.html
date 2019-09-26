@@ -103,7 +103,7 @@
   <br />
   <!-- Diff Viewer -->
   <div *ngIf="showdiffViewer" class="container form-body diff-container animated fadeInDown">
-      <app-diff-viewer (diffObject)="diffObject"></app-diff-viewer>
+      <app-diff-viewer [diffObject]="diffObject"></app-diff-viewer>
   </div>
   <br />
   <div class="container form-body animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'">

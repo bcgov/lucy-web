@@ -49,12 +49,11 @@ export class DiffViewerComponent implements OnInit {
     return this.changes.length;
   }
 
-  _diffObject: DiffResult;
+  private _diffObject: DiffResult;
   @Input() set diffObject(object: DiffResult) {
-    this._diffObject = object
+    this._diffObject = object;
     console.log(object);
   }
-
   get diffObject(): DiffResult {
     return this._diffObject;
   }
