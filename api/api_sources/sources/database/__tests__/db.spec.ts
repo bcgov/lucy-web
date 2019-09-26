@@ -17,8 +17,8 @@
 //
 // Created by Pushan Mitra on 2019-07-04.
 //
-import * as path from 'path';
-import * as fs from 'fs';
+// import * as path from 'path';
+// import * as fs from 'fs';
 import { should, expect } from 'chai';
 import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-database';
 import { defineColumn, createColumn, BaseTableSchema} from '../applicationSchemaInterface';
@@ -39,11 +39,11 @@ class TestSchema extends BaseTableSchema {
     }
 }
 
-class Test2Schema extends BaseTableSchema {
+/*class Test2Schema extends BaseTableSchema {
     get schemaFilePath(): string {
         return path.resolve(__dirname, '../database-schema/schema-files/sample.schema.yaml');
     }
-}
+}*/
 
 describe('Test for db utilities', () => {
     it('should return column create sql', () => {
@@ -77,18 +77,19 @@ describe('Test for db utilities', () => {
         should().exist(sql);
     });
 
-    it('should load and create sql from schema yaml', () => {
-        const schema = new Test2Schema();
-        const sql = schema.createTable();
-        // console.log(sql);
-        should().exist(sql);
-        schema.table.name = 'sample2_table';
-        schema.saveSchema();
-        schema.createMigrationFile(path.resolve(__dirname, '../database-schema/schema-sqls/sample.sql'));
-        fs.unlinkSync(path.resolve(__dirname, '../database-schema/schema-sqls/sample.sql'));
-
-        // schema.saveSchema(path.resolve(__dirname, '../database-schema/schema-files/sample2.schema.yaml'));
-    });
+    /*if (process.env.ENVIRONMENT === 'local') {
+        it('should load and create sql from schema yaml', () => {
+            const schema = new Test2Schema();
+            const sql = schema.createTable();
+            // console.log(sql);
+            should().exist(sql);
+            schema.table.name = 'sample2_table';
+            schema.saveSchema();
+            schema.createMigrationFile(path.resolve(__dirname, '../database-schema/schema-sqls/sample.sql'));
+            fs.unlinkSync(path.resolve(__dirname, '../database-schema/schema-sqls/sample.sql'));
+            // schema.saveSchema(path.resolve(__dirname, '../database-schema/schema-files/sample2.schema.yaml'));
+        });
+    }*/
 
     it('should load schema', () => {
         const pathOfSchema = getYAMLFilePath('observation.codes.schema.yaml');
