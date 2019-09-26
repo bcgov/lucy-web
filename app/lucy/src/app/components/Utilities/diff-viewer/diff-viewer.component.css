@@ -22,3 +22,8 @@
 .odd {
     background-color: rgba(51, 51, 51, 0.08);
 }
+
+.field-name {
+    display: flex;
+    align-items: center;
+}

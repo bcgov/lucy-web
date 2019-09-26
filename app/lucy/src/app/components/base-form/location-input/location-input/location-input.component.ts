@@ -116,7 +116,6 @@ export class LocationInputComponent implements OnInit {
     this.zoneChanged(String(converted.zone));
     this.northingsChanged(String(converted.x.toFixed(0)));
     this.eastingChanged(String(converted.y.toFixed(0)));
-
     this.setMapToObservationLocation();
   }
 
@@ -137,12 +136,9 @@ export class LocationInputComponent implements OnInit {
    * @param value latitude
    */
   latChanged(value: string) {
-    if (this.object) {
-      if (this.validation.isValidLatitude(value)) {
-        this.object.latitude.value = +value;
-      } else {
-        this.object.latitude.value = undefined;
-      }
+    if (this.object && Number(value) && this.validation.isValidLatitude(value)) {
+      this.object.latitude.value = value;
+      console.log(this.object.latitude.value);
     }
     this.latLongChanged();
   }
@@ -152,12 +148,9 @@ export class LocationInputComponent implements OnInit {
    * @param value longitude
    */
   longChanged(value: string) {
-    if (this.object) {
-      if (this.validation.isValidLongitude(value)) {
-        this.object.longitude.value = +value;
-      } else {
-        this.object.longitude.value = undefined;
-      }
+    if (this.object && Number(value) && this.validation.isValidLongitude(value)) {
+      this.object.longitude.value = value;
+      console.log(this.object.longitude.value);
     }
     this.latLongChanged();
   }

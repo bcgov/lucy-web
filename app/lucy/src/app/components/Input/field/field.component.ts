@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
 import { FormControl, FormGroupDirective, NgForm, Validators, ValidatorFn } from '@angular/forms';
@@ -18,8 +18,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./field.component.css']
 })
 
-export class FieldComponent implements OnInit, AfterViewInit {
-
+export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
+  private isReady = false;
   // Output
   @Output() valueChanged = new EventEmitter<string>();
   // Optional Input
@@ -28,6 +28,8 @@ export class FieldComponent implements OnInit, AfterViewInit {
   @Input() multiline = false;
   // Field header
   @Input() header = '';
+  // Field header
+  @Input() tabIndex = 0;
 
   ///// Verification
   private _verification: any;
@@ -84,7 +86,18 @@ export class FieldComponent implements OnInit, AfterViewInit {
   // Set
   @Input() set value(value: string) {
     this._value = value;
-    this.valueChanged.emit(value);
+    if (!this.isReady) {
+      return;
+    }
+    if (this.fieldFormControl) {
+      if (this.fieldFormControl.valid) {
+        this.valueChanged.emit(value);
+      } else {
+        // console.log(`there is an error ${this.header} -> ${value}`);
+      }
+    } else {
+      this.valueChanged.emit(value);
+    }
   }
   ////////////////////
 
@@ -100,7 +113,7 @@ export class FieldComponent implements OnInit, AfterViewInit {
   }
 
   ///// Form Control
-  private _fieldFormControl: FormControl;
+  private _fieldFormControl: FormControl = new FormControl();
   // Get
   get fieldFormControl(): FormControl {
     return this._fieldFormControl;
@@ -120,6 +133,10 @@ export class FieldComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.setFormControlVerification();
+  }
+
+  ngAfterViewChecked(): void {
+    this.isReady = true;
   }
 
   /**
@@ -154,8 +171,25 @@ export class FieldComponent implements OnInit, AfterViewInit {
     if (this.verification.isLongitude) {
       validatorOptions.push(this.validLongitude);
     }
+
+    // Future feature
+    // if (this.verification.custom) { 
+    //   validatorOptions.push(this.customValidation.bind(this));
+    // }
+
     this.fieldFormControl = new FormControl(this.value, validatorOptions);
   }
+
+  // Future feature
+  // customValidation(control: FormControl): { [key: string]: any; } {
+  //   if (this.verification.custom) {
+  //     for (const rules of this.verification.custom) {
+  //       if (this.validation[rules] && typeof this.validation[rules] === 'function') {
+  //         this.validation[rules]
+  //       }
+  //     }
+  //   }
+  // }
 
   /**
    * Custom Form Control validation fucntion
