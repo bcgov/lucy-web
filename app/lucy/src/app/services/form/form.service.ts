@@ -58,7 +58,7 @@ export interface FormConfig {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: `root`
 })
 export class FormService {
   constructor(
@@ -154,7 +154,7 @@ export class FormService {
         );
       }
       default: {
-        console.log("Case not handled");
+        console.log(`Case not handled`);
       }
     }
   }
@@ -217,7 +217,7 @@ export class FormService {
       }
       default: {
         console.log(
-          "**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**"
+          `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
         );
         this.errorService.show(ErrorType.NotFound);
         return undefined;
@@ -455,16 +455,16 @@ export class FormService {
 
   private isLatitude(headerOrKey: string): boolean {
     return (
-      headerOrKey.toLocaleLowerCase() === "lat" ||
-      headerOrKey.toLocaleLowerCase() === "latitude"
+      headerOrKey.toLocaleLowerCase() === `lat` ||
+      headerOrKey.toLocaleLowerCase() === `latitude`
     );
   }
 
   private isLongitude(headerOrKey: string): boolean {
     return (
-      headerOrKey.toLocaleLowerCase() === "long" ||
-      headerOrKey.toLocaleLowerCase() === "longitude" ||
-      headerOrKey.toLocaleLowerCase() === "lon"
+      headerOrKey.toLocaleLowerCase() === `long` ||
+      headerOrKey.toLocaleLowerCase() === `longitude` ||
+      headerOrKey.toLocaleLowerCase() === `lon`
     );
   }
 
@@ -528,7 +528,7 @@ export class FormService {
     const dropdowns = await this.dropdownfor(codeTableName);
     let selectedID: number;
     for (const key in selectedObject) {
-      if (key.toLowerCase().indexOf("id") !== -1) {
+      if (key.toLowerCase().indexOf(`id`) !== -1) {
         selectedID = selectedObject[key];
         break;
       }
@@ -540,7 +540,7 @@ export class FormService {
       const dropdown = item.object;
       for (const key in dropdown) {
         if (
-          key.toLowerCase().indexOf("id") !== -1 &&
+          key.toLowerCase().indexOf(`id`) !== -1 &&
           dropdown[key] === selectedID
         ) {
           return item;
@@ -563,18 +563,20 @@ export class FormService {
 
     // set id & date
     for (const key in object) {
-      if (key.toLowerCase().indexOf("id") !== -1) {
-        configuration["objectId"] = object[key];
-      } else if (key.toLowerCase().indexOf("date") !== -1) {
-        configuration["objectDate"] = moment(
-          moment(object[key], "YYYY-MM-DD").toDate()
-        ).format("dddd MMM DD YYYY");
-      }
-      if (
-        configuration["objectId"] !== undefined &&
-        configuration["objectDate"] !== undefined
-      ) {
-        break;
+      if(object.hasOwnProperty(key)) {
+        if (key.toLowerCase().indexOf(`id`) !== -1) {
+          configuration[`objectId`] = object[key];
+        } else if (key.toLowerCase().indexOf(`date`) !== -1) {
+          configuration[`objectDate`] = moment(
+            moment(object[key], `YYYY-MM-DD`).toDate()
+          ).format(`dddd MMM DD YYYY`);
+        }
+        if (
+          configuration[`objectId`] !== undefined &&
+          configuration[`objectDate`] !== undefined
+        ) {
+          break;
+        }
       }
     }
 
@@ -637,7 +639,7 @@ export class FormService {
       while (decimals.length < 5) {
         decimals = `${decimals}0`;
       }
-      return `${separated[0]}${decimals}`;
+      return `${separated[0]}.${decimals}`;
     }
 
     // at this point it should be fine as is
@@ -708,9 +710,6 @@ export class FormService {
     // Setup
     const currentId = this.router.routeId;
     const endpoint = config.api;
-    // clean body will cast the correct type on the fields
-    const cleanNewBody = this.cleanBodyForSubmission(newBody, config);
-    console.dir(cleanNewBody);
     // 1) Fetch the latest original object
     const original = await this.getObjectWithId(endpoint, currentId);
     // 2) fetch the config
@@ -731,7 +730,7 @@ export class FormService {
     // 6) get json body for merged ui condig
     const originalJSONBody = this.generateBodyForMergedConfig(mergedUIConfig);
     // 7) diff with body in params
-    const diffResult = this.diff(originalJSONBody, cleanNewBody);
+    const diffResult = this.diff(originalJSONBody, newBody);
     if (!diffResult) {
       console.log(`Couldnt diff`);
       return undefined;
@@ -746,7 +745,7 @@ export class FormService {
     const changed = changedKeys.length > 1;
     return {
       changed: changed,
-      newObject: cleanNewBody,
+      newObject: newBody,
       originalObject: originalJSONBody,
       diffMessage: changedKeys,
       changes: diffResult
