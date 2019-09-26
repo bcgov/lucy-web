@@ -1,0 +1,33 @@
+FROM node:11.0.0
+
+RUN apt-get update
+RUN npm install -g npm
+
+# Create app directory
+
+ENV HOME_ROOT=/opt/app-root
+ENV HOME=/opt/app-root/src
+
+RUN mkdir -p $HOME
+
+WORKDIR $HOME_ROOT
+
+WORKDIR $HOME
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+
+# Bundle app source
+COPY ./ .
+
+# Cleaning any existing generated file
+
+
+VOLUME ${HOME}
+
+
+#ENTRYPOINT [ "npm", "run", "docker_start" ]
+
+CMD [ "npm", "run", "hotload" ]
+#ENTRYPOINT /usr/bin/tail -f /dev/null

@@ -1,0 +1,107 @@
+.view-title-section {
+    background-color: #F7F7F7;
+    position: sticky;
+    top:0;
+    /* height: 100px; */
+    padding-top: 20px;
+    padding-bottom: 20px;
+    align-items: center;
+    z-index:1;
+}
+
+.view-title {
+    height: 34px;
+	color: #000000;
+	font-size: 28px;
+	font-weight: bold;
+    line-height: 34px;
+}
+
+.map-box-partial {
+    height: 400px;
+}
+
+.map-box-full {
+    height: 80vh;
+}
+
+.toggle-btn-on {
+    height: 32px;
+    width: 32px;
+    background-color: #000000;
+    color: #D8D8D8;
+}
+
+.toggle-btn-off {
+    height: 32px;
+	width: 32px;
+    background-color: #D8D8D8;
+    color: #000000;
+    border-radius: 5;
+}
+
+.left-toggle {
+    border-top-left-radius: 20%;
+    border-bottom-left-radius: 20%;
+}
+
+.right-toggle {
+    border-top-right-radius: 20%;
+    border-bottom-right-radius: 20%;
+}
+
+.action-btn {
+	height: 29px;
+	color: #000000;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16px;
+    text-align: center;
+    border: 1px solid #000000;
+    width: 100%;
+}
+
+.table-header {
+    background-color: #F7F7F7;
+}
+
+.db-view-toggle {
+    max-width: 300px;
+}
+
+.header-container {
+    background: #002C71;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.spacer-toolbar {
+    flex: 1 1 auto;
+}
+
+.action-buttons {
+    padding: 0 14px;
+}
+
+.view-title {
+	color: #FFFFFF;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 29px;
+}
+
+.active-btn {
+    color: #FFFFFF;
+}
+
+.inactive-btn {
+    color: #5C668C;
+}
+
+.action-icon {
+    font-size: 15px;
+}
+
+table {
+    width: 100%;
+}

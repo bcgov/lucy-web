@@ -1,11 +1,16 @@
 // Admin related schemas
+import { ApplicationTable } from '../../libs/core-database';
+import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
 
-import { ApplicationTable, BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
-
+/**
+ * @description Schema Class to design table for request access level change from a user
+ * @export class RequestAccessTableSchema
+ */
 export class RequestAccessTableSchema extends BaseTableSchema {
     defineTable() {
         const table: ApplicationTable = super.defineTable();
         table.name = 'access_request';
+        table.description = 'Table to store requests of access level change for a user. Request will be handle by admin';
         table.columnsDefinition = {
             id: defineColumn('request_id', 'Auto generated incremental primary key column'),
             requestNote: defineColumn('request_note', 'Note with request'),

@@ -1,79 +1,130 @@
-import * as path from 'path'
+/**
+ * Application Con figuration
+ */
+import * as path from 'path';
 import * as assert from 'assert';
 declare const process: any;
 declare const __dirname: any;
 
+/**
+ * @description Application configuration class
+ */
 class AppConfiguration {
-    
+    // Shared instance
     private static instance: AppConfiguration;
 
-    public port: number = 0;
-    public host: string = '127.0.0.1';
-    public secure: boolean = false;
+    // Instance variables
+    public port = 0;
+    public host = '127.0.0.1';
+    public secure = false;
     public appName: string = process.env.PROJECT_NAME || 'lucy';
     public dbs: string[] = ['templateDB'];
 
-    public static getInstance() {
+    /**
+     * @description Getter for shard instance
+     * @return AppConfiguration
+     */
+    public static getInstance(): AppConfiguration {
         return this.instance || (this.instance = new this());
     }
 
+    /**
+     * @description Constructing
+     */
     constructor() {
         this.port = (process.env.PORT || 3001);
         this.host = process.env.HOST || '127.0.0.1';
     }
-    // environments:  = ['local-dev', 'docker-dev', 'prod']
 
+    /**
+     * @description Get Node Env
+     */
     public getEnv = () => {
         return process.env.NODE_ENV;
     }
 
+    /**
+     * @description Retry delay
+     */
     public get retryDelay(): number {
         return 10000;
     }
 
-    
+    /**
+     * @description Check env is docker or not
+     */
     public get isDocker(): boolean {
         return this.getEnv() === 'docker-dev';
     }
 
+    /**
+     * @description Check env is production or not
+     */
     public get isProduction(): boolean {
-        return process.env.ENVIRONMENT === 'production'
+        return process.env.ENVIRONMENT === 'production';
     }
 
+    /**
+     * @description Database user name
+     */
     public get dbUser(): string  {
         return process.env.DB_USER || 'application';
     }
 
+    /**
+     * @description Database password
+     */
     public get dbPassword(): string {
         return process.env.DB_PASS || 'lucy';
     }
 
+    /**
+     * @description Database name
+     */
     public get dbName(): string {
         return process.env.DB_DATABASE || 'app_dev';
     }
 
+    /**
+     * @description Database host name
+     */
     public get dbHost(): string {
-        return process.env.DB_HOST || ( this.isDocker === true ? 'db' : 'localhost')
+        return process.env.DB_HOST || ( this.isDocker === true ? 'db' : 'localhost');
     }
 
 
+    /**
+     * @description Path for application data
+     */
     public get dataDirPath(): string {
         return path.resolve(__dirname, '../../_app_data');
     }
 
+    /**
+     * @description Application certificate url
+     */
     public get certificateURL(): string {
         assert(process.env.APP_CERTIFICATE_URL, `No App Certificate url`);
         return process.env.APP_CERTIFICATE_URL;
     }
 
+    /**
+     * @description User session timeout
+     */
     public get sessionLifeTime(): number {
-        return (86400 * 1000)
+        return (86400 * 1000);
     }
 
+    /**
+     * @description Flag to check session token expiry
+     */
     public get bypassTokenExpiry(): boolean {
         return true;
     }
-
 }
 
+/**
+ * @description Shared AppConfig instance
+ * @export AppConfiguration
+ */
 export default AppConfiguration.getInstance();

@@ -1,6 +1,23 @@
-/**
- *  RetryManager
- */
+//
+// Retry Manager
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-05-10.
+
+// @IMPORT
 import { LoggerBase } from '../logger';
 /**
  * @description RetryManager class to retry any action on given object with specified delay
@@ -31,7 +48,7 @@ export class RetryManager<T> extends LoggerBase {
             // RetryManager.logger.info(` // ** --- Will try [${this.key}] with retry count: ${this.noOfRetry}`);
             this.object[this.key]().then((data?: T) => {
                 callback(data);
-            }).catch((err: any)=> {
+            }).catch((err: any) => {
                 this.noOfRetry = this.noOfRetry + 1;
                 this.error = err;
                 setTimeout(() => {

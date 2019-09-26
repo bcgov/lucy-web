@@ -25,7 +25,7 @@ objects:
     labels: null
     name: ${NAME}${SUFFIX}
   spec:
-    replicas: 1
+    replicas: "${{REPLICAS}}"
     revisionHistoryLimit: 10
     selector:
       deploymentConfig: ${NAME}${SUFFIX}
@@ -33,7 +33,13 @@ objects:
       activeDeadlineSeconds: 21600
       recreateParams:
         timeoutSeconds: 600
-      resources: {}
+      resources: 
+        limits:
+          cpu: 750m
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 1Gi
       type: Recreate
     template:
       metadata:
@@ -45,7 +51,7 @@ objects:
         containers:
         - env:
           - name: DB_HOST
-            value: lucy-db
+            value: ${DB_SERVICE_NAME}
           - name: DB_USER
             valueFrom:
               secretKeyRef:
@@ -64,21 +70,53 @@ objects:
           - name: DB_PORT
             value: "5432"
           - name: APP_CERTIFICATE_URL
-            value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+            value: ${CERTIFICATE_URL}
+          - name: CHANGE_VERSION
+            value: ${CHANGE_ID}
+          - name: ENVIRONMENT
+            value: ${ENVIRONMENT}
+          - name: VERSION
+            value: ${VERSION}
           image: " "
           imagePullPolicy: Always
           name: api
           ports:
-          - containerPort: 3001
+          - containerPort: "${{PORT}}"
             protocol: TCP
           - containerPort: 8080
             protocol: TCP
-          resources: {}
+          resources: 
+            limits:
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
+            requests:
+              cpu: ${CPU_REQ}
+              memory: ${MEMORY_REQ}
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /api/misc/version
+              port: 3001
+              scheme: HTTP
+            initialDelaySeconds: 140
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 20
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /api/misc/version
+              port: 3001
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 20
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
           - mountPath: /opt/app-root/app
-            name: lucy-api-test-1
+            name: ${NAME}${SUFFIX}
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -86,7 +124,7 @@ objects:
         terminationGracePeriodSeconds: 30
         volumes:
         - emptyDir: {}
-          name: lucy-api-test-1
+          name: ${NAME}${SUFFIX}
     test: false
     triggers:
     - imageChangeParams:
@@ -113,7 +151,7 @@ objects:
   kind: Secret
   metadata:
     annotations:
-      as-copy-of: lucy-db
+      as-copy-of: ${DB_SERVICE_NAME}
     creationTimestamp: null
     name: ${NAME}${SUFFIX}
   type: Opaque
@@ -126,14 +164,14 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     ports:
-    - name: 3001-tcp
-      port: 3001
-      protocol: TCP
-      targetPort: 3001
-    - name: 8080-tcp
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
+      - name: ${NAME}-${APP_PORT_DEFAULT}
+        port: "${{PORT}}"
+        protocol: TCP
+        targetPort: "${{PORT}}"
+      - name: ${APP_PORT_OTHER}
+        port: 8080
+        protocol: TCP
+        targetPort: 8080
     selector:
       deploymentconfig: ${NAME}${SUFFIX}
     sessionAffinity: None
@@ -150,7 +188,7 @@ objects:
   spec:
     host: ${HOST}
     port:
-      targetPort: 3001-tcp
+      targetPort: ${NAME}-${APP_PORT_DEFAULT}
     to:
       kind: Service
       name: ${NAME}${SUFFIX}
@@ -164,9 +202,43 @@ metadata:
   selfLink: ""
 parameters:
 - name: NAME
-  value: lucy-api
+  value: invasivesbc-api
 - name: SUFFIX
   value: "-dev"
 - name: VERSION
+  description: Version of the application
   value: "1.0.0"
 - name: HOST
+  description: Host name of the application
+  required: true
+- name: CHANGE_ID
+  description: Change id of the project. This will help to pull image stream
+  required: true
+  value: "0"
+- name: DB_SERVICE_NAME
+  description: 'Database service name associated  with deployment'
+  required: true
+- name: ENVIRONMENT
+  description: Application Environment type variable
+  required: true
+  value: 'dev'
+- name: CERTIFICATE_URL
+  description: Authentication certificate urls
+  required: true
+  value: "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+- name: CPU_REQ
+  value: '500m'
+- name: CPU_LIMIT
+  value: '750m'
+- name: MEMORY_REQ
+  value: '1Gi'
+- name: MEMORY_LIMIT
+  value: '2Gi'
+- name: REPLICAS
+  value: '1'
+- name: APP_PORT_DEFAULT
+  value: '3001-tcp'
+- name: APP_PORT_OTHER
+  value: '8080-tcp'
+- name: PORT
+  value: '3001'

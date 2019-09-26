@@ -1,10 +1,27 @@
+//
+// Request Access and User Message Factory
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-06-3.
 /**
- * Request Access and User Message Factory
+ * Imports
  */
 import * as faker from 'faker';
-
 import { userFactory} from './userFactory';
-import { RequestAccess, RequestAccessController, RoleCodeController, User, RolesCodeValue, UserMessageController } from '../models';
+import { RequestAccess, RequestAccessController, RoleCodeController, User, RolesCodeValue, UserMessageController, UserMessageStatus } from '../models';
 import { UserMessage } from '../models';
 
 /**
@@ -42,7 +59,7 @@ export const userMessageFactory = async (receiverIp?: User, creatorIp?: User, no
     const message: UserMessage = UserMessageController.shared.create();
     message.body = faker.random.word();
     message.title = faker.random.word();
-    message.status = 0;
+    message.status = UserMessageStatus.unseen;
     message.type = 0;
     message.receiver = receiver;
     message.creator = creator;

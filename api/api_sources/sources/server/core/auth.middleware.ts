@@ -1,4 +1,24 @@
-// Application Auth Middleware
+//
+// Auth Middleware
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-06-6.
+/**
+ * Imports
+ */
 import * as passport from 'passport';
 import * as express from 'express';
 import * as assert from 'assert';
@@ -9,6 +29,10 @@ import { LoggerBase } from '../logger';
 import { errorBody } from './common.error.handler';
 import { BCHelperLib } from '../../libs/utilities/bc.helpers';
 
+/**
+ * @description Model interface for Middleware result
+ * @export interface MiddlewareValidationResult
+ */
 export interface MiddlewareValidationResult {
     message?: string;
     code?: number;
@@ -63,14 +87,12 @@ export class ApplicationAuthMiddleware extends LoggerBase {
     async _tokenCallback(request: express.Request, payload: any, done: any) {
         const { errorWithCode } = BCHelperLib.getCommonUtility();
         try {
-            // Get user info
+             // Get user info
+             // ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
              const { preferred_username, email, family_name, given_name} = payload;
-             assert(preferred_username, 'JWT payload preferred_username is missing');
-             assert(email, 'JWT payload email is missing');
-             assert(family_name, 'JWT payload family_name is missing');
-             assert(given_name, 'JWT payload given_name is missing');
-             const api = request.originalUrl;
-             ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
+             assert((preferred_username || email), `Email And Preferred user name is missing from payload\n ${JSON.stringify(payload)}`);
+
+             const api = `${request.originalUrl}[${request.method}]`;
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
@@ -87,23 +109,36 @@ export class ApplicationAuthMiddleware extends LoggerBase {
 
              // Get user
              ApplicationAuthMiddleware.logger.info(`${api} | Getting user`);
-             let user: User = await UserDataController.shared.fetchOne({email: email});
+             let user: User;
+             if (preferred_username && email) {
+                ApplicationAuthMiddleware.logger.info(`${api} | Fetching using preferred_username => ${preferred_username}`);
+                 user = await UserDataController.shared.fetchOne({preferredUsername: preferred_username});
+                 if (!user) {
+                    ApplicationAuthMiddleware.logger.info(`${api} | Fetching using email => ${email}`);
+                    user = await UserDataController.shared.fetchOne({email: email});
+                 }
+             } else {
+                 ApplicationAuthMiddleware.logger.info(`${api} | Fetching user by preferredUsername: ${preferred_username}
+                  - *** - \n[ISSUE]*: possibly email is missing from payload: \n${JSON.stringify(payload)}`);
+                 user = await UserDataController.shared.fetchOne({ preferredUsername: preferred_username});
+             }
              if (!user) {
                  ApplicationAuthMiddleware.logger.info(`${api} | Creating new user with email and username: {${email}, ${preferred_username}}`);
 
                  // Creating new user with viewer role
                  user = UserDataController.shared.create();
-                 user.email = email;
-                 user.preferredUsername = preferred_username;
-                 user.firstName = given_name;
-                 user.lastName = family_name;
+                 user.email = email || preferred_username;
+                 user.preferredUsername = preferred_username || email;
+                 user.firstName = given_name || 'Test';
+                 user.lastName = family_name || 'User';
                  user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
                  user.accountStatus = AccountStatus.active;
                  await UserDataController.shared.saveInDB(user);
              } else {
                  // Update user data if require
-                 if (user.preferredUsername !== preferred_username) {
-                    user.preferredUsername = preferred_username;
+                 if (user.preferredUsername !== preferred_username || user.email !== email) {
+                    user.preferredUsername = preferred_username || user.preferredUsername;
+                    user.email = email || user.email;
                     user.firstName = given_name;
                     user.lastName = family_name;
                     user.accountStatus = AccountStatus.active;
@@ -216,4 +251,11 @@ export const adminOnlyRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin]);
 };
 
-// -----------------
+/**
+ * @description Route For Editor
+ * @export closure writerOnlyRoute
+ */
+export const writerOnlyRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]);
+};
+// -----------------------------------------------------------------------------------------------------------

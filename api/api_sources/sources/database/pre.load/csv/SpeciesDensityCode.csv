@@ -1,0 +1,6 @@
+code,description
+LOW,Less than 1 plant per square meter
+MED,2-5 plants per square meter
+HIGH,6-10 plants per square meter
+DENSE,More than 10 plants per square meter 
+

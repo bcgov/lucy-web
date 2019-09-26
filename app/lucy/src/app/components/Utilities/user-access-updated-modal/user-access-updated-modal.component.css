@@ -1,0 +1,42 @@
+.msg-modal-btn {
+    width: 80%;
+}
+
+.user-access-level {
+    text-align: center;
+    border: 1px solid #CCCCCC;
+    background-color: #F7F7F7;
+    padding: 5px;
+    border-radius: 9px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.role {
+    color: #000000;
+    font-size: 17px;
+    line-height: 22px;
+}
+
+.access-message {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 22px;
+    text-align: center;
+}
+
+.access-response-header {
+    color: #000000;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 18px;
+    text-align: center;
+}
+
+.access-response-body {
+    color: #333333;
+    font-size: 15px;
+    line-height: 18px;
+    text-align: center;
+}

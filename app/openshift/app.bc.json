@@ -4,9 +4,9 @@
     "metadata": {
         "creationTimestamp": null,
         "labels": {
-            "build": "lucy-app"
+            "build": "invasivebc-app"
         },
-        "name": "lucy-app"
+        "name": "invasivebc-app"
     },
     "parameters": [
         {
@@ -14,7 +14,7 @@
           "displayName": "Name",
           "description": "A suffix appended to all objects",
           "required": true,
-          "value": "lucy-app"
+          "value": "invasivebc-app"
         },
         {
           "name": "SUFFIX",
@@ -41,7 +41,7 @@
         {
           "name": "SOURCE_REPOSITORY_REF",
           "required": false,
-          "value": "dev-api"
+          "value": "dev"
         }, 
         {
           "name": "SOURCE_IMAGE_NAME",
@@ -128,7 +128,7 @@
                 "postCommit": {},
                 "resources": {
                     "limits": {
-                        "cpu": "1",
+                        "cpu": "1250m",
                         "memory": "2Gi"
                     },
                     "requests": {

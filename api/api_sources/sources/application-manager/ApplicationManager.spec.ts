@@ -1,7 +1,7 @@
 //
-// SecureImage
+// Test
 //
-// Copyright © 2018 Province of British Columbia
+// Copyright © 2019 Province of British Columbia
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 //
 // Created by Pushan Mitra on 2019-05-10.
 //
-
+import { expect} from 'chai';
 import { ApplicationManager } from './ApplicationManager';
 
 
 // Test
 describe('application manager', () => {
-    test('test shared application manager', () => {
+    it('test shared application manager', () => {
         const appManager = ApplicationManager.shared;
-        expect(appManager).toBeDefined();
+        expect(appManager).not.equal(undefined);
     });
 });

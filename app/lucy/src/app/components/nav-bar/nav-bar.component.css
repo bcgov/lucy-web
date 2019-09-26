@@ -1,28 +1,78 @@
-.app-navbar {
-  margin: 10px;
-  border-bottom: 1px solid black;
-  background: #333333;
+.gov-nav {
+  background: #FFFFFF;
 }
 
 .title-app {
-  font-style: normal;
-  font-weight: 600;
-  line-height: 23px;
-  font-size: 18px;
-  letter-spacing: -0.434118px;
-  color: #ffffff;
+	color: #002C71;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 29px;
 }
 
-.circle {
-  border-radius: 2px;
-  display: flex;
-  flex-wrap: wrap;
-  background: #d6d6d6;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+.spacer-toolbar {
+  flex: 1 1 auto;
 }
 
-.dropdown-toggle::after {
-  display:none;
+.navbar-nav > li{
+  margin-left:5px;
+  margin-right:5px;
+}
+
+.mat-card-title {
+  font-size: 16px;
+}
+
+.user-access-level {
+  background-color: #F7F7F7;
+  padding: 5px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+
+  /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+  .container {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 100%;
+  }
+}
+
+
+@media (max-width: 992px) {
+  /* CSS that should be displayed if width is equal to or smaller than 992px goes here */
+  .user-actions-large {
+      /* hide sidebar */
+      display: none;
+  }
+
+  .user-actions-menu {
+    /* hide sidebar */
+    display: flex;
+  }
+}
+
+@media (min-width: 992px) {
+
+  /* CSS that should be displayed if width is equal to or bigger than 992px goes here */
+  .user-actions-large {
+      /* hide sidebar */
+      display: flex;
+  }
+
+  .user-actions-menu {
+    /* hide sidebar */
+    display: none;
+  }
+}
+
+.menu-item-on {
+  color: #002C71;
+  font-weight: bold;
+}
+
+.menu-item-off {
+  color: #333333;
+  font-weight: normal;
 }

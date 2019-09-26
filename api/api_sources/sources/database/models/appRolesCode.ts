@@ -1,14 +1,34 @@
-// Model File
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-
+//
+// RoleCode DataModel
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-06-02.
+/**
+ * Imports
+ */
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 // Local Import
 import { BaseModel } from './baseModel';
 import { DataModelController } from '../data.model.controller';
 import { RolesCodeTableSchema} from '../database-schema';
 
 /**
- * LoginAccessCodeValues
- * Value for different Access codes
+ *
+ * @description Value for different Access codes
+ * @export enum RolesCodeValue
  */
 export enum RolesCodeValue {
     admin = 'ADM',
@@ -17,6 +37,10 @@ export enum RolesCodeValue {
     superUser = 'SUP'
 }
 
+/**
+ * @description Entity model class for RoleCode
+ * @export class RolesCode
+ */
 @Entity({
     name: RolesCodeTableSchema.schema.name
 })
@@ -44,8 +68,15 @@ export class RolesCode extends BaseModel {
     }
 }
 
+/**
+ * @description Data Model Controller for RoleCode
+ * @export class RoleCodeController
+ */
 export class RoleCodeController extends DataModelController<RolesCode> {
 
+    /**
+     * @description Getter for shared instance
+     */
     public static get shared(): RoleCodeController {
         return this.sharedInstance<RolesCode>(RolesCode, RolesCodeTableSchema) as RoleCodeController;
     }
@@ -56,4 +87,5 @@ export class RoleCodeController extends DataModelController<RolesCode> {
         return codeValue;
     }
 }
+// ----------------------------------------------------------------------------------------------------------------
 

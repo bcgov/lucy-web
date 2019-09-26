@@ -1,10 +1,26 @@
+//
+// Typeorm Database connection manager class
+//
+// Copyright © 2019 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Created by Pushan Mitra on 2019-05-10.
 /**
- * Database Manager
+ * Imports
  */
 import {createConnection, Connection} from 'typeorm';
 import { LoggerBase} from '../server/logger';
-
-// import { User, UserRole } from './models/User';
 import { SeedManager } from './seed.manager';
 const dbConfig = require('../../ormconfig');
 
@@ -51,7 +67,8 @@ export class DBManager extends LoggerBase {
             });
         }
         return new Promise<boolean>((resolve, reject) => {
-            createConnection().then((connection: Connection) => {
+            DBManager.logger.info('Connecting DB ...');
+            createConnection(dbConfig).then((connection: Connection) => {
                 this.connection = connection;
                 // DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
                 resolve(true);
@@ -59,7 +76,7 @@ export class DBManager extends LoggerBase {
                 DBManager.logger.error(`[DB Connection] Error: ${err}`);
                 DBManager.logger.error(`[DB Config]: ${JSON.stringify(dbConfig)}`);
 
-                // Try to connect with options directly 
+                // Try to connect with options directly
                 createConnection(dbConfig).then((connection: Connection) => {
                     this.connection = connection;
                     DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
