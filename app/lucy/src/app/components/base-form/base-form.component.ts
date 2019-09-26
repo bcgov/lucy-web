@@ -153,7 +153,14 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._config = object;
   }
 
-  diffObject: DiffResult;
+
+  private _diffObject: DiffResult;
+  get diffObject(): DiffResult {
+    return this._diffObject;
+  }
+  set diffObject(object: DiffResult) {
+    this._diffObject = object;
+  }
 
   get canSubmit(): boolean {
     if (!this.config || !this.responseBody) {
@@ -356,7 +363,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   async createDiffMessage() {
     this.loadingService.add();
     this.diffObject = await this.formService.diffObject(JSON.parse(JSON.stringify(this.responseBody)), this.config);
-    console.dir(this.diffObject);
     this.loadingService.remove();
     // const current = this.router.current;
     // switch (current) {

@@ -309,7 +309,7 @@ export class FormService {
       });
     }
     configObject.requiredFieldKeys = requiredFieldKeys;
-    console.dir(configObject);
+    // console.dir(configObject);
     return configObject;
   }
 
@@ -645,7 +645,8 @@ export class FormService {
     return JSON.parse(JSON.stringify(body));
   }
 
-  //////////////////////////////////// ********* ////////////////////////////////////
+  //////////////////////////////////// DIFF ////////////////////////////////////
+
   async diffObject(newBody: JSON, config: any): Promise<DiffResult> {
     const currentId = this.router.routeId;
     const endpoint = config.api;
@@ -755,56 +756,5 @@ export class FormService {
     return result;
   }
 
-  //////////////////////////////////// ********* ////////////////////////////////////
-  async diffObservation(bodyPre: any): Promise<DiffResult> {
-    const body = bodyPre;
-    body.observation_id = this.router.routeId;
-    const diff = await this.observationService.diffObservation(body);
-    if (!diff) {
-      return undefined;
-    }
-    console.dir(diff);
-    return {
-      changed: diff.changed,
-      newObject: diff.newObervation,
-      originalObject: diff.originalObservation,
-      diffMessage: diff.diffMessage,
-      changes: diff.changes
-    };
-  }
-
-  async diffMechanicalTreatment(bodyPre: any): Promise<DiffResult> {
-    const body = bodyPre;
-    body.mechanical_treatment_id = this.router.routeId;
-    const diff = await this.mechanicalTreatmentService.diffMechanicalTreatment(
-      body
-    );
-    if (!diff) {
-      return undefined;
-    }
-    console.dir(diff);
-    return {
-      changed: diff.changed,
-      newObject: diff.newMechanicalTreatment,
-      originalObject: diff.originalMechanicalTreatment,
-      diffMessage: diff.diffMessage,
-      changes: diff.changes
-    };
-  }
+  //////////////////////////////////// END DIFF ////////////////////////////////////
 }
-
-// export interface ObservationDiffResult {
-//   changed: boolean;
-//   newObervation: Observation;
-//   originalObservation: Observation;
-//   diffMessage: string;
-//   changes: Object;
-// }
-
-// export interface DiffResult {
-//   changed: boolean;
-//   newObject: Object;
-//   originalObject: Object;
-//   diffMessage: string;
-//   changes: Object;
-// }
