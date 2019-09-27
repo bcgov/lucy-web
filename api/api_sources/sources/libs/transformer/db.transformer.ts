@@ -20,6 +20,7 @@
  * Modified By: pushan
  * -----
  */
+import * as moment from 'moment';
 /**
  * @file db.transformer.ts
  * @description Transformer classes for database
@@ -34,6 +35,24 @@ export class NumericTransformer {
 
     from(data: string) {
         return parseFloat(data);
+    }
+}
+
+export class DateTransformer {
+    to(date: any) {
+        return date;
+    }
+
+    from(date: any) {
+        if (typeof date === 'string') {
+            return date;
+        }
+        try {
+            const ds = `${moment(date).format('YYYY-MM-DD')}`;
+            return ds;
+        } catch (excp) {
+            return `${date}`;
+        }
     }
 }
 // -------------------------------------------------------------------
