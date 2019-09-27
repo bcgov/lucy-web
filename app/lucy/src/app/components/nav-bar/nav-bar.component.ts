@@ -18,6 +18,11 @@ declare const location: any;
 export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
+   * Title of application to be displayed in header
+   */
+  public appTitle = ``;
+
+  /**
    * User initials & full name
    */
   public userInitials = ``;
@@ -145,9 +150,11 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService, private roles: RolesService) { }
 
   ngOnInit() {
+    this.setAppTitle();
   }
 
   ngAfterViewInit() {
+    this.setAppTitle();
     this.setInitials();
     this.setFullName();
     this.setAccessType();
@@ -171,9 +178,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setInitials();
       this.setFullName();
       this.setAccessType();
-      this.setOrganization();
-      this.setRole();
-      this.setAccessTypeMessage();
+      this.setAppTitle();
     });
   }
 
@@ -182,6 +187,10 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private endRouteEventsListener() {
     this.routeEventsListener.unsubscribe();
+  }
+
+  private setAppTitle() {
+    this.appTitle = StringConstants.app_Title;
   }
 
   /**
