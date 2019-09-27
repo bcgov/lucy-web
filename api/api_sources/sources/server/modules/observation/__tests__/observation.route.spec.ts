@@ -60,50 +60,6 @@ describe('Test for observation routes', () => {
         await commonTestTearDownAction();
     });
 
-    /*it('should return codes', async () => {
-        await testRequest(SharedExpressApp.app, {
-            type: HttpMethodType.get,
-            url: '/api/observation/codes',
-            expect: 200,
-            auth: AuthType.admin
-        })
-        .then(async (resp: any) => {
-            const body = resp.body;
-            await verifySuccessBody(body, async (data: any) => {
-                should().exist(data.jurisdictionCodes);
-                should().exist(data.speciesList);
-                should().exist(data.speciesDensityCodes);
-                should().exist(data.speciesDistributionCodes);
-                should().exist(data.speciesAgencyCodes);
-                should().exist(data.observationTypeCodes);
-                should().exist(data.soilTextureCodes);
-                should().exist(data.observationGeometryCodes);
-                should().exist(data.specificUseCodes);
-                should().exist(data.slopeCodes);
-                should().exist(data.aspectCodes);
-                should().exist(data.proposedActionCodes);
-                should().exist(data.mechanicalTreatmentMethodsCodes);
-                should().exist(data.mechanicalDisposalMethodCodes);
-                should().exist(data.mechanicalSoilDisturbanceCodes);
-                should().exist(data.mechanicalRootRemovalCodes);
-                should().exist(data.mechanicalIssueCodes);
-                should().exist(data.mechanicalTreatmentProviders);
-            });
-            // done();
-        });
-    });*/
-
-    /*it('should return 401', async () => {
-        await request(SharedExpressApp.app)
-        .get('/api/observation/codes')
-        .expect(401)
-        .then(async (resp) => {
-            await verifyErrorBody(resp.body);
-            // done();
-        });
-    });*/
-
-
     it('should not create observation', async () => {
         const create = {
         };
@@ -216,6 +172,7 @@ describe('Test for observation routes', () => {
                 should().exist(body.aspectCode);
                 should().exist(body.proposedAction);
                 should().exist(body.edrrIndicator);
+                expect(body.date).to.be.equal(create.date);
                 expect(body.edrrIndicator).to.be.equal(create.edrrIndicator);
                 expect(body.length).to.be.equal(create.length);
                 await ObservationController.shared.removeById(body.observation_id);
@@ -267,7 +224,8 @@ describe('Test for observation routes', () => {
             researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id,
-            rangeUnitNumber: 'A7890'
+            rangeUnitNumber: 'A7890',
+            date: '2019-05-09'
         };
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.put,
@@ -286,6 +244,7 @@ describe('Test for observation routes', () => {
                 expect(body.researchIndicator).to.be.equal(true);
                 expect(body.length).to.be.equal(update.length);
                 expect(body.rangeUnitNumber).to.be.equal(update.rangeUnitNumber);
+                expect(body.date).to.be.equal(update.date);
             });
             await destroyObservation(obsSpecies);
         });

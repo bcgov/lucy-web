@@ -101,6 +101,7 @@ describe('Test for mechanical treatment', () => {
                 .to.be.equal(create.issue.mechanical_treatment_issue_code_id);
                 expect(data.providerContractor.treatment_provider_contractor_id)
                 .to.be.equal(create.providerContractor.treatment_provider_contractor_id);
+                expect(data.date).to.be.equal(create.date);
                 await MechanicalTreatmentController.shared.removeById(data.mechanical_treatment_id);
             });
             await ObservationController.shared.remove(create.observation);
@@ -183,6 +184,7 @@ describe('Test for mechanical treatment', () => {
                 expect(data.species.species_id).to.be.equal(mt.species.species_id);
                 expect(data.speciesAgency.species_agency_code_id).to.be.equal(updateReq.speciesAgency);
                 expect(data.mechanicalMethod.mechanical_method_code_id).to.be.equal(updateReq.mechanicalMethod);
+                expect(data.date).to.be.equal(create.date);
             });
             await destroyMechanicalTreatment(mt);
         });
