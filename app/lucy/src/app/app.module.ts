@@ -1,5 +1,5 @@
 // Core
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 
 // Others
@@ -77,6 +77,7 @@ import { AddPlantObservationTreatmentsComponent } from './components/Routes/add-
 import { BaseFormComponent } from './components/base-form/base-form.component';
 import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-viewer.component';
 import { AddMechanicalTreatmentAdvancedComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-advanced/add-mechanical-treatment-advanced.component';
+import { StringConstants } from './constants/string-constants'
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -120,7 +121,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AddPlantObservationTreatmentsComponent,
     BaseFormComponent,
     DiffViewerComponent,
-    AddMechanicalTreatmentAdvancedComponent,
+    AddMechanicalTreatmentAdvancedComponent
   ],
   imports: [
     BrowserModule,
@@ -156,6 +157,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     CookieService,
     SsoService,
     RouterService,
+    Title,
     AppBootService,
     {
       provide: APP_INITIALIZER,

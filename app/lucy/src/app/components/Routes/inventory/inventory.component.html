@@ -1,17 +1,19 @@
 <!-- Header Section -->
 <div class="container-fluid header-container">
-    <div class="container">
-        <mat-toolbar color="primary">
-            <mat-toolbar-row>
-                <span class="view-title">Lucy Database</span>
-                <span class="spacer-toolbar"></span>
-                <mat-icon [ngClass]="showMap ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="map view" (click)="switchShowMap()">map
-                </mat-icon>
-                <mat-icon [ngClass]="showList ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="list view" (click)="switchShowList()">
-                    view_list</mat-icon>
-            </mat-toolbar-row>
-        </mat-toolbar>
-    </div>
+  <div class="container">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <span class="view-title">{{ databaseTitle }}</span>
+        <span class="spacer-toolbar"></span>
+        <mat-icon [ngClass]="showMap ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="map view"
+          (click)="switchShowMap()">map
+        </mat-icon>
+        <mat-icon [ngClass]="showList ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="list view"
+          (click)="switchShowList()">
+          view_list</mat-icon>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </div>
 </div>
 <!-- -------------------- -->
 <div class="container">
