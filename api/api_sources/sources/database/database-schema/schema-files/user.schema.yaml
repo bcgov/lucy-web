@@ -74,7 +74,7 @@ schemas:
         foreignTable: application_user
         refColumn: user_id
       role:
-        name: role_id
+        name: role_code_id
         comment: 'Foreign key reference to role code table'
         definition: INT NOT NULL
         foreignTable: app_role_code
