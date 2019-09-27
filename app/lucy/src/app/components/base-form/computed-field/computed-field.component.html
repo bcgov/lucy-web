@@ -1,0 +1,11 @@
+
+<div class="col-12 field">
+  <mat-label>{{ header }}</mat-label>
+  <input
+  matInput
+  placeholder="{{ header }}"
+  [(ngModel)]="value"
+  [attr.id]="fieldId"
+  [readonly]="true"
+  />
+</div>
