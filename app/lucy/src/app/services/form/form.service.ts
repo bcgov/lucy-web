@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { ApiService, APIRequestMethod } from "../api.service";
-import { AppConstants, AppRoutes } from "src/app/constants";
-import { DropdownObject, DropdownService } from "../dropdown.service";
-import { DummyService } from "../dummy.service";
-import { RouterService } from "../router.service";
-import { ErrorService, ErrorType } from "../error.service";
-import { MechanicalTreatmentService } from "../mechanical-treatment.service";
-import { ObservationService } from "../observation.service";
-import * as moment from "moment";
-import { DiffResult } from "../diff.service";
+import { Injectable } from '@angular/core';
+import { ApiService, APIRequestMethod } from '../api.service';
+import { AppConstants, AppRoutes } from 'src/app/constants';
+import { DropdownObject, DropdownService } from '../dropdown.service';
+import { DummyService } from '../dummy.service';
+import { RouterService } from '../router.service';
+import { ErrorService, ErrorType } from '../error.service';
+import { MechanicalTreatmentService } from '../mechanical-treatment.service';
+import { ObservationService } from '../observation.service';
+import * as moment from 'moment';
+import { DiffResult } from '../diff.service';
 
 export interface FormConfigField {
   key: string;
@@ -87,9 +87,9 @@ export class FormService {
     private errorService: ErrorService,
     private observationService: ObservationService,
     private mechanicalTreatmentService: MechanicalTreatmentService
-  ) {}
+  ) { }
 
-   //////////////////////////////////// Fetch UI Config ////////////////////////////////////
+  //////////////////////////////////// Fetch UI Config ////////////////////////////////////
   /**
    * returns UI configuration for Mechanical Treatments
    */
@@ -503,43 +503,43 @@ export class FormService {
       return [];
     }
     switch (code.toLowerCase()) {
-      case "speciesagencycode":
+      case 'speciesagencycode':
         return await this.dropdownService.getAgencies();
-      case "jurisdictioncode":
+      case 'jurisdictioncode':
         return await this.dropdownService.getJuristictions();
-      case "species":
+      case 'species':
         return await this.dropdownService.getInvasivePlantSpecies();
-      case "speciesdistributioncode":
+      case 'speciesdistributioncode':
         return await this.dropdownService.getDistributions();
-      case "observationtypecode":
+      case 'observationtypecode':
         return await this.dropdownService.getObservationType();
-      case "soiltexturecode":
+      case 'soiltexturecode':
         return await this.dropdownService.getSoilTextureCodes();
-      case "observationgeometrycode":
+      case 'observationgeometrycode':
         return await this.dropdownService.getGeometry();
-      case "specificusecode":
+      case 'specificusecode':
         return await this.dropdownService.getSpecificUseCodes();
-      case "slopecode":
+      case 'slopecode':
         return await this.dropdownService.getGroundSlopes();
-      case "aspectcode":
+      case 'aspectcode':
         return await this.dropdownService.getGroundAspects();
-      case "proposedactioncode":
+      case 'proposedactioncode':
         return await this.dropdownService.getProposedActions();
-      case "mechanicalmethodcode":
+      case 'mechanicalmethodcode':
         return await this.dropdownService.getMechanicalTreatmentMethods();
-      case "mechanicaldisposalmethodcode":
+      case 'mechanicaldisposalmethodcode':
         return await this.dropdownService.getMechanicalDisposalMethods();
-      case "mechanicalsoildisturbancecode":
+      case 'mechanicalsoildisturbancecode':
         return await this.dropdownService.getMechanicalSoilDisturbances();
-      case "mechanicalrootremovalcode":
+      case 'mechanicalrootremovalcode':
         return await this.dropdownService.getMechanicalRootRemovals();
-      case "mechanicaltreatmentissuecode":
+      case 'mechanicaltreatmentissuecode':
         return await this.dropdownService.getMechanicalIssues();
-      case "treatmentprovidercontractor":
+      case 'treatmentprovidercontractor':
         return await this.dropdownService.getMechanicalTreatmentProviders();
-      case "observation":
+      case 'observation':
         return await this.dropdownService.getObservations();
-      case "speciesdensitycode":
+      case 'speciesdensitycode':
         return await this.dropdownService.getDensities();
       default:
         console.log(`Code Table is not handled ${code}`);
@@ -596,7 +596,7 @@ export class FormService {
 
     // set id & date
     for (const key in object) {
-      if(object.hasOwnProperty(key)) {
+      if (object.hasOwnProperty(key)) {
         if (key.toLowerCase().indexOf(`id`) !== -1) {
           configuration[`objectId`] = object[key];
         } else if (key.toLowerCase().indexOf(`date`) !== -1) {
@@ -785,8 +785,8 @@ export class FormService {
     }
     // 8) generate response
     // Convert keys from camel case:
-    const keys =  Object.keys(diffResult).map(x => {
-      const fromCamel = x.replace( /([A-Z])/g, ` $1` );
+    const keys = Object.keys(diffResult).map(x => {
+      const fromCamel = x.replace(/([A-Z])/g, ` $1`);
       return fromCamel.charAt(0).toUpperCase() + fromCamel.slice(1);
     });
     const changedKeys = keys.join(`, `);
@@ -854,21 +854,21 @@ export class FormService {
   private diff(obj1: JSON, obj2: JSON): any {
     const result = {};
     if (Object.is(obj1, obj2)) {
-        return undefined;
+      return undefined;
     }
     if (!obj2 || typeof obj2 !== 'object') {
-        return obj2;
+      return obj2;
     }
     Object.keys(obj1 || {}).concat(Object.keys(obj2 || {})).forEach(key => {
-        if(obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-            result[key] = obj2[key];
+      if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+        result[key] = obj2[key];
+      }
+      if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+        const value = this.diff(obj1[key], obj2[key]);
+        if (value !== undefined) {
+          result[key] = value;
         }
-        if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
-            const value = this.diff(obj1[key], obj2[key]);
-            if (value !== undefined) {
-                result[key] = value;
-            }
-        }
+      }
     });
     return result;
   }
@@ -888,14 +888,14 @@ export class FormService {
     for (const field of configFilds) {
       switch (field.type.toLowerCase()) {
         case 'string':
-            cleanBody[field.key] = String(body[field.key]);
-            break;
+          cleanBody[field.key] = String(body[field.key]);
+          break;
         case 'number':
-            cleanBody[field.key] = Number(body[field.key]);
-            break;
+          cleanBody[field.key] = Number(body[field.key]);
+          break;
         default:
-            cleanBody[field.key] = body[field.key];
-            break;
+          cleanBody[field.key] = body[field.key];
+          break;
       }
     }
     return JSON.parse(JSON.stringify(cleanBody));
