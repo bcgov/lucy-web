@@ -49,7 +49,7 @@ import {
     AspectCodeSchema,
     ProposedActionCodeSchema
 } from '../database-schema';
-import { NumericTransformer } from '../../libs/transformer';
+import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 import { MechanicalTreatment } from './mechanical.treatment';
 
 
@@ -131,7 +131,11 @@ export class Observation extends Record implements ObservationCreateModel {
     @ModelProperty({ type: PropertyType.number})
     observation_id: number;
 
-    @Column({ name: ObservationSchema.columns.date, nullable: true})
+    @Column({
+        name: ObservationSchema.columns.date,
+        nullable: true,
+        transformer: new DateTransformer
+    })
     @ModelProperty({ type: PropertyType.string})
     date: string;
 

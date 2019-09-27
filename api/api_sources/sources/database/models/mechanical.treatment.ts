@@ -50,7 +50,7 @@ import {
 	TreatmentProviderContractor
 } from '../models';
 import { Record } from './generic.data.models';
-import { NumericTransformer } from '../../libs/transformer';
+import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 
 
 /** Interface **/
@@ -193,7 +193,10 @@ export class MechanicalTreatment extends Record {
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_date}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.date})
+	@Column({
+		name: MechanicalTreatmentSchema.columns.date,
+		transformer: new DateTransformer
+	})
 	@ModelProperty({type: PropertyType.string})
 	date: string;
 
