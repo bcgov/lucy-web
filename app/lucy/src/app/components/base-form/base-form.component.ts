@@ -37,7 +37,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   //   this._formType = type;
   // }
   public componentName = ` `;
-  private responseBody = {};
+
+  private _responseBody = {};
+  get responseBody(): any {
+    // return JSON.parse(JSON.stringify(this._responseBody));
+    return this._responseBody;
+  }
+  set responseBody(object: any) {
+    this._responseBody = object;
+  }
 
   // Lottie Animation
   isLoading = false;
@@ -237,29 +245,36 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @param field chnged field object
    * @param event change event emitted
    */
-  private fieldChanged(field: any, event: any) {
+  fieldChanged(field: any, event: any) {
     if (field.isLocationField) {
-      // location field
+      // location field - needs
       this.responseBody[field.latitude.key] = event.latitude.value;
       this.responseBody[field.longitude.key] = event.longitude.value;
     } else if (field.isDropdown) {
-      // dropdown field
+      // dropdown field - needs id extraction
       for (const key in event.object) {
+        // find id field
         if (key.toLowerCase().indexOf('id') !== -1) {
           this.responseBody[field.key] = event.object[key];
           break;
         }
       }
     } else if (field.isDateField) {
-      // date field
+      // date field - needs formatting
       if (event) {
         const formatted = moment(event).format('YYYY-MM-DD');
         this.responseBody[field.key] = formatted;
       }
     } else {
-      // Store key / value for regular field
+      // regular field - store key / value
       this.responseBody[field.key] = event;
     }
+  //   /*
+  //     This reassignment will trigger the set function of responseBody
+  //     which will send the new body to the computed fields.
+  //   */
+  //  const temp = this.responseBody;
+  // this.responseBody = temp;
   }
 
   /**

@@ -193,7 +193,16 @@
                   (selectionChanged)="fieldChanged(field, $event)"
                 >
                 </app-checkbox>
+               <!-- Computed field -->
               </div>
+              <app-computed-field
+              *ngIf="field.isComputedField"
+              [mode]="mode"
+              [header]="field.header"
+              [formBody]="responseBody"
+              [computationRules]="field.computationRules"
+            >
+            </app-computed-field>
             </div>
           </div>
         </div>
