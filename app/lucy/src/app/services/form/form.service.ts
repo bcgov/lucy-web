@@ -60,6 +60,24 @@ export interface FormConfig {
 @Injectable({
   providedIn: `root`
 })
+/**
+ * To add support for a new config file:
+ * 1) Add new route names in -> app/constants/app-routes.enum.ts
+ * 2) Add support for new routes in -> app/app-routing.module.ts
+ * 3) Add API endpoint for config in -> app/constants/app-constants.ts
+ * 4) Create function in this class under Fetch Server Config section to
+ * fetch server config from endpoint specified in STEP-3)
+ * 5) create function in this class under Fetch UI Config section to
+ * fetch server config from STEP-4) and convert to a Ui configuration
+ * 6) Add to function in this class -> getFormConfigForCurrentRoute() to
+ * add cases for the new routes added in STEP-1)
+ * 7) Add to function in this class -> editCurrent() to
+ * add case for new view route to be able to switch to edit mode.
+ * 8) * Optional - If new Code tables were introduced: Add support in:
+ *  - codeTable service
+ *  - dropdown service
+ *  - dropdownfor() function in this class.
+ */
 export class FormService {
   constructor(
     private api: ApiService,
@@ -71,16 +89,100 @@ export class FormService {
     private mechanicalTreatmentService: MechanicalTreatmentService
   ) {}
 
+   //////////////////////////////////// Fetch UI Config ////////////////////////////////////
+  /**
+   * returns UI configuration for Mechanical Treatments
+   */
   public async getMechanicalTreatmentUIConfig(): Promise<any> {
     const serverConfig = await this.getMechanicalTreatmentServerConfig();
     return await this.createUIConfig(serverConfig);
   }
 
+  /**
+   * returns UI configuration for Observations
+   */
   public async getObservationUIConfig(): Promise<any> {
     const serverConfig = await this.getObservationServerConfig();
     return await this.createUIConfig(serverConfig);
   }
 
+  /**
+   * returns UI configuration based on current route
+   */
+  public async getFormConfigForCurrentRoute(): Promise<any> {
+    switch (this.router.current) {
+      //// Observation routes ////
+      case AppRoutes.ViewObservation: {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const observation = await this.observationService.getWithId(id);
+        if (configFile && observation) {
+          return this.merge(configFile, observation);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.EditObservation: {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const observation = await this.observationService.getWithId(id);
+        if (configFile && observation) {
+          return this.merge(configFile, observation);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.AddObservation: {
+        const configFile = await this.getObservationUIConfig();
+        return configFile;
+        break;
+      }
+      //// END Observation routes ////
+      //// Mechanical Treatment routes ////
+      case AppRoutes.ViewMechanicalTreatment: {
+        const id = this.router.routeId;
+        const configFile = await this.getMechanicalTreatmentUIConfig();
+        const treatment = await this.mechanicalTreatmentService.getWithId(id);
+        if (configFile && treatment) {
+          return this.merge(configFile, treatment);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.EditMechanicalTreatment: {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const treatment = await this.mechanicalTreatmentService.getWithId(id);
+        if (configFile && treatment) {
+          return this.merge(configFile, treatment);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.AddMechanicalTreatment: {
+        const configFile = await this.getMechanicalTreatmentUIConfig();
+        return configFile;
+        break;
+      }
+      //// END Mechanical Treatment routes ////
+      default: {
+        console.log(
+          `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
+        );
+        this.errorService.show(ErrorType.NotFound);
+        return undefined;
+        break;
+      }
+    }
+  }
+
+  //////////////////////////////////// END Fetch UI Config ////////////////////////////////////
+
+  //////////////////////////////////// Fetch Server Config ////////////////////////////////////
   /**
    * Fetch and return configuration json for Mechanical treatment page
    */
@@ -135,96 +237,9 @@ export class FormService {
     }
   }
 
-  /**
-   * Switch current form to edit mode
-   */
-  public editCurrent() {
-    const current = this.router.current;
-    switch (current) {
-      case AppRoutes.ViewMechanicalTreatment: {
-        return this.router.navigateTo(
-          AppRoutes.EditMechanicalTreatment,
-          this.router.routeId
-        );
-      }
-      case AppRoutes.ViewObservation: {
-        return this.router.navigateTo(
-          AppRoutes.EditObservation,
-          this.router.routeId
-        );
-      }
-      default: {
-        console.log(`Case not handled`);
-      }
-    }
-  }
+  //////////////////////////////////// END Fetch Server Config ////////////////////////////////////
 
-  public async getFormConfigForCurrentRoute(): Promise<any> {
-    switch (this.router.current) {
-      case AppRoutes.ViewObservation: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditObservation: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.AddObservation: {
-        const configFile = await this.getObservationUIConfig();
-        return configFile;
-        break;
-      }
-      case AppRoutes.ViewMechanicalTreatment: {
-        const id = this.router.routeId;
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditMechanicalTreatment: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.AddMechanicalTreatment: {
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        return configFile;
-        break;
-      }
-      default: {
-        console.log(
-          `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
-        );
-        this.errorService.show(ErrorType.NotFound);
-        return undefined;
-        break;
-      }
-    }
-  }
+  //////////////////////////////////// Generate UI Config ////////////////////////////////////
 
   /**
    * generate and return Form Configuration file
@@ -416,7 +431,7 @@ export class FormService {
       cssClasses = cssClasses + ` `;
     }
 
-    // BEGIN Tweak verifical object received.
+    // BEGIN Tweak verification object received.
     let verification = field.verification;
     if (!verification) {
       verification = {};
@@ -441,7 +456,7 @@ export class FormService {
       verification.positiveNumber = true;
     }
 
-    ///// END Tweak verifical object received
+    ///// END Tweak verification object received
     return {
       key: field.key,
       header: field.layout.header.default,
@@ -456,6 +471,10 @@ export class FormService {
     };
   }
 
+  /**
+   * check if field could be latitude field
+   * @param headerOrKey name
+   */
   private isLatitude(headerOrKey: string): boolean {
     return (
       headerOrKey.toLocaleLowerCase() === `lat` ||
@@ -463,6 +482,10 @@ export class FormService {
     );
   }
 
+  /**
+   * check if field could be longitude field
+   * @param headerOrKey name
+   */
   private isLongitude(headerOrKey: string): boolean {
     return (
       headerOrKey.toLocaleLowerCase() === `long` ||
@@ -524,6 +547,13 @@ export class FormService {
     }
   }
 
+  /**
+   * Generate a DropdownObject for
+   * the specified codetable type and
+   * currently selected code table object
+   * @param codeTableName code table type
+   * @param selectedObject code table object (single object; could be any code table object)
+   */
   private async getDropdownObjectWithId(
     codeTableName: string,
     selectedObject: any
@@ -620,6 +650,10 @@ export class FormService {
     return configuration;
   }
 
+  /**
+   * Convert to string and add trailing zeros as needed.
+   * @param value Lat or Long
+   */
   private formatLatLongForDisplay(value: number): string {
     // If its undefined or not a number, return empty string
     if (value === undefined || !Number(value)) {
@@ -650,9 +684,13 @@ export class FormService {
 
   }
 
+  //////////////////////////////////// END Generate UI Config ////////////////////////////////////
+
+  //////////////////////////////////// UI Config Utilities ////////////////////////////////////
   /**
    * Generate json body from UIConfig
    * @param config UIConfig
+   * @returns JSON body
    */
   public generateBodyForMergedConfig(config: any): JSON {
     const body = {};
@@ -707,8 +745,15 @@ export class FormService {
     return fields;
   }
 
+  //////////////////////////////////// END UI Config Utilities ////////////////////////////////////
+
   //////////////////////////////////// DIFF ////////////////////////////////////
 
+  /**
+   * Compare changes in newBody with the latest version of the object in backend
+   * @param newBody new body to be submitted
+   * @param config Configuration object for the object
+   */
   async diffObject(newBody: JSON, config: any): Promise<DiffResult> {
     // Setup
     const currentId = this.router.routeId;
@@ -755,6 +800,11 @@ export class FormService {
     };
   }
 
+  /**
+   * Get object related for config (example:  an Observation)
+   * @param endpoint API endpoint
+   * @param id Id of the object
+   */
   private async getObjectWithId(endpoint: string, id: number): Promise<any> {
     const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
     const response = await this.api.request(APIRequestMethod.GET, endpointWithId, null);
@@ -765,6 +815,10 @@ export class FormService {
     }
   }
 
+  /**
+   * Get config for object endpoint
+   * @param endpoint API endpoint (without /config at the end)
+   */
   private async getConfig(endpoint: string) {
     const configEndpoint = `${AppConstants.API_baseURL}${endpoint}/config`;
     const response = await this.api.request(
@@ -886,4 +940,30 @@ export class FormService {
     return await this.merge(config, dummy);
   }
   //////////////////////////////////// END TESTS ////////////////////////////////////
+
+  /////////////////////////////////// Route helpers ////////////////////////////////////
+  /**
+   * Switch current form route to edit mode
+  */
+  public editCurrent() {
+    const current = this.router.current;
+    switch (current) {
+      case AppRoutes.ViewMechanicalTreatment: {
+        return this.router.navigateTo(
+          AppRoutes.EditMechanicalTreatment,
+          this.router.routeId
+        );
+      }
+      case AppRoutes.ViewObservation: {
+        return this.router.navigateTo(
+          AppRoutes.EditObservation,
+          this.router.routeId
+        );
+      }
+      default: {
+        console.log(`Case not handled`);
+      }
+    }
+  }
+  /////////////////////////////////// End Route helpers ////////////////////////////////////
 }
