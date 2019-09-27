@@ -1,0 +1,9 @@
+version: '1.0'
+externalTables: 
+  - name: application_user
+    schema: UserSchema
+    description: Application user
+schemas:
+  UserSessionSchema:
+    name: user_session
+    description: 
