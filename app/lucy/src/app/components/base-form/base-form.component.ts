@@ -134,7 +134,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   // Set
   @Input() set mode(mode: FormMode) {
-    console.log(`Form mode is ${mode}`);
     this._mode = mode;
   }
   ////////////////////
@@ -217,11 +216,14 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     const config = await this.formService.getFormConfigForCurrentRoute();
     if (config) {
       this.config = config;
+      this.responseBody = this.formService.generateBodyForMergedConfig(config);
     } else {
       console.log('Bad config. show a toast in the future');
     }
-    if (this.router.isEditRoute) {
-      this.responseBody = await this.formService.generateBodyForMergedConfig(this.config);
+    if (this.router.isEditRoute || this.router.isViewRoute) {
+      // We are setting the body for view mode as well because:
+      // Computed fields rely on body to display their value.
+      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     }
     this.isLoading = false;
   }
@@ -282,7 +284,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * Form submission
    */
   async submitAction() {
-    console.dir(this.responseBody);
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.alert.show('Missing fields', 'Please fill all required fields');
