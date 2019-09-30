@@ -16,15 +16,21 @@
 // limitations under the License.
 //
 // Created by Pushan Mitra on 2019-06-7.
-/**
- * Imports
- */
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn} from 'typeorm';
-import { RequestAccessTableSchema, UserSchema, RolesCodeTableSchema} from '../database-schema';
-import { BaseModel } from './baseModel';
-import { User } from './user';
-import { DataModelController} from '../data.model.controller';
-import { RolesCode } from './appRolesCode';
+// ** Model: RequestAccess from schema RequestAccessSchema **
+
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
+import { RequestAccessSchema } from '../database-schema';
+import {
+	RolesCodeTableSchema,
+	UserSchema
+} from '../database-schema';
+
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
+import { DataModelController } from '../data.model.controller';
+import {
+	RolesCode,
+	User
+} from '../models';
 
 /**
  * @description Status enum of property of RequestAccess.status
@@ -36,66 +42,122 @@ export enum RequestStatus {
     rejected = 2
 }
 
+/** Interface **/
 /**
- * @description Entity model class for RequestAccess
- * @export class RequestAccess
+ * @description RequestAccess create interface
  */
-@Entity({
-    name: RequestAccessTableSchema.schema.name,
+export interface RequestAccessSpec {
+	requestNote: string;
+	status: number;
+	approverNote: string;
+	requestedAccessCode: RolesCode;
+	requester: User;
+	approver: User;
+}
+// -- End: RequestAccessSpec --
+
+
+/** Interface **/
+/**
+ * @description RequestAccess update interface
+ */
+export interface RequestAccessUpdateSpec {
+	requestNote?: string;
+	status?: number;
+	approverNote?: string;
+	requestedAccessCode?: RolesCode;
+	requester?: User;
+	approver?: User;
+}
+// -- End: RequestAccessUpdateSpec --
+
+/**
+ * @description Data Model Class for RequestAccessSchema
+ */
+@ModelDescription({
+	description: 'Data Model Class for RequestAccessSchema',
+	schema: RequestAccessSchema,
+	apiResource: false
 })
-export class RequestAccess extends BaseModel {
-    @PrimaryGeneratedColumn()
-    request_id: number;
+@Entity( { name: RequestAccessSchema.dbTable} )
+export class RequestAccess {
 
-    @Column({
-        name: RequestAccessTableSchema.schema.columns.requestNote,
-        nullable: true
-    })
-    requestNote: string;
+	/**
+	 * Class Properties
+	 */
 
-    @Column()
-    status: number;
+	/**
+	 * @description Getter/Setter property for column {request_id}
+	 */
+	@PrimaryGeneratedColumn()
+	@ModelProperty({type: PropertyType.number})
+	request_id: number;
 
-    @Column({
-        name: RequestAccessTableSchema.schema.columns.approverNote,
-        nullable: true
-    })
-    approverNote: string;
+	/**
+	 * @description Getter/Setter property for column {request_note}
+	 */
+	@Column({ name: RequestAccessSchema.columns.requestNote})
+	@ModelProperty({type: PropertyType.string})
+	requestNote: string;
 
-    // Relationships
-    // Access Code
-    @ManyToOne(type => RolesCode, {eager: true})
-    @JoinColumn({
-        name: RequestAccessTableSchema.schema.columns.refRequestType,
-        referencedColumnName: RolesCodeTableSchema.schema.columns.id
-    })
-    requestedAccessCode: RolesCode;
-    // Requester
-    @OneToOne( type => User, {eager: true})
-    @JoinColumn({
-        name: RequestAccessTableSchema.schema.columns.refRequester,
-        referencedColumnName: UserSchema.schema.columns.id
-    })
-    requester: User;
+	/**
+	 * @description Getter/Setter property for column {status}
+	 */
+	@Column({ name: RequestAccessSchema.columns.status})
+	@ModelProperty({type: PropertyType.number})
+	status: number;
 
-    @ManyToOne( type => User,  {eager: true})
-    @JoinColumn({
-        name: RequestAccessTableSchema.schema.columns.refApprover,
-        referencedColumnName: UserSchema.schema.columns.id
-    })
-    approver: User;
+	/**
+	 * @description Getter/Setter property for column {approver_note}
+	 */
+	@Column({ name: RequestAccessSchema.columns.approverNote})
+	@ModelProperty({type: PropertyType.string})
+	approverNote: string;
+
+	/**
+	 * @description Getter/Setter property for column {requested_role_code_id}
+	 */
+	@ManyToOne( type => RolesCode, { eager: true})
+	@JoinColumn({ name: RequestAccessSchema.columns.requestedAccessCode, referencedColumnName: RolesCodeTableSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	requestedAccessCode: RolesCode;
+
+	/**
+	 * @description Getter/Setter property for column {requester_user_id}
+	 */
+	@ManyToOne( type => User, { eager: true})
+	@JoinColumn({ name: RequestAccessSchema.columns.requester, referencedColumnName: UserSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	requester: User;
+
+	/**
+	 * @description Getter/Setter property for column {approver_user_id}
+	 */
+	@ManyToOne( type => User, { eager: true})
+	@JoinColumn({ name: RequestAccessSchema.columns.approver, referencedColumnName: UserSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	approver: User;
+
 }
 
+
+// ** DataModel controller of RequestAccess **
+
 /**
- * @description Data Model Controller for RequestAccess
- * @export class RequestAccessController
+ * @description Data Model Controller Class for RequestAccessSchema and RequestAccess
  */
 export class RequestAccessController extends DataModelController<RequestAccess> {
-    /**
-     * @description Getter for shared instance
-     */
-    public static get shared(): RequestAccessController {
-        return this.sharedInstance<RequestAccess>(RequestAccess, RequestAccessTableSchema) as RequestAccessController;
-    }
+	/**
+	* @description Getter for shared instance
+	*/
+	public static get shared(): RequestAccessController {
+		return this.sharedInstance<RequestAccess>(RequestAccess, RequestAccessSchema) as RequestAccessController;
+	}
 }
+
+// -------------------------------------
+
+
+// -------------------------------------
+
 

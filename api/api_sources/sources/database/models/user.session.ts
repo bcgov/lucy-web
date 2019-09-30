@@ -22,7 +22,7 @@
 import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
 import { BaseModel } from './baseModel';
 import { User } from './user';
-import { SessionActivity } from './userSessionActivity';
+import { SessionActivity } from './session.activity';
 import { DataModelController } from '../data.model.controller';
 import { UserSchema, UserSessionSchema} from '../database-schema';
 

@@ -1,13 +1,16 @@
 // Admin related schemas
-import { ApplicationTable } from '../../libs/core-database';
-import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
+import { BaseTableSchema } from '../applicationSchemaInterface';
+import { getYAMLFilePath } from './schema-files';
 
 /**
  * @description Schema Class to design table for request access level change from a user
  * @export class RequestAccessTableSchema
  */
-export class RequestAccessTableSchema extends BaseTableSchema {
-    defineTable() {
+export class RequestAccessSchema extends BaseTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('admin.ops.schema.yaml');
+    }
+    /*defineTable() {
         const table: ApplicationTable = super.defineTable();
         table.name = 'access_request';
         table.description = 'Table to store requests of access level change for a user. Request will be handle by admin';
@@ -23,5 +26,5 @@ export class RequestAccessTableSchema extends BaseTableSchema {
             createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
         };
         return table;
-    }
+    }*/
 }

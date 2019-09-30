@@ -1,13 +1,17 @@
 // System related schema
 import { ApplicationTable } from '../../libs/core-database';
 import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
+import { getYAMLFilePath } from './schema-files';
 
 /**
  * @description Schema Class to design table to store different application level events
  * @export class ApplicationEventSchema
  */
 export class ApplicationEventSchema extends BaseTableSchema {
-    defineTable() {
+    get schemaFilePath(): string {
+        return getYAMLFilePath(`system.schema.yaml`);
+    }
+    /*defineTable() {
         const table: ApplicationTable = new ApplicationTable();
         table.name = 'application_event';
         table.description = 'Table to store different application level events. This table will help to debug production defects and maintenance';
@@ -21,7 +25,7 @@ export class ApplicationEventSchema extends BaseTableSchema {
             createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
         };
         return table;
-    }
+    }*/
 }
 
 /**

@@ -23,7 +23,6 @@ export * from './user';
 export * from './user.session';
 export * from './baseModel';
 export * from './appRolesCode';
-export * from './userSessionActivity';
 export * from './requestAccess';
 export * from './userMessage';
 export * from './species';
@@ -46,6 +45,9 @@ export * from './mechanicalSoilDisturbance.code';
 export * from './mechanicalRootRemoval.code';
 export * from './mechanicalTreatmentIssue.code';
 export * from './treatmentProviderContractor';
+export * from './applicationEvent';
+export * from './sessionActivity.code';
+export * from './session.activity';
 export * from './generic.data.models';
 
 /**
