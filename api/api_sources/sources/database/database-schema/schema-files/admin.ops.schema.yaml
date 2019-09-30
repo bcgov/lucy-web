@@ -47,4 +47,43 @@ schemas:
         foreignTable: application_user
         refColumn: user_id
   ## --
+  ## -- UserMessagesSchema
+  UserMessagesSchema:
+    name: user_message
+    modelName: UserMessage
+    description: Table to store user messages. Messages can be created by system or other user. This messages will be displayed as notification.
+    columns:
+      id: 
+        name: message_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY
+      title:
+        name: title
+        comment: Title of the messages.
+        definition: VARCHAR(200) NULL
+      body:
+        name: body
+        comment: Message body
+        definition: VARCHAR(1000) NULL
+      type:
+        name: message_type
+        comment: 'Integer enum value to specify message type. Currently types are managed by application'
+        definition: SMALLINT NOT NULL DEFAULT 0
+      status:
+        name: message_status
+        comment: 'Integer enum value to specify message status. Currently types are managed by application'
+        definition: SMALLINT NOT NULL DEFAULT 0
+      receiver:
+        name: receiver_user_id
+        comment: 'FOREIGN KEY reference to User table. This column will store receiver of the message'
+        definition: INT NULL
+        foreignTable: application_user
+        refColumn: user_id
+      creator:
+        name: creator_user_id
+        comment: 'FOREIGN KEY reference to User table. This column will store creator of the message '
+        definition: INT NULL
+        foreignTable: application_user
+        refColumn: user_id
+  ## --
 
