@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 
+
 export enum ComputationMethod {
   calculateArea,
   somethingElse
@@ -15,6 +16,8 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
   @Input() header = '';
   // Rules
   @Input() computationRules: any;
+  // full config 
+  @Input() config: any;
 
   private _formBody: any = {};
   get formBody(): any {
@@ -24,7 +27,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
     this._formBody = object;
   }
 
-  private _value = `xx`;
+  private _value = ``;
   get value(): string {
     return this._value;
   }
@@ -36,26 +39,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
     return this.header;
   }
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.dir(changes.formBody.currentValue);
-    this.compute();
-  }
-
-  compute() {
-    if (!this.formBody || !this.computationRules || !this.computationRules[0])  {
-      return;
-    }
-    if (this.requiredFieldsForComputationExist()) {
-      const compMethod : ComputationMethod = this.computationRules.method as keyof typeof ComputationMethod;
-    }
-  }
-
-  requiredFieldsForComputationExist(): boolean {
+  get requiredFieldsForComputationExist(): boolean {
     if (!this.formBody || !this.computationRules || !this.computationRules[0]) {
       return false;
     }
@@ -66,6 +50,105 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
       }
     }
     return true;
+  }
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.compute();
+  }
+
+  /**
+   * Perform the computation method specified in computationRules -> method
+   */
+  compute() {
+    if (!this.formBody || !this.computationRules || !this.computationRules[0]) {
+      return;
+    }
+    if (this.requiredFieldsForComputationExist) {
+      // convert method to enum
+      const tempMethod = this.computationRules[0].method as keyof typeof ComputationMethod;
+      const compMethod: ComputationMethod = ComputationMethod[tempMethod];
+      // switch ComputationMethods
+      switch (compMethod) {
+        case ComputationMethod.calculateArea:
+          this.setCalculatedArea();
+          break;
+        case ComputationMethod.somethingElse:
+          console.log('not implemented');
+          break;
+        default:
+          console.log('default not implemented');
+          break;
+      }
+    }
+  }
+
+  /**
+   * Get an array of key value objects containing
+   * required keys and their current values.
+   */
+  private getRequiredFields(): { key: string; value: any }[] | undefined {
+    if (!this.formBody || !this.computationRules || !this.computationRules[0]) {
+      return undefined;
+    }
+    const fields = [];
+
+    for (const key of this.computationRules[0].keys) {
+      if (this.formBody[key] === undefined) {
+        return undefined;
+      } else {
+        fields.push({
+          key: [key],
+          value: this.formBody[key],
+        })
+      }
+    }
+    return fields;
+  }
+
+  /**
+   * Check if a required key is a dropdown.
+   * @param key 
+   */
+  private isDropdown(key: string): boolean {
+    if (!this.config || !this.config.dropdownFieldKeys) {
+      return false
+    }
+    return this.config.dropdownFieldKeys.indexOf(String(key)) !== -1;
+  }
+
+  /**
+   * Calculate area and set value text
+   */
+  private setCalculatedArea() {
+    const area = String(this.calculateArea());
+    this.value = `${area}\tm²`;
+  }
+
+  /**
+   * Return area calculated by multiplying required fields.
+   * (ignores required dropdown value)
+   */
+  private calculateArea(): number {
+    const fields = this.getRequiredFields();
+    if (!fields) {
+      return 0;
+    }
+    let result = 0;
+    for (const field of fields) {
+      if (!this.isDropdown(field.key)) {
+        if (result === 0) {
+          result = Number(field.value);
+        } else {
+          result = result * Number(field.value);
+        }
+      }
+    }
+    return result;
   }
 
 }
