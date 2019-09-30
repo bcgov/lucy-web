@@ -79,6 +79,7 @@ import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-vie
 import { AddMechanicalTreatmentAdvancedComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-advanced/add-mechanical-treatment-advanced.component';
 import { LocationInputComponent } from './components/base-form/location-input/location-input/location-input.component';
 import { StringConstants } from './constants/string-constants';
+import { ComputedFieldComponent } from './components/base-form/computed-field/computed-field.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -124,6 +125,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     DiffViewerComponent,
     AddMechanicalTreatmentAdvancedComponent,
     LocationInputComponent,
+    ComputedFieldComponent,
   ],
   imports: [
     BrowserModule,

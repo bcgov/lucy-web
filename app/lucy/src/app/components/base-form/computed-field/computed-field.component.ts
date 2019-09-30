@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnChanges, SimpleChange, SimpleChanges } from
 
 export enum ComputationMethod {
   calculateArea,
+  somethingElse
 }
 
 @Component({
@@ -41,18 +42,17 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.dir(changes.formBody.currentValue);
-    // this.compute();
+    // console.dir(changes.formBody.currentValue);
+    this.compute();
   }
 
   compute() {
     if (!this.formBody || !this.computationRules || !this.computationRules[0])  {
       return;
     }
-    console.log('should compute');
-    console.log(this.computationRules);
-    console.log(`can compute: ${this.requiredFieldsForComputationExist()}`);
-
+    if (this.requiredFieldsForComputationExist()) {
+      const compMethod : ComputationMethod = this.computationRules.method as keyof typeof ComputationMethod;
+    }
   }
 
   requiredFieldsForComputationExist(): boolean {

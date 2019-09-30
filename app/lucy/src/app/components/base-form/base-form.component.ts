@@ -269,12 +269,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       // regular field - store key / value
       this.responseBody[field.key] = event;
     }
-  //   /*
-  //     This reassignment will trigger the set function of responseBody
-  //     which will send the new body to the computed fields.
-  //   */
-  //  const temp = this.responseBody;
-  // this.responseBody = temp;
+    /*
+      This reassignment will trigger the set function of responseBody
+      which will send the new body to the computed fields.
+      Otherwise the opject reference is passed and computed field cant be trigerred on change.
+    */
+    const temp = { ...this.responseBody };
+    this.responseBody = { ...temp};
   }
 
   /**
