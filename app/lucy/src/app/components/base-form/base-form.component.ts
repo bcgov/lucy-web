@@ -160,7 +160,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._config = object;
   }
 
-
+  // Diff object
   private _diffObject: DiffResult;
   get diffObject(): DiffResult {
     return this._diffObject;
@@ -169,6 +169,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._diffObject = object;
   }
 
+  /**
+   * Check if the required fields exist
+   */
   get canSubmit(): boolean {
     if (!this.config || !this.responseBody) {
       return false;
@@ -181,6 +184,45 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       }
     }
     return requiredFieldsExist;
+  }
+
+   /**
+   * Returns an array of strings containing headers
+   * of missing fields 
+   * @returns string array of headers
+   */
+  get missingFields(): string[] {
+    let requiredMissingFieldKeys: string[]= [];
+    
+    for (const key of this.config.requiredFieldKeys) {
+      if (!this.responseBody[key]) {
+        requiredMissingFieldKeys.push(key);
+      }
+    }
+    // let requiredMissingFieldHeaders: string[]= [];
+    let missingFieldHeaders: string[]= [];
+    let locationIncluded = false
+    for (const key of requiredMissingFieldKeys) {
+      if (this.config.fieldHeaders[key] !== undefined) {
+        // Group Lat long under "location" tag
+        if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
+          if (!locationIncluded) {
+            missingFieldHeaders.push(`Location`)
+            locationIncluded = true;
+          } 
+        } else {
+          // All other fields
+          missingFieldHeaders.push(this.config.fieldHeaders[key]);
+        }
+      }
+    }
+    return missingFieldHeaders;
+  }
+
+  // Flag used to show missing fields section
+  triedToSubmit = false;
+  get showMissingFieldsDialog() : boolean {    
+    return (this.triedToSubmit && this.missingFields.length > 0);
   }
 
   constructor(
@@ -216,7 +258,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     const config = await this.formService.getFormConfigForCurrentRoute();
     if (config) {
       this.config = config;
-      this.responseBody = this.formService.generateBodyForMergedConfig(config);
     } else {
       console.log('Bad config. show a toast in the future');
     }
@@ -248,8 +289,17 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @param event change event emitted
    */
   fieldChanged(field: any, event: any) {
-    if (field.isLocationField) {
-      // location field - needs
+    // if input was invalid, field component emits ``
+    // handle INVALID input cases
+    if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+      this.responseBody[field.latitude.key] = undefined;
+      this.responseBody[field.longitude.key] = undefined;
+    } else if (event === `` && this.responseBody[field.key] !== undefined) {
+      this.responseBody[field.key] = undefined;
+    }
+    // handle valid input cases
+     else if (field.isLocationField) {
+      // location field - needs lat long extraction
       this.responseBody[field.latitude.key] = event.latitude.value;
       this.responseBody[field.longitude.key] = event.longitude.value;
     } else if (field.isDropdown) {
@@ -286,7 +336,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   async submitAction() {
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
-      this.alert.show('Missing fields', 'Please fill all required fields');
+      this.triedToSubmit = true;
     } else {
       if (!this.inReviewMode) {
         this.enterReviewMode();
