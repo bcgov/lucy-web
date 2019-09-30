@@ -60,7 +60,7 @@ export class AppLogger {
      * @param string inputTag
      */
     public constructor (inputTag: string) {
-        this.tag = inputTag;
+        this.tag = inputTag || this.constructor.name;
     }
 
     public set disableInfoLog(val: boolean) {

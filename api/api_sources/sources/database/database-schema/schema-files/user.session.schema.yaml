@@ -2,8 +2,42 @@ version: '1.0'
 externalTables: 
   - name: application_user
     schema: UserSchema
-    description: Application user
+    description: Application user table
 schemas:
+  ## -- UserSessionSchema
   UserSessionSchema:
     name: user_session
-    description: 
+    description: 'User session information. This table is maintain all session of user.'
+    columns:
+      id: 
+        name: session_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY
+      lastLoginAt:
+        name: last_login_at
+        comment: Last login timestamp
+        definition: TIMESTAMP NULL
+      token:
+        name: token
+        comment: Keyclock token of the user
+        definition: VARCHAR(1000) NULL
+      tokenExpiry:
+        name: token_expiry
+        comment: Keyclock token expiry timestamp
+        definition: TIMESTAMP NULL
+      tokenLifetime:
+        name: token_lifetime
+        comment: Life time of KC token in sec
+        definition: INT NULL
+      lastActiveAt:
+        name: last_active_at
+        comment: Timestamp to check last activity of user
+        definition: TIMESTAMP NULL
+      user: 
+        name: user_id
+        comment: Foreign key reference to user table. Owner of the session.
+        definition: INT NOT NULL
+        foreignTable: application_user
+        refColumn: user_id
+        deleteCascade: true
+  ## --
