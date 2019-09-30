@@ -43,6 +43,12 @@ export interface FormConfig {
       }[];
     }[];
   };
+  computedFields: {
+
+  };
+  relations: {
+
+  };
   fields: {
     key: string;
     layout: {
@@ -53,7 +59,7 @@ export interface FormConfig {
     meta: {};
     type: number;
     verification: {};
-    required: true;
+    required: boolean;
   }[];
 }
 
@@ -73,7 +79,7 @@ export interface FormConfig {
  * add cases for the new routes added in STEP-1)
  * 7) Add to function in this class -> editCurrent() to
  * add case for new view route to be able to switch to edit mode.
- * 8) * Optional - If new Code tables were introduced: Add support in:
+ * 8) * Optional: If new Code tables were introduced: Add support in:
  *  - codeTable service
  *  - dropdown service
  *  - dropdownfor() function in this class.
@@ -250,6 +256,7 @@ export class FormService {
     }
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
+    const computedFields = serverConfig.computedFields;
     const configObject: any = {
       api: serverConfig.meta.api,
       title: serverConfig.layout.title.default,
@@ -257,23 +264,31 @@ export class FormService {
       requiredFieldKeys: []
     };
     const requiredFieldKeys: string[] = [];
-    let fieldCount = 0;
-    // if you think this is O N^3, you're wrong. it O N^4!
-    // But this generated structure makes if easy for the view to display
+    // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
+    // But this generated structure makes if easy for the view to be generated
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
+      // Loop thorugh groups in server config layout
       for (const group of groups) {
+        // Initialize fields for group
         const subSectionFields: any[] = [];
+        // Lat long fields will be merged into a location field. so first one found needs to be cached
         let cachedLatOrLongField: any;
+        // Now loop through field keys specified in group layout
         for (let i = 0; i < group.fields.length; i++) {
-          const field = group.fields[i];
+          // Get key for field
+          const fieldKey = group.fields[i];
           // Add type flags to field (to help with html generation)
-          const newField = await this.configField(field, fields);
-          // newField.tabindex = fieldCount;
-          fieldCount++;
+          let newField = await this.configField(fieldKey, fields);
+          // If field key wasnt found in fields
           if (!newField) {
-            continue;
+            // Could be a computed field
+            newField = await this.configComputedField(fieldKey, computedFields);
+            if (!newField) {
+              // If it wasnt, just skip it
+              continue;
+            }
           }
           if (newField.required) {
             requiredFieldKeys.push(newField.key);
@@ -291,6 +306,8 @@ export class FormService {
             // Comment fields should take the whole row
             newField.cssClasses = newField.cssClasses + ' col-12';
           }
+
+          ////// Special case for lat or long fields //////
           if (
             newField.isLocationLatitudeField ||
             newField.isLocationLongitudeField
@@ -314,7 +331,9 @@ export class FormService {
             } else {
               cachedLatOrLongField = newField;
             }
+            ////// END Special case for lat or long field //////
           } else {
+            // Add field to group fields
             subSectionFields.push(newField);
           }
         }
@@ -332,6 +351,38 @@ export class FormService {
     configObject.requiredFieldKeys = requiredFieldKeys;
     // console.dir(configObject);
     return configObject;
+  }
+
+  private async configComputedField(key: string, computedFields: any): Promise<any> {
+    // if key is not in computed fields, return undefined
+    if (!computedFields[key]) {
+      return undefined;
+    }
+    const computedField = computedFields[key];
+    // set css classes // TODO: Server doesnt send this yet
+    let cssClasses = ``;
+    if (computedField.layout && computedField.layout.classes) {
+      const classes = computedField.layout.classes;
+      for (const item of classes) {
+        cssClasses = cssClasses + ` `;
+      }
+    }
+    // END set css classes
+    console.log('adding computer field');
+    return {
+      key: key,
+      header: computedField.header.default,
+      description: computedField.description, // TODO: Server doesnt send this yet
+      required: false,
+      type: 'computed',
+      verification: undefined,
+      meta: computedField.meta, // TODO: Server doesnt send this yet
+      cssClasses: cssClasses, // TODO: Server doesnt send this yet
+      codeTable: '',
+      condition: '',
+      computationRules: computedField.computationRules,
+      isComputedField: true,
+    };
   }
 
   /**
@@ -612,13 +663,6 @@ export class FormService {
         }
       }
     }
-
-    /*
-      Yes, big O of n^3 is really bad
-      (its actually way, way worse if you look deeper)
-      but we're still coming up with the form builder
-      so things are too complicated for us to figure this out right now.
-    */
     // TODO: Refactor
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
