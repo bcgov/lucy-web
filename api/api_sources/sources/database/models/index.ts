@@ -48,6 +48,10 @@ export * from './mechanicalTreatmentIssue.code';
 export * from './treatmentProviderContractor';
 export * from './generic.data.models';
 
+/**
+ * Controllers
+ */
 export * from './controllers/mechanicalTreatment.controller';
 export * from './controllers/observation.data.controller';
+export * from './controllers/user.controller';
 // ----------------------------------------------------------------------------------------------------------------

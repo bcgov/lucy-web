@@ -1,7 +1,32 @@
 # User Table Schema 
 version: '1.0'
-externalTables: []
+externalTables: 
+  - name: app_roles_code
+    schema: RolesCodeTableSchema
+    description: Application roles code table
 schemas: 
+  ## RolesCodeTableSchema
+  RolesCodeTableSchema:
+    name: app_roles_code
+    description: This table holds definition of different user roles of the system along with cross domain code.
+    columns:
+      id:
+        name: role_code_id
+        comment: 'Auto generated primary key.'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: role_code
+        comment: Cross domain code to uniquely identify any role 
+        definition: VARCHAR(10) NOT NULL UNIQUE
+      role:
+        name: role
+        comment: Role description in words
+        definition: VARCHAR(50) NULL
+      description:
+        name: description
+        comment: Detail description of of different roles and access level and functional capability
+        definition: VARCHAR(100) NULL
+  ## --
   # -- UserSchema --
   UserSchema:
     name: application_user
@@ -39,25 +64,11 @@ schemas:
         name: activation_status
         comment: Flag to check account is active or not
         definition: SMALLINT DEFAULT 1
-      refCurrentSession:
-        name: current_session_id
-        comment: Reference to current session id. relationship will be removed
+      activeSessionId:
+        name: active_session_id
+        comment: 'Reference to active session table. This is non referential colum to create soft link to user_session table. This column will used to keep track current active session of the user'
         definition: INT NULL
   # --
-  ## -- RolesCodeTableSchema 
-  RolesCodeTableSchema:
-    name: app_role_code
-    description: 'Code table to store different roles enum values. Different application user role and code related those roles will be managed in this table. This is code table will be managed by business for long term and cross product usage'
-    columns:
-      id: 
-        name: role_code_id
-        comment: 'Auto generated primary key. Uniquely identify user'
-        definition: SERIAL PRIMARY KEY
-      code: 
-        name: 'role_code'
-        comment: 'String encoded enum values for different roles. Typical example are like ADM => Admin, DAV => Data Viewer, DAE => Data Editor (SME)'
-        definition: VARCHAR(6) NOT NULL UNIQUE
-  ## --
   ## -- UserRoleSchema
   UserRoleSchema:
     name: user_role
@@ -73,10 +84,12 @@ schemas:
         definition: INT NOT NULL
         foreignTable: application_user
         refColumn: user_id
+        deleteCascade: true
       role:
         name: role_code_id
         comment: 'Foreign key reference to role code table'
         definition: INT NOT NULL
-        foreignTable: app_role_code
+        foreignTable: app_roles_code
         refColumn: role_code_id
-  ## --
+        deleteCascade: true
+  ## -- 

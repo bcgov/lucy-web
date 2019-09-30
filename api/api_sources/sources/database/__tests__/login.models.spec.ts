@@ -36,7 +36,7 @@ describe('Test Login Data Model', () => {
         await commonTestTearDownAction();
         return;
     });
-    it('-should create/fetch model (admin)-', async () => {
+    it('should create/fetch model (admin)', async () => {
         const user = await userFactory(RolesCodeValue.admin);
         expect(user).not.equal(undefined);
         if (user) {
@@ -95,6 +95,7 @@ describe('Test Login Data Model', () => {
         expect(dbSession.user.email).to.equal(userSession.user.email);
 
         // Checking currentSession relationship of user
+        UserDataController.shared.setCurrentSession(dbSession.user, dbSession);
         const currentSession: UserSession = await UserDataController.shared.getCurrentSession(dbSession.user);
         expect(currentSession).not.equal(undefined);
         expect(currentSession.session_id).to.equal(dbSession.session_id);

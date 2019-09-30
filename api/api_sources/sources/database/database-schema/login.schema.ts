@@ -2,26 +2,15 @@
 
 import { ApplicationTable } from '../../libs/core-database';
 import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
+import { getYAMLFilePath } from './schema-files';
 
 /**
  * @description Schema Class to design role code table
  * @export class RolesCodeTableSchema
  */
 export class RolesCodeTableSchema extends BaseTableSchema {
-    defineTable(): ApplicationTable {
-        const table: ApplicationTable = new ApplicationTable();
-        table.name = 'app_roles_code';
-        table.description = 'Table to store different roles of application along with unique code and description';
-        table.columnsDefinition = {
-            id: defineColumn('role_code_id', 'Auto generated incremental primary key column'),
-            code: defineColumn('code', 'Application level identifier code'),
-            role: defineColumn('role', 'User role as per access'),
-            description: defineColumn('description', 'Description of each access level item'),
-            updateAt: defineColumn(BaseTableSchema.timestampColumns.updatedAt, 'Row update timestamp'),
-            createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
-        };
-
-        return table;
+    get schemaFilePath(): string {
+        return getYAMLFilePath('user.schema.yaml');
     }
 }
 
@@ -30,25 +19,14 @@ export class RolesCodeTableSchema extends BaseTableSchema {
  * @export class UserSchema
  */
 export class UserSchema extends BaseTableSchema {
-    defineTable() {
-        const table = new ApplicationTable();
-        table.name = 'application_user';
-        table.description = 'Table to store user information';
-        table.columnsDefinition = {
-            id: defineColumn('user_id', 'Auto generated incremental primary key column'),
-            firstName: defineColumn('first_name', 'First name of user'),
-            lastName: defineColumn('last_name', 'Last name of user'),
-            email: defineColumn('email', 'User email'),
-            preferredUsername: defineColumn('preferred_username', 'User name provided by KeyClock'),
-            loginType: defineColumn('login_type', 'Login type BCeID or IDR'),
-            expiryDate: defineColumn('expiry_date', 'Expiry date of account'),
-            accountStatus: defineColumn('account_status', 'Status of account'),
-            activation: defineColumn('activation', 'Activation status of account'),
-            refCurrentSession: defineColumn('ref_current_session_id', 'FOREIGN KEY reference to session table to track current sessions of users'),
-            updateAt: defineColumn(BaseTableSchema.timestampColumns.updatedAt, 'Row update timestamp'),
-            createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
-        };
-        return table;
+    get schemaFilePath(): string {
+        return getYAMLFilePath('user.schema.yaml');
+    }
+}
+
+export class UserRoleSchema extends BaseTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('user.schema.yaml');
     }
 }
 
@@ -57,7 +35,10 @@ export class UserSchema extends BaseTableSchema {
  * @export class UserSessionSchema
  */
 export class UserSessionSchema extends BaseTableSchema {
-    defineTable() {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('user.session.schema.yaml');
+    }
+    /*defineTable() {
         const table = new ApplicationTable();
         table.name = 'user_session';
         table.description = 'User session information table. Store active user sessions of application';
@@ -73,7 +54,7 @@ export class UserSessionSchema extends BaseTableSchema {
             createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
         };
         return table;
-    }
+    }*/
 }
 
 /**
@@ -95,6 +76,8 @@ export class SessionActivityCodeSchema extends BaseTableSchema {
         return table;
     }
 }
+
+
 
 /**
  * @description Schema Class to design table of user session activities
