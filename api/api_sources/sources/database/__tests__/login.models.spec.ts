@@ -115,12 +115,12 @@ describe('Test Login Data Model', () => {
         await SessionActivityController.shared.saveInDB(sessionActivity);
 
         // Fetch
-        const fetchValues: SessionActivity = await SessionActivityController.shared.findById(sessionActivity.activity_id);
+        const fetchValues: SessionActivity = await SessionActivityController.shared.findById(sessionActivity.user_session_activity_id);
 
         // Test
         expect(fetchValues.session.session_id).to.eql(sessionActivity.session.session_id);
         expect(fetchValues.info).to.equal(sessionActivity.info);
-        expect(fetchValues.code).to.eql(sessionActivity.code);
+        expect(fetchValues.activityCode).to.eql(sessionActivity.activityCode);
 
         // Remove
         const session = sessionActivity.session;

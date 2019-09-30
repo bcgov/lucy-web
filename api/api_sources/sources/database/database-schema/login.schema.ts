@@ -1,8 +1,7 @@
 // Application Login Schemas
-
-import { ApplicationTable } from '../../libs/core-database';
-import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
+import { BaseTableSchema} from '../applicationSchemaInterface';
 import { getYAMLFilePath } from './schema-files';
+import { CodeTableSchema } from './base.record.schema';
 
 /**
  * @description Schema Class to design role code table
@@ -38,31 +37,17 @@ export class UserSessionSchema extends BaseTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('user.session.schema.yaml');
     }
-    /*defineTable() {
-        const table = new ApplicationTable();
-        table.name = 'user_session';
-        table.description = 'User session information table. Store active user sessions of application';
-        table.columnsDefinition = {
-            id: defineColumn('session_id', 'Session id auto generated incremental primary key column'),
-            lastLoginAt: defineColumn('last_login_at', 'Last login timestamp'),
-            token: defineColumn('token', 'Keyclock token'),
-            tokenExpiry: defineColumn('token_expiry', 'Token expiry timestamp'),
-            tokenLifetime: defineColumn('token_lifetime', 'Token lifetime'),
-            lastActiveAt: defineColumn('last_active_at', 'Timestamp to check last activity of user'),
-            refUserId: defineColumn('ref_user_id', 'FOREIGN KEY reference to user table'),
-            updateAt: defineColumn(BaseTableSchema.timestampColumns.updatedAt, 'Row update timestamp'),
-            createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
-        };
-        return table;
-    }*/
 }
 
 /**
  * @description Schema Class to design code table for different session activities
  * @export class SessionActivityCodeSchema
  */
-export class SessionActivityCodeSchema extends BaseTableSchema {
-    defineTable() {
+export class SessionActivityCodeSchema extends CodeTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('user.session.schema.yaml');
+    }
+    /*defineTable() {
         const table = new ApplicationTable();
         table.name = 'session_activity_code';
         table.description = 'Code table to hold different activity of user in application';
@@ -74,7 +59,7 @@ export class SessionActivityCodeSchema extends BaseTableSchema {
             createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
         };
         return table;
-    }
+    }*/
 }
 
 
@@ -84,7 +69,10 @@ export class SessionActivityCodeSchema extends BaseTableSchema {
  * @export class SessionActivitySchema
  */
 export class SessionActivitySchema extends BaseTableSchema {
-    defineTable() {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('user.session.schema.yaml');
+    }
+    /*defineTable() {
         const table = new ApplicationTable();
         table.name = 'user_session_activity';
         table.description = 'Collection table to hold information of users session activities';
@@ -97,7 +85,7 @@ export class SessionActivitySchema extends BaseTableSchema {
             createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
         };
         return table;
-    }
+    }*/
 }
 
 // -------------------------------------------------------------------------
