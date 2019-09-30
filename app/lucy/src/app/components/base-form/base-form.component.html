@@ -105,7 +105,28 @@
   <div *ngIf="showdiffViewer" class="container form-body diff-container animated fadeInDown">
       <app-diff-viewer [diffObject]="diffObject"></app-diff-viewer>
   </div>
-  <br />
+  <!-- Missing fields  -->
+  <div *ngIf="showMissingFieldsDialog" class="container form-body diff-container animated fadeInDown">
+      <mat-accordion>
+          <mat-expansion-panel
+          [expanded]="true"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+               Missing Fields
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="container container-fluid">
+              <div class="row">
+                  <mat-chip-list *ngFor="let missingField of missingFields; let j = index">
+                  <mat-chip>{{missingField}}</mat-chip>
+                  </mat-chip-list>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion> 
+  </div>
+  <!-- Form Body -->
   <div class="container form-body animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'">
     <div
       class="container-fluid"

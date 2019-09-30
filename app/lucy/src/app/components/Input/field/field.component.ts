@@ -21,6 +21,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   private isReady = false;
   // Output
+  /**
+   * Emits `` if validations didnt pass.
+   */
   @Output() valueChanged = new EventEmitter<string>();
   // Optional Input
   @Input() editable = true;
@@ -92,8 +95,13 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     if (this.fieldFormControl) {
       if (this.fieldFormControl.valid) {
         this.valueChanged.emit(value);
-      } else {
-        // console.log(`there is an error ${this.header} -> ${value}`);
+      } else if (this.fieldFormControl.invalid) {
+        if (Object.keys(this.fieldFormControl.errors).length === 1 && this.fieldFormControl.errors.required && value.length > 0) {
+          // if the only requirement is for the field to be required, and value is not empty.. dont emit
+          // this is a hot-fix for "generate for testing" button.
+        } else {
+          this.valueChanged.emit(``);
+        }
       }
     } else {
       this.valueChanged.emit(value);

@@ -63,6 +63,26 @@ export interface FormConfig {
   }[];
 }
 
+export interface UIConfigObject {
+  api: string,
+  title: string,
+  sections: UIConfigSection[],
+  requiredFieldKeys: string[],
+  dropdownFieldKeys: string[],
+  fieldHeaders: {},
+};
+
+export interface UIConfigSection {
+  title: string,
+  subSections: UIConfigSubSection[],
+}
+
+export interface UIConfigSubSection {
+  title: string,
+  boxed: boolean,
+  fields: any[]
+}
+
 @Injectable({
   providedIn: `root`
 })
@@ -259,12 +279,14 @@ export class FormService {
     const computedFields = serverConfig.computedFields;
     const requiredFieldKeys: string[] = [];
     const dropdownFieldKeys: string[] = [];
-    const configObject: any = {
+    const fieldHeaders: {} = {};
+    const configObject: UIConfigObject = {
       api: serverConfig.meta.api,
       title: serverConfig.layout.title.default,
       sections: [],
       requiredFieldKeys: [],
-      dropdownFieldKeys: []
+      dropdownFieldKeys: [],
+      fieldHeaders: [],
     };
     
     // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
@@ -293,14 +315,17 @@ export class FormService {
               continue;
             }
           }
-          // Store required fields in a separate array too
+          // Store required fields in a separate array
           if (newField.required) {
             requiredFieldKeys.push(newField.key);
           }
-          // store dropdown fields in a separate array too
+          // Store dropdown fields in a separate array
           if (newField.isDropdown) {
             dropdownFieldKeys.push(newField.key);
           }
+          // Store field headers in a separate array
+          fieldHeaders[newField.key] = newField.header;
+          
           // set column size:
           if (
             group.fields.length >= 3 &&
@@ -358,6 +383,7 @@ export class FormService {
     }
     configObject.requiredFieldKeys = requiredFieldKeys;
     configObject.dropdownFieldKeys = dropdownFieldKeys;
+    configObject.fieldHeaders = fieldHeaders;
     // console.dir(configObject);
     return configObject;
   }
@@ -378,7 +404,6 @@ export class FormService {
       }
     }
     // END set css classes
-    console.log('adding computed field');
     return {
       key: key,
       header: computedField.header.default,
@@ -654,7 +679,6 @@ export class FormService {
    */
   private async merge(config: any, object: any): Promise<any> {
     const configuration = config;
-
     // set id & date
     for (const key in object) {
       if (object.hasOwnProperty(key)) {
@@ -693,9 +717,10 @@ export class FormService {
                 field.value = object[field.key];
               }
             } else {
-              console.log(
-                `**** config key ${field.key} does not exist in object`
-              );
+              // UNCOMMENT for debugging/ when adding new form support. it helps
+              // console.log(
+              //   `**** config key ${field.key} does not exist in object`
+              // );
             }
           }
         }
@@ -732,7 +757,6 @@ export class FormService {
       }
       return `${separated[0]}.${decimals}`;
     }
-
     // at this point it should be fine as is
     return String(value);
 
@@ -991,7 +1015,8 @@ export class FormService {
 
   public async generateObservationTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyObservation([]);
-    return await this.merge(config, dummy);
+    const temp =  await this.merge(config, dummy);
+    return temp;
   }
   //////////////////////////////////// END TESTS ////////////////////////////////////
 

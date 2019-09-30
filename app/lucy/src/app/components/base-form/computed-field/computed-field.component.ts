@@ -84,6 +84,8 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
           console.log('default not implemented');
           break;
       }
+    } else {
+      this.value = ``;
     }
   }
 

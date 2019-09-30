@@ -79,7 +79,7 @@ export class ValidationService {
    * @param latitude string - * use String(number) if needed.
    */
   public isValidLatitude(latitude: string) {
-    return +latitude >= 48 && +latitude <= 61;
+    return Number(latitude) >= 48 && Number(latitude) <= 61;
   }
 
   /**
