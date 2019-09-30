@@ -257,13 +257,16 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
+    const requiredFieldKeys: string[] = [];
+    const dropdownFieldKeys: string[] = [];
     const configObject: any = {
       api: serverConfig.meta.api,
       title: serverConfig.layout.title.default,
       sections: [],
-      requiredFieldKeys: []
+      requiredFieldKeys: [],
+      dropdownFieldKeys: []
     };
-    const requiredFieldKeys: string[] = [];
+    
     // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
     // But this generated structure makes if easy for the view to be generated
     for (const section of sections) {
@@ -290,8 +293,13 @@ export class FormService {
               continue;
             }
           }
+          // Store required fields in a separate array too
           if (newField.required) {
             requiredFieldKeys.push(newField.key);
+          }
+          // store dropdown fields in a separate array too
+          if (newField.isDropdown) {
+            dropdownFieldKeys.push(newField.key);
           }
           // set column size:
           if (
@@ -349,6 +357,7 @@ export class FormService {
       });
     }
     configObject.requiredFieldKeys = requiredFieldKeys;
+    configObject.dropdownFieldKeys = dropdownFieldKeys;
     // console.dir(configObject);
     return configObject;
   }
@@ -356,6 +365,7 @@ export class FormService {
   private async configComputedField(key: string, computedFields: any): Promise<any> {
     // if key is not in computed fields, return undefined
     if (!computedFields[key]) {
+      console.log('heeere');
       return undefined;
     }
     const computedField = computedFields[key];
@@ -368,7 +378,7 @@ export class FormService {
       }
     }
     // END set css classes
-    console.log('adding computer field');
+    console.log('adding computed field');
     return {
       key: key,
       header: computedField.header.default,
