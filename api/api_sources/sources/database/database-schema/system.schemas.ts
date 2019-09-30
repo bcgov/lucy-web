@@ -1,6 +1,5 @@
 // System related schema
-import { ApplicationTable } from '../../libs/core-database';
-import { BaseTableSchema, defineColumn} from '../applicationSchemaInterface';
+import { BaseTableSchema } from '../applicationSchemaInterface';
 import { getYAMLFilePath } from './schema-files';
 
 /**
@@ -33,7 +32,10 @@ export class ApplicationEventSchema extends BaseTableSchema {
  * @export class UserMessagesSchema
  */
 export class UserMessagesSchema extends BaseTableSchema {
-    defineTable() {
+    get schemaFilePath(): string {
+        return getYAMLFilePath(`admin.ops.schema.yaml`);
+    }
+    /*defineTable() {
         const table: ApplicationTable = new ApplicationTable();
         table.name = 'user_message';
         table.description = 'Table to store messages for users.';
@@ -49,7 +51,7 @@ export class UserMessagesSchema extends BaseTableSchema {
             createAt: defineColumn(BaseTableSchema.timestampColumns.createdAt, 'Row create timestamp')
         };
         return table;
-    }
+    }*/
 }
 
 // --------------------------------------------------------------------------------

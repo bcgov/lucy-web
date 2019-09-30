@@ -8,6 +8,7 @@ schemas:
   ## RolesCodeTableSchema
   RolesCodeTableSchema:
     name: app_roles_code
+    modelName: RolesCode
     description: This table holds definition of different user roles of the system along with cross domain code.
     columns:
       id:

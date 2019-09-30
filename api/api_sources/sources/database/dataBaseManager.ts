@@ -124,7 +124,6 @@ export class DBManager extends LoggerBase {
             UserMessageController.shared,
             SessionActivityCodeController.shared,
             RequestAccessController.shared,
-            UserMessageController.shared,
             SpeciesController.shared,
             SpeciesDensityCodeController.shared,
             SpeciesDistributionCodeController.shared,

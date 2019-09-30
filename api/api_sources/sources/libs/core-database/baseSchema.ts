@@ -90,7 +90,7 @@ export class  BaseSchema {
      * @description Model class name related to schema
      */
     public get modelName(): string {
-        return this.className.split('Schema')[0];
+        return this.table.modelName || this.className.split('Schema')[0];
     }
 
     public get hasDefaultValues(): boolean {
@@ -142,6 +142,7 @@ export class  BaseSchema {
         table.meta = def.meta;
         table.computedFields = def.computedFields;
         table.relations = def.relations || {};
+        table.modelName = def.modelName;
         _.each(def.columns, (value: TableColumnOption, key) => {
             const result = {};
             const column: ApplicationTableColumn = new ApplicationTableColumn(
