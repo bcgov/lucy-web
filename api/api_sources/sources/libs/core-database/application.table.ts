@@ -37,6 +37,7 @@ export class ApplicationTable {
     displayLayout: any;
     computedFields: any;
     relations: any;
+    modelName?: string;
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {

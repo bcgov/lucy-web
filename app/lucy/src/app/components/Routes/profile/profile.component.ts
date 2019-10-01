@@ -88,6 +88,13 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         this.navigateToUserInfo();
       }
     });
+
+    // Check Access type
+    this.loadingService.add();
+    this.userService.getAccess().then((value) => {
+      this.userAccessType = value;
+      this.loadingService.remove();
+    });
   }
 
   /////////// Lottie ///////////
