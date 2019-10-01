@@ -754,7 +754,7 @@ export class FormService {
     // Relations
     for (const relationKey of configuration.relationKeys) {
       if (object[relationKey]) {
-        console.log("Relation field exists");
+        console.log('Relation field exists');
         configuration.relationsConfigs[relationKey].objects = object[relationKey];
         this.createUIConfigForArrayRelation(configuration.relationsConfigs[relationKey]);
       }
@@ -784,14 +784,29 @@ export class FormService {
       const fieldConfig: any = {};
       if (isResource) {
         fieldConfig.endpoint = `${api}/${object[idKey]}`;
-
+        for (const columnKey of this.getTableColumnKeys()) {
+          if (Array.isArray(columnKey)) {
+            for (let _i = 0; _i < columnKey.length; _i++) {
+              const key = columnKey[_i];
+              if (_i === 0) {
+                fieldConfig[columnKey[0]] = object[key];
+              } else {
+                fieldConfig[columnKey[0]] = fieldConfig[columnKey[0]][key];
+              }
+            }
+          } else {
+            fieldConfig[columnKey] = object[columnKey];
+          }
+        }
       }
-     
       relationFields.push(fieldConfig);
     }
+    console.log(relationFields);
   }
 
-  private 
+  private getTableColumnKeys(): any[] {
+    return ['date', ['species', 'commonName'], 'paperFileReference'];
+  }
 
   /**
    * Convert to string and add trailing zeros as needed.
