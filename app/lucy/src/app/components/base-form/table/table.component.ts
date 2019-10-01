@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { RouterService } from 'src/app/services/router.service';
 
 export interface TableModel {
   displayedColums: string[];
@@ -34,7 +35,6 @@ export class TableComponent implements OnInit {
   @Input() set model(object: TableModel) {
     this._model = object;
     if (object) {
-      console.dir(object);
       this.initMaterialTable();
     }
   }
@@ -59,7 +59,7 @@ export class TableComponent implements OnInit {
   dataSource = new MatTableDataSource<MapObject>(this.tableRows);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   /************ END OF Material Table ************/
-  constructor() { }
+  constructor(private router: RouterService) { }
 
   ngOnInit() {
   }
@@ -97,7 +97,15 @@ export class TableComponent implements OnInit {
   }
 
   viewDetails(object: any) {
-    console.log(object);
+    if (!this.router.isViewRoute || !object.api || !object.objectId) {
+      return;
+    }
+    const route = this.router.getAppRouteForAPI(object.api);
+    if (!route) {
+      console.log('not found');
+      return;
+    }
+    this.router.navigateTo(route, object.objectId);
   }
 
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppRoutes } from '../constants';
+import { AppRoutes, AppConstants } from '../constants';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -42,8 +42,8 @@ export class RouterService {
   private getFirstRouteParam(): string {
     const temp1 = this.router.url.substring(1);
     // is it a route with params
-    if ( temp1 .indexOf(`/`) !== -1) {
-      const temp2 =  temp1.slice(0,  temp1.indexOf(`/`));
+    if (temp1.indexOf(`/`) !== -1) {
+      const temp2 = temp1.slice(0, temp1.indexOf(`/`));
       return temp2;
     } else {
       return undefined;
@@ -70,12 +70,12 @@ export class RouterService {
     }
     switch (createType.toLowerCase()) {
       case `observation`:
-          return AppRoutes.AddObservation;
+        return AppRoutes.AddObservation;
       case `mechnical`:
-          return AppRoutes.AddMechanicalTreatment;
+        return AppRoutes.AddMechanicalTreatment;
       default:
         console.log(`here`);
-          // return AppRoutes.Error;
+      // return AppRoutes.Error;
     }
   }
 
@@ -85,12 +85,12 @@ export class RouterService {
     const editType = editTypeAndId.slice(0, editTypeAndId.indexOf(`/`));
     switch (editType.toLowerCase()) {
       case `observation`:
-          return AppRoutes.EditObservation;
+        return AppRoutes.EditObservation;
       case `mechnical`:
-          return AppRoutes.EditMechanicalTreatment;
+        return AppRoutes.EditMechanicalTreatment;
       default:
         console.log(`here`);
-          return AppRoutes.Error;
+        return AppRoutes.Error;
     }
   }
 
@@ -100,9 +100,9 @@ export class RouterService {
     const viewType = viewTypeAndId.slice(0, viewTypeAndId.indexOf(`/`));
     switch (viewType.toLowerCase()) {
       case `observation`:
-          return AppRoutes.ViewObservation;
+        return AppRoutes.ViewObservation;
       case `mechnical`:
-          return AppRoutes.ViewMechanicalTreatment;
+        return AppRoutes.ViewMechanicalTreatment;
       default:
         console.log(`here`);
         return AppRoutes.Error;
@@ -141,5 +141,18 @@ export class RouterService {
     } else {
       return undefined;
     }
+  }
+
+  public getAppRouteForAPI(api: string): AppRoutes {
+    const apiWithBaseURL = `${AppConstants.API_baseURL}${api}`;
+    switch (apiWithBaseURL) {
+      case AppConstants.API_mechanicalTreatment:
+        return AppRoutes.ViewMechanicalTreatment;
+      case AppConstants.API_observation:
+        return AppRoutes.ViewObservation;
+      default:
+        console.log(`${api} does not have a route`);
+    }
+    return undefined;
   }
 }
