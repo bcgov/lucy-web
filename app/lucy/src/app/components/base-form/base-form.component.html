@@ -254,7 +254,7 @@
       *ngFor="let relationKey of config.relationKeys; let relationIndex = index"
     >
     <br />
-      <div class="row">
+      <div class="row" *ngIf="config.relationsConfigs && config.relationsConfigs[relationKey] && config.relationsConfigs[relationKey].object">
         <div class="col-12 section-title">
           {{ config.relationsConfigs[relationKey].header.default }}
           <hr class="section-divider" />

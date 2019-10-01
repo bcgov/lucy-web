@@ -745,7 +745,6 @@ export class FormService {
         }
       }
     }
-    // Relations
     for (const relationKey of configuration.relationKeys) {
       if (object[relationKey]) {
         configuration.relationsConfigs[relationKey].objects = object[relationKey];
