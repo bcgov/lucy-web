@@ -9,6 +9,7 @@ import { MechanicalTreatmentService } from '../mechanical-treatment.service';
 import { ObservationService } from '../observation.service';
 import * as moment from 'moment';
 import { DiffResult } from '../diff.service';
+import { TableModel, TableColumn, TableRowModel } from 'src/app/components/base-form/table/table.component';
 
 export interface FormConfigField {
   key: string;
@@ -144,7 +145,7 @@ export class FormService {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
         const observation = await this.observationService.getWithId(id);
-        console.dir(observation);
+        // console.dir(observation);
         if (configFile && observation) {
           return this.merge(configFile, observation);
         } else {
@@ -293,7 +294,7 @@ export class FormService {
       relationKeys: [],
       fieldHeaders: [],
     };
-    
+
     // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
     // But this generated structure makes if easy for the view to be generated
     for (const section of sections) {
@@ -330,7 +331,7 @@ export class FormService {
           }
           // Store field headers in a separate array
           fieldHeaders[newField.key] = newField.header;
-          
+
           // set column size:
           if (
             group.fields.length >= 3 &&
@@ -391,24 +392,18 @@ export class FormService {
     configObject.fieldHeaders = fieldHeaders;
     if (serverConfig.relations) {
       configObject.relationKeys = this.getRelationKeysInConfig(serverConfig.relations);
-      configObject.relationsConfigs = serverConfig.relations
+      configObject.relationsConfigs = serverConfig.relations;
     }
     // console.dir(configObject);
     return configObject;
   }
 
-  private getRelationKeysInConfig(relations: any): string[]{
-    let result: string[] = [];
-    for (let key in relations) {
-      result.push(key);
-    }
-    return result;
-  }
-
-  private processRelations(relations: any): any[] {
-    let result: any[] = [];
-    for (let key in relations) {
-      result.push(key);
+  private getRelationKeysInConfig(relations: any): string[] {
+    const result: string[] = [];
+    for (const key in relations) {
+      if (relations[key] !== undefined) {
+        result.push(key);
+      }
     }
     return result;
   }
@@ -416,7 +411,6 @@ export class FormService {
   private async configComputedField(key: string, computedFields: any): Promise<any> {
     // if key is not in computed fields, return undefined
     if (!computedFields[key]) {
-      console.log('heeere');
       return undefined;
     }
     const computedField = computedFields[key];
@@ -754,9 +748,8 @@ export class FormService {
     // Relations
     for (const relationKey of configuration.relationKeys) {
       if (object[relationKey]) {
-        console.log('Relation field exists');
         configuration.relationsConfigs[relationKey].objects = object[relationKey];
-        this.createUIConfigForArrayRelation(configuration.relationsConfigs[relationKey]);
+        configuration.relationsConfigs[relationKey].table = this.createUIConfigForTableRelation(configuration.relationsConfigs[relationKey]);
       }
     }
     return configuration;
@@ -767,12 +760,11 @@ export class FormService {
    * objects and they way they are meant to be displayed
    * @param onject Relation object
    */
-  private createUIConfigForArrayRelation(relationConfig: any): any[] {
+  private createUIConfigForTableRelation(relationConfig: any): TableModel {
     const relationFields = [];
-    console.log(relationConfig);
     if (!relationConfig.refSchema || !relationConfig.refSchema.idKey || !relationConfig.refSchema.meta) {
       console.log(`relationConfig does not define an id key or reference schema or meta`);
-      return [];
+      return undefined;
     }
     const idKey = relationConfig.refSchema.idKey;
     const isResource = relationConfig.refSchema.meta.resource;
@@ -780,32 +772,87 @@ export class FormService {
     if (isResource) {
       api = relationConfig.refSchema.meta.api;
     }
+    const tableDataConfig = relationConfig.refSchema.displayLayout.fields;
+    // Create an array of rows that contain keys and values for those keys derived from object
     for (const object of relationConfig.objects) {
-      const fieldConfig: any = {};
+      const tableRowConfig: any = {};
       if (isResource) {
-        fieldConfig.endpoint = `${api}/${object[idKey]}`;
-        for (const columnKey of this.getTableColumnKeys()) {
+        tableRowConfig.endpoint = `${api}/${object[idKey]}`;
+        for (const columnKey of this.getTableColumnKeys(tableDataConfig)) {
           if (Array.isArray(columnKey)) {
             for (let _i = 0; _i < columnKey.length; _i++) {
               const key = columnKey[_i];
               if (_i === 0) {
-                fieldConfig[columnKey[0]] = object[key];
+                tableRowConfig[columnKey[0]] = object[key];
               } else {
-                fieldConfig[columnKey[0]] = fieldConfig[columnKey[0]][key];
+                tableRowConfig[columnKey[0]] = tableRowConfig[columnKey[0]][key];
               }
             }
           } else {
-            fieldConfig[columnKey] = object[columnKey];
+            tableRowConfig[columnKey] = object[columnKey];
           }
         }
       }
-      relationFields.push(fieldConfig);
+      relationFields.push(tableRowConfig);
     }
-    console.log(relationFields);
+    const tableModel: TableModel = this.generateTableModel(tableDataConfig, relationFields);
+    return tableModel;
   }
 
-  private getTableColumnKeys(): any[] {
-    return ['date', ['species', 'commonName'], 'paperFileReference'];
+  private generateTableModel(tableDataConfig: any[], values: any[]): TableModel {
+    const columns: TableColumn[] = [];
+    const displayedColums: string[] = [];
+    const tableRows: TableRowModel[] = [];
+    for (const element of tableDataConfig) {
+      const displayedHeader = element.header.default;
+      columns.push({
+        key: this.convertDotSeparatedStringToArray(element.key)[0],
+        display: displayedHeader,
+      });
+      displayedColums.push(this.convertDotSeparatedStringToArray(element.key)[0]);
+    }
+
+    for (const fields of values) {
+      tableRows.push({
+        fields: fields,
+        url: fields.api
+      });
+    }
+
+    return {
+      displayedColums: displayedColums,
+      columns: columns,
+      rows: tableRows
+    };
+  }
+
+  /**
+  * Convert keys recieved from server to array of strings
+  */
+  private getTableColumnKeys(tableDataConfig: any[]): string[][] {
+    const keys: string[][] = [];
+    for (const element of tableDataConfig) {
+      const currentKey = element.key;
+      keys.push(this.convertDotSeparatedStringToArray(currentKey));
+    }
+    return keys;
+  }
+
+  /**
+   * Convert a dot separated string into array og string
+   * @param string dot separated (or not)
+   */
+  private convertDotSeparatedStringToArray(string: string): string[] {
+    const result: string[] = [];
+    if (String(string).indexOf('.') === -1) {
+      result.push(string);
+    } else {
+      const separated = String(string).split('.');
+      for (const subElement of separated) {
+        result.push(subElement);
+      }
+    }
+    return result;
   }
 
   /**
@@ -1094,7 +1141,7 @@ export class FormService {
 
   public async generateObservationTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyObservation([]);
-    const temp =  await this.merge(config, dummy);
+    const temp = await this.merge(config, dummy);
     return temp;
   }
   //////////////////////////////////// END TESTS ////////////////////////////////////
