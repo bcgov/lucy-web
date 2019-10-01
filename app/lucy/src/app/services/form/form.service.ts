@@ -67,6 +67,8 @@ export interface UIConfigObject {
   api: string,
   title: string,
   sections: UIConfigSection[],
+  relationsConfigs: any,
+  relationKeys: string[],
   requiredFieldKeys: string[],
   dropdownFieldKeys: string[],
   fieldHeaders: {},
@@ -142,6 +144,7 @@ export class FormService {
         const id = this.router.routeId;
         const configFile = await this.getObservationUIConfig();
         const observation = await this.observationService.getWithId(id);
+        console.dir(observation);
         if (configFile && observation) {
           return this.merge(configFile, observation);
         } else {
@@ -286,6 +289,8 @@ export class FormService {
       sections: [],
       requiredFieldKeys: [],
       dropdownFieldKeys: [],
+      relationsConfigs: {},
+      relationKeys: [],
       fieldHeaders: [],
     };
     
@@ -384,8 +389,28 @@ export class FormService {
     configObject.requiredFieldKeys = requiredFieldKeys;
     configObject.dropdownFieldKeys = dropdownFieldKeys;
     configObject.fieldHeaders = fieldHeaders;
+    if (serverConfig.relations) {
+      configObject.relationKeys = this.getRelationKeysInConfig(serverConfig.relations);
+      configObject.relationsConfigs = serverConfig.relations
+    }
     // console.dir(configObject);
     return configObject;
+  }
+
+  private getRelationKeysInConfig(relations: any): string[]{
+    let result: string[] = [];
+    for (let key in relations) {
+      result.push(key);
+    }
+    return result;
+  }
+
+  private processRelations(relations: any): any[] {
+    let result: any[] = [];
+    for (let key in relations) {
+      result.push(key);
+    }
+    return result;
   }
 
   private async configComputedField(key: string, computedFields: any): Promise<any> {
@@ -697,7 +722,7 @@ export class FormService {
         }
       }
     }
-    // TODO: Refactor
+    // Sections/ subsections/ fields
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
@@ -726,8 +751,47 @@ export class FormService {
         }
       }
     }
+    // Relations
+    for (const relationKey of configuration.relationKeys) {
+      if (object[relationKey]) {
+        console.log("Relation field exists");
+        configuration.relationsConfigs[relationKey].objects = object[relationKey];
+        this.createUIConfigForArrayRelation(configuration.relationsConfigs[relationKey]);
+      }
+    }
     return configuration;
   }
+
+  /**
+   * Used by merge: Create UI config based on
+   * objects and they way they are meant to be displayed
+   * @param onject Relation object
+   */
+  private createUIConfigForArrayRelation(relationConfig: any): any[] {
+    const relationFields = [];
+    console.log(relationConfig);
+    if (!relationConfig.refSchema || !relationConfig.refSchema.idKey || !relationConfig.refSchema.meta) {
+      console.log(`relationConfig does not define an id key or reference schema or meta`);
+      return [];
+    }
+    const idKey = relationConfig.refSchema.idKey;
+    const isResource = relationConfig.refSchema.meta.resource;
+    let api = '';
+    if (isResource) {
+      api = relationConfig.refSchema.meta.api;
+    }
+    for (const object of relationConfig.objects) {
+      const fieldConfig: any = {};
+      if (isResource) {
+        fieldConfig.endpoint = `${api}/${object[idKey]}`;
+
+      }
+     
+      relationFields.push(fieldConfig);
+    }
+  }
+
+  private 
 
   /**
    * Convert to string and add trailing zeros as needed.
