@@ -81,6 +81,7 @@ import { AddMechanicalTreatmentAdvancedComponent } from './components/Routes/add
 import { LocationInputComponent } from './components/base-form/location-input/location-input/location-input.component';
 import { StringConstants } from './constants/string-constants';
 import { ComputedFieldComponent } from './components/base-form/computed-field/computed-field.component';
+import { TableComponent } from './components/base-form/table/table.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -127,6 +128,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AddMechanicalTreatmentAdvancedComponent,
     LocationInputComponent,
     ComputedFieldComponent,
+    TableComponent,
   ],
   imports: [
     BrowserModule,

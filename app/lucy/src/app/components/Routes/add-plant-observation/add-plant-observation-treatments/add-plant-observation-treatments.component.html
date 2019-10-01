@@ -4,7 +4,6 @@
     <div class="col table-container">
       <table mat-table [dataSource]="dataSource">
         ['Date', 'Method', 'Species', `PaperFileReference`, `Actions`];
-
         <!-- Date Column -->
         <ng-container matColumnDef="Date">
           <th mat-header-cell *matHeaderCellDef (click)="sortByDate()">

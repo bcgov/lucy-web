@@ -271,6 +271,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       // Computed fields rely on body to display their value.
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     }
+    console.log(config);
     this.isLoading = false;
   }
 
