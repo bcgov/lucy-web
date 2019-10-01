@@ -348,7 +348,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         this.enterReviewMode();
         return;
       }
+      this.loadingService.add();
       const submitted = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
+      this.loadingService.remove();
       if (submitted) {
         this.router.navigateTo(AppRoutes.Inventory);
       } else {
