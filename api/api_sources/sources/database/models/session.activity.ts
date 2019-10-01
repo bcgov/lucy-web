@@ -13,6 +13,7 @@ import {
 	SessionActivityCode,
 	UserSession
 } from '.';
+import { BaseModel } from './baseModel';
 
 
 /** Interface **/
@@ -47,7 +48,7 @@ export interface SessionActivityUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: SessionActivitySchema.dbTable} )
-export class SessionActivity {
+export class SessionActivity extends BaseModel {
 
 	/**
 	 * Class Properties

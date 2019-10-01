@@ -29,6 +29,7 @@ import { DataModelController } from '../data.model.controller';
 import {
 	User
 } from '../models';
+import { BaseModel } from './baseModel';
 
 /**
  * @description Status of message
@@ -77,7 +78,7 @@ export interface UserMessagesUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: UserMessagesSchema.dbTable} )
-export class UserMessage {
+export class UserMessage extends BaseModel {
 
 	/**
 	 * Class Properties
