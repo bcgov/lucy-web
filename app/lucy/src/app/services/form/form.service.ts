@@ -776,7 +776,8 @@ export class FormService {
     for (const object of relationConfig.objects) {
       const tableRowConfig: any = {};
       if (isResource) {
-        tableRowConfig.endpoint = `${api}/${object[idKey]}`;
+        tableRowConfig.objectId = object[idKey];
+        tableRowConfig.api = String(api);
         for (const columnKey of this.getTableColumnKeys(tableDataConfig)) {
           if (Array.isArray(columnKey)) {
             for (let _i = 0; _i < columnKey.length; _i++) {
@@ -814,7 +815,7 @@ export class FormService {
     for (const fields of values) {
       tableRows.push({
         fields: fields,
-        url: fields.api
+        url: ''
       });
     }
 
