@@ -31,6 +31,7 @@ import {
 	RolesCode,
 	User
 } from '../models';
+import { BaseModel } from './baseModel';
 
 /**
  * @description Status enum of property of RequestAccess.status
@@ -80,7 +81,7 @@ export interface RequestAccessUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: RequestAccessSchema.dbTable} )
-export class RequestAccess {
+export class RequestAccess extends BaseModel {
 
 	/**
 	 * Class Properties

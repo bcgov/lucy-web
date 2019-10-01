@@ -5,6 +5,7 @@ import { SessionActivityCodeSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
+import { BaseModel } from './baseModel';
 
 
 /**
@@ -52,7 +53,7 @@ export interface SessionActivityCodeUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: SessionActivityCodeSchema.dbTable} )
-export class SessionActivityCode {
+export class SessionActivityCode extends BaseModel {
 
 	/**
 	 * Class Properties
