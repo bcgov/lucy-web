@@ -31,7 +31,7 @@ export class DropdownComponent implements OnInit {
   @Input() editable = true;
 
   get fieldId(): string {
-    return this.fieldHeader;
+    return this.camelize(this.fieldHeader);
   }
 
   ///// Form Mode
@@ -159,6 +159,12 @@ export class DropdownComponent implements OnInit {
         }
       }
     }
+  }
+
+  camelize(str: string): string {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
   }
 
 }

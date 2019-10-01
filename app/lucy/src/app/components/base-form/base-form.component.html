@@ -93,7 +93,6 @@
             </i>
             Make changes
           </button>
-          
           <!-- ---- -->
         </mat-toolbar-row>
       </mat-toolbar>
@@ -119,7 +118,7 @@
             <div class="container container-fluid">
               <div class="row">
                   <mat-chip-list *ngFor="let missingField of missingFields; let j = index">
-                  <mat-chip>{{missingField}}</mat-chip>
+                  <mat-chip (click)="missingFieldSelected(missingField)">{{missingField}}</mat-chip>
                   </mat-chip-list>
               </div>
             </div>

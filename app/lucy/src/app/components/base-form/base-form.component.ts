@@ -3,6 +3,8 @@ import {
   OnInit,
   Input,
   AfterViewChecked,
+  Renderer,
+  Renderer2,
 } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ErrorService, ErrorType } from 'src/app/services/error.service';
@@ -18,6 +20,7 @@ import * as moment from 'moment';
 import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
+import { ElementRef } from '@angular/core';
 
 export enum FormType {
   Observation,
@@ -236,6 +239,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private formService: FormService,
     private api: ApiService,
     private loadingService: LoadingService,
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
   ) {
     this.lottieConfig = {
       path: this.formLoadingIcon,
@@ -400,6 +405,27 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.anim.setSpeed(speed);
   }
   /////////// End Lottie ///////////
+
+  missingFieldSelected(missingFieldHeader: string) {
+    const highlightClass = 'shake';
+    let el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
+      if (el) {;
+          el.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+          this.renderer.addClass(el, highlightClass);
+          setTimeout(() => {
+          this.renderer.removeClass(el, highlightClass);
+          }, 2000);
+      } else {
+          console.log(`${this.camelize(missingFieldHeader)} not found`);
+          console.log(this.elementRef.nativeElement);
+      }
+  }
+
+  camelize(str: string): string {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
 
   async generateForTesting() {
     this.loadingService.add();
