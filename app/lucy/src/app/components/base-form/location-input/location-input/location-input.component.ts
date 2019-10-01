@@ -138,7 +138,12 @@ export class LocationInputComponent implements OnInit {
   latChanged(value: string) {
     if (this.object && Number(value) && this.validation.isValidLatitude(value)) {
       this.object.latitude.value = value;
-      console.log(this.object.latitude.value);
+      this.notifyChangeEvent();
+    } else if (value === ``) {
+      // Field returns `` if input is invalid. 
+      // so form must know to remove this item from body
+      this.object.latitude.value = value;
+      this.notifyChangeEvent();
     }
     this.latLongChanged();
   }
@@ -150,7 +155,12 @@ export class LocationInputComponent implements OnInit {
   longChanged(value: string) {
     if (this.object && Number(value) && this.validation.isValidLongitude(value)) {
       this.object.longitude.value = value;
-      console.log(this.object.longitude.value);
+      this.notifyChangeEvent();
+    } else if (value === ``) {
+      // Field returns `` if input is invalid. 
+      // so form must know to remove this item from body
+      this.object.longitude.value = value;
+      this.notifyChangeEvent();
     }
     this.latLongChanged();
   }

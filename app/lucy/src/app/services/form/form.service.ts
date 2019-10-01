@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { ApiService, APIRequestMethod } from "../api.service";
-import { AppConstants, AppRoutes } from "src/app/constants";
-import { DropdownObject, DropdownService } from "../dropdown.service";
-import { DummyService } from "../dummy.service";
-import { RouterService } from "../router.service";
-import { ErrorService, ErrorType } from "../error.service";
-import { MechanicalTreatmentService } from "../mechanical-treatment.service";
-import { ObservationService } from "../observation.service";
-import * as moment from "moment";
-import { DiffResult } from "../diff.service";
+import { Injectable } from '@angular/core';
+import { ApiService, APIRequestMethod } from '../api.service';
+import { AppConstants, AppRoutes } from 'src/app/constants';
+import { DropdownObject, DropdownService } from '../dropdown.service';
+import { DummyService } from '../dummy.service';
+import { RouterService } from '../router.service';
+import { ErrorService, ErrorType } from '../error.service';
+import { MechanicalTreatmentService } from '../mechanical-treatment.service';
+import { ObservationService } from '../observation.service';
+import * as moment from 'moment';
+import { DiffResult } from '../diff.service';
 
 export interface FormConfigField {
   key: string;
@@ -43,6 +43,12 @@ export interface FormConfig {
       }[];
     }[];
   };
+  computedFields: {
+
+  };
+  relations: {
+
+  };
   fields: {
     key: string;
     layout: {
@@ -53,13 +59,53 @@ export interface FormConfig {
     meta: {};
     type: number;
     verification: {};
-    required: true;
+    required: boolean;
   }[];
+}
+
+export interface UIConfigObject {
+  api: string,
+  title: string,
+  sections: UIConfigSection[],
+  relationsConfigs: any,
+  relationKeys: string[],
+  requiredFieldKeys: string[],
+  dropdownFieldKeys: string[],
+  fieldHeaders: {},
+};
+
+export interface UIConfigSection {
+  title: string,
+  subSections: UIConfigSubSection[],
+}
+
+export interface UIConfigSubSection {
+  title: string,
+  boxed: boolean,
+  fields: any[]
 }
 
 @Injectable({
   providedIn: `root`
 })
+/**
+ * To add support for a new config file:
+ * 1) Add new route names in -> app/constants/app-routes.enum.ts
+ * 2) Add support for new routes in -> app/app-routing.module.ts
+ * 3) Add API endpoint for config in -> app/constants/app-constants.ts
+ * 4) Create function in this class under Fetch Server Config section to
+ * fetch server config from endpoint specified in STEP-3)
+ * 5) create function in this class under Fetch UI Config section to
+ * fetch server config from STEP-4) and convert to a Ui configuration
+ * 6) Add to function in this class -> getFormConfigForCurrentRoute() to
+ * add cases for the new routes added in STEP-1)
+ * 7) Add to function in this class -> editCurrent() to
+ * add case for new view route to be able to switch to edit mode.
+ * 8) * Optional: If new Code tables were introduced: Add support in:
+ *  - codeTable service
+ *  - dropdown service
+ *  - dropdownfor() function in this class.
+ */
 export class FormService {
   constructor(
     private api: ApiService,
@@ -69,18 +115,103 @@ export class FormService {
     private errorService: ErrorService,
     private observationService: ObservationService,
     private mechanicalTreatmentService: MechanicalTreatmentService
-  ) {}
+  ) { }
 
+  //////////////////////////////////// Fetch UI Config ////////////////////////////////////
+  /**
+   * returns UI configuration for Mechanical Treatments
+   */
   public async getMechanicalTreatmentUIConfig(): Promise<any> {
     const serverConfig = await this.getMechanicalTreatmentServerConfig();
     return await this.createUIConfig(serverConfig);
   }
 
+  /**
+   * returns UI configuration for Observations
+   */
   public async getObservationUIConfig(): Promise<any> {
     const serverConfig = await this.getObservationServerConfig();
     return await this.createUIConfig(serverConfig);
   }
 
+  /**
+   * returns UI configuration based on current route
+   */
+  public async getFormConfigForCurrentRoute(): Promise<any> {
+    switch (this.router.current) {
+      //// Observation routes ////
+      case AppRoutes.ViewObservation: {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const observation = await this.observationService.getWithId(id);
+        console.dir(observation);
+        if (configFile && observation) {
+          return this.merge(configFile, observation);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.EditObservation: {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const observation = await this.observationService.getWithId(id);
+        if (configFile && observation) {
+          return this.merge(configFile, observation);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.AddObservation: {
+        const configFile = await this.getObservationUIConfig();
+        return configFile;
+        break;
+      }
+      //// END Observation routes ////
+      //// Mechanical Treatment routes ////
+      case AppRoutes.ViewMechanicalTreatment: {
+        const id = this.router.routeId;
+        const configFile = await this.getMechanicalTreatmentUIConfig();
+        const treatment = await this.mechanicalTreatmentService.getWithId(id);
+        if (configFile && treatment) {
+          return this.merge(configFile, treatment);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.EditMechanicalTreatment: {
+        const id = this.router.routeId;
+        const configFile = await this.getObservationUIConfig();
+        const treatment = await this.mechanicalTreatmentService.getWithId(id);
+        if (configFile && treatment) {
+          return this.merge(configFile, treatment);
+        } else {
+          return undefined;
+        }
+        break;
+      }
+      case AppRoutes.AddMechanicalTreatment: {
+        const configFile = await this.getMechanicalTreatmentUIConfig();
+        return configFile;
+        break;
+      }
+      //// END Mechanical Treatment routes ////
+      default: {
+        console.log(
+          `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
+        );
+        this.errorService.show(ErrorType.NotFound);
+        return undefined;
+        break;
+      }
+    }
+  }
+
+  //////////////////////////////////// END Fetch UI Config ////////////////////////////////////
+
+  //////////////////////////////////// Fetch Server Config ////////////////////////////////////
   /**
    * Fetch and return configuration json for Mechanical treatment page
    */
@@ -135,96 +266,9 @@ export class FormService {
     }
   }
 
-  /**
-   * Switch current form to edit mode
-   */
-  public editCurrent() {
-    const current = this.router.current;
-    switch (current) {
-      case AppRoutes.ViewMechanicalTreatment: {
-        return this.router.navigateTo(
-          AppRoutes.EditMechanicalTreatment,
-          this.router.routeId
-        );
-      }
-      case AppRoutes.ViewObservation: {
-        return this.router.navigateTo(
-          AppRoutes.EditObservation,
-          this.router.routeId
-        );
-      }
-      default: {
-        console.log(`Case not handled`);
-      }
-    }
-  }
+  //////////////////////////////////// END Fetch Server Config ////////////////////////////////////
 
-  public async getFormConfigForCurrentRoute(): Promise<any> {
-    switch (this.router.current) {
-      case AppRoutes.ViewObservation: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditObservation: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.AddObservation: {
-        const configFile = await this.getObservationUIConfig();
-        return configFile;
-        break;
-      }
-      case AppRoutes.ViewMechanicalTreatment: {
-        const id = this.router.routeId;
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditMechanicalTreatment: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.AddMechanicalTreatment: {
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        return configFile;
-        break;
-      }
-      default: {
-        console.log(
-          `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
-        );
-        this.errorService.show(ErrorType.NotFound);
-        return undefined;
-        break;
-      }
-    }
-  }
+  //////////////////////////////////// Generate UI Config ////////////////////////////////////
 
   /**
    * generate and return Form Configuration file
@@ -235,34 +279,58 @@ export class FormService {
     }
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
-    const configObject: any = {
+    const computedFields = serverConfig.computedFields;
+    const requiredFieldKeys: string[] = [];
+    const dropdownFieldKeys: string[] = [];
+    const fieldHeaders: {} = {};
+    const configObject: UIConfigObject = {
       api: serverConfig.meta.api,
       title: serverConfig.layout.title.default,
       sections: [],
-      requiredFieldKeys: []
+      requiredFieldKeys: [],
+      dropdownFieldKeys: [],
+      relationsConfigs: {},
+      relationKeys: [],
+      fieldHeaders: [],
     };
-    const requiredFieldKeys: string[] = [];
-    let fieldCount = 0;
-    // if you think this is O N^3, you're wrong. it O N^4!
-    // But this generated structure makes if easy for the view to display
+    
+    // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
+    // But this generated structure makes if easy for the view to be generated
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
+      // Loop thorugh groups in server config layout
       for (const group of groups) {
+        // Initialize fields for group
         const subSectionFields: any[] = [];
+        // Lat long fields will be merged into a location field. so first one found needs to be cached
         let cachedLatOrLongField: any;
+        // Now loop through field keys specified in group layout
         for (let i = 0; i < group.fields.length; i++) {
-          const field = group.fields[i];
+          // Get key for field
+          const fieldKey = group.fields[i];
           // Add type flags to field (to help with html generation)
-          const newField = await this.configField(field, fields);
-          // newField.tabindex = fieldCount;
-          fieldCount++;
+          let newField = await this.configField(fieldKey, fields);
+          // If field key wasnt found in fields
           if (!newField) {
-            continue;
+            // Could be a computed field
+            newField = await this.configComputedField(fieldKey, computedFields);
+            if (!newField) {
+              // If it wasnt, just skip it
+              continue;
+            }
           }
+          // Store required fields in a separate array
           if (newField.required) {
             requiredFieldKeys.push(newField.key);
           }
+          // Store dropdown fields in a separate array
+          if (newField.isDropdown) {
+            dropdownFieldKeys.push(newField.key);
+          }
+          // Store field headers in a separate array
+          fieldHeaders[newField.key] = newField.header;
+          
           // set column size:
           if (
             group.fields.length >= 3 &&
@@ -276,6 +344,8 @@ export class FormService {
             // Comment fields should take the whole row
             newField.cssClasses = newField.cssClasses + ' col-12';
           }
+
+          ////// Special case for lat or long fields //////
           if (
             newField.isLocationLatitudeField ||
             newField.isLocationLongitudeField
@@ -299,7 +369,9 @@ export class FormService {
             } else {
               cachedLatOrLongField = newField;
             }
+            ////// END Special case for lat or long field //////
           } else {
+            // Add field to group fields
             subSectionFields.push(newField);
           }
         }
@@ -315,8 +387,62 @@ export class FormService {
       });
     }
     configObject.requiredFieldKeys = requiredFieldKeys;
+    configObject.dropdownFieldKeys = dropdownFieldKeys;
+    configObject.fieldHeaders = fieldHeaders;
+    if (serverConfig.relations) {
+      configObject.relationKeys = this.getRelationKeysInConfig(serverConfig.relations);
+      configObject.relationsConfigs = serverConfig.relations
+    }
     // console.dir(configObject);
     return configObject;
+  }
+
+  private getRelationKeysInConfig(relations: any): string[]{
+    let result: string[] = [];
+    for (let key in relations) {
+      result.push(key);
+    }
+    return result;
+  }
+
+  private processRelations(relations: any): any[] {
+    let result: any[] = [];
+    for (let key in relations) {
+      result.push(key);
+    }
+    return result;
+  }
+
+  private async configComputedField(key: string, computedFields: any): Promise<any> {
+    // if key is not in computed fields, return undefined
+    if (!computedFields[key]) {
+      console.log('heeere');
+      return undefined;
+    }
+    const computedField = computedFields[key];
+    // set css classes // TODO: Server doesnt send this yet
+    let cssClasses = ``;
+    if (computedField.layout && computedField.layout.classes) {
+      const classes = computedField.layout.classes;
+      for (const item of classes) {
+        cssClasses = cssClasses + ` `;
+      }
+    }
+    // END set css classes
+    return {
+      key: key,
+      header: computedField.header.default,
+      description: computedField.description, // TODO: Server doesnt send this yet
+      required: false,
+      type: 'computed',
+      verification: undefined,
+      meta: computedField.meta, // TODO: Server doesnt send this yet
+      cssClasses: cssClasses, // TODO: Server doesnt send this yet
+      codeTable: '',
+      condition: '',
+      computationRules: computedField.computationRules,
+      isComputedField: true,
+    };
   }
 
   /**
@@ -416,7 +542,7 @@ export class FormService {
       cssClasses = cssClasses + ` `;
     }
 
-    // BEGIN Tweak verifical object received.
+    // BEGIN Tweak verification object received.
     let verification = field.verification;
     if (!verification) {
       verification = {};
@@ -441,7 +567,7 @@ export class FormService {
       verification.positiveNumber = true;
     }
 
-    ///// END Tweak verifical object received
+    ///// END Tweak verification object received
     return {
       key: field.key,
       header: field.layout.header.default,
@@ -456,6 +582,10 @@ export class FormService {
     };
   }
 
+  /**
+   * check if field could be latitude field
+   * @param headerOrKey name
+   */
   private isLatitude(headerOrKey: string): boolean {
     return (
       headerOrKey.toLocaleLowerCase() === `lat` ||
@@ -463,6 +593,10 @@ export class FormService {
     );
   }
 
+  /**
+   * check if field could be longitude field
+   * @param headerOrKey name
+   */
   private isLongitude(headerOrKey: string): boolean {
     return (
       headerOrKey.toLocaleLowerCase() === `long` ||
@@ -480,43 +614,43 @@ export class FormService {
       return [];
     }
     switch (code.toLowerCase()) {
-      case "speciesagencycode":
+      case 'speciesagencycode':
         return await this.dropdownService.getAgencies();
-      case "jurisdictioncode":
+      case 'jurisdictioncode':
         return await this.dropdownService.getJuristictions();
-      case "species":
+      case 'species':
         return await this.dropdownService.getInvasivePlantSpecies();
-      case "speciesdistributioncode":
+      case 'speciesdistributioncode':
         return await this.dropdownService.getDistributions();
-      case "observationtypecode":
+      case 'observationtypecode':
         return await this.dropdownService.getObservationType();
-      case "soiltexturecode":
+      case 'soiltexturecode':
         return await this.dropdownService.getSoilTextureCodes();
-      case "observationgeometrycode":
+      case 'observationgeometrycode':
         return await this.dropdownService.getGeometry();
-      case "specificusecode":
+      case 'specificusecode':
         return await this.dropdownService.getSpecificUseCodes();
-      case "slopecode":
+      case 'slopecode':
         return await this.dropdownService.getGroundSlopes();
-      case "aspectcode":
+      case 'aspectcode':
         return await this.dropdownService.getGroundAspects();
-      case "proposedactioncode":
+      case 'proposedactioncode':
         return await this.dropdownService.getProposedActions();
-      case "mechanicalmethodcode":
+      case 'mechanicalmethodcode':
         return await this.dropdownService.getMechanicalTreatmentMethods();
-      case "mechanicaldisposalmethodcode":
+      case 'mechanicaldisposalmethodcode':
         return await this.dropdownService.getMechanicalDisposalMethods();
-      case "mechanicalsoildisturbancecode":
+      case 'mechanicalsoildisturbancecode':
         return await this.dropdownService.getMechanicalSoilDisturbances();
-      case "mechanicalrootremovalcode":
+      case 'mechanicalrootremovalcode':
         return await this.dropdownService.getMechanicalRootRemovals();
-      case "mechanicaltreatmentissuecode":
+      case 'mechanicaltreatmentissuecode':
         return await this.dropdownService.getMechanicalIssues();
-      case "treatmentprovidercontractor":
+      case 'treatmentprovidercontractor':
         return await this.dropdownService.getMechanicalTreatmentProviders();
-      case "observation":
+      case 'observation':
         return await this.dropdownService.getObservations();
-      case "speciesdensitycode":
+      case 'speciesdensitycode':
         return await this.dropdownService.getDensities();
       default:
         console.log(`Code Table is not handled ${code}`);
@@ -524,6 +658,13 @@ export class FormService {
     }
   }
 
+  /**
+   * Generate a DropdownObject for
+   * the specified codetable type and
+   * currently selected code table object
+   * @param codeTableName code table type
+   * @param selectedObject code table object (single object; could be any code table object)
+   */
   private async getDropdownObjectWithId(
     codeTableName: string,
     selectedObject: any
@@ -563,10 +704,9 @@ export class FormService {
    */
   private async merge(config: any, object: any): Promise<any> {
     const configuration = config;
-
     // set id & date
     for (const key in object) {
-      if(object.hasOwnProperty(key)) {
+      if (object.hasOwnProperty(key)) {
         if (key.toLowerCase().indexOf(`id`) !== -1) {
           configuration[`objectId`] = object[key];
         } else if (key.toLowerCase().indexOf(`date`) !== -1) {
@@ -582,14 +722,7 @@ export class FormService {
         }
       }
     }
-
-    /*
-      Yes, big O of n^3 is really bad
-      (its actually way, way worse if you look deeper)
-      but we're still coming up with the form builder
-      so things are too complicated for us to figure this out right now.
-    */
-    // TODO: Refactor
+    // Sections/ subsections/ fields
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
@@ -609,17 +742,76 @@ export class FormService {
                 field.value = object[field.key];
               }
             } else {
-              console.log(
-                `**** config key ${field.key} does not exist in object`
-              );
+              // UNCOMMENT for debugging/ when adding new form support. it helps
+              // console.log(
+              //   `**** config key ${field.key} does not exist in object`
+              // );
             }
           }
         }
       }
     }
+    // Relations
+    for (const relationKey of configuration.relationKeys) {
+      if (object[relationKey]) {
+        console.log('Relation field exists');
+        configuration.relationsConfigs[relationKey].objects = object[relationKey];
+        this.createUIConfigForArrayRelation(configuration.relationsConfigs[relationKey]);
+      }
+    }
     return configuration;
   }
 
+  /**
+   * Used by merge: Create UI config based on
+   * objects and they way they are meant to be displayed
+   * @param onject Relation object
+   */
+  private createUIConfigForArrayRelation(relationConfig: any): any[] {
+    const relationFields = [];
+    console.log(relationConfig);
+    if (!relationConfig.refSchema || !relationConfig.refSchema.idKey || !relationConfig.refSchema.meta) {
+      console.log(`relationConfig does not define an id key or reference schema or meta`);
+      return [];
+    }
+    const idKey = relationConfig.refSchema.idKey;
+    const isResource = relationConfig.refSchema.meta.resource;
+    let api = '';
+    if (isResource) {
+      api = relationConfig.refSchema.meta.api;
+    }
+    for (const object of relationConfig.objects) {
+      const fieldConfig: any = {};
+      if (isResource) {
+        fieldConfig.endpoint = `${api}/${object[idKey]}`;
+        for (const columnKey of this.getTableColumnKeys()) {
+          if (Array.isArray(columnKey)) {
+            for (let _i = 0; _i < columnKey.length; _i++) {
+              const key = columnKey[_i];
+              if (_i === 0) {
+                fieldConfig[columnKey[0]] = object[key];
+              } else {
+                fieldConfig[columnKey[0]] = fieldConfig[columnKey[0]][key];
+              }
+            }
+          } else {
+            fieldConfig[columnKey] = object[columnKey];
+          }
+        }
+      }
+      relationFields.push(fieldConfig);
+    }
+    console.log(relationFields);
+  }
+
+  private getTableColumnKeys(): any[] {
+    return ['date', ['species', 'commonName'], 'paperFileReference'];
+  }
+
+  /**
+   * Convert to string and add trailing zeros as needed.
+   * @param value Lat or Long
+   */
   private formatLatLongForDisplay(value: number): string {
     // If its undefined or not a number, return empty string
     if (value === undefined || !Number(value)) {
@@ -644,15 +836,18 @@ export class FormService {
       }
       return `${separated[0]}.${decimals}`;
     }
-
     // at this point it should be fine as is
     return String(value);
 
   }
 
+  //////////////////////////////////// END Generate UI Config ////////////////////////////////////
+
+  //////////////////////////////////// UI Config Utilities ////////////////////////////////////
   /**
    * Generate json body from UIConfig
    * @param config UIConfig
+   * @returns JSON body
    */
   public generateBodyForMergedConfig(config: any): JSON {
     const body = {};
@@ -707,8 +902,15 @@ export class FormService {
     return fields;
   }
 
+  //////////////////////////////////// END UI Config Utilities ////////////////////////////////////
+
   //////////////////////////////////// DIFF ////////////////////////////////////
 
+  /**
+   * Compare changes in newBody with the latest version of the object in backend
+   * @param newBody new body to be submitted
+   * @param config Configuration object for the object
+   */
   async diffObject(newBody: JSON, config: any): Promise<DiffResult> {
     // Setup
     const currentId = this.router.routeId;
@@ -740,8 +942,8 @@ export class FormService {
     }
     // 8) generate response
     // Convert keys from camel case:
-    const keys =  Object.keys(diffResult).map(x => {
-      const fromCamel = x.replace( /([A-Z])/g, ` $1` );
+    const keys = Object.keys(diffResult).map(x => {
+      const fromCamel = x.replace(/([A-Z])/g, ` $1`);
       return fromCamel.charAt(0).toUpperCase() + fromCamel.slice(1);
     });
     const changedKeys = keys.join(`, `);
@@ -755,6 +957,11 @@ export class FormService {
     };
   }
 
+  /**
+   * Get object related for config (example:  an Observation)
+   * @param endpoint API endpoint
+   * @param id Id of the object
+   */
   private async getObjectWithId(endpoint: string, id: number): Promise<any> {
     const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
     const response = await this.api.request(APIRequestMethod.GET, endpointWithId, null);
@@ -765,6 +972,10 @@ export class FormService {
     }
   }
 
+  /**
+   * Get config for object endpoint
+   * @param endpoint API endpoint (without /config at the end)
+   */
   private async getConfig(endpoint: string) {
     const configEndpoint = `${AppConstants.API_baseURL}${endpoint}/config`;
     const response = await this.api.request(
@@ -800,21 +1011,21 @@ export class FormService {
   private diff(obj1: JSON, obj2: JSON): any {
     const result = {};
     if (Object.is(obj1, obj2)) {
-        return undefined;
+      return undefined;
     }
     if (!obj2 || typeof obj2 !== 'object') {
-        return obj2;
+      return obj2;
     }
     Object.keys(obj1 || {}).concat(Object.keys(obj2 || {})).forEach(key => {
-        if(obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-            result[key] = obj2[key];
+      if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+        result[key] = obj2[key];
+      }
+      if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+        const value = this.diff(obj1[key], obj2[key]);
+        if (value !== undefined) {
+          result[key] = value;
         }
-        if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
-            const value = this.diff(obj1[key], obj2[key]);
-            if (value !== undefined) {
-                result[key] = value;
-            }
-        }
+      }
     });
     return result;
   }
@@ -834,14 +1045,14 @@ export class FormService {
     for (const field of configFilds) {
       switch (field.type.toLowerCase()) {
         case 'string':
-            cleanBody[field.key] = String(body[field.key]);
-            break;
+          cleanBody[field.key] = String(body[field.key]);
+          break;
         case 'number':
-            cleanBody[field.key] = Number(body[field.key]);
-            break;
+          cleanBody[field.key] = Number(body[field.key]);
+          break;
         default:
-            cleanBody[field.key] = body[field.key];
-            break;
+          cleanBody[field.key] = body[field.key];
+          break;
       }
     }
     return JSON.parse(JSON.stringify(cleanBody));
@@ -883,7 +1094,34 @@ export class FormService {
 
   public async generateObservationTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyObservation([]);
-    return await this.merge(config, dummy);
+    const temp =  await this.merge(config, dummy);
+    return temp;
   }
   //////////////////////////////////// END TESTS ////////////////////////////////////
+
+  /////////////////////////////////// Route helpers ////////////////////////////////////
+  /**
+   * Switch current form route to edit mode
+  */
+  public editCurrent() {
+    const current = this.router.current;
+    switch (current) {
+      case AppRoutes.ViewMechanicalTreatment: {
+        return this.router.navigateTo(
+          AppRoutes.EditMechanicalTreatment,
+          this.router.routeId
+        );
+      }
+      case AppRoutes.ViewObservation: {
+        return this.router.navigateTo(
+          AppRoutes.EditObservation,
+          this.router.routeId
+        );
+      }
+      default: {
+        console.log(`Case not handled`);
+      }
+    }
+  }
+  /////////////////////////////////// End Route helpers ////////////////////////////////////
 }

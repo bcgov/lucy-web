@@ -1,5 +1,4 @@
-<div *ngIf="!readonly" class="col-12 field d-inline-block">
-
+<div *ngIf="!readonly" class="col-12 field d-inline-block animated" id="{{fieldId}}">
     <mat-form-field>
         <mat-select [formControl]="optionCtrl" placeholder="{{fieldHeader}}" [(ngModel)]="selectedItemName" #singleSelect>
           <app-mat-select-search [formControl]="optionFilterCtrl"></app-mat-select-search>
