@@ -143,6 +143,7 @@ export class  BaseSchema {
         table.computedFields = def.computedFields;
         table.relations = def.relations || {};
         table.modelName = def.modelName;
+        table.displayLayout = def.displayLayout;
         _.each(def.columns, (value: TableColumnOption, key) => {
             const result = {};
             const column: ApplicationTableColumn = new ApplicationTableColumn(
@@ -286,7 +287,7 @@ export class  BaseSchema {
         result.meta = this.table.meta || {};
         result.idKey = this.table.id;
         result.displayLayout = this.table.displayLayout || {};
-        result.displayLayout = { ...result.displayLayout, title: layout.title } || {};
+        result.displayLayout = { ...result.displayLayout, title: layout.title } || { title: layout.title };
         if (skipDetail) {
             return result;
         }

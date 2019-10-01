@@ -24,7 +24,22 @@ schemas:
     # End-meta
     displayLayout:
       fields:
-        - species.commonName
+        - header:
+            key: 'species'
+            default: 'Species'
+          key: species.commonName
+        - header:
+            key: 'latitude'
+            default: 'Latitude'
+          key: latitude
+        - header:
+            key: 'longitude'
+            default: 'Longitude'
+          key: longitude
+        - header:
+            key: 'date'
+            default: 'Date'
+          key: date
     layout:
       title: 
         key: '' 
