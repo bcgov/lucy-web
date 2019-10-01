@@ -3,6 +3,8 @@ import {
   OnInit,
   Input,
   AfterViewChecked,
+  Renderer,
+  Renderer2,
 } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ErrorService, ErrorType } from 'src/app/services/error.service';
@@ -18,6 +20,7 @@ import * as moment from 'moment';
 import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
+import { ElementRef } from '@angular/core';
 
 export enum FormType {
   Observation,
@@ -37,7 +40,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   //   this._formType = type;
   // }
   public componentName = ` `;
-  private responseBody = {};
+
+  private _responseBody = {};
+  get responseBody(): any {
+    // return JSON.parse(JSON.stringify(this._responseBody));
+    return this._responseBody;
+  }
+  set responseBody(object: any) {
+    this._responseBody = object;
+  }
 
   // Lottie Animation
   isLoading = false;
@@ -126,7 +137,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   // Set
   @Input() set mode(mode: FormMode) {
-    console.log(`Form mode is ${mode}`);
     this._mode = mode;
   }
   ////////////////////
@@ -153,7 +163,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._config = object;
   }
 
-
+  // Diff object
   private _diffObject: DiffResult;
   get diffObject(): DiffResult {
     return this._diffObject;
@@ -162,6 +172,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._diffObject = object;
   }
 
+  /**
+   * Check if the required fields exist
+   */
   get canSubmit(): boolean {
     if (!this.config || !this.responseBody) {
       return false;
@@ -176,6 +189,45 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return requiredFieldsExist;
   }
 
+   /**
+   * Returns an array of strings containing headers
+   * of missing fields 
+   * @returns string array of headers
+   */
+  get missingFields(): string[] {
+    let requiredMissingFieldKeys: string[]= [];
+    
+    for (const key of this.config.requiredFieldKeys) {
+      if (!this.responseBody[key]) {
+        requiredMissingFieldKeys.push(key);
+      }
+    }
+    // let requiredMissingFieldHeaders: string[]= [];
+    let missingFieldHeaders: string[]= [];
+    let locationIncluded = false
+    for (const key of requiredMissingFieldKeys) {
+      if (this.config.fieldHeaders[key] !== undefined) {
+        // Group Lat long under "location" tag
+        if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
+          if (!locationIncluded) {
+            missingFieldHeaders.push(`Location`)
+            locationIncluded = true;
+          } 
+        } else {
+          // All other fields
+          missingFieldHeaders.push(this.config.fieldHeaders[key]);
+        }
+      }
+    }
+    return missingFieldHeaders;
+  }
+
+  // Flag used to show missing fields section
+  triedToSubmit = false;
+  get showMissingFieldsDialog() : boolean {    
+    return (this.triedToSubmit && this.missingFields.length > 0);
+  }
+
   constructor(
     // private mechanicalTreatmentService: MechanicalTreatmentService,
     private errorService: ErrorService,
@@ -187,6 +239,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private formService: FormService,
     private api: ApiService,
     private loadingService: LoadingService,
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
   ) {
     this.lottieConfig = {
       path: this.formLoadingIcon,
@@ -212,8 +266,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     } else {
       console.log('Bad config. show a toast in the future');
     }
-    if (this.router.isEditRoute) {
-      this.responseBody = await this.formService.generateBodyForMergedConfig(this.config);
+    if (this.router.isEditRoute || this.router.isViewRoute) {
+      // We are setting the body for view mode as well because:
+      // Computed fields rely on body to display their value.
+      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     }
     this.isLoading = false;
   }
@@ -237,39 +293,55 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @param field chnged field object
    * @param event change event emitted
    */
-  private fieldChanged(field: any, event: any) {
-    if (field.isLocationField) {
-      // location field
+  fieldChanged(field: any, event: any) {
+    // if input was invalid, field component emits ``
+    // handle INVALID input cases
+    if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+      this.responseBody[field.latitude.key] = undefined;
+      this.responseBody[field.longitude.key] = undefined;
+    } else if (event === `` && this.responseBody[field.key] !== undefined) {
+      this.responseBody[field.key] = undefined;
+    }
+    // handle valid input cases
+     else if (field.isLocationField) {
+      // location field - needs lat long extraction
       this.responseBody[field.latitude.key] = event.latitude.value;
       this.responseBody[field.longitude.key] = event.longitude.value;
     } else if (field.isDropdown) {
-      // dropdown field
+      // dropdown field - needs id extraction
       for (const key in event.object) {
+        // find id field
         if (key.toLowerCase().indexOf('id') !== -1) {
           this.responseBody[field.key] = event.object[key];
           break;
         }
       }
     } else if (field.isDateField) {
-      // date field
+      // date field - needs formatting
       if (event) {
         const formatted = moment(event).format('YYYY-MM-DD');
         this.responseBody[field.key] = formatted;
       }
     } else {
-      // Store key / value for regular field
+      // regular field - store key / value
       this.responseBody[field.key] = event;
     }
+    /*
+      This reassignment will trigger the set function of responseBody
+      which will send the new body to the computed fields.
+      Otherwise the opject reference is passed and computed field cant be trigerred on change.
+    */
+    const temp = { ...this.responseBody };
+    this.responseBody = { ...temp};
   }
 
   /**
    * Form submission
    */
   async submitAction() {
-    console.dir(this.responseBody);
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
-      this.alert.show('Missing fields', 'Please fill all required fields');
+      this.triedToSubmit = true;
     } else {
       if (!this.inReviewMode) {
         this.enterReviewMode();
@@ -333,6 +405,27 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.anim.setSpeed(speed);
   }
   /////////// End Lottie ///////////
+
+  missingFieldSelected(missingFieldHeader: string) {
+    const highlightClass = 'shake';
+    let el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
+      if (el) {;
+          el.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+          this.renderer.addClass(el, highlightClass);
+          setTimeout(() => {
+          this.renderer.removeClass(el, highlightClass);
+          }, 2000);
+      } else {
+          console.log(`${this.camelize(missingFieldHeader)} not found`);
+          console.log(this.elementRef.nativeElement);
+      }
+  }
+
+  camelize(str: string): string {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
 
   async generateForTesting() {
     this.loadingService.add();

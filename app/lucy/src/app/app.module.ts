@@ -19,6 +19,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatChipsModule} from '@angular/material/chips';
 
 // Third-party
 // ng-bootstrap
@@ -79,6 +80,7 @@ import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-vie
 import { AddMechanicalTreatmentAdvancedComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-advanced/add-mechanical-treatment-advanced.component';
 import { LocationInputComponent } from './components/base-form/location-input/location-input/location-input.component';
 import { StringConstants } from './constants/string-constants';
+import { ComputedFieldComponent } from './components/base-form/computed-field/computed-field.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -124,6 +126,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     DiffViewerComponent,
     AddMechanicalTreatmentAdvancedComponent,
     LocationInputComponent,
+    ComputedFieldComponent,
   ],
   imports: [
     BrowserModule,
@@ -152,7 +155,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatChipsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

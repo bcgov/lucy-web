@@ -45,6 +45,10 @@ export class CheckboxComponent implements OnInit {
     this._checked = checked;
     this.emit();
   }
+  
+  get fieldId(): string {
+    return this.camelize(this.header);
+  }
 
   // Output
   @Output() selectionChanged = new EventEmitter<boolean>();
@@ -56,5 +60,12 @@ export class CheckboxComponent implements OnInit {
   private emit() {
     this.selectionChanged.emit(this.checked);
   }
+
+  camelize(str: string): string {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
+
 
 }
