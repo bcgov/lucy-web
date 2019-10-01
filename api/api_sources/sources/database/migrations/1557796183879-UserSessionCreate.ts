@@ -20,14 +20,16 @@
  * Imports
  */
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { UserSessionSchema, UserSchema} from '../database-schema';
+import { UserSessionSchema, UserSchema } from '../database-schema';
+import { AppLogger } from '../../Applogger';
 
 /**
  * @description Generated Migration file for creation of user session
  * @export class UserSessionCreate1557796183879
  */
-export class UserSessionCreate1557796183879 extends UserSessionSchema implements MigrationInterface {
+export class UserSessionCreate1557796183879 extends AppLogger implements MigrationInterface {
 
+    sessionSchema: UserSessionSchema = new UserSessionSchema();
     /**
      * @description Up method
      * @param QueryRunner queryRunner
@@ -35,33 +37,9 @@ export class UserSessionCreate1557796183879 extends UserSessionSchema implements
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
         // Schema
-        await queryRunner.query(`CREATE TABLE ${this.table.name} (
-            ${this.table.columns.id} SERIAL PRIMARY KEY,
-            ${this.table.columns.lastLoginAt} TIMESTAMP NULL,
-            ${this.table.columns.token} VARCHAR (5000) NULL,
-            ${this.table.columns.tokenExpiry} TIMESTAMP NULL,
-            ${this.table.columns.tokenLifetime} INT NULL,
-            ${this.table.columns.lastActiveAt} TIMESTAMP NULL,
-            ${this.table.columns.refUserId} INT NULL
-        );`);
-
-        // Creating timestamp column
-        await queryRunner.query(this.createTimestampsColumn());
-
-        // Creating comments
-        await queryRunner.query(this.createComments());
-
-        // Foreign Key
-        await queryRunner.query(`ALTER TABLE ${this.table.name}
-        ADD CONSTRAINT FK_2019051d15h34m FOREIGN KEY (${this.table.columns.refUserId})
-        REFERENCES ${UserSchema.schema.name}(${UserSchema.schema.columns.id})
-        ON DELETE CASCADE;`);
-
-        // Alter user table to add foreign key ref to user table
-        await queryRunner.query(`ALTER TABLE ${UserSchema.schema.name}
-        ADD CONSTRAINT FK_20190606d9h38m FOREIGN KEY (${UserSchema.schema.columns.refCurrentSession})
-        REFERENCES ${this.table.name}(${this.table.columns.id})
-        ON DELETE SET NULL;`);
+        this.info(`[RUNNING]`);
+        await queryRunner.query(this.sessionSchema.migrationSQL);
+        this.info(`[DONE]`);
     }
 
     /**
@@ -70,8 +48,10 @@ export class UserSessionCreate1557796183879 extends UserSessionSchema implements
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`ALTER TABLE ${UserSchema.schema.name} DROP CONSTRAINT FK_20190606d9h38m`);
-        await queryRunner.query(this.dropTable());
+        await queryRunner.query(`ALTER TABLE ${UserSchema.dbTable} DROP CONSTRAINT IF EXISTS fk_20190926`);
+        await queryRunner.query(`DROP TABLE IF EXISTS user_active_session`);
+        await queryRunner.query(`ALTER TABLE ${UserSchema.dbTable} DROP CONSTRAINT IF EXISTS FK_20190606d9h38m`);
+        await queryRunner.query(this.sessionSchema.dropTable());
     }
 }
 
