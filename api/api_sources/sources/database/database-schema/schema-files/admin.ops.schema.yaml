@@ -43,7 +43,7 @@ schemas:
       approver:
         name: 'approver_user_id'
         comment: 'FOREIGN KEY reference to User table to store approver id'
-        definition: INT NOT NULL
+        definition: INT NULL
         foreignTable: application_user
         refColumn: user_id
   ## --

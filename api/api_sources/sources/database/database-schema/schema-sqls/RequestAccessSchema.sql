@@ -8,7 +8,7 @@ ALTER TABLE access_request ADD COLUMN status INT NULL;
 ALTER TABLE access_request ADD COLUMN approver_note VARCHAR(500) NULL;
 ALTER TABLE access_request ADD COLUMN requested_role_code_id INT NOT NULL REFERENCES app_roles_code(role_code_id) ON DELETE SET NULL;
 ALTER TABLE access_request ADD COLUMN requester_user_id INT NOT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
-ALTER TABLE access_request ADD COLUMN approver_user_id INT NOT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
+ALTER TABLE access_request ADD COLUMN approver_user_id INT NULL REFERENCES application_user(user_id) ON DELETE SET NULL;
 
 
         
