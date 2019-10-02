@@ -51,7 +51,6 @@
             id="orgizationsDropdown" ngbDropdownAnchor
             (focus)="orgDropdown.open()" readonly
             [(ngModel)]="organization"
-            (change)="organizationChanged()"
             [ngClass]="organizationIsValid ? 'field-input' : 'field-input-invalid'"/>
           <div ngbDropdownMenu aria-labelledby="orgizationsDropdown">
             <div class="col-12" *ngFor="let org of organizations; let i = index">

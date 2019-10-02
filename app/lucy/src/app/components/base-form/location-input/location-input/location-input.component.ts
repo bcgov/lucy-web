@@ -19,7 +19,7 @@ export class LocationInputComponent implements OnInit {
   };
 
   // Markers shown on map
-  private markers: MapMarker[] = [];
+  markers: MapMarker[] = [];
 
   // Entry mode flag
   locationEntryModeLatLong = true;
@@ -254,6 +254,9 @@ export class LocationInputComponent implements OnInit {
       latitude: latitude,
       longitude: longitude
     });
+  }
+
+  mapCenterChanged(event: any) {
   }
 
 }

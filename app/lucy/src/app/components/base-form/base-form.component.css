@@ -119,8 +119,11 @@
     background: greenyellow;
     border-radius: .25rem;
     position: fixed;
-    bottom: 0;
-    width: 18%;
+    bottom: 15px;
+    left: 15px;
+    height: 50px;
+    width: 50px;
+    font-weight: bold;
 }
 
 .submit-button {
