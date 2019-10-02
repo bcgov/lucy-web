@@ -292,7 +292,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
         fillOpacity: 0.7,
         weight: 1,
       }
-    ).addTo(this.map);
+    );
+    polygon.addTo(this.map);
   }
 
   //////////////////////////////////////////////

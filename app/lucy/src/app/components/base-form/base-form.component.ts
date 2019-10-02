@@ -99,9 +99,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * submit button title for different states
    */
   get submitButtonPrefix(): string {
-    let prefix: string;
     if (this.creating && !this.inReviewMode) {
-      return 'Submit'
+      return 'Submit';
     }
     if (this.creating && this.inReviewMode) {
       return 'Create';
@@ -118,12 +117,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   // Add prefix based on state
   get pageTitlePrefix(): string {
-    let prefix: string;
     if (this.creating && this.inReviewMode) {
       return 'Review';
     }
     if (this.creating && !this.inReviewMode) {
-      return 'Add New'
+      return 'Add New';
     }
     return ``;
   }
@@ -296,6 +294,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   fieldChanged(field: any, event: any) {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
+    console.dir(event);
     if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;

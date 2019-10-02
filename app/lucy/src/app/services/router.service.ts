@@ -14,12 +14,11 @@ export class RouterService {
     const current = this.router.url.substring(1);
     // is it a route with params
     if (current.indexOf(`/`) !== -1) {
-      const origin = current.slice(0, current.indexOf(`/`));
+      // const origin = current.slice(0, current.indexOf(`/`));
       return this.resolveRoute(current);
-
-      const genericOrigin = `${origin}/:id`;
-      const result = this.stringToEnumRoute(genericOrigin);
-      return result;
+      // const genericOrigin = `${origin}/:id`;
+      // const result = this.stringToEnumRoute(genericOrigin);
+      // return result;
     } else {
       // Route with no params
       return this.stringToEnumRoute(current);
@@ -81,7 +80,7 @@ export class RouterService {
 
   private resolveEditRoute(route: string): AppRoutes {
     const editTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
-    const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
+    // const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
     const editType = editTypeAndId.slice(0, editTypeAndId.indexOf(`/`));
     switch (editType.toLowerCase()) {
       case `observation`:
@@ -96,7 +95,7 @@ export class RouterService {
 
   private resolveViewRoute(route: string): AppRoutes {
     const viewTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
-    const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
+    // const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
     const viewType = viewTypeAndId.slice(0, viewTypeAndId.indexOf(`/`));
     switch (viewType.toLowerCase()) {
       case `observation`:

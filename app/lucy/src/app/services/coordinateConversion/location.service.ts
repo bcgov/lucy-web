@@ -251,8 +251,8 @@ export class ConverterService {
   ): AlbersCoordinate {
     const a = this.b;
     const e2 = 2 * (1 / 298.257) - Math.pow(1 / 298.257, 2);
-    const k = this.k0;
-    const ep2 = e2 / (1 - e2);
+    // const k = this.k0;
+    // const ep2 = e2 / (1 - e2);
     const offsetX = 1000000;
     const offsetY = 0;
 
@@ -371,9 +371,9 @@ export class ConverterService {
   // MARK: HEX Calculation
 
   public getHexId(latitude: number, longitude: number): any {
-    const e271 = 2.718282;
-    const k0 = 0.9996;
-    const k1 = 0.9992;
+    // const e271 = 2.718282;
+    // const k0 = 0.9996;
+    // const k1 = 0.9992;
     const r3 = Math.pow(3, 0.5);
     const radiusO = Math.pow(((10000 * 2) / (3 * (r3))), 0.5);
     const radiusI = radiusO / 2 * r3;
@@ -407,8 +407,8 @@ export class ConverterService {
       ticY = ticY - 1;
     }
 
-    let ticXlow = ticX - 4;
-    let ticXhigh = ticX + 8;
+    const ticXlow = ticX - 4;
+    const ticXhigh = ticX + 8;
     let ticYlow = 0;
     let ticYhigh = 0;
     if (ticY > 0) {

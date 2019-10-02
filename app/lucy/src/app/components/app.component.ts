@@ -168,15 +168,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   /******** Notifications ********/
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
-      /// For testing
-      const msg = {
-        body: null,
-        message_id: 2,
-        status: 0,
-        title: `Request Access rejected`,
-        type: 0
-      };
-      /////
       this.showMessage(messages[0]);
     });
   }

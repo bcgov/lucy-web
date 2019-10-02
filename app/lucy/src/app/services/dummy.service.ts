@@ -377,34 +377,20 @@ export class DummyService {
    * Generate a random longitude within bc
    */
   public randomLong(): number {
-    const max = 127977180;
-    const min = 120845602;
-
     const a = this.randomIntFromInterval(0, 7);
     const b = this.randomIntFromInterval(845602, 977180);
     const z = `-12${a}.${b}`;
     return +z;
-
-    const randomString = String(this.randomIntFromInterval(min, max));
-    const withDecimal = randomString.slice(0, 3) + '.' + randomString.slice(2);
-    return Math.abs(+withDecimal) * -1;
   }
 
   /**
    * Generate a random latitude within bc
    */
   public randomLat() {
-    const max = 58202679;
-    const min = 50713134;
-
     const a = this.randomIntFromInterval(0, 8);
     const b = this.randomIntFromInterval(713134, 202679);
     const z = `5${a}.${b}`;
     return +z;
-
-    const randomString = String(this.randomIntFromInterval(min, max));
-    const withDecimal = randomString.slice(0, 2) + '.' + randomString.slice(1);
-    return +withDecimal;
   }
 
   /**
