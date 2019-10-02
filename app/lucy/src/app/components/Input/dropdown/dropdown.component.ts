@@ -70,6 +70,11 @@ export class DropdownComponent implements OnInit {
   }
   ////////////////////
 
+  private _selectedItemName: string;
+  set selectedItemName(name: string) {
+    this._selectedItemName = name;
+  }
+
   get selectedItemName(): string {
     if (this.selectedItem) {
       return this.selectedItem.name;

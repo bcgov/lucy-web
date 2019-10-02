@@ -1,8 +1,9 @@
 {
   "name": "lucy",
   "version": "0.0.0",
-  "scripts": {
+  "scripts": { 
     "ng": "ng",
+    "ng-h": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",

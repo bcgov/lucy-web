@@ -41,8 +41,6 @@ import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './components/app.component';
 import { HomeComponent } from './components/Routes/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { SpeciesTableComponent } from './components/species-table/species-table.component';
-import { AddPlantObservationComponent } from './components/Routes/add-plant-observation/add-plant-observation.component';
 import { LoginComponent } from './components/Routes/login/login.component';
 import { Injector } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -54,30 +52,21 @@ import { RouterService } from './services/router.service';
 import { AccessRequestResponseModalComponent} from './components/Routes/admin-tools/access-request-response-modal/access-request-response-modal.component';
 import { UserCellComponent } from './components/Routes/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/Routes/admin-tools/request-cell/request-cell.component';
-import { AddPlantObservationBasicInformationComponent } from './components/Routes/add-plant-observation/add-plant-observation-basic-information/add-plant-observation-basic-information.component';
 import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/Utilities/user-access-updated-modal/user-access-updated-modal.component';
 import { AlertComponent } from './components/Utilities/alert/alert.component';
 import { MapPreviewComponent } from './components/Utilities/map-preview/map-preview.component';
-import { AddPlantObservationInvasivePlantSpeciesCellComponent } from './components/Routes/add-plant-observation/add-plant-observation-invasive-plant-species-cell/add-plant-observation-invasive-plant-species-cell.component';
 import { DropdownComponent } from './components/Input/dropdown/dropdown.component';
 import { FieldComponent } from './components/Input/field/field.component';
-import { SideNavComponent } from './components/Routes/add-plant-observation/side-nav/side-nav.component';
 import { MatSelectSearchComponent } from './components/Input/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from './components/Input/mat-select-search/mat-select-search.module';
-import { AddPlantObservationAdvancedDataComponent } from './components/Routes/add-plant-observation/add-plant-observation-advanced-data/add-plant-observation-advanced-data.component';
 import { CheckboxComponent } from './components/Input/checkbox/checkbox.component';
 import { AddEntryComponent } from './components/Routes/add-entry/add-entry.component';
-import { AddMechanicalTreatmentComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment.component';
-import { AddMechanicalTreatmentBasicInfoComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-basic-info/add-mechanical-treatment-basic-info.component';
-import { AddMechanicalTreatmentTreatmentDetailsComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-treatment-details/add-mechanical-treatment-treatment-details.component';
 import { DatePickerComponent } from './components/Input/date-picker/date-picker.component';
 import { InventoryComponent } from './components/Routes/inventory/inventory.component';
 import { ErrorComponent } from './components/Routes/error/error.component';
-import { AddPlantObservationTreatmentsComponent } from './components/Routes/add-plant-observation/add-plant-observation-treatments/add-plant-observation-treatments.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
 import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-viewer.component';
-import { AddMechanicalTreatmentAdvancedComponent } from './components/Routes/add-mechanical-treatment/add-mechanical-treatment-advanced/add-mechanical-treatment-advanced.component';
 import { LocationInputComponent } from './components/base-form/location-input/location-input/location-input.component';
 import { StringConstants } from './constants/string-constants';
 import { ComputedFieldComponent } from './components/base-form/computed-field/computed-field.component';
@@ -95,8 +84,6 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     routingComponents,
     HomeComponent,
     NavBarComponent,
-    SpeciesTableComponent,
-    AddPlantObservationComponent,
     LoginComponent,
     ProfileComponent,
     UserInformationComponent,
@@ -104,28 +91,19 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AccessRequestResponseModalComponent,
     UserCellComponent,
     RequestCellComponent,
-    AddPlantObservationBasicInformationComponent,
     UserAccessUpdatedModalComponent,
     AlertComponent,
     MapPreviewComponent,
-    AddPlantObservationInvasivePlantSpeciesCellComponent,
     DropdownComponent,
     FieldComponent,
-    SideNavComponent,
     InventoryComponent,
     DatePickerComponent,
     MomentPipe,
-    AddPlantObservationAdvancedDataComponent,
     CheckboxComponent,
     ErrorComponent,
     AddEntryComponent,
-    AddMechanicalTreatmentComponent,
-    AddMechanicalTreatmentBasicInfoComponent,
-    AddMechanicalTreatmentTreatmentDetailsComponent,
-    AddPlantObservationTreatmentsComponent,
     BaseFormComponent,
     DiffViewerComponent,
-    AddMechanicalTreatmentAdvancedComponent,
     LocationInputComponent,
     ComputedFieldComponent,
     TableComponent,
