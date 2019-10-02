@@ -141,62 +141,25 @@ export class FormService {
   public async getFormConfigForCurrentRoute(): Promise<any> {
     switch (this.router.current) {
       //// Observation routes ////
-      case AppRoutes.ViewObservation: {
-        const id = this.router.routeId;
+      case AppRoutes.ViewObservation || AppRoutes.EditObservation: {
         const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        // console.dir(observation);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditObservation: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
+        const observation = await this.observationService.getWithId(this.router.routeId);
+        return await this.getUIConfigFrom(configFile, observation);
       }
       case AppRoutes.AddObservation: {
         const configFile = await this.getObservationUIConfig();
         return configFile;
-        break;
       }
       //// END Observation routes ////
       //// Mechanical Treatment routes ////
-      case AppRoutes.ViewMechanicalTreatment: {
-        const id = this.router.routeId;
+      case AppRoutes.ViewMechanicalTreatment || AppRoutes.EditMechanicalTreatment: {
         const configFile = await this.getMechanicalTreatmentUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditMechanicalTreatment: {
-        const id = this.router.routeId;
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
+        const treatment = await this.mechanicalTreatmentService.getWithId(this.router.routeId);
+        return await this.getUIConfigFrom(configFile, treatment);
       }
       case AppRoutes.AddMechanicalTreatment: {
         const configFile = await this.getMechanicalTreatmentUIConfig();
         return configFile;
-        break;
       }
       //// END Mechanical Treatment routes ////
       default: {
@@ -205,9 +168,15 @@ export class FormService {
         );
         this.errorService.show(ErrorType.NotFound);
         return undefined;
-        break;
       }
     }
+  }
+
+  private async getUIConfigFrom(config: any, objectWithValues: any): Promise<any> {
+    if (!config || !objectWithValues) {
+      return undefined;
+    }
+    return await this.merge(config, objectWithValues);
   }
 
   //////////////////////////////////// END Fetch UI Config ////////////////////////////////////
@@ -523,12 +492,9 @@ export class FormService {
    * @param field any
    */
   private processFieldConfig(field: any): FormConfigField {
-    let isCodeTable = false;
     let codeTable = '';
     if (field.type === 'object') {
-      isCodeTable = true;
       codeTable = field.refSchema.modelName;
-      // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
     }
     let cssClasses = ``;
     const classes = field.layout.classes;
