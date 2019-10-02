@@ -45,27 +45,24 @@ export class LocationInputComponent implements OnInit {
     return this._object;
   }
   @Input() set object(object: any) {
-    this._object = object;
-    // this.autofill();
+    this._object = { ...object};
+    console.log(`setting...`);
+    console.dir(this.object);
+    console.log(this.object.latitude.value);
+    console.log(this.object.longitude.value);
+    if (this.object && this.object.latitude && this.object.latitude.value) {
+      console.log(`setting ${this.object.latitude.value}`);
+      this.lat = String(this.object.latitude.value);
+    }
+    if (this.object && this.object.longitude && this.object.longitude.value) {
+      console.log(`setting ${this.object.longitude.value}`);
+      this.long = String(this.object.longitude.value);
+    }
   }
   ////////////////////
 
-  // Lat Long
-  get lat(): string {
-    if (this.object && this.object.latitude.value) {
-      return String(this.object.latitude.value);
-    } else {
-      return ``;
-    }
-  }
-
-  get long(): string {
-    if (this.object && this.object.longitude.value) {
-      return String(this.object.longitude.value);
-    } else {
-      return ``;
-    }
-  }
+ long = '';
+ lat = '';
 
   // * Validations
   get validLat(): Boolean {
@@ -136,7 +133,6 @@ export class LocationInputComponent implements OnInit {
    * @param value latitude
    */
   latChanged(value: string) {
-    console.log(`lat-> ${value}`);
     if ((this.object && Number(value) && this.validation.isValidLatitude(value)) || (value === ``)) {
       this.object.latitude.value = value;
       this.notifyChangeEvent();
@@ -149,7 +145,6 @@ export class LocationInputComponent implements OnInit {
    * @param value longitude
    */
   longChanged(value: string) {
-    console.log(`long-> ${value}`);
     if ( (this.object && Number(value) && this.validation.isValidLongitude(value)) || (value === ``)) {
       this.object.longitude.value = value;
       this.notifyChangeEvent();

@@ -158,7 +158,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return this._config;
   }
   private set config(object: any) {
-    this._config = object;
+    this._config = { ...object};
   }
 
   // Diff object
@@ -268,7 +268,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       // Computed fields rely on body to display their value.
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     }
-    console.log(config);
     this.isLoading = false;
   }
 
@@ -294,7 +293,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   fieldChanged(field: any, event: any) {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
-    console.dir(event);
     if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
@@ -431,10 +429,14 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   async generateForTesting() {
     this.loadingService.add();
     if (this.router.current === AppRoutes.AddMechanicalTreatment) {
-      this.config = await this.formService.generateMechanicalTreatmentTest(this.config);
+      const temp = await this.formService.generateMechanicalTreatmentTest(this.config);
+      this.config= { ...temp};
+      console.log(`config updated`);
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else if (this.router.current === AppRoutes.AddObservation) {
-      this.config = await this.formService.generateObservationTest(this.config);
+      const temp = await this.formService.generateObservationTest(this.config);
+      this.config = { ...temp};
+      console.log(`config updated`);
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else {
       this.alert.show('Form not supported yet', `Test generatgion for this form type is not implemented yet`);
