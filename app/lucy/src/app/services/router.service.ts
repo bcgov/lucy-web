@@ -26,16 +26,27 @@ export class RouterService {
   }
 
   public get isCreateRoute(): boolean {
-    return (this.getFirstRouteParam().toLowerCase() === 'create');
+    if (this.getFirstRouteParam()) {
+      return (this.getFirstRouteParam().toLowerCase() === 'create');
+    } else {
+      return false;
+    }
   }
 
   public get isEditRoute(): boolean {
-    return (this.getFirstRouteParam().toLowerCase() === 'edit');
-
+    if (this.getFirstRouteParam()) {
+      return (this.getFirstRouteParam().toLowerCase() === 'edit');
+    } else {
+      return false;
+    }
   }
 
   public get isViewRoute(): boolean {
-    return (this.getFirstRouteParam().toLowerCase() === 'view');
+    if (this.getFirstRouteParam()) {
+      return (this.getFirstRouteParam().toLowerCase() === 'view');
+    } else {
+      return false;
+    }
   }
 
   private getFirstRouteParam(): string {
@@ -73,8 +84,7 @@ export class RouterService {
       case `mechnical`:
         return AppRoutes.AddMechanicalTreatment;
       default:
-        console.log(`here`);
-      // return AppRoutes.Error;
+        return AppRoutes.Error;
     }
   }
 
@@ -88,7 +98,6 @@ export class RouterService {
       case `mechnical`:
         return AppRoutes.EditMechanicalTreatment;
       default:
-        console.log(`here`);
         return AppRoutes.Error;
     }
   }
@@ -103,7 +112,6 @@ export class RouterService {
       case `mechnical`:
         return AppRoutes.ViewMechanicalTreatment;
       default:
-        console.log(`here`);
         return AppRoutes.Error;
     }
   }
@@ -132,10 +140,10 @@ export class RouterService {
 
   public get routeId(): number | undefined {
     const current = this.router.url.substring(1);
-    console.log(`getting id... ${current}`);
+    // console.log(`getting id... ${current}`);
     if (current.indexOf(`/`) !== -1) {
       const id = current.slice(current.lastIndexOf(`/`) + 1);
-      console.log(id);
+      // console.log(id);
       return +id;
     } else {
       return undefined;

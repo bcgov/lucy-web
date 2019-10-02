@@ -139,36 +139,32 @@ export class FormService {
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
-    switch (this.router.current) {
-      //// Observation routes ////
-      case AppRoutes.ViewObservation || AppRoutes.EditObservation: {
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(this.router.routeId);
-        return await this.getUIConfigFrom(configFile, observation);
-      }
-      case AppRoutes.AddObservation: {
-        const configFile = await this.getObservationUIConfig();
+
+    if ((this.router.current === AppRoutes.ViewObservation) || (this.router.current === AppRoutes.EditObservation)) {
+       //// Observation View And Edit routes ////
+      const configFile = await this.getObservationUIConfig();
+      const observation = await this.observationService.getWithId(this.router.routeId);
+      return await this.getUIConfigFrom(configFile, observation);
+    } else if (this.router.current === AppRoutes.AddObservation) {
+      //// Observation Create route ////
+      const configFile = await this.getObservationUIConfig();
+      return configFile;
+    } else if ((this.router.current === AppRoutes.ViewMechanicalTreatment) || (this.router.current === AppRoutes.EditMechanicalTreatment)) {
+      //// Mechanical Treatment View and Edit routes ////
+      const configFile = await this.getMechanicalTreatmentUIConfig();
+      const treatment = await this.mechanicalTreatmentService.getWithId(this.router.routeId);
+      return await this.getUIConfigFrom(configFile, treatment);
+    } else if (this.router.current === AppRoutes.AddMechanicalTreatment)  {
+      //// Mechanical Treatment Create route ////
+      const configFile = await this.getMechanicalTreatmentUIConfig();
         return configFile;
-      }
-      //// END Observation routes ////
-      //// Mechanical Treatment routes ////
-      case AppRoutes.ViewMechanicalTreatment || AppRoutes.EditMechanicalTreatment: {
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(this.router.routeId);
-        return await this.getUIConfigFrom(configFile, treatment);
-      }
-      case AppRoutes.AddMechanicalTreatment: {
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        return configFile;
-      }
-      //// END Mechanical Treatment routes ////
-      default: {
+    } else {
+      console.log(this.router.current);
         console.log(
           `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
         );
         this.errorService.show(ErrorType.NotFound);
         return undefined;
-      }
     }
   }
 
@@ -495,6 +491,7 @@ export class FormService {
     let codeTable = '';
     if (field.type === 'object') {
       codeTable = field.refSchema.modelName;
+      // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
     }
     let cssClasses = ``;
     const classes = field.layout.classes;
@@ -832,7 +829,7 @@ export class FormService {
     }
     // If it doesnt have a decimap point, add 5 zeros
     if (String(value).indexOf('.') === -1) {
-      return `${String(value)}.00000`;
+      return `${(value)}.00000`;
     }
     // Split by decimal point
     const separated = String(value).split('.');
@@ -850,7 +847,7 @@ export class FormService {
       return `${separated[0]}.${decimals}`;
     }
     // at this point it should be fine as is
-    return String(value);
+    return `${(value)}`;
 
   }
 
@@ -1102,11 +1099,13 @@ export class FormService {
   //////////////////////////////////// TESTS ////////////////////////////////////
   public async generateMechanicalTreatmentTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyMechanicalTreatment();
+    console.dir(dummy);
     return await this.merge(config, dummy);
   }
 
   public async generateObservationTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyObservation([]);
+    console.log(`dummy: ${dummy.lat} ${dummy.long}`);
     const temp = await this.merge(config, dummy);
     return temp;
   }
