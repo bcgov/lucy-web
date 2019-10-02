@@ -902,7 +902,7 @@ export class FormService {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
           // if its a dropdown
-          if (field.isDropdown) {
+          if (field.isDropdown && field.value) {
             // Find the id of the value
             for (const key in field.value.object) {
               if (key.toLowerCase().indexOf('id') !== -1) {
