@@ -184,7 +184,7 @@ export class FormService {
       }
       case AppRoutes.EditMechanicalTreatment: {
         const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
+        const configFile = await this.getMechanicalTreatmentUIConfig();
         const treatment = await this.mechanicalTreatmentService.getWithId(id);
         if (configFile && treatment) {
           return this.merge(configFile, treatment);
