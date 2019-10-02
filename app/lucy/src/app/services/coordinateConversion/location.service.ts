@@ -500,7 +500,7 @@ export class ConverterService {
 		Assign “keep=1” to those patch cells proximal to the target */
     for (let i = 1; i <= totalHEX; i++) {
       const hexagon = hexagons.find(item => item.hexID === i);
-      const dxy = Math.pow((Math.pow((hexagon.xAlb0 - target.xAlb0), 2) + Math.pow((target.yAlb0 - target.yAlb0), 2)), 0.5);
+      const dxy = Math.pow((Math.pow((hexagon.xAlb0 - target.xAlb0), 2) + Math.pow((hexagon.yAlb0 - target.yAlb0), 2)), 0.5);
       if (dxy < 230) {
         hexagon.keep = 1;
       }
