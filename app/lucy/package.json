@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": { 
     "ng": "ng",
-    "ng-h": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng",
+    "ng-h": "node --max_old_space_size=1024 ./node_modules/@angular/cli/bin/ng",
     "start": "ng serve",
+    "build-prod": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --prod",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
