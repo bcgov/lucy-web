@@ -195,24 +195,23 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @returns string array of headers
    */
   get missingFields(): string[] {
-    let requiredMissingFieldKeys: string[]= [];
-    
+    const requiredMissingFieldKeys: string[] = [];
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
         requiredMissingFieldKeys.push(key);
       }
     }
     // let requiredMissingFieldHeaders: string[]= [];
-    let missingFieldHeaders: string[]= [];
-    let locationIncluded = false
+    const missingFieldHeaders: string[] = [];
+    let locationIncluded = false;
     for (const key of requiredMissingFieldKeys) {
       if (this.config.fieldHeaders[key] !== undefined) {
         // Group Lat long under "location" tag
         if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
           if (!locationIncluded) {
-            missingFieldHeaders.push(`Location`)
+            missingFieldHeaders.push(`Location`);
             locationIncluded = true;
-          } 
+          }
         } else {
           // All other fields
           missingFieldHeaders.push(this.config.fieldHeaders[key]);
@@ -224,7 +223,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   // Flag used to show missing fields section
   triedToSubmit = false;
-  get showMissingFieldsDialog() : boolean {    
+  get showMissingFieldsDialog(): boolean {
     return (this.triedToSubmit && this.missingFields.length > 0);
   }
 
