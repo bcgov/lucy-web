@@ -30,7 +30,7 @@ describe(' Test Schema YAML file loader', () => {
     });
 
     it('should return schema yaml data', () => {
-        const data = getSQLFilePath('JurisdictionCodeData.sql');
+        const data = getSQLFileData('JurisdictionCodeData.sql');
         should().exist(data);
     });
 });
