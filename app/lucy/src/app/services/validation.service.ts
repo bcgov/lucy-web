@@ -57,7 +57,7 @@ export class ValidationService {
 
   //////////////// Specific Field Validations ////////////////
 
-  public isValidPlotDimention(value: string): boolean {
+  public isValidPlotDimension(value: string): boolean {
     return this.isPositiveNumber(value);
   }
 
@@ -124,8 +124,10 @@ export class ValidationService {
       return `Observer organization is missing`;
     }
 
-    if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width))) {
-      return `You must specify a valid plot dimension for invasive plant species`;
+    for (const key in observation.dimensions) {
+      if (!this.isValidPlotDimension(observation.dimensions[key])) {
+        return `You must specify a valid plot dimension for invasive plant species`;
+      }
     }
 
     if (!observation.jurisdiction) {
