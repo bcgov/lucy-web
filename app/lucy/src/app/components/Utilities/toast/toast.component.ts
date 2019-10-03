@@ -7,7 +7,7 @@ import { ToastModel, ToastIconType, ToastService } from 'src/app/services/toast/
   styleUrls: ['./toast.component.css']
 })
 export class ToastComponent implements OnInit {
-  private displaySeconds = 200;
+  private displaySeconds = 2;
 
   private dirmissDurationInSeconds = 0.5;
   private get timeout(): number {
