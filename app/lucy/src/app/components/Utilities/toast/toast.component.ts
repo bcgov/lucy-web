@@ -7,7 +7,7 @@ import { ToastModel, ToastIconType, ToastService } from 'src/app/services/toast/
   styleUrls: ['./toast.component.css']
 })
 export class ToastComponent implements OnInit {
-  private displaySeconds = 2.5;
+  private displaySeconds = 200;
 
   private dirmissDurationInSeconds = 0.5;
   private get timeout(): number {
@@ -32,11 +32,23 @@ export class ToastComponent implements OnInit {
    }
 
   get iconType(): string {
-    if (this.model && this.model.icon) {
+    if (this.model && this.model.icon !== undefined) {
       return ToastIconType[this.model.icon];
     } else {
       return ToastIconType[ToastIconType.none]
     }
+  }
+
+  get isSuccess(): boolean {
+    if (this.model && this.model.icon !== undefined) {
+      return this.model.icon === ToastIconType.success;
+    } 
+  }
+
+  get isFailure(): boolean {
+    if (this.model && this.model.icon !== undefined) {
+      return this.model.icon === ToastIconType.fail;
+    } 
   }
 
   constructor(private toastService: ToastService) { }

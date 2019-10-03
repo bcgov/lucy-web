@@ -9,7 +9,7 @@ export interface ToastModel {
 export enum ToastIconType {
   success,
   fail,
-  none
+  none,
 }
 
 
@@ -33,7 +33,7 @@ export class ToastService {
    */
   public show(message: string, iconType?: ToastIconType) {
     let icon = ToastIconType.none;
-    if(iconType) {
+    if(iconType !== undefined) {
       icon = iconType
     }
     const model: ToastModel = {

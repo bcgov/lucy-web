@@ -1,7 +1,8 @@
 .toast-container {
     width: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    height: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
 	border-radius: 4px;
 	background-color: #FFFFFF;
     box-shadow: 0 10px 40px 0 rgba(20,27,43,0.3);
@@ -20,10 +21,18 @@
 
 .success {
     background-color: #56BD5B;
+    color: #FFFFFF;
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 
 .fail {
     background-color: #FF534A;
+    color: #FFFFFF;
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 
 .none {

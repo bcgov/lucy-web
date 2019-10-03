@@ -1,13 +1,19 @@
 <div class="toast-position">
-  <div class="container toast-container animated" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
-    <div class="row">
-      <div class="col-1" [ngClass]="iconType">
-        {{iconType}}
+  <div class="container container-fluid toast-container animated" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
+    <div class="row ">
+      <div class="col-3" *ngIf="isSuccess" [ngClass]="iconType">
+          <i class="material-icons">
+              done
+          </i>
+      </div>
+      <div class="col-3" *ngIf="isFailure" [ngClass]="iconType">
+          <i class="material-icons">
+              error_outline
+          </i>
       </div>
       <div class="col">
         {{model.message}}
       </div>
-
     </div>
   </div>
 </div>
