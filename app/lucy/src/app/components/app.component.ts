@@ -244,7 +244,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private testToasts() {
     this.delay(100).then(() => {
-      this.toastService.show(`one`);
+      this.toastService.show(`one`, ToastIconType.fail);
       this.delay(100).then(() => {
         this.toastService.show(`two`, ToastIconType.success);
         this.delay(1000).then(() => {
