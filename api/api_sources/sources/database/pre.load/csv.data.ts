@@ -21,7 +21,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { CSV} from '../../libs/utilities';
 import { ObjectLiteral } from 'typeorm';
-export const getDataFilePath = (fileName: string) => path.resolve(__dirname, `./csv/${fileName}`);
+
+const csvDirName = 'resources/csv';
+export const getDataFilePath = (fileName: string) => path.resolve(__dirname, `../../../${csvDirName}/${fileName}`);
 export const getFileData = (fileName: string) => fs.readFileSync(getDataFilePath(fileName), 'utf8')
 ;
 

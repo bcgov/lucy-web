@@ -11,20 +11,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: schemaYaml.loader.ts
  * Project: lucy
- * File Created: Friday, 30th August 2019 1:31:37 pm
- * Author: pushan (you@you.you)
+ * File Created: Thursday, 3rd October 2019 9:06:55 am
+ * Author: pushan
  * -----
- * Last Modified: Friday, 30th August 2019 1:34:22 pm
- * Modified By: pushan (you@you.you>)
+ * Last Modified: Thursday, 3rd October 2019 9:21:21 am
+ * Modified By: pushan
  * -----
  */
 
-export * from './application.column';
-export * from './application.table';
-export * from './baseSchema';
-export * from './schema.storage';
-export * from './base.data.controller';
-export * from './schemaYaml.loader';
-export * from './sql.loader';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const schemaYAMLDir = 'schema-files';
+export const getYAMLFilePath = (fileName: string) => path.resolve(__dirname, `../../../${schemaYAMLDir}/${fileName}`);
+
+export const getYAMLFileData = (fileName: string) => fs.readFileSync(getYAMLFilePath(fileName), 'utf8');
+
+// ------------------------------------------------------------------
