@@ -118,7 +118,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
    */
   private isDropdown(key: string): boolean {
     if (!this.config || !this.config.dropdownFieldKeys) {
-      return false
+      return false;
     }
     return this.config.dropdownFieldKeys.indexOf(String(key)) !== -1;
   }
@@ -131,11 +131,24 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
     this.value = `${area}\tm²`;
   }
 
+/**
+ * Determines whether rectangular area or circular area should be calculated,
+ * based on key(s) in required fields
+ */
+  private calculateArea(): number {
+    const fields = this.getRequiredFields();
+    if (fields[0].key === `width` || fields[0].key === `length`) {
+      return this.calculateAreaRectangle();
+    } else if (fields[0].key === `radius`) {
+      return this.calculateAreaCircle();
+    } else { return 0; }
+  }
+
   /**
-   * Return area calculated by multiplying required fields.
+   * Return area of rectangle calculated by multiplying required fields.
    * (ignores required dropdown value)
    */
-  private calculateArea(): number {
+  private calculateAreaRectangle(): number {
     const fields = this.getRequiredFields();
     if (!fields) {
       return 0;
@@ -153,4 +166,19 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
     return result;
   }
 
+  /**
+   * Returns area of circle calculated by multiplying radius by PI^2
+   */
+  private calculateAreaCircle(): number {
+    const fields = this.getRequiredFields();
+    let result: number;
+    if (!fields) {    // no value entered
+      result = 0;
+    } else if (fields.length > 1) {   // multiple values entered (so can't be radius)
+      result = 0;
+    } else {
+      result = Math.PI * Math.pow(fields[0].value, 2);
+    }
+    return result;
+  }
 }
