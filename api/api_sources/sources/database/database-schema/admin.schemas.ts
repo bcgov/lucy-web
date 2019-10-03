@@ -1,6 +1,6 @@
 // Admin related schemas
 import { BaseTableSchema } from '../applicationSchemaInterface';
-import { getYAMLFilePath } from './schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 
 /**
  * @description Schema Class to design table for request access level change from a user
