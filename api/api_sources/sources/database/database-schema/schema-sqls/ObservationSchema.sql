@@ -8,6 +8,7 @@ ALTER TABLE observation ADD COLUMN observation_location_lat NUMERIC(8, 6) NOT NU
 ALTER TABLE observation ADD COLUMN observation_location_long NUMERIC(9, 6) NOT NULL;
 ALTER TABLE observation ADD COLUMN area_width NUMERIC(7, 2) NULL DEFAULT 0.0;
 ALTER TABLE observation ADD COLUMN area_length NUMERIC(7, 2) NULL DEFAULT 0.0;
+ALTER TABLE observation ADD COLUMN area_radius NUMERIC(7, 2) NULL DEFAULT 0.0;
 ALTER TABLE observation ADD COLUMN access_description VARCHAR(500) NULL;
 ALTER TABLE observation ADD COLUMN observer_first_name VARCHAR(100) NULL;
 ALTER TABLE observation ADD COLUMN observer_last_name VARCHAR(100) NULL;
@@ -46,6 +47,7 @@ COMMENT ON COLUMN observation.observation_location_lat IS 'Latitude of observati
 COMMENT ON COLUMN observation.observation_location_long IS 'Longitude of observation location';
 COMMENT ON COLUMN observation.area_width IS 'Width of the area observed';
 COMMENT ON COLUMN observation.area_length IS 'Length of the area observed';
+COMMENT ON COLUMN observation.area_radius IS 'Radius of the area observed';
 COMMENT ON COLUMN observation.access_description IS 'Note to specify how to access the location';
 COMMENT ON COLUMN observation.observer_first_name IS 'First name of the observer of the observation';
 COMMENT ON COLUMN observation.observer_last_name IS 'Last name of the observer of the observation';
