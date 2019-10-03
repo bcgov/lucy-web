@@ -46,8 +46,7 @@ export class ObservationService {
       observationType: observation.observationType.observation_type_code_id,
       specificUseCode: observation.specificUseCode.specific_use_code_id,
       soilTexture: observation.soilTexture.soil_texture_code_id,
-      width: +String(observation.width),
-      length: +String(observation.length),
+      dimensions: observation.dimensions,
       accessDescription: observation.accessDescription,
       // Advanced
       // indicators
@@ -197,8 +196,7 @@ export class ObservationService {
       observationType: undefined,
       specificUseCode: undefined,
       soilTexture: undefined,
-      width: undefined,
-      length: undefined,
+      dimensions: undefined,
       accessDescription: undefined,
       // Advanced //
       // indicators
