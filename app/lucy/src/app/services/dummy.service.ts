@@ -276,6 +276,7 @@ export class DummyService {
     const surveyType = await this.randomSurveyTypeCodes();
     const soilTexture = await this.randomSoilTextureCodes();
     const geometry = await this.randomSurveyGeometryCodes();
+    const dimensions = await this.getDimensions(geometry);
     const useCode = await this.randomSpecificUseCodes();
     const groundSlope = await this.randomGroundSlopeCodes();
     const groundAspect = await this.randomGroundAspectCodes();
@@ -313,8 +314,6 @@ export class DummyService {
       observationType: surveyType,
       specificUseCode: useCode,
       soilTexture: soilTexture,
-      width: this.randomIntFromInterval(4, 20),
-      length: this.randomIntFromInterval(4, 20),
       accessDescription: faker.lorem.sentences(),
       // Advanced //
       // indicators
@@ -333,6 +332,7 @@ export class DummyService {
       aspectCode: groundAspect,
       slopeCode: groundSlope,
       observationGeometry: geometry,
+      dimensions: {},
       mechanicalTreatments: [],
     };
     return observation;
@@ -371,6 +371,21 @@ export class DummyService {
    */
   public randomIntFromInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  public getDimensions(geometry: ObservationGeometryCodes) {
+    if (geometry.code === `PO`) {
+      // geometry = Point - small area circle
+      return {'radius': this.randomIntFromInterval(4, 20)};
+    } else if (geometry.code === `PL`) {
+      // geometry = Point - length x width
+      return {
+        'width': this.randomIntFromInterval(4, 20),
+        'length': this.randomIntFromInterval(4, 20)
+      };
+    } else {
+      return {};
+    }
   }
 
    /**
