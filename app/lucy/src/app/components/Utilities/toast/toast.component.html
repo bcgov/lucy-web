@@ -1,0 +1,13 @@
+<div class="toast-position">
+  <div class="container toast-container animated" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
+    <div class="row">
+      <div class="col-1" [ngClass]="iconType">
+        {{iconType}}
+      </div>
+      <div class="col">
+        {{model.message}}
+      </div>
+
+    </div>
+  </div>
+</div>
