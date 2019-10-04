@@ -139,7 +139,7 @@ export class  BaseSchema {
         table.description = def.description;
         table.columnsDefinition = {};
         table.layout = def.layout;
-        table.meta = def.meta;
+        table.meta = def.meta || {};
         table.computedFields = def.computedFields;
         table.relations = def.relations || {};
         table.modelName = def.modelName;
