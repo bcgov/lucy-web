@@ -41,7 +41,13 @@ import {
     controllerForSchemaName
 } from '../../libs/core-database';
 
-
+/**
+ * @description The ResourceRouteController is generic route controller provide manipulation of resource or table row item. Typical functionality
+ * 1. Provides CURD functionality of table row item
+ * 2. Provides Automated request data manipulation
+ * 3. Custom middleware configuring
+ * 4. Securing resource
+ */
 export class ResourceRouteController<D extends DataController, CreateSpec, UpdateSpec> extends BaseRoutController<D> {
     constructor() {
         super();
@@ -100,22 +106,37 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
         }
     }
 
+    /**
+     * @description Create Route Handler
+     */
     get create(): RouteHandler {
         return this.routeConfig<CreateSpec>(`${this.className}: create`, async (data: CreateSpec, req: Request) => {
             return [201, await this.dataController.createNewObject(data, req.user)];
         });
     }
+
+    /**
+     * @description Update Route Handler
+     */
     get update(): RouteHandler {
         return this.routeConfig<UpdateSpec>(`${this.className}: update`, async (data: UpdateSpec, req: any) => {
             assert(req.resource, `${this.className}: update: No resource object found`);
             return [200, await this.dataController.updateObject(req.resource, data, req.user)];
         });
     }
+
+    /**
+     * @description Index or Fetch route
+     */
     get index(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: index`, async (d: any, req: any) => {
             return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
         });
     }
+
+    /**
+     * @description Handler for config route
+     */
     get config(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: config`, async () => {
             return [200, this.dataController.schemaObject.config()];
