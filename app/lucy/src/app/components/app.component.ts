@@ -83,8 +83,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.subscribeToLoadingService();
     this.reRouteIfNeeded();
-    this.testAlerts();
-    this.testToasts();
+    // this.testAlerts();
+    // this.testToasts();
   }
 
   /******** Loading animation ********/
@@ -221,20 +221,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private testAlerts() {
-    return;
+    // return;
     this.delay(100).then(() => {
       this.alertService.show(`HELOO`, `one`, null);
       this.delay(100).then(() => {
         this.alertService.show(`HELOO`, `two`, null);
         this.delay(1000).then(() => {
-          this.alertService.show(`HELOO`, `three`, null);
+          this.alertService.showConfirmation(`HELOO`, `three`);
         });
       });
       this.delay(1000).then(() => {
         this.alertService.show(`HELOO`, `three?`, null);
       });
       this.delay(1000).then(() => {
-        this.alertService.show(`HELOO`, `three???`, null);
+        this.alertService.showConfirmation(`HELOO`, `three??`);
       });
     });
     this.delay(1000).then(() => {
