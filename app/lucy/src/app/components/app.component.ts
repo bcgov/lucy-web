@@ -220,8 +220,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  /*
   private testAlerts() {
-    // return;
     this.delay(100).then(() => {
       this.alertService.show(`HELOO`, `one`, null);
       this.delay(100).then(() => {
@@ -244,6 +244,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private testToasts() {
     this.delay(100).then(() => {
+      this.toastService.show(`Your record has been commited to the InvasivesBC database.`, ToastIconType.success);
       this.toastService.show(`one`, ToastIconType.fail);
       this.delay(100).then(() => {
         this.toastService.show(`two`, ToastIconType.success);
@@ -262,5 +263,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toastService.show(`six`, ToastIconType.success);
     });
   }
+  */
 
 }
