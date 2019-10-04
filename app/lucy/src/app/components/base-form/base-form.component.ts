@@ -181,7 +181,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     let requiredFieldsExist = true;
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
-        console.log(`${key} is missing`);
         requiredFieldsExist = false;
       }
     }
@@ -341,6 +340,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.triedToSubmit = true;
+      this.toast.show('Some required fields are missing', ToastIconType.fail);
     } else {
       if (!this.inReviewMode) {
         this.enterReviewMode();
@@ -350,10 +350,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       const submittedId = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
       if (submittedId !== -1) {
-        this.toast.show(`Your record has been commited to the InvasivesBC database.`, ToastIconType.success);
+        this.toast.show(`Your record has been commited to the database.`, ToastIconType.success);
         this.formService.viewCurrentWithId(submittedId);
       } else {
-        this.alert.show('error', 'There was an error');
+        this.alert.show('Submission failed', 'There was an error');
       }
     }
   }
@@ -410,9 +410,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
-    let el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
+    const el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
       if (el) {;
-          el.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+          el.scrollIntoView({ block: 'center',  behavior: 'smooth' });
           this.renderer.addClass(el, highlightClass);
           setTimeout(() => {
           this.renderer.removeClass(el, highlightClass);
@@ -434,12 +434,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     if (this.router.current === AppRoutes.AddMechanicalTreatment) {
       const temp = await this.formService.generateMechanicalTreatmentTest(this.config);
       this.config = { ...temp};
-      console.log(`config updated`);
+      // console.log(`config updated`);
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else if (this.router.current === AppRoutes.AddObservation) {
       const temp = await this.formService.generateObservationTest(this.config);
       this.config = { ...temp};
-      console.log(`config updated`);
+      // console.log(`config updated`);
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else {
       this.alert.show('Form not supported yet', `Test generatgion for this form type is not implemented yet`);
