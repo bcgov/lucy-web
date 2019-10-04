@@ -211,6 +211,11 @@ schemas:
         name: 'area_length'
         comment: 'Length of the area observed'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        meta: 
+          dependencies:
+            key: observationGeometry.observation_geometry_code_id
+            hideOn:
+              - 1
         layout:
           header:
             key: 'generic.length'
@@ -255,7 +260,7 @@ schemas:
         meta:
           dependencies:
             - key: sampleTakenIndicator
-              requiredValues:
+              showOn:
                 - true
         layout:
           header:
