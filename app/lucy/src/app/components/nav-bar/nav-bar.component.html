@@ -87,18 +87,18 @@
                             <a mat-menu-item class="btn-with-icon" [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off' " (click)="navigateToProfile()">
                 Profile 
                 <i class="material-icons">account_circle</i>
-              </button>
-              <button mat-menu-item class="btn-with-icon" (click)="logout()">
+                            </a>
+                            <button mat-menu-item class="btn-with-icon" (click)="logout()">
                 Logout <i class="material-icons">input</i>
               </button>
-            </mat-menu>
-          </div>
-        </li>
-        <!-- User menu for smaller sizes (in dropdown) -->
-        <li class="nav-item user-actions-menu">
-            <a class="nav-link" (click)="logout()">Logout</a>
+                        </mat-menu>
+                    </div>
+                </li>
+                <!-- User menu for smaller sizes (in dropdown) -->
+                <li class="nav-item user-actions-menu">
+                    <a class="nav-link" (click)="logout()">Logout</a>
                 </li>
             </ul>
-            </div>
         </div>
+    </div>
 </nav>
