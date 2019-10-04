@@ -77,8 +77,8 @@ schemas:
                 key: '' 
                 default: Geometry
               fields:
-                - width
-                - length
+                - horizontalDimension
+                - verticalDimension
               style: {}
         # End-Section
         - title: 
@@ -126,8 +126,8 @@ schemas:
         computationRules:
           - name: Compute Area
             keys:
-              - width
-              - length
+              - horizontalDimension
+              - verticalDimension
             method: calculateArea
     # End - Computed fields
     columns: 
@@ -159,26 +159,26 @@ schemas:
             default: 'Longitude'
           classes:
             - none
-      width:
-        name: 'mechanical_treatment_area_width'
-        comment: 'Width of the area of treatment'
+      horizontalDimension:
+        name: 'mechanical_treatment_area_horizontal_dimension'
+        comment: 'Width or horizontal dimension of the area of treatment'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         meta: {}
         layout:
           header: 
             key: 'width' 
-            default: 'Width'
+            default: 'Width or Radius'
           classes:
             - none
-      length:
-        name: 'mechanical_treatment_area_length'
-        comment: 'Length of the area of treatment'
+      verticalDimension:
+        name: 'mechanical_treatment_area_vertical_dimension'
+        comment: 'Length or vertical dimension of the area of treatment'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         meta: {}
         layout:
           header: 
             key: 'length' 
-            default: 'Length'
+            default: 'Length or vertical dimension'
           classes:
             - none
       applicatorFirstName: 

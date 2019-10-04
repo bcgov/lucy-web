@@ -60,8 +60,8 @@ import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 export interface MechanicalTreatmentSpec {
 	latitude: number;
 	longitude: number;
-	width: number;
-	length: number;
+	horizontalDimension: number;
+	verticalDimension: number;
 	applicatorFirstName: string;
 	applicatorLastName: string;
 	secondaryApplicatorFirstName: string;
@@ -90,8 +90,8 @@ export interface MechanicalTreatmentSpec {
 export interface MechanicalTreatmentUpdateSpec {
 	latitude?: number;
 	longitude?: number;
-	width?: number;
-	length?: number;
+	horizontalDimension?: number;
+	verticalDimension?: number;
 	applicatorFirstName?: string;
 	applicatorLastName?: string;
 	secondaryApplicatorFirstName?: string;
@@ -149,18 +149,18 @@ export class MechanicalTreatment extends Record {
 	longitude: number;
 
 	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_area_width}
+	 * @description Getter/Setter property for column {mechanical_treatment_area_horizontal_dimension}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.width, transformer: new NumericTransformer})
+	@Column({ name: MechanicalTreatmentSchema.columns.horizontal_dimension, transformer: new NumericTransformer})
 	@ModelProperty({type: PropertyType.number})
-	width: number;
+	horizontal_dimension: number;
 
 	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_area_length}
+	 * @description Getter/Setter property for column {mechanical_treatment_area_vertical_dimension}
 	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.length, transformer: new NumericTransformer()})
+	@Column({ name: MechanicalTreatmentSchema.columns.vertical_dimension, transformer: new NumericTransformer()})
 	@ModelProperty({type: PropertyType.number})
-	length: number;
+	vertical_dimension: number;
 
 	/**
 	 * @description Getter/Setter property for column {applicator_first_name}
