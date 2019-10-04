@@ -1100,13 +1100,13 @@ export class FormService {
   //////////////////////////////////// TESTS ////////////////////////////////////
   public async generateMechanicalTreatmentTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyMechanicalTreatment();
-    console.dir(dummy);
+    // console.dir(dummy);
     return await this.merge(config, dummy);
   }
 
   public async generateObservationTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyObservation([]);
-    console.log(`dummy: ${dummy.lat} ${dummy.long}`);
+    // console.log(`dummy: ${dummy.lat} ${dummy.long}`);
     const temp = await this.merge(config, dummy);
     return temp;
   }
