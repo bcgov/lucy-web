@@ -265,7 +265,7 @@ export class FormService {
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
-      // Loop thorugh groups in server config layout
+      // Loop thorugh groups in server config lay out
       for (const group of groups) {
         // Initialize fields for group
         const subSectionFields: any[] = [];
