@@ -21,6 +21,7 @@ import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
 import { ElementRef } from '@angular/core';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 
 export enum FormType {
   Observation,
@@ -238,6 +239,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private loadingService: LoadingService,
     private elementRef: ElementRef,
     private renderer: Renderer2,
+    private toast: ToastService
   ) {
     this.lottieConfig = {
       path: this.formLoadingIcon,
@@ -345,10 +347,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         return;
       }
       this.loadingService.add();
-      const submitted = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
+      const submittedId = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
-      if (submitted) {
-        this.router.navigateTo(AppRoutes.Inventory);
+      if (submittedId !== -1) {
+        this.toast.show(`Your record has been commited to the InvasivesBC database.`, ToastIconType.success);
+        this.formService.viewCurrentWithId(submittedId);
       } else {
         this.alert.show('error', 'There was an error');
       }
@@ -405,19 +408,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   /////////// End Lottie ///////////
 
-  /////////// dependency ///////////
-  dependencySatisfied(field: any): boolean {
-    return true;
-  }
-  resolveHeader(field: any): string {
-    if (field.meta && field.meta.dependency) {
-      
-    } else {
-      return field.header;
-    }
-  }
-  /////////// End dependency ///////////
-
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
     let el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
@@ -443,7 +433,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.loadingService.add();
     if (this.router.current === AppRoutes.AddMechanicalTreatment) {
       const temp = await this.formService.generateMechanicalTreatmentTest(this.config);
-      this.config= { ...temp};
+      this.config = { ...temp};
       console.log(`config updated`);
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else if (this.router.current === AppRoutes.AddObservation) {
