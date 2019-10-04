@@ -34,7 +34,7 @@ export class ToastService {
   public show(message: string, iconType?: ToastIconType) {
     let icon = ToastIconType.none;
     if(iconType !== undefined) {
-      icon = iconType
+      icon = iconType;
     }
     const model: ToastModel = {
       message: message,
@@ -70,7 +70,7 @@ export class ToastService {
     return -1;
   }
 
-  private isTheSameAlert(item1: ToastModel, item2:ToastModel) {
+  private isTheSameAlert(item1: ToastModel, item2: ToastModel) {
     const first = JSON.parse(JSON.stringify(item1));
     const second = JSON.parse(JSON.stringify(item2));
     return first === second;
