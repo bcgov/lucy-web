@@ -1,12 +1,12 @@
 <div class="toast-position animated" [ngClass]="presenting ? 'fadeIn' : 'fadeOut'">
   <div class="container container-fluid toast-container animated" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
     <div class="row animated" >
-      <div class="col-2 success" *ngIf="isSuccess">
+      <div class="col-1 success" *ngIf="isSuccess">
           <i class="material-icons">
               done
           </i>
       </div>
-      <div class="col-2 fail" *ngIf="isFailure">
+      <div class="col-1 fail" *ngIf="isFailure">
           <i class="material-icons">
               error_outline
           </i>
@@ -14,7 +14,7 @@
       <div class="col message">
         {{model.message}}
       </div>
-      <div class="col-2 close" (click)="closeAction()">
+      <div class="col-1 close" (click)="closeAction()">
           <i class="material-icons">
               close
           </i>
