@@ -7,7 +7,7 @@ import { ToastModel, ToastIconType, ToastService } from 'src/app/services/toast/
   styleUrls: ['./toast.component.css']
 })
 export class ToastComponent implements OnInit {
-  private displaySeconds = 2;
+  private displaySeconds = 7;
 
   private dirmissDurationInSeconds = 0.5;
   private get timeout(): number {
@@ -17,7 +17,11 @@ export class ToastComponent implements OnInit {
     return this.timeout - (this.dirmissDurationInSeconds * 1000);
   }
 
+  dismissTimer: NodeJS.Timer;
+  dismissAnimationTimer: NodeJS.Timer;
+
   presenting = true;
+  closedEarly = false;
 
   private _model: ToastModel;
   get model(): ToastModel {
@@ -35,20 +39,20 @@ export class ToastComponent implements OnInit {
     if (this.model && this.model.icon !== undefined) {
       return ToastIconType[this.model.icon];
     } else {
-      return ToastIconType[ToastIconType.none]
+      return ToastIconType[ToastIconType.none];
     }
   }
 
   get isSuccess(): boolean {
     if (this.model && this.model.icon !== undefined) {
       return this.model.icon === ToastIconType.success;
-    } 
+    }
   }
 
   get isFailure(): boolean {
     if (this.model && this.model.icon !== undefined) {
       return this.model.icon === ToastIconType.fail;
-    } 
+    }
   }
 
   constructor(private toastService: ToastService) { }
@@ -63,21 +67,55 @@ export class ToastComponent implements OnInit {
   }
 
   async beginDismissAnimationTimer() {
-    await this.wait(this.displayTime);
-    this.presenting = false;
+    // const current = {... this.model};
+    await this.waitForDismissAnimationTimeout();
+    if (!this.closedEarly) {
+      this.presenting = false;
+    }
   }
+
   async beginDismissTimer() {
-    await this.wait(this.timeout);
+    await this.waitForDismissTimeout();
+    if (this.model && !this.closedEarly) {
+      this.toastService.clear(this.model);
+    }
+  }
+
+  async closeAction() {
+    // 1) stop beginDismissAnimationTimer and beginDismissTimer from executing
+    this.closedEarly = true;
+    clearTimeout(this.dismissTimer);
+    clearTimeout(this.dismissAnimationTimer);
+    // execute dismiss animation
+    this.presenting = false;
+    await this.wait(this.dirmissDurationInSeconds * 1000);
+    // clear it in toast
     if (this.model) {
       this.toastService.clear(this.model);
     }
+    // 3) un-block beginDismissAnimationTimer and beginDismissTimer.
+    this.closedEarly = false;
   }
 
    /**
    * Create a delay
    * @param ms milliseconds
    */
-  private wait(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+  private wait(ms: number): Promise<any> {
+    return new Promise( resolve => {
+      setTimeout(resolve, ms);
+    } );
+  }
+
+  private waitForDismissTimeout(): Promise<any> {
+    return new Promise( resolve => {
+      this.dismissTimer = setTimeout(resolve, this.timeout);
+    } );
+  }
+
+  private waitForDismissAnimationTimeout(): Promise<any> {
+    return new Promise( resolve => {
+      this.dismissAnimationTimer = setTimeout(resolve, this.displayTime);
+    } );
   }
 }

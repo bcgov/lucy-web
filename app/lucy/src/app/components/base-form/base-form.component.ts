@@ -408,6 +408,19 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   /////////// End Lottie ///////////
 
+  /////////// dependency ///////////
+  dependencySatisfied(field: any): boolean {
+    return true;
+  }
+  resolveHeader(field: any): string {
+    if (field.meta && field.meta.dependency) {
+      
+    } else {
+      return field.header;
+    }
+  }
+  /////////// End dependency ///////////
+
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
     let el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
