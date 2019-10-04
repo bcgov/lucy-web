@@ -94,9 +94,10 @@ export class DropdownService {
 
   /**
    * Fetch SurveyModes code table, return as array of
+   * RENAMED TO OBSERVATION TYPE
    * deopdown objects
    */
-  public async getSurveyModes(): Promise<DropdownObject[]> {
+  public async getObservationType(): Promise<DropdownObject[]> {
     const modes = await this.codeTableService.observationTypeCodes();
     return this.createDropdownObjectsFrom(modes, this.displayedSurveyTypeField);
   }

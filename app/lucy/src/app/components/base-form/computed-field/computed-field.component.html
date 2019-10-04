@@ -1,0 +1,14 @@
+
+<div class="col-12 field">
+  <mat-form-field appearance="none">
+      <mat-label>{{ header }}</mat-label>
+      <input
+      matInput
+      class="field-style"
+      placeholder="{{ header }}"
+      [(ngModel)]="value"
+      [attr.id]="fieldId"
+      [readonly]="true"
+      />
+  </mat-form-field>
+</div>

@@ -23,97 +23,24 @@
 /**
  * Imports
  */
-import * as assert from 'assert';
-import * as moment from 'moment';
 import { Router } from 'express';
 import {
     // SecureRouteController,
     ResourceRoute,
     CreateMiddleware,
-    // RouteHandler,
-    // Route,
-    // HTTPMethod,
-    // writerOnlyRoute,
-    ValidatorExists,
-    ValidatorCheck,
     ResourceRouteController,
     writerOnlyRoute,
     UpdateMiddleware
 } from '../../../core';
 import {
     MechanicalTreatmentController,
-    MechanicalTreatmentSpec,
-    ObservationController,
-    SpeciesController,
-    MechanicalMethodCodeController,
-    SpeciesAgencyCodeController,
-    MechanicalDisposalMethodCodeController,
-    MechanicalSoilDisturbanceCodeController,
-    MechanicalTreatmentIssueCodeController,
-    MechanicalRootRemovalCodeController,
-    TreatmentProviderContractorController
+    MechanicalTreatmentSpec
 } from '../../../../database/models';
-
-const CreateTreatmentValidator = (): any[] => {
-    return ValidatorExists({
-            observation: ObservationController.shared,
-            species: SpeciesController.shared,
-            speciesAgency: SpeciesAgencyCodeController.shared,
-            mechanicalMethod: MechanicalMethodCodeController.shared,
-            mechanicalDisposalMethod: MechanicalDisposalMethodCodeController.shared,
-            soilDisturbance: MechanicalSoilDisturbanceCodeController.shared,
-            rootRemoval: MechanicalRootRemovalCodeController.shared,
-            issue: MechanicalTreatmentIssueCodeController.shared,
-            providerContractor: TreatmentProviderContractorController.shared
-        }).concat(ValidatorCheck({
-                applicatorFirstName: {
-                    validate: validate => validate.isString(),
-                    message: 'should be string'
-                },
-                applicatorLastName: {
-                    validate: validate => validate.isString(),
-                    message: 'should be string'
-                },
-                latitude: {
-                    validate: validate => validate.isNumeric(),
-                    message: 'should be number'
-                },
-                longitude: {
-                    validate: validate => validate.isNumeric(),
-                    message: 'should be number'
-                },
-                width: {
-                    validate: validate => validate.isNumeric(),
-                    message: 'should be number'
-                },
-                length: {
-                    validate: validate => validate.isNumeric(),
-                    message: 'should be number'
-                },
-                date: {
-                    validate: validate => validate.isString().custom(async (val: string, {req}) => {
-                        assert(moment(val, 'YYYY-MM-DD').isValid(), `date: should be string in YYYY-MM-DD format`);
-                    }),
-                    message: 'should be string in YYYY-MM-DD format'
-                },
-                paperFileReference: {
-                    validate: validate => validate.isString().isAlphanumeric().optional(),
-                    message: 'should be alphanumeric string'
-                },
-                comment: {
-                    validate: validate => validate.isString().optional()
-                },
-                signageOnSiteIndicator: {
-                    validate: validate => validate.isBoolean().optional()
-                }
-            }));
-};
-
 @ResourceRoute({
     path: 'api/treatment/mechanical/#',
     description: 'API route controller for mechanical treatment',
     dataController: MechanicalTreatmentController.shared,
-    validators: CreateTreatmentValidator,
+    // validators: CreateTreatmentValidator,
     secure: true
 })
 @CreateMiddleware(() => [writerOnlyRoute()])

@@ -28,7 +28,7 @@ RUN npm ci
 COPY ./ .
 
 # BUILD APP
-RUN npm run build
+RUN npm run build-prod
 
 EXPOSE 3030
 

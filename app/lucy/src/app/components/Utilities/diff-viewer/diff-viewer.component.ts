@@ -45,7 +45,18 @@ export class DiffViewerComponent implements OnInit {
     return _changes;
   }
 
-  @Input() diffObject: DiffResult;
+  get numberOfChanged(): number {
+    return this.changes.length;
+  }
+
+  private _diffObject: DiffResult;
+  @Input() set diffObject(object: DiffResult) {
+    this._diffObject = object;
+    console.log(object);
+  }
+  get diffObject(): DiffResult {
+    return this._diffObject;
+  }
 
   constructor() { }
 

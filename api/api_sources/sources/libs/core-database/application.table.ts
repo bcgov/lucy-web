@@ -29,9 +29,15 @@ import { ApplicationTableColumn} from './application.column';
  */
 export class ApplicationTable {
     name: string;
-    columnsDefinition: {[key: string]: ApplicationTableColumn};
+    columnsDefinition: {[key: string]: ApplicationTableColumn} = {};
     description = 'Application table';
     private _columnNames: {[key: string]: string};
+    meta: any;
+    layout: any;
+    displayLayout: any;
+    computedFields: any;
+    relations: any;
+    modelName?: string;
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
@@ -49,7 +55,7 @@ export class ApplicationTable {
     }
 
     get id(): string {
-        return this.columnsDefinition.id.name;
+        return this.columnsDefinition && this.columnsDefinition.id ? this.columnsDefinition.id.name : 'NA';
     }
 
     public createTableSql(): string {

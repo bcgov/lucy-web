@@ -33,6 +33,7 @@ export interface ResourceInfo {
     createMiddleware?: () => any[];
     updateMiddleware?: () => any[];
     viewMiddleware?: () => any[];
+    dependency?: () => any[];
 }
 
 // ----------------------------------------------------------------------

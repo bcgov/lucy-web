@@ -20,11 +20,15 @@
  * Imports
  */
 import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
-import { ApplicationCode } from './user';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ApplicationCode } from './generic.data.models';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { JurisdictionCodeSchema } from '../database-schema';
 
 @Entity( { name: JurisdictionCodeSchema.dbTable} )
+@ModelDescription({
+    description: '',
+    schema: JurisdictionCodeSchema
+})
 export class JurisdictionCode extends ApplicationCode {
     @PrimaryGeneratedColumn()
     @ModelProperty( {type: PropertyType.number})
