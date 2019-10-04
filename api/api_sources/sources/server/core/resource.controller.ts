@@ -21,15 +21,25 @@
  * -----
  */
 import * as assert from 'assert';
+import * as _ from 'underscore';
+import * as moment from 'moment';
 import { Request } from 'express';
 import { DataController} from '../../database/data.model.controller';
 import {
     BaseRoutController,
     RouteHandler,
-    MakeOptionalValidator
+    MakeOptionalValidator,
+    ValidationInfo,
+    ValidatorExists,
+    ValidatorCheck
 } from './base.route.controller';
 import { ResourceInfo } from './route.const';
 import { roleAuthenticationMiddleware } from './auth.middleware';
+import {
+    ApplicationTable,
+    ApplicationTableColumn,
+    controllerForSchemaName
+} from '../../libs/core-database';
 
 
 export class ResourceRouteController<D extends DataController, CreateSpec, UpdateSpec> extends BaseRoutController<D> {
@@ -44,10 +54,16 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
             if (info.secure && info.secure === true) {
                 this.router.use(this.authHandle);
             }
+            // this['dependencies'] = this.dataController.dependencies;
 
             // Check users
             if (info.users) {
                 this.router.use(roleAuthenticationMiddleware(info.users));
+            }
+
+            // Calling Dependencies
+            if (info.dependency) {
+                info.dependency();
             }
 
             // Getting controller specific middleware
@@ -56,8 +72,8 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
                 this.router.use(middleware);
             }
             // Getting validator
-            const validators: any[] = info.validators ? info.validators() : [];
-            const optional: any[] = MakeOptionalValidator(() => info.validators ? info.validators() : []);
+            const validators: any[] = this._createValidator();
+            const optional: any[] = MakeOptionalValidator(() => this._createValidator());
 
             // Getting operation specific middleware
             const createMiddleware: any[] = info.createMiddleware ? info.createMiddleware() : [];
@@ -72,6 +88,9 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
 
             // Configuring View all Route with filter
             this.router.get(`/`, this.combineValidator(viewMiddleware), this.index);
+
+            // Configuring config route
+            this.router.get(`/config`, viewMiddleware, this.config);
 
             // Configuring View {single} Route
             this.router.get(`/:id`, this.combineValidator(this.idValidation(), viewMiddleware) , this.index);
@@ -96,6 +115,101 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
         return this.routeConfig<any>(`${this.className}: index`, async (d: any, req: any) => {
             return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
         });
+    }
+    get config(): RouteHandler {
+        return this.routeConfig<any>(`${this.className}: config`, async () => {
+            return [200, this.dataController.schemaObject.config()];
+        });
+    }
+
+    /**
+     * @description Create Validator Logic based on Schema
+     */
+    private _createValidator(): any[] {
+        const tableSchema: ApplicationTable = this.dataController.schema;
+        const columns = tableSchema.columnsDefinition;
+        let validatorCheck = {};
+        let validatorExists = {};
+        _.each(columns, (column: ApplicationTableColumn, key: string) => {
+            if (key === 'id') {
+                return;
+            }
+            const typeInfo: any = column.typeDetails;
+            const validateKey: {[key: string]: ValidationInfo} = {};
+            const validateExists: {[key: string]: DataController} = {};
+            switch  (typeInfo.type) {
+                case 'string':
+                    if (typeInfo.isDate) {
+                        validateKey[key] = {
+                            validate: validate => validate.isString().custom(async (val: string, {req}) => {
+                                assert(moment(val, 'YYYY-MM-DD').isValid(), `${key}: should be string in YYYY-MM-DD format`);
+                            }),
+                            message: 'should be string in YYYY-MM-DD format',
+                            optional: !column.required
+                        };
+                    } else {
+                        validateKey[key] = {
+                            validate: validate => validate.isString().custom(async (value: string, {req}) => {
+                                // 1. Check Size
+                                assert(value, `${key}: Value must be defined`);
+                                assert(value.length < typeInfo.size, `${key}: Exceed maximum size ${typeInfo.size}`);
+                                // 2. Regx check
+                                const verification = column.columnVerification || {};
+                                if (verification.regx) {
+                                    const regx = new RegExp(verification.regx.re, verification.regx.flag || 'gm');
+                                    assert(value.match(regx), `${key}: should match regx: ${regx}`);
+                                }
+                            }),
+                            message: 'should be string',
+                            optional: !column.required
+                        };
+                    }
+                    break;
+                case 'number':
+                    validateKey[key] = {
+                        validate: validate => validate.isNumeric(),
+                        message: 'should be number',
+                        optional: !column.required
+                    };
+                    break;
+                case 'boolean':
+                    validateKey[key] = {
+                        validate: validate => validate.isBoolean(),
+                        message: 'should be boolean',
+                        optional: !column.required
+                    };
+                    break;
+                case 'object':
+                    // Get schema name
+                    const schemaName = typeInfo.schema;
+                    // console.log(`${key}: 1: ${schemaName}`);
+                    const controller = controllerForSchemaName(schemaName);
+                    if (controller) {
+                        // console.log(`${key}: 2`);
+                        validateExists[key] = controller;
+                    } else {
+                        validateKey[key] = {
+                            validate: validate => validate.isInt().custom(async (val: number, {req}) => {
+                                const con = controllerForSchemaName(schemaName);
+                                if (con) {
+                                    const item = await con.findById(val);
+                                    assert(item, `${key}: Item not exists with id: ${val}`);
+                                    if (!req.body) {
+                                        req.body = {};
+                                    }
+                                    req.body[key] = item;
+                                }
+                            }),
+                            optional: !column.required
+                        };
+                    }
+                    break;
+            }
+            validatorCheck = {...validatorCheck, ...validateKey};
+            validatorExists = {...validatorExists, ...validateExists};
+        });
+        // console.dir(validatorExists);
+        return ValidatorExists(validatorExists).concat(ValidatorCheck(validatorCheck));
     }
 }
 

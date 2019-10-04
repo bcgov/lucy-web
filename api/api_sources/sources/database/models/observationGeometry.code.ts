@@ -25,13 +25,17 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ObservationGeometryCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
-import { Record } from './user';
+import { Record } from './generic.data.models';
 /**
  * @description Data Model Class for ObservationGeometryCodeSchema
  */
 @Entity( { name: ObservationGeometryCodeSchema.dbTable} )
+@ModelDescription({
+	description: 'Data model for Observation Geometry',
+	schema: ObservationGeometryCodeSchema
+})
 export class ObservationGeometryCode extends Record {
 
 	/**

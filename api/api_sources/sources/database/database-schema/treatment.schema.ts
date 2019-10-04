@@ -24,7 +24,7 @@
  * Imports
  */
 import { RecordTableSchema, CodeTableSchema, } from './base.record.schema';
-import { getYAMLFilePath } from './schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 import { TreatmentProviderCSVData } from '../pre.load';
 import { convertDateString } from '../../libs/utilities';
 
@@ -82,6 +82,10 @@ export class TreatmentProviderContractorSchema extends TreatmentSchema {
         return csv.load({
             license_expiry_date: (value: string) => convertDateString(value, 'DD-MMM-YY', 'YYYY-MM-DD')
         });
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
     }
 
     entryString(input?: string, context?: string): string {

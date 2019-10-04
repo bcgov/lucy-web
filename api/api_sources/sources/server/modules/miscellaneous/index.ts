@@ -17,6 +17,7 @@
 //
 // Created by Pushan Mitra on 2019-05-10.
 export * from './miscellaneous.router';
+export * from './codes.route';
 
 // -----------------------------------------------------------------------------------------------------------
 

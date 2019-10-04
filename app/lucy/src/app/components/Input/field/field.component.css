@@ -14,7 +14,7 @@
 
 .invalid {
     color: #ff0000;
-    border: 1px solid rgba(233, 23, 23, 0.4);
+    /* border: 1px solid rgba(233, 23, 23, 0.4); */
     box-sizing: border-box;
 }
 
@@ -27,6 +27,11 @@
     border: 0;
 }
 
+.view-field-background {
+    background-color: rgba(51, 51, 51, 0.08);
+}
+
 .field {
     width: 100% !important;
+    min-width: 200px;
 }

@@ -81,7 +81,7 @@ const exportModel = (schema: BaseTableSchema) => {
 };
 
 export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
-    const className = cls || schema.className.split('Schema')[0] || 'SampleClass';
+    const className = cls || schema.modelName || 'SampleClass';
     const schemaName = schema.className;
     const n = '\n';
     const t = '\t';

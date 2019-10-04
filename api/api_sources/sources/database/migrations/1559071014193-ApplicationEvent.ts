@@ -20,14 +20,15 @@
  * Imports
  */
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { ApplicationEventSchema, UserSessionSchema} from '../database-schema';
+import { ApplicationEventSchema } from '../database-schema';
+import { AppLogger } from '../../Applogger';
 
 /**
  * @description Generated Migration file for creation of application events
  * @export class ApplicationEvent1559071014193
  */
-export class ApplicationEvent1559071014193 extends ApplicationEventSchema implements MigrationInterface {
-
+export class ApplicationEvent1559071014193 extends AppLogger implements MigrationInterface {
+    eventSchema: ApplicationEventSchema = new ApplicationEventSchema();
     /**
      * @description Up method
      * @param QueryRunner queryRunner
@@ -35,26 +36,9 @@ export class ApplicationEvent1559071014193 extends ApplicationEventSchema implem
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
         // Creating table
-        await queryRunner.query(`CREATE TABLE ${this.table.name} (
-            ${this.table.columns.id} SERIAL PRIMARY KEY,
-            ${this.table.columns.type} INT NOT NULL,
-            ${this.table.columns.source} VARCHAR(200) NULL,
-            ${this.table.columns.refSessionId} INT NULL,
-            ${this.table.columns.note} VARCHAR(500)
-        );`);
-
-        // Creating timestamp column
-        await queryRunner.query(this.createTimestampsColumn());
-
-        // Creating comments
-        await queryRunner.query(this.createComments());
-
-        // Foreign key -> session
-        await queryRunner.query(`ALTER TABLE ${this.table.name}
-        ADD CONSTRAINT FK_2019052812h49m FOREIGN KEY (${this.table.columns.refSessionId})
-        REFERENCES ${UserSessionSchema.schema.name}(${UserSessionSchema.schema.columns.id})
-        ON DELETE SET NULL;`);
-
+        this.info('[RUNNING]');
+        await queryRunner.query(this.eventSchema.migrationSQL);
+        this.info('[DONE]');
     }
 
     /**
@@ -63,7 +47,8 @@ export class ApplicationEvent1559071014193 extends ApplicationEventSchema implem
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(this.dropTable());
+        await queryRunner.query(`ALTER TABLE ${this.eventSchema.tableName} DROP CONSTRAINT IF EXISTS FK_2019052812h49m`);
+        await queryRunner.query(this.eventSchema.dropTable());
     }
 
 }

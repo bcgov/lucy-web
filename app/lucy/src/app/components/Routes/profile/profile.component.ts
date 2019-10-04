@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     if (!this.userAccessType) {
       return false;
     }
-    if ( this.roleService.canCreate(this.userAccessType)) {
+    if (this.roleService.canCreate(this.userAccessType)) {
       return false;
     } else {
       return this.userService.showRequestDataEntryAccessMessage();
@@ -42,7 +42,21 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public userFullName = ``;
   public userInitials = ``;
 
-  constructor(private userService: UserService, private router: RouterService, private alertService: AlertService, private loadingService: LoadingService, private roleService: RolesService) { }
+  // Lottie Animation
+  public lottieConfig: Object;
+  private anim: any;
+  private animationSpeed = 1;
+  /////////////////
+
+
+  constructor(private userService: UserService, private router: RouterService, private alertService: AlertService, private loadingService: LoadingService, private roleService: RolesService) {
+    this.lottieConfig = {
+      path: 'https://assets3.lottiefiles.com/datafiles/cS8pm9FZK13Qo6e/data.json',
+      renderer: 'canvas',
+      autoplay: true,
+      loop: false
+    };
+  }
 
   ngOnInit() {
   }
@@ -74,12 +88,43 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         this.navigateToUserInfo();
       }
     });
+
+    // Check Access type
+    this.loadingService.add();
+    this.userService.getAccess().then((value) => {
+      this.userAccessType = value;
+      this.loadingService.remove();
+    });
   }
 
-  /**
-   * Uses UserService -> setShowRequestDataEntryAccessMessage()
-   * to create a cookie to save the user preference.
-   */
+  /////////// Lottie ///////////
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
+  }
+
+  /////////// End Lottie ///////////
+
+	/**
+	 * Uses UserService -> setShowRequestDataEntryAccessMessage()
+	 * to create a cookie to save the user preference.
+	 */
   public hideRequestDataEntryAccessMessage() {
     this.userService.setShowRequestDataEntryAccessMessage(false);
   }
@@ -88,7 +133,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public requestDataEntryAccess() {
     const success = this.userService.submitDataEntryRequest(`Let me in please.`);
     if (success) {
-      this.alertService.show( `Success`, `Your Data Entry Access request has been sent.`, null);
+      this.alertService.show(`Success`, `Your Data Entry Access request has been sent.`, null);
       console.log(`Request sent`);
     } else {
       this.alertService.show(`Failed`, `Could not create request.`, null);

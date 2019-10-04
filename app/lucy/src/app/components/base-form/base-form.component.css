@@ -5,12 +5,19 @@
     line-height: 24px;
 }
 
+.sub-header {
+	color: #FFFFFF;
+	font-size: 14px;
+	letter-spacing: -0.05px;
+	line-height: 18px;
+}
+
 
 .sub-section-title {
     color: #000000;
     font-size: 17px;
-	font-weight: bold;
-	line-height: 22px;
+    font-weight: bold;
+    line-height: 22px;
 }
 
 .section-divider {
@@ -18,4 +25,127 @@
     height: 1px;
     width: 100%;
     border: 2px solid #E2A014;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.sticky {
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.mat-toolbar {
+    background-color: rgba(0, 0, 0, 0);
+    color: #fff;
+}
+
+.header-container {
+    margin: 0 auto;
+    width: 100%;
+    background: linear-gradient(135deg, #0053A4 0%, #002C71 100%);
+    box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
+    animation-duration: 0.5s;
+}
+
+.header-container-loading {
+    margin: 0 auto;
+    width: 100%;
+    background: transparent;
+}
+
+.header-container-review {
+    margin: 0 auto;
+    width: 100%;
+    background: linear-gradient(135deg, #EA8B0F 0%, #F1AC24 100%);
+    box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+    animation-duration: 0.5s;
+}
+
+.spacer-toolbar {
+    flex: 1 1 auto;
+}
+
+/* HANDELING SIDE NAV ON SCREEN SIZE CHANGE */
+@media (min-width: 992px) {}
+
+@media (max-width: 992px) {}
+
+/****************************************/
+@media (max-width: 768px) {
+
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .header-container-inner {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.form-bg {
+    background: #F5F6FA;
+    min-height: 100%;
+}
+
+.form-body {
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 5px 0 #E5E9F2;
+    animation-duration: 0.5s;
+}
+
+.mat-toolbar-row {
+    padding: 0 !important;
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-option-button {
+    width: 100%;
+}
+
+.test-btn {
+    align-content: center;
+    text-align: center;
+    background: greenyellow;
+    border-radius: .25rem;
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    height: 50px;
+    width: 50px;
+    font-weight: bold;
+}
+
+.submit-button {
+    background-color: white;
+    border-color: white;
+    color: #234075;
+    margin-left: 20px;
+}
+
+.edit-button {
+    background: transparent;
+    border: 1px solid white !important;
+    color: white;
+    margin-left: 20px;
+}
+
+.diff-container {
+    background-color: purple;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    animation-duration: 0.5s;
+    animation-delay: 0s;
+    margin-bottom: 10px;
 }

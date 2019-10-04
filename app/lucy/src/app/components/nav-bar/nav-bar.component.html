@@ -27,41 +27,16 @@
       <ul class="navbar-nav">
         <!-- User menu for smaller sizes (in dropdown) -->
         <li class="nav-item user-actions-menu">
-          <!-- User access preview (non-clickable) -->
-          <mat-card-flat>
-            <mat-card-title>{{ fullName }}</mat-card-title>
-            <mat-card-subtitle>
-              <div>
-                {{ role }}
-              </div>
-              <div>
-                {{ organization }}
-              </div>
-            </mat-card-subtitle>
-            <mat-card-content>
-              <div class="user-access-level">
-                {{ accessTypeMessage }}
-              </div>
-            </mat-card-content>
-          </mat-card-flat>
-        </li>
-        <li>
-            <mat-divider></mat-divider>
-        </li>
-        <li class="nav-item user-actions-menu">
-          <a class="nav-link" (click)="navigateToProfile()"
-            [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'">Profile</a>
+          <a class="nav-link" (click)="navigateToProfile()" [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'">Profile</a>
         </li>
         <!-- Other Navar elements  -->
         <!-- View Database -->
-        <li class="nav-item">
-          <a class="nav-link" [ngClass]="isInventoryActive ? 'menu-item-on' : 'menu-item-off'"
-            (click)="navigateToInventory()">View Database</a>
+        <li *ngIf="!isInfo" class="nav-item">
+          <a class="nav-link" [ngClass]="isInventoryActive ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToInventory()">View Database</a>
         </li>
         <!-- Admin Tools -->
-        <li *ngIf="isAdmin" class="nav-item">
-          <a class="nav-link" [ngClass]="isAdminToolsActive ? 'menu-item-on' : 'menu-item-off'"
-            (click)="navigateToAdminTools()">Admin Tools</a>
+        <li *ngIf="isAdmin && !isInfo" class="nav-item">
+          <a class="nav-link" [ngClass]="isAdminToolsActive ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToAdminTools()">Admin Tools</a>
         </li>
         <!-- Create Observation  -->
         <li *ngIf="isDataEditor && !isInfo" class="nav-item" [class.active]="isAddObservationActive">
@@ -72,31 +47,13 @@
       <ul *ngIf="isAuthenticated" class="navbar-nav">
         <li class="nav-item">
           <div class="user-actions-large">
-            <button mat-fab [matMenuTriggerFor]="menu">{{userInitials}}</button>
+            <button mat-fab [matMenuTriggerFor]="menu" class="user-icon">{{userInitials}}</button>
             <mat-menu #menu="matMenu">
-              <!-- User access preview (non-clickable) -->
-              <mat-card>
-                <mat-card-title>{{ fullName }}</mat-card-title>
-                <mat-card-subtitle>
-                  <div>
-                    {{ role }}
-                  </div>
-                  <div>
-                    {{ organization }}
-                  </div>
-                </mat-card-subtitle>
-                <mat-card-content>
-                  <div class="user-access-level">
-                    {{ accessTypeMessage }}
-                  </div>
-                </mat-card-content>
-              </mat-card>
-              <!-- the buttons in the menu -->
-              <a class="nav-link" mat-menu-item class="btn-with-icon"
-                [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'" (click)="navigateToProfile()">
-                Profile
+              <button mat-menu-item class="btn-with-icon"  [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off' "
+              (click)="navigateToProfile()">
+                Profile 
                 <i class="material-icons">account_circle</i>
-              </a>
+              </button>
               <button mat-menu-item class="btn-with-icon" (click)="logout()">
                 Logout <i class="material-icons">input</i>
               </button>
@@ -105,7 +62,7 @@
         </li>
         <!-- User menu for smaller sizes (in dropdown) -->
         <li class="nav-item user-actions-menu">
-          <a class="nav-link" (click)="logout()">Logout</a>
+            <a class="nav-link" (click)="logout()">Logout</a>
         </li>
       </ul>
     </div>
