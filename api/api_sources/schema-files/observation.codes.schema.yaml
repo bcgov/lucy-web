@@ -76,8 +76,8 @@ schemas:
                 default: Geometry  
               fields:
                 - observationGeometry
-                - width
-                - length
+                - horizontalDimension
+                - verticalDimension
                 - observationArea
                 - accessDescription
             # End-group(Geometry)
@@ -142,8 +142,8 @@ schemas:
         computationRules:
           - name: Compute Area
             keys:
-              - width
-              - length
+              - horizontalDimension
+              - verticalDimension
               - observationGeometry
             method: calculateArea
     # End - Computed fields
@@ -157,7 +157,7 @@ schemas:
           key: 'observation.mechanicalTreatments.description'
           default: 'Mechanical treatments performed on observation'
         type: array
-        relationshipType: many-to-one
+        relationshipType: one-to-many
         schema: MechanicalTreatmentSchema
     # End - Relation
     columns: 
@@ -197,19 +197,19 @@ schemas:
             default: 'Observation Longitude'
           classes:
             - none
-      width:
-        name: 'area_width'
-        comment: 'Width of the area observed'
+      horizontalDimension:
+        name: 'horizontal_dimension'
+        comment: 'Width or horizontal dimension of the area observed'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         layout:
           header:
             key: 'generic.width'
-            default: 'Width'
+            default: 'Horizontal dimension or Width or Radius'
           classes:
             - none
-      length:
-        name: 'area_length'
-        comment: 'Length of the area observed'
+      verticalDimension:
+        name: 'vertical_dimension'
+        comment: 'Length or vertical dimension of the area observed'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         meta: 
           dependencies:
@@ -219,7 +219,7 @@ schemas:
         layout:
           header:
             key: 'generic.length'
-            default: 'Length'
+            default: 'Vertical dimension or Length'
           classes:
             - none
       accessDescription:

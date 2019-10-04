@@ -23,7 +23,7 @@
 import * as path from 'path';
 import * as _ from 'underscore';
 import { BaseTableSchema } from '../sources/database/applicationSchemaInterface';
-import { incrementalWrite } from '../sources/libs/utilities';
+import { incrementalWrite, writeIfNotExists, reverseCapitalize } from '../sources/libs/utilities';
 
 const addDoc = (input: string, description: string, ipTabs?: string, others?: any): string => {
     const tab = ipTabs || '';
@@ -125,10 +125,27 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClassController = defClassController + `${n}${t}public static get shared(): ${className}Controller {`;
     defClassController = defClassController + `${n}${t}${t}return this.sharedInstance<${className}>(${className}, ${schemaName}) as ${className}Controller;`;
     defClassController = defClassController + `${n}${t}}\n}\n`;
-    const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
 
-    incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
-    return final;
+
+    if (schema.table.meta.resource) {
+        // Creating model and controller separate
+        const final = `${defClass}${n}// -------------------------------------${n}`;
+        // Writing Model
+        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
+
+        // Writing Controller
+        writeIfNotExists(
+            path.resolve(__dirname, `../sources/database/models/controllers/${reverseCapitalize(className)}.controller.ts`),
+            `${defClassController}// ----------------\n`);
+
+        return final;
+    } else {
+        // Writing model and controller together
+        const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
+
+        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
+        return final;
+    }
 };
 
 
