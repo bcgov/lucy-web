@@ -46,10 +46,7 @@ export class LocationInputComponent implements OnInit {
   }
   @Input() set object(object: any) {
     this._object = { ...object};
-    // console.log(`setting...`);
-    // console.dir(this.object);
-    // console.log(this.object.latitude.value);
-    // console.log(this.object.longitude.value);
+
     if (this.object && this.object.latitude && this.object.latitude.value) {
       // console.log(`setting ${this.object.latitude.value}`);
       this.lat = String(this.object.latitude.value);
