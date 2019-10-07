@@ -257,7 +257,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.isLoading = true;
     this.setFormMode();
     this.accessType = await this.userService.getAccess();
+    console.log('fetching config');
+    console.log(this.router.current);
     const config = await this.formService.getFormConfigForCurrentRoute();
+    console.dir(config);
     if (config) {
       this.config = config;
     } else {

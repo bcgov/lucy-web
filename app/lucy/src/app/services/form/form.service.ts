@@ -136,14 +136,22 @@ export class FormService {
   }
 
   /**
+   * returns UI configuration for Chemical Treatments
+   */
+  public async getChemicalTreatmentUIConfig(): Promise<any> {
+    const serverConfig = await this.getChemicalTreatmentServerConfig();
+    return await this.createUIConfig(serverConfig);
+  }
+
+  /**
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
 
     if ((this.router.current === AppRoutes.ViewObservation) || (this.router.current === AppRoutes.EditObservation)) {
-       //// Observation View And Edit routes ////
+      //// Observation View And Edit routes ////
       const configFile = await this.getObservationUIConfig();
-      const observation = await this.observationService.getWithId(this.router.routeId);
+      const observation = await this.getObjectWithId(configFile.api, this.router.routeId);
       return await this.getUIConfigFrom(configFile, observation);
     } else if (this.router.current === AppRoutes.AddObservation) {
       //// Observation Create route ////
@@ -152,19 +160,30 @@ export class FormService {
     } else if ((this.router.current === AppRoutes.ViewMechanicalTreatment) || (this.router.current === AppRoutes.EditMechanicalTreatment)) {
       //// Mechanical Treatment View and Edit routes ////
       const configFile = await this.getMechanicalTreatmentUIConfig();
-      const treatment = await this.mechanicalTreatmentService.getWithId(this.router.routeId);
+      const treatment = await this.getObjectWithId(configFile.api, this.router.routeId);
       return await this.getUIConfigFrom(configFile, treatment);
-    } else if (this.router.current === AppRoutes.AddMechanicalTreatment)  {
+    } else if (this.router.current === AppRoutes.AddMechanicalTreatment) {
       //// Mechanical Treatment Create route ////
       const configFile = await this.getMechanicalTreatmentUIConfig();
-        return configFile;
+      return configFile;
+    } else if ((this.router.current === AppRoutes.ViewChemicalTreatment) || (this.router.current === AppRoutes.EditChemicalTreatment)) {
+      //// Chemical Treatment View and Edit routes ////
+      const configFile = await this.getChemicalTreatmentUIConfig();
+      const treatment = await this.getObjectWithId(configFile.api, this.router.routeId);
+      return await this.getUIConfigFrom(configFile, treatment);
+    } else if (this.router.current === AppRoutes.AddChemicalTreatment) {
+      console.log('here');
+      console.log(this.router.current);
+      //// Chemical Treatment Create route ////
+      const configFile = await this.getChemicalTreatmentUIConfig();
+      return configFile;
     } else {
       console.log(this.router.current);
-        console.log(
-          `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
-        );
-        this.errorService.show(ErrorType.NotFound);
-        return undefined;
+      console.log(
+        `** his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
+      );
+      this.errorService.show(ErrorType.NotFound);
+      return undefined;
     }
   }
 
@@ -199,7 +218,6 @@ export class FormService {
         return undefined;
       }
     } else {
-      console.log(`observation creation failed`);
       console.dir(response);
       return undefined;
     }
@@ -226,11 +244,33 @@ export class FormService {
         return undefined;
       }
     } else {
-      console.log(`observation creation failed`);
       console.dir(response);
       return undefined;
     }
   }
+
+  private async getChemicalTreatmentServerConfig(): Promise<FormConfig> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_Form_ChemicalTreatment,
+      undefined
+    );
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
+        console.dir(response);
+        return undefined;
+      }
+    } else {
+      console.dir(response);
+      return undefined;
+    }
+  } 
 
   //////////////////////////////////// END Fetch Server Config ////////////////////////////////////
 
@@ -1127,6 +1167,12 @@ export class FormService {
       case AppRoutes.ViewObservation: {
         return this.router.navigateTo(
           AppRoutes.EditObservation,
+          this.router.routeId
+        );
+      }
+      case AppRoutes.ViewChemicalTreatment: {
+        return this.router.navigateTo(
+          AppRoutes.EditChemicalTreatment,
           this.router.routeId
         );
       }
