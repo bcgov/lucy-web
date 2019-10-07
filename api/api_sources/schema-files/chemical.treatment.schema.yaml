@@ -49,7 +49,8 @@ schemas:
             - title:
                 key: ''
                 default: Treatment Details
-              fields: []
+              fields: 
+                - speciesAgency
               style: {}
             ## -- group { Treatment Details }
         # -- section {Location}
