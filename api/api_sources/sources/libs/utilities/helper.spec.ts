@@ -21,7 +21,7 @@
  * -----
  */
 import { should, expect } from 'chai';
-import { verifyObject, incrementalFileName, applicationTemFileDir, incrementalWrite, arrayToString, ifDefined } from './helpers.utilities';
+import { verifyObject, incrementalFileName, applicationTemFileDir, incrementalWrite, arrayToString, ifDefined, writeIfNotExists, reverseCapitalize } from './helpers.utilities';
 
 
 describe('Test Helper/Utilities', () => {
@@ -72,5 +72,21 @@ describe('Test Helper/Utilities', () => {
         expect(y).to.be.equal(1);
         const z = ifDefined(y, 2);
         expect(z).to.be.equal(y);
+    });
+
+    it('should write to empty path', () => {
+        const filePath = `${applicationTemFileDir()}/test.${Date.now()}.txt`;
+        const r = writeIfNotExists(filePath, 'Laba is back');
+        expect(r).to.be.equal(filePath);
+        const nr = writeIfNotExists(filePath, 'Laba is back again');
+        expect(nr).to.be.equal(null);
+    });
+
+    it ('should reverse capitalize string', () => {
+        const value = 'Lao';
+        const value2 = 'LaBa';
+        expect(reverseCapitalize(value)).to.be.equal('lao');
+        expect(reverseCapitalize(value2)).to.be.equal('laBa');
+        expect(reverseCapitalize({})).to.be.equal('');
     });
 });

@@ -20,7 +20,7 @@
  * Imports
  */
 import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
-import { getYAMLFilePath } from './schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData, SpeciesDensityCodeCSVData, CodeCSVData } from '../pre.load';
 
 /**

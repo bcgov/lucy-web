@@ -6,8 +6,8 @@ ALTER TABLE observation ADD COLUMN observation_id SERIAL PRIMARY KEY;
 ALTER TABLE observation ADD COLUMN observation_date DATE NULL;
 ALTER TABLE observation ADD COLUMN observation_location_lat NUMERIC(8, 6) NOT NULL;
 ALTER TABLE observation ADD COLUMN observation_location_long NUMERIC(9, 6) NOT NULL;
-ALTER TABLE observation ADD COLUMN area_width NUMERIC(7, 2) NULL DEFAULT 0.0;
-ALTER TABLE observation ADD COLUMN area_length NUMERIC(7, 2) NULL DEFAULT 0.0;
+ALTER TABLE observation ADD COLUMN horizontal_dimension NUMERIC(7, 2) NULL DEFAULT 0.0;
+ALTER TABLE observation ADD COLUMN vertical_dimension NUMERIC(7, 2) NULL DEFAULT 0.0;
 ALTER TABLE observation ADD COLUMN access_description VARCHAR(500) NULL;
 ALTER TABLE observation ADD COLUMN observer_first_name VARCHAR(100) NULL;
 ALTER TABLE observation ADD COLUMN observer_last_name VARCHAR(100) NULL;
@@ -39,13 +39,13 @@ ALTER TABLE observation ADD COLUMN observation_proposed_action_code_id INT NULL 
 -- ### Creating Comments on table ### --
 
         
-COMMENT ON TABLE observation IS 'An observation describing the nature and extent of the species on the landscape. It may be collected by 1) an individual (a scientist or citizen) at the location, 2) a digital tracking device (airborne or ground based), or 3) an inferred analysis based on surrounding data.  An observation location provides an historical record of all surveys done regarding a particular species of invasive plant on the site. Provides a chronological recording of the change in distribution and density of invasive plants on the site. An area with confirmed ground sightings of invasive alien plants. This may be terrestrial (invasive plants on the ground) or aquatic (invasive plants in lakes, streams or other water-bodies). Within this inventory area, all roads accessible by a four-wheel drive vehicle that cross potential habitat will be checked for occurrences of invasive plants. Plants on both sides of the road will be identified as far as can be seen from the road, or as defined for specific inventory projects. In addition, all major disturbances including but not limited to landings, log sort yards, burned areas, gravel pits, air strips, landfills, parking lots, construction or maintenance sites and recreational sites and trails within the potential habitat will be checked. baseSchema: Record';
+COMMENT ON TABLE observation IS 'An observation describing the nature and extent of the species on the landscape. It may be collected by 1) an individual (a scientist or citizen) at the location, 2) a digital tracking device (airborne or ground based), or 3) an inferred analysis based on surrounding data.  An observation location provides an historical record of all surveys done regarding a particular species of invasive plant on the site. Provides a chronological recording of the change in distribution and density of invasive plants on the site. An area with confirmed ground sightings of invasive alien plants. This may be terrestrial (invasive plants on the ground) or aquatic (invasive plants in lakes, streams or other water-bodies). Within this inventory area, all roads accessible by a four-wheel drive vehicle that cross potential habitat will be checked for occurrences of invasive plants. Plants on both sides of the road will be identified as far as can be seen from the road, or as defined for specific inventory projects. In addition, all major disturbances including but not limited to landings, log sort yards, burned areas, gravel pits, air strips, landfills, parking lots, construction or maintenance sites and recreational sites and trails within the potential habitat will be checked.';
 COMMENT ON COLUMN observation.observation_id IS 'Auto generated primary key';
 COMMENT ON COLUMN observation.observation_date IS 'The Observation Date is the date that the invasive species occurrence was observed by the submitter.';
 COMMENT ON COLUMN observation.observation_location_lat IS 'Latitude of observation location';
 COMMENT ON COLUMN observation.observation_location_long IS 'Longitude of observation location';
-COMMENT ON COLUMN observation.area_width IS 'Width of the area observed';
-COMMENT ON COLUMN observation.area_length IS 'Length of the area observed';
+COMMENT ON COLUMN observation.horizontal_dimension IS 'Width or horizontal dimension of the area observed';
+COMMENT ON COLUMN observation.vertical_dimension IS 'Length or vertical dimension of the area observed';
 COMMENT ON COLUMN observation.access_description IS 'Note to specify how to access the location';
 COMMENT ON COLUMN observation.observer_first_name IS 'First name of the observer of the observation';
 COMMENT ON COLUMN observation.observer_last_name IS 'Last name of the observer of the observation';

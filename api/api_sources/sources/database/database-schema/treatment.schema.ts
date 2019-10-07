@@ -24,7 +24,7 @@
  * Imports
  */
 import { RecordTableSchema, CodeTableSchema, } from './base.record.schema';
-import { getYAMLFilePath } from './schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 import { TreatmentProviderCSVData } from '../pre.load';
 import { convertDateString } from '../../libs/utilities';
 
