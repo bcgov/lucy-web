@@ -168,6 +168,30 @@ export const incrementalWrite = (filePath: string, data: any) => {
 };
 
 /**
+ * @description Write into provided file path if nothing exists on path
+ * @param string filePath: File path to write back
+ * @param any data: Data object to write
+ */
+export const writeIfNotExists = (filePath: string, data: any) => {
+    if (fs.existsSync(filePath)) {
+        return null;
+    }
+    fs.writeFileSync(filePath, data, { flag: 'w', encoding: 'utf8'});
+    return filePath;
+};
+
+/**
+ * @description Reverse Capitalize any given string
+ * @param any s: Input string
+ */
+export const reverseCapitalize = (s: any) => {
+    if (typeof s !== 'string') {
+        return '';
+    }
+    return s.charAt(0).toLocaleLowerCase() + s.slice(1);
+};
+
+/**
  * @description Check status of value and return if defined or return default
  * @param any value
  * @param any defaultValue
