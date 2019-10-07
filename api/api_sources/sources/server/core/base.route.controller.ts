@@ -163,7 +163,7 @@ export class BaseRoutController<Controller extends DataController>  {
     }
 
     apiName(request: express.Request) {
-        return `${request.originalUrl}[${request.method}]`
+        return `${request.originalUrl}[${request.method}]`;
     }
 
     /**
