@@ -1,0 +1,684 @@
+version: '1.0'
+externalTables:
+  - name: species
+    description: Species table
+    schema: SpeciesSchema
+  - name: application_user
+    description: User table
+schemas: 
+  JurisdictionCodeSchema:
+    name: jurisdiction_code
+    description: 'Who owns or is responsible for the land.  85% of the province is "crown" under the jurisdiction of the Ministry of Forests, Lands, Natural Resource Operations & Rural Development'
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: 'jurisdiction_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: jurisdiction_code
+        comment: Unique code value for jurisdiction area
+        definition: VARCHAR(10) NOT NULL UNIQUE
+  # -- End JurisdictionCode
+  # -- Observation schema ** Observation
+  ObservationSchema:
+    name: observation
+    description: 'An observation describing the nature and extent of the species on the landscape. It may be collected by 1) an individual (a scientist or citizen) at the location, 2) a digital tracking device (airborne or ground based), or 3) an inferred analysis based on surrounding data.  An observation location provides an historical record of all surveys done regarding a particular species of invasive plant on the site. Provides a chronological recording of the change in distribution and density of invasive plants on the site.
+    An area with confirmed ground sightings of invasive alien plants. This may be terrestrial (invasive plants on the ground) or aquatic (invasive plants in lakes, streams or other water-bodies). Within this inventory area, all roads accessible by a four-wheel drive vehicle that cross potential habitat will be checked for occurrences of invasive plants. Plants on both sides of the road will be identified as far as can be seen from the road, or as defined for specific inventory projects. In addition, all major disturbances including but not limited to landings, log sort yards, burned areas, gravel pits, air strips, landfills, parking lots, construction or maintenance sites and recreational sites and trails within the potential habitat will be checked.'
+    baseSchema: RecordSchema
+    meta: 
+      resource: true
+      api: /observation
+    # End-meta
+    displayLayout:
+      fields:
+        - header:
+            key: 'species'
+            default: 'Species'
+          key: species.commonName
+        - header:
+            key: 'latitude'
+            default: 'Latitude'
+          key: lat
+        - header:
+            key: 'longitude'
+            default: 'Longitude'
+          key: long
+        - header:
+            key: 'date'
+            default: 'Date'
+          key: date
+    # End-displayLayout  
+    layout:
+      title: 
+        key: '' 
+        default: Observation
+      sections:
+        # Section 
+        - title:
+            key: 'generic.location'
+            default: 'Location'
+          groups:
+            - title: 
+                key: 'location' 
+                default: Location
+              fields:
+                - lat
+                - long
+            # End-group(Location)
+            - title:
+                key: 'date' 
+                default: Date  
+              fields:
+                - date
+            - title: 
+                key: 'geometry' 
+                default: Geometry  
+              fields:
+                - observationGeometry
+                - horizontalDimension
+                - verticalDimension
+                - observationArea
+                - accessDescription
+            # End-group(Geometry)
+            - title: 
+                key: 'observerInformation' 
+                default: Observer Information  
+              fields:
+                - observerFirstName
+                - observerLastName
+            # End-group(Observer Information)
+            - title: 
+                key: 'speciesInformationAndObservation' 
+                default: Species Information and Observation 
+              fields:
+                - species
+                - speciesAgency
+                - jurisdiction
+                - observationType
+                - density
+                - distribution
+                - soilTexture
+                - specificUseCode
+            # End-group(Observer Information)
+          # End- groups
+        # End-Section
+        - title: 
+            key: '' 
+            default: Advance Data Element
+          groups:
+            - title: 
+                key: 'indicators' 
+                default: Indicators  
+              fields:
+                - legacySiteIndicator
+                - edrrIndicator
+                - researchIndicator
+                - sampleTakenIndicator
+                - wellIndicator
+                - specialCareIndicator
+                - biologicalIndicator
+                - aquaticIndicator
+            # End-group(Indicators)
+            - title: 
+                key: 'furtherObservation' 
+                default: Further Observation  
+              fields:
+                - slopeCode
+                - aspectCode
+                - proposedAction
+                - rangeUnitNumber
+                - sampleIdentifier
+            # End-group(Further Observation)
+          # End-groups
+      # End-Section
+    # End-layout
+    # Computed fields
+    computedFields:
+      observationArea:
+        header:
+          key: observationArea
+          default: Observed area
+        computationRules:
+          - name: Compute Area
+            keys:
+              - horizontalDimension
+              - verticalDimension
+              - observationGeometry
+            method: calculateArea
+    # End - Computed fields
+    # Relationship
+    relations:
+      mechanicalTreatments:
+        header:
+          key: 'observation.mechanicalTreatments'
+          default: Mechanical Treatments
+        description: 
+          key: 'observation.mechanicalTreatments.description'
+          default: 'Mechanical treatments performed on observation'
+        type: array
+        relationshipType: one-to-many
+        schema: MechanicalTreatmentSchema
+    # End - Relation
+    columns: 
+      # -- Regular Columns
+      id: 
+        name: 'observation_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      date:
+        name: 'observation_date'
+        comment: 'The Observation Date is the date that the invasive species occurrence was observed by the submitter.'
+        definition: DATE NULL
+        meta: {}
+        layout:
+          header:
+            key: 'observation.date'
+            default: 'Observation Date'
+          classes:
+            - none
+      lat:
+        name: 'observation_location_lat'
+        comment: 'Latitude of observation location'
+        definition: NUMERIC(8, 6) NOT NULL
+        layout:
+          header:
+            key: 'generic.latitude'
+            default: 'Observation Latitude'
+          classes:
+            - none
+      long:
+        name: 'observation_location_long'
+        comment: 'Longitude of observation location'
+        definition: NUMERIC(9, 6) NOT NULL
+        layout:
+          header:
+            key: 'generic.longitude'
+            default: 'Observation Longitude'
+          classes:
+            - none
+      horizontalDimension:
+        name: 'horizontal_dimension'
+        comment: 'Width or horizontal dimension of the area observed'
+        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        layout:
+          header:
+            key: 'generic.width'
+            default: 'Horizontal dimension or Width or Radius'
+          classes:
+            - none
+      verticalDimension:
+        name: 'vertical_dimension'
+        comment: 'Length or vertical dimension of the area observed'
+        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        meta: 
+          dependencies:
+            key: observationGeometry.observation_geometry_code_id
+            hideOn:
+              - 1
+        layout:
+          header:
+            key: 'generic.length'
+            default: 'Vertical dimension or Length'
+          classes:
+            - none
+      accessDescription:
+        name: 'access_description'
+        comment: Note to specify how to access the location
+        definition: VARCHAR(500) NULL
+        layout:
+          header:
+            key: 'observation.accessDescription'
+            default: 'Access description'
+          classes:
+            - none
+      observerFirstName: 
+        name: 'observer_first_name'
+        comment: First name of the observer of the observation
+        definition: VARCHAR(100) NULL
+        layout:
+          header:
+            key: 'observation.observerFirstName'
+            default: 'Observer First Name'
+          classes:
+            - none
+      observerLastName:
+        name: 'observer_last_name'
+        comment: Last name of the observer of the observation
+        definition: VARCHAR(100) NULL
+        layout:
+          header:
+            key: 'observation.observerLastName'
+            default: 'Observer Last Name'
+          classes:
+            - none
+      sampleIdentifier:
+        name: 'sample_identifier'
+        comment: Identifier for sample taken.
+        definition: VARCHAR(50) NULL
+        required: false
+        meta:
+          dependencies:
+            - key: sampleTakenIndicator
+              showOn:
+                - true
+        layout:
+          header:
+            key: 'observation.sampleIdentifier'
+            default: 'Sample Identifier'
+          classes:
+            - none
+        columnVerification: 
+          regx:
+            re: '^[a-zA-Z0-9]+'
+            flag: 'gm'
+      rangeUnitNumber:
+        name: 'range_unit_number'
+        comment: Identifier/Number of range unit associated with observation.
+        definition: VARCHAR(50) NULL
+        layout:
+          header:
+            key: 'observation.rangeUnitNumber'
+            default: 'Range Unit Number'
+          classes:
+            - none
+        columnVerification: 
+          regx:
+            re: '^[a-zA-Z0-9]+'
+            flag: 'gm'
+      # --
+      # -- Indicators --
+      legacySiteIndicator:
+        name: 'legacy_site_ind'
+        comment: This indicator used to indicate the observation site is legacy site or not.
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.legacySiteIndicator'
+            default: 'Legacy Site Indicator'
+          classes:
+            - none
+      edrrIndicator:
+        name: 'early_detection_rapid_resp_ind'
+        comment: Indicator for early detection and rapid response for observed species.
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.edrrIndicator'
+            default: 'Early Detection Indicator'
+          classes:
+            - none
+      researchIndicator:
+        name: 'research_detection_ind'
+        comment: Values of this column indicates this observation is research purpose or not.
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.researchIndicator'
+            default: 'Research Indicator'
+          classes:
+            - none
+      sampleTakenIndicator:
+        name: 'sample_taken_ind'
+        comment: 'This field specify any sample is taken from observed area, if this indicator is true, observer must specify sample id.'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.sampleTakenIndicator'
+            default: 'Sample Taken'
+          classes:
+            - none
+      wellIndicator:
+        name: 'well_ind'
+        comment: 'This field indicates well proximity of the observed location. If this indicator is true, observer should specify well proximity values and API will connect to GWELL service to fetch more information'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.wellIndicator'
+            default: 'Well Indicator'
+          classes:
+            - none
+      specialCareIndicator:
+        name: 'special_care_ind'
+        comment: This field indicates, the requirement of special care.
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.specialCareIndicator'
+            default: 'Special Care Indicator'
+          classes:
+            - none
+      biologicalIndicator:
+        name: 'biological_ind'
+        comment: This field indicates, observation is biological or not.
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.biologicalIndicator'
+            default: 'Biological Indicator'
+          classes:
+            - none
+      aquaticIndicator:
+        name: 'aquatic_ind'
+        comment: This field indicates, observation is for aquatic element or not.
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        required: false
+        layout:
+          header:
+            key: 'observation.aquaticIndicator'
+            default: 'Aquatic Indicator'
+          classes:
+            - none
+      # --
+      # -- Code Table Relations --
+      species:
+        name: 'species_id'
+        comment: Foreign key reference to species table 
+        definition: INT NULL
+        foreignTable: 'species'
+        refColumn: species_id
+        deleteCascade: true
+        layout:
+          header:
+            key: 'species'
+            default: 'Species'
+          classes:
+            - none
+      jurisdiction:
+        name: 'jurisdiction_code_id'
+        comment: Foreign key reference to Jurisdiction code table 
+        definition: INT NULL
+        foreignTable: 'jurisdiction_code'
+        refColumn: jurisdiction_code_id
+        deleteCascade: true
+        layout:
+          header:
+            key: 'jurisdiction'
+            default: 'Jurisdiction'
+          classes:
+            - none
+      density:
+        name: 'species_density_code_id'
+        comment: Foreign key reference to species density code table 
+        definition: INT NULL
+        foreignTable: species_density_code
+        refColumn: species_density_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'density'
+            default: 'Species Density'
+          classes:
+            - none
+      distribution:
+        name: 'species_distribution_code_id'
+        comment: Foreign key reference to observation table 
+        definition: INT NULL
+        foreignTable: species_distribution_code
+        refColumn: species_distribution_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'distribution'
+            default: 'Species Distribution'
+          classes:
+            - none
+      observationType:
+        name: 'observation_type_code_id'
+        comment: Foreign key reference to observation type code table 
+        definition: INT NULL
+        foreignTable: observation_type_code
+        refColumn: observation_type_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'distribution'
+            default: 'Species Distribution'
+          classes:
+            - none
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'speciesAgency'
+            default: 'Complete Behalf of'
+          classes:
+            - none
+      soilTexture: 
+        name: 'soil_texture_code_id'
+        comment: Foreign key reference to Soil Texture code table 
+        definition: INT NULL
+        foreignTable: soil_texture_code
+        refColumn: soil_texture_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'soilTexture'
+            default: 'Soil Texture'
+          classes:
+            - none
+      observationGeometry:
+        name: 'observation_geometry_code_id'
+        comment: Foreign key reference to observation geometry code table 
+        definition: INT NULL
+        foreignTable: observation_geometry_code
+        refColumn: observation_geometry_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'observationGeometry'
+            default: 'Geometry'
+          classes:
+            - none
+      specificUseCode:
+        name: 'specific_use_code_id'
+        comment: Foreign key reference to Specific use code table 
+        definition: INT NULL
+        foreignTable: specific_use_code
+        refColumn: specific_use_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'specificUseCode'
+            default: 'Specific Use Code'
+          classes:
+            - none
+      slopeCode:
+        name: 'observation_slope_code_id'
+        comment: Foreign key reference to observation slope code table 
+        definition: INT NULL
+        foreignTable: observation_slope_code
+        refColumn: observation_slope_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'slopeCode'
+            default: 'Slope Code'
+          classes:
+            - none
+      aspectCode: 
+        name: 'observation_aspect_code_id'
+        comment: Foreign key reference to observation directional aspect code table 
+        definition: INT NULL
+        foreignTable: observation_aspect_code
+        refColumn: observation_aspect_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'aspectCode'
+            default: 'Aspect Code'
+          classes:
+            - none
+      proposedAction:
+        name: 'observation_proposed_action_code_id'
+        comment: Foreign key reference to observation proposed action codes 
+        definition: INT NULL
+        foreignTable: observation_proposed_action_code
+        refColumn: observation_proposed_action_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'proposedAction'
+            default: 'Proposed Action'
+          classes:
+            - none
+  # --
+  # -- SpeciesDistributionCode
+  SpeciesDistributionCodeSchema:
+    name: species_distribution_code
+    description: 'Identifies the geographic distribution of individuals of each species. Example: several well-spaced patches or clumps.'
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: species_distribution_code_id
+        comment: Identifier as code
+        definition: INT NOT NULL PRIMARY KEY
+      description:
+        name: description
+        comment: Description of distribution code
+        definition: VARCHAR(100) NOT NULL
+  # --
+  # -- SpeciesDensityCodeSchema --
+  SpeciesDensityCodeSchema:
+    name: species_density_code
+    description: 'Indicates the number of plants per square metre. Examples: 2-5 plants/m2, 6-10 plants/m2.'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'species_density_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: 'density_code'
+        comment: Density code values based on species present on location
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- Survey Type Codes
+  ObservationTypeCodeSchema:
+    name: observation_type_code
+    description: 'The description of the observation was obtained (akin to quality): Operational, cursory, research, mobile, aerial photo, satellite imagery.'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'observation_type_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_type_code'
+        comment: Cross domain Code values for observation type types
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- SpeciesAgencyCodeSchema
+  SpeciesAgencyCodeSchema:
+    name: species_agency_code
+    description: 'Any BC Ministry, Federal Department, local government (Regional District, municipality, etc), corporation, non-profit or other organization that funds and/or manages invasive plant species on the land base for which they are responsible.  The Agency that oversees a particular activity concerning the Invasive Alien Plant Program. It is the originating agency that data belongs to or the agency that funded the activity.'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'species_agency_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'species_agency_code'
+        comment: Agency code values for managing invasive species
+        definition: VARCHAR(10) NOT NULL UNIQUE
+  # --
+  # -- SoilTextureCodeSchema
+  SoilTextureCodeSchema:
+    name: soil_texture_code
+    description: 'The soil texture code provides details regarding the quality and water-retention of soil in a site where an invasive plant has been identified. Values are C (Coarse), M (Medium), F (Fine), O (Organic)'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'soil_texture_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'soil_texture_code'
+        comment: Soil texture code values in the system
+        definition: VARCHAR(1) NOT NULL UNIQUE
+  # --
+  # -- SurveyGeometryCodeSchema
+  ObservationGeometryCodeSchema:
+    name: observation_geometry_code
+    description: 'A 2 or 3 dimensional geometry used to describe the spatial extent of an observation: Point, linear corridor, transect, circle, rectangular plot, stratified grid, radio tract, GPS tract, water body outline.'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'observation_geometry_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_geometry_code'
+        comment: Observation geometry code of the system
+        definition: VARCHAR(2) NOT NULL UNIQUE
+  # --
+  # -- SpecificUseCodeSchema
+  SpecificUseCodeSchema:
+    name: specific_use_code
+    description: 'The site specific use code provides details regarding the use of an area where invasive species have been found. This assists in determining the appropriate response and treatment methods when dealing with the identified invasive plant species. Values are GR (Gravel pit), NS (No-spray buffer), NH (Numbered Highway), PL (Parking Lot), RT (Rec Site/Trail), RA (Rest Area), SS (Sensitive Site), TL (Transfer station/Landfil), WP (Within PFZ), YW (Yard/Ditching waste dump).'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'specific_use_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'specific_use_code'
+        comment: Code values of specific use codes
+        definition: VARCHAR(2) NOT NULL UNIQUE
+  # --
+  # -- SlopCodeSchema
+  SlopeCodeSchema:
+    name: observation_slope_code
+    description: 'Observation area slope code. Slope code is encoded value of description . NA specified data not available and FL means flat with 0%, similarly VSTS specified very steep slop with more than 45%'
+    columns:
+      id: 
+        name: 'observation_slope_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_slope_code'
+        comment: Integer encoded enum values for slope code
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- AspectCodeSchema
+  AspectCodeSchema:
+    name: observation_aspect_code
+    description: 'Observation area aspect code. Aspect code provides string encoded enum values for directional aspect of the observed species. The typical values like North facing(NF) or south facing(SF)'
+    columns:
+      id: 
+        name: 'observation_aspect_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_aspect_code'
+        comment: String encoded enum values for observation aspect code
+        definition: VARCHAR(4) NOT NULL UNIQUE
+  # --
+  # -- ProposedActionCodeSchema
+  ProposedActionCodeSchema:
+    name: observation_proposed_action_code
+    description: 'The is list of proposed action item of observation like Treatment or Monitoring. So code values like CT for Chemical treatment or CM for Chemical monitoring'
+    columns:
+      id: 
+        name: 'observation_proposed_action_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_proposed_action_code'
+        comment: String encoded enum values for proposed action items.
+        definition: VARCHAR(4) NOT NULL UNIQUE
+  # --

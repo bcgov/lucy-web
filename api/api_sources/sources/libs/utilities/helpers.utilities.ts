@@ -168,6 +168,30 @@ export const incrementalWrite = (filePath: string, data: any) => {
 };
 
 /**
+ * @description Write into provided file path if nothing exists on path
+ * @param string filePath: File path to write back
+ * @param any data: Data object to write
+ */
+export const writeIfNotExists = (filePath: string, data: any) => {
+    if (fs.existsSync(filePath)) {
+        return null;
+    }
+    fs.writeFileSync(filePath, data, { flag: 'w', encoding: 'utf8'});
+    return filePath;
+};
+
+/**
+ * @description Reverse Capitalize any given string
+ * @param any s: Input string
+ */
+export const reverseCapitalize = (s: any) => {
+    if (typeof s !== 'string') {
+        return '';
+    }
+    return s.charAt(0).toLocaleLowerCase() + s.slice(1);
+};
+
+/**
  * @description Check status of value and return if defined or return default
  * @param any value
  * @param any defaultValue
@@ -183,5 +207,11 @@ export const ifDefined = (value: any, defaultValue: any) => {
  * @param string key
  */
 export function setNull<T> (obj: T, key: keyof T) { (obj[key as string] = null); }
+
+/**
+ * @description Check any object is empty or not
+ * @param any obj : any object
+ */
+export const isEmpty = (obj: any) => (obj !== undefined && Object.keys(obj).length === 0);
 
 // -------------------------------

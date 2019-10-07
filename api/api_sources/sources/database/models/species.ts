@@ -21,8 +21,9 @@
  */
 import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { Record } from './user';
+import { Record } from './generic.data.models';
 import { SpeciesSchema } from '../database-schema';
+
 /**
  * @description Model class for species
  */

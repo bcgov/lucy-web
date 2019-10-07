@@ -41,6 +41,12 @@ export class AppLogger {
     // Tag
     public tag = 'AppLogger';
 
+    public disable = false;
+    public disableInfo = false;
+    public disableWarning = false;
+    public disableError = false;
+    public disableLog = false;
+
     // Log level marker
     public levels: LogLevel = {
         log: 'Log',
@@ -54,7 +60,12 @@ export class AppLogger {
      * @param string inputTag
      */
     public constructor (inputTag: string) {
-        this.tag = inputTag;
+        this.tag = inputTag || this.constructor.name;
+    }
+
+    public set disableInfoLog(val: boolean) {
+        this.disableLog = val;
+        this.disableInfo = val;
     }
 
     /**
@@ -127,10 +138,12 @@ export class AppLogger {
      * @param string logLevelValue
      */
     private _log(start: string, others: any[], logLevelValue: string) {
-        const rest: string = this.stringyfyArg(others);
-        const body: string = rest ? start + '' + rest : start;
-        const finalLog = this.finalLog(body, logLevelValue);
-        console.log(finalLog);
+        if (!this.disable) {
+            const rest: string = this.stringyfyArg(others);
+            const body: string = rest ? start + '' + rest : start;
+            const finalLog = this.finalLog(body, logLevelValue);
+            console.log(finalLog);
+        }
     }
 
     /**
@@ -139,7 +152,9 @@ export class AppLogger {
      * @param any[] others
      */
     public log(start: string, ...others: any[]) {
-        this._log(start, others, this.levels.log);
+        if (!this.disableLog) {
+            this._log(start, others, this.levels.log);
+        }
     }
 
     /**
@@ -148,7 +163,9 @@ export class AppLogger {
      * @param any[] others
      */
     public info(start: string, ...others: any[]) {
-        this._log(start, others, this.levels.info);
+        if (!this.disableInfo) {
+            this._log(start, others, this.levels.info);
+        }
     }
 
     /**
@@ -157,7 +174,9 @@ export class AppLogger {
      * @param any[] others
      */
     public error(start: string, ...others: any[]) {
-        this._log(start, others, this.levels.error);
+        if (!this.disableError) {
+            this._log(start, others, this.levels.error);
+        }
     }
 
     /**
@@ -166,7 +185,9 @@ export class AppLogger {
      * @param any[] others
      */
     public warning(start: string, ...others: any[]) {
-        this._log(start, others, this.levels.warning);
+        if (!this.disableWarning) {
+            this._log(start, others, this.levels.warning);
+        }
     }
 
 

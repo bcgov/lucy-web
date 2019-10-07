@@ -4,6 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { MechanicalRootRemovalCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
+import { Record } from './generic.data.models';
 
 
 /** Interface **/
@@ -38,7 +39,7 @@ export interface MechanicalRootRemovalCodeUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: MechanicalRootRemovalCodeSchema.dbTable} )
-export class MechanicalRootRemovalCode {
+export class MechanicalRootRemovalCode extends Record {
 
 	/**
 	 * Class Properties

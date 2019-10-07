@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppRoutes } from '../constants';
+import { AppRoutes, AppConstants } from '../constants';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -14,15 +14,49 @@ export class RouterService {
     const current = this.router.url.substring(1);
     // is it a route with params
     if (current.indexOf(`/`) !== -1) {
-      const origin = current.slice(0, current.indexOf(`/`));
+      // const origin = current.slice(0, current.indexOf(`/`));
       return this.resolveRoute(current);
-
-      const genericOrigin = `${origin}/:id`;
-      const result = this.stringToEnumRoute(genericOrigin);
-      return result;
+      // const genericOrigin = `${origin}/:id`;
+      // const result = this.stringToEnumRoute(genericOrigin);
+      // return result;
     } else {
       // Route with no params
       return this.stringToEnumRoute(current);
+    }
+  }
+
+  public get isCreateRoute(): boolean {
+    if (this.getFirstRouteParam()) {
+      return (this.getFirstRouteParam().toLowerCase() === 'create');
+    } else {
+      return false;
+    }
+  }
+
+  public get isEditRoute(): boolean {
+    if (this.getFirstRouteParam()) {
+      return (this.getFirstRouteParam().toLowerCase() === 'edit');
+    } else {
+      return false;
+    }
+  }
+
+  public get isViewRoute(): boolean {
+    if (this.getFirstRouteParam()) {
+      return (this.getFirstRouteParam().toLowerCase() === 'view');
+    } else {
+      return false;
+    }
+  }
+
+  private getFirstRouteParam(): string {
+    const temp1 = this.router.url.substring(1);
+    // is it a route with params
+    if (temp1.indexOf(`/`) !== -1) {
+      const temp2 = temp1.slice(0, temp1.indexOf(`/`));
+      return temp2;
+    } else {
+      return undefined;
     }
   }
 
@@ -46,41 +80,38 @@ export class RouterService {
     }
     switch (createType.toLowerCase()) {
       case `observation`:
-          return AppRoutes.AddObservation;
+        return AppRoutes.AddObservation;
       case `mechnical`:
-          return AppRoutes.AddMechanicalTreatment;
+        return AppRoutes.AddMechanicalTreatment;
       default:
-        console.log(`here`);
-          // return AppRoutes.Error;
+        return AppRoutes.Error;
     }
   }
 
   private resolveEditRoute(route: string): AppRoutes {
     const editTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
-    const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
+    // const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
     const editType = editTypeAndId.slice(0, editTypeAndId.indexOf(`/`));
     switch (editType.toLowerCase()) {
       case `observation`:
-          return AppRoutes.EditObservation;
+        return AppRoutes.EditObservation;
       case `mechnical`:
-          return AppRoutes.EditMechanicalTreatment;
+        return AppRoutes.EditMechanicalTreatment;
       default:
-        console.log(`here`);
-          return AppRoutes.Error;
+        return AppRoutes.Error;
     }
   }
 
   private resolveViewRoute(route: string): AppRoutes {
     const viewTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
-    const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
+    // const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
     const viewType = viewTypeAndId.slice(0, viewTypeAndId.indexOf(`/`));
     switch (viewType.toLowerCase()) {
       case `observation`:
-          return AppRoutes.ViewObservation;
+        return AppRoutes.ViewObservation;
       case `mechnical`:
-          return AppRoutes.ViewMechanicalTreatment;
+        return AppRoutes.ViewMechanicalTreatment;
       default:
-        console.log(`here`);
         return AppRoutes.Error;
     }
   }
@@ -109,13 +140,26 @@ export class RouterService {
 
   public get routeId(): number | undefined {
     const current = this.router.url.substring(1);
-    console.log(`getting id... ${current}`);
+    // console.log(`getting id... ${current}`);
     if (current.indexOf(`/`) !== -1) {
       const id = current.slice(current.lastIndexOf(`/`) + 1);
-      console.log(id);
+      // console.log(id);
       return +id;
     } else {
       return undefined;
     }
+  }
+
+  public getAppRouteForAPI(api: string): AppRoutes {
+    const apiWithBaseURL = `${AppConstants.API_baseURL}${api}`;
+    switch (apiWithBaseURL) {
+      case AppConstants.API_mechanicalTreatment:
+        return AppRoutes.ViewMechanicalTreatment;
+      case AppConstants.API_observation:
+        return AppRoutes.ViewObservation;
+      default:
+        console.log(`${api} does not have a route`);
+    }
+    return undefined;
   }
 }
