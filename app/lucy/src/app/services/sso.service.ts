@@ -28,8 +28,8 @@ export class SsoService {
   private static instance: SsoService;
 
   private code = ``;
-  private refreshTimer: NodeJS.Timer;
-  private refreshTokenExpieryTimer: NodeJS.Timer;
+  private refreshTimer: any;
+  private refreshTokenExpieryTimer: any;
   private bearerToken: string | null = null;
   private tokenExpiery: Date | null;
 
