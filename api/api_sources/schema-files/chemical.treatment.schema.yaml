@@ -51,6 +51,9 @@ schemas:
                 key: ''
                 default: Treatment Details
               fields: 
+                - primaryPaperFileReference
+                - secondaryPaperFileReference
+                - date
                 - speciesAgency
               style: {}
             ## -- group { Treatment Details }
