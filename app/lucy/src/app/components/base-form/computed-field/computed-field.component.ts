@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 export enum ComputationMethod {
@@ -16,7 +17,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
   @Input() header = '';
   // Rules
   @Input() computationRules: any;
-  // full config 
+  // full config
   @Input() config: any;
 
   private _formBody: any = {};
@@ -106,7 +107,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
         fields.push({
           key: [key],
           value: this.formBody[key],
-        })
+        });
       }
     }
     return fields;
@@ -114,13 +115,22 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
 
   /**
    * Check if a required key is a dropdown.
-   * @param key 
+   * @param key
    */
   private isDropdown(key: string): boolean {
     if (!this.config || !this.config.dropdownFieldKeys) {
-      return false
+      return false;
     }
     return this.config.dropdownFieldKeys.indexOf(String(key)) !== -1;
+  }
+
+  // ----------------------- Calculate observed area based on Geometry ---------------------
+  private getHorizontalDimension(): number {
+    return this.formBody.horizontalDimension;
+  }
+
+  private getVerticalDimension(): number {
+    return this.formBody.verticalDimension;
   }
 
   /**
@@ -132,25 +142,32 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
   }
 
   /**
-   * Return area calculated by multiplying required fields.
-   * (ignores required dropdown value)
+   * Determines whether rectangular area of circular area should be calculated,
+   * based on key(s) in required fields
    */
   private calculateArea(): number {
-    const fields = this.getRequiredFields();
-    if (!fields) {
-      return 0;
-    }
-    let result = 0;
-    for (const field of fields) {
-      if (!this.isDropdown(field.key)) {
-        if (result === 0) {
-          result = Number(field.value);
-        } else {
-          result = result * Number(field.value);
-        }
-      }
-    }
-    return result;
+    if (this.formBody.observationGeometry === 2) {
+      return this.calculateAreaRectangle();
+    } else if (this.formBody.observationGeometry === 1) {
+      return this.calculateAreaCircle();
+    } else { return 0; }
   }
 
+  /**
+   * Return area of rectangle calculated by multiplying required fields
+   */
+  private calculateAreaRectangle(): number {
+    const horizontal = this.getHorizontalDimension();
+    const vertical = this.getVerticalDimension();
+    return horizontal * vertical;
+  }
+
+  /**
+   * Return area of circle calculated by multiplying radius by PI^2
+   */
+  private calculateAreaCircle(): number {
+      return Math.PI * Math.pow(this.getHorizontalDimension(), 2);
+  }
 }
+  // ----------------------- End of Calculate observed area based on Geometry ---------------------
+

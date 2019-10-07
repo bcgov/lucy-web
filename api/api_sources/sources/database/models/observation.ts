@@ -152,11 +152,6 @@ export class Observation extends Record implements ObservationCreateModel {
     @ModelProperty({ type: PropertyType.number})
     long: number;
 
-    @Column({ name: ObservationSchema.columns.width,
-        nullable: false,
-        transformer: new NumericTransformer()
-    })
-
     /**
 	 * @description Getter/Setter property for column {horizontal_dimension}
 	 */
