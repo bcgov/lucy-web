@@ -83,6 +83,8 @@ export class RouterService {
         return AppRoutes.AddObservation;
       case `mechnical`:
         return AppRoutes.AddMechanicalTreatment;
+      case 'chemical':
+        return AppRoutes.AddChemicalTreatment;
       default:
         return AppRoutes.Error;
     }
@@ -97,6 +99,8 @@ export class RouterService {
         return AppRoutes.EditObservation;
       case `mechnical`:
         return AppRoutes.EditMechanicalTreatment;
+      case 'chemical':
+        return AppRoutes.EditChemicalTreatment;
       default:
         return AppRoutes.Error;
     }
@@ -111,6 +115,8 @@ export class RouterService {
         return AppRoutes.ViewObservation;
       case `mechnical`:
         return AppRoutes.ViewMechanicalTreatment;
+      case 'chemical':
+        return AppRoutes.ViewChemicalTreatment;
       default:
         return AppRoutes.Error;
     }
