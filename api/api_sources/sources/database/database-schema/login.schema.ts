@@ -1,6 +1,6 @@
 // Application Login Schemas
 import { BaseTableSchema} from '../applicationSchemaInterface';
-import { getYAMLFilePath } from './schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 import { CodeTableSchema } from './base.record.schema';
 
 /**

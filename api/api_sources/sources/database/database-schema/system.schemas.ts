@@ -1,6 +1,6 @@
 // System related schema
 import { BaseTableSchema } from '../applicationSchemaInterface';
-import { getYAMLFilePath } from './schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 
 /**
  * @description Schema Class to design table to store different application level events
