@@ -99,5 +99,11 @@ export class TreatmentProviderContractorSchema extends TreatmentSchema {
     }
 }
 
+export class ChemicalTreatmentSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('chemical.treatment.schema.yaml');
+    }
+}
+
 // ----------------------------------------------------------
 

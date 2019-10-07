@@ -49,6 +49,7 @@ export * from './applicationEvent';
 export * from './sessionActivity.code';
 export * from './session.activity';
 export * from './generic.data.models';
+export * from './chemicalTreatment';
 
 /**
  * Controllers
@@ -56,4 +57,5 @@ export * from './generic.data.models';
 export * from './controllers/mechanicalTreatment.controller';
 export * from './controllers/observation.data.controller';
 export * from './controllers/user.controller';
+export * from './controllers/chemicalTreatment.controller';
 // ----------------------------------------------------------------------------------------------------------------
