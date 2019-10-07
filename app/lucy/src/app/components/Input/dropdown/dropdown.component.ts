@@ -31,7 +31,7 @@ export class DropdownComponent implements OnInit {
   @Input() editable = true;
 
   get fieldId(): string {
-    return this.fieldHeader;
+    return this.camelize(this.fieldHeader);
   }
 
   ///// Form Mode
@@ -64,8 +64,16 @@ export class DropdownComponent implements OnInit {
   @Input() set selectedItem(item: DropdownObject) {
     if (!item) { return; }
     this._selectedItem = item;
+    if (item) {
+      this.selectionChanged.emit(item);
+    }
   }
   ////////////////////
+
+  private _selectedItemName: string;
+  set selectedItemName(name: string) {
+    this._selectedItemName = name;
+  }
 
   get selectedItemName(): string {
     if (this.selectedItem) {
@@ -137,7 +145,7 @@ export class DropdownComponent implements OnInit {
     this.filteredItems = [];
     console.log(`searching`);
     for (const item of this.items) {
-      if (item.name.toLowerCase().includes(search.toLowerCase())) {
+      if (item.name !== undefined && String(item.name).toLowerCase().includes(search.toLowerCase())) {
         this.filteredItems.push(item);
       }
     }
@@ -156,6 +164,12 @@ export class DropdownComponent implements OnInit {
         }
       }
     }
+  }
+
+  camelize(str: string): string {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
   }
 
 }

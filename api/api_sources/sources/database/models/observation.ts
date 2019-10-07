@@ -20,7 +20,7 @@
  * Imports
  */
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, OneToMany } from 'typeorm';
-import { Record } from './user';
+import { Record } from './generic.data.models';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
 import { SpeciesAgencyCode } from './speciesAgency.code';
@@ -49,55 +49,54 @@ import {
     AspectCodeSchema,
     ProposedActionCodeSchema
 } from '../database-schema';
-import { NumericTransformer } from '../../libs/transformer';
+import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 import { MechanicalTreatment } from './mechanical.treatment';
 
 
 export interface ObservationCreateModel {
-    lat: number;
-    long: number;
     date: string;
-    width: number;
-    length: number;
-    accessDescription: string;
-    observerFirstName: string;
-    observerLastName: string;
-    sampleIdentifier?: string;
-    rangeUnitNumber?: string;
-	legacySiteIndicator?: boolean;
-	edrrIndicator?: boolean;
-	researchIndicator?: boolean;
-	sampleTakenIndicator?: boolean;
-	wellIndicator?: boolean;
-	specialCareIndicator?: boolean;
-	biologicalIndicator?: boolean;
-	aquaticIndicator?: boolean;
-
-    species: Species;
-    jurisdiction: JurisdictionCode;
-    density: SpeciesDensityCode;
-    distribution: SpeciesDistributionCode;
-    observationType: ObservationTypeCode;
-    speciesAgency: SpeciesAgencyCode;
-    soilTexture: SoilTextureCode;
-    observationGeometry: ObservationGeometryCode;
-    specificUseCode: SpecificUseCode;
-    slopeCode: SlopeCode;
-    aspectCode: AspectCode;
-    proposedAction: ProposedActionCode;
+	lat: number;
+	long: number;
+	horizontalDimension: number;
+	verticalDimension: number;
+	accessDescription: string;
+	observerFirstName: string;
+	observerLastName: string;
+	sampleIdentifier?: string;
+	rangeUnitNumber: string;
+	legacySiteIndicator: boolean;
+	edrrIndicator: boolean;
+	researchIndicator: boolean;
+	sampleTakenIndicator: boolean;
+	wellIndicator: boolean;
+	specialCareIndicator: boolean;
+	biologicalIndicator: boolean;
+	aquaticIndicator: boolean;
+	species: Species;
+	jurisdiction: JurisdictionCode;
+	density: SpeciesDensityCode;
+	distribution: SpeciesDistributionCode;
+	observationType: ObservationTypeCode;
+	speciesAgency: SpeciesAgencyCode;
+	soilTexture: SoilTextureCode;
+	observationGeometry: ObservationGeometryCode;
+	specificUseCode: SpecificUseCode;
+	slopeCode: SlopeCode;
+	aspectCode: AspectCode;
+	proposedAction: ProposedActionCode;
 }
 
 export interface ObservationUpdateModel {
-    lat?: number;
-    long?: number;
     date?: string;
-    width?: number;
-    length?: number;
-    accessDescription?: string;
-    observerFirstName?: string;
-    observerLastName?: string;
-    sampleIdentifier?: string;
-    rangeUnitNumber?: string;
+	lat?: number;
+	long?: number;
+	horizontalDimension?: number;
+	verticalDimension?: number;
+	accessDescription?: string;
+	observerFirstName?: string;
+	observerLastName?: string;
+	sampleIdentifier?: string;
+	rangeUnitNumber?: string;
 	legacySiteIndicator?: boolean;
 	edrrIndicator?: boolean;
 	researchIndicator?: boolean;
@@ -106,18 +105,18 @@ export interface ObservationUpdateModel {
 	specialCareIndicator?: boolean;
 	biologicalIndicator?: boolean;
 	aquaticIndicator?: boolean;
-    species?: Species;
-    jurisdiction?: JurisdictionCode;
-    density?: SpeciesDensityCode;
-    distribution?: SpeciesDistributionCode;
-    observationType?: ObservationTypeCode;
-    speciesAgency?: SpeciesAgencyCode;
-    soilTexture?: SoilTextureCode;
-    observationGeometry?: ObservationGeometryCode;
-    specificUseCode?: SpecificUseCode;
-    slopeCode?: SlopeCode;
-    aspectCode?: AspectCode;
-    proposedAction?: ProposedActionCode;
+	species?: Species;
+	jurisdiction?: JurisdictionCode;
+	density?: SpeciesDensityCode;
+	distribution?: SpeciesDistributionCode;
+	observationType?: ObservationTypeCode;
+	speciesAgency?: SpeciesAgencyCode;
+	soilTexture?: SoilTextureCode;
+	observationGeometry?: ObservationGeometryCode;
+	specificUseCode?: SpecificUseCode;
+	slopeCode?: SlopeCode;
+	aspectCode?: AspectCode;
+	proposedAction?: ProposedActionCode;
 }
 
 @Entity({ name: ObservationSchema.dbTable})
@@ -131,7 +130,11 @@ export class Observation extends Record implements ObservationCreateModel {
     @ModelProperty({ type: PropertyType.number})
     observation_id: number;
 
-    @Column({ name: ObservationSchema.columns.date, nullable: true})
+    @Column({
+        name: ObservationSchema.columns.date,
+        nullable: true,
+        transformer: new DateTransformer
+    })
     @ModelProperty({ type: PropertyType.string})
     date: string;
 
@@ -153,15 +156,26 @@ export class Observation extends Record implements ObservationCreateModel {
         nullable: false,
         transformer: new NumericTransformer()
     })
-    @ModelProperty({ type: PropertyType.number})
-    width: number;
 
-    @Column({ name: ObservationSchema.columns.length,
-        nullable: false,
+    /**
+	 * @description Getter/Setter property for column {horizontal_dimension}
+	 */
+	@Column({
+        name: ObservationSchema.columns.horizontalDimension,
         transformer: new NumericTransformer()
     })
-    @ModelProperty({ type: PropertyType.number})
-    length: number;
+	@ModelProperty({type: PropertyType.number})
+	horizontalDimension: number;
+
+	/**
+	 * @description Getter/Setter property for column {vertical_dimension}
+	 */
+	@Column({
+        name: ObservationSchema.columns.verticalDimension,
+        transformer: new NumericTransformer()
+    })
+	@ModelProperty({type: PropertyType.number})
+	verticalDimension: number;
 
     @Column({ name: ObservationSchema.columns.accessDescription, nullable: false})
     @ModelProperty({ type: PropertyType.string})
@@ -187,7 +201,7 @@ export class Observation extends Record implements ObservationCreateModel {
 	 */
 	@Column({ name: ObservationSchema.columns.rangeUnitNumber, nullable: true})
 	@ModelProperty({type: PropertyType.string})
-	rangeUnitNumber?: string;
+	rangeUnitNumber: string;
 
 	/**
 	 * @description Getter/Setter property for column {legacy_site_ind}

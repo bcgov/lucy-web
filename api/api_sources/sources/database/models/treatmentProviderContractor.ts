@@ -27,7 +27,7 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { TreatmentProviderContractorSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { Record, RecordController } from './user';
+import { Record, RecordController } from './generic.data.models';
 
 
 /** Interface **/

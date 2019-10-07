@@ -83,6 +83,10 @@ export class CodeTableSchema extends RecordTableSchema {
         const csvData = new CodeCSVData(`${this.className.split('Schema')[0]}.csv`);
         return csvData.load();
     }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------

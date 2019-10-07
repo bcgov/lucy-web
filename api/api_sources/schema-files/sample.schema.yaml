@@ -1,0 +1,23 @@
+version: '1.0'
+schemas:
+  Test2Schema:
+    name: sample2_table
+    description: Sample application table
+    columns:
+      id:
+        comment: Sample column pk
+        required: true
+        name: sample_id
+        definition: SERIAL PRIMARY KEY
+      name:
+        comment: Name of the sample
+        required: true
+        name: sample_name
+        definition: VARCHAR(20) NULL
+        meta: {}
+        layout:
+          header:
+            key: ''
+            default: ''
+          classes:
+            - none

@@ -52,7 +52,7 @@ import {
     MechanicalRootRemovalCode,
     MechanicalTreatmentIssueCode
 } from '../models';
-import { Destroy } from '../factory/helper';
+import { Destroy, ModelFactory } from '../factory/helper';
 // import { SharedDBManager } from '../dataBaseManager';
 
 describe('Treatment Test', () => {
@@ -82,7 +82,7 @@ describe('Treatment Test', () => {
 
     // Test1: Create Treatment fro factory
     it('should create treatment from factory', async () => {
-        const f = await mechanicalTreatmentFactory();
+        const f = await ModelFactory(MechanicalTreatmentController.shared)();
         should().exist(f);
         const mt: MechanicalTreatment = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
         should().exist(mt);

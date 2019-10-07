@@ -1,0 +1,38 @@
+version: '1.0'
+externalTables: 
+  - name: user_session
+    schema: UserSessionSchema
+    description: Application user session table
+schemas:
+  ## -- ApplicationEventSchema
+  ApplicationEventSchema:
+    name: application_event
+    description: Table to log all application events. Event such as application bootstrapping, error, warning, info. Content of this table helps to monitor and debugging.
+    columns:
+      id:
+        name: application_event_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY
+      type:
+        name: event_type
+        comment: 'Type enum column. Enum values specify event type. Typical event types are Error, Info, Warning. No separate code tables for business exists for type. App system is managing the values.'
+        definition: INT NOT NULL
+      source:
+        name: event_source
+        comment: Source information of event. Source will contain information like Source File/Method/Activity 
+        definition: VARCHAR(1000) NULL
+      note:
+        name: event_note
+        comment: Additional note or log data attached with event
+        definition: VARCHAR(200) NULL
+      ## Relations
+      session:
+        name: session_id
+        comment: User session attached to the event. 
+        definition: INT NULL
+        foreignTable: user_session
+        refColumn: session_id
+        deleteCascade: false
+  ## --
+
+

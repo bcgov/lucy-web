@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.ssoService.isAuthenticated();
   }
 
-  private get isReady(): boolean {
+  get isReady(): boolean {
     return this.authStatusIsLoading === false;
   }
 
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   public lottieConfig: Object;
   private anim: any;
   private animationSpeed = 1;
-  private showLoading = false;
+  showLoading = false;
   private loadingSubscription: Subscription;
   /////////////////
 
@@ -168,15 +168,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   /******** Notifications ********/
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
-      /// For testing
-      const msg = {
-        body: null,
-        message_id: 2,
-        status: 0,
-        title: `Request Access rejected`,
-        type: 0
-      };
-      /////
       this.showMessage(messages[0]);
     });
   }

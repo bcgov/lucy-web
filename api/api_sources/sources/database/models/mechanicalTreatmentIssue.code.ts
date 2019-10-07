@@ -5,6 +5,7 @@ import { MechanicalTreatmentIssueCodeSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
+import { Record } from './generic.data.models';
 
 
 /** Interface **/
@@ -39,7 +40,7 @@ export interface MechanicalTreatmentIssueCodeUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: MechanicalTreatmentIssueCodeSchema.dbTable} )
-export class MechanicalTreatmentIssueCode {
+export class MechanicalTreatmentIssueCode extends Record {
 
 	/**
 	 * Class Properties
