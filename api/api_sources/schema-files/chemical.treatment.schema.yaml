@@ -1,9 +1,12 @@
 version: '1.0'
 description: Schema model for ChemicalTreatmentSchema
 externalTables:
- -  name: application_user
+  - name: application_user
     schema: UserSchema
     description: Application user table
+  - name: species_agency_code
+    description: Species agency code table
+    schema: SpeciesAgencyCodeSchema
 schemas:
   ## -- ChemicalTreatmentSchema
   ChemicalTreatmentSchema:
@@ -13,8 +16,9 @@ schemas:
     To types of herbicide formats: granular and liquid. IAPP allows for liquid particulars only. Lucy will need to cover off both.' 
     baseSchema: RecordSchema
     meta:
+      baseModel: Record
       resource: true
-      api: /treatment/chemical
+      api: /api/treatment/chemical
     ## -- DisplayLayout
     displayLayout: {}
     ## --
@@ -55,6 +59,7 @@ schemas:
     ## --
     ## Columns
     columns: 
+      ## Data Columns
       id: 
         name: chemical_treatment_id
         comment: 'Auto generated primary key. This is auto incremental field'
@@ -91,6 +96,43 @@ schemas:
           header: 
             key: 'date' 
             default: 'Date'
+          classes:
+            - none
+      primaryPaperFileReference:
+        name: chemical_treatment_primary_paper_file_ref
+        comment: 'Primary paper file Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'primaryPaperFileReference' 
+            default: 'Primary Paper File Reference'
+          classes:
+            - none
+      secondaryPaperFileReference:
+        name: chemical_treatment_secondary_paper_file_ref
+        comment: 'Secondary paper file Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'secondaryPaperFileReference' 
+            default: 'Secondary Paper File Reference'
+          classes:
+            - none
+      ## Relation Column
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency Code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'speciesAgency' 
+            default:  'Species Agency'
           classes:
             - none
   ## --
