@@ -18,7 +18,8 @@ schemas:
     meta:
       baseModel: Record
       resource: true
-      api: /api/treatment/chemical
+      api: /treatment/chemical
+      base: /api
     ## -- DisplayLayout
     displayLayout: {}
     ## --

@@ -96,7 +96,7 @@ export class ExpressResourceTest {
             const spec: any = await ModelSpecFactory(controller)();
             const req: any = RequestFactory<any>(spec);
             // Url
-            const url: string = setup.url || controller.schema.meta.api;
+            const url: string = setup.url || controller.schemaObject.apiPath();
             // Checking token
             const actualAuth: number = (setup.auth || AuthType.token) as number;
             const token: string = this.getToken(actualAuth, setup.token);
@@ -138,7 +138,7 @@ export class ExpressResourceTest {
             const req: any = RequestFactory<any>(spec);
 
             // Url
-            const baseUrl: string = setup.url || controller.schema.meta.api;
+            const baseUrl: string = setup.url || controller.schemaObject.apiPath();
 
             // Modify url
             const url = `${baseUrl}/${controller.getIdValue(model)}`;
@@ -182,7 +182,8 @@ export class ExpressResourceTest {
             // Create Data
             const model = await ModelFactory(controller)();
             // Url
-            const baseUrl: string = setup.url || controller.schema.meta.api;
+            const baseUrl: string = setup.url || controller.schemaObject.apiPath();
+            console.log(`url: ${baseUrl}`);
 
             // Modify url
             const url = `${baseUrl}/${controller.getIdValue(model)}`;
@@ -223,7 +224,7 @@ export class ExpressResourceTest {
             // Create Data
             const model = await ModelFactory(controller)();
             // Url
-            const url: string = setup.url || controller.schema.meta.api;
+            const url: string = setup.url || controller.schemaObject.apiPath();
 
             // Checking token
             const actualAuth: number = (setup.auth || AuthType.token) as number;
