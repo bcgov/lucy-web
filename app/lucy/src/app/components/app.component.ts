@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
 import { StringConstants } from 'src/app/constants/string-constants';
+import { ToastService, ToastModel, ToastIconType } from '../services/toast/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +41,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private alertsSubscription: Subscription;
   ////////
 
+  // Toasts
+  public toastMessage: ToastModel;
+  private toastSubscription: Subscription;
+  ////////
+
+
   // Lottie Animation
   public lottieConfig: Object;
   private anim: any;
@@ -54,11 +61,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private ssoService: SsoService,
     private messageService: MessageService,
     private alertService: AlertService,
+    private toastService: ToastService,
     private loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
     private titleService: Title) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
+    this.subscribeToToastService();
     this.setTitle();
   }
 
@@ -68,12 +77,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.unSubscribeFromAlertService();
     this.unSubscribeFromLoadingService();
+    this.unSubscribeFromToastService();
   }
 
   ngAfterViewInit() {
     this.subscribeToLoadingService();
     this.reRouteIfNeeded();
-    this.testAlerts();
+    // this.testAlerts();
+    // this.testToasts();
   }
 
   /******** Loading animation ********/
@@ -137,6 +148,22 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   /******** End Alerts ********/
 
+  /******** Toasts ********/
+  private subscribeToToastService() {
+    this.toastSubscription = this.toastService.getObservable().subscribe(message => {
+      if (message) {
+        this.toastMessage = message;
+      } else {
+        this.alertMessage = undefined;
+      }
+    });
+  }
+
+  private unSubscribeFromToastService() {
+    this.toastSubscription.unsubscribe();
+  }
+  /******** End Toasts ********/
+
   /******** Auth and Routing ********/
   private async reRouteIfNeeded() {
     this.loadingService.add();
@@ -193,26 +220,49 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  /*
   private testAlerts() {
-    return;
     this.delay(100).then(() => {
       this.alertService.show(`HELOO`, `one`, null);
       this.delay(100).then(() => {
         this.alertService.show(`HELOO`, `two`, null);
         this.delay(1000).then(() => {
-          this.alertService.show(`HELOO`, `three`, null);
+          this.alertService.showConfirmation(`HELOO`, `three`);
         });
       });
       this.delay(1000).then(() => {
         this.alertService.show(`HELOO`, `three?`, null);
       });
       this.delay(1000).then(() => {
-        this.alertService.show(`HELOO`, `three???`, null);
+        this.alertService.showConfirmation(`HELOO`, `three??`);
       });
     });
     this.delay(1000).then(() => {
       this.alertService.show(`Hola`, `one?`, null);
     });
   }
+
+  private testToasts() {
+    this.delay(100).then(() => {
+      this.toastService.show(`Your record has been commited to the InvasivesBC database.`, ToastIconType.success);
+      this.toastService.show(`one`, ToastIconType.fail);
+      this.delay(100).then(() => {
+        this.toastService.show(`two`, ToastIconType.success);
+        this.delay(1000).then(() => {
+          this.toastService.show(`three`);
+        });
+      });
+      this.delay(1000).then(() => {
+        this.toastService.show(`four`, ToastIconType.none);
+      });
+      this.delay(1000).then(() => {
+        this.toastService.show(`five`, ToastIconType.fail);
+      });
+    });
+    this.delay(1000).then(() => {
+      this.toastService.show(`six`, ToastIconType.success);
+    });
+  }
+  */
 
 }

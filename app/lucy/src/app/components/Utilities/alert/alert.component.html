@@ -1,23 +1,23 @@
-<ng-template #alertModal let-modal>
-  <!-- Modal Title -->
-  <div class="modal-header">
-    <h5 class="modal-title" id="alertModalTitle">{{title}}</h5>
-    <!-- <button type="button" class="close" (click)="cancelAction()" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button> -->
-  </div>
-  <!-- Modal Body -->
-  <div class="modal-body">
-    <div class="container">
-      <div class="col-12">
-        {{body}}
+<div class="animated" [ngClass]="presenting ? 'overlay fadeIn' : 'fadeOut'">
+<div class="alert-position animated" [ngClass]="presenting ? 'fadeIn' : 'fadeOut'">
+    <div class="container container-fluid alert-container animated" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
+      <div class="row">
+        <div class="col-12 header">
+            {{title}}
+        </div>
+      </div>
+      <div class="row" >
+        <div class="col-12 message">
+            {{body}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col options" *ngFor="let button of buttons; let i = index" >
+            <button mat-raised-button class="button" (click)="buttonPressed(button)">
+                {{button.name}}
+            </button>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Footer -->
-  <div class="modal-footer">
-    <button type="button" class="btn button-fill" *ngFor="let button of buttons; let i = index" (click)="buttonPressed(button)">
-      {{button.name}}
-    </button>
-  </div>
-</ng-template>
+</div>
