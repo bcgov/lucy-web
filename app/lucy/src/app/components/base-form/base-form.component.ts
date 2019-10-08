@@ -247,6 +247,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     };
   }
 
+  private preventReload() {
+    window.addEventListener(`beforeunload`, function (event) {
+      // Cancel the event as stated by the standard.
+      event.preventDefault();
+      // Chrome requires returnValue to be set.
+      event.returnValue = 'Your changes will be lost';
+      return 'Your changes will be lost';
+    });
+  }
+
   ngOnInit() {
     this.initialize();
   }
@@ -256,11 +266,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   private async initialize() {
     this.isLoading = true;
     this.setFormMode();
+    if (this.mode === FormMode.Edit || this.mode === FormMode.Create) {
+      this.preventReload();
+    }
     this.accessType = await this.userService.getAccess();
-    console.log('fetching config');
-    console.log(this.router.current);
     const config = await this.formService.getFormConfigForCurrentRoute();
-    console.dir(config);
     if (config) {
       this.config = config;
     } else {
