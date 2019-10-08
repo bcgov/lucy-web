@@ -5,4 +5,5 @@ swagger/
 *.swp
 **/.scannerwork/
 **/.node-*/
+.bash_history
 
