@@ -18,9 +18,9 @@ export class AlertComponent implements OnInit {
     }
   }
 
-  public get body(): string {
+  public get body(): string[] {
     if (this.model === undefined) {
-      return ``;
+      return [];
     } else {
       return this.model.body;
     }
