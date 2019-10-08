@@ -22,7 +22,14 @@
  */
 import { expect, should } from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
-import { ChemicalTreatment, ChemicalTreatmentController } from '../models';
+import {
+    ChemicalTreatment,
+    ChemicalTreatmentController,
+    PesticideEmployerCode,
+    PesticideEmployerCodeController,
+    ProjectManagementPlanCode,
+    ProjectManagementPlanCodeController
+} from '../models';
 import { ModelFactory, Destroyer } from '../factory';
 
 // ** Test Function
@@ -35,7 +42,28 @@ describe('Test Chemical Treatment', () => {
         return;
     });
 
-    it('should create chemical treatment Object', async () => {
+    it('should fetch pesticide employer codes', async () => {
+        // Fetch Random
+        const code: PesticideEmployerCode = await PesticideEmployerCodeController.shared.random();
+        should().exist(code);
+        should().exist(code.pesticide_employer_code_id);
+        should().exist(code.businessName);
+        should().exist(code.registrationNumber);
+        should().exist(code.licenceExpiryDate);
+    });
+
+    it('should fetch pmp codes', async () => {
+        const code: ProjectManagementPlanCode = await ProjectManagementPlanCodeController.shared.random();
+        should().exist(code);
+        should().exist(code.project_management_plan_code_id);
+        should().exist(code.pmpNumber);
+        should().exist(code.description);
+        should().exist(code.pmpHolder);
+        should().exist(code.startDate);
+        should().exist(code.endDate);
+    });
+
+    it('should create/fetch chemical treatment Object', async () => {
         const obj: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
         should().exist(obj);
         should().exist(obj.chemical_treatment_id);
@@ -44,6 +72,8 @@ describe('Test Chemical Treatment', () => {
         should().exist(ch);
         expect(ch.chemical_treatment_id).to.be.equal(obj.chemical_treatment_id);
         expect(ch.speciesAgency);
+        expect(ch.pesticideEmployer);
+        expect(ch.pmp);
         await Destroyer(ChemicalTreatmentController.shared)(obj);
     });
 });

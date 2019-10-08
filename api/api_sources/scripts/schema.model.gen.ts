@@ -125,10 +125,9 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClass = defClass + `\nimport { NumericTransformer, DateTransformer } from '../../libs/transformer';`;
     defClass = defClass + exportModel(schema);
     defClass = defClass + exportBaseModel(schema);
-    if (schema.table.meta.resource) {
+    if (!schema.table.meta.resource) {
         defClass = defClass + `${n}import { DataModelController } from '../data.model.controller';`;
     }
-
     defClass = defClass + `${createInterface(`${className}Spec`, `${className} create interface`, propInfo)}`;
     defClass = defClass + `${createInterface(`${className}UpdateSpec`, `${className} update interface`, propInfo, true)}`;
     defClass = addDoc(defClass, `Data Model Class for ${schemaName}`);
@@ -163,10 +162,10 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
 
         // Writing Controller
         // Adding some export
-        let conImp = `//** ${className}Controller **//\n`;
+        let conImp = `// ** ${className}Controller ** //\n`;
         conImp = conImp + `\nimport { RecordController } from '../generic.data.models';`;
         conImp = conImp + `\nimport { ${className}} from '../../models';`;
-        conImp = conImp + `\nimport { ${schemaName} } from '../database-schema';`;
+        conImp = conImp + `\nimport { ${schemaName} } from '../../database-schema';`;
         defClassController = conImp + `\n\n` + defClassController;
 
         writeIfNotExists(
@@ -176,7 +175,7 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         return final;
     } else {
         // Writing model and controller together
-        defClassController = `//** ${className}Controller **//\n\n` + defClassController;
+        defClassController = `// ** ${className}Controller ** //\n\n` + defClassController;
         const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
 
         incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
