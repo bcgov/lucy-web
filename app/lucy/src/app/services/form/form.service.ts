@@ -65,25 +65,26 @@ export interface FormConfig {
 }
 
 export interface UIConfigObject {
-  api: string,
-  title: string,
-  sections: UIConfigSection[],
-  relationsConfigs: any,
-  relationKeys: string[],
-  requiredFieldKeys: string[],
-  dropdownFieldKeys: string[],
-  fieldHeaders: {},
-};
+  api: string;
+  idKey: string;
+  title: string;
+  sections: UIConfigSection[];
+  relationsConfigs: any;
+  relationKeys: string[];
+  requiredFieldKeys: string[];
+  dropdownFieldKeys: string[];
+  fieldHeaders: {};
+}
 
 export interface UIConfigSection {
-  title: string,
-  subSections: UIConfigSubSection[],
+  title: string;
+  subSections: UIConfigSubSection[];
 }
 
 export interface UIConfigSubSection {
-  title: string,
-  boxed: boolean,
-  fields: any[]
+  title: string;
+  boxed: boolean;
+  fields: any[];
 }
 
 @Injectable({
@@ -291,6 +292,7 @@ export class FormService {
     const fieldHeaders: {} = {};
     const configObject: UIConfigObject = {
       api: serverConfig.meta.api,
+      idKey: serverConfig.idKey,
       title: serverConfig.layout.title.default,
       sections: [],
       requiredFieldKeys: [],
@@ -305,7 +307,7 @@ export class FormService {
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
-      // Loop thorugh groups in server config layout
+      // Loop thorugh groups in server config lay out
       for (const group of groups) {
         // Initialize fields for group
         const subSectionFields: any[] = [];
@@ -1108,30 +1110,29 @@ export class FormService {
     return JSON.parse(JSON.stringify(cleanBody));
   }
 
-  public async submit(body: JSON, uiConfig: any): Promise<boolean> {
+  public async submit(body: JSON, uiConfig: any): Promise<number> {
     const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
-    console.dir(cleanBody);
     if (this.router.isEditRoute) {
       const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
       const result = await this.api.request(APIRequestMethod.PUT, endpoint, cleanBody);
       // console.log(result);
-      if (result.success) {
-        return true;
+      if (result.success && result.response[uiConfig.idKey]) {
+        return result.response[uiConfig.idKey];
       } else {
-        return false;
+        return -1;
       }
     } else if (this.router.isCreateRoute) {
       const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
       const result = await this.api.request(APIRequestMethod.POST, endpoint, cleanBody);
       // console.log(result);
-      if (result.success) {
-        return true;
+      if (result.success && result.response[uiConfig.idKey]) {
+        return result.response[uiConfig.idKey];
       } else {
-        return false;
+        return -1;
       }
     } else {
       console.log('Not a route that can submit');
-      return false;
+      return -1;
     }
   }
   //////////////////////////////////// END SUBMISSION ////////////////////////////////////
@@ -1139,19 +1140,27 @@ export class FormService {
   //////////////////////////////////// TESTS ////////////////////////////////////
   public async generateMechanicalTreatmentTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyMechanicalTreatment();
-    console.dir(dummy);
+    // console.dir(dummy);
     return await this.merge(config, dummy);
   }
 
   public async generateObservationTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyObservation([]);
-    console.log(`dummy: ${dummy.lat} ${dummy.long}`);
+    // console.log(`dummy: ${dummy.lat} ${dummy.long}`);
     const temp = await this.merge(config, dummy);
     return temp;
   }
   //////////////////////////////////// END TESTS ////////////////////////////////////
 
   /////////////////////////////////// Route helpers ////////////////////////////////////
+  public viewCurrentWithId(id: number) {
+    const current = this.router.current;
+    if (current === AppRoutes.EditMechanicalTreatment || current === AppRoutes.AddMechanicalTreatment) {
+      this.router.navigateTo(AppRoutes.ViewMechanicalTreatment, id);
+    } else if (current === AppRoutes.EditObservation || current === AppRoutes.AddObservation) {
+      this.router.navigateTo(AppRoutes.ViewObservation, id);
+    }
+  }
   /**
    * Switch current form route to edit mode
   */

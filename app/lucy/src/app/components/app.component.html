@@ -21,6 +21,9 @@
 </app-user-access-updated-modal>
 <!-- ----- -->
 
+<!-- Toast  -->
+<app-toast *ngIf="toastMessage" [model]="toastMessage"></app-toast>
+
 <!-- ALERT MODAL -->
 <app-alert *ngIf="alertMessage" [model]="alertMessage"></app-alert>
 <!-- ----- -->
