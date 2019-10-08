@@ -71,6 +71,7 @@ import { LocationInputComponent } from './components/base-form/location-input/lo
 import { StringConstants } from './constants/string-constants';
 import { ComputedFieldComponent } from './components/base-form/computed-field/computed-field.component';
 import { TableComponent } from './components/base-form/table/table.component';
+import { ToastComponent } from './components/Utilities/toast/toast.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -107,6 +108,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     LocationInputComponent,
     ComputedFieldComponent,
     TableComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,

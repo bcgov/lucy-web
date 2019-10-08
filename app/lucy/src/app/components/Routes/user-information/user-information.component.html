@@ -42,23 +42,6 @@
             [ngClass]="emailIsValid ? 'field-input' : 'field-input-invalid'"/>
         </div>
       </div>
-      <!-- Organization dropdown -->
-      <div class="row">
-        <div class="col-sm-12 field d-inline-block" ngbDropdown #orgDropdown="ngbDropdown">
-          <label for="organization" class="field-header">Current Work Organization</label>
-          <input type="text" 
-            class="form-control field-box" 
-            id="orgizationsDropdown" ngbDropdownAnchor
-            (focus)="orgDropdown.open()" readonly
-            [(ngModel)]="organization"
-            [ngClass]="organizationIsValid ? 'field-input' : 'field-input-invalid'"/>
-          <div ngbDropdownMenu aria-labelledby="orgizationsDropdown">
-            <div class="col-12" *ngFor="let org of organizations; let i = index">
-                <button class="btn" ngbDropdownItem (click)='chooseOrganization(org)'>{{org}}</button>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- button  -->
       <br />
       <div class="row justify-content-center">
