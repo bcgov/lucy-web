@@ -61,7 +61,7 @@ describe('Test account routes', () => {
     it('should fetch me', async () => {
         await request(SharedExpressApp.app)
         .get('/api/account/me')
-        .set('Authorization', `Bearer ${adminToken()}`)
+        .set('Authorization', `Bearer ${testIdr1Token()}`)
         .expect(200)
         .then(async (resp) => {
             const body = resp.body;
