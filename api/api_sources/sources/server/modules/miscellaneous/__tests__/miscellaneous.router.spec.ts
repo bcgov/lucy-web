@@ -50,7 +50,9 @@ import {
     MechanicalSoilDisturbanceCodeController,
     MechanicalRootRemovalCodeController,
     MechanicalTreatmentIssueCodeController,
-    TreatmentProviderContractorController
+    TreatmentProviderContractorController,
+    ProjectManagementPlanCodeController,
+    PesticideEmployerCodeController
 } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
 
@@ -156,6 +158,8 @@ describe('Test miscellaneous routes', () => {
                 await checkCodes(MechanicalRootRemovalCodeController.shared);
                 await checkCodes(MechanicalTreatmentIssueCodeController.shared);
                 await checkCodes(TreatmentProviderContractorController.shared);
+                await checkCodes(ProjectManagementPlanCodeController.shared);
+                await checkCodes(PesticideEmployerCodeController.shared);
             });
         });
     });

@@ -38,7 +38,13 @@ export interface SpeciesCSV {
     Latin: string;
 }
 
-export interface TreatmentProviderCSV extends ObjectLiteral {
+export interface ContractorCSV extends ObjectLiteral {
+    registration_number: number;
+    business_name: string;
+    license_expiry_date: string;
+}
+
+export interface TreatmentProviderCSV extends ContractorCSV {
     registration_number: number;
     business_name: string;
     category: string;
@@ -46,6 +52,14 @@ export interface TreatmentProviderCSV extends ObjectLiteral {
     region_operation: string;
     license_expiry_date: string;
     service_provide_ind: string;
+}
+
+export interface ProjectManagementPlanCSV {
+    pmp_number: string;
+    description: string;
+    pmp_holder: string;
+    legal_start_date: string;
+    legal_end_date: string;
 }
 
 export interface Code {
@@ -85,6 +99,18 @@ export class SpeciesDensityCodeCSVData extends CSV<Code> {
 export class TreatmentProviderCSVData extends CSV<TreatmentProviderCSV> {
     constructor() {
         super(getDataFilePath('TreatmentProvider.csv'));
+    }
+}
+
+export class PesticideEmployerCSVData extends CSV<ContractorCSV> {
+    constructor() {
+        super(getDataFilePath('PesticideEmployerCode.csv'));
+    }
+}
+
+export class ProjectManagementPlanCSVData extends CSV<ProjectManagementPlanCSV> {
+    constructor() {
+        super(getDataFilePath('ProjectManagementCode.csv'));
     }
 }
 

@@ -7,6 +7,12 @@ externalTables:
   - name: species_agency_code
     description: Species agency code table
     schema: SpeciesAgencyCodeSchema
+  - name: pesticide_employer_code
+    schema: PesticideEmployerCodeSchema
+  - name: project_management_code
+    schema: ProjectManagementCodeSchema
+  - name: project_management_plan_code
+    schema: ProjectManagementPlanCodeSchema
 schemas:
   ## -- ChemicalTreatmentSchema
   ChemicalTreatmentSchema:
@@ -138,6 +144,33 @@ schemas:
           header: 
             key: 'speciesAgency' 
             default:  'Species Agency'
+          classes:
+            - none
+      pesticideEmployer:
+        name: pesticide_employer_code_id
+        comment: Foreign key reference to Pesticide employer table
+        definition: INT NULL
+        foreignTable: pesticide_employer_code
+        refColumn: pesticide_employer_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'pesticideEmployer' 
+            default:  'Pesticide Employer Code'
+          classes:
+            - none
+      pmp:
+        name: project_management_plan_code_id
+        comment: 'Foreign key reference to Project management plan code table'
+        definition: INT NULL
+        foreignTable: project_management_plan_code
+        refColumn: project_management_plan_code_id
+        meta: {}
+        layout:
+          header: 
+            key: 'pmp' 
+            default:  'Project Management Plan'
           classes:
             - none
   ## --

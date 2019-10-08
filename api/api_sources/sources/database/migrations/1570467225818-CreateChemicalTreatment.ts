@@ -22,7 +22,12 @@
  */
 
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { ChemicalTreatmentSchema } from '../database-schema';
+import {
+    ChemicalTreatmentSchema,
+    PesticideEmployerCodeSchema,
+    getSQLFileData,
+    ProjectManagementPlanCodeSchema
+} from '../database-schema';
 
 export class CreateChemicalTreatment1570467225818 implements MigrationInterface {
 
@@ -31,6 +36,8 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
      */
     // ChemicalTreatment Schema
     chemicalTreatmentSchema: ChemicalTreatmentSchema = new ChemicalTreatmentSchema();
+    employerSchema: PesticideEmployerCodeSchema = new PesticideEmployerCodeSchema();
+    pmpSchema: ProjectManagementPlanCodeSchema = new ProjectManagementPlanCodeSchema();
 
     /**
      * @description Up method
@@ -39,7 +46,17 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
 
-        // Running Chemical Treatment Migration
+        // Running Migrations
+        // Employer Code
+        await queryRunner.query(this.employerSchema.migrationSQL);
+        // PreLoad Data
+        await queryRunner.query(getSQLFileData(this.employerSchema.dataSQLPath()));
+
+        // PMP
+        await queryRunner.query(this.pmpSchema.migrationSQL);
+        await queryRunner.query(getSQLFileData(this.pmpSchema.dataSQLPath()));
+
+        // Chemical Treatment
         await queryRunner.query(this.chemicalTreatmentSchema.migrationSQL);
     }
 
@@ -49,8 +66,18 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        // Dropping Chemical Treatment Table
+        // Dropping Tables
+        // Chemical Treatment
         await queryRunner.query(this.chemicalTreatmentSchema.dropTable());
+
+        // Employer Code
+        await queryRunner.query(this.employerSchema.dropTable());
+
+        // PMP
+        await queryRunner.query(this.pmpSchema.dropTable());
+
+        // Removing Old Code
+        await queryRunner.query('DROP TABLE IF EXISTS project_management_code');
     }
 
 }
