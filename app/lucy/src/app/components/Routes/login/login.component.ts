@@ -32,10 +32,7 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithIDIR() {
-    // If there is a route, store it in sessions to return to it after login
-    if (this.router.current.length > 0) {
-      localStorage.setItem('lastRoute', this.router.current);
-    }
+    this.router.storeCurrentRouteInSession();
     if (this.ssoService) {
       this.loadingService.add();
       this.ssoService.login(SSOLoginProvider.idir);
