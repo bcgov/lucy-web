@@ -169,7 +169,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadingService.add();
     const isAuthenticated =  await this.checkAuthStatus();
     if (isAuthenticated && (this.routerService.current === AppRoutes.Root) || this.routerService.current === undefined) {
-      this.routerService.navigateTo(AppRoutes.Profile);
+
+      // if last route is specified in session (from Login component), go to it and remove key from session.
+      const lastRoute = this.routerService.getLastRouteInSession();
+      if (lastRoute) {
+        this.routerService.navigateTo(lastRoute);
+        this.routerService.clearLastRouteInSession();
+      } else {
+        // Otherwise go to profile
+        this.routerService.navigateTo(AppRoutes.Profile);
+      }
     }
     this.loadingService.remove();
   }
