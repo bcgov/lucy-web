@@ -9,6 +9,8 @@ ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_date DATE NOT NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_primary_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_secondary_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN species_agency_code_id INT NULL REFERENCES species_agency_code(species_agency_code_id) ON DELETE SET NULL;
+ALTER TABLE chemical_treatment ADD COLUMN pesticide_employer_code_id INT NULL REFERENCES pesticide_employer_code(pesticide_employer_code_id) ON DELETE SET NULL;
+ALTER TABLE chemical_treatment ADD COLUMN project_management_plan_code_id INT NULL REFERENCES project_management_plan_code(project_management_plan_code_id) ON DELETE SET NULL;
 
 
         
@@ -24,6 +26,8 @@ COMMENT ON COLUMN chemical_treatment.chemical_treatment_date IS 'Date of the tre
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_primary_paper_file_ref IS 'Primary paper file Paper file reference associated with treatment';
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_secondary_paper_file_ref IS 'Secondary paper file Paper file reference associated with treatment';
 COMMENT ON COLUMN chemical_treatment.species_agency_code_id IS 'Foreign key reference to Species Agency Code table';
+COMMENT ON COLUMN chemical_treatment.pesticide_employer_code_id IS 'Foreign key reference to Pesticide employer table';
+COMMENT ON COLUMN chemical_treatment.project_management_plan_code_id IS 'Foreign key reference to Project management plan code table';
 
 
         
