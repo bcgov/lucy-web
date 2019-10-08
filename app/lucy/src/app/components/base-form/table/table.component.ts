@@ -105,7 +105,7 @@ export class TableComponent implements OnInit {
       console.log('not found');
       return;
     }
-    this.router.navigateTo(route, object.objectId);
+    this.router.navigateTo(route, object.objectId, true);
   }
 
 }
