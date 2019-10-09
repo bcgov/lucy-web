@@ -49,6 +49,9 @@ export * from './applicationEvent';
 export * from './sessionActivity.code';
 export * from './session.activity';
 export * from './generic.data.models';
+export * from './chemicalTreatment';
+export * from './pesticideEmployer.code';
+export * from './projectManagementPlan.code';
 
 /**
  * Controllers
@@ -56,4 +59,6 @@ export * from './generic.data.models';
 export * from './controllers/mechanicalTreatment.controller';
 export * from './controllers/observation.data.controller';
 export * from './controllers/user.controller';
+export * from './controllers/chemicalTreatment.controller';
+export * from './controllers/projectManagementPlanCode.controller';
 // ----------------------------------------------------------------------------------------------------------------

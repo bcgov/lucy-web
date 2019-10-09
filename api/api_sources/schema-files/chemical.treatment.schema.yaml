@@ -1,0 +1,176 @@
+version: '1.0'
+description: Schema model for ChemicalTreatmentSchema
+externalTables:
+  - name: application_user
+    schema: UserSchema
+    description: Application user table
+  - name: species_agency_code
+    description: Species agency code table
+    schema: SpeciesAgencyCodeSchema
+  - name: pesticide_employer_code
+    schema: PesticideEmployerCodeSchema
+  - name: project_management_code
+    schema: ProjectManagementCodeSchema
+  - name: project_management_plan_code
+    schema: ProjectManagementPlanCodeSchema
+schemas:
+  ## -- ChemicalTreatmentSchema
+  ChemicalTreatmentSchema:
+    name: chemical_treatment
+    description: 'An application of a herbicide. Various herbicides are used for spot treatments of weeds in British Columbia. The herbicide selected should depend on the target weed species and environmental factors. Application rate will be dictated by the size and accessibility of the infestation, its proximity to wells and other water, and the potential impacts of the application on non-target vegetation. Some herbicides have residual effects and persist in the soil in an active state for some time after application. Other herbicides become inactive once they contact soil. The residual activity of a herbicide varies with rate of application, soil properties, and climate, and its impact on non-target vegetation should be carefully considered.
+    
+    To types of herbicide formats: granular and liquid. IAPP allows for liquid particulars only. Lucy will need to cover off both.' 
+    baseSchema: RecordSchema
+    meta:
+      baseModel: Record
+      resource: true
+      api: /treatment/chemical
+      base: /api
+    ## -- DisplayLayout
+    displayLayout: {}
+    ## --
+    # -- layout
+    layout: 
+      title: 
+        key: 'chemicalTreatment' 
+        default: 'Chemical Treatment'
+      sections:
+        - title:
+            key: 'chemicalTreatment.details.title'
+            default: Location And Treatment Details
+          groups:
+            - title: 
+                key: '' 
+                default: Location
+              fields: 
+                - latitude
+                - longitude
+              style: {}
+            ## -- group {Location}
+            - title:
+                key: ''
+                default: Applicator Information
+              fields: []
+              style: {}
+            ## -- group {Applicator Info}
+            - title:
+                key: ''
+                default: Treatment Details
+              fields: 
+                - primaryPaperFileReference
+                - secondaryPaperFileReference
+                - date
+                - speciesAgency
+              style: {}
+            ## -- group { Treatment Details }
+        # -- section {Location}
+    # --
+    ## -- computedFields
+    computedFields: {}
+    ## --
+    ## Columns
+    columns: 
+      ## Data Columns
+      id: 
+        name: chemical_treatment_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      latitude:
+        name: 'chemical_treatment_location_latitude'
+        comment: 'Latitude of treatment  location'
+        definition: NUMERIC(8, 6) NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'latitude' 
+            default: 'Latitude'
+          description: ''
+          classes:
+            - none
+      longitude:
+        name: 'chemical_treatment_location_longitude'
+        comment: 'Longitude of treatment location'
+        definition: NUMERIC(9, 6) NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'longitude' 
+            default: 'Longitude'
+          classes:
+            - none
+      date:
+        name: chemical_treatment_date
+        comment: 'Date of the treatment'
+        definition: DATE NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'date' 
+            default: 'Date'
+          classes:
+            - none
+      primaryPaperFileReference:
+        name: chemical_treatment_primary_paper_file_ref
+        comment: 'Primary paper file Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'primaryPaperFileReference' 
+            default: 'Primary Paper File Reference'
+          classes:
+            - none
+      secondaryPaperFileReference:
+        name: chemical_treatment_secondary_paper_file_ref
+        comment: 'Secondary paper file Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'secondaryPaperFileReference' 
+            default: 'Secondary Paper File Reference'
+          classes:
+            - none
+      ## Relation Column
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency Code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'speciesAgency' 
+            default:  'Species Agency'
+          classes:
+            - none
+      pesticideEmployer:
+        name: pesticide_employer_code_id
+        comment: Foreign key reference to Pesticide employer table
+        definition: INT NULL
+        foreignTable: pesticide_employer_code
+        refColumn: pesticide_employer_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'pesticideEmployer' 
+            default:  'Pesticide Employer Code'
+          classes:
+            - none
+      pmp:
+        name: project_management_plan_code_id
+        comment: 'Foreign key reference to Project management plan code table'
+        definition: INT NULL
+        foreignTable: project_management_plan_code
+        refColumn: project_management_plan_code_id
+        meta: {}
+        layout:
+          header: 
+            key: 'pmp' 
+            default:  'Project Management Plan'
+          classes:
+            - none
+  ## --

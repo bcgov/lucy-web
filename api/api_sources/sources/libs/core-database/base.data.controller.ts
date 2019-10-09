@@ -49,6 +49,7 @@ export interface BaseDataController {
     createNewObject(newObj: any, creator: any, ...others: any[]): Promise<any>;
     updateObject(existing: any, update: any, modifier: any, ...others: any[]): Promise<any>;
     factory (): Promise<any>;
+    getIdValue(obj: any): any;
 }
 
 
@@ -264,6 +265,11 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 
     factory(): Promise<T> {
         throw Error(`${this.constructor.name}: factory: subclass should implement`);
+    }
+
+    getIdValue(obj: any): any {
+        const idKey: string = this.schema.id;
+        return obj[idKey];
     }
 }
 

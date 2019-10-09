@@ -11,10 +11,15 @@ export enum AppRoutes {
     Inventory = 'inventory',
     // Observation Routes
     AddEntry = 'add',
-    AddTreatment = 'treatment',
+
+    AddChemicalTreatment = 'create/chemical',
+    ViewChemicalTreatment = 'view/chemical/:id',
+    EditChemicalTreatment = 'edit/chemical/:id',
+  
     AddMechanicalTreatment = 'create/mechnical',
     ViewMechanicalTreatment = 'view/mechnical/:id',
     EditMechanicalTreatment = 'edit/mechnical/:id',
+
     AddObservation = 'create/observation',
     ViewObservation = 'view/observation/:id',
     EditObservation = 'edit/observation/:id',

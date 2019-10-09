@@ -388,6 +388,10 @@ export class  BaseSchema {
         return `DROP TABLE IF EXISTS ${this.table.name}`;
     }
 
+    apiPath(): string {
+        return this.table.meta.api ? `/api${this.table.meta.api}` : `/api/${this.modelName}`;
+    }
+
     /**
      * @description Schema table
      * @return ApplicationTable
