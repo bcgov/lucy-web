@@ -10,7 +10,7 @@ export interface DropdownObject {
 })
 
 export class DropdownService {
-  private possibleDisplayKeys = ['observation_id', 'description', 'businessName', 'commonName'];
+  private possibleDisplayKeys = ['observation_id', 'description', 'businessName', 'commonName', 'certificate'];
 
   constructor() { }
 
@@ -38,6 +38,7 @@ export class DropdownService {
       }
       // if the object doesnt have those keys either, just pick the first key
       if (!name || name.length < 1) {
+        console.dir(object);
         name = object[Object.keys(object)[0]];
       }
       dropdownObjects.push({

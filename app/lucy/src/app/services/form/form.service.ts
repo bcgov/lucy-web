@@ -1140,6 +1140,8 @@ export class FormService {
       this.router.navigateTo(AppRoutes.ViewMechanicalTreatment, id);
     } else if (current === AppRoutes.EditObservation || current === AppRoutes.AddObservation) {
       this.router.navigateTo(AppRoutes.ViewObservation, id);
+    } else if (current === AppRoutes.EditChemicalTreatment || current === AppRoutes.AddChemicalTreatment) {
+      this.router.navigateTo(AppRoutes.ViewChemicalTreatment, id);
     }
   }
   /**
