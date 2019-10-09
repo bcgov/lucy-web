@@ -55,6 +55,7 @@ import {
     PesticideEmployerCodeController
 } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
+import { ChemicalTreatmentEmployeeController } from '../../../../database/models/controllers/chemicalTreatmentEmployee.controller';
 
 describe('Test miscellaneous routes', () => {
     before(async () => {
@@ -160,6 +161,7 @@ describe('Test miscellaneous routes', () => {
                 await checkCodes(TreatmentProviderContractorController.shared);
                 await checkCodes(ProjectManagementPlanCodeController.shared);
                 await checkCodes(PesticideEmployerCodeController.shared);
+                await checkCodes(ChemicalTreatmentEmployeeController.shared);
             });
         });
     });
