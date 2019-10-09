@@ -62,6 +62,12 @@ export interface ProjectManagementPlanCSV {
     legal_end_date: string;
 }
 
+export interface ChemicalTreatmentEmployeeCSV {
+    certificate: string;
+    first_name: string;
+    last_name: string;
+}
+
 export interface Code {
     code: string;
     description: string;
@@ -111,6 +117,12 @@ export class PesticideEmployerCSVData extends CSV<ContractorCSV> {
 export class ProjectManagementPlanCSVData extends CSV<ProjectManagementPlanCSV> {
     constructor() {
         super(getDataFilePath('ProjectManagementCode.csv'));
+    }
+}
+
+export class ChemicalTreatmentEmployeeCSVData extends CSV<ChemicalTreatmentEmployeeCSV> {
+    constructor() {
+        super(getDataFilePath('ChemicalTreatmentEmployee.csv'));
     }
 }
 

@@ -26,7 +26,8 @@ import {
     ChemicalTreatmentSchema,
     PesticideEmployerCodeSchema,
     getSQLFileData,
-    ProjectManagementPlanCodeSchema
+    ProjectManagementPlanCodeSchema,
+    ChemicalTreatmentEmployeeSchema
 } from '../database-schema';
 
 export class CreateChemicalTreatment1570467225818 implements MigrationInterface {
@@ -38,6 +39,7 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
     chemicalTreatmentSchema: ChemicalTreatmentSchema = new ChemicalTreatmentSchema();
     employerSchema: PesticideEmployerCodeSchema = new PesticideEmployerCodeSchema();
     pmpSchema: ProjectManagementPlanCodeSchema = new ProjectManagementPlanCodeSchema();
+    employeeSchema: ChemicalTreatmentEmployeeSchema = new ChemicalTreatmentEmployeeSchema();
 
     /**
      * @description Up method
@@ -55,6 +57,10 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
         // PMP
         await queryRunner.query(this.pmpSchema.migrationSQL);
         await queryRunner.query(getSQLFileData(this.pmpSchema.dataSQLPath()));
+
+        // Employee
+        await queryRunner.query(this.employeeSchema.migrationSQL);
+        await queryRunner.query(getSQLFileData(this.employeeSchema.dataSQLPath()));
 
         // Chemical Treatment
         await queryRunner.query(this.chemicalTreatmentSchema.migrationSQL);
@@ -75,6 +81,9 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
 
         // PMP
         await queryRunner.query(this.pmpSchema.dropTable());
+
+        // Employee 
+        await queryRunner.query(this.employeeSchema.dropTable());
 
         // Removing Old Code
         await queryRunner.query('DROP TABLE IF EXISTS project_management_code');

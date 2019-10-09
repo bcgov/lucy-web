@@ -92,4 +92,18 @@ export class ApplicationTable {
         _.each(this.columnsDefinition, def => def.refModel ? result.push(def.refModel) : null);
         return result;
     }
+
+    public get allColumns(): string[] {
+        return _.map(this.columns, col => col);
+    }
+
+    public get allColumnsExceptId(): string[] {
+        const r: string[] = [];
+        _.each(this.columns, (col, key) => {
+            if (key !== 'id') {
+                r.push(col);
+            }
+        });
+        return r;
+    }
 }
