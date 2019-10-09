@@ -125,6 +125,10 @@ export class RouterService {
     return undefined;
   }
 
+  public getRouteNamed(string: string): AppRoutes {
+    return this.stringToEnumRoute(string) ? this.stringToEnumRoute(string) : undefined;
+  }
+
   public get events(): Observable<any> {
     return this.router.events;
   }
@@ -161,5 +165,34 @@ export class RouterService {
         console.log(`${api} does not have a route`);
     }
     return undefined;
+  }
+
+  /**
+   * Store current route in session.
+   */
+  public storeCurrentRouteInSession() {
+    if (this.current.length > 0) {
+      localStorage.setItem('lastRoute', this.current);
+    }
+  }
+
+  /**
+   * Get the lastRoute specified in session storage (if exists).
+   * @returns AppRoute or Undefined
+   */
+  public getLastRouteInSession(): AppRoutes | undefined {
+    const lastRoute = localStorage.getItem('lastRoute');
+    if (lastRoute && this.getRouteNamed(lastRoute)) {
+      return this.getRouteNamed(lastRoute);
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
+   * Removes the lastRoute key stored in session storage.
+   */
+  public clearLastRouteInSession() {
+    sessionStorage.removeItem('lastRoute');
   }
 }

@@ -7,8 +7,8 @@
         </div>
       </div>
       <div class="row" >
-        <div class="col-12 message">
-            {{body}}
+        <div class="col-12 message" *ngFor="let line of body; let i = index">
+            {{line}}
         </div>
       </div>
       <div class="row">
