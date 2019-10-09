@@ -30,10 +30,12 @@ export class AppConstants {
     static get API_messages(): string { return `${AppConstants.API_baseURL}/account/message`; }
     static get API_allUsers(): string { return `${AppConstants.API_baseURL}/account/users`; }
 
-    // Form Config
+    // Form Config Mechanical
     static get API_Form_MechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical/config`; }
-    // Form Config
+    // Form Config Observation
     static get API_Form_Observation(): string { return `${AppConstants.API_baseURL}/observation/config`; }
+     // Form Config Chemical
+     static get API_Form_ChemicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/chemical/config`; }
 
     // Observation
     static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }

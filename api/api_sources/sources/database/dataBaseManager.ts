@@ -43,7 +43,7 @@ import {
     MechanicalTreatmentIssueCodeController,
     MechanicalSoilDisturbanceCodeController,
     TreatmentProviderContractorController,
-    MechanicalTreatmentController, 
+    MechanicalTreatmentController,
     SpeciesDensityCodeController,
     SpeciesDistributionCodeController} from './models';
 const dbConfig = require('../../ormconfig');

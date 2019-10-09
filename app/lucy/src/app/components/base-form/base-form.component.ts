@@ -412,7 +412,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
     const el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
-      if (el) {;
+      if (el) {
           el.scrollIntoView({ block: 'center',  behavior: 'smooth' });
           this.renderer.addClass(el, highlightClass);
           setTimeout(() => {

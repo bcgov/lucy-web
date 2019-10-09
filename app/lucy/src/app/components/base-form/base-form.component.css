@@ -149,3 +149,22 @@
     animation-delay: 0s;
     margin-bottom: 10px;
 }
+
+.no-content {
+    height: 100px;
+    border-radius: 9px;
+    text-align: center;
+    border: 1px solid #CCCCCC;
+    background: repeating-linear-gradient(
+      45deg,
+      #F7F7F7,
+      #F7F7F7 10px,
+      #ffffff 10px,
+      #ffffff 20px
+    );
+    margin: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

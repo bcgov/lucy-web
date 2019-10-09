@@ -104,6 +104,16 @@ export const fetcher = async (input: any, list: any[]) => {
     await fetcher(input, list);
 };
 
+export const deleteObjects = async (list: any[]) => {
+    if (list.length === 0) {
+        return;
+    }
+    const { object, controller} = list.pop();
+    await controller.remove(object);
+
+    await deleteObjects(list);
+};
+
 export function ModelSpecFactory(controller: DataController, dependency?: any[]) {
     return async (): Promise<any> => {
         const obj: any = {};
@@ -138,9 +148,9 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                     if (typeInfo.subType === 'int') {
                         obj[key] = Math.floor((Math.random() * 255) + 1);
                     } else if (keyname.includes('latitude') || keyname.includes('lat')) {
-                        obj[key] = faker.address.latitude();
+                        obj[key] = parseFloat(faker.address.latitude());
                     } else if (keyname.includes('longitude') || keyname.includes('long') || keyname.includes('lon')) {
-                        obj[key] = faker.address.longitude();
+                        obj[key] = parseFloat(faker.address.longitude());
                     } else {
                         obj[key] = faker.random.number();
                     }
@@ -167,6 +177,37 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
         });
         await fetcher(obj, fetchList);
         return obj;
+    };
+}
+
+export function Destroyer(controller: DataController) {
+    return async (item: any, skipObj?: boolean): Promise<void> => {
+        const delList: any[] = [];
+        _.each(controller.schema.columnsDefinition, async (column, key) => {
+            if (key === 'id') {
+                return;
+            }
+            const typeInfo: any = column.typeDetails;
+            if (typeInfo === 'object' && item[key]) {
+                const schemaName = typeInfo.schema;
+                // console.log(`${key}: 1: ${schemaName}`);
+                const dbCon: DataController = controllerForSchemaName(schemaName) as DataController;
+                // Get schema
+                const schema: BaseSchema = schemaWithName(schemaName);
+                if (!schema.hasDefaultValues) {
+                    delList.push({
+                        key: key,
+                        object: item[key],
+                        controller: dbCon
+                    });
+                }
+            }
+        });
+        await deleteObjects(delList);
+        if (skipObj) {
+            return;
+        }
+        await controller.remove(item);
     };
 }
 
