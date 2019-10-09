@@ -194,14 +194,13 @@ export class ApiService {
 
     } catch (error) {
       console.log(`API ERROR`);
-      console.log();
       const apiError: APIError = {
         endpoint: endpoint,
         body: body,
         method: APIRequestMethod.POST,
         error: error,
         attempts: (attempts + 1)
-      }
+      };
       return await this.handleError(apiError);
     }
   }
@@ -298,8 +297,11 @@ export class ApiService {
         console.log(`Error 401 received, refreshing`);
         return await this.hendleErrorDescision(error, await this.decideOn401(error));
       case 404:
-        console.log(`Error 401 received: Resource is not Available`);
+        console.log(`Error 404 received: Resource is not Available`);
         return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
+      case 422:
+          console.log(`Error 422 received: Unprocessable Entity`);
+          return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
       default:
         console.log(`ERRPR CASE NOT HANDLED.\n Error Code received: ${error.error.status}\nObject:`);
         console.dir(error);
@@ -327,7 +329,7 @@ export class ApiService {
       case APIErrorDescision.Stop:
         return {
           success: false,
-          response: null
+          response: error,
         };
     }
   }

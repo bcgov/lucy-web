@@ -3,7 +3,7 @@ import { Subject, Observable } from 'rxjs';
 
 export interface AlertModel {
   title: string;
-  body: string;
+  body: string[];
   buttons: AlertModalButton[];
 }
 
@@ -51,13 +51,7 @@ export class AlertService {
       actionButtons = buttons;
     }
 
-    const model: AlertModel = {
-      title: title,
-      body: body,
-      buttons: actionButtons
-    };
-    this.que.push(model);
-    this.emit();
+    this.pushModal(title, body, actionButtons);
   }
 
   /**
@@ -71,8 +65,6 @@ export class AlertService {
     const actionButtons: AlertModalButton[] = [];
 
     return new Promise<boolean>((resolve, reject) => {
-
-
       confirmAction.subscribe(item => {
         confirmAction.unsubscribe();
         cancelAction.unsubscribe();
@@ -99,15 +91,19 @@ export class AlertService {
         eventEmitter: cancelAction,
       });
 
-      const model: AlertModel = {
-        title: title,
-        body: body,
-        buttons: actionButtons
-      };
-
-      this.que.push(model);
-      this.emit();
+      this.pushModal(title, body, actionButtons);
     });
+  }
+
+  private pushModal(title: string, body: string, actionButtons: AlertModalButton[]) {
+    const model: AlertModel = {
+      title: title,
+      body: body.split('\n'),
+      buttons: actionButtons
+    };
+
+    this.que.push(model);
+    this.emit();
   }
 
   /**
