@@ -85,6 +85,8 @@ describe('Test Chemical Treatment', () => {
         expect(ch.speciesAgency);
         expect(ch.pesticideEmployer);
         expect(ch.pmp);
+        expect(ch.firstApplicator);
+        expect(ch.secondApplicator);
         await Destroyer(ChemicalTreatmentController.shared)(obj);
     });
 });

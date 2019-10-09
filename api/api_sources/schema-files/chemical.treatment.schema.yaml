@@ -13,6 +13,8 @@ externalTables:
     schema: ProjectManagementCodeSchema
   - name: project_management_plan_code
     schema: ProjectManagementPlanCodeSchema
+  - name: chemical_treatment_employee
+    schema: ChemicalTreatmentEmployeeSchema
 schemas:
   ## -- ChemicalTreatmentSchema
   ChemicalTreatmentSchema:
@@ -50,7 +52,10 @@ schemas:
             - title:
                 key: ''
                 default: Applicator Information
-              fields: []
+              fields: 
+                - firstApplicator
+                - secondApplicator
+                - pesticideEmployer
               style: {}
             ## -- group {Applicator Info}
             - title:
@@ -60,7 +65,9 @@ schemas:
                 - primaryPaperFileReference
                 - secondaryPaperFileReference
                 - date
+                - pup
                 - speciesAgency
+                - pmp
               style: {}
             ## -- group { Treatment Details }
         # -- section {Location}
@@ -131,6 +138,17 @@ schemas:
             default: 'Secondary Paper File Reference'
           classes:
             - none
+      pup:
+        name: pesticide_use_permit 
+        comment: Use permit code of pesticide usage. This is free form information
+        definition: VARCHAR(60) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'pup' 
+            default: 'PUP'
+          classes:
+            - none
       ## Relation Column
       speciesAgency:
         name: 'species_agency_code_id'
@@ -173,4 +191,31 @@ schemas:
             default:  'Project Management Plan'
           classes:
             - none
+      firstApplicator:
+        name: first_applicator_chemical_treatment_employee_id
+        comment: Foreign key reference to Chemical treatment employee table
+        definition: INT NULL
+        foreignTable: chemical_treatment_employee
+        refColumn: chemical_treatment_employee_id
+        meta: {}
+        layout:
+          header: 
+            key: 'chemicalTreatment.firstApplicator' 
+            default:  'First Applicator'
+          classes:
+            - none
+      secondApplicator:
+        name: second_applicator_chemical_treatment_employee_id
+        comment: Foreign key reference to Chemical treatment employee table
+        definition: INT NULL
+        foreignTable: chemical_treatment_employee
+        refColumn: chemical_treatment_employee_id
+        meta: {}
+        layout:
+          header: 
+            key: 'chemicalTreatment.secondApplicator' 
+            default:  'Second Applicator'
+          classes:
+            - none
+      # -- End Columns
   ## --
