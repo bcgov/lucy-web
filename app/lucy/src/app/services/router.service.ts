@@ -182,7 +182,6 @@ export class RouterService {
     return;
   }
 
-
   private preventReload() {
     console.log('initialized prevent reload');
     window.addEventListener(`beforeunload`, (event) => {
@@ -202,7 +201,7 @@ export class RouterService {
       this.alert.showConfirmation(`Are you sure?`, 'If you leave this page, your changes will be lost', `Leave Page`, `Stay`)
       : true;
   }
-
+  
   /**
    * Store current route in session.
    */

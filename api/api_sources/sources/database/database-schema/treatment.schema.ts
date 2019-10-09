@@ -25,8 +25,8 @@
  */
 import { RecordTableSchema, CodeTableSchema, } from './base.record.schema';
 import { getYAMLFilePath } from '../../libs/core-database';
-import { TreatmentProviderCSVData, PesticideEmployerCSVData, ProjectManagementPlanCSVData } from '../pre.load';
-import { convertDateString } from '../../libs/utilities';
+import { TreatmentProviderCSVData, PesticideEmployerCSVData, ProjectManagementPlanCSVData, ChemicalTreatmentEmployeeCSVData } from '../pre.load';
+import { convertDateString, arrayToString } from '../../libs/utilities';
 
 /**
  * @description Treatment base schema class which includes schema file name
@@ -146,6 +146,18 @@ export class ProjectManagementPlanCodeSchema extends ChemicalTreatmentStaticData
         `${columns.pmpHolder},` +
         `${columns.startDate},` +
         `${columns.endDate}`;
+    }
+}
+
+export class ChemicalTreatmentEmployeeSchema extends ChemicalTreatmentStaticData {
+
+    csvData(): Promise<any> {
+        const csv = new ChemicalTreatmentEmployeeCSVData();
+        return csv.load();
+    }
+
+    entryString(): string {
+        return arrayToString(this.table.allColumnsExceptId);
     }
 }
 

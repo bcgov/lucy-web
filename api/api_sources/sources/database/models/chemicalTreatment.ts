@@ -5,7 +5,8 @@ import { ChemicalTreatmentSchema } from '../database-schema';
 import {
 	SpeciesAgencyCodeSchema,
 	PesticideEmployerCodeSchema,
-	ProjectManagementPlanCodeSchema
+	ProjectManagementPlanCodeSchema,
+	ChemicalTreatmentEmployeeSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -13,7 +14,8 @@ import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 import {
 	SpeciesAgencyCode,
 	PesticideEmployerCode,
-	ProjectManagementPlanCode
+	ProjectManagementPlanCode,
+	ChemicalTreatmentEmployee
 } from '../models';
 
 import { Record } from './generic.data.models';
@@ -28,6 +30,7 @@ export interface ChemicalTreatmentSpec {
 	date: string;
 	primaryPaperFileReference: string;
 	secondaryPaperFileReference: string;
+	pup: string;
 	speciesAgency: SpeciesAgencyCode;
 	pesticideEmployer: PesticideEmployerCode;
 	pmp: ProjectManagementPlanCode;
@@ -45,9 +48,12 @@ export interface ChemicalTreatmentUpdateSpec {
 	date?: string;
 	primaryPaperFileReference?: string;
 	secondaryPaperFileReference?: string;
+	pup?: string;
 	speciesAgency?: SpeciesAgencyCode;
 	pesticideEmployer?: PesticideEmployerCode;
 	pmp?: ProjectManagementPlanCode;
+	firstApplicator?: ChemicalTreatmentEmployee;
+	secondApplicator?: ChemicalTreatmentEmployee;
 }
 // -- End: ChemicalTreatmentUpdateSpec --
 
@@ -109,6 +115,13 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	secondaryPaperFileReference: string;
 
 	/**
+	 * @description Getter/Setter property for column {pesticide_use_permit}
+	 */
+	@Column({ name: ChemicalTreatmentSchema.columns.pup})
+	@ModelProperty({type: PropertyType.string})
+	pup: string;
+
+	/**
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
 	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
@@ -131,6 +144,22 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.pmp, referencedColumnName: ProjectManagementPlanCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	pmp: ProjectManagementPlanCode;
+
+	/**
+	 * @description Getter/Setter property for column {first_applicator_chemical_treatment_employee_id}
+	 */
+	@ManyToOne( type => ChemicalTreatmentEmployee, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.firstApplicator, referencedColumnName: ChemicalTreatmentEmployeeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	firstApplicator: ChemicalTreatmentEmployee;
+
+	/**
+	 * @description Getter/Setter property for column {second_applicator_chemical_treatment_employee_id}
+	 */
+	@ManyToOne( type => ChemicalTreatmentEmployee, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.secondApplicator, referencedColumnName: ChemicalTreatmentEmployeeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	secondApplicator: ChemicalTreatmentEmployee;
 
 }
 
