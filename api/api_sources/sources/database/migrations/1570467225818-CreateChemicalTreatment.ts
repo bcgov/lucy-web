@@ -29,8 +29,9 @@ import {
     ProjectManagementPlanCodeSchema,
     ChemicalTreatmentEmployeeSchema
 } from '../database-schema';
+import { AppLogger } from '../../Applogger';
 
-export class CreateChemicalTreatment1570467225818 implements MigrationInterface {
+export class CreateChemicalTreatment1570467225818 extends AppLogger implements MigrationInterface {
 
     /**
      * Schemas
@@ -49,6 +50,7 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
     public async up(queryRunner: QueryRunner): Promise<any> {
 
         // Running Migrations
+        this.info('[Starting]');
         // Employer Code
         await queryRunner.query(this.employerSchema.migrationSQL);
         // PreLoad Data
@@ -64,6 +66,8 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
 
         // Chemical Treatment
         await queryRunner.query(this.chemicalTreatmentSchema.migrationSQL);
+
+        this.info('[DONE]');
     }
 
     /**
@@ -82,7 +86,7 @@ export class CreateChemicalTreatment1570467225818 implements MigrationInterface 
         // PMP
         await queryRunner.query(this.pmpSchema.dropTable());
 
-        // Employee 
+        // Employee
         await queryRunner.query(this.employeeSchema.dropTable());
 
         // Removing Old Code
