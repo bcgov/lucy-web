@@ -5,11 +5,10 @@ import { DropdownObject, DropdownService } from '../dropdown.service';
 import { DummyService } from '../dummy.service';
 import { RouterService } from '../router.service';
 import { ErrorService, ErrorType } from '../error.service';
-import { MechanicalTreatmentService } from '../mechanical-treatment.service';
-import { ObservationService } from '../observation.service';
 import * as moment from 'moment';
 import { DiffResult } from '../diff.service';
 import { TableModel, TableColumn, TableRowModel } from 'src/app/components/base-form/table/table.component';
+import { CodeTableService } from '../code-table.service';
 
 export interface FormConfigField {
   key: string;
@@ -21,6 +20,7 @@ export interface FormConfigField {
   meta: any;
   cssClasses: string;
   codeTable: string;
+  displayKey: string;
   condition: string;
 }
 
@@ -122,11 +122,9 @@ export class FormService {
   constructor(
     private api: ApiService,
     private dropdownService: DropdownService,
-    private dummyService: DummyService,
+    private codeTableService: CodeTableService,
     private router: RouterService,
     private errorService: ErrorService,
-    private observationService: ObservationService,
-    private mechanicalTreatmentService: MechanicalTreatmentService
   ) { }
 
   //////////////////////////////////// Fetch UI Config ////////////////////////////////////
@@ -524,7 +522,8 @@ export class FormService {
         // if its a dropdown, grab its code table
         if (fieldOfInterest.isDropdown) {
           fieldOfInterest.dropdown = await this.dropdownfor(
-            fieldOfInterest.codeTable
+            fieldOfInterest.codeTable,
+            fieldOfInterest.displayKey,
           );
         }
         return fieldOfInterest;
@@ -540,9 +539,10 @@ export class FormService {
    */
   private processFieldConfig(field: any): FormConfigField {
     let codeTable = '';
+    let codeTableDisplayKey = '';
     if (field.type === 'object') {
       codeTable = field.refSchema.modelName;
-      // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
+      codeTableDisplayKey = 'description'
     }
     let cssClasses = ``;
     const classes = field.layout.classes;
@@ -586,6 +586,7 @@ export class FormService {
       meta: field.meta,
       cssClasses: cssClasses,
       codeTable: codeTable,
+      displayKey: codeTableDisplayKey,
       condition: ''
     };
   }
@@ -617,53 +618,12 @@ export class FormService {
    * Return array of dropdown objects for code table specified.
    * @param code table name
    */
-  private async dropdownfor(code: string): Promise<DropdownObject[]> {
+  private async dropdownfor(code: string, displayKey: string): Promise<DropdownObject[]> {
     if (!code) {
       return [];
     }
-    switch (code.toLowerCase()) {
-      case 'speciesagencycode':
-        return await this.dropdownService.getAgencies();
-      case 'jurisdictioncode':
-        return await this.dropdownService.getJuristictions();
-      case 'species':
-        return await this.dropdownService.getInvasivePlantSpecies();
-      case 'speciesdistributioncode':
-        return await this.dropdownService.getDistributions();
-      case 'observationtypecode':
-        return await this.dropdownService.getObservationType();
-      case 'soiltexturecode':
-        return await this.dropdownService.getSoilTextureCodes();
-      case 'observationgeometrycode':
-        return await this.dropdownService.getGeometry();
-      case 'specificusecode':
-        return await this.dropdownService.getSpecificUseCodes();
-      case 'slopecode':
-        return await this.dropdownService.getGroundSlopes();
-      case 'aspectcode':
-        return await this.dropdownService.getGroundAspects();
-      case 'proposedactioncode':
-        return await this.dropdownService.getProposedActions();
-      case 'mechanicalmethodcode':
-        return await this.dropdownService.getMechanicalTreatmentMethods();
-      case 'mechanicaldisposalmethodcode':
-        return await this.dropdownService.getMechanicalDisposalMethods();
-      case 'mechanicalsoildisturbancecode':
-        return await this.dropdownService.getMechanicalSoilDisturbances();
-      case 'mechanicalrootremovalcode':
-        return await this.dropdownService.getMechanicalRootRemovals();
-      case 'mechanicaltreatmentissuecode':
-        return await this.dropdownService.getMechanicalIssues();
-      case 'treatmentprovidercontractor':
-        return await this.dropdownService.getMechanicalTreatmentProviders();
-      case 'observation':
-        return await this.dropdownService.getObservations();
-      case 'speciesdensitycode':
-        return await this.dropdownService.getDensities();
-      default:
-        console.log(`Code Table is not handled ${code}`);
-        return [];
-    }
+    const codeTable = await this.codeTableService.getCodeTable(code);
+    return this.dropdownService.createDropdownObjectsFrom(codeTable, displayKey);
   }
 
   /**
@@ -675,9 +635,10 @@ export class FormService {
    */
   private async getDropdownObjectWithId(
     codeTableName: string,
+    displayedKey: string,
     selectedObject: any
   ): Promise<DropdownObject> {
-    const dropdowns = await this.dropdownfor(codeTableName);
+    const dropdowns = await this.dropdownfor(codeTableName, displayedKey);
     let selectedID: number;
     for (const key in selectedObject) {
       if (key.toLowerCase().indexOf(`id`) !== -1) {
@@ -743,7 +704,8 @@ export class FormService {
               if (typeof key === 'object' && key !== null) {
                 const codeTableName = field.codeTable;
                 field.value = await this.getDropdownObjectWithId(
-                  codeTableName,
+                  field.codeTable,
+                  field.displayKey,
                   object[field.key]
                 );
               } else {
