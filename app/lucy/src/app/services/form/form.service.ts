@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, APIRequestMethod } from '../api.service';
+import { ApiService, APIRequestMethod, APIRequestResult } from '../api.service';
 import { AppConstants, AppRoutes } from 'src/app/constants';
 import { DropdownObject, DropdownService } from '../dropdown.service';
 import { DummyService } from '../dummy.service';
@@ -85,6 +85,16 @@ export interface UIConfigSubSection {
   title: string;
   boxed: boolean;
   fields: any[];
+}
+
+export interface FormSubmissionResult {
+  success: boolean;
+  id?: number;
+  error?: {
+    errors: any[];
+    code: number;
+    message: string;
+  };
 }
 
 @Injectable({
@@ -1109,29 +1119,54 @@ export class FormService {
     return JSON.parse(JSON.stringify(cleanBody));
   }
 
-  public async submit(body: JSON, uiConfig: any): Promise<number> {
+  /**
+   * Submit body for the condig.
+   * Method is determined based on current route
+   * @param body JSON
+   * @param uiConfig UIConfig
+   */
+  public async submit(body: JSON, uiConfig: any): Promise<FormSubmissionResult> {
     const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
+    let endpoint = '';
+    let method = APIRequestMethod.POST;
     if (this.router.isEditRoute) {
-      const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
-      const result = await this.api.request(APIRequestMethod.PUT, endpoint, cleanBody);
-      // console.log(result);
-      if (result.success && result.response[uiConfig.idKey]) {
-        return result.response[uiConfig.idKey];
-      } else {
-        return -1;
-      }
+      endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
+      method = APIRequestMethod.PUT;
     } else if (this.router.isCreateRoute) {
-      const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
-      const result = await this.api.request(APIRequestMethod.POST, endpoint, cleanBody);
-      // console.log(result);
-      if (result.success && result.response[uiConfig.idKey]) {
-        return result.response[uiConfig.idKey];
-      } else {
-        return -1;
-      }
+      endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
+      method = APIRequestMethod.POST;
     } else {
       console.log('Not a route that can submit');
-      return -1;
+      return {
+        success: false
+      };
+    }
+
+    const result = await this.api.request(method, endpoint, cleanBody);
+    return this.prosessSubmissionResult(result, uiConfig.idKey);
+  }
+
+  /**
+   * Check form submission result.
+   * if its successfull, return server id of object
+   * @param result APIRequestResult
+   * @param idKey id key for the object
+   */
+  private prosessSubmissionResult(result: APIRequestResult, idKey: string): FormSubmissionResult {
+    if (result.success && result.response[idKey]) {
+      return {
+        success: result.success,
+        id: result.response[idKey],
+      };
+    } else {
+      return {
+        success: false,
+        error: {
+          errors: result.response.error.error.errors,
+          code: result.response.error.status,
+          message: result.response.error.error.message
+        },
+      };
     }
   }
   //////////////////////////////////// END SUBMISSION ////////////////////////////////////
