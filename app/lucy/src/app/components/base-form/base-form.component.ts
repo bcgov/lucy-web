@@ -15,8 +15,9 @@ import { RouterService } from 'src/app/services/router.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { AppRoutes, AppConstants } from 'src/app/constants';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
-import { FormService} from 'src/app/services/form/form.service';
+import { FormService, UIConfigObject} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
+import * as faker from 'faker';
 import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
@@ -429,21 +430,149 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     }).replace(/\s+/g, '');
   }
 
+  async generateTest(configuration: UIConfigObject): Promise<UIConfigObject> {
+    const config = { ...configuration};
+    for (const section of config.sections) {
+      for (const subsection of section.subSections) {
+        for (let i = 0; i < subsection.fields.length; i++) {
+          const field = subsection.fields[i];
+          if (field.isComputedField) {
+            continue;
+          }
+          if (field.isLocationField) {
+            const fakeLat = await this.fakeFieldValue(field.latitude);
+            field.latitude.value = fakeLat.fieldValue;
+            this.responseBody[field.latitude.key] = fakeLat.bodyValue;
+            const fakeLong = await this.fakeFieldValue(field.longitude);
+            field.longitude.value = fakeLong.fieldValue;
+            this.responseBody[field.longitude.key] = fakeLong.bodyValue;
+          } else {
+            const fake = await this.fakeFieldValue(field);
+            field.value = fake.fieldValue;
+            this.responseBody[field.key] = fake.bodyValue;
+          }
+        }
+      }
+    }
+    console.dir(config);
+    console.dir(this.responseBody)
+    return config;
+  }
+
+  private async fakeFieldValue(field: any): Promise<{fieldValue: any, bodyValue: any}> {
+    if (field.isDateField) {
+      const date = faker.date.past();
+      const fake = moment(date).format('YYYY-MM-DD');
+      return {
+        fieldValue: fake,
+        bodyValue: fake,
+      }
+    }
+
+    if (field.isCheckbox) {
+      const fake = faker.random.boolean();
+      return {
+        fieldValue: fake,
+        bodyValue: fake,
+      }
+    }
+
+    if (field.isTextAreaField) {
+      const fake = faker.lorem.sentences();
+      return {
+        fieldValue: fake,
+        bodyValue: fake,
+      }
+    }
+
+    if (field.isInputField && field.type.toLowerCase() === 'string') {
+      const fake = faker.lorem.word();
+      return {
+        fieldValue: fake,
+        bodyValue: fake,
+      }
+    }
+
+    if (field.isInputField && field.type.toLowerCase() === 'number') {
+      const fake = this.randomNumber(4, 20)
+      return {
+        fieldValue: fake,
+        bodyValue: fake,
+      }
+    }
+    
+    // Dropdown
+    if (field.isDropdown) {
+      const randomIndex = this.randomNumber(0, field.dropdown.length - 1);
+      const value = field.dropdown[randomIndex];
+      const vieldValue = value;
+      let selectedID = 0;
+      for (const key in value) {
+        if (key.toLowerCase().indexOf(`id`) !== -1) {
+          selectedID = value[key];
+          break;
+        }
+      }
+      return {
+        fieldValue: vieldValue,
+        bodyValue: selectedID,
+      }
+    }
+
+    if (field.key.toLowerCase() === `lat` || field.key.toLowerCase() === `latitude`) {
+      const value = this.randomLat();
+      return {
+        fieldValue: value,
+        bodyValue: value,
+      }
+    }
+
+    if (field.key.toLowerCase() === `lon` || field.key.toLowerCase() === `long` ||field.key.toLowerCase() === `longitude` ) {
+      const value = this.randomLong();
+      return {
+        fieldValue: value,
+        bodyValue: value,
+      }
+    }
+
+    console.log(`Unknown field ${field}`);
+    console.dir(field);
+    return {
+      fieldValue: undefined,
+      bodyValue: undefined,
+    }
+    
+  }
+
+
+  /**
+  * Generate a random longitude within bc
+  */
+  public randomLong(): number {
+    const a = this.randomNumber(0, 7);
+    const b = this.randomNumber(845602, 977180);
+    const z = `-12${a}.${b}`;
+    return +z;
+  }
+
+  /**
+   * Generate a random latitude within bc
+   */
+  public randomLat() {
+    const a = this.randomNumber(0, 8);
+    const b = this.randomNumber(713134, 202679);
+    const z = `5${a}.${b}`;
+    return +z;
+  }
+
+  private randomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
   async generateForTesting() {
     this.loadingService.add();
-    if (this.router.current === AppRoutes.AddMechanicalTreatment) {
-      const temp = await this.formService.generateMechanicalTreatmentTest(this.config);
-      this.config = { ...temp};
-      // console.log(`config updated`);
-      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
-    } else if (this.router.current === AppRoutes.AddObservation) {
-      const temp = await this.formService.generateObservationTest(this.config);
-      this.config = { ...temp};
-      // console.log(`config updated`);
-      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
-    } else {
-      this.alert.show('Form not supported yet', `Test generatgion for this form type is not implemented yet`);
-    }
+    this.config = await this.generateTest(this.config);
+    console.dir(this.config);
     this.loadingService.remove();
   }
 

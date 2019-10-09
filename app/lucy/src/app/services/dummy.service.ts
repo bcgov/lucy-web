@@ -202,7 +202,7 @@ export class DummyService {
     }
   }
 
-  public async createDummyMechanicalTreatment(): Promise<MechanicalTreatment> {
+  public async createDummyMechanicalTreatment(): Promise<MechanicalTreatment | undefined> {
     const invasivePlantSpecies = await this.randomInvasivePlantSpecies();
     const agency = await this.randomSpeciesAgencyCodes();
     const mechanicalMethod = await this.randomMechanicalMethodCodes();

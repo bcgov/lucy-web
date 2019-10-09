@@ -300,6 +300,9 @@ export class ApiService {
       case 404:
         console.log(`Error 401 received: Resource is not Available`);
         return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
+      case 500:
+        console.log(`Error 500 received: Resource is not Available`);
+        return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
       default:
         console.log(`ERRPR CASE NOT HANDLED.\n Error Code received: ${error.error.status}\nObject:`);
         console.dir(error);

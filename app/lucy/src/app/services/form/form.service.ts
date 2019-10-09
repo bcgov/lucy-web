@@ -262,8 +262,7 @@ export class FormService {
       fieldHeaders: [],
     };
 
-    // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
-    // But this generated structure makes if easy for the view to be generated
+    // This structure makes if easy for the view to be generated
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
