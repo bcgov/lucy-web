@@ -257,29 +257,4 @@ export class UserService {
   }
 
   /*------------------------------------ END OF User Preferences------------------------------------*/
-  /*------------------------------------MOCK DATA------------------------------------*/
-  private getMockUser(): User {
-    var user: User = {
-      roles: [{
-        "code": "ADM",
-        "createdAt": "2019-06-11T12:10:12.495Z",
-        "description": "Overall SEISM Access",
-        "role": "Admin",
-        "role_code_id": 1,
-        "updateAt": "2019-06-11T12:10:12.495Z",
-      }],
-      "createdAt": "2019-06-11T12:10:12.495Z",
-      "currentSessionId": 1,
-      "email": "amir@freshworks.io",
-      "firstName": "Amir",
-      "lastName": "Shayegh",
-      "preferredUsername": "ashayega@idir",
-      "updateAt": "2019-06-11T12:48:36.361Z",
-      "user_id": 1,
-      "accountStatus": 1.
-    };
-    return user
-  }
-  /*------------------------------------END OF MOCK DATA------------------------------------*/
-
 }
