@@ -28,9 +28,11 @@ import {
     PesticideEmployerCode,
     PesticideEmployerCodeController,
     ProjectManagementPlanCode,
-    ProjectManagementPlanCodeController
+    ProjectManagementPlanCodeController,
+    ChemicalTreatmentEmployee
 } from '../models';
 import { ModelFactory, Destroyer } from '../factory';
+import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
 
 // ** Test Function
 describe('Test Chemical Treatment', () => {
@@ -61,6 +63,15 @@ describe('Test Chemical Treatment', () => {
         should().exist(code.pmpHolder);
         should().exist(code.startDate);
         should().exist(code.endDate);
+    });
+
+    it('should fetch chemical treatment employee', async () => {
+        const code: ChemicalTreatmentEmployee = await ChemicalTreatmentEmployeeController.shared.random();
+        should().exist(code);
+        should().exist(code.chemical_treatment_employee_id);
+        should().exist(code.certificate);
+        should().exist(code.firstName);
+        should().exist(code.lastName);
     });
 
     it('should create/fetch chemical treatment Object', async () => {

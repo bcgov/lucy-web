@@ -82,3 +82,31 @@ schemas:
         comment: Legal end data of plan
         definition: DATE NOT NULL
   ## --
+  ## --
+  ChemicalTreatmentEmployeeSchema:
+    name: chemical_treatment_employee
+    description: The contractor employee who applied chemical treatment.
+    baseScheme: RecordSchema
+    meta: 
+      baseModel: Record
+      resource: true
+    displayLayout: {}
+    columns:
+      id:
+        name: chemical_treatment_employee_id
+        comment: Auto generated primary key. This is auto incremental field
+        definition: SERIAL PRIMARY KEY
+      certificate:
+        name: certificate
+        comment: Certificate number associated with employee
+        definition: VARCHAR(20) NOT NULL UNIQUE
+      firstName:
+        name: first_name
+        comment: First name of the employee
+        definition: VARCHAR(99) NOT NULL
+      lastName:
+        name: last_name
+        comment: Last name of the employee
+        definition: VARCHAR(99) NOT NULL
+  ## --
+## --------------

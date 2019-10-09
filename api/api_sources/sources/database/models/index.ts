@@ -52,6 +52,7 @@ export * from './generic.data.models';
 export * from './chemicalTreatment';
 export * from './pesticideEmployer.code';
 export * from './projectManagementPlan.code';
+export * from './chemicalTreatmentEmployee';
 
 /**
  * Controllers
