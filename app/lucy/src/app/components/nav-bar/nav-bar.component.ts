@@ -265,34 +265,34 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * Navigate to Profile Component
    */
   navigateToProfile() {
-    this.routerService.navigateTo(AppRoutes.Profile);
+    this.routerService.navigateTo(AppRoutes.Profile, undefined, true);
   }
 
   /**
    * Navigate to Admin Tools Component
    */
   navigateToAdminTools() {
-    this.routerService.navigateTo(AppRoutes.AdminTools);
+    this.routerService.navigateTo(AppRoutes.AdminTools, undefined, true);
   }
 
   /**
    * Navigate to Add Observation Component
    */
   navigateToAddEntry() {
-    this.routerService.navigateTo(AppRoutes.AddEntry);
+    this.routerService.navigateTo(AppRoutes.AddEntry, undefined, true);
   }
 
   /**
    * Navigate to Add Observation Component
    */
   navigateToAddObservation() {
-    this.routerService.navigateTo(AppRoutes.AddObservation);
+    this.routerService.navigateTo(AppRoutes.AddObservation, undefined, true);
   }
 
   /**
    * Navigate to Inventory Component
    */
   navigateToInventory() {
-    this.routerService.navigateTo(AppRoutes.Inventory);
+    this.routerService.navigateTo(AppRoutes.Inventory, undefined, true);
   }
 }

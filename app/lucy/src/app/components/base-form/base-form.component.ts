@@ -258,10 +258,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.isLoading = true;
     this.setFormMode();
     this.accessType = await this.userService.getAccess();
-    console.log('fetching config');
-    console.log(this.router.current);
     const config = await this.formService.getFormConfigForCurrentRoute();
-    console.dir(config);
     if (config) {
       this.config = config;
     } else {
@@ -414,7 +411,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
     const el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
-      if (el) {;
+      if (el) {
           el.scrollIntoView({ block: 'center',  behavior: 'smooth' });
           this.renderer.addClass(el, highlightClass);
           setTimeout(() => {
