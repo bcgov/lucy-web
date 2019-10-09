@@ -70,9 +70,11 @@
 }
 
 .header-container {
-    background: #002C71;
     margin: 0 auto;
     width: 100%;
+    background: linear-gradient(135deg, #0053A4 0%, #002C71 100%);
+    box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
+    animation-duration: 0.5s;
 }
 
 .spacer-toolbar {
@@ -81,13 +83,6 @@
 
 .action-buttons {
     padding: 0 14px;
-}
-
-.view-title {
-	color: #FFFFFF;
-	font-size: 24px;
-	font-weight: 500;
-	line-height: 29px;
 }
 
 .active-btn {
@@ -104,4 +99,11 @@
 
 table {
     width: 100%;
+}
+
+.toolbar {
+    color: white;
+    margin: 0 auto;
+    width: 100%;
+    background: transparent;
 }

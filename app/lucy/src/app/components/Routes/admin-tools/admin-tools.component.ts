@@ -13,9 +13,9 @@ import { LoadingService } from 'src/app/services/loading.service';
 })
 
 export class AdminToolsComponent implements OnInit, AfterViewInit {
-  public requests: AccessRequest[] = []
-  public allUsers: User[] = []
-  public activeRoles: Role[] = []
+  public requests: AccessRequest[] = [];
+  public allUsers: User[] = [];
+  public activeRoles: Role[] = [];
 
   public focusedAccessRequest: AccessRequest;
 
