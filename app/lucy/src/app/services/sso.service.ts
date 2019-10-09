@@ -191,8 +191,8 @@ export class SsoService {
 
   /**
    * Perform Login by opening URL specified by SSO_LoginEndpoint()
-   * After successful login, user will be re-directed back to the redirect uri spesified in 
-   * AppConstants -> SSOConstants -> SSO_LOGIN_REDIRECT_URI 
+   * After successful login, user will be re-directed back to the redirect uri spesified in
+   * AppConstants -> SSOConstants -> SSO_LOGIN_REDIRECT_URI
    * THe route will include a code that we will use in getToken() to get the user's token
    * @param provider SSOLoginProvider
    */
