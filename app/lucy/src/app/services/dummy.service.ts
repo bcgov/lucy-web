@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { ObservationService } from './observation.service';
 import { MapMarker } from '../components/Utilities/map-preview/map-preview.component';
 import { UIConfigObject } from './form/form.service';
+import { promise } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -198,6 +199,10 @@ export class DummyService {
       });
     }
     return coordinates;
+  }
+
+  public async createDummyObservations(number: number): Promise<any[]> {
+    return;
   }
 
 }
