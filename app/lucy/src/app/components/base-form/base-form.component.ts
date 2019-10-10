@@ -433,11 +433,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   async generateForTesting() {
-    this.loadingService.add();
+    this.isLoading = true;
     const fake = await this.dummy.generateTest(this.config);
-    this.config = fake.config
+    this.config = fake.config;
     this.responseBody = fake.json;
-    this.loadingService.remove();
+    this.isLoading = false;
   }
 
   async createDiffMessage() {
