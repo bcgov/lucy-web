@@ -199,7 +199,7 @@ export class FormService {
       );
       return await this.getUIConfigFrom(configFile, treatment);
     } else if (this.router.current === AppRoutes.AddChemicalTreatment) {
-      console.log("here");
+      console.log('here');
       console.log(this.router.current);
       //// Chemical Treatment Create route ////
       const configFile = await this.getChemicalTreatmentUIConfig();
@@ -584,22 +584,22 @@ export class FormService {
         ) {
           // Set field type flag
           switch (field.type) {
-            case "object": {
+            case 'object': {
               // Object is code table
               fieldOfInterest.isDropdown = true;
               break;
             }
-            case "boolean": {
+            case 'boolean': {
               // Booleans is checkbox
               fieldOfInterest.isCheckbox = true;
               break;
             }
-            case "number": {
+            case 'number': {
               // Number is input field
               fieldOfInterest.isInputField = true;
               break;
             }
-            case "string": {
+            case 'string': {
               // String can be a simple input field, comment field, or date
               if (fieldOfInterest.verification.isDate) {
                 // Date is Date FIeld
@@ -704,7 +704,7 @@ export class FormService {
       codeTable: codeTable,
       codeTableMeta: codeTableMeta,
       displayKey: codeTableDisplayKey,
-      condition: ""
+      condition: ''
     };
   }
 
@@ -892,7 +892,7 @@ export class FormService {
     }
     const idKey = relationConfig.refSchema.idKey;
     const isResource = relationConfig.refSchema.meta.resource;
-    let api = "";
+    let api = '';
     if (isResource) {
       api = relationConfig.refSchema.meta.api;
     }
@@ -949,7 +949,7 @@ export class FormService {
     for (const fields of values) {
       tableRows.push({
         fields: fields,
-        url: ""
+        url: ''
       });
     }
 
@@ -978,10 +978,10 @@ export class FormService {
    */
   private convertDotSeparatedStringToArray(string: string): string[] {
     const result: string[] = [];
-    if (String(string).indexOf(".") === -1) {
+    if (String(string).indexOf('.') === -1) {
       result.push(string);
     } else {
-      const separated = String(string).split(".");
+      const separated = String(string).split('.');
       for (const subElement of separated) {
         result.push(subElement);
       }
@@ -996,18 +996,18 @@ export class FormService {
   private formatLatLongForDisplay(value: number): string {
     // If its undefined or not a number, return empty string
     if (value === undefined || !Number(value)) {
-      return "";
+      return '';
     }
     // If it doesnt have a decimap point, add 5 zeros
-    if (String(value).indexOf(".") === -1) {
+    if (String(value).indexOf('.') === -1) {
       return `${value}.00000`;
     }
     // Split by decimal point
-    const separated = String(value).split(".");
+    const separated = String(value).split('.');
     let decimals = separated[1];
     // If it has multiple decimal points, return empty string
     if (separated.length > 2) {
-      return "";
+      return '';
     }
     // If there are less than 5 chars after decimal
     if (separated[1].length < 5) {
@@ -1038,7 +1038,7 @@ export class FormService {
           if (field.isDropdown && field.value) {
             // Find the id of the value
             for (const key in field.value.object) {
-              if (key.toLowerCase().indexOf("id") !== -1) {
+              if (key.toLowerCase().indexOf('id') !== -1) {
                 body[field.key] = field.value.object[key];
                 break;
               }
@@ -1049,7 +1049,7 @@ export class FormService {
             body[field.longitude.key] = field.longitude.value;
           } else if (field.isDateField) {
             // if its a date (needs to be formatted)
-            body[field.key] = moment(field.value).format("YYYY-MM-DD");
+            body[field.key] = moment(field.value).format('YYYY-MM-DD');
           } else {
             // for all other types just grab the value
             body[field.key] = field.value;
@@ -1197,7 +1197,7 @@ export class FormService {
     if (Object.is(obj1, obj2)) {
       return undefined;
     }
-    if (!obj2 || typeof obj2 !== "object") {
+    if (!obj2 || typeof obj2 !== 'object') {
       return obj2;
     }
     Object.keys(obj1 || {})
@@ -1206,7 +1206,7 @@ export class FormService {
         if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
           result[key] = obj2[key];
         }
-        if (typeof obj2[key] === "object" && typeof obj1[key] === "object") {
+        if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
           const value = this.diff(obj1[key], obj2[key]);
           if (value !== undefined) {
             result[key] = value;
@@ -1230,10 +1230,10 @@ export class FormService {
     const configFilds = this.getFieldsInConfig(uiConfig);
     for (const field of configFilds) {
       switch (field.type.toLowerCase()) {
-        case "string":
+        case 'string':
           cleanBody[field.key] = String(body[field.key]);
           break;
-        case "number":
+        case 'number':
           cleanBody[field.key] = Number(body[field.key]);
           break;
         default:
@@ -1255,7 +1255,7 @@ export class FormService {
     uiConfig: any
   ): Promise<FormSubmissionResult> {
     const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
-    let endpoint = "";
+    let endpoint = '';
     let method = APIRequestMethod.POST;
     if (this.router.isEditRoute) {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
@@ -1264,7 +1264,7 @@ export class FormService {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
       method = APIRequestMethod.POST;
     } else {
-      console.log("Not a route that can submit");
+      console.log('Not a route that can submit');
       return {
         success: false
       };
