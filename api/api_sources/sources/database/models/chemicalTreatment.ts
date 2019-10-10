@@ -34,6 +34,8 @@ export interface ChemicalTreatmentSpec {
 	speciesAgency: SpeciesAgencyCode;
 	pesticideEmployer: PesticideEmployerCode;
 	pmp: ProjectManagementPlanCode;
+	firstApplicator?: ChemicalTreatmentEmployee;
+	secondApplicator?: ChemicalTreatmentEmployee;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -156,7 +158,7 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	/**
 	 * @description Getter/Setter property for column {second_applicator_chemical_treatment_employee_id}
 	 */
-	@ManyToOne( type => ChemicalTreatmentEmployee, { eager: true})
+	@ManyToOne( type => ChemicalTreatmentEmployee )
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.secondApplicator, referencedColumnName: ChemicalTreatmentEmployeeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	secondApplicator: ChemicalTreatmentEmployee;

@@ -183,7 +183,6 @@ export class ExpressResourceTest {
             const model = await ModelFactory(controller)();
             // Url
             const baseUrl: string = setup.url || controller.schemaObject.apiPath();
-            console.log(`url: ${baseUrl}`);
 
             // Modify url
             const url = `${baseUrl}/${controller.getIdValue(model)}`;
@@ -254,6 +253,67 @@ export class ExpressResourceTest {
                 })
                 .catch(async err => {
                     await Destroyer(controller)(model);
+                    rej(err);
+                });
+            }
+        });
+    }
+
+    static testGetFilteredItem(app: any, setup: ExpressSetup, controller: DataController, filterInfo: {[key: string]: any}): Promise<any> {
+        return new Promise(async (res, rej) => {
+            // Schema
+            // const schema: BaseSchema = controller.schemaObject;
+            // Create Data
+            const model1 = await ModelFactory(controller)();
+            const model2 = await ModelFactory(controller)();
+            await ModelFactory(controller)();
+
+            _.each(filterInfo, (v, k) => {
+                if (model1[k]) {
+                    model1[k] = v;
+                }
+                if (model2[k]) {
+                    model2[k] = v;
+                }
+            });
+
+            // Save two items
+            await controller.saveInDB(model1);
+            await controller.saveInDB(model2);
+            // Url
+            const url: string = setup.url || controller.schemaObject.apiPath();
+
+            // Checking token
+            const actualAuth: number = (setup.auth || AuthType.token) as number;
+            const token: string = this.getToken(actualAuth, setup.token);
+
+            // Expect
+            const expectedStatus = setup.expect || 200;
+
+            if (token && token !== '') {
+                request(app).get(url)
+                .set('Authorization', `Bearer ${token}`)
+                .query(filterInfo)
+                .expect(expectedStatus)
+                .then(async resp => {
+                    if (expectedStatus === 200) {
+                        await verifySuccessBody(resp.body);
+                        const dataAll: any[] = resp.body.data;
+                        expect(dataAll.length).to.be.equal(2);
+                        const all: any[] = await controller.all();
+                        expect(all.length).to.be.greaterThan(2);
+                        await Destroyer(controller)(model1);
+                        await Destroyer(controller)(model2);
+                    } else {
+                        await Destroyer(controller)(model1);
+                        await Destroyer(controller)(model2);
+                        await verifyErrorBody(resp.body);
+                    }
+                    res();
+                })
+                .catch(async err => {
+                    await Destroyer(controller)(model1);
+                    await Destroyer(controller)(model2);
                     rej(err);
                 });
             }

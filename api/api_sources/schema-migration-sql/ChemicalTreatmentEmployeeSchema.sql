@@ -3,7 +3,7 @@
         
 CREATE TABLE chemical_treatment_employee ();
 ALTER TABLE chemical_treatment_employee ADD COLUMN chemical_treatment_employee_id SERIAL PRIMARY KEY;
-ALTER TABLE chemical_treatment_employee ADD COLUMN certificate VARCHAR(20) NOT NULL UNIQUE;
+ALTER TABLE chemical_treatment_employee ADD COLUMN certificate VARCHAR(20) NOT NULL;
 ALTER TABLE chemical_treatment_employee ADD COLUMN first_name VARCHAR(99) NOT NULL;
 ALTER TABLE chemical_treatment_employee ADD COLUMN last_name VARCHAR(99) NOT NULL;
 

@@ -29,9 +29,10 @@ import {
     PesticideEmployerCodeController,
     ProjectManagementPlanCode,
     ProjectManagementPlanCodeController,
-    ChemicalTreatmentEmployee
+    ChemicalTreatmentEmployee,
+    ChemicalTreatmentSpec
 } from '../models';
-import { ModelFactory, Destroyer } from '../factory';
+import { ModelFactory, Destroyer, ModelSpecFactory, userFactory } from '../factory';
 import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
 
 // ** Test Function
@@ -89,6 +90,18 @@ describe('Test Chemical Treatment', () => {
         expect(ch.secondApplicator);
         await Destroyer(ChemicalTreatmentController.shared)(obj);
     });
+
+    it('should create chemical treatment Object', async () => {
+        const obj: ChemicalTreatmentSpec = await ModelSpecFactory(ChemicalTreatmentController.shared)();
+        obj.secondApplicator = await ChemicalTreatmentEmployeeController.shared.findById(3);
+        const chObj: ChemicalTreatment = await ChemicalTreatmentController.shared.createNewObject(obj, await userFactory());
+        const ch: ChemicalTreatment = await ChemicalTreatmentController.shared.findById(chObj.chemical_treatment_id);
+        expect(ch.chemical_treatment_id).to.be.equal(chObj.chemical_treatment_id);
+        expect(ch.firstApplicator.chemical_treatment_employee_id).to.be.equal(chObj.firstApplicator.chemical_treatment_employee_id);
+        expect(ch.secondApplicator.chemical_treatment_employee_id).to.be.equal(chObj.secondApplicator.chemical_treatment_employee_id);
+        await Destroyer(ChemicalTreatmentController.shared)(ch);
+    });
+
 });
 
 // ------------------------------------------------------------

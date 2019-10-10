@@ -62,4 +62,5 @@ export * from './controllers/observation.data.controller';
 export * from './controllers/user.controller';
 export * from './controllers/chemicalTreatment.controller';
 export * from './controllers/projectManagementPlanCode.controller';
+export * from './controllers/chemicalTreatmentEmployee.controller';
 // ----------------------------------------------------------------------------------------------------------------

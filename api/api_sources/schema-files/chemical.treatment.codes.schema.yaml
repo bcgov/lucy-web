@@ -99,7 +99,7 @@ schemas:
       certificate:
         name: certificate
         comment: Certificate number associated with employee
-        definition: VARCHAR(20) NOT NULL UNIQUE
+        definition: VARCHAR(20) NOT NULL
       firstName:
         name: first_name
         comment: First name of the employee

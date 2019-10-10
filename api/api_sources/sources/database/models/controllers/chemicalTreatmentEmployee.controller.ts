@@ -1,7 +1,7 @@
 // ** ChemicalTreatmentEmployeeController ** //
 
 import { RecordController } from '../generic.data.models';
-import { ChemicalTreatmentEmployee} from '../../models';
+import { ChemicalTreatmentEmployee } from '../chemicalTreatmentEmployee';
 import { ChemicalTreatmentEmployeeSchema } from '../../database-schema';
 
 
