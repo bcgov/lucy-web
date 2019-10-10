@@ -53,3 +53,16 @@
     color: #FFFFFF !important;
     background-color: #234075 !important;
 }
+
+.message-animation {
+    animation-duration: 0.4s;
+}
+
+.overly-animation {
+   animation-duration: 0.5s;
+   animation-delay: 0.1s;
+}
+
+.message-container-animation {
+   animation-duration: 0.5s;
+}
