@@ -346,18 +346,20 @@ export class FormService {
           // Store field headers in a separate array
           fieldHeaders[newField.key] = newField.header;
 
-          // set column size:
-          if (
-            group.fields.length >= 3 &&
-            (i % 3 === 0 || (i + 1) % 3 === 0) &&
-            !newField.isTextAreaField
-          ) {
-            // if group has more than 3 elements, make sure we dont have more than 3 elements per row
-            // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
-            newField.cssClasses = newField.cssClasses + ' col col-md-4';
-          } else if (newField.isTextAreaField) {
-            // Comment fields should take the whole row
-            newField.cssClasses = newField.cssClasses + ' col-12';
+          if (newField.cssClasses.indexOf('col') === -1) {
+            // set column size:
+            if (
+              group.fields.length >= 3 &&
+              (i % 3 === 0 || (i + 1) % 3 === 0) &&
+              !newField.isTextAreaField
+            ) {
+              // if group has more than 3 elements, make sure we dont have more than 3 elements per row
+              // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
+              newField.cssClasses = newField.cssClasses + ' col col-md-4';
+            } else if (newField.isTextAreaField) {
+              // Comment fields should take the whole row
+              newField.cssClasses = newField.cssClasses + ' col-12';
+            }
           }
 
           ////// Special case for lat or long fields //////
@@ -542,12 +544,15 @@ export class FormService {
     let codeTableDisplayKey = '';
     if (field.type === 'object') {
       codeTable = field.refSchema.modelName;
-      codeTableDisplayKey = 'description'
+      if (field.refSchema.displayLayout && field.refSchema.displayLayout.fields) {
+        const lastField = field.refSchema.displayLayout.fields.slice(-1)[0];
+        codeTableDisplayKey = lastField.key;
+      }
     }
     let cssClasses = ``;
     const classes = field.layout.classes;
     for (const item of classes) {
-      cssClasses = cssClasses + ` `;
+      cssClasses = item + ` `;
     }
 
     // BEGIN Tweak verification object received.
