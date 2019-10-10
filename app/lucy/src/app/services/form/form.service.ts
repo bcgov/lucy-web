@@ -20,6 +20,7 @@ export interface FormConfigField {
   meta: any;
   cssClasses: string;
   codeTable: string;
+  codeTableMeta: {};
   displayKey: string;
   condition: string;
 }
@@ -125,7 +126,7 @@ export class FormService {
     private codeTableService: CodeTableService,
     private router: RouterService,
     private errorService: ErrorService,
-  ) { }
+  ) {}
 
   //////////////////////////////////// Fetch UI Config ////////////////////////////////////
   /**
@@ -156,32 +157,49 @@ export class FormService {
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
-
-    if ((this.router.current === AppRoutes.ViewObservation) || (this.router.current === AppRoutes.EditObservation)) {
+    if (
+      this.router.current === AppRoutes.ViewObservation ||
+      this.router.current === AppRoutes.EditObservation
+    ) {
       //// Observation View And Edit routes ////
       const configFile = await this.getObservationUIConfig();
-      const observation = await this.getObjectWithId(configFile.api, this.router.routeId);
+      const observation = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
       return await this.getUIConfigFrom(configFile, observation);
     } else if (this.router.current === AppRoutes.AddObservation) {
       //// Observation Create route ////
       const configFile = await this.getObservationUIConfig();
       return configFile;
-    } else if ((this.router.current === AppRoutes.ViewMechanicalTreatment) || (this.router.current === AppRoutes.EditMechanicalTreatment)) {
+    } else if (
+      this.router.current === AppRoutes.ViewMechanicalTreatment ||
+      this.router.current === AppRoutes.EditMechanicalTreatment
+    ) {
       //// Mechanical Treatment View and Edit routes ////
       const configFile = await this.getMechanicalTreatmentUIConfig();
-      const treatment = await this.getObjectWithId(configFile.api, this.router.routeId);
+      const treatment = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
       return await this.getUIConfigFrom(configFile, treatment);
     } else if (this.router.current === AppRoutes.AddMechanicalTreatment) {
       //// Mechanical Treatment Create route ////
       const configFile = await this.getMechanicalTreatmentUIConfig();
       return configFile;
-    } else if ((this.router.current === AppRoutes.ViewChemicalTreatment) || (this.router.current === AppRoutes.EditChemicalTreatment)) {
+    } else if (
+      this.router.current === AppRoutes.ViewChemicalTreatment ||
+      this.router.current === AppRoutes.EditChemicalTreatment
+    ) {
       //// Chemical Treatment View and Edit routes ////
       const configFile = await this.getChemicalTreatmentUIConfig();
-      const treatment = await this.getObjectWithId(configFile.api, this.router.routeId);
+      const treatment = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
       return await this.getUIConfigFrom(configFile, treatment);
     } else if (this.router.current === AppRoutes.AddChemicalTreatment) {
-      console.log('here');
+      console.log("here");
       console.log(this.router.current);
       //// Chemical Treatment Create route ////
       const configFile = await this.getChemicalTreatmentUIConfig();
@@ -196,7 +214,10 @@ export class FormService {
     }
   }
 
-  private async getUIConfigFrom(config: any, objectWithValues: any): Promise<any> {
+  private async getUIConfigFrom(
+    config: any,
+    objectWithValues: any
+  ): Promise<any> {
     if (!config || !objectWithValues) {
       return undefined;
     }
@@ -279,7 +300,7 @@ export class FormService {
       console.dir(response);
       return undefined;
     }
-  } 
+  }
 
   //////////////////////////////////// END Fetch Server Config ////////////////////////////////////
 
@@ -295,9 +316,9 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
-    const requiredFieldKeys: string[] = [];
-    const dropdownFieldKeys: string[] = [];
-    const fieldHeaders: {} = {};
+    let requiredFieldKeys: string[] = [];
+    let dropdownFieldKeys: string[] = [];
+    let fieldHeaders: {} = {};
     const configObject: UIConfigObject = {
       api: serverConfig.meta.api,
       idKey: serverConfig.idKey,
@@ -307,7 +328,7 @@ export class FormService {
       dropdownFieldKeys: [],
       relationsConfigs: {},
       relationKeys: [],
-      fieldHeaders: [],
+      fieldHeaders: []
     };
 
     // This structure makes if easy for the view to be generated
@@ -316,75 +337,16 @@ export class FormService {
       const subSections: any[] = [];
       // Loop thorugh groups in server config lay out
       for (const group of groups) {
-        // Initialize fields for group
-        const subSectionFields: any[] = [];
-        // Lat long fields will be merged into a location field. so first one found needs to be cached
-        let cachedLatOrLongField: any;
-        // Now loop through field keys specified in group layout
-        for (let i = 0; i < group.fields.length; i++) {
-          // Get key for field
-          const fieldKey = group.fields[i];
-          // Add type flags to field (to help with html generation) & convert data structure
-          let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
-          // If field key wasnt found in fields
-          if (!newField) {
-            // Could be a computed field
-            newField = await this.configComputedField(fieldKey, computedFields);
-            if (!newField) {
-              // If it wasnt, just skip it
-              continue;
-            }
-          }
-          // Store required fields in a separate array
-          if (newField.required) {
-            requiredFieldKeys.push(newField.key);
-          }
-          // Store dropdown fields in a separate array
-          if (newField.isDropdown) {
-            dropdownFieldKeys.push(newField.key);
-          }
-          // Store field headers in a separate array
-          fieldHeaders[newField.key] = newField.header;
-
-          // Add Bootstrap column size
-          newField.cssClasses = this.addColumnClass(newField.cssClasses, i, group.fields.length, newField.isTextAreaField);
-
-          ////// Special case for lat or long fields //////
-          if (
-            newField.isLocationLatitudeField ||
-            newField.isLocationLongitudeField
-          ) {
-            // if its a latitude or logitude field, and we havent cached such field before, cache it
-            // if its already chached, generate special location field to add to subsection
-            if (cachedLatOrLongField) {
-              const cachedFieldIsLatitude =
-                cachedLatOrLongField.isLocationLatitudeField === true;
-              const locationField = {
-                key: `location`,
-                isLocationField: true,
-                latitude: cachedFieldIsLatitude
-                  ? cachedLatOrLongField
-                  : newField,
-                longitude: cachedFieldIsLatitude
-                  ? newField
-                  : cachedLatOrLongField
-              };
-              // Add Location field
-              subSectionFields.push(locationField);
-            } else {
-              cachedLatOrLongField = newField;
-            }
-            ////// END Special case for lat or long field //////
-          } else {
-            // Add field to group fields
-            subSectionFields.push(newField);
-          }
-        }
+        // Process group
+        const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+        requiredFieldKeys = groupInfo.requiredFieldKeys;
+        dropdownFieldKeys = groupInfo.dropdownFieldKeys;
+        fieldHeaders = groupInfo.fieldHeaders;
         // Add Group/Subsection
         subSections.push({
           title: group.title,
           boxed: false,
-          fields: subSectionFields
+          fields: groupInfo.fields
         });
       }
       // Add Section
@@ -393,20 +355,145 @@ export class FormService {
         subSections: subSections
       });
     }
-    // Add the arrays to the config
-    configObject.requiredFieldKeys = requiredFieldKeys;
-    configObject.dropdownFieldKeys = dropdownFieldKeys;
-    configObject.fieldHeaders = fieldHeaders;
-    if (serverConfig.relations) {
-      configObject.relationKeys = this.getRelationKeysInConfig(serverConfig.relations);
-      configObject.relationsConfigs = serverConfig.relations;
+
+    // Check if there are any fields in server config fields that havent been added to a section/group
+    ////////// Orphan fields //////////
+    const orphanFields: any[] = [];
+    const orphanGroupFieldKeys: string[] = [];
+    for (const field of fields) {
+      if (!fieldHeaders[field.key]) {
+        orphanFields.push(field);
+        orphanGroupFieldKeys.push(field.key);
+      }
+    }
+    if (orphanFields.length > 0) {
+      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+      requiredFieldKeys = orphanGroupInfo.requiredFieldKeys;
+      dropdownFieldKeys = orphanGroupInfo.dropdownFieldKeys;
+      fieldHeaders = orphanGroupInfo.fieldHeaders;
+      const orphanSubSections: any[] = [{
+        title: '',
+        boxed: false,
+        fields: orphanGroupInfo.fields
+      }];
+
+      configObject.sections.push({
+        title: '',
+        subSections: orphanSubSections
+      });
+      ////////// End of Orphan fields //////////
+
+      // Add the arrays to the config
+      configObject.requiredFieldKeys = requiredFieldKeys;
+      configObject.dropdownFieldKeys = dropdownFieldKeys;
+      configObject.fieldHeaders = fieldHeaders;
+      if (serverConfig.relations) {
+        configObject.relationKeys = this.getRelationKeysInConfig(
+          serverConfig.relations
+        );
+        configObject.relationsConfigs = serverConfig.relations;
+      }
     }
 
     // console.dir(configObject);
     return configObject;
   }
 
-  private addColumnClass(cssClasses: string, fieldIndex: number, numberOfFields: number, isTextAreaField: boolean): string {
+  private async procesConfigGroup(
+    groupFields: string[],
+    fields: any[],
+    computedFields: any[],
+    _requiredFieldKeys: string[],
+    _dropdownFieldKeys: string[],
+    _fieldHeaders: {}
+  ): Promise<{
+    fields: any[];
+    requiredFieldKeys: string[];
+    dropdownFieldKeys: string[];
+    fieldHeaders: {};
+  }> {
+    const requiredFieldKeys: string[] = _requiredFieldKeys;
+    const dropdownFieldKeys: string[] = _dropdownFieldKeys;
+    const fieldHeaders: {} = _fieldHeaders;
+    // Initialize fields for group
+    const subSectionFields: any[] = [];
+    // Lat long fields will be merged into a location field. so first one found needs to be cached
+    let cachedLatOrLongField: any;
+    // Now loop through field keys specified in group layout
+    for (let i = 0; i < groupFields.length; i++) {
+      // Get key for field
+      const fieldKey = groupFields[i];
+      // Add type flags to field (to help with html generation) & convert data structure
+      let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
+      // If field key wasnt found in fields
+      if (!newField) {
+        // Could be a computed field
+        newField = await this.configComputedField(fieldKey, computedFields);
+        if (!newField) {
+          // If it wasnt, just skip it
+          continue;
+        }
+      }
+      // Store required fields in a separate array
+      if (newField.required) {
+        requiredFieldKeys.push(newField.key);
+      }
+      // Store dropdown fields in a separate array
+      if (newField.isDropdown) {
+        dropdownFieldKeys.push(newField.key);
+      }
+      // Store field headers in a separate array
+      fieldHeaders[newField.key] = newField.header;
+
+      // Add Bootstrap column size
+      newField.cssClasses = this.addColumnClass(
+        newField.cssClasses,
+        i,
+        groupFields.length,
+        newField.isTextAreaField
+      );
+
+      ////// Special case for lat or long fields //////
+      if (
+        newField.isLocationLatitudeField ||
+        newField.isLocationLongitudeField
+      ) {
+        // if its a latitude or logitude field, and we havent cached such field before, cache it
+        // if its already chached, generate special location field to add to subsection
+        if (cachedLatOrLongField) {
+          const cachedFieldIsLatitude =
+            cachedLatOrLongField.isLocationLatitudeField === true;
+          const locationField = {
+            key: `location`,
+            isLocationField: true,
+            latitude: cachedFieldIsLatitude ? cachedLatOrLongField : newField,
+            longitude: cachedFieldIsLatitude ? newField : cachedLatOrLongField
+          };
+          // Add Location field
+          subSectionFields.push(locationField);
+        } else {
+          cachedLatOrLongField = newField;
+        }
+        ////// END Special case for lat or long field //////
+      } else {
+        // Add field to group fields
+        subSectionFields.push(newField);
+      }
+    }
+    return {
+      fields: subSectionFields,
+      requiredFieldKeys: requiredFieldKeys,
+      dropdownFieldKeys: dropdownFieldKeys,
+      fieldHeaders: fieldHeaders
+    };
+  }
+
+  private addColumnClass(
+    cssClasses: string,
+    fieldIndex: number,
+    numberOfFields: number,
+    isTextAreaField: boolean
+  ): string {
     let result = cssClasses;
     // If column is specified (from config) dont add
     if (cssClasses.indexOf('col') === -1) {
@@ -437,7 +524,10 @@ export class FormService {
     return result;
   }
 
-  private async configComputedField(key: string, computedFields: any): Promise<any> {
+  private async configComputedField(
+    key: string,
+    computedFields: any
+  ): Promise<any> {
     // if key is not in computed fields, return undefined
     if (!computedFields[key]) {
       return undefined;
@@ -464,7 +554,7 @@ export class FormService {
       codeTable: '',
       condition: '',
       computationRules: computedField.computationRules,
-      isComputedField: true,
+      isComputedField: true
     };
   }
 
@@ -472,7 +562,10 @@ export class FormService {
    * Generate and return field configuration
    * This function sets the field type
    */
-  private async findFieldAndCreateConfigField(key: string, fields: any[]): Promise<any> {
+  private async findFieldAndCreateConfigField(
+    key: string,
+    fields: any[]
+  ): Promise<any> {
     for (const field of fields) {
       if (field['key'] === key) {
         // convert server config field
@@ -493,22 +586,22 @@ export class FormService {
         ) {
           // Set field type flag
           switch (field.type) {
-            case 'object': {
+            case "object": {
               // Object is code table
               fieldOfInterest.isDropdown = true;
               break;
             }
-            case 'boolean': {
+            case "boolean": {
               // Booleans is checkbox
               fieldOfInterest.isCheckbox = true;
               break;
             }
-            case 'number': {
+            case "number": {
               // Number is input field
               fieldOfInterest.isInputField = true;
               break;
             }
-            case 'string': {
+            case "string": {
               // String can be a simple input field, comment field, or date
               if (fieldOfInterest.verification.isDate) {
                 // Date is Date FIeld
@@ -536,9 +629,10 @@ export class FormService {
         }
         // if its a dropdown, grab its code table
         if (fieldOfInterest.isDropdown) {
-          fieldOfInterest.dropdown = await this.dropdownfor(
+            fieldOfInterest.dropdown = await this.dropdownfor(
             fieldOfInterest.codeTable,
             fieldOfInterest.displayKey,
+            fieldOfInterest.codeTableMeta
           );
         }
         return fieldOfInterest;
@@ -553,13 +647,19 @@ export class FormService {
    * @param field any
    */
   private createFormConfigField(field: any): FormConfigField {
-    let codeTable = '';
-    let codeTableDisplayKey = '';
-    if (field.type === 'object') {
+    let codeTable = ``;
+    let codeTableDisplayKey = ``;
+    let codeTableMeta = [];
+    if (field.type === `object`) {
       codeTable = field.refSchema.modelName;
-      if (field.refSchema.displayLayout && field.refSchema.displayLayout.fields) {
-        const lastField = field.refSchema.displayLayout.fields.slice(-1)[0];
+      if (
+        field.refSchema.displayLayout &&
+        field.refSchema.displayLayout.fields
+      ) {
+        // const lastField = field.refSchema.displayLayout.fields.slice(-1)[0];
+        const lastField = field.refSchema.displayLayout.fields[0];
         codeTableDisplayKey = lastField.key;
+        codeTableMeta = field.refSchema.meta;
       }
     }
     let cssClasses = ``;
@@ -587,7 +687,7 @@ export class FormService {
     }
 
     if (
-      field.type.toLowerCase() === 'number' &&
+      field.type.toLowerCase() === `number` &&
       (!verification.isLatitude && !verification.isLongitude)
     ) {
       verification.positiveNumber = true;
@@ -604,8 +704,9 @@ export class FormService {
       meta: field.meta,
       cssClasses: cssClasses,
       codeTable: codeTable,
+      codeTableMeta: codeTableMeta,
       displayKey: codeTableDisplayKey,
-      condition: ''
+      condition: ""
     };
   }
 
@@ -636,12 +737,28 @@ export class FormService {
    * Return array of dropdown objects for code table specified.
    * @param code table name
    */
-  private async dropdownfor(code: string, displayKey: string): Promise<DropdownObject[]> {
+  private async dropdownfor(
+    code: string,
+    displayKey: string,
+    meta: any
+  ): Promise<DropdownObject[]> {
     if (!code) {
+      console.log(`${code} not found`);
       return [];
     }
-    const codeTable = await this.codeTableService.getCodeTable(code);
-    return this.dropdownService.createDropdownObjectsFrom(codeTable, displayKey);
+    let codeTable = await this.codeTableService.getCodeTable(code);
+    // If it wasnt found in code table,
+    // try using api in meta field to fetch content
+    if ((!codeTable || codeTable.length < 1) && meta.api) {
+      const apiResult = await this.api.request(APIRequestMethod.GET, `${AppConstants.API_baseURL}${meta.api}`, null);
+      if (apiResult.success) {
+        codeTable = apiResult.response;
+      }
+    }
+    return this.dropdownService.createDropdownObjectsFrom(
+      codeTable,
+      displayKey
+    );
   }
 
   /**
@@ -654,9 +771,10 @@ export class FormService {
   private async getDropdownObjectWithId(
     codeTableName: string,
     displayedKey: string,
-    selectedObject: any
+    selectedObject: any,
+    codeTableMeta: any,
   ): Promise<DropdownObject> {
-    const dropdowns = await this.dropdownfor(codeTableName, displayedKey);
+    const dropdowns = await this.dropdownfor(codeTableName, displayedKey, codeTableMeta);
     let selectedID: number;
     for (const key in selectedObject) {
       if (key.toLowerCase().indexOf(`id`) !== -1) {
@@ -714,17 +832,21 @@ export class FormService {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
           if (field.isLocationField) {
-            field.latitude.value = this.formatLatLongForDisplay(object[field.latitude.key]);
-            field.longitude.value = this.formatLatLongForDisplay(object[field.longitude.key]);
+            field.latitude.value = this.formatLatLongForDisplay(
+              object[field.latitude.key]
+            );
+            field.longitude.value = this.formatLatLongForDisplay(
+              object[field.longitude.key]
+            );
           } else {
             if (object[field.key]) {
               const key = object[field.key];
               if (typeof key === 'object' && key !== null) {
-                const codeTableName = field.codeTable;
                 field.value = await this.getDropdownObjectWithId(
                   field.codeTable,
                   field.displayKey,
-                  object[field.key]
+                  object[field.key],
+                  field.codeTableMeta
                 );
               } else {
                 field.value = object[field.key];
@@ -741,8 +863,13 @@ export class FormService {
     }
     for (const relationKey of configuration.relationKeys) {
       if (object[relationKey]) {
-        configuration.relationsConfigs[relationKey].objects = object[relationKey];
-        configuration.relationsConfigs[relationKey].table = this.createUIConfigForTableRelation(configuration.relationsConfigs[relationKey]);
+        configuration.relationsConfigs[relationKey].objects =
+          object[relationKey];
+        configuration.relationsConfigs[
+          relationKey
+        ].table = this.createUIConfigForTableRelation(
+          configuration.relationsConfigs[relationKey]
+        );
       }
     }
     return configuration;
@@ -755,13 +882,19 @@ export class FormService {
    */
   private createUIConfigForTableRelation(relationConfig: any): TableModel {
     const relationFields = [];
-    if (!relationConfig.refSchema || !relationConfig.refSchema.idKey || !relationConfig.refSchema.meta) {
-      console.log(`relationConfig does not define an id key or reference schema or meta`);
+    if (
+      !relationConfig.refSchema ||
+      !relationConfig.refSchema.idKey ||
+      !relationConfig.refSchema.meta
+    ) {
+      console.log(
+        `relationConfig does not define an id key or reference schema or meta`
+      );
       return undefined;
     }
     const idKey = relationConfig.refSchema.idKey;
     const isResource = relationConfig.refSchema.meta.resource;
-    let api = '';
+    let api = "";
     if (isResource) {
       api = relationConfig.refSchema.meta.api;
     }
@@ -779,7 +912,8 @@ export class FormService {
               if (_i === 0) {
                 tableRowConfig[columnKey[0]] = object[key];
               } else {
-                tableRowConfig[columnKey[0]] = tableRowConfig[columnKey[0]][key];
+                tableRowConfig[columnKey[0]] =
+                  tableRowConfig[columnKey[0]][key];
               }
             }
           } else {
@@ -789,11 +923,17 @@ export class FormService {
       }
       relationFields.push(tableRowConfig);
     }
-    const tableModel: TableModel = this.generateTableModel(tableDataConfig, relationFields);
+    const tableModel: TableModel = this.generateTableModel(
+      tableDataConfig,
+      relationFields
+    );
     return tableModel;
   }
 
-  private generateTableModel(tableDataConfig: any[], values: any[]): TableModel {
+  private generateTableModel(
+    tableDataConfig: any[],
+    values: any[]
+  ): TableModel {
     const columns: TableColumn[] = [];
     const displayedColums: string[] = [];
     const tableRows: TableRowModel[] = [];
@@ -801,15 +941,17 @@ export class FormService {
       const displayedHeader = element.header.default;
       columns.push({
         key: this.convertDotSeparatedStringToArray(element.key)[0],
-        display: displayedHeader,
+        display: displayedHeader
       });
-      displayedColums.push(this.convertDotSeparatedStringToArray(element.key)[0]);
+      displayedColums.push(
+        this.convertDotSeparatedStringToArray(element.key)[0]
+      );
     }
 
     for (const fields of values) {
       tableRows.push({
         fields: fields,
-        url: ''
+        url: ""
       });
     }
 
@@ -821,8 +963,8 @@ export class FormService {
   }
 
   /**
-  * Convert keys recieved from server to array of strings
-  */
+   * Convert keys recieved from server to array of strings
+   */
   private getTableColumnKeys(tableDataConfig: any[]): string[][] {
     const keys: string[][] = [];
     for (const element of tableDataConfig) {
@@ -838,10 +980,10 @@ export class FormService {
    */
   private convertDotSeparatedStringToArray(string: string): string[] {
     const result: string[] = [];
-    if (String(string).indexOf('.') === -1) {
+    if (String(string).indexOf(".") === -1) {
       result.push(string);
     } else {
-      const separated = String(string).split('.');
+      const separated = String(string).split(".");
       for (const subElement of separated) {
         result.push(subElement);
       }
@@ -856,18 +998,18 @@ export class FormService {
   private formatLatLongForDisplay(value: number): string {
     // If its undefined or not a number, return empty string
     if (value === undefined || !Number(value)) {
-      return '';
+      return "";
     }
     // If it doesnt have a decimap point, add 5 zeros
-    if (String(value).indexOf('.') === -1) {
-      return `${(value)}.00000`;
+    if (String(value).indexOf(".") === -1) {
+      return `${value}.00000`;
     }
     // Split by decimal point
-    const separated = String(value).split('.');
+    const separated = String(value).split(".");
     let decimals = separated[1];
     // If it has multiple decimal points, return empty string
     if (separated.length > 2) {
-      return '';
+      return "";
     }
     // If there are less than 5 chars after decimal
     if (separated[1].length < 5) {
@@ -878,8 +1020,7 @@ export class FormService {
       return `${separated[0]}.${decimals}`;
     }
     // at this point it should be fine as is
-    return `${(value)}`;
-
+    return `${value}`;
   }
 
   //////////////////////////////////// END Generate UI Config ////////////////////////////////////
@@ -899,7 +1040,7 @@ export class FormService {
           if (field.isDropdown && field.value) {
             // Find the id of the value
             for (const key in field.value.object) {
-              if (key.toLowerCase().indexOf('id') !== -1) {
+              if (key.toLowerCase().indexOf("id") !== -1) {
                 body[field.key] = field.value.object[key];
                 break;
               }
@@ -910,7 +1051,7 @@ export class FormService {
             body[field.longitude.key] = field.longitude.value;
           } else if (field.isDateField) {
             // if its a date (needs to be formatted)
-            body[field.key] = moment(field.value).format('YYYY-MM-DD');
+            body[field.key] = moment(field.value).format("YYYY-MM-DD");
           } else {
             // for all other types just grab the value
             body[field.key] = field.value;
@@ -1005,7 +1146,11 @@ export class FormService {
    */
   private async getObjectWithId(endpoint: string, id: number): Promise<any> {
     const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
-    const response = await this.api.request(APIRequestMethod.GET, endpointWithId, null);
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      endpointWithId,
+      null
+    );
     if (response.success) {
       return response.response;
     } else {
@@ -1054,20 +1199,22 @@ export class FormService {
     if (Object.is(obj1, obj2)) {
       return undefined;
     }
-    if (!obj2 || typeof obj2 !== 'object') {
+    if (!obj2 || typeof obj2 !== "object") {
       return obj2;
     }
-    Object.keys(obj1 || {}).concat(Object.keys(obj2 || {})).forEach(key => {
-      if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-        result[key] = obj2[key];
-      }
-      if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
-        const value = this.diff(obj1[key], obj2[key]);
-        if (value !== undefined) {
-          result[key] = value;
+    Object.keys(obj1 || {})
+      .concat(Object.keys(obj2 || {}))
+      .forEach(key => {
+        if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+          result[key] = obj2[key];
         }
-      }
-    });
+        if (typeof obj2[key] === "object" && typeof obj1[key] === "object") {
+          const value = this.diff(obj1[key], obj2[key]);
+          if (value !== undefined) {
+            result[key] = value;
+          }
+        }
+      });
     return result;
   }
 
@@ -1085,10 +1232,10 @@ export class FormService {
     const configFilds = this.getFieldsInConfig(uiConfig);
     for (const field of configFilds) {
       switch (field.type.toLowerCase()) {
-        case 'string':
+        case "string":
           cleanBody[field.key] = String(body[field.key]);
           break;
-        case 'number':
+        case "number":
           cleanBody[field.key] = Number(body[field.key]);
           break;
         default:
@@ -1105,9 +1252,12 @@ export class FormService {
    * @param body JSON
    * @param uiConfig UIConfig
    */
-  public async submit(body: JSON, uiConfig: any): Promise<FormSubmissionResult> {
+  public async submit(
+    body: JSON,
+    uiConfig: any
+  ): Promise<FormSubmissionResult> {
     const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
-    let endpoint = '';
+    let endpoint = "";
     let method = APIRequestMethod.POST;
     if (this.router.isEditRoute) {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
@@ -1116,7 +1266,7 @@ export class FormService {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
       method = APIRequestMethod.POST;
     } else {
-      console.log('Not a route that can submit');
+      console.log("Not a route that can submit");
       return {
         success: false
       };
@@ -1132,11 +1282,14 @@ export class FormService {
    * @param result APIRequestResult
    * @param idKey id key for the object
    */
-  private prosessSubmissionResult(result: APIRequestResult, idKey: string): FormSubmissionResult {
+  private prosessSubmissionResult(
+    result: APIRequestResult,
+    idKey: string
+  ): FormSubmissionResult {
     if (result.success && result.response[idKey]) {
       return {
         success: result.success,
-        id: result.response[idKey],
+        id: result.response[idKey]
       };
     } else {
       return {
@@ -1145,7 +1298,7 @@ export class FormService {
           errors: result.response.error.error.errors,
           code: result.response.error.status,
           message: result.response.error.error.message
-        },
+        }
       };
     }
   }
@@ -1154,17 +1307,26 @@ export class FormService {
   /////////////////////////////////// Route helpers ////////////////////////////////////
   public viewCurrentWithId(id: number) {
     const current = this.router.current;
-    if (current === AppRoutes.EditMechanicalTreatment || current === AppRoutes.AddMechanicalTreatment) {
+    if (
+      current === AppRoutes.EditMechanicalTreatment ||
+      current === AppRoutes.AddMechanicalTreatment
+    ) {
       this.router.navigateTo(AppRoutes.ViewMechanicalTreatment, id);
-    } else if (current === AppRoutes.EditObservation || current === AppRoutes.AddObservation) {
+    } else if (
+      current === AppRoutes.EditObservation ||
+      current === AppRoutes.AddObservation
+    ) {
       this.router.navigateTo(AppRoutes.ViewObservation, id);
-    } else if (current === AppRoutes.EditChemicalTreatment || current === AppRoutes.AddChemicalTreatment) {
+    } else if (
+      current === AppRoutes.EditChemicalTreatment ||
+      current === AppRoutes.AddChemicalTreatment
+    ) {
       this.router.navigateTo(AppRoutes.ViewChemicalTreatment, id);
     }
   }
   /**
    * Switch current form route to edit mode
-  */
+   */
   public editCurrent() {
     const current = this.router.current;
     switch (current) {
