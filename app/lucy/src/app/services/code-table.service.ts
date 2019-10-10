@@ -9,6 +9,7 @@ import {
   ProposedActionCodes, AspectCodes, SlopeCodes
 } from '../models';
 import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { Key } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,15 @@ export class CodeTableService {
     } else {
       return null;
     }
+  }
+
+  public async getCodeTable(key: string): Promise<any[]> {
+    const codes = await this.getCodes();
+    if (codes === null) {
+      console.dir('not found');
+      return [];
+    }
+    return codes[key] ? codes[key] : [];
   }
 
   /**

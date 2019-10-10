@@ -17,8 +17,8 @@ export class ToastComponent implements OnInit {
     return this.timeout - (this.dirmissDurationInSeconds * 1000);
   }
 
-  dismissTimer: NodeJS.Timer;
-  dismissAnimationTimer: NodeJS.Timer;
+  dismissTimer: any;
+  dismissAnimationTimer: any;
 
   presenting = true;
   closedEarly = false;
