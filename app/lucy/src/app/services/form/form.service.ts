@@ -324,8 +324,8 @@ export class FormService {
         for (let i = 0; i < group.fields.length; i++) {
           // Get key for field
           const fieldKey = group.fields[i];
-          // Add type flags to field (to help with html generation)
-          let newField = await this.configField(fieldKey, fields);
+          // Add type flags to field (to help with html generation) & convert data structure
+          let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
           // If field key wasnt found in fields
           if (!newField) {
             // Could be a computed field
@@ -346,21 +346,8 @@ export class FormService {
           // Store field headers in a separate array
           fieldHeaders[newField.key] = newField.header;
 
-          if (newField.cssClasses.indexOf('col') === -1) {
-            // set column size:
-            if (
-              group.fields.length >= 3 &&
-              (i % 3 === 0 || (i + 1) % 3 === 0) &&
-              !newField.isTextAreaField
-            ) {
-              // if group has more than 3 elements, make sure we dont have more than 3 elements per row
-              // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
-              newField.cssClasses = newField.cssClasses + ' col col-md-4';
-            } else if (newField.isTextAreaField) {
-              // Comment fields should take the whole row
-              newField.cssClasses = newField.cssClasses + ' col-12';
-            }
-          }
+          // Add Bootstrap column size
+          newField.cssClasses = this.addColumnClass(newField.cssClasses, i, group.fields.length, newField.isTextAreaField);
 
           ////// Special case for lat or long fields //////
           if (
@@ -382,6 +369,7 @@ export class FormService {
                   ? newField
                   : cachedLatOrLongField
               };
+              // Add Location field
               subSectionFields.push(locationField);
             } else {
               cachedLatOrLongField = newField;
@@ -392,17 +380,20 @@ export class FormService {
             subSectionFields.push(newField);
           }
         }
+        // Add Group/Subsection
         subSections.push({
           title: group.title,
           boxed: false,
           fields: subSectionFields
         });
       }
+      // Add Section
       configObject.sections.push({
         title: section.title,
         subSections: subSections
       });
     }
+    // Add the arrays to the config
     configObject.requiredFieldKeys = requiredFieldKeys;
     configObject.dropdownFieldKeys = dropdownFieldKeys;
     configObject.fieldHeaders = fieldHeaders;
@@ -410,8 +401,30 @@ export class FormService {
       configObject.relationKeys = this.getRelationKeysInConfig(serverConfig.relations);
       configObject.relationsConfigs = serverConfig.relations;
     }
+
     // console.dir(configObject);
     return configObject;
+  }
+
+  private addColumnClass(cssClasses: string, fieldIndex: number, numberOfFields: number, isTextAreaField: boolean): string {
+    let result = cssClasses;
+    // If column is specified (from config) dont add
+    if (cssClasses.indexOf('col') === -1) {
+      // set column size:
+      if (
+        numberOfFields >= 3 &&
+        (fieldIndex % 3 === 0 || (fieldIndex + 1) % 3 === 0) &&
+        !isTextAreaField
+      ) {
+        // if group has more than 3 elements, make sure we dont have more than 3 elements per row
+        // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
+        result = result + ' col col-md-4';
+      } else if (isTextAreaField) {
+        // Comment fields should take the whole row
+        result = result + ' col-12';
+      }
+    }
+    return result;
   }
 
   private getRelationKeysInConfig(relations: any): string[] {
@@ -459,11 +472,11 @@ export class FormService {
    * Generate and return field configuration
    * This function sets the field type
    */
-  private async configField(key: string, fields: any[]): Promise<any> {
+  private async findFieldAndCreateConfigField(key: string, fields: any[]): Promise<any> {
     for (const field of fields) {
       if (field['key'] === key) {
         // convert server config field
-        const fieldOfInterest: any = this.processFieldConfig(field);
+        const fieldOfInterest: any = this.createFormConfigField(field);
         // initialize value field
         fieldOfInterest.value = undefined;
 
@@ -539,7 +552,7 @@ export class FormService {
    * can be interpreted by base Form.
    * @param field any
    */
-  private processFieldConfig(field: any): FormConfigField {
+  private createFormConfigField(field: any): FormConfigField {
     let codeTable = '';
     let codeTableDisplayKey = '';
     if (field.type === 'object') {
