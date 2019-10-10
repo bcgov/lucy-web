@@ -199,15 +199,13 @@ export class FormService {
       );
       return await this.getUIConfigFrom(configFile, treatment);
     } else if (this.router.current === AppRoutes.AddChemicalTreatment) {
-      console.log('here');
-      console.log(this.router.current);
       //// Chemical Treatment Create route ////
       const configFile = await this.getChemicalTreatmentUIConfig();
       return configFile;
     } else {
       console.log(this.router.current);
       console.log(
-        `** his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
+        `** this form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
       );
       this.errorService.show(ErrorType.NotFound);
       return undefined;

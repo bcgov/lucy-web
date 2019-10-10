@@ -68,11 +68,13 @@
 }
 
 .menu-item-on {
+  cursor: default;
   color: #002C71;
   font-weight: bold;
 }
 
 .menu-item-off {
+  cursor: pointer;
   color: #333333;
   font-weight: normal;
 }
