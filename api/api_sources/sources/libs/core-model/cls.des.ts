@@ -54,6 +54,9 @@ export interface ClassInfo {
 export function ModelDescription(info: ClassInfo) {
     return function (target: Function) {
         classInfoStorage[target.name] = info;
+        target.prototype.getClassInfo = () => {
+            return classInfoStorage[target.name];
+        };
     };
 }
 

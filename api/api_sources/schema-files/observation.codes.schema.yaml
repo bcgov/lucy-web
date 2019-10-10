@@ -32,6 +32,7 @@ schemas:
       api: /observation
     # End-meta
     displayLayout:
+      displayLabel: '#(species.commonName)# - #(date)#'
       fields:
         - header:
             key: 'species'

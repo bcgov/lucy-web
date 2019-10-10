@@ -106,4 +106,23 @@ export class ApplicationTable {
         });
         return r;
     }
+
+    get displayLabelInfo(): any {
+        if (this.displayLayout && this.displayLayout.displayLabel) {
+            const format: string = this.displayLayout.displayLabel || '';
+            const re = /#\([a-zA-Z0-9.]*\)#/gi;
+            const re1 = /[a-zA-Z0-9]+[.a-zA-Z0-9]*/gi;
+            const groups: any[] = format.match(re) as any[];
+            const keys = [];
+            for (const g of groups) {
+                const k = g.match(re1);
+                keys.push(k[0]);
+            }
+            return {
+                format: format,
+                keys: keys
+            };
+        }
+        return null;
+    }
 }
