@@ -29,7 +29,8 @@ schemas:
       api: /treatment/chemical
       base: /api
     ## -- DisplayLayout
-    displayLayout: {}
+    displayLayout: 
+      displayLabel: 'Chemical Treatment #(date)#'
     ## --
     # -- layout
     layout: 

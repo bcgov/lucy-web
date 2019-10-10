@@ -214,4 +214,26 @@ export function setNull<T> (obj: T, key: keyof T) { (obj[key as string] = null);
  */
 export const isEmpty = (obj: any) => (obj !== undefined && Object.keys(obj).length === 0);
 
+/**
+ * @description Iterate through input object with keys mentioned in key path and fetch values
+ * @param any obj: Input object
+ * @param string keyPath: keyPath separated by '.'
+ */
+export const valueAtKeyPath = (obj: any, keyPath: string) => {
+    const getValue = (o: any, ks: string[]): any => {
+        if (o === undefined) {
+            return;
+        }
+        const k = ks.shift() || '';
+        if (ks.length === 0) {
+            return o[k];
+        } else {
+            return getValue(o[k], ks);
+        }
+    };
+
+    const keys: string[] = keyPath.split('.');
+    return getValue(obj, keys);
+};
+
 // -------------------------------
