@@ -89,6 +89,9 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   // Set
   @Input() set value(value: string) {
     this._value = value;
+    if (value === `0`) {
+      console.log(`is zero`);
+    }
     if (!this.isReady) {
       return;
     }

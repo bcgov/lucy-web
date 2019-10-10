@@ -97,6 +97,7 @@
     background-color: #FFFFFF;
     box-shadow: 0 0 5px 0 #E5E9F2;
     animation-duration: 0.5s;
+    padding-bottom: 20px;
 }
 
 .mat-toolbar-row {
@@ -141,7 +142,7 @@
 }
 
 .diff-container {
-    background-color: purple;
+    background-color: transparent;
     width: 100%;
     padding-left: 0;
     padding-right: 0;
