@@ -341,7 +341,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.triedToSubmit = true;
-      console.dir(this.responseBody);
       this.toast.show('Some required fields are missing', ToastIconType.fail);
       return;
     } else {

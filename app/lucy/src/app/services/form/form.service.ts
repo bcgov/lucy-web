@@ -126,7 +126,7 @@ export class FormService {
     private codeTableService: CodeTableService,
     private router: RouterService,
     private errorService: ErrorService,
-  ) {}
+  ) { }
 
   //////////////////////////////////// Fetch UI Config ////////////////////////////////////
   /**
@@ -381,21 +381,19 @@ export class FormService {
         title: '',
         subSections: orphanSubSections
       });
-      ////////// End of Orphan fields //////////
-
-      // Add the arrays to the config
-      configObject.requiredFieldKeys = requiredFieldKeys;
-      configObject.dropdownFieldKeys = dropdownFieldKeys;
-      configObject.fieldHeaders = fieldHeaders;
-      if (serverConfig.relations) {
-        configObject.relationKeys = this.getRelationKeysInConfig(
-          serverConfig.relations
-        );
-        configObject.relationsConfigs = serverConfig.relations;
-      }
     }
+    ////////// End of Orphan fields //////////
 
-    // console.dir(configObject);
+    // Add the arrays to the config
+    configObject.requiredFieldKeys = requiredFieldKeys;
+    configObject.dropdownFieldKeys = dropdownFieldKeys;
+    configObject.fieldHeaders = fieldHeaders;
+    if (serverConfig.relations) {
+      configObject.relationKeys = this.getRelationKeysInConfig(
+        serverConfig.relations
+      );
+      configObject.relationsConfigs = serverConfig.relations;
+    }
     return configObject;
   }
 
@@ -629,7 +627,7 @@ export class FormService {
         }
         // if its a dropdown, grab its code table
         if (fieldOfInterest.isDropdown) {
-            fieldOfInterest.dropdown = await this.dropdownfor(
+          fieldOfInterest.dropdown = await this.dropdownfor(
             fieldOfInterest.codeTable,
             fieldOfInterest.displayKey,
             fieldOfInterest.codeTableMeta
@@ -839,7 +837,7 @@ export class FormService {
               object[field.longitude.key]
             );
           } else {
-            if (object[field.key]) {
+            if (object[field.key] !== undefined) {
               const key = object[field.key];
               if (typeof key === 'object' && key !== null) {
                 field.value = await this.getDropdownObjectWithId(

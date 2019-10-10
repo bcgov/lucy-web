@@ -116,7 +116,7 @@ export class ApiService {
       this.APIRequests.splice(index, 1);
     }
     if (this.APIRequests.length < 1) {
-      console.log(`** No more requests in waiting **`);
+      // console.log(`** No more requests in waiting **`);
     }
   }
 

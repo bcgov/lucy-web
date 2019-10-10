@@ -106,7 +106,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
         fields.push({
           key: [key],
           value: this.formBody[key],
-        })
+        });
       }
     }
     return fields;
