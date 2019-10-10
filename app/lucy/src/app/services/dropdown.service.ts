@@ -31,14 +31,13 @@ export class DropdownService {
       if (!name || name.length < 1) {
         for (const possibleKey of this.possibleDisplayKeys) {
           if (object[possibleKey]) {
-            name = object[possibleKey]
+            name = object[possibleKey];
             break;
           }
         }
       }
       // if the object doesnt have those keys either, just pick the first key
       if (!name || name.length < 1) {
-        console.dir(object);
         name = object[Object.keys(object)[0]];
       }
       dropdownObjects.push({
