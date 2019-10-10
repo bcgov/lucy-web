@@ -1256,7 +1256,7 @@ export class FormService {
   ): Promise<FormSubmissionResult> {
     const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
     let endpoint = '';
-    let method = APIRequestMethod.POST;
+    let method: APIRequestMethod;
     if (this.router.isEditRoute) {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
       method = APIRequestMethod.PUT;
