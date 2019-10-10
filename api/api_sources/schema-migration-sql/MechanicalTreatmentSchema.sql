@@ -34,7 +34,7 @@ COMMENT ON TABLE mechanical_treatment IS 'An application of a mechanical or cult
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_id IS 'Auto generated primary key';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_location_latitude IS 'Latitude of treatment  location';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_location_longitude IS 'Longitude of treatment location';
-COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_horizontal_dimension IS 'Width or horizontal dimension of the area of treatment';
+COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_horizontal_dimension IS 'Width, horizontal dimension or radius of the area of treatment';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_vertical_dimension IS 'Length or vertical dimension of the area of treatment';
 COMMENT ON COLUMN mechanical_treatment.applicator_first_name IS 'First name of the applicator';
 COMMENT ON COLUMN mechanical_treatment.applicator_last_name IS 'Last name of the applicator';

@@ -218,8 +218,8 @@ describe('Test for observation routes', () => {
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const update = {
-            horizontalDimension: 6700.78,
-            verticalDimension: 900.00,
+            horizontal_dimension: 6700.78,
+            vertical_dimension: 900.00,
             accessDescription: 'Test description',
             researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
@@ -255,8 +255,8 @@ describe('Test for observation routes', () => {
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const update = {
-            length: 6700.78,
-            width: 900.00,
+            verticalDimension: 6700.78,
+            horizontalDimension: 900.00,
             accessDescription: 'Test description',
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
             species: species.species_id,
@@ -279,8 +279,8 @@ describe('Test for observation routes', () => {
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const update = {
-            length: 6700.78,
-            width: 900.00,
+            verticalDimension: 6700.78,
+            horizontalDimension: 900.00,
             accessDescription: 'Test description',
             researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,

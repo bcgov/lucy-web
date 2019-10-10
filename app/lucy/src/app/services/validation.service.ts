@@ -124,7 +124,7 @@ export class ValidationService {
       return `Observer organization is missing`;
     }
 
-    if (!observation.width || !observation.length || !this.isValidPlotDimention(String(observation.length)) || !this.isValidPlotDimention(String(observation.width))) {
+    if (!observation.horizontalDimension || !observation.verticalDimension || !this.isValidPlotDimention(String(observation.verticalDimension)) || !this.isValidPlotDimention(String(observation.horizontalDimension))) {
       return `You must specify a valid plot dimension for invasive plant species`;
     }
 
@@ -193,12 +193,12 @@ export class ValidationService {
       return `Treatment location is missing`;
     }
 
-    if (!mechanicalTreatment.width) {
-      return `Treatment width is missing`;
+    if (!mechanicalTreatment.horizontalDimension) {
+      return `Horizontal dimension of treatment is missing`;
     }
 
-    if (!mechanicalTreatment.length) {
-      return `Treatment length is missing`;
+    if (!mechanicalTreatment.verticalDimension) {
+      return `Vertical dimension of treatment is missing`;
     }
 
     if (!mechanicalTreatment.applicatorFirstName) {

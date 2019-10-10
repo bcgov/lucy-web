@@ -482,6 +482,26 @@ schemas:
             default: 'Geometry'
           classes:
             - none
+        meta:
+          dependencies:
+            - horizontal_dimension:
+              - 1:
+                value: '1'
+                property: 'fieldHeader'
+                update: 'Radius'
+              - 2:
+                value: '2'
+                property: 'fieldHeader'
+                update: 'Width'
+            - vertical_dimension:
+              - 1:
+                value: '1'
+                property: 'visibility'
+                update: 'false'
+              - 2:
+                value: '2'
+                property: 'fieldHeader'
+                update: 'Length'
       specificUseCode:
         name: 'specific_use_code_id'
         comment: Foreign key reference to Specific use code table 

@@ -19,8 +19,8 @@ export interface Observation {
     observationType: ObservationTypeCodes;
     specificUseCode: SpecificUseCodes;
     soilTexture: SoilTextureCodes;
-    width: number;
-    length: number;
+    horizontalDimension: number;
+    verticalDimension: number;
     accessDescription: string;
     // Advanced //
     // indicators

@@ -4,8 +4,8 @@ export interface MechanicalTreatment {
         mechanical_treatment_id: number;
         latitude: number;
         longitude: number;
-        length: number;
-        width: number;
+        verticalDimension: number;
+        horizontalDimension: number;
         applicatorFirstName: string;
         applicatorLastName: string;
         secondaryApplicatorFirstName: string;

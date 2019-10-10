@@ -54,7 +54,7 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
             if (info.secure && info.secure === true) {
                 this.router.use(this.authHandle);
             }
-            // this['dependencies'] = this.dataController.dependencies;
+            this['dependencies'] = this.dataController.dependencies;
 
             // Check users
             if (info.users) {

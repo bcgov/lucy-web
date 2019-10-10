@@ -161,7 +161,7 @@ schemas:
             - none
       horizontalDimension:
         name: 'mechanical_treatment_area_horizontal_dimension'
-        comment: 'Width or horizontal dimension of the area of treatment'
+        comment: 'Width, horizontal dimension or radius of the area of treatment'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         meta: {}
         layout:

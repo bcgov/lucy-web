@@ -64,8 +64,8 @@ export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, Mechanica
 export const mechanicalTreatmentUpdateSpecFactory = async (): Promise<MechanicalTreatmentUpdateSpec> => {
   return {
     latitude: parseFloat(faker.address.latitude()) || 0.0,
-    width: faker.random.number(),
-    length: faker.random.number(),
+    horizontalDimension: faker.random.number(),
+    verticalDimension: faker.random.number(),
     observation: (await observationFactory()),
   };
 };

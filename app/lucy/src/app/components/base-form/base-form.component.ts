@@ -5,6 +5,9 @@ import {
   AfterViewChecked,
   Renderer,
   Renderer2,
+  OnChanges,
+  SimpleChange,
+  SimpleChanges
 } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ErrorService, ErrorType } from 'src/app/services/error.service';
@@ -21,6 +24,8 @@ import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
 import { ElementRef } from '@angular/core';
+import { forEach } from '@angular/router/src/utils/collection';
+import { detectChanges } from '@angular/core/src/render3';
 
 export enum FormType {
   Observation,
@@ -323,6 +328,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       // regular field - store key / value
       this.responseBody[field.key] = event;
     }
+
+    if (this.hasDependents(field)) {
+      this.getDependents(field).forEach((fieldKey: object) => {
+        this.notify(fieldKey['key'], field, event);
+      });
     /*
       This reassignment will trigger the set function of responseBody
       which will send the new body to the computed fields.
@@ -331,6 +341,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     const temp = { ...this.responseBody };
     this.responseBody = { ...temp};
   }
+}
 
   /**
    * Form submission
@@ -353,6 +364,62 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         this.alert.show('error', 'There was an error');
       }
     }
+  }
+
+  notify(targetField: any, changedField: any, event: any) {
+    if (event) {
+      const valueOfChangedField = this.responseBody[changedField.key];
+      const targetFieldKeys = [];
+      for (const key of Object.keys(targetField)) {
+        targetFieldKeys.push(key);
+      }
+      const targetFieldKey = targetFieldKeys[0]; // there will only ever be 1 entry in targetField dictionary
+
+      // tslint:disable-next-line: forin
+      for (const key in targetField[targetFieldKey]) {
+        if (valueOfChangedField in targetField[targetFieldKey][key]) {
+          const fieldHeaderKey = this.snakeCaseToCamelCase(targetFieldKey);
+          const propertyToUpdate = targetField[targetFieldKey][key].property;
+          switch(propertyToUpdate) {
+            case 'fieldHeader':       this.updateFieldHeader(targetField, fieldHeaderKey, targetFieldKey, key);
+                                      break;
+            case 'visibility':        this.updateFieldVisibility();
+                                      break;
+            case 'computationMethod': this.updateComputationMethod();
+                                      break;
+            default:                  console.log('Unrecognized dependency property');
+          }
+          break;
+        }
+      }
+
+
+
+    }
+  }
+
+  // TODO refactor - remove triple-nested for loop
+  updateFieldHeader(targetField: any, fieldHeaderKey: string, targetFieldKey: any, key: string) {
+    const valueToUpdate = targetField[targetFieldKey][key].update;
+    for (const sec of Object.keys(this.config.sections)) {
+      for (const subsec of Object.keys(this.config.sections[sec].subSections)) {
+        for ( const f of Object.keys( this.config.sections[sec].subSections[subsec].fields)) {
+          if (fieldHeaderKey === this.config.sections[sec].subSections[subsec].fields[f].key) {
+            this.config.sections[sec].subSections[subsec].fields[f].header = valueToUpdate;
+            this.config.fieldHeaders[fieldHeaderKey] = valueToUpdate;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  updateFieldVisibility() {
+
+  }
+
+  updateComputationMethod() {
+    
   }
 
   edit() {
@@ -380,6 +447,25 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.inReviewMode = false;
     this.showdiffViewer = false;
     this.setFormMode();
+  }
+
+  hasDependents(field: any): boolean {
+    if (field.meta && field.meta.dependencies) {
+      return true;
+    } else { return false; }
+  }
+
+  getDependents(field: any): any[] {
+    const dependents = [];
+    console.log(field.meta.dependencies);
+    if (field.meta && field.meta.dependencies) {
+      // tslint:disable-next-line: forin
+      for (const key in field.meta.dependencies) {
+        const value = field.meta.dependencies[key];
+        dependents.push({key: value});
+      }
+    }
+    return dependents;
   }
 
   /////////// Lottie ///////////
@@ -424,6 +510,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
       return index == 0 ? word.toLowerCase() : word.toUpperCase();
     }).replace(/\s+/g, '');
+  }
+
+  snakeCaseToCamelCase(input: string): string {
+    return input.split('_').reduce((res, word, i) => i === 0 ? word.toLowerCase() : `${res}${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`, '');
   }
 
   async generateForTesting() {

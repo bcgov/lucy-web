@@ -222,8 +222,8 @@ export class DummyService {
       mechanical_treatment_id: 1,
       latitude: this.randomLat(),
       longitude: this.randomLong(),
-      length: this.randomIntFromInterval(4, 20),
-      width: this.randomIntFromInterval(4, 20),
+      verticalDimension: this.randomIntFromInterval(4, 20),
+      horizontalDimension: this.randomIntFromInterval(4, 20),
       applicatorFirstName: faker.name.firstName(),
       applicatorLastName: faker.name.lastName(),
       secondaryApplicatorFirstName: faker.name.firstName(),
@@ -313,8 +313,8 @@ export class DummyService {
       observationType: surveyType,
       specificUseCode: useCode,
       soilTexture: soilTexture,
-      width: this.randomIntFromInterval(4, 20),
-      length: this.randomIntFromInterval(4, 20),
+      horizontalDimension: this.randomIntFromInterval(4, 20),
+      verticalDimension: this.randomIntFromInterval(4, 20),
       accessDescription: faker.lorem.sentences(),
       // Advanced //
       // indicators
