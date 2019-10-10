@@ -26,12 +26,12 @@ import * as moment from 'moment';
 import { Request } from 'express';
 import { DataController} from '../../database/data.model.controller';
 import {
-    BaseRoutController,
     RouteHandler,
     MakeOptionalValidator,
     ValidationInfo,
     ValidatorExists,
-    ValidatorCheck
+    ValidatorCheck,
+    RouteController
 } from './base.route.controller';
 import { ResourceInfo } from './route.const';
 import { roleAuthenticationMiddleware } from './auth.middleware';
@@ -48,14 +48,14 @@ import {
  * 3. Custom middleware configuring
  * 4. Securing resource
  */
-export class ResourceRouteController<D extends DataController, CreateSpec, UpdateSpec> extends BaseRoutController<D> {
+export class BaseResourceRouteController extends RouteController {
     constructor() {
         super();
         if (this.constructor.prototype._routeResourceInfo) {
             // Getting resource info
             // console.dir(this.constructor.prototype._routeResourceInfo);
             const info: ResourceInfo = this.constructor.prototype._routeResourceInfo;
-            this.dataController = info.dataController as D;
+            this.dataController = info.dataController;
             // Check secure
             if (info.secure && info.secure === true) {
                 this.router.use(this.authHandle);
@@ -80,6 +80,7 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
             // Getting validator
             const validators: any[] = this._createValidator();
             const optional: any[] = MakeOptionalValidator(() => this._createValidator());
+            // const filters: any = MakeOptionalValidator(() => this._createValidator(true));
 
             // Getting operation specific middleware
             const createMiddleware: any[] = info.createMiddleware ? info.createMiddleware() : [];
@@ -87,7 +88,6 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
             const viewMiddleware: any[] = info.viewMiddleware ? info.viewMiddleware() : [];
 
             // Getting resource endpoint Endpoint
-            // const endPoint = info.path.split('#')[1] || this.className.toLowerCase();
 
             // Configuring Create Route
             this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
@@ -110,7 +110,7 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
      * @description Create Route Handler
      */
     get create(): RouteHandler {
-        return this.routeConfig<CreateSpec>(`${this.className}: create`, async (data: CreateSpec, req: Request) => {
+        return this.routeConfig<any>(`${this.className}: create`, async (data: any, req: Request) => {
             return [201, await this.dataController.createNewObject(data, req.user)];
         });
     }
@@ -119,7 +119,7 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
      * @description Update Route Handler
      */
     get update(): RouteHandler {
-        return this.routeConfig<UpdateSpec>(`${this.className}: update`, async (data: UpdateSpec, req: any) => {
+        return this.routeConfig<any>(`${this.className}: update`, async (data: any, req: any) => {
             assert(req.resource, `${this.className}: update: No resource object found`);
             return [200, await this.dataController.updateObject(req.resource, data, req.user)];
         });
@@ -146,7 +146,7 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
     /**
      * @description Create Validator Logic based on Schema
      */
-    private _createValidator(): any[] {
+    private _createValidator(filterOnly?: boolean): any[] {
         const tableSchema: ApplicationTable = this.dataController.schema;
         const columns = tableSchema.columnsDefinition;
         let validatorCheck = {};
@@ -201,6 +201,10 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
                     };
                     break;
                 case 'object':
+                    // Check Filter only or not
+                    if (filterOnly) {
+                        break;
+                    }
                     // Get schema name
                     const schemaName = typeInfo.schema;
                     // console.log(`${key}: 1: ${schemaName}`);
@@ -230,7 +234,36 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
             validatorExists = {...validatorExists, ...validateExists};
         });
         // console.dir(validatorExists);
+        if (filterOnly) {
+            return ValidatorCheck(validatorCheck);
+        }
         return ValidatorExists(validatorExists).concat(ValidatorCheck(validatorCheck));
+    }
+}
+
+/**
+ * @description Generic subclass of BaseResourceRouteController
+ */
+export class ResourceRouteController<D extends DataController, CreateSpec, UpdateSpec> extends BaseResourceRouteController {
+    // DataController
+    protected dataController: D;
+    /**
+     * @description Create Route Handler
+     */
+    get create(): RouteHandler {
+        return this.routeConfig<CreateSpec>(`${this.className}: create`, async (data: CreateSpec, req: Request) => {
+            return [201, await this.dataController.createNewObject(data, req.user)];
+        });
+    }
+
+    /**
+     * @description Update Route Handler
+     */
+    get update(): RouteHandler {
+        return this.routeConfig<UpdateSpec>(`${this.className}: update`, async (data: UpdateSpec, req: any) => {
+            assert(req.resource, `${this.className}: update: No resource object found`);
+            return [200, await this.dataController.updateObject(req.resource, data, req.user)];
+        });
     }
 }
 

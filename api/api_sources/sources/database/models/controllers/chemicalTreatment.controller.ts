@@ -13,5 +13,23 @@ export class ChemicalTreatmentController extends RecordController<ChemicalTreatm
 	public static get shared(): ChemicalTreatmentController {
 		return this.sharedInstance<ChemicalTreatment>(ChemicalTreatment, ChemicalTreatmentSchema) as ChemicalTreatmentController;
 	}
+
+	async findById(id: number): Promise<ChemicalTreatment> {
+		const items: ChemicalTreatment[] = await this.repo.find({
+			where: { chemical_treatment_id: id},
+			relations: ['secondApplicator']
+		}) as ChemicalTreatment[];
+        return items[0];
+	}
+
+	/**
+     * @description Method to get all object filtered by query
+     * @param object query
+     */
+    async all(query?: object): Promise<ChemicalTreatment[]> {
+
+        const items: ChemicalTreatment[] = await this.repo.find({ where: query, relations: ['secondApplicator']}) as ChemicalTreatment[];
+        return items;
+    }
 }
 // ----------------

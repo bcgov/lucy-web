@@ -126,15 +126,16 @@ export interface RouteConfig {
  * 5. Created for sub classing only
  * @export class BaseRoutController<DataController>
  */
-export class BaseRoutController<Controller extends DataController>  {
+
+export class RouteController {
     // Generic share instance
-    private static _sharedInstance: any;
+    protected static _sharedInstance: any;
+    // DataController associated with route
+    protected dataController: DataController;
     // Express route
     router: express.Router = express.Router();
     // Logger
     logger: Logger;
-    // DataController associated with route
-    dataController: Controller;
     // User Data Controller
     userController: UserDataController = UserDataController.shared;
 
@@ -146,7 +147,7 @@ export class BaseRoutController<Controller extends DataController>  {
     /**
      * @description Getter for share instance
      */
-    static sharedInstance<Controller>(): BaseRoutController<DataController> {
+    static sharedInstance(): RouteController {
         return (this._sharedInstance || (this._sharedInstance = new this()));
     }
 
@@ -348,6 +349,17 @@ export class BaseRoutController<Controller extends DataController>  {
                 return this.commonError(500, `routeConfig:${tag}`, excp, resp);
             }
         };
+    }
+}
+
+export class BaseRoutController<Controller extends DataController> extends RouteController {
+    // DataController
+    protected dataController: Controller;
+    /**
+     * @description Getter for share instance
+     */
+    static sharedInstance<Controller>(): BaseRoutController<DataController> {
+        return (this._sharedInstance || (this._sharedInstance = new this()));
     }
 }
 

@@ -1,7 +1,7 @@
 // ** ProjectManagementPlanCodeController **//
 
 import { RecordController } from '../generic.data.models';
-import { ProjectManagementPlanCode} from '../../models';
+import { ProjectManagementPlanCode} from '../projectManagementPlan.code';
 import { ProjectManagementPlanCodeSchema } from '../../database-schema';
 
 

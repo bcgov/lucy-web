@@ -47,7 +47,7 @@ import {
 @UpdateMiddleware(() => [writerOnlyRoute()])
 export class ChemicalTreatmentRouteController extends ResourceRouteController<ChemicalTreatmentController, ChemicalTreatmentSpec, any> {
     static get shared(): ChemicalTreatmentRouteController {
-        return this.sharedInstance<ChemicalTreatmentController>() as ChemicalTreatmentRouteController;
+        return this.sharedInstance() as ChemicalTreatmentRouteController;
     }
 }
 

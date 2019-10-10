@@ -24,6 +24,7 @@
 /**
  * Imports
  */
+import * as faker from 'faker';
 import { SharedExpressApp } from '../../../initializers';
 import {
     commonTestSetupAction,
@@ -78,6 +79,14 @@ describe(`Test for ${resourceName}`, () => {
     // Test5: Fail to create for Viewer
     it(`should not update ${resourceName} for {viewer}`, async () => {
         await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
+    });
+
+    // Test6: Get Filter elements
+    it(`should fetch filtered item ${resourceName}`, async () => {
+        await ExpressResourceTest.testGetFilteredItem(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller, {
+            latitude: faker.address.latitude(),
+            longitude: faker.address.longitude()
+        });
     });
 });
 
