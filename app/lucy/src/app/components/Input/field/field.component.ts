@@ -100,6 +100,7 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
           // if the only requirement is for the field to be required, and value is not empty.. dont emit
           // this is a hot-fix for "generate for testing" button.
         } else {
+          // console.log(`bad ${this.header}`);
           this.valueChanged.emit(``);
         }
       }

@@ -165,7 +165,7 @@ export class RouterService {
       // console.log(id);
       return +id;
     } else {
-      return undefined;
+      return;
     }
   }
 
@@ -179,7 +179,7 @@ export class RouterService {
       default:
         console.log(`${api} does not have a route`);
     }
-    return undefined;
+    return;
   }
 
   private preventReload() {
@@ -197,12 +197,11 @@ export class RouterService {
   }
 
   private async shouldLeaveDialog(): Promise<boolean> {
-    if (this.isCreateRoute || this.isEditRoute) {
-      return this.alert.showConfirmation(`Are you sure?`, 'If you leave this page, your changes will be lost', `Leave Page`, `Stay`);
-    } else {
-      return true;
-    }
+    return (this.isCreateRoute || this.isEditRoute) ?
+      this.alert.showConfirmation(`Are you sure?`, 'If you leave this page, your changes will be lost', `Leave Page`, `Stay`)
+      : true;
   }
+  
   /**
    * Store current route in session.
    */

@@ -67,6 +67,7 @@
           <span class="spacer-toolbar"></span>
           <!-- Submit button -->
           <button
+            mat-flat-button
             *ngIf="!readonly || inReviewMode"
             type="button"
             class="btn btn-secondary submit-button"
@@ -77,7 +78,7 @@
           <!-- ---- -->
           <!-- Edit button for review -->
           <button
-            (click)="exitReviewMode()"
+            mat-flat-button
             *ngIf="inReviewMode"
             type="button"
             class="btn btn-secondary edit-button animated fadeIn"
@@ -91,6 +92,7 @@
           <!-- ---- -->
           <!-- Edit Button for when in view mode and user is data editor -->
           <button
+            mat-flat-button
             (click)="edit()"
             *ngIf="isDataEditor && viewing"
             type="button"

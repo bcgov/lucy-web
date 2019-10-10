@@ -5,11 +5,10 @@ import { DropdownObject, DropdownService } from '../dropdown.service';
 import { DummyService } from '../dummy.service';
 import { RouterService } from '../router.service';
 import { ErrorService, ErrorType } from '../error.service';
-import { MechanicalTreatmentService } from '../mechanical-treatment.service';
-import { ObservationService } from '../observation.service';
 import * as moment from 'moment';
 import { DiffResult } from '../diff.service';
 import { TableModel, TableColumn, TableRowModel } from 'src/app/components/base-form/table/table.component';
+import { CodeTableService } from '../code-table.service';
 
 export interface FormConfigField {
   key: string;
@@ -21,6 +20,7 @@ export interface FormConfigField {
   meta: any;
   cssClasses: string;
   codeTable: string;
+  displayKey: string;
   condition: string;
 }
 
@@ -122,11 +122,9 @@ export class FormService {
   constructor(
     private api: ApiService,
     private dropdownService: DropdownService,
-    private dummyService: DummyService,
+    private codeTableService: CodeTableService,
     private router: RouterService,
     private errorService: ErrorService,
-    private observationService: ObservationService,
-    private mechanicalTreatmentService: MechanicalTreatmentService
   ) { }
 
   //////////////////////////////////// Fetch UI Config ////////////////////////////////////
@@ -312,8 +310,7 @@ export class FormService {
       fieldHeaders: [],
     };
 
-    // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
-    // But this generated structure makes if easy for the view to be generated
+    // This structure makes if easy for the view to be generated
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
@@ -327,8 +324,8 @@ export class FormService {
         for (let i = 0; i < group.fields.length; i++) {
           // Get key for field
           const fieldKey = group.fields[i];
-          // Add type flags to field (to help with html generation)
-          let newField = await this.configField(fieldKey, fields);
+          // Add type flags to field (to help with html generation) & convert data structure
+          let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
           // If field key wasnt found in fields
           if (!newField) {
             // Could be a computed field
@@ -349,19 +346,8 @@ export class FormService {
           // Store field headers in a separate array
           fieldHeaders[newField.key] = newField.header;
 
-          // set column size:
-          if (
-            group.fields.length >= 3 &&
-            (i % 3 === 0 || (i + 1) % 3 === 0) &&
-            !newField.isTextAreaField
-          ) {
-            // if group has more than 3 elements, make sure we dont have more than 3 elements per row
-            // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
-            newField.cssClasses = newField.cssClasses + ' col col-md-4';
-          } else if (newField.isTextAreaField) {
-            // Comment fields should take the whole row
-            newField.cssClasses = newField.cssClasses + ' col-12';
-          }
+          // Add Bootstrap column size
+          newField.cssClasses = this.addColumnClass(newField.cssClasses, i, group.fields.length, newField.isTextAreaField);
 
           ////// Special case for lat or long fields //////
           if (
@@ -383,6 +369,7 @@ export class FormService {
                   ? newField
                   : cachedLatOrLongField
               };
+              // Add Location field
               subSectionFields.push(locationField);
             } else {
               cachedLatOrLongField = newField;
@@ -393,17 +380,20 @@ export class FormService {
             subSectionFields.push(newField);
           }
         }
+        // Add Group/Subsection
         subSections.push({
           title: group.title,
           boxed: false,
           fields: subSectionFields
         });
       }
+      // Add Section
       configObject.sections.push({
         title: section.title,
         subSections: subSections
       });
     }
+    // Add the arrays to the config
     configObject.requiredFieldKeys = requiredFieldKeys;
     configObject.dropdownFieldKeys = dropdownFieldKeys;
     configObject.fieldHeaders = fieldHeaders;
@@ -411,8 +401,30 @@ export class FormService {
       configObject.relationKeys = this.getRelationKeysInConfig(serverConfig.relations);
       configObject.relationsConfigs = serverConfig.relations;
     }
+
     // console.dir(configObject);
     return configObject;
+  }
+
+  private addColumnClass(cssClasses: string, fieldIndex: number, numberOfFields: number, isTextAreaField: boolean): string {
+    let result = cssClasses;
+    // If column is specified (from config) dont add
+    if (cssClasses.indexOf('col') === -1) {
+      // set column size:
+      if (
+        numberOfFields >= 3 &&
+        (fieldIndex % 3 === 0 || (fieldIndex + 1) % 3 === 0) &&
+        !isTextAreaField
+      ) {
+        // if group has more than 3 elements, make sure we dont have more than 3 elements per row
+        // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
+        result = result + ' col col-md-4';
+      } else if (isTextAreaField) {
+        // Comment fields should take the whole row
+        result = result + ' col-12';
+      }
+    }
+    return result;
   }
 
   private getRelationKeysInConfig(relations: any): string[] {
@@ -460,11 +472,11 @@ export class FormService {
    * Generate and return field configuration
    * This function sets the field type
    */
-  private async configField(key: string, fields: any[]): Promise<any> {
+  private async findFieldAndCreateConfigField(key: string, fields: any[]): Promise<any> {
     for (const field of fields) {
       if (field['key'] === key) {
         // convert server config field
-        const fieldOfInterest: any = this.processFieldConfig(field);
+        const fieldOfInterest: any = this.createFormConfigField(field);
         // initialize value field
         fieldOfInterest.value = undefined;
 
@@ -525,7 +537,8 @@ export class FormService {
         // if its a dropdown, grab its code table
         if (fieldOfInterest.isDropdown) {
           fieldOfInterest.dropdown = await this.dropdownfor(
-            fieldOfInterest.codeTable
+            fieldOfInterest.codeTable,
+            fieldOfInterest.displayKey,
           );
         }
         return fieldOfInterest;
@@ -539,16 +552,20 @@ export class FormService {
    * can be interpreted by base Form.
    * @param field any
    */
-  private processFieldConfig(field: any): FormConfigField {
+  private createFormConfigField(field: any): FormConfigField {
     let codeTable = '';
+    let codeTableDisplayKey = '';
     if (field.type === 'object') {
       codeTable = field.refSchema.modelName;
-      // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
+      if (field.refSchema.displayLayout && field.refSchema.displayLayout.fields) {
+        const lastField = field.refSchema.displayLayout.fields.slice(-1)[0];
+        codeTableDisplayKey = lastField.key;
+      }
     }
     let cssClasses = ``;
     const classes = field.layout.classes;
     for (const item of classes) {
-      cssClasses = cssClasses + ` `;
+      cssClasses = item + ` `;
     }
 
     // BEGIN Tweak verification object received.
@@ -587,6 +604,7 @@ export class FormService {
       meta: field.meta,
       cssClasses: cssClasses,
       codeTable: codeTable,
+      displayKey: codeTableDisplayKey,
       condition: ''
     };
   }
@@ -618,53 +636,12 @@ export class FormService {
    * Return array of dropdown objects for code table specified.
    * @param code table name
    */
-  private async dropdownfor(code: string): Promise<DropdownObject[]> {
+  private async dropdownfor(code: string, displayKey: string): Promise<DropdownObject[]> {
     if (!code) {
       return [];
     }
-    switch (code.toLowerCase()) {
-      case 'speciesagencycode':
-        return await this.dropdownService.getAgencies();
-      case 'jurisdictioncode':
-        return await this.dropdownService.getJuristictions();
-      case 'species':
-        return await this.dropdownService.getInvasivePlantSpecies();
-      case 'speciesdistributioncode':
-        return await this.dropdownService.getDistributions();
-      case 'observationtypecode':
-        return await this.dropdownService.getObservationType();
-      case 'soiltexturecode':
-        return await this.dropdownService.getSoilTextureCodes();
-      case 'observationgeometrycode':
-        return await this.dropdownService.getGeometry();
-      case 'specificusecode':
-        return await this.dropdownService.getSpecificUseCodes();
-      case 'slopecode':
-        return await this.dropdownService.getGroundSlopes();
-      case 'aspectcode':
-        return await this.dropdownService.getGroundAspects();
-      case 'proposedactioncode':
-        return await this.dropdownService.getProposedActions();
-      case 'mechanicalmethodcode':
-        return await this.dropdownService.getMechanicalTreatmentMethods();
-      case 'mechanicaldisposalmethodcode':
-        return await this.dropdownService.getMechanicalDisposalMethods();
-      case 'mechanicalsoildisturbancecode':
-        return await this.dropdownService.getMechanicalSoilDisturbances();
-      case 'mechanicalrootremovalcode':
-        return await this.dropdownService.getMechanicalRootRemovals();
-      case 'mechanicaltreatmentissuecode':
-        return await this.dropdownService.getMechanicalIssues();
-      case 'treatmentprovidercontractor':
-        return await this.dropdownService.getMechanicalTreatmentProviders();
-      case 'observation':
-        return await this.dropdownService.getObservations();
-      case 'speciesdensitycode':
-        return await this.dropdownService.getDensities();
-      default:
-        console.log(`Code Table is not handled ${code}`);
-        return [];
-    }
+    const codeTable = await this.codeTableService.getCodeTable(code);
+    return this.dropdownService.createDropdownObjectsFrom(codeTable, displayKey);
   }
 
   /**
@@ -676,9 +653,10 @@ export class FormService {
    */
   private async getDropdownObjectWithId(
     codeTableName: string,
+    displayedKey: string,
     selectedObject: any
   ): Promise<DropdownObject> {
-    const dropdowns = await this.dropdownfor(codeTableName);
+    const dropdowns = await this.dropdownfor(codeTableName, displayedKey);
     let selectedID: number;
     for (const key in selectedObject) {
       if (key.toLowerCase().indexOf(`id`) !== -1) {
@@ -744,7 +722,8 @@ export class FormService {
               if (typeof key === 'object' && key !== null) {
                 const codeTableName = field.codeTable;
                 field.value = await this.getDropdownObjectWithId(
-                  codeTableName,
+                  field.codeTable,
+                  field.displayKey,
                   object[field.key]
                 );
               } else {
@@ -1172,21 +1151,6 @@ export class FormService {
   }
   //////////////////////////////////// END SUBMISSION ////////////////////////////////////
 
-  //////////////////////////////////// TESTS ////////////////////////////////////
-  public async generateMechanicalTreatmentTest(config: any): Promise<any> {
-    const dummy = await this.dummyService.createDummyMechanicalTreatment();
-    // console.dir(dummy);
-    return await this.merge(config, dummy);
-  }
-
-  public async generateObservationTest(config: any): Promise<any> {
-    const dummy = await this.dummyService.createDummyObservation([]);
-    // console.log(`dummy: ${dummy.lat} ${dummy.long}`);
-    const temp = await this.merge(config, dummy);
-    return temp;
-  }
-  //////////////////////////////////// END TESTS ////////////////////////////////////
-
   /////////////////////////////////// Route helpers ////////////////////////////////////
   public viewCurrentWithId(id: number) {
     const current = this.router.current;
@@ -1194,6 +1158,8 @@ export class FormService {
       this.router.navigateTo(AppRoutes.ViewMechanicalTreatment, id);
     } else if (current === AppRoutes.EditObservation || current === AppRoutes.AddObservation) {
       this.router.navigateTo(AppRoutes.ViewObservation, id);
+    } else if (current === AppRoutes.EditChemicalTreatment || current === AppRoutes.AddChemicalTreatment) {
+      this.router.navigateTo(AppRoutes.ViewChemicalTreatment, id);
     }
   }
   /**
