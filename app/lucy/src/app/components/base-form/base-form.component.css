@@ -97,6 +97,7 @@
     background-color: #FFFFFF;
     box-shadow: 0 0 5px 0 #E5E9F2;
     animation-duration: 0.5s;
+    padding-bottom: 20px;
 }
 
 .mat-toolbar-row {
@@ -141,11 +142,30 @@
 }
 
 .diff-container {
-    background-color: purple;
+    background-color: transparent;
     width: 100%;
     padding-left: 0;
     padding-right: 0;
     animation-duration: 0.5s;
     animation-delay: 0s;
     margin-bottom: 10px;
+}
+
+.no-content {
+    height: 100px;
+    border-radius: 9px;
+    text-align: center;
+    border: 1px solid #CCCCCC;
+    background: repeating-linear-gradient(
+      45deg,
+      #F7F7F7,
+      #F7F7F7 10px,
+      #ffffff 10px,
+      #ffffff 20px
+    );
+    margin: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

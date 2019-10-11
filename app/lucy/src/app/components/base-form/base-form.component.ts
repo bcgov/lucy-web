@@ -7,21 +7,19 @@ import {
   Renderer2,
 } from '@angular/core';
 import { FormMode } from 'src/app/models';
-import { ErrorService, ErrorType } from 'src/app/services/error.service';
 import { UserService } from 'src/app/services/user.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { RouterService } from 'src/app/services/router.service';
 import { UserAccessType } from 'src/app/models/Role';
-import { AppRoutes, AppConstants } from 'src/app/constants';
-import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
-import { FormService, FormSubmissionResult} from 'src/app/services/form/form.service';
+import { AppRoutes } from 'src/app/constants';
+import { FormService, FormSubmissionResult, UIConfigObject} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
-import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
 import { ElementRef } from '@angular/core';
 import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
+import { DummyService } from 'src/app/services/dummy.service';
 
 export enum FormType {
   Observation,
@@ -154,11 +152,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   // Config
-  private _config: any = {};
-  private get config(): any {
+  private _config: UIConfigObject;
+  private get config(): UIConfigObject {
     return this._config;
   }
-  private set config(object: any) {
+  private set config(object: UIConfigObject) {
     this._config = { ...object};
   }
 
@@ -226,15 +224,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   constructor(
-    // private mechanicalTreatmentService: MechanicalTreatmentService,
-    private errorService: ErrorService,
+    private dummy: DummyService,
     private userService: UserService,
     private roles: RolesService,
     private alert: AlertService,
     private router: RouterService,
-    private dropdownService: DropdownService,
     private formService: FormService,
-    private api: ApiService,
     private loadingService: LoadingService,
     private elementRef: ElementRef,
     private renderer: Renderer2,
@@ -298,9 +293,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
     if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+      // console.log('setting lat long in body to undefined')
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
     } else if (event === `` && this.responseBody[field.key] !== undefined) {
+      // console.log(`setting ${field.key} to undefined`)
+      // console.dir(event);
       this.responseBody[field.key] = undefined;
     }
     // handle valid input cases
@@ -416,7 +414,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
     const el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
-      if (el) {;
+      if (el) {
           el.scrollIntoView({ block: 'center',  behavior: 'smooth' });
           this.renderer.addClass(el, highlightClass);
           setTimeout(() => {
@@ -435,21 +433,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   async generateForTesting() {
-    this.loadingService.add();
-    if (this.router.current === AppRoutes.AddMechanicalTreatment) {
-      const temp = await this.formService.generateMechanicalTreatmentTest(this.config);
-      this.config = { ...temp};
-      // console.log(`config updated`);
-      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
-    } else if (this.router.current === AppRoutes.AddObservation) {
-      const temp = await this.formService.generateObservationTest(this.config);
-      this.config = { ...temp};
-      // console.log(`config updated`);
-      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
-    } else {
-      this.alert.show('Form not supported yet', `Test generatgion for this form type is not implemented yet`);
-    }
-    this.loadingService.remove();
+    this.isLoading = true;
+    const fake = await this.dummy.generateTest(this.config);
+    this.config = fake.config;
+    this.responseBody = fake.json;
+    this.isLoading = false;
   }
 
   async createDiffMessage() {

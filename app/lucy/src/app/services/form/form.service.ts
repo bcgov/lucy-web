@@ -5,11 +5,10 @@ import { DropdownObject, DropdownService } from '../dropdown.service';
 import { DummyService } from '../dummy.service';
 import { RouterService } from '../router.service';
 import { ErrorService, ErrorType } from '../error.service';
-import { MechanicalTreatmentService } from '../mechanical-treatment.service';
-import { ObservationService } from '../observation.service';
 import * as moment from 'moment';
 import { DiffResult } from '../diff.service';
 import { TableModel, TableColumn, TableRowModel } from 'src/app/components/base-form/table/table.component';
+import { CodeTableService } from '../code-table.service';
 
 export interface FormConfigField {
   key: string;
@@ -21,6 +20,8 @@ export interface FormConfigField {
   meta: any;
   cssClasses: string;
   codeTable: string;
+  codeTableMeta: {};
+  displayKey: string;
   condition: string;
 }
 
@@ -122,11 +123,9 @@ export class FormService {
   constructor(
     private api: ApiService,
     private dropdownService: DropdownService,
-    private dummyService: DummyService,
+    private codeTableService: CodeTableService,
     private router: RouterService,
     private errorService: ErrorService,
-    private observationService: ObservationService,
-    private mechanicalTreatmentService: MechanicalTreatmentService
   ) { }
 
   //////////////////////////////////// Fetch UI Config ////////////////////////////////////
@@ -147,39 +146,76 @@ export class FormService {
   }
 
   /**
+   * returns UI configuration for Chemical Treatments
+   */
+  public async getChemicalTreatmentUIConfig(): Promise<any> {
+    const serverConfig = await this.getChemicalTreatmentServerConfig();
+    return await this.createUIConfig(serverConfig);
+  }
+
+  /**
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
-
-    if ((this.router.current === AppRoutes.ViewObservation) || (this.router.current === AppRoutes.EditObservation)) {
-       //// Observation View And Edit routes ////
+    if (
+      this.router.current === AppRoutes.ViewObservation ||
+      this.router.current === AppRoutes.EditObservation
+    ) {
+      //// Observation View And Edit routes ////
       const configFile = await this.getObservationUIConfig();
-      const observation = await this.observationService.getWithId(this.router.routeId);
+      const observation = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
       return await this.getUIConfigFrom(configFile, observation);
     } else if (this.router.current === AppRoutes.AddObservation) {
       //// Observation Create route ////
       const configFile = await this.getObservationUIConfig();
       return configFile;
-    } else if ((this.router.current === AppRoutes.ViewMechanicalTreatment) || (this.router.current === AppRoutes.EditMechanicalTreatment)) {
+    } else if (
+      this.router.current === AppRoutes.ViewMechanicalTreatment ||
+      this.router.current === AppRoutes.EditMechanicalTreatment
+    ) {
       //// Mechanical Treatment View and Edit routes ////
       const configFile = await this.getMechanicalTreatmentUIConfig();
-      const treatment = await this.mechanicalTreatmentService.getWithId(this.router.routeId);
+      const treatment = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
       return await this.getUIConfigFrom(configFile, treatment);
-    } else if (this.router.current === AppRoutes.AddMechanicalTreatment)  {
+    } else if (this.router.current === AppRoutes.AddMechanicalTreatment) {
       //// Mechanical Treatment Create route ////
       const configFile = await this.getMechanicalTreatmentUIConfig();
-        return configFile;
+      return configFile;
+    } else if (
+      this.router.current === AppRoutes.ViewChemicalTreatment ||
+      this.router.current === AppRoutes.EditChemicalTreatment
+    ) {
+      //// Chemical Treatment View and Edit routes ////
+      const configFile = await this.getChemicalTreatmentUIConfig();
+      const treatment = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
+      return await this.getUIConfigFrom(configFile, treatment);
+    } else if (this.router.current === AppRoutes.AddChemicalTreatment) {
+      //// Chemical Treatment Create route ////
+      const configFile = await this.getChemicalTreatmentUIConfig();
+      return configFile;
     } else {
       console.log(this.router.current);
-        console.log(
-          `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
-        );
-        this.errorService.show(ErrorType.NotFound);
-        return undefined;
+      console.log(
+        `** this form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
+      );
+      this.errorService.show(ErrorType.NotFound);
+      return undefined;
     }
   }
 
-  private async getUIConfigFrom(config: any, objectWithValues: any): Promise<any> {
+  private async getUIConfigFrom(
+    config: any,
+    objectWithValues: any
+  ): Promise<any> {
     if (!config || !objectWithValues) {
       return undefined;
     }
@@ -210,7 +246,6 @@ export class FormService {
         return undefined;
       }
     } else {
-      console.log(`observation creation failed`);
       console.dir(response);
       return undefined;
     }
@@ -237,7 +272,29 @@ export class FormService {
         return undefined;
       }
     } else {
-      console.log(`observation creation failed`);
+      console.dir(response);
+      return undefined;
+    }
+  }
+
+  private async getChemicalTreatmentServerConfig(): Promise<FormConfig> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_Form_ChemicalTreatment,
+      undefined
+    );
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
+        console.dir(response);
+        return undefined;
+      }
+    } else {
       console.dir(response);
       return undefined;
     }
@@ -257,9 +314,9 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
-    const requiredFieldKeys: string[] = [];
-    const dropdownFieldKeys: string[] = [];
-    const fieldHeaders: {} = {};
+    let requiredFieldKeys: string[] = [];
+    let dropdownFieldKeys: string[] = [];
+    let fieldHeaders: {} = {};
     const configObject: UIConfigObject = {
       api: serverConfig.meta.api,
       idKey: serverConfig.idKey,
@@ -269,110 +326,188 @@ export class FormService {
       dropdownFieldKeys: [],
       relationsConfigs: {},
       relationKeys: [],
-      fieldHeaders: [],
+      fieldHeaders: []
     };
 
-    // if you think this is O N^3, you're wrong. it O N^4! -Edit: actually worse
-    // But this generated structure makes if easy for the view to be generated
+    // This structure makes if easy for the view to be generated
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
       // Loop thorugh groups in server config lay out
       for (const group of groups) {
-        // Initialize fields for group
-        const subSectionFields: any[] = [];
-        // Lat long fields will be merged into a location field. so first one found needs to be cached
-        let cachedLatOrLongField: any;
-        // Now loop through field keys specified in group layout
-        for (let i = 0; i < group.fields.length; i++) {
-          // Get key for field
-          const fieldKey = group.fields[i];
-          // Add type flags to field (to help with html generation)
-          let newField = await this.configField(fieldKey, fields);
-          // If field key wasnt found in fields
-          if (!newField) {
-            // Could be a computed field
-            newField = await this.configComputedField(fieldKey, computedFields);
-            if (!newField) {
-              // If it wasnt, just skip it
-              continue;
-            }
-          }
-          // Store required fields in a separate array
-          if (newField.required) {
-            requiredFieldKeys.push(newField.key);
-          }
-          // Store dropdown fields in a separate array
-          if (newField.isDropdown) {
-            dropdownFieldKeys.push(newField.key);
-          }
-          // Store field headers in a separate array
-          fieldHeaders[newField.key] = newField.header;
-
-          // set column size:
-          if (
-            group.fields.length >= 3 &&
-            (i % 3 === 0 || (i + 1) % 3 === 0) &&
-            !newField.isTextAreaField
-          ) {
-            // if group has more than 3 elements, make sure we dont have more than 3 elements per row
-            // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
-            newField.cssClasses = newField.cssClasses + ' col col-md-4';
-          } else if (newField.isTextAreaField) {
-            // Comment fields should take the whole row
-            newField.cssClasses = newField.cssClasses + ' col-12';
-          }
-
-          ////// Special case for lat or long fields //////
-          if (
-            newField.isLocationLatitudeField ||
-            newField.isLocationLongitudeField
-          ) {
-            // if its a latitude or logitude field, and we havent cached such field before, cache it
-            // if its already chached, generate special location field to add to subsection
-            if (cachedLatOrLongField) {
-              const cachedFieldIsLatitude =
-                cachedLatOrLongField.isLocationLatitudeField === true;
-              const locationField = {
-                key: `location`,
-                isLocationField: true,
-                latitude: cachedFieldIsLatitude
-                  ? cachedLatOrLongField
-                  : newField,
-                longitude: cachedFieldIsLatitude
-                  ? newField
-                  : cachedLatOrLongField
-              };
-              subSectionFields.push(locationField);
-            } else {
-              cachedLatOrLongField = newField;
-            }
-            ////// END Special case for lat or long field //////
-          } else {
-            // Add field to group fields
-            subSectionFields.push(newField);
-          }
-        }
+        // Process group
+        const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+        requiredFieldKeys = groupInfo.requiredFieldKeys;
+        dropdownFieldKeys = groupInfo.dropdownFieldKeys;
+        fieldHeaders = groupInfo.fieldHeaders;
+        // Add Group/Subsection
         subSections.push({
           title: group.title,
           boxed: false,
-          fields: subSectionFields
+          fields: groupInfo.fields
         });
       }
+      // Add Section
       configObject.sections.push({
         title: section.title,
         subSections: subSections
       });
     }
+
+    // Check if there are any fields in server config fields that havent been added to a section/group
+    ////////// Orphan fields //////////
+    const orphanFields: any[] = [];
+    const orphanGroupFieldKeys: string[] = [];
+    for (const field of fields) {
+      if (!fieldHeaders[field.key]) {
+        orphanFields.push(field);
+        orphanGroupFieldKeys.push(field.key);
+      }
+    }
+    if (orphanFields.length > 0) {
+      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+      requiredFieldKeys = orphanGroupInfo.requiredFieldKeys;
+      dropdownFieldKeys = orphanGroupInfo.dropdownFieldKeys;
+      fieldHeaders = orphanGroupInfo.fieldHeaders;
+      const orphanSubSections: any[] = [{
+        title: '',
+        boxed: false,
+        fields: orphanGroupInfo.fields
+      }];
+
+      configObject.sections.push({
+        title: '',
+        subSections: orphanSubSections
+      });
+    }
+    ////////// End of Orphan fields //////////
+
+    // Add the arrays to the config
     configObject.requiredFieldKeys = requiredFieldKeys;
     configObject.dropdownFieldKeys = dropdownFieldKeys;
     configObject.fieldHeaders = fieldHeaders;
     if (serverConfig.relations) {
-      configObject.relationKeys = this.getRelationKeysInConfig(serverConfig.relations);
+      configObject.relationKeys = this.getRelationKeysInConfig(
+        serverConfig.relations
+      );
       configObject.relationsConfigs = serverConfig.relations;
     }
-    // console.dir(configObject);
     return configObject;
+  }
+
+  private async procesConfigGroup(
+    groupFields: string[],
+    fields: any[],
+    computedFields: any[],
+    _requiredFieldKeys: string[],
+    _dropdownFieldKeys: string[],
+    _fieldHeaders: {}
+  ): Promise<{
+    fields: any[];
+    requiredFieldKeys: string[];
+    dropdownFieldKeys: string[];
+    fieldHeaders: {};
+  }> {
+    const requiredFieldKeys: string[] = _requiredFieldKeys;
+    const dropdownFieldKeys: string[] = _dropdownFieldKeys;
+    const fieldHeaders: {} = _fieldHeaders;
+    // Initialize fields for group
+    const subSectionFields: any[] = [];
+    // Lat long fields will be merged into a location field. so first one found needs to be cached
+    let cachedLatOrLongField: any;
+    // Now loop through field keys specified in group layout
+    for (let i = 0; i < groupFields.length; i++) {
+      // Get key for field
+      const fieldKey = groupFields[i];
+      // Add type flags to field (to help with html generation) & convert data structure
+      let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
+      // If field key wasnt found in fields
+      if (!newField) {
+        // Could be a computed field
+        newField = await this.configComputedField(fieldKey, computedFields);
+        if (!newField) {
+          // If it wasnt, just skip it
+          continue;
+        }
+      }
+      // Store required fields in a separate array
+      if (newField.required) {
+        requiredFieldKeys.push(newField.key);
+      }
+      // Store dropdown fields in a separate array
+      if (newField.isDropdown) {
+        dropdownFieldKeys.push(newField.key);
+      }
+      // Store field headers in a separate array
+      fieldHeaders[newField.key] = newField.header;
+
+      // Add Bootstrap column size
+      newField.cssClasses = this.addColumnClass(
+        newField.cssClasses,
+        i,
+        groupFields.length,
+        newField.isTextAreaField
+      );
+
+      ////// Special case for lat or long fields //////
+      if (
+        newField.isLocationLatitudeField ||
+        newField.isLocationLongitudeField
+      ) {
+        // if its a latitude or logitude field, and we havent cached such field before, cache it
+        // if its already chached, generate special location field to add to subsection
+        if (cachedLatOrLongField) {
+          const cachedFieldIsLatitude =
+            cachedLatOrLongField.isLocationLatitudeField === true;
+          const locationField = {
+            key: `location`,
+            isLocationField: true,
+            latitude: cachedFieldIsLatitude ? cachedLatOrLongField : newField,
+            longitude: cachedFieldIsLatitude ? newField : cachedLatOrLongField
+          };
+          // Add Location field
+          subSectionFields.push(locationField);
+        } else {
+          cachedLatOrLongField = newField;
+        }
+        ////// END Special case for lat or long field //////
+      } else {
+        // Add field to group fields
+        subSectionFields.push(newField);
+      }
+    }
+    return {
+      fields: subSectionFields,
+      requiredFieldKeys: requiredFieldKeys,
+      dropdownFieldKeys: dropdownFieldKeys,
+      fieldHeaders: fieldHeaders
+    };
+  }
+
+  private addColumnClass(
+    cssClasses: string,
+    fieldIndex: number,
+    numberOfFields: number,
+    isTextAreaField: boolean
+  ): string {
+    let result = cssClasses;
+    // If column is specified (from config) dont add
+    if (cssClasses.indexOf('col') === -1) {
+      // set column size:
+      if (
+        numberOfFields >= 3 &&
+        (fieldIndex % 3 === 0 || (fieldIndex + 1) % 3 === 0) &&
+        !isTextAreaField
+      ) {
+        // if group has more than 3 elements, make sure we dont have more than 3 elements per row
+        // This sets the fixed column size for every 3rd row so the remainng columns will fill the row
+        result = result + ' col col-md-4';
+      } else if (isTextAreaField) {
+        // Comment fields should take the whole row
+        result = result + ' col-12';
+      }
+    }
+    return result;
   }
 
   private getRelationKeysInConfig(relations: any): string[] {
@@ -385,7 +520,10 @@ export class FormService {
     return result;
   }
 
-  private async configComputedField(key: string, computedFields: any): Promise<any> {
+  private async configComputedField(
+    key: string,
+    computedFields: any
+  ): Promise<any> {
     // if key is not in computed fields, return undefined
     if (!computedFields[key]) {
       return undefined;
@@ -412,7 +550,7 @@ export class FormService {
       codeTable: '',
       condition: '',
       computationRules: computedField.computationRules,
-      isComputedField: true,
+      isComputedField: true
     };
   }
 
@@ -420,11 +558,14 @@ export class FormService {
    * Generate and return field configuration
    * This function sets the field type
    */
-  private async configField(key: string, fields: any[]): Promise<any> {
+  private async findFieldAndCreateConfigField(
+    key: string,
+    fields: any[]
+  ): Promise<any> {
     for (const field of fields) {
       if (field['key'] === key) {
         // convert server config field
-        const fieldOfInterest: any = this.processFieldConfig(field);
+        const fieldOfInterest: any = this.createFormConfigField(field);
         // initialize value field
         fieldOfInterest.value = undefined;
 
@@ -485,7 +626,9 @@ export class FormService {
         // if its a dropdown, grab its code table
         if (fieldOfInterest.isDropdown) {
           fieldOfInterest.dropdown = await this.dropdownfor(
-            fieldOfInterest.codeTable
+            fieldOfInterest.codeTable,
+            fieldOfInterest.displayKey,
+            fieldOfInterest.codeTableMeta
           );
         }
         return fieldOfInterest;
@@ -499,16 +642,26 @@ export class FormService {
    * can be interpreted by base Form.
    * @param field any
    */
-  private processFieldConfig(field: any): FormConfigField {
-    let codeTable = '';
-    if (field.type === 'object') {
+  private createFormConfigField(field: any): FormConfigField {
+    let codeTable = ``;
+    let codeTableDisplayKey = ``;
+    let codeTableMeta = [];
+    if (field.type === `object`) {
       codeTable = field.refSchema.modelName;
-      // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
+      if (
+        field.refSchema.displayLayout &&
+        field.refSchema.displayLayout.fields
+      ) {
+        // const lastField = field.refSchema.displayLayout.fields.slice(-1)[0];
+        const lastField = field.refSchema.displayLayout.fields[0];
+        codeTableDisplayKey = lastField.key;
+        codeTableMeta = field.refSchema.meta;
+      }
     }
     let cssClasses = ``;
     const classes = field.layout.classes;
     for (const item of classes) {
-      cssClasses = cssClasses + ` `;
+      cssClasses = item + ` `;
     }
 
     // BEGIN Tweak verification object received.
@@ -530,7 +683,7 @@ export class FormService {
     }
 
     if (
-      field.type.toLowerCase() === 'number' &&
+      field.type.toLowerCase() === `number` &&
       (!verification.isLatitude && !verification.isLongitude)
     ) {
       verification.positiveNumber = true;
@@ -547,6 +700,8 @@ export class FormService {
       meta: field.meta,
       cssClasses: cssClasses,
       codeTable: codeTable,
+      codeTableMeta: codeTableMeta,
+      displayKey: codeTableDisplayKey,
       condition: ''
     };
   }
@@ -578,53 +733,28 @@ export class FormService {
    * Return array of dropdown objects for code table specified.
    * @param code table name
    */
-  private async dropdownfor(code: string): Promise<DropdownObject[]> {
+  private async dropdownfor(
+    code: string,
+    displayKey: string,
+    meta: any
+  ): Promise<DropdownObject[]> {
     if (!code) {
+      console.log(`${code} not found`);
       return [];
     }
-    switch (code.toLowerCase()) {
-      case 'speciesagencycode':
-        return await this.dropdownService.getAgencies();
-      case 'jurisdictioncode':
-        return await this.dropdownService.getJuristictions();
-      case 'species':
-        return await this.dropdownService.getInvasivePlantSpecies();
-      case 'speciesdistributioncode':
-        return await this.dropdownService.getDistributions();
-      case 'observationtypecode':
-        return await this.dropdownService.getObservationType();
-      case 'soiltexturecode':
-        return await this.dropdownService.getSoilTextureCodes();
-      case 'observationgeometrycode':
-        return await this.dropdownService.getGeometry();
-      case 'specificusecode':
-        return await this.dropdownService.getSpecificUseCodes();
-      case 'slopecode':
-        return await this.dropdownService.getGroundSlopes();
-      case 'aspectcode':
-        return await this.dropdownService.getGroundAspects();
-      case 'proposedactioncode':
-        return await this.dropdownService.getProposedActions();
-      case 'mechanicalmethodcode':
-        return await this.dropdownService.getMechanicalTreatmentMethods();
-      case 'mechanicaldisposalmethodcode':
-        return await this.dropdownService.getMechanicalDisposalMethods();
-      case 'mechanicalsoildisturbancecode':
-        return await this.dropdownService.getMechanicalSoilDisturbances();
-      case 'mechanicalrootremovalcode':
-        return await this.dropdownService.getMechanicalRootRemovals();
-      case 'mechanicaltreatmentissuecode':
-        return await this.dropdownService.getMechanicalIssues();
-      case 'treatmentprovidercontractor':
-        return await this.dropdownService.getMechanicalTreatmentProviders();
-      case 'observation':
-        return await this.dropdownService.getObservations();
-      case 'speciesdensitycode':
-        return await this.dropdownService.getDensities();
-      default:
-        console.log(`Code Table is not handled ${code}`);
-        return [];
+    let codeTable = await this.codeTableService.getCodeTable(code);
+    // If it wasnt found in code table,
+    // try using api in meta field to fetch content
+    if ((!codeTable || codeTable.length < 1) && meta.api) {
+      const apiResult = await this.api.request(APIRequestMethod.GET, `${AppConstants.API_baseURL}${meta.api}`, null);
+      if (apiResult.success) {
+        codeTable = apiResult.response;
+      }
     }
+    return this.dropdownService.createDropdownObjectsFrom(
+      codeTable,
+      displayKey
+    );
   }
 
   /**
@@ -636,9 +766,11 @@ export class FormService {
    */
   private async getDropdownObjectWithId(
     codeTableName: string,
-    selectedObject: any
+    displayedKey: string,
+    selectedObject: any,
+    codeTableMeta: any,
   ): Promise<DropdownObject> {
-    const dropdowns = await this.dropdownfor(codeTableName);
+    const dropdowns = await this.dropdownfor(codeTableName, displayedKey, codeTableMeta);
     let selectedID: number;
     for (const key in selectedObject) {
       if (key.toLowerCase().indexOf(`id`) !== -1) {
@@ -696,16 +828,21 @@ export class FormService {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
           if (field.isLocationField) {
-            field.latitude.value = this.formatLatLongForDisplay(object[field.latitude.key]);
-            field.longitude.value = this.formatLatLongForDisplay(object[field.longitude.key]);
+            field.latitude.value = this.formatLatLongForDisplay(
+              object[field.latitude.key]
+            );
+            field.longitude.value = this.formatLatLongForDisplay(
+              object[field.longitude.key]
+            );
           } else {
-            if (object[field.key]) {
+            if (object[field.key] !== undefined) {
               const key = object[field.key];
               if (typeof key === 'object' && key !== null) {
-                const codeTableName = field.codeTable;
                 field.value = await this.getDropdownObjectWithId(
-                  codeTableName,
-                  object[field.key]
+                  field.codeTable,
+                  field.displayKey,
+                  object[field.key],
+                  field.codeTableMeta
                 );
               } else {
                 field.value = object[field.key];
@@ -722,8 +859,13 @@ export class FormService {
     }
     for (const relationKey of configuration.relationKeys) {
       if (object[relationKey]) {
-        configuration.relationsConfigs[relationKey].objects = object[relationKey];
-        configuration.relationsConfigs[relationKey].table = this.createUIConfigForTableRelation(configuration.relationsConfigs[relationKey]);
+        configuration.relationsConfigs[relationKey].objects =
+          object[relationKey];
+        configuration.relationsConfigs[
+          relationKey
+        ].table = this.createUIConfigForTableRelation(
+          configuration.relationsConfigs[relationKey]
+        );
       }
     }
     return configuration;
@@ -736,8 +878,14 @@ export class FormService {
    */
   private createUIConfigForTableRelation(relationConfig: any): TableModel {
     const relationFields = [];
-    if (!relationConfig.refSchema || !relationConfig.refSchema.idKey || !relationConfig.refSchema.meta) {
-      console.log(`relationConfig does not define an id key or reference schema or meta`);
+    if (
+      !relationConfig.refSchema ||
+      !relationConfig.refSchema.idKey ||
+      !relationConfig.refSchema.meta
+    ) {
+      console.log(
+        `relationConfig does not define an id key or reference schema or meta`
+      );
       return undefined;
     }
     const idKey = relationConfig.refSchema.idKey;
@@ -760,7 +908,8 @@ export class FormService {
               if (_i === 0) {
                 tableRowConfig[columnKey[0]] = object[key];
               } else {
-                tableRowConfig[columnKey[0]] = tableRowConfig[columnKey[0]][key];
+                tableRowConfig[columnKey[0]] =
+                  tableRowConfig[columnKey[0]][key];
               }
             }
           } else {
@@ -770,11 +919,17 @@ export class FormService {
       }
       relationFields.push(tableRowConfig);
     }
-    const tableModel: TableModel = this.generateTableModel(tableDataConfig, relationFields);
+    const tableModel: TableModel = this.generateTableModel(
+      tableDataConfig,
+      relationFields
+    );
     return tableModel;
   }
 
-  private generateTableModel(tableDataConfig: any[], values: any[]): TableModel {
+  private generateTableModel(
+    tableDataConfig: any[],
+    values: any[]
+  ): TableModel {
     const columns: TableColumn[] = [];
     const displayedColums: string[] = [];
     const tableRows: TableRowModel[] = [];
@@ -782,9 +937,11 @@ export class FormService {
       const displayedHeader = element.header.default;
       columns.push({
         key: this.convertDotSeparatedStringToArray(element.key)[0],
-        display: displayedHeader,
+        display: displayedHeader
       });
-      displayedColums.push(this.convertDotSeparatedStringToArray(element.key)[0]);
+      displayedColums.push(
+        this.convertDotSeparatedStringToArray(element.key)[0]
+      );
     }
 
     for (const fields of values) {
@@ -802,8 +959,8 @@ export class FormService {
   }
 
   /**
-  * Convert keys recieved from server to array of strings
-  */
+   * Convert keys recieved from server to array of strings
+   */
   private getTableColumnKeys(tableDataConfig: any[]): string[][] {
     const keys: string[][] = [];
     for (const element of tableDataConfig) {
@@ -841,7 +998,7 @@ export class FormService {
     }
     // If it doesnt have a decimap point, add 5 zeros
     if (String(value).indexOf('.') === -1) {
-      return `${(value)}.00000`;
+      return `${value}.00000`;
     }
     // Split by decimal point
     const separated = String(value).split('.');
@@ -859,8 +1016,7 @@ export class FormService {
       return `${separated[0]}.${decimals}`;
     }
     // at this point it should be fine as is
-    return `${(value)}`;
-
+    return `${value}`;
   }
 
   //////////////////////////////////// END Generate UI Config ////////////////////////////////////
@@ -986,7 +1142,11 @@ export class FormService {
    */
   private async getObjectWithId(endpoint: string, id: number): Promise<any> {
     const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
-    const response = await this.api.request(APIRequestMethod.GET, endpointWithId, null);
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      endpointWithId,
+      null
+    );
     if (response.success) {
       return response.response;
     } else {
@@ -1038,17 +1198,19 @@ export class FormService {
     if (!obj2 || typeof obj2 !== 'object') {
       return obj2;
     }
-    Object.keys(obj1 || {}).concat(Object.keys(obj2 || {})).forEach(key => {
-      if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-        result[key] = obj2[key];
-      }
-      if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
-        const value = this.diff(obj1[key], obj2[key]);
-        if (value !== undefined) {
-          result[key] = value;
+    Object.keys(obj1 || {})
+      .concat(Object.keys(obj2 || {}))
+      .forEach(key => {
+        if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+          result[key] = obj2[key];
         }
-      }
-    });
+        if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+          const value = this.diff(obj1[key], obj2[key]);
+          if (value !== undefined) {
+            result[key] = value;
+          }
+        }
+      });
     return result;
   }
 
@@ -1086,10 +1248,13 @@ export class FormService {
    * @param body JSON
    * @param uiConfig UIConfig
    */
-  public async submit(body: JSON, uiConfig: any): Promise<FormSubmissionResult> {
+  public async submit(
+    body: JSON,
+    uiConfig: any
+  ): Promise<FormSubmissionResult> {
     const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
     let endpoint = '';
-    let method = APIRequestMethod.POST;
+    let method: APIRequestMethod;
     if (this.router.isEditRoute) {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
       method = APIRequestMethod.PUT;
@@ -1113,11 +1278,14 @@ export class FormService {
    * @param result APIRequestResult
    * @param idKey id key for the object
    */
-  private prosessSubmissionResult(result: APIRequestResult, idKey: string): FormSubmissionResult {
+  private prosessSubmissionResult(
+    result: APIRequestResult,
+    idKey: string
+  ): FormSubmissionResult {
     if (result.success && result.response[idKey]) {
       return {
         success: result.success,
-        id: result.response[idKey],
+        id: result.response[idKey]
       };
     } else {
       return {
@@ -1126,39 +1294,35 @@ export class FormService {
           errors: result.response.error.error.errors,
           code: result.response.error.status,
           message: result.response.error.error.message
-        },
+        }
       };
     }
   }
   //////////////////////////////////// END SUBMISSION ////////////////////////////////////
 
-  //////////////////////////////////// TESTS ////////////////////////////////////
-  public async generateMechanicalTreatmentTest(config: any): Promise<any> {
-    const dummy = await this.dummyService.createDummyMechanicalTreatment();
-    // console.dir(dummy);
-    return await this.merge(config, dummy);
-  }
-
-  public async generateObservationTest(config: any): Promise<any> {
-    const dummy = await this.dummyService.createDummyObservation([]);
-    // console.log(`dummy: ${dummy.lat} ${dummy.long}`);
-    const temp = await this.merge(config, dummy);
-    return temp;
-  }
-  //////////////////////////////////// END TESTS ////////////////////////////////////
-
   /////////////////////////////////// Route helpers ////////////////////////////////////
   public viewCurrentWithId(id: number) {
     const current = this.router.current;
-    if (current === AppRoutes.EditMechanicalTreatment || current === AppRoutes.AddMechanicalTreatment) {
+    if (
+      current === AppRoutes.EditMechanicalTreatment ||
+      current === AppRoutes.AddMechanicalTreatment
+    ) {
       this.router.navigateTo(AppRoutes.ViewMechanicalTreatment, id);
-    } else if (current === AppRoutes.EditObservation || current === AppRoutes.AddObservation) {
+    } else if (
+      current === AppRoutes.EditObservation ||
+      current === AppRoutes.AddObservation
+    ) {
       this.router.navigateTo(AppRoutes.ViewObservation, id);
+    } else if (
+      current === AppRoutes.EditChemicalTreatment ||
+      current === AppRoutes.AddChemicalTreatment
+    ) {
+      this.router.navigateTo(AppRoutes.ViewChemicalTreatment, id);
     }
   }
   /**
    * Switch current form route to edit mode
-  */
+   */
   public editCurrent() {
     const current = this.router.current;
     switch (current) {
@@ -1171,6 +1335,12 @@ export class FormService {
       case AppRoutes.ViewObservation: {
         return this.router.navigateTo(
           AppRoutes.EditObservation,
+          this.router.routeId
+        );
+      }
+      case AppRoutes.ViewChemicalTreatment: {
+        return this.router.navigateTo(
+          AppRoutes.EditChemicalTreatment,
           this.router.routeId
         );
       }

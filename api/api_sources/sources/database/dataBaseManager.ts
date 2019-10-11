@@ -43,9 +43,14 @@ import {
     MechanicalTreatmentIssueCodeController,
     MechanicalSoilDisturbanceCodeController,
     TreatmentProviderContractorController,
-    MechanicalTreatmentController, 
+    MechanicalTreatmentController,
     SpeciesDensityCodeController,
-    SpeciesDistributionCodeController} from './models';
+    SpeciesDistributionCodeController,
+    ChemicalTreatmentEmployeeController,
+    ProjectManagementPlanCodeController,
+    ChemicalTreatmentController,
+    PesticideEmployerCodeController
+} from './models';
 const dbConfig = require('../../ormconfig');
 
 /**
@@ -141,7 +146,11 @@ export class DBManager extends LoggerBase {
             MechanicalTreatmentIssueCodeController.shared,
             MechanicalSoilDisturbanceCodeController.shared,
             TreatmentProviderContractorController.shared,
-            MechanicalTreatmentController.shared
+            MechanicalTreatmentController.shared,
+            ChemicalTreatmentEmployeeController.shared,
+            ProjectManagementPlanCodeController.shared,
+            ChemicalTreatmentController.shared,
+            PesticideEmployerCodeController.shared
 
         ];
     }

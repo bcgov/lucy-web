@@ -1,6 +1,7 @@
 # Sonar
 **/.scannerwork
 **/.sonar
+**/scripts/test.ts
 
 # Generated Swagger file
 **/swagger.raw.yaml

@@ -89,6 +89,9 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   // Set
   @Input() set value(value: string) {
     this._value = value;
+    if (value === `0`) {
+      console.log(`is zero`);
+    }
     if (!this.isReady) {
       return;
     }
@@ -100,6 +103,7 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
           // if the only requirement is for the field to be required, and value is not empty.. dont emit
           // this is a hot-fix for "generate for testing" button.
         } else {
+          // console.log(`bad ${this.header}`);
           this.valueChanged.emit(``);
         }
       }
