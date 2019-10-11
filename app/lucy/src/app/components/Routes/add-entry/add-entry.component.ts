@@ -15,8 +15,12 @@ export class AddEntryComponent implements OnInit {
 
   }
 
-  createTreatment() {
+  createMechanicalTreatment() {
     this.routerService.navigateTo(AppRoutes.AddMechanicalTreatment);
+  }
+
+  createChemicalTreatment() {
+    this.routerService.navigateTo(AppRoutes.AddChemicalTreatment);
   }
 
   createObservation() {

@@ -54,12 +54,17 @@ export class AlertService {
     this.pushModal(title, body, actionButtons);
   }
 
-  /**
-   * Add message to que and returns true or false
-   * to indicate if user confirmed or cancelled.
-   * @returns boolean
-   */
-  public async showConfirmation(title: string, body: string): Promise<boolean> {
+ /**
+  * Add message to que and returns true or false
+  * to indicate if user confirmed or cancelled.
+  * @param title Message title
+  * @param body Message body
+  * @param confirmName Defaults to Confirm
+  * @param cancelName Defefaults to Cancel
+  * @returns boolean
+  */
+
+  public async showConfirmation(title: string, body: string, confirmName?: string, cancelName?: string): Promise<boolean> {
     const confirmAction = new EventEmitter<boolean>();
     const cancelAction = new EventEmitter<boolean>();
     const actionButtons: AlertModalButton[] = [];
@@ -68,25 +73,23 @@ export class AlertService {
       confirmAction.subscribe(item => {
         confirmAction.unsubscribe();
         cancelAction.unsubscribe();
-        console.log(`should confirm`);
         resolve(true);
       });
 
       cancelAction.subscribe(item => {
         confirmAction.unsubscribe();
         cancelAction.unsubscribe();
-        console.log(`should cancel`);
         resolve(false);
       });
 
       actionButtons.push({
-        name: `Confirm`,
+        name: cancelName ? confirmName : `Confirm`,
         canDismiss: true,
         eventEmitter: confirmAction,
       });
 
       actionButtons.push({
-        name: `Cancel`,
+        name: cancelName ? cancelName : `Cancel`,
         canDismiss: true,
         eventEmitter: cancelAction,
       });

@@ -14,7 +14,7 @@
         "test:all": "nyc ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 8000",
         "migration": "ts-node scripts/run.migrations.ts",
         "typeorm": "ts-node -r ./tsconfig.json/register ./node_modules/typeorm/cli.js",
-        "test": "ts-mocha '**/*.spec.ts' --timeout 8000",
+        "test": "ts-mocha --timeout 8000",
         "ts-run": "ts-node",
         "tslint": "tslint",
         "test:lint": "tslint --project .",

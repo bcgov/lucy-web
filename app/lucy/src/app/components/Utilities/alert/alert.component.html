@@ -1,6 +1,6 @@
-<div class="animated" [ngClass]="presenting ? 'overlay fadeIn' : 'fadeOut'">
-<div class="alert-position animated" [ngClass]="presenting ? 'fadeIn' : 'fadeOut'">
-    <div class="container container-fluid alert-container animated" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
+<div class="animated overlay overly-animation" [ngClass]="presenting ? 'fadeIn' : 'fadeOut'">
+<div class="alert-position animated message-container-animation" [ngClass]="presenting ? 'fadeIn' : ''">
+    <div class="container container-fluid alert-container animated message-animation" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
       <div class="row">
         <div class="col-12 header">
             {{title}}

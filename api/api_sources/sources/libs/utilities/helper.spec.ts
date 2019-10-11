@@ -21,7 +21,17 @@
  * -----
  */
 import { should, expect } from 'chai';
-import { verifyObject, incrementalFileName, applicationTemFileDir, incrementalWrite, arrayToString, ifDefined, writeIfNotExists, reverseCapitalize } from './helpers.utilities';
+import {
+    verifyObject,
+    incrementalFileName,
+    applicationTemFileDir,
+    incrementalWrite,
+    arrayToString,
+    ifDefined,
+    writeIfNotExists,
+    reverseCapitalize,
+    valueAtKeyPath
+} from './helpers.utilities';
 
 
 describe('Test Helper/Utilities', () => {
@@ -88,5 +98,21 @@ describe('Test Helper/Utilities', () => {
         expect(reverseCapitalize(value)).to.be.equal('lao');
         expect(reverseCapitalize(value2)).to.be.equal('laBa');
         expect(reverseCapitalize({})).to.be.equal('');
+    });
+
+    it('should fetch values', () => {
+        const o = {
+            x : {
+                y: {
+                    z: 100
+                }
+            }
+        };
+        expect(valueAtKeyPath(o, 'x.y.z')).to.be.equal(100);
+    });
+
+    it('should not fetch values', () => {
+        const o = {};
+        expect(valueAtKeyPath(o, 'x.y.z')).to.be.equal(undefined);
     });
 });

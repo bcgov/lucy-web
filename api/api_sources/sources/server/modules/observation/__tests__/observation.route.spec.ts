@@ -50,6 +50,7 @@ import {
     ModelSpecFactory,
     RequestFactory
 } from '../../../../database/factory';
+import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
 
 describe('Test for observation routes', () => {
     before(async () => {
@@ -297,6 +298,13 @@ describe('Test for observation routes', () => {
         .then(async (resp) => {
             await verifyErrorBody(resp.body);
             await destroyObservation(obsSpecies);
+        });
+    });
+
+    it('should filter by observer name and location', async () => {
+        await ExpressResourceTest.testGetFilteredItem(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, ObservationController.shared, {
+            observerFirstName: 'Laba',
+            observerLastName: 'Ballabh'
         });
     });
 });

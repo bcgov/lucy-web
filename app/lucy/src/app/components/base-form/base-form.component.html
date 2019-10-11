@@ -31,7 +31,7 @@
     </div>
   </div>
   <br />
-  <div class="container form-body">
+  <div class="container form-body animated fadeIn">
     <br />
     <lottie-animation-view
       [options]="lottieConfig"
@@ -67,6 +67,7 @@
           <span class="spacer-toolbar"></span>
           <!-- Submit button -->
           <button
+            mat-flat-button
             *ngIf="!readonly || inReviewMode"
             type="button"
             class="btn btn-secondary submit-button"
@@ -77,7 +78,7 @@
           <!-- ---- -->
           <!-- Edit button for review -->
           <button
-            (click)="exitReviewMode()"
+            mat-flat-button
             *ngIf="inReviewMode"
             type="button"
             class="btn btn-secondary edit-button animated fadeIn"
@@ -91,6 +92,7 @@
           <!-- ---- -->
           <!-- Edit Button for when in view mode and user is data editor -->
           <button
+            mat-flat-button
             (click)="edit()"
             *ngIf="isDataEditor && viewing"
             type="button"
@@ -242,6 +244,17 @@
                 [computationRules]="field.computationRules"
               >
               </app-computed-field>
+            </div>
+            <div class="col nopadding" *ngIf="subSection.fields.length === 0">
+              <div class="container">
+                <div class="row">
+                  <div class="col no-content">
+                    <i class="material-icons">
+                      build
+                    </i>This section does not have any content yet.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
