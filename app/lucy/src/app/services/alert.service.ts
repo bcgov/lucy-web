@@ -3,7 +3,7 @@ import { Subject, Observable } from 'rxjs';
 
 export interface AlertModel {
   title: string;
-  body: string;
+  body: string[];
   buttons: AlertModalButton[];
 }
 
@@ -51,63 +51,62 @@ export class AlertService {
       actionButtons = buttons;
     }
 
-    const model: AlertModel = {
-      title: title,
-      body: body,
-      buttons: actionButtons
-    };
-    this.que.push(model);
-    this.emit();
+    this.pushModal(title, body, actionButtons);
   }
 
-  /**
-   * Add message to que and returns true or false
-   * to indicate if user confirmed or cancelled.
-   * @returns boolean
-   */
-  public async showConfirmation(title: string, body: string): Promise<boolean> {
+ /**
+  * Add message to que and returns true or false
+  * to indicate if user confirmed or cancelled.
+  * @param title Message title
+  * @param body Message body
+  * @param confirmName Defaults to Confirm
+  * @param cancelName Defefaults to Cancel
+  * @returns boolean
+  */
+
+  public async showConfirmation(title: string, body: string, confirmName?: string, cancelName?: string): Promise<boolean> {
     const confirmAction = new EventEmitter<boolean>();
     const cancelAction = new EventEmitter<boolean>();
     const actionButtons: AlertModalButton[] = [];
 
     return new Promise<boolean>((resolve, reject) => {
-
-
       confirmAction.subscribe(item => {
         confirmAction.unsubscribe();
         cancelAction.unsubscribe();
-        console.log(`should confirm`);
         resolve(true);
       });
 
       cancelAction.subscribe(item => {
         confirmAction.unsubscribe();
         cancelAction.unsubscribe();
-        console.log(`should cancel`);
         resolve(false);
       });
 
       actionButtons.push({
-        name: `Confirm`,
+        name: cancelName ? confirmName : `Confirm`,
         canDismiss: true,
         eventEmitter: confirmAction,
       });
 
       actionButtons.push({
-        name: `Cancel`,
+        name: cancelName ? cancelName : `Cancel`,
         canDismiss: true,
         eventEmitter: cancelAction,
       });
 
-      const model: AlertModel = {
-        title: title,
-        body: body,
-        buttons: actionButtons
-      };
-
-      this.que.push(model);
-      this.emit();
+      this.pushModal(title, body, actionButtons);
     });
+  }
+
+  private pushModal(title: string, body: string, actionButtons: AlertModalButton[]) {
+    const model: AlertModel = {
+      title: title,
+      body: body.split('\n'),
+      buttons: actionButtons
+    };
+
+    this.que.push(model);
+    this.emit();
   }
 
   /**
@@ -116,7 +115,8 @@ export class AlertService {
    */
   public clear(message: AlertModel) {
     if (!message) { return; }
-    this.que.splice(this.indexOf(message, this.que), 1);
+    this.que.splice(0, 1);
+    // this.que.splice(this.indexOf(message, this.que), 1);
     this.emit();
   }
 

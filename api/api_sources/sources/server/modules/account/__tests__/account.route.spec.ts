@@ -61,12 +61,12 @@ describe('Test account routes', () => {
     it('should fetch me', async () => {
         await request(SharedExpressApp.app)
         .get('/api/account/me')
-        .set('Authorization', `Bearer ${adminToken()}`)
+        .set('Authorization', `Bearer ${testIdr1Token()}`)
         .expect(200)
         .then(async (resp) => {
             const body = resp.body;
             await verifySuccessBody(body, async (data: any) => {
-                expect(data.email).to.equal('amir@freshworks.io');
+                expect(data.email).to.equal('istest1@idir');
             });
             // done();
         });
@@ -87,9 +87,9 @@ describe('Test account routes', () => {
     });
 
     it('should update me', async () => {
-        const fname = 'AmirFW';
-        const lname = 'FW';
-        const user = await UserDataController.shared.fetchOne({email : 'amir@freshworks.io'});
+        const fname = 'Test';
+        const lname = 'Idr1';
+        const user = await UserDataController.shared.fetchOne({email : 'istest1@idir'});
         expect(user).not.to.equal(undefined);
         await request(SharedExpressApp.app)
         .put('/api/account/me')
@@ -126,7 +126,7 @@ describe('Test account routes', () => {
     });
 
     it('should not update my role', async () => {
-        const user = await UserDataController.shared.fetchOne({email : 'amir@freshworks.io'});
+        const user = await UserDataController.shared.fetchOne({email : 'istest1@idir'});
         await request(SharedExpressApp.app)
         .put('/api/account/me')
         .set('Authorization', `Bearer ${adminToken()}`)
@@ -136,7 +136,7 @@ describe('Test account routes', () => {
         .expect(200)
         .then(async (resp) => {
             await verifySuccessBody(resp.body, async  (data: any) => {
-                const updatedUser = await UserDataController.shared.fetchOne({email : 'amir@freshworks.io'});
+                const updatedUser = await UserDataController.shared.fetchOne({email : 'istest1@idir'});
                 expect(updatedUser.roles).to.eql(user.roles);
             });
             // Finish

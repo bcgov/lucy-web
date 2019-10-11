@@ -68,10 +68,10 @@ export const createAdmin = async (): Promise<User> => {
         return existing;
     }
     const admin = await UserDataController.shared.create();
-    admin.email = 'amir@freshworks.io';
-    admin.preferredUsername = 'ashayega@idir';
-    admin.firstName = 'Amir';
-    admin.lastName = 'Shyega';
+    admin.email = 'istest1@idir';
+    admin.preferredUsername = 'istest1@idir';
+    admin.firstName = 'First';
+    admin.lastName = 'Last';
     admin.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.admin)];
     await UserDataController.shared.saveInDB(admin);
     return admin;

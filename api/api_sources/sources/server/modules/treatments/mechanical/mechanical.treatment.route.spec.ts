@@ -14,10 +14,10 @@
  * File: mechanical.treatment.route.spec.ts
  * Project: lucy
  * File Created: Monday, 12th August 2019 1:45:08 pm
- * Author: pushan (you@you.you)
+ * Author: pushan
  * -----
  * Last Modified: Monday, 12th August 2019 1:59:47 pm
- * Modified By: pushan (you@you.you>)
+ * Modified By: pushan
  * -----
  */
 /**
@@ -42,7 +42,8 @@ import {
     mechanicalTreatmentCreateSpecFactory,
     RequestFactory,
     mechanicalTreatmentFactory,
-    destroyMechanicalTreatment
+    destroyMechanicalTreatment,
+    Destroyer
 } from '../../../../database/factory';
 import {
     ObservationController,
@@ -129,16 +130,17 @@ describe('Test for mechanical treatment', () => {
 
     it('should not create mechanical treatment for {viewer}', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
         await testRequest(SharedExpressApp.app , {
             url: '/api/treatment/mechanical/',
             type: HttpMethodType.post,
             expect: 401,
             auth: AuthType.viewer,
-            send: create
+            send: createReq
         })
         .then(async (resp) => {
             await verifyErrorBody(resp.body);
-            await ObservationController.shared.remove(create.observation);
+            await Destroyer(MechanicalTreatmentController.shared)(create, true);
         });
     });
 
