@@ -28,7 +28,8 @@ import {
     saveYaml,
     SchemaCache,
     SchemaLoader,
-    incrementalWrite
+    incrementalWrite,
+    unWrap
 } from '../utilities';
 
 import {
@@ -159,6 +160,7 @@ export class  BaseSchema {
             column.columnVerification = value.columnVerification;
             column.meta = value.meta;
             column.layout = value.layout;
+            column.eager = unWrap(def.eager, true);
             column.required = (value.required !== undefined) ? value.required : true;
             result[key] = column;
             table.columnsDefinition = {...table.columnsDefinition, ...result};
@@ -386,6 +388,10 @@ export class  BaseSchema {
      */
     dropTable(): string {
         return `DROP TABLE IF EXISTS ${this.table.name}`;
+    }
+
+    apiPath(): string {
+        return this.table.meta.api ? `/api${this.table.meta.api}` : `/api/${this.modelName}`;
     }
 
     /**

@@ -79,7 +79,7 @@ export class TableComponent implements OnInit {
   private generateTableRows() {
     this.tableRows = [];
     if (!this.model || !this.model.rows) {
-      console.log(`invalid table model`);
+      // console.log(`invalid table model`);
       return;
     }
     for (const row of this.model.rows) {
@@ -102,10 +102,10 @@ export class TableComponent implements OnInit {
     }
     const route = this.router.getAppRouteForAPI(object.api);
     if (!route) {
-      console.log('not found');
+      // console.log('not found');
       return;
     }
-    this.router.navigateTo(route, object.objectId);
+    this.router.navigateTo(route, object.objectId, true);
   }
 
 }

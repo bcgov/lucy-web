@@ -46,23 +46,32 @@ export class LocationInputComponent implements OnInit {
   }
   @Input() set object(object: any) {
     this._object = { ...object};
-    console.log(`setting...`);
-    console.dir(this.object);
-    console.log(this.object.latitude.value);
-    console.log(this.object.longitude.value);
+
     if (this.object && this.object.latitude && this.object.latitude.value) {
-      console.log(`setting ${this.object.latitude.value}`);
-      this.lat = String(this.object.latitude.value);
+      // console.log(`setting ${this.object.latitude.value}`);
+      this.lat = `${this.object.latitude.value}`;
     }
     if (this.object && this.object.longitude && this.object.longitude.value) {
-      console.log(`setting ${this.object.longitude.value}`);
-      this.long = String(this.object.longitude.value);
+      // console.log(`setting ${this.object.longitude.value}`);
+      this.long = `${this.object.longitude.value}`;
     }
   }
   ////////////////////
 
- long = '';
- lat = '';
+  private _long = ''
+  get long(): string {
+    return this._long
+  }
+  set long(value: string) {
+    this._long = value
+  }
+  private _lat = ''
+  get lat(): string {
+    return this._lat
+  }
+  set lat(value: string) {
+    this._lat = value
+  }
 
   // * Validations
   get validLat(): Boolean {
@@ -206,7 +215,7 @@ export class LocationInputComponent implements OnInit {
 
     // 3) Check if converted lat long are valid
     if (!this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {
-      console.dir(converted);
+      // console.dir(converted);
       return;
     }
 
