@@ -1,59 +1,59 @@
 {
-    "jti":"57147f02-3741-4eb1-8949-c6690a058b7d",
-    "exp":1557947030,
-    "nbf":0,
-    "iat":1557946730,
-    "iss":"https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z",
-    "aud":"lucy",
-    "sub":"32e33e03-9d12-43a5-88e6-ce031fc36be8",
-    "typ":"Bearer",
-    "azp":"lucy",
-    "auth_time":1557945662,
-    "session_state":"15baf3f6-92d9-4c81-8ca5-ba9459f2f2b2",
-    "acr":"0",
-    "allowed-origins":[
-       "http://localhost:4200"
+    "jti": "57147f02-3741-4eb1-8949-c6690a058b7d",
+    "exp": 1557947030,
+    "nbf": 0,
+    "iat": 1557946730,
+    "iss": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z",
+    "aud": "lucy",
+    "sub": "32e33e03-9d12-43a5-88e6-ce031fc36be8",
+    "typ": "Bearer",
+    "azp": "lucy",
+    "auth_time": 1557945662,
+    "session_state": "15baf3f6-92d9-4c81-8ca5-ba9459f2f2b2",
+    "acr": "0",
+    "allowed-origins": [
+        "http://localhost:4200"
     ],
-    "realm_access":{
-       "roles":[
-          "uma_authorization"
-       ]
+    "realm_access": {
+        "roles": [
+            "uma_authorization"
+        ]
     },
-    "resource_access":{
-       "realm-management":{
-          "roles":[
-             "view-realm",
-             "view-identity-providers",
-             "manage-identity-providers",
-             "impersonation",
-             "realm-admin",
-             "create-client",
-             "manage-users",
-             "query-realms",
-             "view-authorization",
-             "query-clients",
-             "query-users",
-             "manage-events",
-             "manage-realm",
-             "view-events",
-             "view-users",
-             "view-clients",
-             "manage-authorization",
-             "manage-clients",
-             "query-groups"
-          ]
-       },
-       "account":{
-          "roles":[
-             "manage-account",
-             "manage-account-links",
-             "view-profile"
-          ]
-       }
+    "resource_access": {
+        "realm-management": {
+            "roles": [
+                "view-realm",
+                "view-identity-providers",
+                "manage-identity-providers",
+                "impersonation",
+                "realm-admin",
+                "create-client",
+                "manage-users",
+                "query-realms",
+                "view-authorization",
+                "query-clients",
+                "query-users",
+                "manage-events",
+                "manage-realm",
+                "view-events",
+                "view-users",
+                "view-clients",
+                "manage-authorization",
+                "manage-clients",
+                "query-groups"
+            ]
+        },
+        "account": {
+            "roles": [
+                "manage-account",
+                "manage-account-links",
+                "view-profile"
+            ]
+        }
     },
-    "name":"Amir Shayegh",
-    "preferred_username":"ashayega@idir",
-    "given_name":"Amir",
-    "family_name":"Shayegh",
-    "email":"amir@freshworks.io"
- }
+    "name": "First Last",
+    "preferred_username": "istest1@idir",
+    "given_name": "First",
+    "family_name": "Last",
+    "email": "istest1@idir"
+}

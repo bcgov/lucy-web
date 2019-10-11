@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { AppRoutes } from 'src/app/constants';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-user-information',
@@ -33,7 +35,7 @@ export class UserInformationComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    return (this.firstNameIsValid && this.lastNameIsValid && this.emailIsValid && this.organizationIsValid);
+    return (this.firstNameIsValid && this.lastNameIsValid);
   }
 
   public get invalidMessage(): string {
@@ -62,7 +64,7 @@ export class UserInformationComponent implements OnInit {
 
   }
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private toast: ToastService, private alert: AlertService) { }
 
   ngOnInit() {
     // Fetch organizations
@@ -88,16 +90,15 @@ export class UserInformationComponent implements OnInit {
   public onNext() {
     if (this.isValid) {
       this.userService.updateUserInfo(this.firstName, this.lastName).then((success) => {
-        console.log(`called set basic info: ` + success);
         if (success) {
+          this.toast.show('Your information has been updated', ToastIconType.success);
           this.router.navigateByUrl(AppRoutes.Profile);
         } else {
-          // TODO: Create a re-usable modal alert component.
-          console.log(`Couldnt update user information`);
+          this.alert.show('Error', 'We couldnt update your indormation');
         }
       });
     } else {
-      console.log(`not valid`);
+      this.alert.show('Error', 'The information you entered is not valid');
     }
   }
 }

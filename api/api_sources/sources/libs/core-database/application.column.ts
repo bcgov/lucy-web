@@ -57,6 +57,7 @@ export interface TableColumnDefinition {
     columnVerification?: TableColumnVerification;
     meta?: any;
     layout?: any;
+    eager?: boolean;
 }
 
 
@@ -77,6 +78,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     columnVerification?: TableColumnVerification;
     meta?: any;
     layout?: any;
+    eager = true;
     constructor(
         name: string,
         comment: string,

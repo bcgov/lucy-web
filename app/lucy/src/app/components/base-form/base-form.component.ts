@@ -7,20 +7,19 @@ import {
   Renderer2,
 } from '@angular/core';
 import { FormMode } from 'src/app/models';
-import { ErrorService, ErrorType } from 'src/app/services/error.service';
 import { UserService } from 'src/app/services/user.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { RouterService } from 'src/app/services/router.service';
 import { UserAccessType } from 'src/app/models/Role';
-import { AppRoutes, AppConstants } from 'src/app/constants';
-import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
-import { FormService} from 'src/app/services/form/form.service';
+import { AppRoutes } from 'src/app/constants';
+import { FormService, FormSubmissionResult, UIConfigObject} from 'src/app/services/form/form.service';
 import * as moment from 'moment';
-import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
 import { ElementRef } from '@angular/core';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
+import { DummyService } from 'src/app/services/dummy.service';
 
 export enum FormType {
   Observation,
@@ -153,11 +152,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   // Config
-  private _config: any = {};
-  private get config(): any {
+  private _config: UIConfigObject;
+  private get config(): UIConfigObject {
     return this._config;
   }
-  private set config(object: any) {
+  private set config(object: UIConfigObject) {
     this._config = { ...object};
   }
 
@@ -180,7 +179,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     let requiredFieldsExist = true;
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
-        console.log(`${key} is missing`);
         requiredFieldsExist = false;
       }
     }
@@ -226,18 +224,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   constructor(
-    // private mechanicalTreatmentService: MechanicalTreatmentService,
-    private errorService: ErrorService,
+    private dummy: DummyService,
     private userService: UserService,
     private roles: RolesService,
     private alert: AlertService,
     private router: RouterService,
-    private dropdownService: DropdownService,
     private formService: FormService,
-    private api: ApiService,
     private loadingService: LoadingService,
     private elementRef: ElementRef,
     private renderer: Renderer2,
+    private toast: ToastService
   ) {
     this.lottieConfig = {
       path: this.formLoadingIcon,
@@ -261,7 +257,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     if (config) {
       this.config = config;
     } else {
-      console.log('Bad config. show a toast in the future');
+      this.alert.show('Configuration error', 'This feature is currently unavailable');
+      console.log(`Bad config`);
+      this.router.navigateTo(AppRoutes.AddEntry);
+      return;
     }
     if (this.router.isEditRoute || this.router.isViewRoute) {
       // We are setting the body for view mode as well because:
@@ -294,9 +293,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
     if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+      // console.log('setting lat long in body to undefined')
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
     } else if (event === `` && this.responseBody[field.key] !== undefined) {
+      // console.log(`setting ${field.key} to undefined`)
+      // console.dir(event);
       this.responseBody[field.key] = undefined;
     }
     // handle valid input cases
@@ -339,18 +341,22 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.triedToSubmit = true;
+      this.toast.show('Some required fields are missing', ToastIconType.fail);
+      return;
     } else {
       if (!this.inReviewMode) {
         this.enterReviewMode();
         return;
       }
       this.loadingService.add();
-      const submitted = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
+      // const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify({key: 'hello'})), this.config);
+      const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
-      if (submitted) {
-        this.router.navigateTo(AppRoutes.Inventory);
+      if (submissionResult.success) {
+        this.toast.show(`Your record has been commited to the database.`, ToastIconType.success);
+        this.formService.viewCurrentWithId(submissionResult.id);
       } else {
-        this.alert.show('error', 'There was an error');
+        this.handleSubmissionError(submissionResult);
       }
     }
   }
@@ -407,9 +413,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
-    let el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
-      if (el) {;
-          el.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+    const el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
+      if (el) {
+          el.scrollIntoView({ block: 'center',  behavior: 'smooth' });
           this.renderer.addClass(el, highlightClass);
           setTimeout(() => {
           this.renderer.removeClass(el, highlightClass);
@@ -427,21 +433,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   async generateForTesting() {
-    this.loadingService.add();
-    if (this.router.current === AppRoutes.AddMechanicalTreatment) {
-      const temp = await this.formService.generateMechanicalTreatmentTest(this.config);
-      this.config= { ...temp};
-      console.log(`config updated`);
-      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
-    } else if (this.router.current === AppRoutes.AddObservation) {
-      const temp = await this.formService.generateObservationTest(this.config);
-      this.config = { ...temp};
-      console.log(`config updated`);
-      this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
-    } else {
-      this.alert.show('Form not supported yet', `Test generatgion for this form type is not implemented yet`);
-    }
-    this.loadingService.remove();
+    this.isLoading = true;
+    const fake = await this.dummy.generateTest(this.config);
+    this.config = fake.config;
+    this.responseBody = fake.json;
+    this.isLoading = false;
   }
 
   async createDiffMessage() {
@@ -449,4 +445,77 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this.diffObject = await this.formService.diffObject(JSON.parse(JSON.stringify(this.responseBody)), this.config);
     this.loadingService.remove();
   }
+
+  /////////// Submission error handling ///////////
+
+  /**
+   * Handle Server error
+   */
+  private handleSubmissionError(submissionResult: FormSubmissionResult) {
+    if (submissionResult.success) {
+      return;
+    }
+
+    if (!submissionResult.error || !submissionResult.error.code) {
+      this.alert.show('Submission failed', 'There was an unknown error\nPlease check your connection');
+      console.dir(submissionResult);
+    }
+
+    switch (submissionResult.error.code) {
+      case 422:
+        // if we have all the fields that the server is throwing errors for
+        if (this.missingServerResponseFieldsFromConfig(submissionResult).length < 1) {
+          this.alert.show(`Submission failed ${submissionResult.error.code}`, `Reason: ${submissionResult.error.message}\nPlease review the indicated fields.`);
+          // Remove error fields from response body, exit review mode and show missing fields
+          this.removeFieldsInServerSubmissionErrorFromResponseBody(submissionResult);
+        } else {
+          // if server is indicating fields that we don't have
+          this.alert.show(`Submission failed ${submissionResult.error.code}`, `There is a configuration error.\nPlease contact app administrator.`);
+          console.log('Form config does not have the missing fields indicated in server error\nthe following is missing:');
+          console.dir(this.missingServerResponseFieldsFromConfig(submissionResult));
+        }
+        break;
+      case 401:
+        this.alert.show(`Submission failed ${submissionResult.error.code}`, `You do not have the required permission`);
+        break;
+      case 404:
+          this.alert.show(`Submission failed ${submissionResult.error.code}`, `Reason: ${submissionResult.error.message}`);
+          break;
+      default:
+          this.alert.show(`Submission failed`, 'There was an unknown error');
+    }
+  }
+
+  /**
+   * - Remove fields in server error from response body,
+   * - Change form to edit/create mode
+   * - Show missing fields section
+   * @param submissionResult FormSubmissionResult
+   */
+  private removeFieldsInServerSubmissionErrorFromResponseBody(submissionResult: FormSubmissionResult) {
+    for (const error of submissionResult.error.errors) {
+      if (this.config.fieldHeaders[error.param]) {
+        this.responseBody[error.param] = undefined;
+      }
+    }
+    this.triedToSubmit = true;
+    this.exitReviewMode();
+  }
+
+  /**
+   * Check if the fields in server error exist in ui config
+   * @param submissionResult FormSubmissionResult
+   * @returns string array of mismatch keys
+   */
+  private missingServerResponseFieldsFromConfig(submissionResult: FormSubmissionResult): string[] {
+    const result: string[] = [];
+    for (const error of submissionResult.error.errors) {
+      if (!this.config.fieldHeaders[error.param]) {
+        result.push(error.param);
+      }
+    }
+    return result;
+  }
+
+  /////////// END Submission error handling ///////////
 }

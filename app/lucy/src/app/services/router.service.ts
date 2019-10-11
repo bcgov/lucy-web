@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { AppRoutes, AppConstants } from '../constants';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RouterService {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private alert: AlertService) {
+    this.preventReload();
+   }
 
   public get current(): AppRoutes {
     const current = this.router.url.substring(1);
@@ -83,6 +86,8 @@ export class RouterService {
         return AppRoutes.AddObservation;
       case `mechnical`:
         return AppRoutes.AddMechanicalTreatment;
+      case 'chemical':
+        return AppRoutes.AddChemicalTreatment;
       default:
         return AppRoutes.Error;
     }
@@ -97,6 +102,8 @@ export class RouterService {
         return AppRoutes.EditObservation;
       case `mechnical`:
         return AppRoutes.EditMechanicalTreatment;
+      case 'chemical':
+        return AppRoutes.EditChemicalTreatment;
       default:
         return AppRoutes.Error;
     }
@@ -111,6 +118,8 @@ export class RouterService {
         return AppRoutes.ViewObservation;
       case `mechnical`:
         return AppRoutes.ViewMechanicalTreatment;
+      case 'chemical':
+        return AppRoutes.ViewChemicalTreatment;
       default:
         return AppRoutes.Error;
     }
@@ -125,11 +134,21 @@ export class RouterService {
     return undefined;
   }
 
+  public getRouteNamed(string: string): AppRoutes {
+    return this.stringToEnumRoute(string) ? this.stringToEnumRoute(string) : undefined;
+  }
+
   public get events(): Observable<any> {
     return this.router.events;
   }
 
-  public navigateTo(route: AppRoutes, id?: number) {
+  public async navigateTo(route: AppRoutes, id?: number, allowWarning?: boolean) {
+    if (allowWarning && allowWarning === true) {
+      const shouldNavigate = await this.shouldLeaveDialog();
+      if (!shouldNavigate) {
+        return;
+      }
+    }
     if (id) {
       const routeWithId = route.replace(':id', `${id}`);
       this.router.navigate([routeWithId]);
@@ -146,7 +165,7 @@ export class RouterService {
       // console.log(id);
       return +id;
     } else {
-      return undefined;
+      return;
     }
   }
 
@@ -160,6 +179,55 @@ export class RouterService {
       default:
         console.log(`${api} does not have a route`);
     }
-    return undefined;
+    return;
+  }
+
+  private preventReload() {
+    console.log('initialized prevent reload');
+    window.addEventListener(`beforeunload`, (event) => {
+      console.log('triggered');
+      if (this.isCreateRoute || this.isEditRoute) {
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = 'Your changes will be lost';
+        return 'Your changes will be lost';
+      }
+    });
+  }
+
+  private async shouldLeaveDialog(): Promise<boolean> {
+    return (this.isCreateRoute || this.isEditRoute) ?
+      this.alert.showConfirmation(`Are you sure?`, 'If you leave this page, your changes will be lost', `Leave Page`, `Stay`)
+      : true;
+  }
+  
+  /**
+   * Store current route in session.
+   */
+  public storeCurrentRouteInSession() {
+    if (this.current.length > 0) {
+      localStorage.setItem('lastRoute', this.current);
+    }
+  }
+
+  /**
+   * Get the lastRoute specified in session storage (if exists).
+   * @returns AppRoute or Undefined
+   */
+  public getLastRouteInSession(): AppRoutes | undefined {
+    const lastRoute = localStorage.getItem('lastRoute');
+    if (lastRoute && this.getRouteNamed(lastRoute)) {
+      return this.getRouteNamed(lastRoute);
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
+   * Removes the lastRoute key stored in session storage.
+   */
+  public clearLastRouteInSession() {
+    sessionStorage.removeItem('lastRoute');
   }
 }

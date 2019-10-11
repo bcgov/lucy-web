@@ -25,7 +25,7 @@ import {
 @UpdateMiddleware(() => [writerOnlyRoute()])
 export class ObservationRouteController extends ResourceRouteController<ObservationController, ObservationCreateModel, any> {
     static get shared(): ObservationRouteController {
-        return this.sharedInstance<ObservationRouteController>() as ObservationRouteController;
+        return this.sharedInstance() as ObservationRouteController;
     }
 }
 

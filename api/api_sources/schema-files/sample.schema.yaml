@@ -1,5 +1,25 @@
 version: '1.0'
 schemas:
+  ## -- Example
+  Example:
+    name: '#tableName'
+    description: '---' 
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: '#path'
+    ## -- DisplayLayout
+    displayLayout: {}
+    ## --
+    # -- layout
+    layout: {}
+    # --
+    ## -- computedFields
+    computedFields: {}
+    ## --
+    ## Columns
+    columns: {}
+  ## -- End Schema
   Test2Schema:
     name: sample2_table
     description: Sample application table

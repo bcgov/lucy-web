@@ -1,6 +1,7 @@
 # Sonar
 **/.scannerwork
 **/.sonar
+**/scripts/test.ts
 
 # Generated Swagger file
 **/swagger.raw.yaml
@@ -47,6 +48,9 @@ ehthumbs_vista.db
 
 # Folder config file
 [Dd]esktop.ini
+
+# Crash reports (JSON format)
+**/report.*.json
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/

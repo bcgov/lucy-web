@@ -25,8 +25,8 @@
  */
 import { RecordTableSchema, CodeTableSchema, } from './base.record.schema';
 import { getYAMLFilePath } from '../../libs/core-database';
-import { TreatmentProviderCSVData } from '../pre.load';
-import { convertDateString } from '../../libs/utilities';
+import { TreatmentProviderCSVData, PesticideEmployerCSVData, ProjectManagementPlanCSVData, ChemicalTreatmentEmployeeCSVData } from '../pre.load';
+import { convertDateString, arrayToString } from '../../libs/utilities';
 
 /**
  * @description Treatment base schema class which includes schema file name
@@ -96,6 +96,68 @@ export class TreatmentProviderContractorSchema extends TreatmentSchema {
         `${columns.regions},` +
         `${columns.licenceExpiryDate},` +
         `${columns.serviceProvideIndicator}`;
+    }
+}
+
+export class ChemicalTreatmentSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('chemical.treatment.schema.yaml');
+    }
+}
+
+class ChemicalTreatmentStaticData extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('chemical.treatment.codes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
+
+export class PesticideEmployerCodeSchema extends ChemicalTreatmentStaticData {
+
+    csvData(): Promise<any> {
+        const csv = new PesticideEmployerCSVData();
+        return csv.load({
+            license_expiry_date: (value: string) => convertDateString(value, 'DD-MMM-YY', 'YYYY-MM-DD')
+        });
+    }
+
+    entryString(): string {
+        const columns = this.table.columns;
+        return `${columns.registrationNumber},` +
+        `${columns.businessName},` +
+        `${columns.licenceExpiryDate}`;
+    }
+}
+
+export class ProjectManagementPlanCodeSchema extends ChemicalTreatmentStaticData {
+    csvData(): Promise<any> {
+        const csv = new ProjectManagementPlanCSVData();
+        return csv.load();
+    }
+
+    entryString(): string {
+        const columns = this.table.columns;
+        return `${columns.pmpNumber},` +
+        `${columns.description},` +
+        `${columns.pmpHolder},` +
+        `${columns.startDate},` +
+        `${columns.endDate}`;
+    }
+}
+
+export class ChemicalTreatmentEmployeeSchema extends ChemicalTreatmentStaticData {
+
+    csvData(): Promise<any> {
+        const csv = new ChemicalTreatmentEmployeeCSVData();
+        return csv.load();
+    }
+
+    entryString(): string {
+        return arrayToString(this.table.allColumnsExceptId);
     }
 }
 
