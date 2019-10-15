@@ -17,7 +17,7 @@ module.exports = (settings)=>{
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'HOST': phases[phase].host,
-      'CHANGE_ID': phases[phase].changeId,
+      'CHANGE_ID':  phases.build.changeId || changeId,
       'API_HOST': phases[phase].apiHost,
       'ENVIRONMENT':  phases[phase].env || 'dev'
     }
