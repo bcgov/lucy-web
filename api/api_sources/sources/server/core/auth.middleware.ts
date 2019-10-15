@@ -89,6 +89,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
         try {
              // Get user info
              // ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
+             ApplicationAuthMiddleware.logger.disableInfoLog = true;
              const { preferred_username, email, family_name, given_name} = payload;
              assert((preferred_username || email), `Email And Preferred user name is missing from payload\n ${JSON.stringify(payload)}`);
 
@@ -220,6 +221,7 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
     // Returning Middleware callback
     return (req: express.Request, resp: express.Response, next: any) => {
         try {
+            LoggerBase.logger.disableInfoLog = true;
             assert(req.user || req['appUser'], 'Invalid request parameters: [No User]');
             const user: User = req.user || req['appUser'];
             const userRoles = user.roles;
@@ -231,13 +233,16 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
                 } else {
                     LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
                 }
+                LoggerBase.logger.disableInfoLog = false;
                 return value;
             });
+            LoggerBase.logger.disableInfoLog = false;
             return acceptedRoles.length > 0 ? next() : (resp.status(401).json(errorBody('User role is not authorized to access this route', [{
                 acceptedRoles: `Accepted roles are [${roles}]`
             }])));
 
         } catch (excp) {
+            LoggerBase.logger.disableInfoLog = false;
             resp.status(500).json(errorBody(`${excp}`, [excp]));
         }
     };

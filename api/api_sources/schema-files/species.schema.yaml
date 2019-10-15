@@ -1,0 +1,48 @@
+version: '1.0'
+externalTables:
+  - name: application_user
+    description: User table
+schemas:
+  ## -- SpeciesSchema
+  SpeciesSchema:
+    name: species
+    description: 'Universal species table. A species is often defined as a group of individuals that actually or potentially interbreed in nature. Taxonomic Level: Domain, Kingdom, Phylum, Class, Order, Family,Genus, Species'
+    baseSchema: RecordSchema
+    columns:
+      id:
+        name: 'species_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      mapCode:
+        name: 'map_code'
+        comment: 'Code associated with species. This code is used to uniquely identify with application domain'
+        definition: VARCHAR(10) NOT NULL UNIQUE
+      earlyDetection:
+        name: 'early_detection_ind'
+        comment: 'This indicator indicates early detection of species'
+        definition: BOOLEAN DEFAULT FALSE
+      cmt:
+        name: 'containment_species'
+        comment: 'Code to check species containment level'
+        definition: SMALLINT NULL
+      shp:
+        name: containment_species_spatial_ref
+        comment: Containment spatial reference of species
+        definition: SMALLINT NULL
+      species:
+        name: 'species_code'
+        comment: 'Species Code. String enum to identify species with application domain'
+        definition: VARCHAR(10) NOT NULL
+      genus:
+        name: genus_code
+        comment: 'Latin Genus name of the species (first 3 characters)'
+        definition: VARCHAR(5) NOT NULL
+      commonName:
+        name: common_name
+        comment: 'Common or popular name of the species'
+        definition: VARCHAR(100) NOT NULL
+      latinName:
+        name: latin_name
+        comment: 'Latin or scientific name of the species'
+        definition: VARCHAR(100) NOT NULL
+  ## --

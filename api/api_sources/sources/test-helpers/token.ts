@@ -26,7 +26,7 @@ import * as path from 'path';
  * @description Getter: Admin token
  */
 export const adminToken = (): string => {
-    return fs.readFileSync(path.join(__dirname, 'test.token'), 'utf8');
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr1.token'), 'utf8');
 };
 
 /**

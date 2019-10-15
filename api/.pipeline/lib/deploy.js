@@ -20,7 +20,8 @@ module.exports = (settings) => {
       'HOST': phases[phase].host,
       'CHANGE_ID': phases[phase].changeId,
       'ENVIRONMENT': phases[phase].env || 'dev',
-      'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`
+      'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
+      'CERTIFICATE_URL': phases[phase].certificateURL
     }
   }))
   

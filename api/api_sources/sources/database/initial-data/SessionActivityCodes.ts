@@ -21,23 +21,23 @@
  */
 export const DefaultSessionActivityCodes = [
     {
-        code: 'DE',
+        session_activity_code: 'DE',
         description: 'Date Edit'
     },
     {
-        code: 'DA',
+        session_activity_code: 'DA',
         description: 'Date Add'
     },
     {
-        code: 'DD',
+        session_activity_code: 'DD',
         description: 'Date Delete'
     },
     {
-        code: 'RP',
+        session_activity_code: 'RP',
         description: 'Report'
     },
     {
-        code: 'OTHER',
+        session_activity_code: 'OTHER',
         description: 'Other Activity'
     }
 ];

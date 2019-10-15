@@ -33,7 +33,8 @@ module.exports = (settings) => {
       'CHANGE_ID': phases[phase].changeId,
       'ENVIRONMENT': phases[phase].env || 'dev',
       'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
-      'IMAGE': imageStream.image.dockerImageReference
+      'IMAGE': imageStream.image.dockerImageReference,
+      'CERTIFICATE_URL': 'https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs'
     }
   }))
   

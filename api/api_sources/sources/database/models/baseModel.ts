@@ -19,8 +19,11 @@
 /**
  * Imports
  */
-import { CreateDateColumn, UpdateDateColumn} from 'typeorm';
+import { CreateDateColumn, UpdateDateColumn, AfterLoad, AfterInsert, AfterUpdate} from 'typeorm';
 import { BaseTableSchema } from '../applicationSchemaInterface';
+import { ClassInfo } from '../../libs/core-model';
+import { BaseSchema } from '../../libs/core-database';
+import { valueAtKeyPath } from '../../libs/utilities';
 // import {  ModelProperty, PropertyType } from '../../libs/core-model';
 
 /**
@@ -28,6 +31,9 @@ import { BaseTableSchema } from '../applicationSchemaInterface';
  * @export class BaseModel
  */
 export abstract class BaseModel  {
+    /**
+     * Time Columns
+     */
     @CreateDateColumn({
         name: BaseTableSchema.timestampColumns.createdAt,
         nullable: true,
@@ -40,6 +46,75 @@ export abstract class BaseModel  {
         nullable: true
     })
     updatedAt: Date;
+
+    /**
+     * Common props
+     */
+    /**
+     * @description Display label of the object
+     */
+    displayLabel = '';
+
+    /**
+     * @description ClassName
+     */
+    get className(): string {
+        return this.constructor.name;
+    }
+
+    /**
+     * Private Methods
+     */
+    /**
+     * @description Update Display label
+     */
+    private _updateLabel(tag?: string) {
+        // Checking description of object
+        if (this['description']) {
+            this.displayLabel = this['description'];
+        } else if (this.getClassInfo().schema) {
+            const schema: BaseSchema = this.getClassInfo().schema.shareInstance;
+            if (schema.table.displayLabelInfo) {
+                let format: string = schema.table.displayLabelInfo.format;
+                const keys: any[] = schema.table.displayLabelInfo.keys || [];
+                for (const k of keys) {
+                    const item = valueAtKeyPath(this, `${k}`) || '';
+                    format = format.replace(`#(${k})#`, item);
+                }
+                this.displayLabel = format;
+            } else {
+                this.displayLabel = this[schema.table.id] ? `${this[schema.table.id]}` :  '-';
+            }
+        }
+    }
+
+    /**
+     * Protected Method
+     */
+    /**
+     * @description Place Holder Method. This method will be replaced by ModelDescription Decorator
+     */
+    protected getClassInfo(): ClassInfo {
+        return {};
+    }
+
+    /**
+     * DB Hooks
+     */
+    @AfterLoad()
+    afterLoad() {
+        this._updateLabel('al');
+    }
+
+    @AfterInsert()
+    afterInsert() {
+        this._updateLabel('ai');
+    }
+
+    @AfterUpdate()
+    afterUpdate() {
+        this._updateLabel('au');
+    }
 }
 
 /**

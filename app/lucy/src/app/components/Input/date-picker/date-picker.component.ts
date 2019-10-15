@@ -16,12 +16,6 @@ export class DatePickerComponent implements OnInit {
   // Optional Input
   @Input() editable = true;
 
-  pastAndPresentDatesOnlyFilter = (d: Date): boolean => {
-    let currentDate = new Date();
-    // prevent dates in future from being selected
-    return currentDate >= d;
-  }
-
   get readonly(): boolean {
     if (this.mode === FormMode.View) {
       return true;
@@ -55,15 +49,26 @@ export class DatePickerComponent implements OnInit {
   @Input() set date(date: string) {
     if (date) {
       this._date = moment(date, 'YYYY-MM-DD').toDate();
+      this.emitSelection();
     }
   }
   ////////////////////
+
+  get fieldId(): string {
+    return this.camelize(this.header);
+  }
 
   @Output() selected = new EventEmitter<Date>();
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  pastAndPresentDatesOnlyFilter = (d: Date): boolean => {
+    const currentDate = new Date();
+    // prevent dates in future from being selected
+    return currentDate >= d;
   }
 
   dateChanged(event: MatDatepickerInputEvent<Date>) {
@@ -74,8 +79,12 @@ export class DatePickerComponent implements OnInit {
   }
 
   emitSelection() {
-    console.dir(this._date);
     this.selected.emit(this._date);
   }
 
+  camelize(str: string): string {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
 }

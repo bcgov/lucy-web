@@ -28,7 +28,8 @@ import {
     saveYaml,
     SchemaCache,
     SchemaLoader,
-    incrementalWrite
+    incrementalWrite,
+    unWrap
 } from '../utilities';
 
 import {
@@ -36,6 +37,7 @@ import {
     TableColumnDefinition
 } from './application.column';
 import { ApplicationTable } from './application.table';
+import { registerSchema, schemaWithName } from './schema.storage';
 
 export interface TableColumnOption extends TableColumnDefinition {
     refSchemaObject?: BaseSchema;
@@ -76,8 +78,32 @@ export class  BaseSchema {
         return '';
     }
 
+    /**
+     * className
+     * @description Class name of schema
+     */
     public get className(): string {
         return this.constructor.name;
+    }
+
+    /**
+     * modelName
+     * @description Model class name related to schema
+     */
+    public get modelName(): string {
+        return this.table.modelName || this.className.split('Schema')[0];
+    }
+
+    public get hasDefaultValues(): boolean {
+        return false;
+    }
+
+    /**
+     * tableName
+     * @description Table name related to schema
+     */
+    public get tableName(): string {
+        return this.table.name;
     }
 
     /**
@@ -85,17 +111,20 @@ export class  BaseSchema {
      */
     constructor() {
         let loadedFromFile = false;
+        // Load from file
         if (this.schemaFilePath && this.schemaFilePath !== '' && fs.existsSync(this.schemaFilePath)) {
             loadedFromFile = this.loadSchema();
         }
 
+        // Load from define table
         if (!loadedFromFile) {
             this.table = this.defineTable();
             this.joinTables = this.defineJoinTable();
         }
         assert(this.table.id, `No {id} column for schema ${this.table.name}`);
-        // Check table name
 
+        // Register schema
+        registerSchema(this);
     }
 
     loadSchema(): boolean {
@@ -110,9 +139,15 @@ export class  BaseSchema {
         table.name = def.name;
         table.description = def.description;
         table.columnsDefinition = {};
+        table.layout = def.layout;
+        table.meta = def.meta || {};
+        table.computedFields = def.computedFields;
+        table.relations = def.relations || {};
+        table.modelName = def.modelName;
+        table.displayLayout = def.displayLayout;
         _.each(def.columns, (value: TableColumnOption, key) => {
             const result = {};
-            result[key] = new ApplicationTableColumn(
+            const column: ApplicationTableColumn = new ApplicationTableColumn(
                 value.name,
                 value.comment,
                 value.definition,
@@ -122,6 +157,12 @@ export class  BaseSchema {
                 value.refSchema,
                 value.refModel
             );
+            column.columnVerification = value.columnVerification;
+            column.meta = value.meta;
+            column.layout = value.layout;
+            column.eager = unWrap(def.eager, true);
+            column.required = (value.required !== undefined) ? value.required : true;
+            result[key] = column;
             table.columnsDefinition = {...table.columnsDefinition, ...result};
         });
         assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
@@ -236,6 +277,66 @@ export class  BaseSchema {
         throw new Error('Subclass must override');
     }
 
+    config(skipDetail?: boolean): any {
+        const result: any = {};
+        const layout: any = this.table.layout || {};
+        result.schemaName = this.className;
+        result.modelName = this.modelName;
+        result.description = {
+            key: this.modelName.toLocaleLowerCase(),
+            default: this.table.description
+        };
+        result.meta = this.table.meta || {};
+        result.idKey = this.table.id;
+        result.displayLayout = this.table.displayLayout || {};
+        result.displayLayout = { ...result.displayLayout, title: layout.title } || { title: layout.title };
+        if (skipDetail) {
+            return result;
+        }
+        result.layout = layout;
+        result.computedFields = this.table.computedFields || {};
+        result.relations = {};
+        _.each(this.table.relations, (rel: any, key: string) => {
+            const schema = rel.schema || '';
+            const schemaObj = schemaWithName(schema) || { config: () => {}};
+            rel.refSchema = schemaObj.config(true);
+            const updatedRel = {};
+            updatedRel[key] = rel;
+            result.relations = {...result.relations, ...updatedRel};
+        });
+        result.fields = [];
+        _.each(this.table.columnsDefinition, (col: ApplicationTableColumn, key: string) => {
+            if (key === 'id') {
+                return;
+            }
+            const typeDetails = col.typeDetails;
+            const verification = col.columnVerification || {};
+            const refSchema = col.refSchema || '';
+            const schemaObj: BaseSchema = schemaWithName(refSchema) || { config: () => {}};
+            const fieldLayout = col.layout || {};
+            verification.size = typeDetails.size;
+            verification.isDate = typeDetails.isDate;
+            layout.description = layout.description || {
+                key: `${this.modelName}.${key}`,
+                default: col.comment
+            };
+            layout.header = layout.header || key;
+
+            const field = {
+                key: key,
+                layout: fieldLayout,
+                meta: col.meta || {},
+                type: typeDetails.type || '',
+                verification: verification,
+                idKey: col.refColumn,
+                refSchema: schemaObj.config(true),
+                required: col.required
+            };
+            result.fields.push(field);
+        });
+        return result;
+    }
+
     /**
      * @description Method to create table of schema, subclass should override this methods
      * @return ApplicationTable
@@ -287,6 +388,10 @@ export class  BaseSchema {
      */
     dropTable(): string {
         return `DROP TABLE IF EXISTS ${this.table.name}`;
+    }
+
+    apiPath(): string {
+        return this.table.meta.api ? `/api${this.table.meta.api}` : `/api/${this.modelName}`;
     }
 
     /**

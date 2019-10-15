@@ -23,7 +23,7 @@
 import * as path from 'path';
 import * as _ from 'underscore';
 import { BaseTableSchema } from '../sources/database/applicationSchemaInterface';
-import { incrementalWrite } from '../sources/libs/utilities';
+import { incrementalWrite, writeIfNotExists, reverseCapitalize } from '../sources/libs/utilities';
 
 const addDoc = (input: string, description: string, ipTabs?: string, others?: any): string => {
     const tab = ipTabs || '';
@@ -80,8 +80,16 @@ const exportModel = (schema: BaseTableSchema) => {
     return `\nimport {${importStmt}\n} from '../models';\n`;
 };
 
+const exportBaseModel = (schema: BaseTableSchema) => {
+    const bm = schema.table.meta.baseModel;
+    if (bm && bm !== 'BaseModel') {
+        return `\nimport { ${bm} } from './generic.data.models';`;
+    }
+    return `\nimport { BaseModel } from './baseModel';`;
+};
+
 export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
-    const className = cls || schema.className.split('Schema')[0] || 'SampleClass';
+    const className = cls || schema.modelName || 'SampleClass';
     const schemaName = schema.className;
     const n = '\n';
     const t = '\t';
@@ -97,7 +105,12 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
                 const jc = `${n}${t}@JoinColumn({ name: ${schemaName}.columns.${col}, referencedColumnName: ${column.refSchema || '#SCHEMA-NAME'}.pk})`;
                 props = `${props}${rel}${jc}${n}${t}@ModelProperty({type: PropertyType.${column.type}})${n}${t}${col}: ${column.refModel || column.type};${n}`;
             } else {
-                const cols = `${n}${t}@Column({ name: ${schemaName}.columns.${col}})`;
+                let cols = `${n}${t}@Column({ name: ${schemaName}.columns.${col}})`;
+                if (column.type === 'number') {
+                    cols = `${n}${t}@Column({name: ${schemaName}.columns.${col}, transformer: new NumericTransformer()})`;
+                } else if (column.typeDetails.isDate) {
+                    cols = `${n}${t}@Column({name: ${schemaName}.columns.${col}, transformer: new DateTransformer()})`;
+                }
                 props = `${props}${cols}${n}${t}@ModelProperty({type: PropertyType.${column.type}})${n}${t}${col}: ${column.type};${n}`;
             }
             propInfo[col] = { type: column.refModel || column.type, optional: false};
@@ -109,26 +122,65 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
     defClass = defClass + exportRelatedSchema(schema);
     defClass = defClass + `${n}import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';`;
-    defClass = defClass + `${n}import { DataModelController } from '../data.model.controller';`;
+    defClass = defClass + `\nimport { NumericTransformer, DateTransformer } from '../../libs/transformer';`;
     defClass = defClass + exportModel(schema);
+    defClass = defClass + exportBaseModel(schema);
+    if (!schema.table.meta.resource) {
+        defClass = defClass + `${n}import { DataModelController } from '../data.model.controller';`;
+    }
     defClass = defClass + `${createInterface(`${className}Spec`, `${className} create interface`, propInfo)}`;
     defClass = defClass + `${createInterface(`${className}UpdateSpec`, `${className} update interface`, propInfo, true)}`;
     defClass = addDoc(defClass, `Data Model Class for ${schemaName}`);
     defClass = defClass + `${n}@ModelDescription({\n\tdescription: 'Data Model Class for ${schemaName}',\n\tschema: ${schemaName},\n\tapiResource: false\n})`;
-    defClass = defClass + `${n}@Entity( { name: ${schemaName}.dbTable} )\nexport class ${className} {\n${props}\n}\n`;
-    let defClassController = `// ** DataModel controller of ${className} **\n`;
+    let classDef = '';
+    if (schema.table.meta.baseModel) {
+        classDef = `${className} extends ${schema.table.meta.baseModel} implements ${className}Spec`;
+    } else {
+        classDef = `${className} extends BaseModel implements ${className}Spec`;
+    }
+    let baseController = `DataModelController<${className}>`;
+    if (schema.table.meta.resource) {
+        baseController = `RecordController<${className}>`;
+    }
+    defClass = defClass + `${n}@Entity( { name: ${schemaName}.dbTable} )\nexport class ${classDef} {\n${props}\n}\n`;
+    let defClassController = ``;
     defClassController = addDoc(defClassController, `Data Model Controller Class for ${schemaName} and ${className}`);
-    defClassController = defClassController + `${n}export class ${className}Controller extends DataModelController<${className}> {`;
+    defClassController = defClassController + `${n}export class ${className}Controller extends ${baseController} {`;
     defClassController = defClassController + `${n}${t}/**`;
     defClassController = defClassController + `${n}${t}* @description Getter for shared instance`;
     defClassController = defClassController + `${n}${t}*/`;
     defClassController = defClassController + `${n}${t}public static get shared(): ${className}Controller {`;
     defClassController = defClassController + `${n}${t}${t}return this.sharedInstance<${className}>(${className}, ${schemaName}) as ${className}Controller;`;
     defClassController = defClassController + `${n}${t}}\n}\n`;
-    const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
 
-    incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
-    return final;
+
+    if (schema.table.meta.resource) {
+        // Creating model and controller separate
+        const final = `${defClass}${n}// -------------------------------------${n}`;
+        // Writing Model
+        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
+
+        // Writing Controller
+        // Adding some export
+        let conImp = `// ** ${className}Controller ** //\n`;
+        conImp = conImp + `\nimport { RecordController } from '../generic.data.models';`;
+        conImp = conImp + `\nimport { ${className}} from '../../models';`;
+        conImp = conImp + `\nimport { ${schemaName} } from '../../database-schema';`;
+        defClassController = conImp + `\n\n` + defClassController;
+
+        writeIfNotExists(
+            path.resolve(__dirname, `../sources/database/models/controllers/${reverseCapitalize(className)}.controller.ts`),
+            `${defClassController}// ----------------\n`);
+
+        return final;
+    } else {
+        // Writing model and controller together
+        defClassController = `// ** ${className}Controller ** //\n\n` + defClassController;
+        const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
+
+        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
+        return final;
+    }
 };
 
 

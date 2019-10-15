@@ -23,13 +23,11 @@ export * from './user';
 export * from './user.session';
 export * from './baseModel';
 export * from './appRolesCode';
-export * from './userSessionActivity';
 export * from './requestAccess';
 export * from './userMessage';
 export * from './species';
 export * from './observation.codes';
 export * from './observation';
-export * from '../data-controllers';
 export * from './speciesDensity.code';
 export * from './speciesDistribution.code';
 export * from './speciesAgency.code';
@@ -47,4 +45,22 @@ export * from './mechanicalSoilDisturbance.code';
 export * from './mechanicalRootRemoval.code';
 export * from './mechanicalTreatmentIssue.code';
 export * from './treatmentProviderContractor';
+export * from './applicationEvent';
+export * from './sessionActivity.code';
+export * from './session.activity';
+export * from './generic.data.models';
+export * from './chemicalTreatment';
+export * from './pesticideEmployer.code';
+export * from './projectManagementPlan.code';
+export * from './chemicalTreatmentEmployee';
+
+/**
+ * Controllers
+ */
+export * from './controllers/mechanicalTreatment.controller';
+export * from './controllers/observation.data.controller';
+export * from './controllers/user.controller';
+export * from './controllers/chemicalTreatment.controller';
+export * from './controllers/projectManagementPlanCode.controller';
+export * from './controllers/chemicalTreatmentEmployee.controller';
 // ----------------------------------------------------------------------------------------------------------------

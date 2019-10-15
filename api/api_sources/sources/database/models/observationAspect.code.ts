@@ -2,13 +2,17 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { AspectCodeSchema } from '../database-schema';
-import { ModelProperty, PropertyType } from '../../libs/core-model';
+import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { DataModelController } from '../data.model.controller';
-import { Record } from './user';
+import { Record } from './generic.data.models';
 /**
  * @description Data Model Class for AspectCodeSchema
  */
 @Entity( { name: AspectCodeSchema.dbTable} )
+@ModelDescription({
+	description: '',
+	schema: AspectCodeSchema
+})
 export class AspectCode extends Record {
 
 	/**

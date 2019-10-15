@@ -19,7 +19,7 @@
  * Imports
  */
 import * as faker from 'faker';
-import { User, AccountStatus, UserDataController} from '../models/user';
+import { User, AccountStatus, UserDataController} from '../models';
 import { RolesCodeValue, RoleCodeController } from '../models/appRolesCode';
 
 /**
@@ -35,6 +35,7 @@ export const userFactory = async (accessCodeValue?: RolesCodeValue, noSave?: boo
     user.firstName = faker.name.firstName();
     user.lastName = faker.name.lastName();
     user.accountStatus = AccountStatus.active;
+    user.preferredUsername = user.email;
     user.roles = [ await RoleCodeController.shared.getCode(code)];
     if (!noSave) {
         await UserDataController.shared.saveInDB(user);

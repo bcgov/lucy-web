@@ -1,5 +1,16 @@
 export const StringConstants = {
 
+    //////////////////////////////////////////////////////////
+    // Strings for UI
+    app_Title: (() => {
+        return 'InvasivesBC';
+    })(),
+
+    database_Title: (() => {
+        return 'InvasivesBC Database';
+    })(),
+    //////////////////////////////////////////////////////////
+
     /** DB Access Related text **/
 
     // Badges for access types

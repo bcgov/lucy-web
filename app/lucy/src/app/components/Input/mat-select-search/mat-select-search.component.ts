@@ -27,7 +27,7 @@ export class MatSelectSearchComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() placeholderLabel = 'Search';
 
   /** Label to be shown when no entries are found. Set to null if no message should be shown. */
-  @Input() noEntriesFoundLabel = 'Keine Optionen gefunden';
+  @Input() noEntriesFoundLabel = 'Not Found';
 
   /** Reference to the search input field */
   @ViewChild('searchSelectInput', {read: ElementRef}) searchSelectInput: ElementRef;

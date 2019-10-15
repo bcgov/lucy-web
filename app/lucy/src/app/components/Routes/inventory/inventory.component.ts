@@ -11,11 +11,13 @@ import { ValidationService } from 'src/app/services/validation.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
+import { StringConstants } from 'src/app/constants/string-constants';
 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 
 
 declare const process: any;
@@ -31,6 +33,12 @@ export class InventoryComponent implements OnInit {
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
 
+   /**
+   * Name of database
+   * to be consumed by HTML
+   */
+  public databaseTitle = ``;
+  
   /**
    * Boolean to indicate whether app is running in 
    * production environment
@@ -93,12 +101,14 @@ export class InventoryComponent implements OnInit {
     private observationService: ObservationService,
     private router: RouterService,
     private loadingService: LoadingService,
+    private toast: ToastService,
     private dummy: DummyService) { }
 
   ngOnInit() {
     this.isProd = AppConstants.CONFIG.env == `prod` ? true : false;
     this.fetchObservations();
     this.setAccessType();
+    this.setDatabaseTitle();
   }
 
   private initMaterialTable() {
@@ -133,6 +143,10 @@ export class InventoryComponent implements OnInit {
         observation: object,
       });
     }
+  }
+
+  private setDatabaseTitle() {
+    this.databaseTitle = StringConstants.database_Title;
   }
 
   switchShowMap() {
@@ -335,6 +349,11 @@ export class InventoryComponent implements OnInit {
     this.observations = [];
     console.log(`generating`);
     const random = await this.dummy.createDummyObservations(this.numberOfObservationForTesting);
+    if (!random) {
+      this.toast.show('Feature is not available', ToastIconType.fail);
+      this.loadingService.remove();
+      return 
+    }
     console.log(`generated`);
     this.observations = random;
     this.initMaterialTable();
