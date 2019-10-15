@@ -114,35 +114,29 @@
             </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Relation fields -->
-<div class="container-fluid" *ngFor="let relationKey of config.relationKeys; let relationIndex = index">
-    <br />
-    <div class="row" *ngIf="config.relationsConfigs && config.relationsConfigs[relationKey] && config.relationsConfigs[relationKey].objects">
-        <div class="col-12 section-title">
-            {{ config.relationsConfigs[relationKey].header.default }}
-            <hr class="section-divider" />
-        </div>
-        <div class="col-12">
-            <app-table *ngIf="
+        <!-- Relation fields -->
+        <div class="container-fluid" *ngFor="let relationKey of config.relationKeys; let relationIndex = index">
+            <br />
+            <div class="row" *ngIf="config.relationsConfigs && config.relationsConfigs[relationKey] && config.relationsConfigs[relationKey].objects">
+                <div class="col-12 section-title">
+                    {{ config.relationsConfigs[relationKey].header.default }}
+                    <hr class="section-divider" />
+                </div>
+                <div class="col-12">
+                    <app-table *ngIf="
               config.relationsConfigs[relationKey] &&
               config.relationsConfigs[relationKey].table
             " [model]="config.relationsConfigs[relationKey].table"></app-table>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<!-- End of form body -->
-</div>
-<!-- test btn -->
-<div *ngIf="creating" class="row test-btn">
-    <div class="col-12">
-        <button class="btn" (click)="generateForTesting()">
+        <!-- test btn -->
+        <div *ngIf="creating" class="row test-btn">
+            <div class="col-12">
+                <button class="btn" (click)="generateForTesting()">
         T
       </button>
-    </div>
-</div>
-<br />
-<!-- -------------------- -->
-</div>
+            </div>
+        </div>
+        <br />
