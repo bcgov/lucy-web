@@ -1,58 +1,73 @@
-  <ng-template #userAccessMessageModal let-modal>
+<!--
+ Copyright 2019 Province of British Columbia
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<ng-template #userAccessMessageModal let-modal>
     <!-- Modal Title -->
     <div class="modal-header text-center">
         <div class="col">
             <h5>{{messageTitle}}</h5>
-          </div>
-     
+        </div>
+
     </div>
     <!-- Modal Body -->
     <div class="modal-body text-center">
-      <div class="row">
-        <div class="col-12">
-          <h5>{{userFullName}}</h5>
+        <div class="row">
+            <div class="col-12">
+                <h5>{{userFullName}}</h5>
+            </div>
+            <br/>
+            <div class="col-12 role">
+                {{userRoleAndOrganization}}
+            </div>
+            <br/>
+            <div class="col-12  text-center">
+                <div class="user-access-level">
+                    <i class="material-icons">info</i> {{accessTypeMessage}}
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="col-12 access-message">
+                {{roleMessage}}
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <div class="col-12 access-response-header">
+                Access Request Response:
+            </div>
+            <br/>
+            <br/>
+            <div class="col-12 access-response-body">
+                {{messageBody}}
+            </div>
         </div>
-        <br/>
-        <div class="col-12 role">
-            {{userRoleAndOrganization}}
-        </div>
-        <br/>
-        <div class="col-12  text-center">
-            <div class="user-access-level">
-                <i class="material-icons">info</i>
-                {{accessTypeMessage}}
-              </div>
-        </div>
-        <br/>
-        <br/>
-        <div class="col-12 access-message">
-          {{roleMessage}}
-        </div>
-        <br/>
-        <br/>
-        <br/>
-        <div class="col-12 access-response-header">
-          Access Request Response:
-        </div>
-        <br/>
-        <br/>
-        <div class="col-12 access-response-body">
-          {{messageBody}}
-        </div>
-      </div>
     </div>
 
     <div class="modal-footer text-center">
-      <div class="col">
-        <button type="button" class="btn button-hollow msg-modal-btn" (click)="removeModal()">
+        <div class="col">
+            <button type="button" class="btn button-hollow msg-modal-btn" (click)="removeModal()">
           Show me later
         </button>
-      </div>
-      <div class="col">
-        <button type="button" class="btn button-fill msg-modal-btn" (click)="markAsRead()">
+        </div>
+        <div class="col">
+            <button type="button" class="btn button-fill msg-modal-btn" (click)="markAsRead()">
           Finish
         </button>
-      </div>
+        </div>
 
     </div>
-  </ng-template>
+</ng-template>
