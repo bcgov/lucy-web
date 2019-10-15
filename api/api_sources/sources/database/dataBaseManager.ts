@@ -22,6 +22,35 @@
 import {createConnection, Connection} from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SeedManager } from './seed.manager';
+import {
+    UserDataController,
+    UserSessionDataController,
+    UserMessageController,
+    SessionActivityCodeController,
+    RequestAccessController,
+    SpeciesController,
+    SpeciesAgencyCodeController,
+    SlopeCodeController,
+    SoilTextureCodeController,
+    ObservationGeometryCodeController,
+    ObservationController,
+    ObservationTypeCodeController,
+    JurisdictionCodeController,
+    SpecificUseCodeController,
+    MechanicalDisposalMethodCodeController,
+    MechanicalMethodCodeController,
+    MechanicalRootRemovalCodeController,
+    MechanicalTreatmentIssueCodeController,
+    MechanicalSoilDisturbanceCodeController,
+    TreatmentProviderContractorController,
+    MechanicalTreatmentController,
+    SpeciesDensityCodeController,
+    SpeciesDistributionCodeController,
+    ChemicalTreatmentEmployeeController,
+    ProjectManagementPlanCodeController,
+    ChemicalTreatmentController,
+    PesticideEmployerCodeController
+} from './models';
 const dbConfig = require('../../ormconfig');
 
 /**
@@ -31,6 +60,9 @@ const dbConfig = require('../../ormconfig');
 export class DBManager extends LoggerBase {
     // Share Instance
     private static instance: DBManager;
+
+    // Controllers
+    dataController: any[] = [];
 
     // DB connection object
     connection: Connection;
@@ -90,6 +122,39 @@ export class DBManager extends LoggerBase {
         });
     }
 
+    private loadControllers() {
+        this.dataController = [
+            UserDataController.shared,
+            UserSessionDataController.shared,
+            UserMessageController.shared,
+            SessionActivityCodeController.shared,
+            RequestAccessController.shared,
+            SpeciesController.shared,
+            SpeciesDensityCodeController.shared,
+            SpeciesDistributionCodeController.shared,
+            SpeciesAgencyCodeController.shared,
+            SlopeCodeController.shared,
+            SoilTextureCodeController.shared,
+            ObservationGeometryCodeController.shared,
+            ObservationTypeCodeController.shared,
+            JurisdictionCodeController.shared,
+            SpecificUseCodeController.shared,
+            ObservationController.shared,
+            MechanicalDisposalMethodCodeController.shared,
+            MechanicalMethodCodeController.shared,
+            MechanicalRootRemovalCodeController.shared,
+            MechanicalTreatmentIssueCodeController.shared,
+            MechanicalSoilDisturbanceCodeController.shared,
+            TreatmentProviderContractorController.shared,
+            MechanicalTreatmentController.shared,
+            ChemicalTreatmentEmployeeController.shared,
+            ProjectManagementPlanCodeController.shared,
+            ChemicalTreatmentController.shared,
+            PesticideEmployerCodeController.shared
+
+        ];
+    }
+
     /**
      * @description API to connect db
      * @method connect
@@ -97,6 +162,7 @@ export class DBManager extends LoggerBase {
     async connect(): Promise<void> {
         try {
             await this._connect();
+            this.loadControllers();
             return;
         } catch (err) {
             throw Error(`Unable to connect DB, please check log`);

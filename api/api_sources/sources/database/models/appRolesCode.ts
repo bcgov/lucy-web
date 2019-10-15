@@ -24,6 +24,7 @@ import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { BaseModel } from './baseModel';
 import { DataModelController } from '../data.model.controller';
 import { RolesCodeTableSchema} from '../database-schema';
+import { ModelDescription } from '../../libs/core-model';
 
 /**
  *
@@ -43,6 +44,11 @@ export enum RolesCodeValue {
  */
 @Entity({
     name: RolesCodeTableSchema.schema.name
+})
+@ModelDescription({
+	description: 'Data Model Class Role table schema',
+	schema: RolesCodeTableSchema,
+	apiResource: false
 })
 export class RolesCode extends BaseModel {
     @PrimaryGeneratedColumn()

@@ -61,13 +61,13 @@ export const sessionActivityFactory = async (code?: SessionActivityCodeValues, n
     const session: UserSession = await sessionFactory(RolesCodeValue.admin, noSave);
     const sessionActivity: SessionActivity = SessionActivityController.shared.create();
     sessionActivity.session = session;
-    sessionActivity.code = await SessionActivityCodeController.shared.code(code || SessionActivityCodeValues.dataAdd);
+    sessionActivity.activityCode = await SessionActivityCodeController.shared.random();
     sessionActivity.info = faker.random.word();
     if (!noSave) {
         await SessionActivityController.shared.saveInDB(sessionActivity);
     } else {
         if (id) {
-            sessionActivity.activity_id = id || 0;
+            sessionActivity.user_session_activity_id = id || 0;
         }
     }
     return sessionActivity;

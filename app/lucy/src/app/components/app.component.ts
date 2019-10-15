@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { SsoService } from '../services/sso.service';
 import { AppRoutes } from '../constants';
 import { RouterService } from '../services/router.service';
@@ -10,6 +11,9 @@ import { AlertModel, AlertService } from '../services/alert.service';
 import { Subscription } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
+import { StringConstants } from 'src/app/constants/string-constants';
+import { ToastService, ToastModel, ToastIconType } from '../services/toast/toast.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,7 +29,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.ssoService.isAuthenticated();
   }
 
-  private get isReady(): boolean {
+  get isReady(): boolean {
     return this.authStatusIsLoading === false;
   }
 
@@ -37,11 +41,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private alertsSubscription: Subscription;
   ////////
 
+  // Toasts
+  public toastMessage: ToastModel;
+  private toastSubscription: Subscription;
+  ////////
+
+
   // Lottie Animation
   public lottieConfig: Object;
   private anim: any;
   private animationSpeed = 1;
-  private showLoading = false;
+  showLoading = false;
   private loadingSubscription: Subscription;
   /////////////////
 
@@ -51,10 +61,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private ssoService: SsoService,
     private messageService: MessageService,
     private alertService: AlertService,
+    private toastService: ToastService,
     private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private titleService: Title) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
+    this.subscribeToToastService();
+    this.setTitle();
   }
 
   ngOnInit() {
@@ -63,12 +77,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.unSubscribeFromAlertService();
     this.unSubscribeFromLoadingService();
+    this.unSubscribeFromToastService();
   }
 
   ngAfterViewInit() {
     this.subscribeToLoadingService();
     this.reRouteIfNeeded();
-    this.testAlerts();
+    // this.testAlerts();
+    // this.testToasts();
   }
 
   /******** Loading animation ********/
@@ -132,12 +148,37 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   /******** End Alerts ********/
 
+  /******** Toasts ********/
+  private subscribeToToastService() {
+    this.toastSubscription = this.toastService.getObservable().subscribe(message => {
+      if (message) {
+        this.toastMessage = message;
+      } else {
+        this.alertMessage = undefined;
+      }
+    });
+  }
+
+  private unSubscribeFromToastService() {
+    this.toastSubscription.unsubscribe();
+  }
+  /******** End Toasts ********/
+
   /******** Auth and Routing ********/
   private async reRouteIfNeeded() {
     this.loadingService.add();
     const isAuthenticated =  await this.checkAuthStatus();
     if (isAuthenticated && (this.routerService.current === AppRoutes.Root) || this.routerService.current === undefined) {
-      this.routerService.navigateTo(AppRoutes.Profile);
+
+      // if last route is specified in session (from Login component), go to it and remove key from session.
+      const lastRoute = this.routerService.getLastRouteInSession();
+      if (lastRoute) {
+        this.routerService.navigateTo(lastRoute);
+        this.routerService.clearLastRouteInSession();
+      } else {
+        // Otherwise go to profile
+        this.routerService.navigateTo(AppRoutes.Profile);
+      }
     }
     this.loadingService.remove();
   }
@@ -154,20 +195,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return isAuthenticated;
   }
+
+  public setTitle( ) {
+    this.titleService.setTitle( StringConstants.app_Title );
+  }
   /******** End Auth and Routing ********/
 
   /******** Notifications ********/
   private fetchMessages() {
     this.messageService.fetchUnreadMessages().then(messages => {
-      /// For testing
-      const msg = {
-        body: null,
-        message_id: 2,
-        status: 0,
-        title: `Request Access rejected`,
-        type: 0
-      };
-      /////
       this.showMessage(messages[0]);
     });
   }
@@ -193,26 +229,49 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  /*
   private testAlerts() {
-    return;
     this.delay(100).then(() => {
       this.alertService.show(`HELOO`, `one`, null);
       this.delay(100).then(() => {
         this.alertService.show(`HELOO`, `two`, null);
         this.delay(1000).then(() => {
-          this.alertService.show(`HELOO`, `three`, null);
+          this.alertService.showConfirmation(`HELOO`, `three`);
         });
       });
       this.delay(1000).then(() => {
         this.alertService.show(`HELOO`, `three?`, null);
       });
       this.delay(1000).then(() => {
-        this.alertService.show(`HELOO`, `three???`, null);
+        this.alertService.showConfirmation(`HELOO`, `three??`);
       });
     });
     this.delay(1000).then(() => {
       this.alertService.show(`Hola`, `one?`, null);
     });
   }
+
+  private testToasts() {
+    this.delay(100).then(() => {
+      this.toastService.show(`Your record has been commited to the InvasivesBC database.`, ToastIconType.success);
+      this.toastService.show(`one`, ToastIconType.fail);
+      this.delay(100).then(() => {
+        this.toastService.show(`two`, ToastIconType.success);
+        this.delay(1000).then(() => {
+          this.toastService.show(`three`);
+        });
+      });
+      this.delay(1000).then(() => {
+        this.toastService.show(`four`, ToastIconType.none);
+      });
+      this.delay(1000).then(() => {
+        this.toastService.show(`five`, ToastIconType.fail);
+      });
+    });
+    this.delay(1000).then(() => {
+      this.toastService.show(`six`, ToastIconType.success);
+    });
+  }
+  */
 
 }

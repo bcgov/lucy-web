@@ -1,0 +1,68 @@
+
+.overlay {
+    background-color: rgba(255, 255, 255, 0.4);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 998;
+}
+
+.alert-container {
+    width: 100%;
+    height: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+	border-radius: 4px;
+	background-color: #FFFFFF;
+    box-shadow: 0 10px 40px 0 rgba(20,27,43,0.3);
+}
+
+.alert-position {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    z-index: 999;
+    min-width: 20%;
+    min-height: 50px;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); 
+}
+
+.header {
+    padding: 0;
+    margin: 16px;
+    font-size: 20px;
+	font-weight: 500;
+	line-height: 24px;
+}
+
+.message {
+    margin: 16px;
+    padding: 0;
+}
+
+.options {
+    padding: 0;
+    margin: 16px;
+}
+
+.button {
+    width: 100%;
+    color: #FFFFFF !important;
+    background-color: #234075 !important;
+}
+
+.message-animation {
+    animation-duration: 0.4s;
+}
+
+.overly-animation {
+   animation-duration: 0.5s;
+   animation-delay: 0.1s;
+}
+
+.message-container-animation {
+   animation-duration: 0.5s;
+}

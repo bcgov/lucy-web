@@ -30,6 +30,7 @@ import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { RolesCodeValue, UserDataController } from '../../database/models';
 import { DataController} from '../../database/data.model.controller';
+import { isEmpty } from '../../libs/utilities';
 // import { getRouteConfigs } from './route.des';
 
 /**
@@ -125,15 +126,16 @@ export interface RouteConfig {
  * 5. Created for sub classing only
  * @export class BaseRoutController<DataController>
  */
-export class BaseRoutController<Controller extends DataController>  {
+
+export class RouteController {
     // Generic share instance
-    private static _sharedInstance: any;
+    protected static _sharedInstance: any;
+    // DataController associated with route
+    protected dataController: DataController;
     // Express route
     router: express.Router = express.Router();
     // Logger
     logger: Logger;
-    // DataController associated with route
-    dataController: Controller;
     // User Data Controller
     userController: UserDataController = UserDataController.shared;
 
@@ -145,7 +147,7 @@ export class BaseRoutController<Controller extends DataController>  {
     /**
      * @description Getter for share instance
      */
-    static sharedInstance<Controller>(): BaseRoutController<DataController> {
+    static sharedInstance(): RouteController {
         return (this._sharedInstance || (this._sharedInstance = new this()));
     }
 
@@ -159,6 +161,10 @@ export class BaseRoutController<Controller extends DataController>  {
 
     get className(): string {
         return this.constructor.name;
+    }
+
+    apiName(request: express.Request) {
+        return `${request.originalUrl}[${request.method}]`;
     }
 
     /**
@@ -298,6 +304,18 @@ export class BaseRoutController<Controller extends DataController>  {
         };
     }
 
+    logReq(req: express.Request, tag: string) {
+        this.logger.error(`${tag}: api => ${this.apiName(req)}`);
+        if (!isEmpty(req.params) ) {
+            this.logger.error(`${tag}: Received parma(s):\n ${JSON.stringify(req.params, null, 2)}`);
+        }
+        if (!isEmpty(req.body)) {
+            this.logger.error(`${tag}: Received body:\n ${JSON.stringify(req.body, null, 2)}`);
+        }
+        if (!isEmpty(req.query)) {
+            this.logger.error(`${tag}: Received query:\n ${JSON.stringify(req.query, null, 2)}`);
+        }
+    }
 
     /**
      *
@@ -310,7 +328,8 @@ export class BaseRoutController<Controller extends DataController>  {
                 // Check for error
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
-                    this.logger.error(`${tag}: Validation error: ${JSON.stringify(errors.array())}`);
+                    this.logger.error(`${tag}: Validation error:\n ${JSON.stringify(errors.array(), null, 2)}`);
+                    this.logReq(req, tag);
                     return resp.status(422).json({
                         message: 'Input validation error',
                         errors: errors.array()
@@ -321,7 +340,6 @@ export class BaseRoutController<Controller extends DataController>  {
                 assert(data, `Unexpected request body: tag:${tag}`);
                 const [status, body]  = await handler(data, req, resp);
                 if (status > 0) {
-                    this.logger.info(`${tag}: [DONE]`);
                     return resp.status(status).json(this.successResp(body));
                 } else {
                     this.logger.error(`${tag}: [FAIL]`);
@@ -331,6 +349,17 @@ export class BaseRoutController<Controller extends DataController>  {
                 return this.commonError(500, `routeConfig:${tag}`, excp, resp);
             }
         };
+    }
+}
+
+export class BaseRoutController<Controller extends DataController> extends RouteController {
+    // DataController
+    protected dataController: Controller;
+    /**
+     * @description Getter for share instance
+     */
+    static sharedInstance<Controller>(): BaseRoutController<DataController> {
+        return (this._sharedInstance || (this._sharedInstance = new this()));
     }
 }
 
@@ -395,6 +424,7 @@ export type Validate = (chain: ValidationChain) => ValidationChain;
 export interface ValidationInfo {
     message?: string;
     validate: Validate;
+    optional?: boolean;
 }
 
 /**
@@ -405,7 +435,11 @@ export interface ValidationInfo {
 export const ValidatorCheck = (query: {[key: string]: ValidationInfo}) => {
     const result: any[] = [];
     _.each(query, ( info: ValidationInfo, key) => {
-        result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+        if (info.optional !== undefined && info.optional === true) {
+            result.push(info.validate(check(key)).optional().withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+        } else {
+            result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+        }
     });
     return result;
 };

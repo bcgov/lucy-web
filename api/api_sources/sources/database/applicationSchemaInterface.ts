@@ -17,7 +17,7 @@
 //
 // Created by Pushan Mitra on 2019-05-17.
 import { unWrap, incrementalWrite } from '../libs/utilities';
-import { getSQLFileData, getSQLFilePath } from './database-schema/schema-sqls';
+import { getSQLFileData, getSQLFilePath } from '../libs/core-database';
 import {
     ApplicationTableColumn,
     TableColumnOption,

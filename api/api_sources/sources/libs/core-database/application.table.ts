@@ -29,9 +29,15 @@ import { ApplicationTableColumn} from './application.column';
  */
 export class ApplicationTable {
     name: string;
-    columnsDefinition: {[key: string]: ApplicationTableColumn};
+    columnsDefinition: {[key: string]: ApplicationTableColumn} = {};
     description = 'Application table';
     private _columnNames: {[key: string]: string};
+    meta: any;
+    layout: any;
+    displayLayout: any;
+    computedFields: any;
+    relations: any;
+    modelName?: string;
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
@@ -49,7 +55,7 @@ export class ApplicationTable {
     }
 
     get id(): string {
-        return this.columnsDefinition.id.name;
+        return this.columnsDefinition && this.columnsDefinition.id ? this.columnsDefinition.id.name : 'NA';
     }
 
     public createTableSql(): string {
@@ -85,5 +91,38 @@ export class ApplicationTable {
         const result: string[] = [];
         _.each(this.columnsDefinition, def => def.refModel ? result.push(def.refModel) : null);
         return result;
+    }
+
+    public get allColumns(): string[] {
+        return _.map(this.columns, col => col);
+    }
+
+    public get allColumnsExceptId(): string[] {
+        const r: string[] = [];
+        _.each(this.columns, (col, key) => {
+            if (key !== 'id') {
+                r.push(col);
+            }
+        });
+        return r;
+    }
+
+    get displayLabelInfo(): any {
+        if (this.displayLayout && this.displayLayout.displayLabel) {
+            const format: string = this.displayLayout.displayLabel || '';
+            const re = /#\([a-zA-Z0-9.]*\)#/gi;
+            const re1 = /[a-zA-Z0-9]+[.a-zA-Z0-9]*/gi;
+            const groups: any[] = format.match(re) as any[];
+            const keys = [];
+            for (const g of groups) {
+                const k = g.match(re1);
+                keys.push(k[0]);
+            }
+            return {
+                format: format,
+                keys: keys
+            };
+        }
+        return null;
     }
 }
