@@ -41,6 +41,25 @@
             <ul class="navbar-nav">
                 <!-- User menu for smaller sizes (in dropdown) -->
                 <li class="nav-item user-actions-menu">
+                    <!-- User access preview (non-clickable) -->
+                    <mat-card-flat>
+                        <mat-card-title>{{ fullName }}</mat-card-title>
+                        <mat-card-subtitle>
+                            <div>
+                                {{ role }}
+                            </div>
+                            <div>
+                                {{ organization }}
+                            </div>
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            <div class="user-access-level">
+                                {{ accessTypeMessage }}
+                            </div>
+                        </mat-card-content>
+                    </mat-card-flat>
+                </li>
+                <li class="nav-item user-actions-menu">
                     <a class="nav-link" (click)="navigateToProfile()" [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off'">Profile</a>
                 </li>
                 <!-- Other Navar elements  -->
@@ -63,10 +82,28 @@
                     <div class="user-actions-large">
                         <button mat-fab [matMenuTriggerFor]="menu" class="user-icon">{{userInitials}}</button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item class="btn-with-icon" [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off' " (click)="navigateToProfile()">
+                            <!-- User access preview (non-clickable) -->
+                            <mat-card>
+                                <mat-card-title>{{ fullName }}</mat-card-title>
+                                <mat-card-subtitle>
+                                    <div>
+                                        {{ role }}
+                                    </div>
+                                    <div>
+                                        {{ organization }}
+                                    </div>
+                                </mat-card-subtitle>
+                                <mat-card-content>
+                                    <div class="user-access-level">
+                                        {{ accessTypeMessage }}
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                            <!-- the buttons in the menu -->
+                            <a mat-menu-item class="btn-with-icon" [ngClass]="isProfileActive ? 'menu-item-on' : 'menu-item-off' " (click)="navigateToProfile()">
                 Profile 
                 <i class="material-icons">account_circle</i>
-              </button>
+                            </a>
                             <button mat-menu-item class="btn-with-icon" (click)="logout()">
                 Logout <i class="material-icons">input</i>
               </button>

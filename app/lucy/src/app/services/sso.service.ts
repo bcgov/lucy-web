@@ -31,12 +31,6 @@ interface TokenReponse {
   refreshTokenTokenExpiery: number;
 }
 
-interface RefreshTokenReponse {
-  success: boolean;
-  accessToken: string;
-  accessTokenExpiery: number;
-}
-
 export enum SSOLoginProvider {
   BCeID,
   idir
@@ -50,9 +44,15 @@ export class SsoService {
   private static instance: SsoService;
 
   private code = ``;
-  private refreshTimer = null;
+  private refreshTimer: any;
+  private refreshTokenExpieryTimer: any;
   private bearerToken: string | null = null;
   private tokenExpiery: Date | null;
+
+  private accessTokenCookie = 'accessToken';
+  private refreshTokenCookie = 'refreshToken';
+  private refreshTokenExpieryCookie = 'refreshTokenExpiery';
+  private accessTokenExpieryCookie = 'accessTokenExpiery';
 
   constructor(private cookieService: CookieService, private httpClient: HttpClient, private activatedRoute: ActivatedRoute, private router: Router) {
     // If user is not authenticated, listen to route changes
@@ -60,7 +60,7 @@ export class SsoService {
       this.listenForRidirect();
     } else {
       // User is not authenticated. wait for redirect.
-      this.beginTokeRefreshTimer();
+      this.beginTokenRefreshTimer();
     }
   }
 
@@ -115,20 +115,20 @@ export class SsoService {
 
   /**
    * NOTE: This one is currently not used.
-   * 
+   *
    * For this alternative:
    * - This should be used in combination with this.isAuthenticated2()
    * - Constructor should be empty
    * - Call this on each page refresh
-   * 
+   *
    * If access token doesnt exist, but refresh token exists -> Refresh access token
-   * otherwise listen for redirect. 
-   * (if both exist, user is autenticated and no action is required. 
+   * otherwise listen for redirect.
+   * (if both exist, user is autenticated and no action is required.
    *  isAuthenticated2() will also do the refresh.
    * )
    */
   private initAuthenticator() {
-    if (!this.cookieService.check('accessToken') && this.cookieService.check('refreshToken')) {
+    if (!this.cookieService.check(this.accessTokenCookie) && this.cookieService.check(this.refreshTokenCookie)) {
       // User is autneticated but access token is expired.
       this.refreshToken();
     } else {
@@ -139,18 +139,42 @@ export class SsoService {
 
   /**
    * Triggers a refreshToken()
-   * when 
+   * when
    * Access token expires.
    */
-  private beginTokeRefreshTimer() {
+  private beginTokenRefreshTimer() {
     const expiresIn = this.convertUTCDateStringToMillisecondsFromNow(this.getAccessTokenExpiery());
-
-    if (expiresIn < 0 && this.cookieService.check('refreshToken')) {
+    if (Number(expiresIn) && expiresIn < 0 && this.cookieService.check(this.refreshTokenCookie)) {
       this.refreshToken();
-    } else {
-      this.refreshTimer = setTimeout(function () {
+    } else if (Number(expiresIn)) {
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = setTimeout(() => {
+        // stop refresh token refresh timer
+        clearTimeout(this.refreshTokenExpieryTimer);
         this.refreshToken();
-      }, (expiresIn));
+      }, (expiresIn - 5000)); // set expiery to 5 seconds before the time specified in token
+    } else {
+      console.log(`invalid expiery`);
+    }
+  }
+
+  /**
+   * When a refresh token is expired, we can no longer
+   * refresh the access token.
+   */
+  private beginRefreshExpieryTimer() {
+    const expiresIn = this.convertUTCDateStringToMillisecondsFromNow(this.getRefreshTokenExpiery());
+    if (Number(expiresIn) && expiresIn <= 0) {
+      this.logout();
+    } else if (Number(expiresIn)) {
+      clearTimeout(this.refreshTokenExpieryTimer);
+      this.refreshTokenExpieryTimer = setTimeout(() => {
+        // stop token refresh timer
+        clearTimeout(this.refreshTimer);
+        this.refreshToken();
+      }, (expiresIn - 5000)); // set expiery to 5 seconds before the time specified in token
+    } else {
+      console.log(`invalid expiery`);
     }
   }
 
@@ -158,8 +182,8 @@ export class SsoService {
    * Check if access token OR exiery token exist
    */
   public isAuthenticated(): boolean {
-    // console.log("\nChcecking is authenticated.\n")
-    return (this.cookieService.check('accessToken') || this.cookieService.check('refreshToken'));
+    // console.log('\nChcecking is authenticated.\n')
+    return (this.cookieService.check(this.accessTokenCookie) || this.cookieService.check(this.refreshTokenCookie));
   }
 
   /**
@@ -168,16 +192,16 @@ export class SsoService {
    * 
    */
   public async isAuthenticatedAsync(): Promise<boolean> {
-    if (!this.cookieService.check('accessToken')) {
+    if (!this.cookieService.check(this.accessTokenCookie)) {
       // If access token is expired, check if the refresh token is still valid
-      if (!this.cookieService.check('refreshToken')) {
+      if (!this.cookieService.check(this.refreshTokenCookie)) {
         // If refresh token is expired too, return false
-        return false
+        return false;
       } else {
         return await this.refreshToken();
       }
     } else {
-      return true
+      return true;
     }
   }
 
@@ -189,11 +213,11 @@ export class SsoService {
    * @param provider SSOLoginProvider
    */
   public login(provider: SSOLoginProvider) {
-    switch(provider) {
+    switch (provider) {
       case SSOLoginProvider.idir: {
          window.open(this.SSO_idirLoginEndpoint(), `_self`);
          break;
-      } 
+      }
       case SSOLoginProvider.BCeID: {
          window.open(this.SSO_BCeidLoginEndpoint(), `_self`);
          break;
@@ -202,19 +226,20 @@ export class SsoService {
         console.log(`where am i`);
          window.open(this.SSO_LoginEndpoint(), `_self`);
          break;
-      } 
-   } 
+      }
+   }
   }
 
   /**
-   * Remove cookies, 
+   * Remove cookies,
    * end refresh timer,
    * and end keycloak session
    */
   public logout() {
     this.removeCookies();
-    if (this.refreshTimer != null) {
+    if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
+      clearTimeout(this.refreshTokenExpieryTimer);
     }
     this.endKeycloakSession();
   }
@@ -222,17 +247,18 @@ export class SsoService {
   /**
    * Remove Cookies
    */
-  private removeCookies(){
-    this.cookieService.delete('accessToken');
-    this.cookieService.delete('refreshToken');
-    this.cookieService.delete('accessTokenExpiery');
+  private removeCookies() {
+    this.cookieService.delete(this.accessTokenCookie);
+    this.cookieService.delete(this.refreshTokenCookie);
+    this.cookieService.delete(this.refreshTokenExpieryCookie);
+    this.cookieService.delete(this.accessTokenExpieryCookie);
   }
 
   /**
    * End session on Keycloak
    */
   private endKeycloakSession() {
-    window.open(this.SSO_LogoutEndpoint(), "_self");
+    window.open(this.SSO_LogoutEndpoint(), '_self');
   }
 
   /**
@@ -240,11 +266,12 @@ export class SsoService {
    */
   public async refreshToken(): Promise<boolean> {
     const result = await this.getAccessTokenFromRefreshToken(this.getRefreshToken());
-    if (result.success) {
+    if (result !== undefined) {
       this.storeAccessToken(result.accessToken, result.accessTokenExpiery);
-      return (this.getAccessToken() != "");
+      this.storeRefreshToken(result.refreshToken, result.refreshTokenTokenExpiery);
+      return (this.getAccessToken() !== '');
     } else {
-      this.removeCookies()
+      this.removeCookies();
       return false;
     }
   }
@@ -252,7 +279,7 @@ export class SsoService {
   /**
    * Retruns Access token fetched using refresh token
    */
-  private async getAccessTokenFromRefreshToken(refreshToken: string): Promise<RefreshTokenReponse> {
+  private async getAccessTokenFromRefreshToken(refreshToken: string): Promise<TokenReponse | undefined> {
     const data: object = {
       refresh_token: refreshToken,
       grant_type: 'refresh_token',
@@ -260,36 +287,36 @@ export class SsoService {
       client_id: AppConstants.SSOConstants.SSO_CLIENT_ID,
     };
 
-    var response: RefreshTokenReponse = {
-      success: false,
-      accessToken: "",
-      accessTokenExpiery: 0,
-    };
-
     try {
       const result = await this.httpClient.post<any>(this.SSO_RefreshTokenEndpoint(), queryString.stringify(data), { headers: this.getHeaders() }).toPromise();
-      if (result['success'] == false) {
-        response.success = false;
-        return response;
-      } else {
-        const accessToken = result["access_token"];
-        const expiresIn = result["expires_in"];
-        if (accessToken == undefined || expiresIn == undefined) {
-          response.success = false;
-          return response;
-        } else {
-          response.accessToken = accessToken;
-          response.accessTokenExpiery = expiresIn;
-          response.success = true
-          return response;
-        }
-      }
-
+      return this.getTokensFromAPIResult(result);
     } catch (error) {
       console.log(`Refresh token failed with Error: ${error}`);
-      console.dir(error);
-      response.success = false;
-      return response;
+      return undefined;
+    }
+  }
+
+  private getTokensFromAPIResult(result: any): TokenReponse | undefined {
+    if (result['success'] === false) {
+      return undefined;
+    } else {
+      const accessToken = result['access_token'];
+      const expiresIn = result['expires_in'];
+      const newRefreshToken = result['refresh_token'];
+      const newRefreshTokenExpiery = result['refresh_expires_in'];
+
+      if (!accessToken || !expiresIn || !newRefreshToken || !newRefreshTokenExpiery) {
+        console.log('response doesnt have all required data');
+        return undefined;
+      } else {
+        return {
+          success: true,
+          accessToken: accessToken,
+          accessTokenExpiery: expiresIn,
+          refreshToken: newRefreshToken,
+          refreshTokenTokenExpiery: newRefreshTokenExpiery,
+        };
+      }
     }
   }
 
@@ -305,12 +332,12 @@ export class SsoService {
   */
   private listenForRidirect() {
     // Before initiating listener, check if code is already there
-    if (this.extractCodeFromRoute() != "" && this.extractCodeFromRoute() != undefined) {
+    if (this.extractCodeFromRoute() !== '' && this.extractCodeFromRoute() !== undefined) {
       this.handleLoginOnRedirect();
       return;
     }
-    var listener = this.router.events.subscribe((val) => {
-      if (this.extractCodeFromRoute() != "" && this.extractCodeFromRoute() != undefined) {
+    const listener = this.router.events.subscribe((val) => {
+      if (this.extractCodeFromRoute() !== '' && this.extractCodeFromRoute() !== undefined) {
         listener.unsubscribe();
         this.handleLoginOnRedirect();
       }
@@ -328,12 +355,12 @@ export class SsoService {
 
     /**
      * This function gets called from listenForRidirect().
-     * the listener in listenForRidirect() could be sending multiple 
-     * calls to this function before being unsubscribed. 
-     * 
+     * the listener in listenForRidirect() could be sending multiple
+     * calls to this function before being unsubscribed.
+     *
      * lets make sure we only make 1 api call for each code
      */
-    if (this.code == codeFromRoute) {
+    if (this.code === codeFromRoute) {
       return this.isAuthenticated();
     } else {
       this.code = codeFromRoute;
@@ -345,7 +372,7 @@ export class SsoService {
   /**
    * Get User's Access and Refresh token and store them in cookies
    * then clears query parameters.
-   * @param code 
+   * @param code
    */
   private async fetchAndStoreTokenFromCode(code: string): Promise<boolean> {
     const result = await this.getTokensFromCode(code);
@@ -355,63 +382,37 @@ export class SsoService {
       this.clearQueryParams();
 
       // Verify that the tokens are stored.
-      return (this.getAccessToken() != "" && this.getRefreshToken() != "");
+      return (this.getAccessToken() !== '' && this.getRefreshToken() !== '');
     } else {
       return false;
     }
   }
 
   /**
-   * Makes a Post call to URL generated by SSO_TokenEndpoint() 
+   * Makes a Post call to URL generated by SSO_TokenEndpoint()
    * to get user's tokens from code returned in login()
    * Returns User's Tokens
-   * @param code 
+   * @param code
    */
   private async getTokensFromCode(code: string): Promise<TokenReponse> {
     const data: object = {
       code: code,
-      grant_type: "authorization_code",
+      grant_type: 'authorization_code',
       redirect_uri: AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI,
       client_id: AppConstants.SSOConstants.SSO_CLIENT_ID,
     };
 
-    var response: TokenReponse = {
+    const response: TokenReponse = {
       success: false,
-      accessToken: "",
+      accessToken: '',
       accessTokenExpiery: 0,
-      refreshToken: "",
+      refreshToken: '',
       refreshTokenTokenExpiery: 0,
     };
 
     try {
       const result = await this.httpClient.post<any>(this.SSO_TokenEndpoint(), queryString.stringify(data), { headers: this.getHeaders() }).toPromise();
-
-      if (result['success'] == false) {
-        response.success = false;
-        return response;
-      } else {
-        const accessToken = result["access_token"];
-        const expiresIn = result["expires_in"];
-        const refreshToken = result['refresh_token'];
-        const refreshExpiresIn = result["refresh_expires_in"];
-        if (
-          accessToken == undefined ||
-          expiresIn == undefined ||
-          refreshExpiresIn == undefined ||
-          refreshToken == undefined
-        ) {
-          response.success = false;
-          return response;
-        } else {
-          response.accessToken = accessToken;
-          response.accessTokenExpiery = expiresIn;
-          response.refreshToken = refreshToken;
-          response.refreshTokenTokenExpiery = refreshExpiresIn;
-          response.success = true
-          return response;
-        }
-      }
-
+      return this.getTokensFromAPIResult(result);
     } catch (error) {
       console.log(`login fails with Error: ${error}`);
       console.dir(error);
@@ -435,27 +436,26 @@ export class SsoService {
    */
   private storeAccessToken(token: string, expiery: number) {
     this.bearerToken = token;
-    console.log(`Storing new token:`);
-    console.dir(this.bearerToken);
-    console.log(`////`);
-    console.log(this.getTokenInformation());
-    console.log(`////////////////////////////`);
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
     const expieryDateUTC = expieryDate.toUTCString();
-    this.cookieService.set('accessToken', token, expieryDate);
-    this.cookieService.set('accessTokenExpiery', expieryDateUTC, expieryDate);
-    // TODO: consider using this.beginTokeRefreshTimer()
+    this.cookieService.set(this.accessTokenCookie, token, expieryDate);
+    this.cookieService.set(this.accessTokenExpieryCookie, expieryDateUTC, expieryDate);
+    this.beginTokenRefreshTimer();
   }
 
   /**
    * Store refresh token in cookies
-   * @param token 
-   * @param expiery 
+   * @param token
+   * @param expiery
    */
   private storeRefreshToken(token: string, expiery: number) {
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
-    this.cookieService.set('refreshToken', token, new Date(tokenExpieryInSconds));
+    const expieryDate = new Date(tokenExpieryInSconds);
+    const expieryDateUTC = expieryDate.toUTCString();
+    this.cookieService.set(this.refreshTokenCookie, token, expieryDate);
+    this.cookieService.set(this.refreshTokenExpieryCookie, expieryDateUTC, expieryDate);
+    this.beginRefreshExpieryTimer();
   }
 
   /**
@@ -466,9 +466,9 @@ export class SsoService {
     if (this.bearerToken !== null) {
       return this.bearerToken;
     }
-    const token = this.cookieService.get('accessToken');
-    if (token == undefined) {
-      return "";
+    const token = this.cookieService.get(this.accessTokenCookie);
+    if (token === undefined) {
+      return ``;
     } else {
       this.bearerToken = (token);
       return token;
@@ -481,9 +481,18 @@ export class SsoService {
    * Return empty string if doesnt exist.
    */
   private getAccessTokenExpiery(): string {
-    const expieryDateUTCString = this.cookieService.get('accessTokenExpiery');
-    if (expieryDateUTCString == undefined) {
-      return "";
+    const expieryDateUTCString = this.cookieService.get(this.accessTokenExpieryCookie);
+    if (expieryDateUTCString === undefined) {
+      return ``;
+    } else {
+      return expieryDateUTCString;
+    }
+  }
+
+  private getRefreshTokenExpiery(): string {
+    const expieryDateUTCString = this.cookieService.get(this.refreshTokenExpieryCookie);
+    if (expieryDateUTCString === undefined) {
+      return ``;
     } else {
       return expieryDateUTCString;
     }
@@ -493,10 +502,10 @@ export class SsoService {
    * Convert UTC date in string format
    * to milliseconds from now
    * NOTE: Returns -1 if string is emtpty.
-   * @param dateUTCString 
+   * @param dateUTCString
    */
   private convertUTCDateStringToMillisecondsFromNow(dateUTCString): number {
-    if (dateUTCString == "") {
+    if (dateUTCString === ``) {
       return -1;
     }
     const expieryDate = new Date(Date.parse(dateUTCString));
@@ -508,9 +517,9 @@ export class SsoService {
    * Return empty string if doesnt exist.
    */
   private getRefreshToken(): string {
-    const token = this.cookieService.get('refreshToken');
-    if (token == undefined) {
-      return "";
+    const token = this.cookieService.get(this.refreshTokenCookie);
+    if (token === undefined) {
+      return ``;
     } else {
       return token;
     }
@@ -520,15 +529,15 @@ export class SsoService {
    * Return access token with 'bearer' appended
    */
   public getBearerAccessToken(): string {
-    return ("Bearer " + this.getAccessToken());
+    return (`Bearer ${this.getAccessToken()}`);
   }
 
   /**
    * Decode JWT token and return result
    */
-  public getTokenInformation() {
+  public getTokenInformation(): any {
     const token = this.getAccessToken();
-    if (token == "") { return null };
+    if (token === ``) { return null; }
     return jwtDecode(token);
   }
 

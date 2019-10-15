@@ -11,20 +11,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: schemaYaml.loader.spec.ts
  * Project: lucy
- * File Created: Friday, 30th August 2019 1:31:37 pm
+ * File Created: Thursday, 3rd October 2019 9:10:58 am
  * Author: pushan (you@you.you)
  * -----
- * Last Modified: Friday, 30th August 2019 1:34:22 pm
+ * Last Modified: Thursday, 3rd October 2019 9:11:27 am
  * Modified By: pushan (you@you.you>)
  * -----
  */
+import { should } from 'chai';
+import { getSQLFileData, getSQLFilePath } from '../sql.loader';
 
-export * from './application.column';
-export * from './application.table';
-export * from './baseSchema';
-export * from './schema.storage';
-export * from './base.data.controller';
-export * from './schemaYaml.loader';
-export * from './sql.loader';
+describe(' Test Schema YAML file loader', () => {
+    it('should return path', () => {
+        const path = getSQLFilePath('JurisdictionCodeData.sql');
+        should().exist(path);
+    });
+
+    it('should return schema yaml data', () => {
+        const data = getSQLFileData('JurisdictionCodeData.sql');
+        should().exist(data);
+    });
+});
+
+// -----------------------------------

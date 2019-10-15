@@ -18,5 +18,6 @@ getTestBed().initTestEnvironment(
 // const context = require.context('./', true, /\.spec\.ts$/);
 
 const context = require.context('./', true, /location\.service\.spec\.ts$/);
+
 // And load the modules.
 context.keys().map(context);

@@ -195,6 +195,9 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setFullName();
       this.setAccessType();
       this.setAppTitle();
+      this.setOrganization();
+      this.setRole();
+      this.setAccessTypeMessage();
     });
   }
 

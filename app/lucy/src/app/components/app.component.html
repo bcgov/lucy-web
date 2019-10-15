@@ -14,6 +14,7 @@
  limitations under the License.
 -->
 
+<!-- Loading animation  -->
 <div *ngIf="showLoading" class="overlay">
     <div class="loading-icon-container">
         <lottie-animation-view [options]="lottieConfig" [width]="200" [height]="200" (animCreated)="handleAnimation($event)">
@@ -21,18 +22,20 @@
     </div>
 </div>
 
+<!-- Nav Bar -->
 <app-nav-bar *ngIf="isReady && isAuthenticated"></app-nav-bar>
-<div *ngIf="!isAuthenticated" class="alert alert-warning" role="alert">
-    <strong>Login!</strong> Please login to view Species list.
-</div>
+<!-- Login Page  -->
 <app-login *ngIf="!isAuthenticated"></app-login>
+<!-- Current route  -->
 <router-outlet *ngIf="isAuthenticated"></router-outlet>
-<!-- <router-outlet *ngIf="!isAuthenticated"></router-outlet> -->
 
 <!-- USER ACCESS CHANGED MESSAHE Modal -->
 <app-user-access-updated-modal *ngIf="userAccessUpdatedMessage" (userAccessUpdatedModalEventEmitter)='userAccessUpdatedModalEmitted($event)' [message]="userAccessUpdatedMessage">
 </app-user-access-updated-modal>
 <!-- ----- -->
+
+<!-- Toast  -->
+<app-toast *ngIf="toastMessage" [model]="toastMessage"></app-toast>
 
 <!-- ALERT MODAL -->
 <app-alert *ngIf="alertMessage" [model]="alertMessage"></app-alert>

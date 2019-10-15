@@ -244,10 +244,11 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     // Must have at least 5 decimal places
     const separated = control.value.split('.');
     if (separated.length > 2) {
-      return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number'};
+       // This wont happend because number validation will catch it first
+      return { invalidLatitude: true, invalidLatitudeError: 'There have extra dots'};
     }
      // Must be between 48 and 61
-     if (!(Number(separated[0]) >= 48 && Number(separated[0]) <= 61)) {
+     if (!(Number(control.value) >= 48 && Number(control.value) <= 61)) {
       return { invalidLatitude: true, invalidLatitudeError: 'Must be between 48 and 61'};
     }
     if (!separated[1] || separated[1].length < 5) {
@@ -269,10 +270,11 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       // Must have at least 5 decimal places
       const separated = control.value.split('.');
       if (separated.length > 2) {
-        return { validLongitude: true, invalidLongitudeError: 'Not a valid number' };
+        // This wont happend because number validation will catch it first
+        return { validLongitude: true, invalidLongitudeError: 'There have extra dots' };
       }
       // Must be between 48 and 61
-      if (!(Number(separated[0]) >= -139 && Number(separated[0]) <= -114)) {
+      if (!(Number(control.value) >= -139 && Number(control.value) <= -114)) {
         return { validLongitude: true, invalidLongitudeError: 'Must be between -139 and -114' };
       }
       if (!separated[1] || separated[1].length < 5) {

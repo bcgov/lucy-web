@@ -37,6 +37,7 @@ import { ApiService, APIRequestMethod } from 'src/app/services/api.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DiffResult } from 'src/app/services/diff.service';
 import { ElementRef } from '@angular/core';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 
 export enum FormType {
   Observation,
@@ -115,9 +116,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * submit button title for different states
    */
   get submitButtonPrefix(): string {
-    let prefix: string;
     if (this.creating && !this.inReviewMode) {
-      return 'Submit'
+      return 'Submit';
     }
     if (this.creating && this.inReviewMode) {
       return 'Create';
@@ -134,12 +134,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   // Add prefix based on state
   get pageTitlePrefix(): string {
-    let prefix: string;
     if (this.creating && this.inReviewMode) {
       return 'Review';
     }
     if (this.creating && !this.inReviewMode) {
-      return 'Add New'
+      return 'Add New';
     }
     return ``;
   }
@@ -176,7 +175,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return this._config;
   }
   private set config(object: any) {
-    this._config = object;
+    this._config = { ...object};
   }
 
   // Diff object
@@ -198,7 +197,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     let requiredFieldsExist = true;
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
-        console.log(`${key} is missing`);
         requiredFieldsExist = false;
       }
     }
@@ -211,24 +209,23 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @returns string array of headers
    */
   get missingFields(): string[] {
-    let requiredMissingFieldKeys: string[]= [];
-    
+    const requiredMissingFieldKeys: string[] = [];
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
         requiredMissingFieldKeys.push(key);
       }
     }
     // let requiredMissingFieldHeaders: string[]= [];
-    let missingFieldHeaders: string[]= [];
-    let locationIncluded = false
+    const missingFieldHeaders: string[] = [];
+    let locationIncluded = false;
     for (const key of requiredMissingFieldKeys) {
       if (this.config.fieldHeaders[key] !== undefined) {
         // Group Lat long under "location" tag
         if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
           if (!locationIncluded) {
-            missingFieldHeaders.push(`Location`)
+            missingFieldHeaders.push(`Location`);
             locationIncluded = true;
-          } 
+          }
         } else {
           // All other fields
           missingFieldHeaders.push(this.config.fieldHeaders[key]);
@@ -240,7 +237,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   // Flag used to show missing fields section
   triedToSubmit = false;
-  get showMissingFieldsDialog() : boolean {    
+  get showMissingFieldsDialog(): boolean {
     return (this.triedToSubmit && this.missingFields.length > 0);
   }
 
@@ -257,6 +254,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     private loadingService: LoadingService,
     private elementRef: ElementRef,
     private renderer: Renderer2,
+    private toast: ToastService
   ) {
     this.lottieConfig = {
       path: this.formLoadingIcon,
@@ -287,7 +285,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       // Computed fields rely on body to display their value.
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     }
-    console.log(config);
     this.isLoading = false;
   }
 
@@ -359,18 +356,20 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.triedToSubmit = true;
+      this.toast.show('Some required fields are missing', ToastIconType.fail);
     } else {
       if (!this.inReviewMode) {
         this.enterReviewMode();
         return;
       }
       this.loadingService.add();
-      const submitted = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
+      const submittedId = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
-      if (submitted) {
-        this.router.navigateTo(AppRoutes.Inventory);
+      if (submittedId !== -1) {
+        this.toast.show(`Your record has been commited to the database.`, ToastIconType.success);
+        this.formService.viewCurrentWithId(submittedId);
       } else {
-        this.alert.show('error', 'There was an error');
+        this.alert.show('Submission failed', 'There was an error');
       }
     }
   }
@@ -427,9 +426,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   missingFieldSelected(missingFieldHeader: string) {
     const highlightClass = 'shake';
-    let el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
+    const el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
       if (el) {;
-          el.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+          el.scrollIntoView({ block: 'center',  behavior: 'smooth' });
           this.renderer.addClass(el, highlightClass);
           setTimeout(() => {
           this.renderer.removeClass(el, highlightClass);
@@ -449,10 +448,14 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   async generateForTesting() {
     this.loadingService.add();
     if (this.router.current === AppRoutes.AddMechanicalTreatment) {
-      this.config = await this.formService.generateMechanicalTreatmentTest(this.config);
+      const temp = await this.formService.generateMechanicalTreatmentTest(this.config);
+      this.config = { ...temp};
+      // console.log(`config updated`);
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else if (this.router.current === AppRoutes.AddObservation) {
-      this.config = await this.formService.generateObservationTest(this.config);
+      const temp = await this.formService.generateObservationTest(this.config);
+      this.config = { ...temp};
+      // console.log(`config updated`);
       this.responseBody = this.formService.generateBodyForMergedConfig(this.config);
     } else {
       this.alert.show('Form not supported yet', `Test generatgion for this form type is not implemented yet`);

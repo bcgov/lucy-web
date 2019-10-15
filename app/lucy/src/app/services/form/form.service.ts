@@ -81,25 +81,26 @@ export interface FormConfig {
 }
 
 export interface UIConfigObject {
-  api: string,
-  title: string,
-  sections: UIConfigSection[],
-  relationsConfigs: any,
-  relationKeys: string[],
-  requiredFieldKeys: string[],
-  dropdownFieldKeys: string[],
-  fieldHeaders: {},
-};
+  api: string;
+  idKey: string;
+  title: string;
+  sections: UIConfigSection[];
+  relationsConfigs: any;
+  relationKeys: string[];
+  requiredFieldKeys: string[];
+  dropdownFieldKeys: string[];
+  fieldHeaders: {};
+}
 
 export interface UIConfigSection {
-  title: string,
-  subSections: UIConfigSubSection[],
+  title: string;
+  subSections: UIConfigSubSection[];
 }
 
 export interface UIConfigSubSection {
-  title: string,
-  boxed: boolean,
-  fields: any[]
+  title: string;
+  boxed: boolean;
+  fields: any[];
 }
 
 @Injectable({
@@ -155,75 +156,40 @@ export class FormService {
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
-    switch (this.router.current) {
-      //// Observation routes ////
-      case AppRoutes.ViewObservation: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        // console.dir(observation);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditObservation: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const observation = await this.observationService.getWithId(id);
-        if (configFile && observation) {
-          return this.merge(configFile, observation);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.AddObservation: {
-        const configFile = await this.getObservationUIConfig();
+
+    if ((this.router.current === AppRoutes.ViewObservation) || (this.router.current === AppRoutes.EditObservation)) {
+       //// Observation View And Edit routes ////
+      const configFile = await this.getObservationUIConfig();
+      const observation = await this.observationService.getWithId(this.router.routeId);
+      return await this.getUIConfigFrom(configFile, observation);
+    } else if (this.router.current === AppRoutes.AddObservation) {
+      //// Observation Create route ////
+      const configFile = await this.getObservationUIConfig();
+      return configFile;
+    } else if ((this.router.current === AppRoutes.ViewMechanicalTreatment) || (this.router.current === AppRoutes.EditMechanicalTreatment)) {
+      //// Mechanical Treatment View and Edit routes ////
+      const configFile = await this.getMechanicalTreatmentUIConfig();
+      const treatment = await this.mechanicalTreatmentService.getWithId(this.router.routeId);
+      return await this.getUIConfigFrom(configFile, treatment);
+    } else if (this.router.current === AppRoutes.AddMechanicalTreatment)  {
+      //// Mechanical Treatment Create route ////
+      const configFile = await this.getMechanicalTreatmentUIConfig();
         return configFile;
-        break;
-      }
-      //// END Observation routes ////
-      //// Mechanical Treatment routes ////
-      case AppRoutes.ViewMechanicalTreatment: {
-        const id = this.router.routeId;
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.EditMechanicalTreatment: {
-        const id = this.router.routeId;
-        const configFile = await this.getObservationUIConfig();
-        const treatment = await this.mechanicalTreatmentService.getWithId(id);
-        if (configFile && treatment) {
-          return this.merge(configFile, treatment);
-        } else {
-          return undefined;
-        }
-        break;
-      }
-      case AppRoutes.AddMechanicalTreatment: {
-        const configFile = await this.getMechanicalTreatmentUIConfig();
-        return configFile;
-        break;
-      }
-      //// END Mechanical Treatment routes ////
-      default: {
+    } else {
+      console.log(this.router.current);
         console.log(
           `**t his form route in not handled here |form.service -> getFormConfigForCurrentRoute()|**`
         );
         this.errorService.show(ErrorType.NotFound);
         return undefined;
-        break;
-      }
     }
+  }
+
+  private async getUIConfigFrom(config: any, objectWithValues: any): Promise<any> {
+    if (!config || !objectWithValues) {
+      return undefined;
+    }
+    return await this.merge(config, objectWithValues);
   }
 
   //////////////////////////////////// END Fetch UI Config ////////////////////////////////////
@@ -302,6 +268,7 @@ export class FormService {
     const fieldHeaders: {} = {};
     const configObject: UIConfigObject = {
       api: serverConfig.meta.api,
+      idKey: serverConfig.idKey,
       title: serverConfig.layout.title.default,
       sections: [],
       requiredFieldKeys: [],
@@ -316,7 +283,7 @@ export class FormService {
     for (const section of sections) {
       const groups = section.groups;
       const subSections: any[] = [];
-      // Loop thorugh groups in server config layout
+      // Loop thorugh groups in server config lay out
       for (const group of groups) {
         // Initialize fields for group
         const subSectionFields: any[] = [];
@@ -539,10 +506,8 @@ export class FormService {
    * @param field any
    */
   private processFieldConfig(field: any): FormConfigField {
-    let isCodeTable = false;
     let codeTable = '';
     if (field.type === 'object') {
-      isCodeTable = true;
       codeTable = field.refSchema.modelName;
       // codeTable = codeTable.charAt(0).toLowerCase() + codeTable.slice(1);
     }
@@ -882,7 +847,7 @@ export class FormService {
     }
     // If it doesnt have a decimap point, add 5 zeros
     if (String(value).indexOf('.') === -1) {
-      return `${String(value)}.00000`;
+      return `${(value)}.00000`;
     }
     // Split by decimal point
     const separated = String(value).split('.');
@@ -900,7 +865,7 @@ export class FormService {
       return `${separated[0]}.${decimals}`;
     }
     // at this point it should be fine as is
-    return String(value);
+    return `${(value)}`;
 
   }
 
@@ -918,7 +883,7 @@ export class FormService {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
           // if its a dropdown
-          if (field.isDropdown) {
+          if (field.isDropdown && field.value) {
             // Find the id of the value
             for (const key in field.value.object) {
               if (key.toLowerCase().indexOf('id') !== -1) {
@@ -1121,30 +1086,29 @@ export class FormService {
     return JSON.parse(JSON.stringify(cleanBody));
   }
 
-  public async submit(body: JSON, uiConfig: any): Promise<boolean> {
+  public async submit(body: JSON, uiConfig: any): Promise<number> {
     const cleanBody = this.cleanBodyForSubmission(body, uiConfig);
-    console.dir(cleanBody);
     if (this.router.isEditRoute) {
       const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}/${this.router.routeId}`;
       const result = await this.api.request(APIRequestMethod.PUT, endpoint, cleanBody);
       // console.log(result);
-      if (result.success) {
-        return true;
+      if (result.success && result.response[uiConfig.idKey]) {
+        return result.response[uiConfig.idKey];
       } else {
-        return false;
+        return -1;
       }
     } else if (this.router.isCreateRoute) {
       const endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
       const result = await this.api.request(APIRequestMethod.POST, endpoint, cleanBody);
       // console.log(result);
-      if (result.success) {
-        return true;
+      if (result.success && result.response[uiConfig.idKey]) {
+        return result.response[uiConfig.idKey];
       } else {
-        return false;
+        return -1;
       }
     } else {
       console.log('Not a route that can submit');
-      return false;
+      return -1;
     }
   }
   //////////////////////////////////// END SUBMISSION ////////////////////////////////////
@@ -1152,17 +1116,27 @@ export class FormService {
   //////////////////////////////////// TESTS ////////////////////////////////////
   public async generateMechanicalTreatmentTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyMechanicalTreatment();
+    // console.dir(dummy);
     return await this.merge(config, dummy);
   }
 
   public async generateObservationTest(config: any): Promise<any> {
     const dummy = await this.dummyService.createDummyObservation([]);
+    // console.log(`dummy: ${dummy.lat} ${dummy.long}`);
     const temp = await this.merge(config, dummy);
     return temp;
   }
   //////////////////////////////////// END TESTS ////////////////////////////////////
 
   /////////////////////////////////// Route helpers ////////////////////////////////////
+  public viewCurrentWithId(id: number) {
+    const current = this.router.current;
+    if (current === AppRoutes.EditMechanicalTreatment || current === AppRoutes.AddMechanicalTreatment) {
+      this.router.navigateTo(AppRoutes.ViewMechanicalTreatment, id);
+    } else if (current === AppRoutes.EditObservation || current === AppRoutes.AddObservation) {
+      this.router.navigateTo(AppRoutes.ViewObservation, id);
+    }
+  }
   /**
    * Switch current form route to edit mode
   */

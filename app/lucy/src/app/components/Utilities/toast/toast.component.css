@@ -14,17 +14,7 @@
  * limitations under the License.
  */
 
-.overlay {
-    background-color: rgba(255, 255, 255, 0.4);
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    z-index: 998;
-}
-
-.alert-container {
+.toast-container {
     width: 100%;
     height: 100%;
     margin-top: 10px;
@@ -34,9 +24,9 @@
     box-shadow: 0 10px 40px 0 rgba(20, 27, 43, 0.3);
 }
 
-.alert-position {
+.toast-position {
     position: fixed;
-    top: 30%;
+    top: 10%;
     left: 50%;
     z-index: 999;
     min-width: 20%;
@@ -45,26 +35,42 @@
     transform: translate(-50%, -50%);
 }
 
-.header {
-    padding: 0;
-    margin: 16px;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 24px;
-}
-
 .message {
     margin: 16px;
     padding: 0;
 }
 
-.options {
-    padding: 0;
-    margin: 16px;
+.success {
+    background-color: #56BD5B;
+    color: #FFFFFF;
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.button {
-    width: 100%;
-    color: #FFFFFF !important;
-    background-color: #234075 !important;
+.fail {
+    background-color: #FF534A;
+    color: #FFFFFF;
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close {
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.none {
+    background-color: transparent;
 }

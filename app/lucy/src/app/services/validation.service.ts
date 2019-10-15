@@ -104,7 +104,7 @@ export class ValidationService {
    * @param longitude string - * use String(number) if needed.
    */
   public isValidLongitude(longitude: string) {
-    return +longitude >= -139 && +longitude <= -114;
+    return Number(longitude) >= -139 && Number(longitude) <= -114;
   }
 
   //////////////// End Location Validations ////////////////

@@ -132,7 +132,8 @@ export class AlertService {
    */
   public clear(message: AlertModel) {
     if (!message) { return; }
-    this.que.splice(this.indexOf(message, this.que), 1);
+    this.que.splice(0, 1);
+    // this.que.splice(this.indexOf(message, this.que), 1);
     this.emit();
   }
 

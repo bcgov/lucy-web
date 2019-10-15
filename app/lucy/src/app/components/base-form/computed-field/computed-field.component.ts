@@ -32,7 +32,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
   @Input() header = '';
   // Rules
   @Input() computationRules: any;
-  // full config 
+  // full config
   @Input() config: any;
 
   private _formBody: any = {};
@@ -130,7 +130,7 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
 
   /**
    * Check if a required key is a dropdown.
-   * @param key 
+   * @param key
    */
   private isDropdown(key: string): boolean {
     if (!this.config || !this.config.dropdownFieldKeys) {

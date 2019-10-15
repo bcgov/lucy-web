@@ -11,20 +11,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: db.query.runner.ts
  * Project: lucy
- * File Created: Friday, 30th August 2019 1:31:37 pm
- * Author: pushan (you@you.you)
+ * File Created: Tuesday, 1st October 2019 2:00:50 pm
+ * Author: pushan
  * -----
- * Last Modified: Friday, 30th August 2019 1:34:22 pm
- * Modified By: pushan (you@you.you>)
+ * Last Modified: Tuesday, 1st October 2019 2:00:55 pm
+ * Modified By: pushan
  * -----
  */
 
-export * from './application.column';
-export * from './application.table';
-export * from './baseSchema';
-export * from './schema.storage';
-export * from './base.data.controller';
-export * from './schemaYaml.loader';
-export * from './sql.loader';
+import { Connection } from 'typeorm';
+import { DBManager } from '../sources/database';
+(async () => {
+    console.log(`Running Query => ${process.argv[2]}`);
+    await DBManager.shared.connect();
+    const connection: Connection = DBManager.shared.connection;
+    const result = await connection.query(`${process.argv[2]}`);
+    console.log(JSON.stringify(result, null, 2));
+    await DBManager.shared.close();
+})();
+// -----------------------------------------

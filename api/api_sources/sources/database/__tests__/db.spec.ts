@@ -22,7 +22,7 @@
 import { should, expect } from 'chai';
 import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-database';
 import { defineColumn, createColumn, BaseTableSchema} from '../applicationSchemaInterface';
-import { getYAMLFilePath } from '../database-schema/schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 import { SchemaCache } from '../../libs/utilities';
 import { MechanicalTreatmentSchema } from '../database-schema';
 import { appSchemaMap } from '../app.schema.loader';
