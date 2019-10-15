@@ -79,7 +79,7 @@ export abstract class BaseModel  {
                 const keys: any[] = schema.table.displayLabelInfo.keys || [];
                 for (const k of keys) {
                     const item = valueAtKeyPath(this, `${k}`) || '';
-                    format = format.replace(`#(${k})#`, item);
+                    format = format.replace(`#(${k})`, item);
                 }
                 this.displayLabel = format;
             } else {

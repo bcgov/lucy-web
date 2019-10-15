@@ -18,7 +18,7 @@ module.exports = (settings) => {
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'HOST': phases[phase].host,
-      'CHANGE_ID': phases[phase].changeId,
+      'CHANGE_ID': phases.build.changeId || changeId,
       'ENVIRONMENT': phases[phase].env || 'dev',
       'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
       'CERTIFICATE_URL': phases[phase].certificateURL
