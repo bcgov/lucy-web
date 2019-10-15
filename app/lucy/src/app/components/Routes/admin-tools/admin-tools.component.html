@@ -1,65 +1,81 @@
+<!--
+ Copyright 2019 Province of British Columbia
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
 <!-- Header Section -->
 <div class="container-fluid header-container">
-  <div class="container">
-    <mat-toolbar class="toolbar">
-      <mat-toolbar-row>
-        <span class="animated fadeIn">Admin Tools</span>
-      </mat-toolbar-row>
-    </mat-toolbar>
-  </div>
+    <div class="container">
+        <mat-toolbar class="toolbar">
+            <mat-toolbar-row>
+                <span class="animated fadeIn">Admin Tools</span>
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </div>
 </div>
 <br />
 <div class="container">
-  <!-- Requests -->
-  <div class="row">
-    <h4>Pending Access Requests</h4>
-  </div>
-  <div class="row">
-    <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-  </div>
-  <div class="row">
-    <table class="table table-borderless table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Username</th>
-          <th scope="col">Name</th>
-          <th scope="col">Current Role</th>
-          <th scope="col">Requested Role</th>
-          <th scope="col">Reasons</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr app-request-cell *ngFor="let request of requests; let i = index" [request]="request" (shouldRefresh)="requestResponseSent()">
-      </tbody>
-    </table>
-  </div>
-  <!-- End Requests -->
-  <br />
-  <!-- All Users -->
-  <div class="row">
-    <h4>All Users</h4>
-  </div>
-  <div class="row">
-    <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-  </div>
-  <div class="row">
-    <table class="table table-borderless table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Username</th>
-          <th scope="col">First Name</th>
-          <th scope="col">Last name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Role</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr app-user-cell *ngFor="let user of allUsers; let i = index" [user]="user">
-        </tr> 
-      </tbody>
-    </table>
-  </div>
-  <!-- END All Users -->
+    <!-- Requests -->
+    <div class="row">
+        <h4>Pending Access Requests</h4>
+    </div>
+    <div class="row">
+        <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+    </div>
+    <div class="row">
+        <table class="table table-borderless table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Current Role</th>
+                    <th scope="col">Requested Role</th>
+                    <th scope="col">Reasons</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr app-request-cell *ngFor="let request of requests; let i = index" [request]="request" (shouldRefresh)="requestResponseSent()">
+            </tbody>
+        </table>
+    </div>
+    <!-- End Requests -->
+    <br />
+    <!-- All Users -->
+    <div class="row">
+        <h4>All Users</h4>
+    </div>
+    <div class="row">
+        <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+    </div>
+    <div class="row">
+        <table class="table table-borderless table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr app-user-cell *ngFor="let user of allUsers; let i = index" [user]="user">
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- END All Users -->
 </div>

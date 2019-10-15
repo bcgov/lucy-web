@@ -1,3 +1,19 @@
+/**
+ * Copyright 2019 Province of British Columbia
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 .section-title {
     color: #000000;
     font-size: 20px;
@@ -6,12 +22,11 @@
 }
 
 .sub-header {
-	color: #FFFFFF;
-	font-size: 14px;
-	letter-spacing: -0.05px;
-	line-height: 18px;
+    color: #FFFFFF;
+    font-size: 14px;
+    letter-spacing: -0.05px;
+    line-height: 18px;
 }
-
 
 .sub-section-title {
     color: #000000;
@@ -63,7 +78,7 @@
     margin: 0 auto;
     width: 100%;
     background: linear-gradient(135deg, #EA8B0F 0%, #F1AC24 100%);
-    box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+    box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
     animation-duration: 0.5s;
 }
 
@@ -71,14 +86,17 @@
     flex: 1 1 auto;
 }
 
+
 /* HANDELING SIDE NAV ON SCREEN SIZE CHANGE */
+
 @media (min-width: 992px) {}
 
 @media (max-width: 992px) {}
 
-/****************************************/
-@media (max-width: 768px) {
 
+/****************************************/
+
+@media (max-width: 768px) {
     /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
     .header-container-inner {
         margin: 0 auto;

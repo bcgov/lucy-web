@@ -7,6 +7,7 @@ ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_location_latitu
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_location_longitude NUMERIC(9, 6) NOT NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_width NUMERIC(7, 2) NULL DEFAULT 0.0;
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_length NUMERIC(7, 2) NULL DEFAULT 0.0;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_radius NUMERIC(7, 2) NULL DEFAULT 0.0;
 ALTER TABLE mechanical_treatment ADD COLUMN applicator_first_name VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN applicator_last_name VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN secondary_applicator_first_name VARCHAR(100) NULL;
@@ -36,6 +37,7 @@ COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_location_latitude IS
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_location_longitude IS 'Longitude of treatment location';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_width IS 'Width of the area of treatment';
 COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_length IS 'Length of the area of treatment';
+COMMENT ON COLUMN mechanical_treatment.mechanical_treatment_area_radius IS 'Radius of the circular area of treatment';
 COMMENT ON COLUMN mechanical_treatment.applicator_first_name IS 'First name of the applicator';
 COMMENT ON COLUMN mechanical_treatment.applicator_last_name IS 'Last name of the applicator';
 COMMENT ON COLUMN mechanical_treatment.secondary_applicator_first_name IS 'First name of the secondary applicator';

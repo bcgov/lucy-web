@@ -1,3 +1,19 @@
+/**
+ * Copyright 2019 Province of British Columbia
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component, Input, OnInit, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 
 
@@ -131,11 +147,24 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
     this.value = `${area}\tm²`;
   }
 
+/**
+ * Determines whether rectangular area or circular area should be calculated,
+ * based on key(s) in required fields
+ */
+  private calculateArea(): number {
+    const fields = this.getRequiredFields();
+    if (fields[0].key === `width` || fields[0].key === `length`) {
+      return this.calculateAreaRectangle();
+    } else if (fields[0].key === `radius`) {
+      return this.calculateAreaCircle();
+    } else { return 0; }
+  }
+
   /**
-   * Return area calculated by multiplying required fields.
+   * Return area of rectangle calculated by multiplying required fields.
    * (ignores required dropdown value)
    */
-  private calculateArea(): number {
+  private calculateAreaRectangle(): number {
     const fields = this.getRequiredFields();
     if (!fields) {
       return 0;
@@ -153,4 +182,19 @@ export class ComputedFieldComponent implements OnChanges, OnInit {
     return result;
   }
 
+  /**
+   * Returns area of circle calculated by multiplying radius by PI^2
+   */
+  private calculateAreaCircle(): number {
+    const fields = this.getRequiredFields();
+    let result: number;
+    if (!fields) {    // no value entered
+      result = 0;
+    } else if (fields.length > 1) {   // multiple values entered (so can't be radius)
+      result = 0;
+    } else {
+      result = Math.PI * Math.pow(fields[0].value, 2);
+    }
+    return result;
+  }
 }

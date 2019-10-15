@@ -1,19 +1,35 @@
+/**
+ * Copyright 2019 Province of British Columbia
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 .view-title-section {
     background-color: #F7F7F7;
     position: sticky;
-    top:0;
+    top: 0;
     /* height: 100px; */
     padding-top: 20px;
     padding-bottom: 20px;
     align-items: center;
-    z-index:1;
+    z-index: 1;
 }
 
 .view-title {
     height: 34px;
-	color: #000000;
-	font-size: 28px;
-	font-weight: bold;
+    color: #000000;
+    font-size: 28px;
+    font-weight: bold;
     line-height: 34px;
 }
 
@@ -34,7 +50,7 @@
 
 .toggle-btn-off {
     height: 32px;
-	width: 32px;
+    width: 32px;
     background-color: #D8D8D8;
     color: #000000;
     border-radius: 5;
@@ -51,11 +67,11 @@
 }
 
 .action-btn {
-	height: 29px;
-	color: #000000;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 16px;
+    height: 29px;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
     text-align: center;
     border: 1px solid #000000;
     width: 100%;

@@ -1,3 +1,19 @@
+<!--
+ Copyright 2019 Province of British Columbia
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
 <!-- <div *ngIf="!formType">
 <br />
 <br />
@@ -22,41 +38,37 @@
 </div> -->
 
 <div *ngIf="isLoading" class="form-bg">
-  <!-- Header Section  -->
-  <div class="container-fluid header-container-loading sticky">
-    <div class="container header-container-inner">
-      <mat-toolbar>
-        <mat-toolbar-row> </mat-toolbar-row>
-      </mat-toolbar>
+    <!-- Header Section  -->
+    <div class="container-fluid header-container-loading sticky">
+        <div class="container header-container-inner">
+            <mat-toolbar>
+                <mat-toolbar-row> </mat-toolbar-row>
+            </mat-toolbar>
+        </div>
     </div>
-  </div>
-  <br />
-  <div class="container form-body animated fadeIn">
+</div>
+<br />
+<div class="container form-body animated fadeIn">
     <br />
-    <lottie-animation-view
-      [options]="lottieConfig"
-      (animCreated)="handleAnimation($event)"
-    >
-    </lottie-animation-view>
-  </div>
+    <div class="container form-body">
+        <br />
+        <lottie-animation-view [options]="lottieConfig" (animCreated)="handleAnimation($event)">
+        </lottie-animation-view>
+    </div>
 </div>
 <div *ngIf="!isLoading" class="form-bg">
-  <!-- Header Section  -->
-  <div
-    class="container-fluid header-container sticky animated"
-    [ngClass]="
+    <!-- Header Section  -->
+    <div class="container-fluid header-container sticky animated" [ngClass]="
       inReviewMode
         ? 'header-container-review pulse'
         : 'header-container slideInRight'
-    "
-  >
-    <div class="container header-container-inner">
-      <mat-toolbar>
-        <mat-toolbar-row>
-          <div class="row">
-            <div class="col-12">
-              <span
-                >{{ pageTitlePrefix }} {{ config["title"] }}</span
+    ">
+        <div class="container header-container-inner">
+            <mat-toolbar>
+                <mat-toolbar-row>
+                    <div class="row">
+                        <div class="col-12">
+                            <span>{{ pageTitlePrefix }} {{ config["title"] }}</span
               >
             </div>
             <div *ngIf="config['objectId']" class="col-12 sub-header">
@@ -65,234 +77,72 @@
           </div>
 
           <span class="spacer-toolbar"></span>
-          <!-- Submit button -->
-          <button
-            mat-flat-button
-            *ngIf="!readonly || inReviewMode"
-            type="button"
-            class="btn btn-secondary submit-button"
-            (click)="submitAction()"
-          >
+                            <!-- Submit button -->
+                            <button mat-flat-button *ngIf="!readonly || inReviewMode" type="button" class="btn btn-secondary submit-button" (click)="submitAction()">
             {{ submitButtonPrefix }} {{ config["title"] }}
           </button>
-          <!-- ---- -->
-          <!-- Edit button for review -->
-          <button
-            mat-flat-button
-            *ngIf="inReviewMode"
-            type="button"
-            class="btn btn-secondary edit-button animated fadeIn"
-            (click)="exitReviewMode()"
-          >
+                            <!-- ---- -->
+                            <!-- Edit button for review -->
+                            <button mat-flat-button *ngIf="inReviewMode" type="button" class="btn btn-secondary edit-button animated fadeIn" (click)="exitReviewMode()">
             <i class="material-icons action-icon">
               edit
             </i>
             Make changes
           </button>
-          <!-- ---- -->
-          <!-- Edit Button for when in view mode and user is data editor -->
-          <button
-            mat-flat-button
-            (click)="edit()"
-            *ngIf="isDataEditor && viewing"
-            type="button"
-            class="btn btn-secondary edit-button animated fadeIn"
-          >
+                            <!-- ---- -->
+                            <!-- Edit Button for when in view mode and user is data editor -->
+                            <button mat-flat-button (click)="edit()" *ngIf="isDataEditor && viewing" type="button" class="btn btn-secondary edit-button animated fadeIn">
             <i class="material-icons action-icon">
               edit
             </i>
             Make changes
           </button>
-          <!-- ---- -->
-        </mat-toolbar-row>
-      </mat-toolbar>
-    </div>
-  </div>
-  <!-- -------------------- -->
-  <br />
-  <!-- Diff Viewer -->
-  <div
-    *ngIf="showdiffViewer"
-    class="container form-body diff-container animated fadeInDown"
-  >
-    <app-diff-viewer [diffObject]="diffObject"></app-diff-viewer>
-  </div>
-  <!-- Missing fields  -->
-  <div
-    *ngIf="showMissingFieldsDialog"
-    class="container form-body diff-container animated fadeInDown"
-  >
-    <mat-accordion>
-      <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Missing Fields
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="container container-fluid">
-          <div class="row">
-            <mat-chip-list
-              *ngFor="let missingField of missingFields; let j = index"
-            >
-              <mat-chip (click)="missingFieldSelected(missingField)">{{
-                missingField
-              }}</mat-chip>
-            </mat-chip-list>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
-  <!-- Form Body -->
-  <div
-    class="container form-body animated"
-    [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'"
-  >
-    <div
-      class="container-fluid"
-      *ngFor="let section of config.sections; let i = index"
-    >
-      <br />
-      <div class="row">
-        <div class="col-12 section-title">
-          {{ section["title"].default }}
-          <hr class="section-divider" />
-        </div>
-      </div>
-      <div
-        *ngFor="let subSection of section.subSections; let j = index"
-        class="row"
-      >
-        <div class="col-12 sub-section-title">
-          <br />
-          {{ subSection["title"].default }}
-        </div>
-        <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
-          <div class="row">
-            <div
-              class="col nopadding"
-              *ngFor="let field of subSection.fields; let j = index"
-              [ngClass]="field.cssClasses"
-            >
-              <!-- Location Field -->
-              <app-location-input
-                *ngIf="field.isLocationField"
-                [mode]="mode"
-                [object]="field"
-                (locationChanged)="fieldChanged(field, $event)"
-              >
-              </app-location-input>
-              <!-- Input field  -->
-              <app-field
-                *ngIf="field.isInputField"
-                [mode]="mode"
-                [header]="field.header"
-                [value]="field.value"
-                [verification]="field.verification"
-                [required]="field.required"
-                (valueChanged)="fieldChanged(field, $event)"
-              >
-              </app-field>
-              <!-- Text Area field -->
-              <app-field
-                *ngIf="field.isTextAreaField"
-                [mode]="mode"
-                [multiline]="true"
-                [header]="field.header"
-                [value]="field.value"
-                [verification]="field.verification"
-                [required]="field.required"
-                (valueChanged)="fieldChanged(field, $event)"
-              >
-              </app-field>
-              <!-- Date Field -->
-              <app-date-picker
-                *ngIf="field.isDateField"
-                [mode]="mode"
-                [date]="field.value"
-                [header]="field.header"
-                (selected)="fieldChanged(field, $event)"
-              ></app-date-picker>
-              <!-- Dropdown --->
-              <app-dropdown
-                *ngIf="field.isDropdown"
-                [mode]="mode"
-                [items]="field.dropdown"
-                [fieldHeader]="field.header"
-                [selectedItem]="field.value"
-                (selectionChanged)="fieldChanged(field, $event)"
-              >
-              </app-dropdown>
-              <!-- Checkbox -->
-              <div class="col">
-                <app-checkbox
-                  *ngIf="field.isCheckbox"
-                  [mode]="mode"
-                  [header]="field.header"
-                  [value]="field.value"
-                  (selectionChanged)="fieldChanged(field, $event)"
-                >
-                </app-checkbox>
-                <!-- Computed field -->
-              </div>
-              <app-computed-field
-                *ngIf="field.isComputedField"
-                [mode]="mode"
-                [header]="field.header"
-                [formBody]="responseBody"
-                [config]="config"
-                [computationRules]="field.computationRules"
-              >
-              </app-computed-field>
+                            <!-- ---- -->
+                </mat-toolbar-row>
+            </mat-toolbar>
             </div>
             <div class="col nopadding" *ngIf="subSection.fields.length === 0">
-              <div class="container">
-                <div class="row">
-                  <div class="col no-content">
-                    <i class="material-icons">
+                <div class="container">
+                    <div class="row">
+                        <div class="col no-content">
+                            <i class="material-icons">
                       build
                     </i>This section does not have any content yet.
-                  </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <!-- Relation fields -->
-    <div
-      class="container-fluid"
-      *ngFor="let relationKey of config.relationKeys; let relationIndex = index"
-    >
+<!-- Relation fields -->
+<div class="container-fluid" *ngFor="let relationKey of config.relationKeys; let relationIndex = index">
     <br />
-      <div class="row" *ngIf="config.relationsConfigs && config.relationsConfigs[relationKey] && config.relationsConfigs[relationKey].objects">
+    <div class="row" *ngIf="config.relationsConfigs && config.relationsConfigs[relationKey] && config.relationsConfigs[relationKey].objects">
         <div class="col-12 section-title">
-          {{ config.relationsConfigs[relationKey].header.default }}
-          <hr class="section-divider" />
+            {{ config.relationsConfigs[relationKey].header.default }}
+            <hr class="section-divider" />
         </div>
         <div class="col-12">
-          <app-table
-            *ngIf="
+            <app-table *ngIf="
               config.relationsConfigs[relationKey] &&
               config.relationsConfigs[relationKey].table
-            "
-            [model]="config.relationsConfigs[relationKey].table"
-          ></app-table>
+            " [model]="config.relationsConfigs[relationKey].table"></app-table>
         </div>
-      </div>
     </div>
-    <!-- End of form body -->
-  </div>
-  <!-- test btn -->
-  <div *ngIf="creating" class="row test-btn">
+</div>
+<!-- End of form body -->
+</div>
+<!-- test btn -->
+<div *ngIf="creating" class="row test-btn">
     <div class="col-12">
-      <button class="btn" (click)="generateForTesting()">
+        <button class="btn" (click)="generateForTesting()">
         T
       </button>
     </div>
-  </div>
-  <br />
-  <!-- -------------------- -->
+</div>
+<br />
+<!-- -------------------- -->
 </div>
