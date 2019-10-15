@@ -8,6 +8,12 @@ schemas:
     name: species
     description: 'Universal species table. A species is often defined as a group of individuals that actually or potentially interbreed in nature. Taxonomic Level: Domain, Kingdom, Phylum, Class, Order, Family,Genus, Species'
     baseSchema: RecordSchema
+    displayLayout:
+      displayLabel: '#(commonName)'
+      header:
+        key: Species.header
+        default: 'Species'
+      fields: []
     columns:
       id:
         name: 'species_id'
