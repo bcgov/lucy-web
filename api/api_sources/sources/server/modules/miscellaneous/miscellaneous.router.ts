@@ -61,7 +61,7 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
     }
 
     get versionString(): string {
-        return `${process.env.ENVIRONMENT || 'default'}-${process.env.VERSION || '0.0'}-${process.env.CHANGE_ID || '0'}`;
+        return `${process.env.ENVIRONMENT || 'default'}-${process.env.VERSION || '0.0'}-${process.env.CHANGE_VERSION || '0'}`;
     }
 
     @Route({
