@@ -45,15 +45,15 @@ schemas:
       resource: true
       baseModel: Record
     displayLayout:
-      displayLabel: '#(pmpHolder) - #(description)'
+      displayLabel: '#(pmpNumber)'
       header:
         key: ProjectManagementCodeSchema
         default: 'Project Management Code'
       fields: 
         - header:
-            key: ProjectManagementCodeSchema.holder
-            default: 'Project Management Holder'
-          key: pmpHolder
+            key: ProjectManagementCodeSchema.pmpNumber
+            default: 'Project Management Number'
+          key: pmpNumber
         - header:
             key: ProjectManagementCodeSchema.description
             default: 'Project Management Code Description'
