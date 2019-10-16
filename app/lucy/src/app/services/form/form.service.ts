@@ -78,7 +78,7 @@ export interface UIConfigObject {
 }
 
 export interface UIConfigSection {
-  title: string;
+  title: {};
   subSections: UIConfigSubSection[];
 }
 
@@ -330,28 +330,30 @@ export class FormService {
     };
 
     // This structure makes if easy for the view to be generated
-    for (const section of sections) {
-      const groups = section.groups;
-      const subSections: any[] = [];
-      // Loop thorugh groups in server config lay out
-      for (const group of groups) {
-        // Process group
-        const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
-        requiredFieldKeys = groupInfo.requiredFieldKeys;
-        dropdownFieldKeys = groupInfo.dropdownFieldKeys;
-        fieldHeaders = groupInfo.fieldHeaders;
-        // Add Group/Subsection
-        subSections.push({
-          title: group.title,
-          boxed: false,
-          fields: groupInfo.fields
+    if (sections) {
+      for (const section of sections) {
+        const groups = section.groups;
+        const subSections: any[] = [];
+        // Loop thorugh groups in server config lay out
+        for (const group of groups) {
+          // Process group
+          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+          requiredFieldKeys = groupInfo.requiredFieldKeys;
+          dropdownFieldKeys = groupInfo.dropdownFieldKeys;
+          fieldHeaders = groupInfo.fieldHeaders;
+          // Add Group/Subsection
+          subSections.push({
+            title: group.title,
+            boxed: false,
+            fields: groupInfo.fields
+          });
+        }
+        // Add Section
+        configObject.sections.push({
+          title: section.title,
+          subSections: subSections
         });
       }
-      // Add Section
-      configObject.sections.push({
-        title: section.title,
-        subSections: subSections
-      });
     }
 
     // Check if there are any fields in server config fields that havent been added to a section/group
@@ -376,7 +378,7 @@ export class FormService {
       }];
 
       configObject.sections.push({
-        title: '',
+        title: {default: 'Other'},
         subSections: orphanSubSections
       });
     }
