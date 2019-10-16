@@ -483,6 +483,16 @@ schemas:
   TreatmentProviderContractorSchema:
     name: treatment_provider_contractor
     description: 'Treatment providers are govt contractors, who executes/applies treatment. This table contains list of such contractor and their details.'
+    displayLayout:
+      displayLabel: '#(businessName)'
+      header:
+        key: TreatmentProviderContractor.header
+        default: 'Contractor'
+      fields: 
+        - header:
+            key: 'TreatmentProviderContractor.businessName'
+            default: 'Contractor Name'
+          key: businessName
     columns:
       id: 
         name: treatment_provider_contractor_id

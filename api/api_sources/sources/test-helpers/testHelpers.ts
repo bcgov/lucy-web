@@ -20,11 +20,13 @@
  * Imports
  */
 import * as request from 'supertest';
-import { should } from 'chai';
+import * as _ from 'underscore';
+import { should, expect } from 'chai';
 import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
 import { action } from '../libs/utilities';
 import { SharedDBManager } from '../database/dataBaseManager';
 import { adminToken, editorToken, viewerToken } from './token';
+import { BaseSchema } from '../libs/core-database';
 
 /**
  * @description Closure type to verify any data
@@ -195,6 +197,42 @@ export const testRequest = (app: any, setup: TestSetup) => {
         return request(app)[setup.type](setup.url)
         .send(setup.send)
         .expect(setup.expect);
+    }
+};
+
+/**
+ * @description Test model data conforming schema or not
+ * @param any model: Model object
+ * @param BaseSchema schema: Base Schema
+ */
+export const  testModel = (model: any, schema: BaseSchema, log: boolean = false) => {
+    should().exist(model);
+    _.each(schema.table.columnsDefinition, (col, key) => {
+        if (key === 'id') {
+            return;
+        }
+        const info = col.typeDetails;
+        const val = model[key];
+        if (col.required === true) {
+            should().exist(val);
+        }
+        if (val) {
+            expect(typeof val).to.be.equal(info.type);
+        }
+    });
+
+    // Test display label
+    should().exist(model.displayLabel);
+
+    // Get id
+    const id = model[schema.table.id];
+    should().exist(id);
+
+    // TODO: Add test to separate id from display label
+
+    // Logging
+    if (log) {
+        console.log(`${schema.modelName}: id => ${id}, display: ${model.displayLabel}`);
     }
 };
 
