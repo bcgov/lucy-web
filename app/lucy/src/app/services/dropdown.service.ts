@@ -25,7 +25,6 @@ export class DropdownService {
       return dropdownObjects;
     }
     for (const object of objects) {
-      console.dir(object);
       let name: string = object.displayLabel;
 
       // if (!name || name.length < 1) {
