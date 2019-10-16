@@ -13,7 +13,11 @@ schemas:
       header:
         key: Species.header
         default: 'Species'
-      fields: []
+      fields: 
+        - header:
+            key: 'Species.commonName'
+            default: 'Species Common Name'
+          key: commonName
     columns:
       id:
         name: 'species_id'
