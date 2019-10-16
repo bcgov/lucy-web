@@ -223,6 +223,19 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return (this.triedToSubmit && this.missingFields.length > 0);
   }
 
+  get sectionsForSideMenu(): string[] {
+    const result = [];
+    for (const section of this.config.sections) {
+      result.push(this.toMenuSectionId(section.title['default']));
+    }
+    for (const relationSectionKey of this.config.relationKeys) {
+      if (this.shouldShowRelationship(relationSectionKey)) {
+        result.push(this.toMenuSectionId(this.config.relationsConfigs[relationSectionKey].header.default));
+      }
+    }
+    return result;
+  }
+
   constructor(
     private dummy: DummyService,
     private userService: UserService,
@@ -426,8 +439,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       }
   }
 
-  camelize(str: string): string {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+  /**
+   * Convert string to camel case
+   * Do not remove: (used in the html of this component as well)
+   * @param string tp camelize
+   */
+  camelize(string: string): string {
+    if (!string) {
+      return '';
+    }
+    return string.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
       return index == 0 ? word.toLowerCase() : word.toUpperCase();
     }).replace(/\s+/g, '');
   }
@@ -518,4 +539,39 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   /////////// END Submission error handling ///////////
+
+  shouldShowRelationship(forKey: string): boolean {
+    return (this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects);
+  }
+
+  // convert section title to a camelcased id
+  toMenuSectionId(title: string): string {
+    return `${this.camelize(title)}-menuSection`;
+  }
+
+  // Convert from menu section id back to title
+  fromMenuSectionId(id: string): string {
+    const clean = id.replace('-menuSection', '').replace(/([A-Z]+)/g, ' $1').replace(/([A-Z][a-z])/g, ' $1');
+    return clean.charAt(0).toUpperCase() + clean.slice(1);
+  }
+
+  // Handle menu item click
+  menuItemClicked(id: string) {
+    const highlightClasses = ['pulse', 'highlighted-section'];
+    const el = this.elementRef.nativeElement.querySelector(`#${id}`);
+      if (el) {
+          el.scrollIntoView({ block: 'start',  behavior: 'smooth' });
+          for (const cssClass of highlightClasses) {
+            this.renderer.addClass(el, cssClass);
+          }
+          setTimeout(() => {
+            for (const cssClass of highlightClasses) {
+              this.renderer.removeClass(el, cssClass);
+            }
+          }, 1000);
+      } else {
+          console.log(`${this.camelize(id)} not found`);
+          console.log(this.elementRef.nativeElement);
+      }
+  }
 }
