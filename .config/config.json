@@ -29,5 +29,22 @@
         "dev": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
         "test": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
         "prod": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+    },
+    "sso": {
+        "dev": {
+            "url": "https://sso.pathfinder.gov.bc.ca",
+            "clientId": "lucy",
+            "realm": "dfmlcg7z"
+        },
+        "test": {
+            "url": "https://sso.pathfinder.gov.bc.ca",
+            "clientId": "lucy",
+            "realm": "dfmlcg7z"
+        },
+        "prod": {
+            "url": "https://sso.pathfinder.gov.bc.ca",
+            "clientId": "lucy",
+            "realm": "dfmlcg7z"
+        }
     }
 }
