@@ -66,11 +66,15 @@ export class ValidationService {
   //////////////// Location Validations ////////////////
 
   public isValidUTMNorthings(value: string): boolean {
-    return (this.isValidNumber(value) && value.length < 8);
+    return (this.isValidNumber(value) && value.length < 8 && +value >= 5330000 && +value <= 6700000);
   }
 
   public isValidUTMEastings(value: string): boolean {
-    return (this.isValidNumber(value) && value.length < 7);
+    return (this.isValidNumber(value) && value.length < 7 && +value >= 250000 && +value <= 720000);
+  }
+
+  public isValidUTMZone(value: string): boolean {
+    return (this.isValidInteger(value) && +value >= 7 && +value <= 11);
   }
 
   /**
