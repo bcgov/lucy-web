@@ -159,6 +159,9 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     host: ${HOST}
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
     port:
       targetPort: ${NAME}-${APP_PORT_DEFAULT_NAME}
     to:
