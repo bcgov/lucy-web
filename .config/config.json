@@ -26,13 +26,13 @@
         "prod": "api.invasivesbc.gov.bc.ca"
     },
     "certificateURL": {
-        "dev": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
+        "dev": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
         "test": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
         "prod": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
     },
     "sso": {
         "dev": {
-            "url": "https://sso.pathfinder.gov.bc.ca",
+            "url": "https://sso-dev.pathfinder.gov.bc.ca",
             "clientId": "lucy",
             "realm": "dfmlcg7z"
         },
