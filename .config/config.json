@@ -33,7 +33,7 @@
     "sso": {
         "dev": {
             "url": "https://sso-dev.pathfinder.gov.bc.ca",
-            "clientId": "lucy",
+            "clientId": "invasives-bc",
             "realm": "dfmlcg7z"
         },
         "test": {
