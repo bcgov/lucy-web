@@ -121,7 +121,7 @@
          <br />
           <div class="container">
             <div class="row" *ngFor="let menuSection of sectionsForSideMenu; let sectionIndex = index"> 
-              <div class="col-12" (click)="menuItemClicked(menuSection)">
+              <div class="col-12 side-menu-section" (click)="menuItemClicked(menuSection)">
                   {{ fromMenuSectionId(menuSection) }}
                   <hr class="menu-section-divider" />
               </div>
