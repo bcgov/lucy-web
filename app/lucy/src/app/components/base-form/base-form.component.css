@@ -190,9 +190,12 @@
     padding-bottom: 20px;
 }
 
+.side-menu-section {
+    cursor: pointer;
+}
+
 .highlighted-section {
     animation-duration: 0.5s;
-    background-color: #F5F6FA;
 }
 
 .menu-section-divider {
