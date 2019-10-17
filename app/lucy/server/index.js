@@ -54,10 +54,10 @@ const request = require('request');
     app.use('/healthcheck', (_, resp) => {
         // Request server api
         const host = process.env.API_HOST || process.env.LOCAL_API_HOST || 'localhost'
-        request(`http://${host}/api/misc/version`, (err, res) => {
+        request(`https://${host}/api/misc/version`, (err, res) => {
             if (err) {
                 console.log(`Error: ${err}, host: ${host}`);
-                resp.status(404).json({error: `${JSON.stringify(err)}`, host: host});
+                resp.status(404).json({error: `${err}`, host: host});
             } else {
                 if (res.statusCode === 200) {
                     resp.status(200).json({ success: true});
