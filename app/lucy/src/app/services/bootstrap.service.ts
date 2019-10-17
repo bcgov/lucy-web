@@ -14,7 +14,7 @@ export class AppBootService {
                 // Get API host
                 const host = result.apiHost || 'localhost:80';
                 // Create base url
-                const baseURL = `http://${host}/api`;
+                const baseURL = `${location.protocol}//${host}/api`;
                 // Setting base url to API const
                 AppConstants.API_baseURL = baseURL;
                 // Saving remote Config in app
