@@ -183,9 +183,21 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     if (this.verification.isLongitude) {
       validatorOptions.push(this.validLongitude);
     }
+    // UTM Northings
+    if (this.verification.isNorthingsUTM) {
+      validatorOptions.push(this.validNorthings);
+    }
+    // UTM Eastings
+    if (this.verification.isEastingsUTM) {
+      validatorOptions.push(this.validEastings);
+    }
+    // UTM Zone
+    if (this.verification.isZoneUTM) {
+      validatorOptions.push(this.validZone);
+    }
 
     // Future feature
-    // if (this.verification.custom) { 
+    // if (this.verification.custom) {
     //   validatorOptions.push(this.customValidation.bind(this));
     // }
 
@@ -210,7 +222,7 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
    */
   positiveNumber(control: FormControl): { [key: string]: any; } {
     if (!Number(control.value)) {
-      return { positiveNumber: true, positiveNumberError: 'Not a valid number'};
+      return { positiveNumber: true, positiveNumberError: 'Not a valid number' };
     }
     if (Number(control.value) <= 0) {
       return { positiveNumber: true, positiveNumberError: 'Must be a positive number' };
@@ -227,20 +239,20 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   validLatitude(control: FormControl): { [key: string]: any; } {
     // Must be a number
     if (!Number(control.value)) {
-      return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number'};
+      return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number' };
     }
     // Must have at least 5 decimal places
     const separated = control.value.split('.');
     if (separated.length > 2) {
-       // This wont happend because number validation will catch it first
-      return { invalidLatitude: true, invalidLatitudeError: 'There have extra dots'};
+      // This wont happend because number validation will catch it first
+      return { invalidLatitude: true, invalidLatitudeError: 'There have extra dots' };
     }
-     // Must be between 48 and 61
-     if (!(Number(control.value) >= 48 && Number(control.value) <= 61)) {
-      return { invalidLatitude: true, invalidLatitudeError: 'Must be between 48 and 61'};
+    // Must be between 48 and 61
+    if (!(Number(control.value) >= 48 && Number(control.value) <= 61)) {
+      return { invalidLatitude: true, invalidLatitudeError: 'Must be between 48 and 61' };
     }
     if (!separated[1] || separated[1].length < 5) {
-      return { invalidLatitude: true, invalidLatitudeError: 'Must have at least 5 decimal places'};
+      return { invalidLatitude: true, invalidLatitudeError: 'Must have at least 5 decimal places' };
     }
     return null;
   }
@@ -251,28 +263,92 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
    * @param control FormControl
    */
   validLongitude(control: FormControl): { [key: string]: any; } {
-       // Must be a number
-       if (!Number(control.value)) {
-        return { validLongitude: true, invalidLongitudeError: 'Not a valid number'};
-      }
-      // Must have at least 5 decimal places
-      const separated = control.value.split('.');
-      if (separated.length > 2) {
-        // This wont happend because number validation will catch it first
-        return { validLongitude: true, invalidLongitudeError: 'There have extra dots' };
-      }
-      // Must be between 48 and 61
-      if (!(Number(control.value) >= -139 && Number(control.value) <= -114)) {
-        return { validLongitude: true, invalidLongitudeError: 'Must be between -139 and -114' };
-      }
-      if (!separated[1] || separated[1].length < 5) {
-        return { validLongitude: true, invalidLongitudeError: 'Must have at least 5 decimal places' };
-      }
-      return null;
+    // Must be a number
+    if (!Number(control.value)) {
+      return { validLongitude: true, invalidLongitudeError: 'Not a valid number' };
+    }
+    // Must have at least 5 decimal places
+    const separated = control.value.split('.');
+    if (separated.length > 2) {
+      // This wont happend because number validation will catch it first
+      return { validLongitude: true, invalidLongitudeError: 'There have extra dots' };
+    }
+    // Must be between 48 and 61
+    if (!(Number(control.value) >= -139 && Number(control.value) <= -114)) {
+      return { validLongitude: true, invalidLongitudeError: 'Must be between -139 and -114' };
+    }
+    if (!separated[1] || separated[1].length < 5) {
+      return { validLongitude: true, invalidLongitudeError: 'Must have at least 5 decimal places' };
+    }
+    return null;
+  }
+
+  /**
+  * Custom Form Control validation fucntion
+  * Validate UTM Eastings
+  * @param control FormControl
+  */
+  validEastings(control: FormControl): { [key: string]: any; } {
+    // Must be a number
+    if (!Number(control.value)) {
+      return { validEastingsUTM: true, invalidEastingsUTMError: 'Not a valid number' };
+    }
+    // Must be valid integer
+    if (control.value.indexOf('.') !== -1) {
+      return { validEastingsUTM: true, invalidEastingsUTMError: 'Must be an integer' };
+    }
+    // Must be within valid range
+    if (!(Number(control.value) >= 250000 && Number(control.value) <= 720000)) {
+      return { validEastingsUTM: true, invalidEastingsUTMError: 'Must be between 250000 and 720000' };
+    }
+    return null;
+  }
+
+  /**
+  * Custom Form Control validation fucntion
+  * Validate UTM Northings
+  * @param control FormControl
+  */
+  validNorthings(control: FormControl): { [key: string]: any; } {
+    // Must be a number
+    if (!Number(control.value)) {
+      return { validNorthingsUTM: true, invalidNorthingsUTMError: 'Not a valid number' };
+    }
+    // Must be valid integer
+    if (control.value.indexOf('.') !== -1) {
+      return { validNorthingsUTM: true, invalidNorthingsUTMError: 'Must be an integer' };
+    }
+    // Must be within valid range
+    if (!(Number(control.value) >= 5330000 && Number(control.value) <= 6700000)) {
+      return { validNorthingsUTM: true, invalidNorthingsUTMError: 'Must be between 5330000 and 6700000' };
+    }
+    return null;
+  }
+
+  /**
+    * Custom Form Control validation fucntion
+    * Validate UTM Zone
+    * @param control FormControl
+    */
+  validZone(control: FormControl): { [key: string]: any; } {
+    // Must be a number
+    if (!Number(control.value)) {
+      return { validZoneUTM: true, invalidZoneUTMError: 'Not a valid number' };
+    }
+    // Must be valid integer
+    if (control.value.indexOf('.') !== -1) {
+      return { validZoneUTM: true, invalidZoneUTMError: 'Must be an integer' };
+    }
+    // Must be within valid range
+    if (!(Number(control.value) >= 7 && Number(control.value) <= 11)) {
+      return { validZoneUTM: true, invalidZoneUTMError: 'Must be between 7 and 11' };
+    }
+
+    return null;
   }
 
   camelize(str: string): string {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
       return index == 0 ? word.toLowerCase() : word.toUpperCase();
     }).replace(/\s+/g, '');
   }
