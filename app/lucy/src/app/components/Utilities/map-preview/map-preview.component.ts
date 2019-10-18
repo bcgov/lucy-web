@@ -205,6 +205,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * @param center MapPreviewPoint
    */
   private showMapAt(center: MapPreviewPoint) {
+    if (!center || !center.latitude || !center.longitude) {
+      console.log('invalid coordinates');
+      return;
+    }
     this.map.setView(new L.LatLng(center.latitude, center.longitude), center.zoom);
   }
   //////////////////////////////////////////////
@@ -221,7 +225,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     } else {
       this.clearMarkers();
       this.markers.forEach((element) => {
-        this.addMapMarkerAt(element.latitude, element.longitude);
+        if (element.latitude && element.longitude) {
+          this.addMapMarkerAt(element.latitude, element.longitude);
+        }
       });
     }
   }

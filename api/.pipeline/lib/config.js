@@ -13,7 +13,7 @@ const isStaticDeployment = () => {
 };
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
-const defaultHost = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca';
+const defaultHost = 'invasivebc-8ecbmv-api.pathfinder.gov.bc.ca';
 
 const phases = {
   build: {

@@ -58,6 +58,12 @@ objects:
             value: ${ENVIRONMENT}
           - name: VERSION
             value: ${VERSION}
+          - name: SSO_URL
+            value: ${SSO_URL}
+          - name: SSO_CLIENT_ID
+            value: ${SSO_CLIENT_ID}
+          - name: SSO_REALM
+            value: ${SSO_REALM}
           image: " "
           imagePullPolicy: Always
           name: app
@@ -153,6 +159,9 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     host: ${HOST}
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
     port:
       targetPort: ${NAME}-${APP_PORT_DEFAULT_NAME}
     to:
@@ -206,3 +215,12 @@ parameters:
 - name: MEMORY_LIMIT
   description: MEMORY LIMIT for dc
   value: '2Gi'
+- name: SSO_URL
+  description: Key clock login url
+  value: 'https://sso.pathfinder.gov.bc.ca'
+- name: SSO_CLIENT_ID
+  description: Client Id for application
+  value: "lucy"
+- name: SSO_REALM
+  description: Realm identifier or name
+  value: dfmlcg7z

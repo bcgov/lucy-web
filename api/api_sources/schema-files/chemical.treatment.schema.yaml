@@ -30,7 +30,7 @@ schemas:
       base: /api
     ## -- DisplayLayout
     displayLayout: 
-      displayLabel: 'Chemical Treatment #(date)#'
+      displayLabel: 'Chemical Treatment #(date)'
     ## --
     # -- layout
     layout: 

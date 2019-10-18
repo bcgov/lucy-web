@@ -154,7 +154,22 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
         return items[0];
     }
 
+    async count(): Promise<number> {
+        return this.repo.count();
+    }
+
     async random(): Promise<T> {
+        const count = await this.repo.count();
+        if (count > 0) {
+            // Get random index
+            const randomId = Math.floor((Math.random() * count) + 1);
+            if (randomId > 0 && randomId <= count) {
+                const item: T = await this.findById(randomId) as T;
+                if (item) {
+                    return item;
+                }
+            }
+        }
         return this.findById(1);
     }
 
