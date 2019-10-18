@@ -460,6 +460,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     const fake = await this.dummy.generateTest(this.config);
     this.config = fake.config;
     this.responseBody = fake.json;
+    await this.wait(500);
     this.isLoading = false;
   }
 
@@ -609,5 +610,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
             }
           }, removeAfterMilliSeconds);
       }
+  }
+
+   /**
+   * Create a delay
+   * @param ms milliseconds
+   */
+  private wait(ms: number): Promise<any> {
+    return new Promise( resolve => {
+      setTimeout(resolve, ms);
+    } );
   }
 }
