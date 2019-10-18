@@ -12,16 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
-  constructor() {  }
-
-  ngOnInit() {
+  private _versionNumber = '';
+  get versionNumber(): string {
+    return this._versionNumber;
   }
 
+  constructor() { }
+
+  ngOnInit() {
+    this.setVersionNumber();
+  }
+
+  setVersionNumber() {
+    const packageJson = require('package.json');
+    this._versionNumber = packageJson.version;
+  }
 }
