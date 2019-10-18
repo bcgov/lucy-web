@@ -21,8 +21,8 @@
         "prod": "invasivesbc.gov.bc.ca"
     },
     "staticUrlsAPI": {
-        "dev": "api-dev-invasivesbc.8ecbmv.pathfinder.gov.bc.ca",
-        "staging": "api-test-invasivesbc.8ecbmv.pathfinder.gov.bc.ca",
+        "dev": "api-dev-invasivesbc.pathfinder.gov.bc.ca",
+        "staging": "api-test-invasivesbc.pathfinder.gov.bc.ca",
         "prod": "api.invasivesbc.gov.bc.ca"
     },
     "certificateURL": {
