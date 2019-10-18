@@ -44,7 +44,7 @@ import { ProposedActionCode, ProposedActionCodeController } from '../models';
  * @param boolean noSave: Save on db flag
  */
 export const jurisdictionCodeFactory = async (id?: number, noSave?: boolean): Promise<JurisdictionCode> => {
-    const code: JurisdictionCode = await JurisdictionCodeController.shared.findById(id || 1);
+    const code: JurisdictionCode = await JurisdictionCodeController.shared.random();
     return code;
 };
 
@@ -61,7 +61,7 @@ export const destroyJurisdictionCode = async (code: JurisdictionCode) => {
  * @param boolean noSave: Flag to save species
  */
 export const speciesFactory = async (id?: number, noSave?: boolean): Promise<Species> => {
-    const species: Species = await SpeciesController.shared.findById(id || 1);
+    const species: Species = await SpeciesController.shared.random();
     return species;
 };
 

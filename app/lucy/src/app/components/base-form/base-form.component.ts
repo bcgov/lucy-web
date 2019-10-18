@@ -3,7 +3,6 @@ import {
   OnInit,
   Input,
   AfterViewChecked,
-  Renderer,
   Renderer2,
 } from '@angular/core';
 import { FormMode } from 'src/app/models';
@@ -31,13 +30,6 @@ export enum FormType {
   styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
-  // _formType: FormType;
-  // get formType(): FormType | undefined {
-  //   return this._formType;
-  // }
-  // set formType(type: FormType) {
-  //   this._formType = type;
-  // }
   public componentName = ` `;
 
   private _responseBody = {};
@@ -223,6 +215,19 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     return (this.triedToSubmit && this.missingFields.length > 0);
   }
 
+  get sectionsForSideMenu(): string[] {
+    const result = [];
+    for (const section of this.config.sections) {
+      result.push(this.toMenuSectionId(section.title['default']));
+    }
+    for (const relationSectionKey of this.config.relationKeys) {
+      if (this.shouldShowRelationship(relationSectionKey)) {
+        result.push(this.toMenuSectionId(this.config.relationsConfigs[relationSectionKey].header.default));
+      }
+    }
+    return result;
+  }
+
   constructor(
     private dummy: DummyService,
     private userService: UserService,
@@ -248,6 +253,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void { }
+
+  private async beginLoading() {
+    this.isLoading = true;
+
+  }
+
+  private async endLoading() {
+    this.isLoading = false;
+  }
 
   private async initialize() {
     this.isLoading = true;
@@ -412,22 +426,21 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /////////// End Lottie ///////////
 
   missingFieldSelected(missingFieldHeader: string) {
-    const highlightClass = 'shake';
-    const el = this.elementRef.nativeElement.querySelector(`#${this.camelize(missingFieldHeader)}`);
-      if (el) {
-          el.scrollIntoView({ block: 'center',  behavior: 'smooth' });
-          this.renderer.addClass(el, highlightClass);
-          setTimeout(() => {
-          this.renderer.removeClass(el, highlightClass);
-          }, 2000);
-      } else {
-          console.log(`${this.camelize(missingFieldHeader)} not found`);
-          console.log(this.elementRef.nativeElement);
-      }
+    const highlightClasses = ['shake'];
+    this.scrollToElement(this.camelize(missingFieldHeader), 'center');
+    this.addClassesToElement(this.camelize(missingFieldHeader), highlightClasses, 2000);
   }
 
-  camelize(str: string): string {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+  /**
+   * Convert string to camel case
+   * Do not remove: (used in the html of this component as well)
+   * @param string tp camelize
+   */
+  camelize(string: string): string {
+    if (!string) {
+      return '';
+    }
+    return string.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
       return index == 0 ? word.toLowerCase() : word.toUpperCase();
     }).replace(/\s+/g, '');
   }
@@ -518,4 +531,73 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   /////////// END Submission error handling ///////////
+
+  shouldShowRelationship(forKey: string): boolean {
+    return (this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects);
+  }
+
+  // convert section title to a camelcased id
+  toMenuSectionId(title: string): string {
+    return `${this.camelize(title)}-menuSection`;
+  }
+
+  // Convert from menu section id back to title
+  fromMenuSectionId(id: string): string {
+    const clean = id.replace('-menuSection', '').replace(/([A-Z]+)/g, ' $1').replace(/([A-Z][a-z])/g, ' $1');
+    return clean.charAt(0).toUpperCase() + clean.slice(1);
+  }
+
+  // Handle menu item click
+  async menuItemClicked(id: string) {
+    const highlightClasses = ['pulse', 'highlighted-section'];
+    await this.scrollToElement(id, 'start');
+    this.addClassesToElement(id, highlightClasses, 1000);
+  }
+
+  /**
+   * Scroll to the specified elelemnt and return promise after element is visible.
+   * @param elementId id - string
+   * @param block 'center', 'start', 'end'
+   */
+  async scrollToElement(elementId: string, block: string): Promise<boolean> {
+    return new Promise<boolean>((res, rej) => {
+      const el = this.elementRef.nativeElement.querySelector(`#${elementId}`);
+      const element = document.getElementById(elementId);
+      if (el && element) {
+        el.scrollIntoView({ block: block, behavior: 'smooth' });
+        const intersectionObserver = new IntersectionObserver((entries) => {
+          const [entry] = entries;
+          if (entry.isIntersecting) {
+            intersectionObserver.disconnect();
+            setTimeout(() => {
+              res(true);
+            }, 100);
+          }
+        });
+        intersectionObserver.observe(element);
+      } else {
+        res(false);
+      }
+    });
+  }
+
+  /**
+   * Add Css classes to an element and remove them after the specified time.
+   * @param elementId id - string
+   * @param classes css classes - string[]
+   * @param removeAfterMilliSeconds milliseconds -  number
+   */
+  addClassesToElement(elementId: string, classes: string[], removeAfterMilliSeconds: number) {
+    const el = this.elementRef.nativeElement.querySelector(`#${elementId}`);
+      if (el) {
+          for (const cssClass of classes) {
+            this.renderer.addClass(el, cssClass);
+          }
+          setTimeout(() => {
+            for (const cssClass of classes) {
+              this.renderer.removeClass(el, cssClass);
+            }
+          }, removeAfterMilliSeconds);
+      }
+  }
 }

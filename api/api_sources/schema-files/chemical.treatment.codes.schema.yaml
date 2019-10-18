@@ -7,6 +7,7 @@ schemas:
     name: pesticide_employer_code
     description: 'Table to store contractor/employer information chemical treatment service providers.'
     displayLayout:
+      displayLabel: '#(businessName)'
       header:
         key: PesticideEmployerCodeSchema
         default: 'Pesticide Employer Code'
@@ -44,14 +45,15 @@ schemas:
       resource: true
       baseModel: Record
     displayLayout:
+      displayLabel: '#(pmpNumber)'
       header:
         key: ProjectManagementCodeSchema
         default: 'Project Management Code'
       fields: 
         - header:
-            key: ProjectManagementCodeSchema.holder
-            default: 'Project Management Holder'
-          key: pmpHolder
+            key: ProjectManagementCodeSchema.pmpNumber
+            default: 'Project Management Number'
+          key: pmpNumber
         - header:
             key: ProjectManagementCodeSchema.description
             default: 'Project Management Code Description'
@@ -90,7 +92,8 @@ schemas:
     meta: 
       baseModel: Record
       resource: true
-    displayLayout: {}
+    displayLayout: 
+      displayLabel: '#(firstName) #(lastName) - #(certificate)'
     columns:
       id:
         name: chemical_treatment_employee_id
