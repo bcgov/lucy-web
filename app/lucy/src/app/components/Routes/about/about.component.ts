@@ -27,11 +27,7 @@ export class AboutComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.setVersionNumber();
   }
 
-  setVersionNumber() {
-    const packageJson = require('package.json');
-    this._versionNumber = packageJson.version;
-  }
+
 }
