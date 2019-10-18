@@ -21,7 +21,11 @@
  * -----
  */
 import { expect, should } from 'chai';
-import { commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
+import {
+    commonTestSetupAction,
+    commonTestTearDownAction,
+    testModel
+} from '../../test-helpers/testHelpers';
 import {
     ChemicalTreatment,
     ChemicalTreatmentController,
@@ -34,6 +38,9 @@ import {
 } from '../models';
 import { ModelFactory, Destroyer, ModelSpecFactory, userFactory } from '../factory';
 import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
+import {
+    PesticideEmployerCodeSchema, ProjectManagementPlanCodeSchema, ChemicalTreatmentEmployeeSchema, ChemicalTreatmentSchema
+} from '../database-schema';
 
 // ** Test Function
 describe('Test Chemical Treatment', () => {
@@ -48,46 +55,25 @@ describe('Test Chemical Treatment', () => {
     it('should fetch pesticide employer codes', async () => {
         // Fetch Random
         const code: PesticideEmployerCode = await PesticideEmployerCodeController.shared.random();
-        should().exist(code);
-        should().exist(code.pesticide_employer_code_id);
-        should().exist(code.businessName);
-        should().exist(code.registrationNumber);
-        should().exist(code.licenceExpiryDate);
+        testModel(code, PesticideEmployerCodeSchema.shared);
     });
 
     it('should fetch pmp codes', async () => {
         const code: ProjectManagementPlanCode = await ProjectManagementPlanCodeController.shared.random();
-        should().exist(code);
-        should().exist(code.project_management_plan_code_id);
-        should().exist(code.pmpNumber);
-        should().exist(code.description);
-        should().exist(code.pmpHolder);
-        should().exist(code.startDate);
-        should().exist(code.endDate);
+        testModel(code, ProjectManagementPlanCodeSchema.shared);
     });
 
     it('should fetch chemical treatment employee', async () => {
         const code: ChemicalTreatmentEmployee = await ChemicalTreatmentEmployeeController.shared.random();
-        should().exist(code);
-        should().exist(code.chemical_treatment_employee_id);
-        should().exist(code.certificate);
-        should().exist(code.firstName);
-        should().exist(code.lastName);
+        testModel(code, ChemicalTreatmentEmployeeSchema.shared);
     });
 
     it('should create/fetch chemical treatment Object', async () => {
         const obj: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
-        should().exist(obj);
-        should().exist(obj.chemical_treatment_id);
-        expect(typeof obj.chemical_treatment_id).to.be.equal(typeof 1);
+        testModel(obj, ChemicalTreatmentSchema.shared);
         const ch = await ChemicalTreatmentController.shared.findById(obj.chemical_treatment_id);
         should().exist(ch);
-        expect(ch.chemical_treatment_id).to.be.equal(obj.chemical_treatment_id);
-        expect(ch.speciesAgency);
-        expect(ch.pesticideEmployer);
-        expect(ch.pmp);
-        expect(ch.firstApplicator);
-        expect(ch.secondApplicator);
+        testModel(ch, ChemicalTreatmentSchema.shared);
         await Destroyer(ChemicalTreatmentController.shared)(obj);
     });
 

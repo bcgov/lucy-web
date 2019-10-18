@@ -69,22 +69,27 @@ export abstract class BaseModel  {
      * @description Update Display label
      */
     private _updateLabel(tag?: string) {
-        // Checking description of object
-        if (this['description']) {
-            this.displayLabel = this['description'];
-        } else if (this.getClassInfo().schema) {
+
+        // Checking display label of schema
+        if (this.getClassInfo().schema) {
             const schema: BaseSchema = this.getClassInfo().schema.shareInstance;
             if (schema.table.displayLabelInfo) {
                 let format: string = schema.table.displayLabelInfo.format;
                 const keys: any[] = schema.table.displayLabelInfo.keys || [];
                 for (const k of keys) {
                     const item = valueAtKeyPath(this, `${k}`) || '';
-                    format = format.replace(`#(${k})#`, item);
+                    format = format.replace(`#(${k})`, item);
                 }
                 this.displayLabel = format;
-            } else {
-                this.displayLabel = this[schema.table.id] ? `${this[schema.table.id]}` :  '-';
+                return;
             }
+            // No Description setting id
+            this.displayLabel = this[schema.table.id] ? `${this[schema.table.id]}` :  '-';
+        }
+
+        // Checking description of object
+        if (this['description']) {
+            this.displayLabel = this['description'];
         }
     }
 
