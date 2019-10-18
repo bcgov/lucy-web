@@ -153,6 +153,9 @@
     animation-duration: 0.5s;
     animation-delay: 0s;
     margin-bottom: 10px;
+
+    border-radius: 5px;
+    box-shadow: 0 0 5px 0 #E5E9F2;
 }
 
 .no-content {

@@ -31,8 +31,8 @@ export enum FormType {
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
   headerInitialAnimationClass = 'header-container fadeInDown';
-  sideMenuInitialAnimationClass = 'fadeIn';
-  formBodyInitialAnimationClass = 'fadeIn';
+  sideMenuInitialAnimationClass = '';
+  formBodyInitialAnimationClass = '';
 
   headerOnReviewAnimationClass = 'header-container-review pulse';
   sideMenuOnReviewAnimationClass = 'pulse';
@@ -263,15 +263,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void { }
-
-  private async beginLoading() {
-    this.isLoading = true;
-
-  }
-
-  private async endLoading() {
-    this.isLoading = false;
-  }
 
   private async initialize() {
     this.isLoading = true;
@@ -610,6 +601,14 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
             }
           }, removeAfterMilliSeconds);
       }
+  }
+
+  private async beginLoading() {
+    this.isLoading = true;
+  }
+
+  private async endLoading() {
+    this.isLoading = false;
   }
 
    /**
