@@ -46,14 +46,21 @@ export class LocationInputComponent implements OnInit {
   }
   @Input() set object(object: any) {
     this._object = { ...object};
+    let latExists = false;
+    let longExists = false;
 
     if (this.object && this.object.latitude && this.object.latitude.value) {
       // console.log(`setting ${this.object.latitude.value}`);
       this.lat = `${this.object.latitude.value}`;
+      latExists = true;
     }
     if (this.object && this.object.longitude && this.object.longitude.value) {
       // console.log(`setting ${this.object.longitude.value}`);
       this.long = `${this.object.longitude.value}`;
+      longExists = true;
+    }
+    if (latExists && longExists) {
+      this.autofill();
     }
   }
   ////////////////////
@@ -116,7 +123,7 @@ export class LocationInputComponent implements OnInit {
   }
 
   autofill() {
-    this.setUTMFromObservationLatLong();
+    this.setUTMFromLatLong();
   }
 
   private notifyChangeEvent() {
@@ -125,15 +132,16 @@ export class LocationInputComponent implements OnInit {
     }
   }
 
-  setUTMFromObservationLatLong() {
+  setUTMFromLatLong() {
     if (!this.object || !this.validation.isValidLatitude(String(this.object.latitude.value)) || !this.validation.isValidLongitude(String(this.object.longitude.value))) {
       return;
     }
 
     const converted = this.converterService.convertLatLongCoordinateToUTM(this.object.latitude.value, this.object.longitude.value);
-    this.zoneChanged(String(converted.zone));
-    this.northingsChanged(String(converted.x.toFixed(0)));
-    this.eastingChanged(String(converted.y.toFixed(0)));
+    this.zoneChanged(`${(converted.zone)}`);
+    this.northingsChanged(`${(converted.northings.toFixed(0))}`);
+    this.eastingChanged(`${(converted.eastings.toFixed(0))}`);
+
     this.setMapToCurrentLocation();
   }
 
@@ -209,7 +217,7 @@ export class LocationInputComponent implements OnInit {
       return;
     }
 
-    this.setUTMFromObservationLatLong();
+    this.setUTMFromLatLong();
   }
 
   /**
