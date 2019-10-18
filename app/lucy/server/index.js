@@ -27,6 +27,9 @@ const request = require('request');
  * @description Bootstrap script to start app web server
  */
 (() => {
+    // TODO: Find proper solution 
+    // Ignoring ssl certificate of host
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
     // Express APP
     const app = express();
     // Getting Port
