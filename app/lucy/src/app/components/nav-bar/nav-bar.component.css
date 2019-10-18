@@ -1,87 +1,82 @@
 .gov-nav {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .title-app {
-	color: #002C71;
-	font-size: 24px;
-	font-weight: 500;
-	line-height: 29px;
+    color: #002C71 !important;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29px;
 }
 
 .spacer-toolbar {
-  flex: 1 1 auto;
+    flex: 1 1 auto;
 }
 
-.navbar-nav > li{
-  margin-left:5px;
-  margin-right:5px;
+.navbar-nav>li {
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .mat-card-title {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .user-access-level {
-  background-color: #F7F7F7;
-  padding: 5px;
-  border-radius: 9px;
-  font-size: 12px;
+    background-color: #F7F7F7;
+    padding: 5px;
+    border-radius: 9px;
+    font-size: 12px;
 }
 
 @media (max-width: 768px) {
-
-  /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
-  .container {
-      margin: 0 auto;
-      width: 100%;
-      max-width: 100%;
-  }
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .container {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
 }
 
-
 @media (max-width: 992px) {
-  /* CSS that should be displayed if width is equal to or smaller than 992px goes here */
-  .user-actions-large {
-      /* hide sidebar */
-      display: none;
-  }
-
-  .user-actions-menu {
-    /* hide sidebar */
-    display: flex;
-  }
+    /* CSS that should be displayed if width is equal to or smaller than 992px goes here */
+    .user-actions-large {
+        /* hide sidebar */
+        display: none;
+    }
+    .user-actions-menu {
+        /* hide sidebar */
+        display: flex;
+    }
 }
 
 @media (min-width: 992px) {
-
-  /* CSS that should be displayed if width is equal to or bigger than 992px goes here */
-  .user-actions-large {
-      /* hide sidebar */
-      display: flex;
-  }
-
-  .user-actions-menu {
-    /* hide sidebar */
-    display: none;
-  }
+    /* CSS that should be displayed if width is equal to or bigger than 992px goes here */
+    .user-actions-large {
+        /* hide sidebar */
+        display: flex;
+    }
+    .user-actions-menu {
+        /* hide sidebar */
+        display: none;
+    }
 }
 
 .menu-item-on {
-  cursor: default;
-  color: #002C71;
-  font-weight: bold;
+    cursor: default;
+    color: #002C71;
+    font-weight: bold;
 }
 
 .menu-item-off {
-  cursor: pointer;
-  color: #333333;
-  font-weight: normal;
+    cursor: pointer;
+    color: #333333;
+    font-weight: normal;
 }
 
 .user-icon {
-  border: 1px solid #CCCCCC;
-  background-color: #F2F2F2;
-  color: #002C71;
-  box-shadow: none !important;
+    border: 1px solid #CCCCCC;
+    background-color: #F2F2F2;
+    color: #002C71;
+    box-shadow: none !important;
 }
