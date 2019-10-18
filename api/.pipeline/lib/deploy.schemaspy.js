@@ -34,7 +34,7 @@ module.exports = (settings) => {
   var objects = [];
   const instance = phases[phase].instance;
   const name = `${phases[phase].name}-schemaspy`;
-  const host = `invasivebc.schemaspy-${changeId}.${phases[phase].namespace}.pathfinder.gov.bc.ca`;
+  const host = `invasivebc-schemaspy-${changeId}-${phases[phase].namespace}.pathfinder.gov.bc.ca`;
   // The deployment of your cool app goes here ▼▼▼
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/schemaspy.dc.yaml`, {
     'param':{

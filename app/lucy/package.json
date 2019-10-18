@@ -1,7 +1,7 @@
 {
   "name": "lucy",
   "version": "0.0.0",
-  "scripts": { 
+  "scripts": {
     "ng": "ng",
     "ng-h": "node --max_old_space_size=1024 ./node_modules/@angular/cli/bin/ng",
     "start": "ng serve",
@@ -53,6 +53,7 @@
     "rxjs": "~6.3.3",
     "terser-webpack-plugin": "^2.1.0",
     "tslib": "^1.9.0",
+    "web-animations-js": "^2.3.2",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9",
     "yarn": "^1.17.3",

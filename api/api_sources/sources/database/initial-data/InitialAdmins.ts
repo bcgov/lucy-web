@@ -39,7 +39,7 @@ export const InitialUsers = [
         }
     },
     {
-        email: 'istest1@idir',
+        email: 'istest1@gov.bc.ca',
         preferred_username: 'istest1@idir',
         first_name: 'Test',
         last_name: 'Idr1',
@@ -48,7 +48,7 @@ export const InitialUsers = [
         }
     },
     {
-        email: 'istest2@idir',
+        email: 'istest2@gov.bc.ca',
         preferred_username: 'istest2@idir',
         first_name: 'Test',
         last_name: 'Idr2',
@@ -57,7 +57,7 @@ export const InitialUsers = [
         }
     },
     {
-        email: 'istest3@idir',
+        email: 'istest3@gov.bc.ca',
         preferred_username: 'istest3@idir',
         first_name: 'Test',
         last_name: 'Idr3',

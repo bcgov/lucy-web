@@ -27,6 +27,9 @@ const request = require('request');
  * @description Bootstrap script to start app web server
  */
 (() => {
+    // TODO: Find proper solution 
+    // Ignoring ssl certificate of host
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
     // Express APP
     const app = express();
     // Getting Port
@@ -39,9 +42,14 @@ const request = require('request');
     app.use('/config', (req, resp) => {
         const config = {
             apiHost: process.env.API_HOST || 'localhost',
-            changeVersion: process.env.CHANGE_VERSION || 'NA',
+            changeId: process.env.CHANGE_VERSION || 'NA',
             env: process.env.ENVIRONMENT || 'local',
-            version: process.env.VERSION || 'NA'
+            version: `${process.env.VERSION || 'NA'}-${process.env.CHANGE_VERSION || 'NA'}`,
+            sso: {
+                url: `${process.env.SSO_URL || ''}`,
+                clientId: `${process.env.SSO_CLIENT_ID || ''}`,
+                realm: `${process.env.SSO_REALM || ''}`
+            }
         };
         resp.status(200).json(config);
     });
@@ -49,10 +57,10 @@ const request = require('request');
     app.use('/healthcheck', (_, resp) => {
         // Request server api
         const host = process.env.API_HOST || process.env.LOCAL_API_HOST || 'localhost'
-        request(`http://${host}/api/misc/version`, (err, res) => {
+        request(`https://${host}/api/misc/version`, (err, res) => {
             if (err) {
                 console.log(`Error: ${err}, host: ${host}`);
-                resp.status(404).json({error: `${JSON.stringify(err)}`, host: host});
+                resp.status(404).json({error: `${err}`, host: host});
             } else {
                 if (res.statusCode === 200) {
                     resp.status(200).json({ success: true});
