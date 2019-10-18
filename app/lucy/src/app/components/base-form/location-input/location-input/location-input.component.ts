@@ -244,6 +244,10 @@ export class LocationInputComponent implements OnInit {
 
     // 3) Check if converted lat long are valid
     if (!converted || !this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {
+      this.object.latitude.value = '';
+      this.object.longitude.value = '';
+      this.lat = ``;
+      this.long = ``;
       return;
     }
 
