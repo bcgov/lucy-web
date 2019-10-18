@@ -31,18 +31,27 @@
     </div>
   </div>
   <br />
-  <div class="container form-body animated fadeIn">
-    <br />
-    <lottie-animation-view [options]="lottieConfig" (animCreated)="handleAnimation($event)">
-    </lottie-animation-view>
+  <div class="container">
+    <div class="row">
+      <!-- Menu -->
+      <div class="col-3 sticky side-menu animated fadeInLeft centered-content">
+      </div>
+      <div class="col">
+        <div class="container form-body animated fadeInLeft">
+          <br />
+          <lottie-animation-view [options]="lottieConfig" (animCreated)="handleAnimation($event)">
+          </lottie-animation-view>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <div *ngIf="!isLoading" class="form-bg">
   <!-- Header Section  -->
   <div class="container-fluid header-container sticky animated" [ngClass]="
       inReviewMode
-        ? 'header-container-review pulse'
-        : 'header-container slideInRight'
+        ? headerOnReviewAnimationClass
+        : headerInitialAnimationClass
     ">
     <div class="container header-container-inner">
       <mat-toolbar>
@@ -117,7 +126,7 @@
   <div class="container">
     <div class="row">
       <!-- Menu -->
-      <div class="col-3 sticky side-menu animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'">
+      <div class="col-3 sticky side-menu animated" [ngClass]="inReviewMode ? sideMenuOnReviewAnimationClass : sideMenuInitialAnimationClass">
          <br />
           <div class="container">
             <div class="row" *ngFor="let menuSection of sectionsForSideMenu; let sectionIndex = index"> 
@@ -130,8 +139,7 @@
       </div>
       <!-- Form Body -->
       <div class="col">
-        <!-- Form Body -->
-        <div class="container form-body animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'">
+        <div class="container form-body animated" [ngClass]="inReviewMode ? formBodyOnReviewAnimationClass : formBodyInitialAnimationClass">
           <div class="container-fluid animated" *ngFor="let section of config.sections; let i = index" id="{{toMenuSectionId(section.title.default)}}">
             <br />
             <div class="row">

@@ -30,6 +30,16 @@ export enum FormType {
   styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
+  headerInitialAnimationClass = 'header-container fadeInDown';
+  sideMenuInitialAnimationClass = 'fadeIn';
+  formBodyInitialAnimationClass = 'fadeIn';
+
+  headerOnReviewAnimationClass = 'header-container-review pulse';
+  sideMenuOnReviewAnimationClass = 'pulse';
+  formBodyOnReviewAnimationClass = 'pulse';
+
+
+
   public componentName = ` `;
 
   private _responseBody = {};
