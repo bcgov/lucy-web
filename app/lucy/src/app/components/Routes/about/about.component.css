@@ -15,10 +15,9 @@
  */
 
 .header-container {
-    margin: 0 auto;
     width: 100%;
     background: linear-gradient(135deg, #0053A4 0%, #002C71 100%);
-    box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
+    /* box-shadow: 0 -20px rgba(190, 190, 205, 0.5); */
 }
 
 .header-container-title {
@@ -34,9 +33,7 @@
     border-radius: 5px;
     background-color: #FFFFFF;
     box-shadow: 0 0 5px 0 #E5E9F2;
-    padding-bottom: 20px;
-    padding-top: 20px;
-    margin-top: 40px;
+    padding: 25px 15px;
 }
 
 .section-title {
@@ -69,4 +66,5 @@
 .bg {
     background: #F5F6FA;
     min-height: 100%;
+    padding-top: 25px;
 }
