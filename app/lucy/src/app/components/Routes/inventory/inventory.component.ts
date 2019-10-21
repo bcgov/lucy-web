@@ -61,7 +61,7 @@ export class InventoryComponent implements OnInit {
   sortingByObservationId = false;
   sortingByDate = false;
   sortingBySpecies = false;
-  sortingBySurveyor = false;
+  sortingByObserver = false;
   /************ End of Sorting Variables ************/
 
   markers: MapMarker[] = [];
@@ -250,10 +250,10 @@ export class InventoryComponent implements OnInit {
     this.initMaterialTable();
   }
 
-  sortBySurveyor() {
+  sortByObserver() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
-    if (this.sortingBySurveyor) {
+    if (this.sortingByObserver) {
       this.sortAscending = !this.sortAscending;
     } else {
       this.sortAscending = false;
@@ -261,24 +261,40 @@ export class InventoryComponent implements OnInit {
 
     // Set sort flags
     this.resetSortFields();
-    this.sortingBySurveyor = true;
+    this.sortingByObserver = true;
 
     // Sort objects
     this.observations.sort((left, right): number => {
-      if (left.observerFirstName < right.observerLastName) {
+      if (left.observerLastName < right.observerLastName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.observerFirstName > right.observerLastName) {
+      if (left.observerLastName > right.observerLastName) {
         if (this.sortAscending) {
           return -1;
         } else {
           return 1;
         }
       }
+      // if we've reached here, left and right LastNames are equal
+      // now sort by first name
+      if (left.observerFirstName < right.observerFirstName) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      } else {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      // if here, left observer name is identical to right observer name
       return 0;
     });
     this.initMaterialTable();
@@ -321,8 +337,7 @@ export class InventoryComponent implements OnInit {
   resetSortFields() {
     this.sortingByDate = false;
     this.sortingBySpecies = false;
-    this.sortingByLocation = false;
-    this.sortingBySurveyor = false;
+    this.sortingByObserver = false;
     this.sortingByObservationId = false;
   }
 
