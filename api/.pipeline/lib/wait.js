@@ -20,14 +20,25 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
             }
             // console.log(JSON.stringify(data, null, 2));
             // Get Status
+            console.log(`Getting POD Status: ${resourceName}`);
             const data = list[0];
             const status = data.status || { conditions: [], containerStatuses: []};
-            if (status.conditions.length === 0 || status.containerStatuses.length === 0) {
+            if (( status.conditions && status.conditions.length === 0) || (status.containerStatuses && status.containerStatuses.length === 0)) {
                 console.log(`Unable to fetch API resource: ${resourceName} status`);
                 console.log(`${JSON.stringify(data)}`)
-                throw new Error(`Unable to fetch API resource: ${resourceName} status`);
+
+                // Retry if count is not zero
+                if (count > 0) {
+                    console.log(`Retry until count is 0: ${resourceName}`);
+                    count = count - 1;
+                    setTimeout(check, timeout);
+                } else {
+                    throw new Error(`Unable to fetch API resource: ${resourceName} status`);
+                }
+                
             }
 
+            console.log(`Checking Container State: ${resourceName}`);
             const containerStatus = status.containerStatuses[0] || {};
             if (!containerStatus.state) {
                 console.log(`Unable to fetch API resource: ${resourceName} container state`);
