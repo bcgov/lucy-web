@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import * as hexRules from './hexRules.json';
 
 export interface UTMCoordinate {
-  x: number;
-  y: number;
+  northings: number;
+  eastings: number;
   zone: number;
 }
 
@@ -82,8 +82,8 @@ export class ConverterService {
     const utmY = this.k0 * (m + n2 * Math.tan(theta) * (q1 + q2 + q3));
 
     return {
-      y: utmY,
-      x: utmX,
+      eastings: utmX,
+      northings: utmY,
       zone: utmZone
     };
   }
