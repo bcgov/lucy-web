@@ -61,7 +61,6 @@ export class InventoryComponent implements OnInit {
   sortingByObservationId = false;
   sortingByDate = false;
   sortingBySpecies = false;
-  sortingByLocation = false;
   sortingBySurveyor = false;
   /************ End of Sorting Variables ************/
 
@@ -249,11 +248,6 @@ export class InventoryComponent implements OnInit {
       return 0;
     });
     this.initMaterialTable();
-  }
-
-  sortByLocation() {
-    this.resetSortFields();
-    this.sortingByLocation = true;
   }
 
   sortBySurveyor() {
