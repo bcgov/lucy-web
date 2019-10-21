@@ -61,8 +61,7 @@ export class InventoryComponent implements OnInit {
   sortingByObservationId = false;
   sortingByDate = false;
   sortingBySpecies = false;
-  sortingByLocation = false;
-  sortingBySurveyor = false;
+  sortingByObserver = false;
   /************ End of Sorting Variables ************/
 
   markers: MapMarker[] = [];
@@ -251,15 +250,10 @@ export class InventoryComponent implements OnInit {
     this.initMaterialTable();
   }
 
-  sortByLocation() {
-    this.resetSortFields();
-    this.sortingByLocation = true;
-  }
-
-  sortBySurveyor() {
+  sortByObserver() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
-    if (this.sortingBySurveyor) {
+    if (this.sortingByObserver) {
       this.sortAscending = !this.sortAscending;
     } else {
       this.sortAscending = false;
@@ -267,24 +261,40 @@ export class InventoryComponent implements OnInit {
 
     // Set sort flags
     this.resetSortFields();
-    this.sortingBySurveyor = true;
+    this.sortingByObserver = true;
 
     // Sort objects
-    this.observations.sort((left, right): number => {
-      if (left.observerFirstName < right.observerLastName) {
+    this.observations.sort((leftObservation, rightObservation): number => {
+      if (leftObservation.observerLastName < rightObservation.observerLastName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.observerFirstName > right.observerLastName) {
+      if (leftObservation.observerLastName > rightObservation.observerLastName) {
         if (this.sortAscending) {
           return -1;
         } else {
           return 1;
         }
       }
+      // if we've reached here, left and right LastNames are equal
+      // now sort by first name
+      if (leftObservation.observerFirstName < rightObservation.observerFirstName) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      } else {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      // if here, left observer name is identical to right observer name
       return 0;
     });
     this.initMaterialTable();
@@ -324,11 +334,18 @@ export class InventoryComponent implements OnInit {
     this.initMaterialTable();
   }
 
+  getIconName(): string {
+    if (this.sortAscending) {
+      return 'arrow_upward';
+    } else {
+      return 'arrow_downward';
+    }
+  }
+
   resetSortFields() {
     this.sortingByDate = false;
     this.sortingBySpecies = false;
-    this.sortingByLocation = false;
-    this.sortingBySurveyor = false;
+    this.sortingByObserver = false;
     this.sortingByObservationId = false;
   }
 
