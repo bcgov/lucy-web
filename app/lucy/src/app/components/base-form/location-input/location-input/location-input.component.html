@@ -30,7 +30,7 @@
       <!-- lat long input  -->
       <div *ngIf="locationEntryModeLatLong">
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="object.latitude.header"
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="object.longitude.header"
@@ -59,7 +59,7 @@
       <!-- UTM input  -->
       <div *ngIf="!locationEntryModeLatLong">
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="'Eastings'"
@@ -71,7 +71,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="'Northings'"
@@ -83,7 +83,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeInDown animationDuration">
             <app-field
               [mode]="mode"
               [header]="'Zone'"
