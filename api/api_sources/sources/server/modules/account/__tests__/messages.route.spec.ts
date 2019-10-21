@@ -47,7 +47,7 @@ describe('Test User Messages', () => {
     it('should fetch user messages', async () => {
         // 1. Create receiver, creator and message
         await runNoMockSetup(async () => {
-            admin = await UserDataController.shared.findById(3);
+            admin = await UserDataController.shared.findById(1);
         });
         const sender = await userFactory(RolesCodeValue.admin);
         const message = await userMessageFactory(admin, sender);
