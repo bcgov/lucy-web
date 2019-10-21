@@ -23,7 +23,7 @@
     "staticUrlsAPI": {
         "dev": "api-dev-invasivesbc.pathfinder.gov.bc.ca",
         "staging": "api-test-invasivesbc.pathfinder.gov.bc.ca",
-        "prod": "api.invasivesbc.gov.bc.ca"
+        "prod": "api-invasivesbc.gov.bc.ca"
     },
     "certificateURL": {
         "dev": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
