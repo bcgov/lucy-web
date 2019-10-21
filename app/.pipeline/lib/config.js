@@ -69,10 +69,11 @@ const phases = {
     instance: `${name}-prod`  , 
     version:`${version}`, 
     tag:`prod-${version}`, 
-    host: staticUrlsAPI['prod']},
+    host: staticUrls['prod'],
     apiHost: staticUrlsAPI['prod'] || defaultHostAPI,
     env: 'prod',
     sso: sso.prod
+  }
 };
 
 // This callback forces the node process to exit as failure.
