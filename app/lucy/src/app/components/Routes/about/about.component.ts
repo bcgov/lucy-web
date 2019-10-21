@@ -13,13 +13,14 @@
 // limitations under the License.
 
 import { Component, OnInit, Input } from '@angular/core';
+import { AppConstants } from 'src/app/constants/app-constants';
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
-  private _versionNumber = '';
+  private _versionNumber = AppConstants.CONFIG.version;
   get versionNumber(): string {
     return this._versionNumber;
   }
