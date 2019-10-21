@@ -264,15 +264,15 @@ export class InventoryComponent implements OnInit {
     this.sortingByObserver = true;
 
     // Sort objects
-    this.observations.sort((left, right): number => {
-      if (left.observerLastName < right.observerLastName) {
+    this.observations.sort((leftObservation, rightObservation): number => {
+      if (leftObservation.observerLastName < rightObservation.observerLastName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.observerLastName > right.observerLastName) {
+      if (leftObservation.observerLastName > rightObservation.observerLastName) {
         if (this.sortAscending) {
           return -1;
         } else {
@@ -281,7 +281,7 @@ export class InventoryComponent implements OnInit {
       }
       // if we've reached here, left and right LastNames are equal
       // now sort by first name
-      if (left.observerFirstName < right.observerFirstName) {
+      if (leftObservation.observerFirstName < rightObservation.observerFirstName) {
         if (this.sortAscending) {
           return 1;
         } else {
