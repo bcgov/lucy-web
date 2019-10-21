@@ -152,6 +152,9 @@ pipeline {
                         currentBuild.result = "ABORTED"
                         error "User cancelled"
                     }
+                    echo "Deploying Postgress [PROD] ..."
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=prod --type=static"
                     echo "Deploying in [PROD] [API]..."
                     sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
                     echo "Deploying in [PROD] [APP]..."
