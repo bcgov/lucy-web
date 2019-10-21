@@ -14,12 +14,14 @@ import { ErrorComponent } from './components/Routes/error/error.component';
 import { AddEntryComponent } from './components/Routes/add-entry/add-entry.component';
 import { InventoryComponent } from './components/Routes/inventory/inventory.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
+import { AboutComponent } from './components/Routes/about/about.component';
 
 const routes: Routes = [
   { path: AppRoutes.Login, component: LoginComponent},
   { path: AppRoutes.Profile, component: ProfileComponent},
   { path: AppRoutes.UserInfo, component: UserInformationComponent},
   { path: AppRoutes.AdminTools , component: AdminToolsComponent },
+  { path: AppRoutes.About, component: AboutComponent },
   { path: AppRoutes.AddEntry , component: AddEntryComponent},
   //
   { path: AppRoutes.AddChemicalTreatment , component: BaseFormComponent},
