@@ -47,6 +47,7 @@ import { RouterModule } from '@angular/router';
 import { SsoService } from './services/sso.service';
 import { ProfileComponent } from './components/Routes/profile/profile.component';
 import { UserInformationComponent } from './components/Routes/user-information/user-information.component';
+import { AboutComponent } from './components/Routes/about/about.component';
 import { AdminToolsComponent } from './components/Routes/admin-tools/admin-tools.component';
 import { RouterService } from './services/router.service';
 import { AccessRequestResponseModalComponent} from './components/Routes/admin-tools/access-request-response-modal/access-request-response-modal.component';
@@ -87,6 +88,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     NavBarComponent,
     LoginComponent,
     ProfileComponent,
+    AboutComponent,
     UserInformationComponent,
     AdminToolsComponent,
     AccessRequestResponseModalComponent,

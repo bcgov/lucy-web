@@ -44,7 +44,7 @@ const request = require('request');
             apiHost: process.env.API_HOST || 'localhost',
             changeId: process.env.CHANGE_VERSION || 'NA',
             env: process.env.ENVIRONMENT || 'local',
-            version: `${process.env.VERSION || 'NA'}-${process.env.CHANGE_VERSION || 'NA'}`,
+            version: `${process.env.VERSION || 'NA'}(build #${process.env.CHANGE_VERSION || 'NA'})`,
             sso: {
                 url: `${process.env.SSO_URL || ''}`,
                 clientId: `${process.env.SSO_CLIENT_ID || ''}`,
