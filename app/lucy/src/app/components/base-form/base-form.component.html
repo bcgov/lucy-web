@@ -1,26 +1,3 @@
-<!-- <div *ngIf="!formType">
-<br />
-<br />
-<br />
-  <div class="container container-fluid form-options">
-    <div class="row">
-      <mat-card>
-      <div class="col-12">
-        Choose form configuration
-      </div>
-      <br/>
-      <div class="col-12 form-option-button">
-        <button mat-raised-button color="primary" (click)="selectedMechanicalTreatmentFormType()"> Mechanical Treatment Form</button>
-      </div>
-      <br/>
-      <div class="col-12 form-option-button">
-        <button mat-raised-button color="primary" (click)="selectedObservationFormType()"> Observation Form</button>
-      </div>
-      </mat-card>
-    </div>
-  </div>
-</div> -->
-
 <div *ngIf="isLoading" class="form-bg">
   <!-- Header Section  -->
   <div class="container-fluid header-container-loading sticky">
@@ -31,18 +8,27 @@
     </div>
   </div>
   <br />
-  <div class="container form-body animated fadeIn">
-    <br />
-    <lottie-animation-view [options]="lottieConfig" (animCreated)="handleAnimation($event)">
-    </lottie-animation-view>
+  <div class="container">
+    <div class="row">
+      <!-- Menu -->
+      <div class="col-3 side-menu animated fadeInLeft centered-content">
+      </div>
+      <div class="col">
+        <div class="container form-body animated fadeInLeft">
+          <br />
+          <lottie-animation-view [options]="lottieConfig" (animCreated)="handleAnimation($event)">
+          </lottie-animation-view>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <div *ngIf="!isLoading" class="form-bg">
   <!-- Header Section  -->
   <div class="container-fluid header-container sticky animated" [ngClass]="
       inReviewMode
-        ? 'header-container-review pulse'
-        : 'header-container slideInRight'
+        ? headerOnReviewAnimationClass
+        : headerInitialAnimationClass
     ">
     <div class="container header-container-inner">
       <mat-toolbar>
@@ -87,10 +73,17 @@
   </div>
   <!-- -------------------- -->
   <br />
+
   <!-- Diff Viewer -->
-  <div *ngIf="showdiffViewer" class="container form-body diff-container animated fadeInDown">
-    <app-diff-viewer [diffObject]="diffObject"></app-diff-viewer>
+  <div *ngIf="showdiffViewer" class="container container-fluid diff-container animated fadeInDown">
+  <!-- <div class="container container-fluid diff-container animated fadeInDown"> -->
+      <div class="row">
+        <div class="col">
+          <app-diff-viewer [diffObject]="diffObject"></app-diff-viewer>
+        </div>
+      </div>
   </div>
+
   <!-- Missing fields  -->
   <div *ngIf="showMissingFieldsDialog" class="container form-body diff-container animated fadeInDown">
     <mat-accordion>
@@ -117,22 +110,24 @@
   <div class="container">
     <div class="row">
       <!-- Menu -->
-      <div class="col-3 sticky side-menu animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'">
-         <br />
-          <div class="container">
-            <div class="row" *ngFor="let menuSection of sectionsForSideMenu; let sectionIndex = index"> 
-              <div class="col-12 side-menu-section" (click)="menuItemClicked(menuSection)">
-                  {{ fromMenuSectionId(menuSection) }}
-                  <hr class="menu-section-divider" />
-              </div>
+      <div class="col-3 side-menu animated"
+        [ngClass]="inReviewMode ? sideMenuOnReviewAnimationClass : sideMenuInitialAnimationClass">
+        <br />
+        <div class="container">
+          <div class="row" *ngFor="let menuSection of sectionsForSideMenu; let sectionIndex = index">
+            <div class="col-12 side-menu-section" (click)="menuItemClicked(menuSection)">
+              {{ fromMenuSectionId(menuSection) }}
+              <hr class="menu-section-divider" />
             </div>
           </div>
+        </div>
       </div>
       <!-- Form Body -->
       <div class="col">
-        <!-- Form Body -->
-        <div class="container form-body animated" [ngClass]="inReviewMode ? 'pulse' : 'fadeInLeft'">
-          <div class="container-fluid animated" *ngFor="let section of config.sections; let i = index" id="{{toMenuSectionId(section.title.default)}}">
+        <div class="container form-body animated"
+          [ngClass]="inReviewMode ? formBodyOnReviewAnimationClass : formBodyInitialAnimationClass">
+          <div class="container-fluid animated" *ngFor="let section of config.sections; let i = index"
+            id="{{toMenuSectionId(section.title.default)}}">
             <br />
             <div class="row">
               <div class="col-12 section-title">
@@ -201,8 +196,7 @@
           <!-- Relation fields -->
           <div class="container-fluid" *ngFor="let relationKey of config.relationKeys; let relationIndex = index">
             <br />
-            <div class="row"
-              *ngIf="shouldShowRelationship(relationKey)"
+            <div class="row" *ngIf="shouldShowRelationship(relationKey)"
               id="{{toMenuSectionId(config.relationsConfigs[relationKey].header.default)}}">
               <div class="col-12 section-title">
                 {{ config.relationsConfigs[relationKey].header.default }}

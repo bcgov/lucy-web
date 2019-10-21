@@ -1,5 +1,6 @@
 .gov-nav {
   background: #FFFFFF;
+  z-index: 99;
 }
 
 .title-app {
