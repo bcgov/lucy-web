@@ -71,8 +71,8 @@
                 <ng-container matColumnDef="Observation_id">
                     <th mat-header-cell *matHeaderCellDef (click)="sortByObservationId()">
                         Observation ID
-                        <i *ngIf="sortingByObservationId && !sortAscending" class="material-icons">arrow_downward</i>
-                        <i *ngIf="sortingByObservationId && sortAscending" class="material-icons">arrow_upward</i>
+                        <i *ngIf="sortingByObservationId" class="material-icons opaque">{{ getIconName() }}</i>
+                        <i *ngIf="!sortingByObservationId" class="material-icons hidden">{{ getIconName() }}</i>
                     </th>
                     <td mat-cell *matCellDef="let item"> {{item.observation_id}} </td>
                 </ng-container>

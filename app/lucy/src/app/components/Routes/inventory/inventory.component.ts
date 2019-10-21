@@ -334,6 +334,14 @@ export class InventoryComponent implements OnInit {
     this.initMaterialTable();
   }
 
+  getIconName(): string {
+    if (this.sortAscending) {
+      return 'arrow_upward';
+    } else {
+      return 'arrow_downward';
+    }
+  }
+
   resetSortFields() {
     this.sortingByDate = false;
     this.sortingBySpecies = false;
