@@ -269,6 +269,13 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Navigate to About Component
+   */
+  navigateToAbout() {
+    this.routerService.navigateTo(AppRoutes.About, null, true);
+  }
+
+  /**
    * Navigate to Admin Tools Component
    */
   navigateToAdminTools() {
