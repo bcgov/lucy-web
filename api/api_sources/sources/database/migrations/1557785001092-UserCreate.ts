@@ -21,9 +21,10 @@
  */
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { DatabaseMigrationHelper} from '../migration.helpers';
-import { InitialUsers } from '../initial-data';
+import { InitialUsers, ProdAdmins } from '../initial-data';
 import { UserSchema, UserRoleSchema } from '../database-schema';
 import { AppLogger } from '../../Applogger';
+import { AppEnvConstant } from '../../app-constants';
 
 /**
  * @description Generated Migration file for creation of user tables and user_roles table
@@ -33,23 +34,9 @@ export class UserCreate1557785001092 extends AppLogger implements MigrationInter
 
     userSchema: UserSchema = new UserSchema();
     userRoleSchema: UserRoleSchema = new UserRoleSchema();
-    /**
-     * @description Up method
-     * @param QueryRunner queryRunner
-     * @return Promise<any>
-     */
-    public async up(queryRunner: QueryRunner): Promise<any> {
 
-        this.info('[Running]');
-        // Creating table
-
-        // Creating User from migration SQL
-        await queryRunner.query(this.userSchema.migrationSQL);
-        await queryRunner.query(this.userRoleSchema.migrationSQL);
-
-
-        // Create Initial Admins
-        for (const admin of InitialUsers) {
+    async loadDefaultUsers(users: any[], queryRunner: QueryRunner) {
+        for (const admin of users) {
             await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB(this.userSchema.table.name, admin));
             if (admin.additionalInitDataInfo) {
                 const roles = admin.additionalInitDataInfo.roles;
@@ -67,7 +54,34 @@ export class UserCreate1557785001092 extends AppLogger implements MigrationInter
                 }
             }
         }
+    }
 
+    /**
+     * @description Up method
+     * @param QueryRunner queryRunner
+     * @return Promise<any>
+     */
+    public async up(queryRunner: QueryRunner): Promise<any> {
+
+        this.info('[Running]');
+        // Creating table
+
+        // Creating User from migration SQL
+        await queryRunner.query(this.userSchema.migrationSQL);
+        await queryRunner.query(this.userRoleSchema.migrationSQL);
+
+
+        // Create Initial Admins based on env
+        if (process.env.ENVIRONMENT === AppEnvConstant.APP_ENV_PROD) {
+            this.info('[LOADING PROD ADMINS]');
+            await this.loadDefaultUsers(ProdAdmins, queryRunner);
+            if (process.env.DB_SEED === AppEnvConstant.DB_SEED_ENABLE) {
+                await this.loadDefaultUsers([InitialUsers[0]], queryRunner);
+            }
+        } else {
+            this.info('[LOADING DEFAULT USERS]');
+            await this.loadDefaultUsers(InitialUsers, queryRunner);
+        }
         this.info('[DONE]');
     }
 
