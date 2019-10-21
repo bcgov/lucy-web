@@ -76,7 +76,7 @@
 
 @media (max-width: 992px) {
     .side-menu {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -153,6 +153,9 @@
     animation-duration: 0.5s;
     animation-delay: 0s;
     margin-bottom: 10px;
+
+    border-radius: 5px;
+    box-shadow: 0 0 5px 0 #E5E9F2;
 }
 
 .no-content {
@@ -203,4 +206,10 @@
     height: 1px;
     width: 100%;
     border: 1px solid #F5F6FA;
+}
+
+.centered-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
