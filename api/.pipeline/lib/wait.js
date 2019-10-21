@@ -3,7 +3,7 @@ const {OpenShiftClientX} = require('pipeline-cli')
 
 module.exports = (resourceName, settings, countArg, timeoutArg) => {
     const timeout = timeoutArg || 20000;
-    var count = countArg || 10;
+    var count = countArg || 15;
     const phases = settings.phases
     const options= settings.options
     const phase = options.env
