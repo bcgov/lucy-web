@@ -30,6 +30,16 @@ export enum FormType {
   styleUrls: ['./base-form.component.css']
 })
 export class BaseFormComponent implements OnInit, AfterViewChecked {
+  headerInitialAnimationClass = 'header-container fadeInDown';
+  sideMenuInitialAnimationClass = '';
+  formBodyInitialAnimationClass = '';
+
+  headerOnReviewAnimationClass = 'header-container-review pulse';
+  sideMenuOnReviewAnimationClass = 'pulse';
+  formBodyOnReviewAnimationClass = 'pulse';
+
+
+
   public componentName = ` `;
 
   private _responseBody = {};
@@ -254,15 +264,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void { }
 
-  private async beginLoading() {
-    this.isLoading = true;
-
-  }
-
-  private async endLoading() {
-    this.isLoading = false;
-  }
-
   private async initialize() {
     this.isLoading = true;
     this.setFormMode();
@@ -450,6 +451,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     const fake = await this.dummy.generateTest(this.config);
     this.config = fake.config;
     this.responseBody = fake.json;
+    await this.wait(500);
     this.isLoading = false;
   }
 
@@ -599,5 +601,23 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
             }
           }, removeAfterMilliSeconds);
       }
+  }
+
+  private async beginLoading() {
+    this.isLoading = true;
+  }
+
+  private async endLoading() {
+    this.isLoading = false;
+  }
+
+   /**
+   * Create a delay
+   * @param ms milliseconds
+   */
+  private wait(ms: number): Promise<any> {
+    return new Promise( resolve => {
+      setTimeout(resolve, ms);
+    } );
   }
 }
