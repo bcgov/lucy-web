@@ -1,0 +1,71 @@
+.circle {
+  border-radius: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  background: #d6d6d6;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+}
+
+.user-button {
+  font-size: 30px;
+  font-weight: bold; 
+  line-height: 41px;
+  color: #333333;
+}
+
+.user-access-request {
+  text-align: center;
+  border: 1px solid #CCCCCC;
+  background-color: #F7F7F7;
+  padding: 15px;
+}
+
+.user-access-request-button {
+  height: 50px;
+  width: 250px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 21px;
+  text-align: center;
+}
+
+.user-access-level {
+  text-align: center;
+  border: 1px solid #CCCCCC;
+  background-color: #F7F7F7;
+  padding: 5px;
+  border-radius: 9px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.dropdown-toggle::after {
+  display:none;
+}
+
+.under-construction {
+border-radius: 9px;
+text-align: center;
+border: 1px solid #CCCCCC;
+background: repeating-linear-gradient(
+  45deg,
+  #F7F7F7,
+  #F7F7F7 10px,
+  #ffffff 10px,
+  #ffffff 20px
+);
+padding: 15px;
+}
+
+.stripe {
+color: white;
+}
+
+.user-icon {
+  border: 1px solid #CCCCCC;
+  background-color: #F2F2F2;
+  color: #002C71;
+  box-shadow: none !important;
+}

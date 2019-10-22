@@ -5,55 +5,145 @@ pipeline {
     }
     stages {
         stage('Build') {
-            agent { label 'build' }
-            steps {
-                script {
-                     echo "API Build Pipeline"
-                    def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^api/|^/api/|^app/|^/app/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
-                    def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
-                    echo "${filesInThisCommitAsString}"
-                    if (!currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause') && !hasChangesInPath){
-                        currentBuild.rawBuild.delete()
-                        error("No changes detected in the path ('^api/')")
+            parallel {
+                stage('Build API') {
+                    agent { label 'build' }
+                    steps {
+                        sh 'printenv'
+                        script {
+                            echo "API Build Pipeline"
+                            def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^api/|^/api/|^app/|^/app/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
+                            def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
+                            echo "${filesInThisCommitAsString}"
+                            if (!currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause') && !hasChangesInPath){
+                                currentBuild.rawBuild.delete()
+                                error("No changes detected in the path ('^api/')")
+                            }
+                        }
+                        echo "Aborting all running jobs ..."
+                        script {
+                            abortAllPreviousBuildInProgress(currentBuild)
+                        }
+                        echo "Building ..."
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID}"
+                        /*sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build-tools --pr=${CHANGE_ID}"*/
+                    }
+
+                }
+                stage('Build APP') {
+                    agent { label 'build' }
+                    steps {
+                        script {
+                            echo "App Build Pipeline"
+                            def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep -E '^/app/|^app/|^api/|^/api/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
+                            def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
+                            if (!currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause') && !hasChangesInPath){
+                                currentBuild.rawBuild.delete()
+                                error("No changes detected in the path ('^app/')")
+                            }
+                        }
+                        echo "Aborting all running jobs ..."
+                        script {
+                            abortAllPreviousBuildInProgress(currentBuild)
+                        }
+                        echo "Building ..."
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID}"
                     }
                 }
-                echo "Aborting all running jobs ..."
-                script {
-                    abortAllPreviousBuildInProgress(currentBuild)
-                }
-                echo "Building ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID}"
             }
         }
-        stage('Deploy (DEV)') {
+        stage('Pre Deploy (Dev)') {
             agent { label 'deploy' }
             steps {
-                echo "Deploying ..."
+                echo "Deploying Postgress DB"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev"
+            }
+        }
+        stage('Test API (Dev)') {
+            agent { label 'deploy' }
+            steps {
+                echo "Testing app"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run test -- --pr=${CHANGE_ID} --env=dev"
+            }
+        }
+        stage('Deploy (DEV) API') {
+            agent { label 'deploy' }
+            steps {
+                echo "Deploying API..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --pr=${CHANGE_ID} --env=dev"
             }
         }
-        stage('Deploy (TEST)') {
-            agent { label 'deploy' }
-            when {
-                branch 'staging'
+        stage('Deploy (DEV) APP') {
+            agent {
+                label 'deploy'
             }
             steps {
-                echo "Deploying in TEST ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
+                echo "Deploying APP..."
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
             }
-            /*input {
-                message "Should we continue with deployment to TEST?"
-                ok "Yes!"
-            }
-            steps {
-                echo "Deploying ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test"
-            }*/
         }
-        stage('Deploy (PROD)') {
+        stage('Pre-Deploy (Dev) [Static]') {
+            agent {
+                label 'deploy'
+            }
+            when {
+                environment name : 'CHANGE_TARGET', value: 'dev'
+            }
+            steps {
+                echo "Deploying Postgress [STATIC] ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev --type=static"
+            }
+        }
+        stage('Deploy (Dev) API/APP [Static]') {
+            agent {
+                label 'deploy'
+            }
+            when {
+                environment name : 'CHANGE_TARGET', value: 'dev'
+            }
+            steps {
+                echo "Deploying API [dev] ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                echo "Deploying dev tools ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static"
+                echo "Deploying APP[dev] ..."
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+            }
+        }
+        stage('Pre-Deploy (Test)') {
+            agent {
+                label 'deploy'
+            }
+            when {
+                environment name : 'CHANGE_TARGET', value: 'staging'
+            }
+            steps {
+                echo "Deploying Postgress [TEST] ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=test --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=test --type=static"
+            }
+        }
+        stage('Deploy (TEST) API/APP') {
             agent { label 'deploy' }
             when {
-                branch 'prod'
+                environment name : 'CHANGE_TARGET', value: 'staging'
+            }
+            steps {
+                echo "Deploying in [TEST] [API]..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static"
+                echo "Deploying in [TEST] [APP]..."
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static"
+                echo "Deploying dev tools [TEST] ..."
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=test --type=static"
+            }
+        }
+        stage('Deploy (PROD) API/APP') {
+            agent { label 'deploy' }
+            when {
+                environment name : 'CHANGE_TARGET', value: 'prod'
             }
             steps {
                 script {
@@ -62,8 +152,15 @@ pipeline {
                         currentBuild.result = "ABORTED"
                         error "User cancelled"
                     }
-                    echo "Deploying in PROD ..."
-                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
+                    echo "Deploying Postgress [PROD] ..."
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=prod --type=static"
+                    echo "Deploying in [PROD] [API]..."
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
+                    echo "Deploying in [PROD] [APP]..."
+                    sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
+                    echo "Deploying dev tools [PROD] ..."
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=prod --type=static"
                 } 
             }
             /*input {

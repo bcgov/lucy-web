@@ -10,8 +10,8 @@ import { ObjectValidatorService } from './object-validator.service';
 import { Role, UserAccessType } from '../models/Role';
 
 export interface UserChangeResult {
-  success: boolean
-  response: User | null
+  success: boolean;
+  response: User | null;
 }
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export interface UserChangeResult {
 export class UserService {
 
   private current: User | null = null;
-  public shouldRefresh: boolean = false;
+  public shouldRefresh = false;
 
   constructor(private http: HttpClient,
     private cookieService: CookieService,
@@ -29,7 +29,7 @@ export class UserService {
     private objectValidator: ObjectValidatorService) { }
 
   /**
-   * Return a User object 
+   * Return a User object
    * containing user information.
    */
   public async getUser(): Promise<User | null> {
@@ -52,14 +52,14 @@ export class UserService {
 
   /*------------------------------------API CALL------------------------------------*/
   /**
-   * Make an API Call through 
-   * getUserRequestPromise() 
+   * Make an API Call through
+   * getUserRequestPromise()
    * to get the current users informartion.
    * 
    * @returns User | null
    */
   private async requestUserInfo(): Promise<User | null> {
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, "");
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_me, ``);
     if (this.objectValidator.isUserObject(response.response)) {
       this.current = response.response;
       return response.response;
@@ -78,7 +78,7 @@ export class UserService {
    */
   public async getFirstName(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
   }
 
@@ -88,7 +88,7 @@ export class UserService {
    */
   public async getLastName(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1));
   }
 
@@ -98,8 +98,8 @@ export class UserService {
    */
   public async getFullName(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
-      (user.firstName + " " + user.lastName));
+    return (user == null ? `` :
+      (user.firstName + ` ` + user.lastName));
   }
 
   /**
@@ -108,7 +108,7 @@ export class UserService {
    */
   public async getInitials(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       (user.firstName.charAt(0) + user.lastName.charAt(0)).toUpperCase());
   }
 
@@ -118,13 +118,13 @@ export class UserService {
    */
   public async getEmail(): Promise<string> {
     const user = await this.getUser();
-    return (user == null ? "" :
+    return (user == null ? `` :
       user.email);
   }
 
   /**
    * Get Users Access Type.
-   * Determined based on User's 
+   * Determined based on User's
    * Access Code.
    * @returns UserAccessType
    */
@@ -138,25 +138,30 @@ export class UserService {
 
   /**
    * Return User's relevant access code.
-   * @param user 
+   * @param user object
    * @returns accessCode
    */
   public getUserAccessCode(user: User): Role {
-    return user.roles[user.roles.length-1];
+    return user.roles[user.roles.length - 1];
   }
 
   // TODO: Does not exist in api yet
-  public async getOranizarionAndRole(): Promise<string> {
+  public async getOrganizationAndRole(): Promise<string> {
     // const user = await this.getUser();
     // return (user.roleInOrganization + ", " + user.organization);
-    return "Invasive Plant Specialist, Ministry of Tranaportation";
+    return `Invasive Plant Specialist, Ministry of Transportation`;
   }
 
   // TODO: Does not exist in api yet
-  public async getOranization(): Promise<string> {
+  public async getRole(): Promise<string> {
+    return 'Invasive Plant Specialist';
+  }
+
+  // TODO: Does not exist in api yet
+  public async getOrganization(): Promise<string> {
     // const user = await this.getUser();
     // return user.organization;
-    return "Ministry of Tranaportation";
+    return `Ministry of Transportation`;
   }
 
   /**
@@ -169,8 +174,9 @@ export class UserService {
       return false;
     }
     return (
-      (user.firstName != "") &&
-      (user.lastName != "")
+      (user.firstName !== ``) &&
+      (user.lastName !== ``) &&
+      (user.email !== ``)
     );
   }
   /*------------------------------------END OF GETs------------------------------------*/
@@ -178,45 +184,47 @@ export class UserService {
   /*------------------------------------SETs------------------------------------*/
   /**
    * Update User information
-   * @param firstName 
-   * @param lastName 
+   * @param firstName string
+   * @param lastName string
    * @returns boolean
    */
   async updateUserInfo(firstName: string, lastName: string): Promise<boolean> {
-    let user = await this.getUser()
+    const user = await this.getUser();
     user.firstName = firstName;
     user.lastName = lastName;
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_me, user);
     if (response.success) {
       if (!this.objectValidator.isUserObject(response.response)) {
-        return false
+        return false;
       } else {
         return (response.response.firstName === user.firstName && response.response.lastName === user.lastName)
       }
     } else {
-      return false
+      return false;
     }
   }
 
   /**
    * Create an Access Request
-   * @param notes 
+   * @param notes string
    * @returns boolean
    */
   async submitDataEntryRequest(notes: string): Promise<boolean> {
-    let user = await this.getUser()
-    let dataEntryRole = await this.roles.getDataEntryRole()
+    const user = await this.getUser();
+    const dataEntryRole = await this.roles.getDataEntryRole();
+    if (dataEntryRole === null) {
+      console.log(`Could not fetch data entry role`);
+      return false;
+    }
     const body = {
-      "requestedAccessCode": dataEntryRole.role_code_id,
-      "requestNote": notes
+      requestedAccessCode: dataEntryRole.role_code_id,
+      requestNote: notes
     }
     const response = await this.api.request(APIRequestMethod.POST, AppConstants.API_DataEntryAccessRequest, body);
-    console.log("Response:")
-    console.dir(response)
     if (!this.objectValidator.isUserObject(response)) {
-      return false
+      return false;
     } else {
-      return (response.firstName === user.firstName && response.lastName === user.lastName)
+      return (response.firstName === user.firstName && response.lastName === user.lastName);
     }
   }
   /*------------------------------------END OF SETs------------------------------------*/
@@ -233,7 +241,7 @@ export class UserService {
    */
   public showRequestDataEntryAccessMessage(): boolean {
     const value = this.cookieService.get('ShowRequestDataEntryAccessMessage');
-    if (value == "") {
+    if (value === ``) {
       return true;
     };
   }
@@ -249,29 +257,4 @@ export class UserService {
   }
 
   /*------------------------------------ END OF User Preferences------------------------------------*/
-  /*------------------------------------MOCK DATA------------------------------------*/
-  private getMockUser(): User {
-    var user: User = {
-      roles: [{
-        "code": "ADM",
-        "createdAt": "2019-06-11T12:10:12.495Z",
-        "description": "Overall SEISM Access",
-        "role": "Admin",
-        "role_code_id": 1,
-        "updateAt": "2019-06-11T12:10:12.495Z",
-      }],
-      "createdAt": "2019-06-11T12:10:12.495Z",
-      "currentSessionId": 1,
-      "email": "amir@freshworks.io",
-      "firstName": "Amir",
-      "lastName": "Shayegh",
-      "preferredUsername": "ashayega@idir",
-      "updateAt": "2019-06-11T12:48:36.361Z",
-      "user_id": 1,
-      "accountStatus": 1.
-    };
-    return user
-  }
-  /*------------------------------------END OF MOCK DATA------------------------------------*/
-
 }

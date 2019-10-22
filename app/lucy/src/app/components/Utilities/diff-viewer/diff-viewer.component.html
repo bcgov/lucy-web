@@ -1,0 +1,30 @@
+<mat-accordion>
+  <mat-expansion-panel
+  [expanded]="true"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        You made {{ numberOfChanged }} edits
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list>
+      <mat-list-item *ngFor="let change of changes; let j = index">
+        <div class="container" [ngClass]="j % 2 === 0 ? 'even' : 'odd'">
+          <div class="row">
+            <div class="col-6 field-name">{{ change.prettyName }}</div>
+            <div class="col-6">
+              <div class="row">
+                <div class="before sign col-1">−</div>
+                <div class="before before-box col">{{ change.before }}</div>
+              </div>
+              <div class="row">
+                <div class="after sign col-1">+</div>
+                <div class="after after-box col">{{ change.after }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion>

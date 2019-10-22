@@ -16,7 +16,7 @@ WORKDIR /opt/app-root/src
 COPY ./package*.json ./
 
 # INSATLL NODE DEPENDENCIES
-RUN npm install
+RUN npm ci
 
 # Copy All the sources
 COPY ./ .
@@ -29,7 +29,7 @@ RUN echo 'BUILD SUCCESS'
 
 EXPOSE $APP_PORT
 
-CMD ["npm", "run", "deploy_run"]
+CMD ["npm", "run", "deploy_start"]
 
 
 

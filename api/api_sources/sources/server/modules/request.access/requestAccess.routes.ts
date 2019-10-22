@@ -44,7 +44,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
 
         // Configure route
         // Index for all request-access
-        this.router.get('/', [adminOnlyRoute()], this.index);
+        this.router.get('/', this.index);
 
         // Update request-access
         this.router.put('/:requestId', [adminOnlyRoute()], this.update);
@@ -66,11 +66,16 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
             try {
                 // Now fetch all request access and send it
                 assert(req.user, 'No user for request');
-                this.logger.info(`index | send all request access to user ${req.user.email}`);
-                return resp.status(200).json(this.successResp(await this.dataController.all({
-                    status: 0
-                })));
-
+                const user: User = req.user as User;
+                if (user.isAdmin) {
+                    this.logger.info(`index | send all request access to user ${req.user.email} (admin)`);
+                    return resp.status(200).json(this.successResp(await this.dataController.all({
+                        status: 0
+                    })));
+                } else {
+                    this.logger.info(`index | send own request access to user ${req.user.email} (admin)`);
+                    return resp.status(200).json(this.successResp(await user.requestAccess || null));
+                }
             } catch (excp) {
                 this.commonError(500, 'index', excp, resp);
                 return;
@@ -99,12 +104,16 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
                     accessRequest.requestedAccessCode = await RoleCodeController.shared.findById(req.body.requestedAccessCode);
                 }
                 // Check status
+                let requireDel = false;
                 if (req.body.status && req.body.status !== accessRequest.status) {
-                    accessRequest = await this.handleStatusUpdate(req.body.status, accessRequest, req.user);
+                    [accessRequest, requireDel] = await this.handleStatusUpdate(req.body.status, accessRequest, req.user);
                 }
-                // Save
-                await this.dataController.saveInDB(accessRequest);
-
+                // Save or delete
+                if (requireDel) {
+                    await this.dataController.remove(accessRequest);
+                } else {
+                    await this.dataController.saveInDB(accessRequest);
+                }
                 // Send Response
                 resp.status(200).json(this.successResp(accessRequest));
             } catch (excp) {
@@ -122,6 +131,16 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
         return async (req: Request, resp: Response) => {
             try {
                 assert(req.user, 'No User of the request');
+
+                // Checking request is exists or not
+                const user: User = req.user as User;
+                const existing = await user.requestAccess;
+                if (existing) {
+                    this.logger.info(`Request Access Exists for user: ${user.email}`);
+                    resp.status(200).json(this.successResp(existing));
+                    return;
+                }
+
                 const input = req.body as CreateRequestAccess;
                 assert(input, 'No input to create access');
                 const requestAccess: RequestAccess = this.dataController.create();
@@ -158,7 +177,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
      * @param User approver
      * @return Promise<RequestAccess>
      */
-    async handleStatusUpdate(status: number, requestAccess: RequestAccess, approver: User): Promise<RequestAccess> {
+    async handleStatusUpdate(status: number, requestAccess: RequestAccess, approver: User): Promise<[RequestAccess, boolean]> {
         requestAccess.status = status;
         requestAccess.approver = approver;
 
@@ -166,20 +185,18 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
         const requester: User = requestAccess.requester;
         // Create Message
         const message: UserMessage = UserMessageController.shared.create();
+        let delObj = false;
         if (status === RequestStatus.approved) {
             this.logger.info(`Access request ${requestAccess.request_id} is approved by ${requestAccess.approver.email}`);
             message.title = 'Request Access approved';
-
             // Update requester
-            const roles: RolesCode[] = requester.roles;
-            if (!roles.includes(requestAccess.requestedAccessCode)) {
-                roles.push(requestAccess.requestedAccessCode);
-                requester.roles = roles;
-                await this.userController.saveInDB(requester);
-            }
+            requester.roles = [requestAccess.requestedAccessCode];
+            await this.userController.saveInDB(requester);
+            delObj = true;
         } else if (status === RequestStatus.rejected) {
             this.logger.info(`Access request ${requestAccess.request_id} is rejected by ${requestAccess.approver.email}`);
             message.title = 'Request Access rejected';
+            delObj = true;
         } else {
             this.logger.info(`Unhandled status update: ${JSON.stringify(requestAccess)}`);
         }
@@ -191,7 +208,7 @@ class RequestAccessRouteController extends SecureRouteController<RequestAccessCo
 
         // Save Message
         await UserMessageController.shared.saveInDB(message);
-        return requestAccess;
+        return [requestAccess, delObj];
     }
 
 

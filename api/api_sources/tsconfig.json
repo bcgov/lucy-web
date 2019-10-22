@@ -20,7 +20,8 @@
     "resolveJsonModule": true
   },
   "include": [
-    "./sources/**/*.ts"
+    "./sources/**/*.ts",
+    "./scripts/*.ts"
   ],
   "exclude": [
     "**/node_modules",

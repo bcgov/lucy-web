@@ -12,7 +12,6 @@ export class MessageService {
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
 
   public async fetchMessages(): Promise<Message[]> {
-    return this.getDummyMessages();
     const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_messages, null);
     return response.success ? response.response : [];
   }

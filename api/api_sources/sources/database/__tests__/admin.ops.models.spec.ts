@@ -20,41 +20,61 @@
 /**
  * Test for admin ops data models
  */
+
+// JEST Mock Config
+/*if (process.env.DB_MOCK) {
+    jest.mock('../data.model.controller');
+}*/
+import { expect } from 'chai';
 import {  UserDataController, RequestAccessController, UserMessageController, UserMessage } from '../models';
-
 import {  requestAccessFactory, userMessageFactory } from '../factory';
-
-jest.mock('../data.model.controller');
-
+import { runMockSetup, commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
+// import { SharedDBManager } from '../dataBaseManager';
 describe('Test Admin ops data models', () => {
-    beforeAll(async () => {
+    before(async () => {
+        await commonTestSetupAction();
     });
-    afterAll(async () => {
+    after(async () => {
+        await commonTestTearDownAction();
     });
-    test('should create/fetch request access', async (done) => {
+    it('should create/fetch request access', async () => {
         // Obj
         const obj = await requestAccessFactory();
         // Save
         await UserDataController.shared.saveInDB(obj.requester);
         await UserDataController.shared.saveInDB(obj.approver);
         await RequestAccessController.shared.saveInDB(obj);
+        runMockSetup(() => {
+            obj.requester.requestAccess = new Promise(res => res(obj));
+        });
 
         // Fetch
         const dbObj = await  RequestAccessController.shared.findById(obj.request_id);
-        expect(dbObj).toBeDefined();
-        expect(dbObj.approverNote).toEqual(obj.approverNote);
-        expect(dbObj.approver).toEqual(obj.approver);
-        expect(dbObj.requester).toEqual(obj.requester);
-        expect(dbObj.requestedAccessCode).toEqual(obj.requestedAccessCode);
+        expect(dbObj).not.equal(undefined);
+        expect(dbObj.approverNote).to.equal(obj.approverNote);
+        expect(dbObj.approver.user_id).to.equal(obj.approver.user_id);
+        expect(dbObj.requester.user_id).to.equal(obj.requester.user_id);
+        expect(dbObj.requestedAccessCode.role_code_id).to.equal(obj.requestedAccessCode.role_code_id);
+        expect(dbObj.requestedAccessCode).to.eql(obj.requestedAccessCode);
+
+        // Check relationship of user
+        const request = await obj.requester.requestAccess;
+        expect(request).not.equal(undefined);
+        expect(request.request_id).to.equal(dbObj.request_id);
+
+        // Load user and check
+        const requester = await UserDataController.shared.findById(obj.requester.user_id);
+        const existing: any = requester.existingRequestAccess || {};
+        expect(existing.request_id).to.equal(obj.request_id);
 
         // Clean
         RequestAccessController.shared.remove(obj);
         UserDataController.shared.remove(obj.approver);
         UserDataController.shared.remove(obj.requester);
-        done();
+        // done();
     });
 
-    test('should create/fetch user message', async (done) => {
+    it('should create/fetch user message', async () => {
         // Message
         const message = await userMessageFactory();
 
@@ -66,16 +86,16 @@ describe('Test Admin ops data models', () => {
         // Fetch
         const dbObj: UserMessage = await UserMessageController.shared.findById(message.message_id);
         // Test
-        expect(dbObj).toBeDefined();
-        expect(dbObj.creator).toEqual(message.creator);
-        expect(dbObj.receiver).toEqual(message.receiver);
-        expect(dbObj.body).toEqual(message.body);
+        expect(dbObj).not.equal(undefined);
+        expect(dbObj.creator.user_id).to.equal(message.creator.user_id);
+        expect(dbObj.receiver.user_id).to.equal(message.receiver.user_id);
+        expect(dbObj.body).to.equal(message.body);
 
         // Clean
         await UserMessageController.shared.remove(message);
         await UserDataController.shared.remove(message.creator);
         await UserDataController.shared.remove(message.receiver);
 
-        done();
+        // done();
     });
 });

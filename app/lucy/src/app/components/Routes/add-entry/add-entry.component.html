@@ -1,0 +1,29 @@
+<div class="container text-center animated fadeIn">
+  <div class="row">
+    <div class="col-12 component-header mt-5">
+      Add Entries
+    </div>
+    <div class="col-12 component-sub-header">
+      Select an entry type
+    </div>
+    <div class="col-12 mt-3">
+      <button mat-raised-button color="primary" class="entry-type-button" (click)="createObservation()">
+        Invasive Plant Observation</button>
+    </div>
+    <div class="col-12 mt-2">
+      <button mat-raised-button color="primary" class="entry-type-button" (click)="createMechanicalTreatment()">
+        Invasive Plant Treatment (Mechanical)</button>
+    </div>
+    <div class="col-12 mt-2">
+        <button mat-raised-button color="primary" class="entry-type-button" (click)="createChemicalTreatment()">
+          Invasive Plant Treatment (Chemical)</button>
+      </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-12">
+      <button mat-raised-button (click)="uploadFile()">
+       Upload Data File</button>
+    </div>
+  </div>
+</div>

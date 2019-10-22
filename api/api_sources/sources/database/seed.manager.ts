@@ -26,7 +26,7 @@ import * as csv from 'csvtojson';
 import { Connection} from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import * as path from 'path';
-import { LoadData, BaseModel} from './models';
+import { BaseModel} from './models';
 import { SharedDBManager } from './index';
 
 /**
@@ -65,11 +65,11 @@ export class Seeder<D, T extends BaseModel> extends LoggerBase {
                 if (!existing) {
                     // TODO: Get proper logger
                     // SeedManager.logger.info('Will Create new Item');
-                    const newObj = new entity();
-                    const newItem: T = newObj as T;
-                    const newLoad: LoadData<D> = newObj as LoadData<D>;
-                    newLoad.loadMap(d);
-                    newItem.loadData(d);
+                    // const newObj = new entity();
+                    // const newItem: T = newObj as T;
+                    // const newLoad: LoadData<D> = newObj as LoadData<D>;
+                    // newLoad.loadMap(d);
+                    // newItem.loadData(d);
                 }
             } catch (err) {
                 // TODO: Get proper logger

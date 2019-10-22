@@ -64,8 +64,8 @@ export interface UserMessageCreateRequest {
              try {
                  assert(req.user, 'No User of request, should handle by middleware');
                  this.logger.info(`Will Fetch messages for user ${req.user.email}`);
-                 const user = req.user;
-                 const userMessages: UserMessage[] = await user.messages;
+                 const user: User = req.user as User;
+                 const userMessages: UserMessage[] = await user.messages || [];
                  const results = userMessages.filter( msg => {
                      return (msg.status === UserMessageStatus.unseen);
                  });

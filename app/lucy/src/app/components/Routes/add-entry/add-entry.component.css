@@ -1,0 +1,17 @@
+.component-sub-header {
+    color: #8C8C8C;
+    font-size: 20px;
+	letter-spacing: 0.26px;
+	line-height: 25px;
+}
+
+.component-header {
+    color: #000000;
+    font-size: 34px;
+	font-weight: bold;
+	line-height: 41px;
+}
+
+.entry-type-button {
+    width: 20em;
+}

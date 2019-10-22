@@ -1,20 +1,23 @@
-FROM registry.access.redhat.com/rhscl/nodejs-8-rhel7
+FROM node:10
 
-# RUN mkdir -p /opt/app-root/app
-ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ENV PORT 3001
+ENV HOME /opt/app-root/src/app
 
-# RUN set -x \
+# Creating HOME
+USER 0
+RUN mkdir -p ${HOME}
+RUN chmod -R 777 ${HOME}
+RUN chown -R 1001 ${HOME}
+USER 1001
 
-RUN npm install -g npm
+# Setting Path
+ENV PATH /opt/rh/rh-nodejs8/root/usr/bin:/opt/app-root/src/node_modules/.bin/:/opt/app-root/src/app.npm-global/bin/:/opt/app-root/src/app/bin:/opt/app-root/src/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/app/node_modules/.bin:/opt/app-root/src/app/app.npm-global/bin
 
 # Create app directory
 
-WORKDIR /opt/app-root/src
+WORKDIR ${HOME}
 
-# Logging in Build Console
-RUN echo ' --- BUILD START --- '
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -25,7 +28,7 @@ RUN echo ' --- BUILD START --- '
 # RUN npm install --only=production
 COPY ./package*.json ./
 
-RUN npm install
+RUN npm ci
 
 # If you are building your code for production, copy all files
 COPY ./ .
@@ -36,16 +39,20 @@ RUN rm -rf ./dist-server
 # Building App
 RUN npm run build
 
-ENV NODE_PATH /opt/app-root/src
+# Setting NODE_PATH
+ENV NODE_PATH ${HOME}/node_modules
 
-RUN ls -a
+# Allow all user and app to update few folders
+RUN chmod 777 ${HOME}/node_modules
+RUN mkdir -p ${HOME}/.config/configstore
+RUN chmod -R 777 ${HOME}/.config
+RUN chmod -R 777 ${HOME}/.config/configstore
 
+# Application VOLUME
+VOLUME ${HOME}
 
-VOLUME /opt/app-root/src
-
+# Application Port
 EXPOSE 3001
 
-# Logging in Build Console Build DONE
-RUN echo ' --- BUILD SUCCESS: DONE --- '
-
+# Application Entry point
 CMD ["npm", "run", "deploy_run"]

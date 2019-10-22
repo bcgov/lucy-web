@@ -21,11 +21,15 @@
  */
 const express = require('express');
 const path = require('path');
+const request = require('request');
 
 /**
  * @description Bootstrap script to start app web server
  */
 (() => {
+    // TODO: Find proper solution 
+    // Ignoring ssl certificate of host
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
     // Express APP
     const app = express();
     // Getting Port
@@ -38,10 +42,40 @@ const path = require('path');
     app.use('/config', (req, resp) => {
         const config = {
             apiHost: process.env.API_HOST || 'localhost',
-            changeVersion: process.env.CHANGE_VERSION || ''
+            changeId: process.env.CHANGE_VERSION || 'NA',
+            env: process.env.ENVIRONMENT || 'local',
+            version: `${process.env.VERSION || 'NA'}(build #${process.env.CHANGE_VERSION || 'NA'})`,
+            sso: {
+                url: `${process.env.SSO_URL || ''}`,
+                clientId: `${process.env.SSO_CLIENT_ID || ''}`,
+                realm: `${process.env.SSO_REALM || ''}`
+            }
         };
         resp.status(200).json(config);
     });
+    // Health check
+    app.use('/healthcheck', (_, resp) => {
+        // Request server api
+        const host = process.env.API_HOST || process.env.LOCAL_API_HOST || 'localhost'
+        request(`https://${host}/api/misc/version`, (err, res) => {
+            if (err) {
+                console.log(`Error: ${err}, host: ${host}`);
+                resp.status(404).json({error: `${err}`, host: host});
+            } else {
+                if (res.statusCode === 200) {
+                    resp.status(200).json({ success: true});
+                } else {
+                    resp.status(404).json({ error: 'API not responding'});
+                }
+            }
+        });
+    });
+
+    // All routes
+    const route = express.Router();
+    route.all('*', express.static(resourcePath));
+    app.use('*', route);
+
     // Logging
     console.log(`Stating express web server on port with resource path => ${port}: ${resourcePath}`);
     // Listing to port

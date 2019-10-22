@@ -1,0 +1,53 @@
+<br/>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 text-center">
+      <h2>Welcome to LucyDB</h2>
+    </div>
+    <div *ngIf="isValid" class="col-12 text-center sub-header">
+      Please confirm the information below is correct before continuing.
+    </div>
+    <div *ngIf="!isValid" class="col-12 text-center alert alert-warning" role="alert">
+      Please make sure the following information is correct:
+      {{invalidMessage}}
+    </div>
+    <div>
+      <!-- first & last name -->
+      <div class="row">
+        <div class="col-sm-6 field">
+          <label for="firstName" class="field-header">First Name</label>
+          <input type="text" 
+            class="form-control field-box"
+            [(ngModel)]="firstName"
+            [maxlength]= "35"
+            [ngClass]="firstNameIsValid ? 'field-input' : 'field-input-invalid'"/>
+        </div>
+        <div class="col-sm-6 field">
+          <label for="lastName" class="field-header">Last Name</label>
+          <input type="text" 
+            class="form-control field-box" 
+            [(ngModel)]="lastName"
+            [maxlength]= "35"
+            [ngClass]="lastNameIsValid ? 'field-input' : 'field-input-invalid'"/>
+        </div>
+      </div>
+      <!-- Email -->
+      <div class="row">
+        <div class="col-sm-12 field">
+          <label for="email" class="field-header">Email Address</label>
+          <input type="text" 
+            class="form-control field-box" 
+            [(ngModel)]="email"
+            [maxlength]= "320"
+            [ngClass]="emailIsValid ? 'field-input' : 'field-input-invalid'"/>
+        </div>
+      </div>
+      <!-- button  -->
+      <br />
+      <div class="row justify-content-center">
+        <button *ngIf="isValid" class="btn next-button button-fill" (click)='onNext()'>Next</button>
+        <button *ngIf="!isValid" class="btn next-button button-fill" (click)='onNext()' disabled>Next</button>
+      </div>
+    </div>
+  </div>
+</div>

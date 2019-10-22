@@ -22,7 +22,7 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as cross from 'cors';
-
+import * as path from 'path';
 import {Logger} from '../logger';
 import AppConfig from '../../AppConfig';
 import { routes } from './routes';
@@ -74,6 +74,13 @@ class ExpressApp {
         // Cross origin
         this.app.use(cross());
 
+        // Code coverage
+        if (process.env.ENVIRONMENT === 'local') {
+            const coverage = path.resolve(__dirname, '../../../coverage');
+            this.app.use('/api/dev/coverage', express.static(coverage));
+        }
+
+
         // Auth middleware
         this.app.use(await authenticationMiddleWare());
 
@@ -113,7 +120,6 @@ class ExpressApp {
             this.logger.error(`*** Error: ${err} **`);
             process.exit(1);
         }
-
     }
 }
 
