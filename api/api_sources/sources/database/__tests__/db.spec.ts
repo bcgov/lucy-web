@@ -24,7 +24,7 @@ import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-databa
 import { defineColumn, createColumn, BaseTableSchema} from '../applicationSchemaInterface';
 import { getYAMLFilePath } from '../../libs/core-database';
 import { SchemaCache } from '../../libs/utilities';
-import { MechanicalTreatmentSchema } from '../database-schema';
+import { MechanicalTreatmentSchema, ObservationSchema } from '../database-schema';
 import { appSchemaMap } from '../app.schema.loader';
 
 class TestSchema extends BaseTableSchema {
@@ -119,6 +119,16 @@ describe('Test for db utilities', () => {
         should().exist(mtSchema.table.meta);
         should().exist(mtSchema.table.layout);
         should().exist(mtSchema.config());
+    });
+
+    it('should load Observation Schema', () => {
+        const obsSchema = new ObservationSchema();
+        should().exist(obsSchema);
+        should().exist(obsSchema.table);
+        should().exist(obsSchema.table.columnsDefinition);
+        should().exist(obsSchema.table.meta);
+        should().exist(obsSchema.table.layout);
+        should().exist(obsSchema.config());
     });
 });
 

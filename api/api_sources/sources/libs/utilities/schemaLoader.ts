@@ -24,7 +24,7 @@
 import * as assert from 'assert';
 import * as _ from 'underscore';
 import { yaml, verifyObject } from './helpers.utilities';
-import { TableColumnDefinition } from '../core-database';
+import { TableColumnDefinition, getYAMLFilePath } from '../core-database';
 
 export class SchemaCache {
     static _cached: {[key: string]: SchemaLoader} = {};
@@ -59,16 +59,43 @@ interface TableSchemaInfo {
 export class SchemaLoader {
     schemaFileObj: any;
     tables: {[key: string]: TableSchemaInfo} = {};
+    filePath = '[NA]';
     constructor(input: string | any) {
         let schemaFileObj: any;
         if (typeof input === 'string') {
+            this.filePath = input;
             schemaFileObj = yaml(input);
         } else {
             schemaFileObj = input;
         }
-        assert(schemaFileObj, `SchemaLoader: Unable to load schema from path/input: ${JSON.stringify(input)}`);
-        assert(schemaFileObj.schemas, `SchemaLoader:No Schema is found on file: ${JSON.stringify(input)}\n DATA: ${JSON.stringify(schemaFileObj)}`);
-        this.schemaFileObj = schemaFileObj;
+        assert(schemaFileObj, `SchemaLoader: ${this.filePath}: Unable to load schema from path/input: ${JSON.stringify(input)}`);
+        assert(schemaFileObj.schemas, `SchemaLoader: ${this.filePath} :No Schema is found on file: ${JSON.stringify(input)}\n DATA: ${JSON.stringify(schemaFileObj)}`);
+
+        // Check for includes
+        if (schemaFileObj.includes && schemaFileObj.includes.length > 0) {
+            // Loading included schemas
+            const includes: string[] = schemaFileObj.includes as string[];
+            for (const file of includes) {
+                // Get file path
+                const schemaFilePath = getYAMLFilePath(file);
+                if (schemaFilePath !== input) {
+                    // load schema
+                    const includedSchema: SchemaLoader = SchemaCache.getSchemaLoader(schemaFilePath);
+
+                    // Copy all schemas in included schemas
+                    schemaFileObj.schemas = { ...schemaFileObj.schemas, ...includedSchema.schemaFileObj.schemas};
+
+                    // Copy all external tables
+                    const existing = schemaFileObj.externalTables || [];
+                    if (includedSchema.schemaFileObj.externalTables) {
+                        schemaFileObj.externalTables = [ ...existing, ...includedSchema.schemaFileObj.externalTables];
+                    }
+                }
+            }
+            this.schemaFileObj = schemaFileObj;
+        } else {
+            this.schemaFileObj = schemaFileObj;
+        }
     }
 
     clean() {
@@ -76,20 +103,28 @@ export class SchemaLoader {
     }
 
     verify() {
-        _.each(this.schemaFileObj.schemas, (schema, key: string) => this.verifySchema(schema, key));
-        this.verifyForeignTable();
-        this.clean();
-        return true;
+        try {
+            _.each(this.schemaFileObj.schemas, (schema, key: string) => this.verifySchema(schema, key));
+            this.verifyForeignTable();
+            this.clean();
+            return true;
+        } catch (excp) {
+            console.log(`${this.filePath} : Excp: ${excp}`);
+            console.log(`${this.filePath}: ${JSON.stringify(this.schemaFileObj, null, 2)}`);
+            return false;
+        }
     }
 
     verifySchema(rawSchema: any, schemaName: string) {
         const schema: Schema = rawSchema as Schema;
         // console.log(`1. ${JSON.stringify(schema)} <= ${JSON.stringify(rawSchema)} `);
-        assert(schema, new Error(`SchemaLoader(v): Unknown schema format: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
-        assert(schema.columns, new Error(`SchemaLoader(v): Schema should have columns: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
-        assert((Object.keys(schema.columns).length > 0), new Error(`SchemaLoader(v): Unknown schema format: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
+        assert(schema, new Error(`SchemaLoader(v): ${this.filePath}: Unknown schema format: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
+        assert(schema.columns, new Error(`SchemaLoader(v): ${this.filePath}: Schema should have columns: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
+        assert((
+            Object.keys(schema.columns).length > 0),
+            new Error(`SchemaLoader(v): ${this.filePath}: Unknown schema format: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
         const tableName = schema.name;
-        assert(tableName.match(ValidName.sqlName) !== null, new Error(`SchemaLoader(v): Schema ${schemaName} table name ${tableName} is invalid`));
+        assert(tableName.match(ValidName.sqlName) !== null, new Error(`SchemaLoader(v): ${this.filePath}: Schema ${schemaName} table name ${tableName} is invalid`));
         const obj = {};
         obj[tableName] = { schema: schemaName, columns: []};
         this.tables = { ...this.tables, ...obj};
@@ -99,22 +134,22 @@ export class SchemaLoader {
 
     verifyColumn(rawColumn: any, columnName: string, table: string) {
         const column: TableColumnDefinition = rawColumn as TableColumnDefinition;
-        assert(column, new Error(`SchemaLoader(vc): Unknown column for`));
+        assert(column, new Error(`SchemaLoader(vc): ${this.filePath}:  Unknown column for`));
         verifyObject(column, ['name', 'comment'], 'SchemaLoader(vc)');
         // Check name
         const name = column.name;
-        assert(name.match(ValidName.sqlName) !== null, new Error(`SchemaLoader(vc): Column ${columnName} has invalid name: ${name}`));
+        assert(name.match(ValidName.sqlName) !== null, new Error(`SchemaLoader(vc): ${this.filePath}: Column ${columnName} has invalid name: ${name}`));
         // Check comment
-        assert(column.comment, new Error(`SchemaLoader(vc): Column ${columnName} comment is missing`));
+        assert(column.comment, new Error(`SchemaLoader(vc): ${this.filePath}: Column ${columnName} comment is missing`));
 
         // Checking foreignTable
         if (column.foreignTable) {
-            assert(column.foreignTable.match(ValidName.sqlName), new Error(`SchemaLoader(vc): invalid foreignTable => ${column.foreignTable}`));
+            assert(column.foreignTable.match(ValidName.sqlName), new Error(`SchemaLoader(vc): ${this.filePath}: invalid foreignTable => ${column.foreignTable}`));
         }
 
         // Checking refColumn
         if (column.refColumn) {
-            assert(column.refColumn.match(ValidName.sqlName), new Error(`SchemaLoader(vc): invalid refColumn name => ${column.refColumn}`));
+            assert(column.refColumn.match(ValidName.sqlName), new Error(`SchemaLoader(vc): ${this.filePath}: invalid refColumn name => ${column.refColumn}`));
         }
 
 
@@ -137,13 +172,16 @@ export class SchemaLoader {
             // 1. Check for external tables
             const filter = _.filter(this.schemaFileObj.externalTables || [], (ext: any) => ext.name === ft);
             if (filter.length === 0) {
-                assert(this.tables[ft], new Error(`SchemaLoader(vfc): No foreign Table ${ft} for column ${columnKey}:${column.name}`));
+                assert(this.tables[ft], new Error(`SchemaLoader(vfc): ${this.filePath}: No foreign Table ${ft} for column ${columnKey}:${column.name}`));
 
                 // Checking Ref column
                 const rc = column.refColumn || '';
                 if (rc) {
                     const columns = this.tables[ft].columns;
-                    assert(columns.includes(rc) === true, new Error(`SchemaLoader(vfc): no ref column ${rc} for ${column}:${column.name} with foreign table ${ft}`));
+                    assert(
+                        columns.includes(rc) === true,
+                        new Error(`SchemaLoader(vfc): ${this.filePath}: no ref column ${rc} for ${column}:${column.name} with foreign table ${ft}`)
+                    );
                 }
                 column.refSchema = this.tables[ft].schema;
             } else {
