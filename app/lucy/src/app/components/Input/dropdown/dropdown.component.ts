@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { DropdownObject } from 'src/app/services/dropdown.service';
 import { FormControl } from '@angular/forms';
-import { Subject, ReplaySubject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
-import { MatSelect } from '@angular/material';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 interface Bank {
   id: string;

@@ -1,14 +1,11 @@
 import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
-import { FormsModule } from '@angular/forms';
 import { AccessRequest } from 'src/app/models/AccessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
-import * as bootstrap from 'bootstrap';
-import * as $AB from 'jquery';
 import { Role } from 'src/app/models/Role';
-import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * Output of Access request modal
@@ -109,7 +106,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
   @Output() acessRequestModalEmitter = new EventEmitter<AccessRequestResponseModalEmitterResponse>();
   @ViewChild('requestResponseModal') private content;
 
-  constructor(private admin: AdminService, private roles: RolesService, private formsModule: FormsModule, private userService: UserService, private modalService: NgbModal) { }
+  constructor(private admin: AdminService, private roles: RolesService, private userService: UserService, private modalService: NgbModal) { }
 
   ngOnInit() {
     this.roles.getRoles().then((value) => {
