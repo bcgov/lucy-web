@@ -42,45 +42,45 @@ describe('LocationInputComponent (isolated test)', () => {
     });
 });
 
-describe('LocationInputComponent (shallow test)', () => {
-    let component: LocationInputComponent;
-    let fixture: ComponentFixture<LocationInputComponent>;
-    let obsObject: Observation;
+// describe('LocationInputComponent (shallow test)', () => {
+//     let component: LocationInputComponent;
+//     let fixture: ComponentFixture<LocationInputComponent>;
+//     let obsObject: Observation;
 
-    beforeAll(async() => {
-        TestBed.configureTestingModule({
-            declarations: [LocationInputComponent],
-            providers: [ConverterService, DropdownService, ValidationService, CookieService, DummyService, CodeTableService, {provide: APP_BASE_HREF, useValue: '/'}],
-            imports: [ HttpClientModule, RouterModule.forRoot([]) ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-        }).compileComponents();
-        fixture = TestBed.createComponent(LocationInputComponent);
-        const dummyService: DummyService = TestBed.get(DummyService);
-        component = fixture.componentInstance;
-        await dummyService.createDummyObservation([]).then((value) => {
-            obsObject = value;
-            component.object = value;
-        });
-        fixture.detectChanges();
-    });
+//     beforeAll(async() => {
+//         TestBed.configureTestingModule({
+//             declarations: [LocationInputComponent],
+//             providers: [ConverterService, DropdownService, ValidationService, CookieService, DummyService, CodeTableService, {provide: APP_BASE_HREF, useValue: '/'}],
+//             imports: [ HttpClientModule, RouterModule.forRoot([]) ],
+//             schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+//         }).compileComponents();
+//         fixture = TestBed.createComponent(LocationInputComponent);
+//         const dummyService: DummyService = TestBed.get(DummyService);
+//         component = fixture.componentInstance;
+//         await dummyService.createDummyObservation([]).then((value) => {
+//             obsObject = value;
+//             component.object = value;
+//         });
+//         fixture.detectChanges();
+//     });
 
-    it('should instantiate', async() => {
-        fixture.whenStable().then(() => {
-            expect(component).toBeDefined();
-        });
-    });
+//     it('should instantiate', async() => {
+//         fixture.whenStable().then(() => {
+//             expect(component).toBeDefined();
+//         });
+//     });
 
-    /**
-     * Test validity of lat & long input values (should be within BC)
-     */
-    it('should accept latitude = 48.00000 (within BC)', async() => {
-        fixture.whenStable().then(() => {
-            component.object.latitude = `48.00000`;
-            component.object.latitude.dispatchEvent(new Event('input'));
-            expect(component.validLat).toBeTruthy();
-            expect(component.mapCenter.latitude).toEqual(48);
-        });
-    });
+//     /**
+//      * Test validity of lat & long input values (should be within BC)
+//      */
+//     it('should accept latitude = 48.00000 (within BC)', async() => {
+//         fixture.whenStable().then(() => {
+//             component.object.latitude = `48.00000`;
+//             component.object.latitude.dispatchEvent(new Event('input'));
+//             expect(component.validLat).toBeTruthy();
+//             expect(component.mapCenter.latitude).toEqual(48);
+//         });
+//     });
 
     // it('should accept latitude = 61.00000 (within BC)', async() => {
     //     componentFixture.whenStable().then(() => {
@@ -281,4 +281,4 @@ describe('LocationInputComponent (shallow test)', () => {
     //     });
     // });
 
-});
+// });

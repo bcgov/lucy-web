@@ -14,7 +14,7 @@ import { AlertService } from 'src/app/services/alert.service';
 })
 export class UserCellComponent implements OnInit {
 
-  public activeRoles: Role[] = []
+  public activeRoles: Role[] = [];
 
   get username(): string {
     return this.user.preferredUsername;
@@ -29,11 +29,15 @@ export class UserCellComponent implements OnInit {
   }
 
   get email(): string {
-    return this.user.email
+    return this.user.email;
   }
 
   get role(): string {
-    return this.userService.getUserAccessCode(this.user).role;
+    if (this.userService.getUserAccessCode(this.user)) {
+      return this.userService.getUserAccessCode(this.user).role;
+    } else {
+      return '';
+    }
   }
 
   get isActive(): boolean {
