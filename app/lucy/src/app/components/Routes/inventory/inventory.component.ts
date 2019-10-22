@@ -183,6 +183,10 @@ export class InventoryComponent implements OnInit {
   // }
 
   /************ Sorting Function ************/
+  /**
+   * Sorts observations based on the date that the
+   * observation was made
+   */
   sortByDateObserved() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
@@ -217,6 +221,10 @@ export class InventoryComponent implements OnInit {
     this.initMaterialTable();
   }
 
+  /**
+   * Sorts observations based on the date that the observation
+   * info was last updated (updatedAt property)
+   */
   sortByDateUpdated() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
