@@ -60,7 +60,7 @@ export class InventoryComponent implements OnInit {
   sortAscending = false;
   sortingByObservationId = false;
   sortingByDateObserved = false;
-  sortingByDateUpdated = false;
+  sortingByDateUpdated = true;   // default sorting mechanism is by date last updated
   sortingBySpecies = false;
   sortingByObserver = false;
   /************ End of Sorting Variables ************/
