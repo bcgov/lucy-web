@@ -176,51 +176,32 @@ export class ObservationService {
   }
 
   /**
+   * Helper function to create an empty abstract object
+   * with all property values undefined
+   */
+  public createEmptyObject = (obj: any, props: string[]) => {
+    for (const k of props) {
+      Object.defineProperty(obj, k, {
+        value: undefined,
+        writable: true,
+      });
+    }
+  }
+
+  /**
    * Return an empty observation object
    */
   public getEmptyObservation(): Observation {
-    const object: Observation = {
-      observation_id: -1,
-      // Basic //
-      // Location
-      lat: undefined,
-      long: undefined,
-      date: undefined,
-      updatedAt: undefined,
-      // Observer
-      observerFirstName: undefined,
-      observerLastName: undefined,
-      speciesAgency: undefined,
-      // Invasive Plant
-      species: undefined,
-      jurisdiction: undefined,
-      density: undefined,
-      distribution: undefined,
-      observationType: undefined,
-      specificUseCode: undefined,
-      soilTexture: undefined,
-      width: undefined,
-      length: undefined,
-      accessDescription: undefined,
-      // Advanced //
-      // indicators
-      sampleTakenIndicator: false,
-      wellIndicator: false,
-      legacySiteIndicator: false,
-      edrrIndicator: false,
-      researchIndicator: false,
-      specialCareIndicator: false,
-      biologicalIndicator: false,
-      aquaticIndicator: false,
-      // Further details
-      proposedAction: undefined,
-      sampleIdentifier: undefined,
-      rangeUnitNumber: undefined,
-      aspectCode: undefined,
-      slopeCode: undefined,
-      observationGeometry: undefined,
-      mechanicalTreatments: [],
-    };
+    const observationProps = ['observation_id', 'lat', 'long', 'date', 'updatedAt', 'observerFirstName', 'observerLastName', 'speciesAgency', 'species', 'jurisdiction',
+   'density', 'distribution', 'observationType', 'specificUseCode', 'soilTexture', 'width', 'length', 'accessDescription', 'sampleTakenIndicator',
+   'wellIndicator', 'legacySiteIndicator', 'edrrIndicator', 'researchIndicator', 'specialCareIndicator', 'biologicalIndicator',
+   'aquaticIndicator', 'proposedAction', 'sampleIdentifier', 'rangeUnitNumber', 'aspectCode', 'slopeCode', 'observationGeometry'];
+
+    let object: Observation;
+    this.createEmptyObject(object, observationProps);
+    // add mechanicalTreatments property (specific to Observation object) as an empty list instead of 'undefined'
+    Object.defineProperty(object, 'mechanicalTreatments', []);
+
     return object;
   }
 
