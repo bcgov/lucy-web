@@ -38,6 +38,21 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
                 
             }
 
+            if (!status.containerStatuses) {
+                console.log(`Unable to fetch API resource: ${resourceName} container state (not defined)`);
+                console.log(`${JSON.stringify(data)}`)
+
+                // Retry if count is not zero
+                if (count > 0) {
+                    console.log(`Retry until count is 0: ${resourceName}`);
+                    count = count - 1;
+                    setTimeout(check, timeout);
+                    return;
+                } else {
+                    throw new Error(`Unable to fetch API resource: ${resourceName} status`);
+                }
+            }
+
             // Checking Container state
             if ((status.containerStatuses && status.containerStatuses.length === 0)) {
                 console.log(`Unable to fetch API resource: ${resourceName} container state`);
@@ -48,11 +63,14 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
                     console.log(`Retry until count is 0: ${resourceName}`);
                     count = count - 1;
                     setTimeout(check, timeout);
+                    return;
                 } else {
                     throw new Error(`Unable to fetch API resource: ${resourceName} status`);
                 }
                 
             }
+
+            
 
             console.log(`Checking Container State: ${resourceName}`);
             const containerStatus = status.containerStatuses[0] || {};
