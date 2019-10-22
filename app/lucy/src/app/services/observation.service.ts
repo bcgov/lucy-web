@@ -34,6 +34,7 @@ export class ObservationService {
       lat: +String(observation.lat),
       long: +String(observation.long),
       date: observation.date,
+      updatedAt: observation.updatedAt,
       // Observer
       observerFirstName: observation.observerFirstName,
       observerLastName: observation.observerLastName,
@@ -185,6 +186,7 @@ export class ObservationService {
       lat: undefined,
       long: undefined,
       date: undefined,
+      updatedAt: undefined,
       // Observer
       observerFirstName: undefined,
       observerLastName: undefined,
