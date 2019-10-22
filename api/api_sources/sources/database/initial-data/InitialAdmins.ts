@@ -21,24 +21,6 @@
  */
 export const InitialUsers = [
     {
-        email: 'amir@freshworks.io',
-        preferred_username: '###',
-        first_name: 'Amir',
-        last_name: 'Shayegh',
-        additionalInitDataInfo: {
-            roles: [1]
-        }
-    },
-    {
-        email: 'pushan@freshworks.io',
-        preferred_username: '#',
-        first_name: 'Pushan',
-        last_name: 'Mitra',
-        additionalInitDataInfo: {
-            roles: [2]
-        }
-    },
-    {
         email: 'istest1@gov.bc.ca',
         preferred_username: 'istest1@idir',
         first_name: 'Test',

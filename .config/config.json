@@ -46,5 +46,22 @@
             "clientId": "invasives-bc",
             "realm": "dfmlcg7z"
         }
+    },
+    "migrationInfo" : {
+        "dev": {
+            "type": "refresh",
+            "cleanup": "none",
+            "dbSeed": "yes"
+        },
+        "test": {
+            "type": "refresh",
+            "cleanup": "none",
+            "dbSeed": "yes"
+        },
+        "prod": {
+            "type": "refresh",
+            "cleanup": "none",
+            "dbSeed": "yes"
+        }
     }
 }
