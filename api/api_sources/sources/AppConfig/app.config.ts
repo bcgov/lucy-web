@@ -20,6 +20,8 @@ class AppConfiguration {
     public appName: string = process.env.PROJECT_NAME || 'lucy';
     public dbs: string[] = ['templateDB'];
 
+    
+
     /**
      * @description Getter for shard instance
      * @return AppConfiguration
