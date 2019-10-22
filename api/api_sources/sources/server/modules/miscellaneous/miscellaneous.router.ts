@@ -24,7 +24,8 @@
  */
 import * as express from 'express';
 import * as assert from 'assert';
-import { errorBody} from '../../core';
+import { errorBody, BaseRoutController, RouteHandler, Route, HTTPMethod} from '../../core';
+import { testIdr1Token, testIdr3Token, viewerToken } from '../../../test-helpers/token';
 
 export const miscellaneous = () => {};
 
@@ -32,9 +33,79 @@ export const defaultRoute = () => {
     const route = express.Router();
     route.all('*', (_req, _res) => {
         assert(_req);
-        _res.status(404).json(errorBody('Route Not Found', []))
+        _res.status(404).json(errorBody('Route Not Found', []));
     });
     return route;
 };
+
+/**
+ * @description Tokens map
+ */
+const tokens = {
+    admin : testIdr1Token(),
+    sme: testIdr3Token(),
+    viewer: viewerToken()
+};
+
+/**
+ * @description MiscellaneousRoute route controller
+ */
+export class MiscellaneousRouteController extends BaseRoutController<any> {
+    static get shared(): MiscellaneousRouteController {
+        return this.sharedInstance<MiscellaneousRouteController>() as MiscellaneousRouteController;
+    }
+
+    constructor() {
+        super();
+        this.applyRouteConfig();
+    }
+
+    get versionString(): string {
+        return `${process.env.ENVIRONMENT || 'default'}-${process.env.VERSION || '0.0'}-${process.env.CHANGE_VERSION || '0'}`;
+    }
+
+    @Route({
+        path: 'api/misc#/version',
+        description: 'Version API for app',
+        method: HTTPMethod.get,
+        responses: {
+            200: {
+                description: 'Success',
+                schema: {
+                    type: 'object'
+                }
+            }
+        }
+    })
+    get version(): RouteHandler {
+        return this.routeConfig<any>('version', async () => [200, {
+            version: this.versionString,
+            env: process.env.ENVIRONMENT || 'default',
+            changeId: process.env.CHANGE_VERSION || 'NA'
+        }]);
+    }
+
+    @Route({
+        path: 'api/misc#/test-token/:key',
+        description: 'Get test token for testing',
+        method: HTTPMethod.get
+    })
+    get testToken(): RouteHandler {
+        return this.routeConfig<any>('test-token', async (d: any, req: express.Request) => [200, {
+            token: tokens[req.params.key] || ''
+        }]);
+    }
+
+    @Route({ description: 'Test route', path: 'api/misc#/test', index: 1, method: HTTPMethod.get})
+    get test(): RouteHandler {
+        return this.routeConfig<any>('test', async() => [200, {}]);
+    }
+}
+
+/**
+ * @description Miscellaneous Router
+ */
+export const miscellaneousRouter = () => MiscellaneousRouteController.shared.router;
+
 // -----------------------------------------------------------------------------------------------------------
 

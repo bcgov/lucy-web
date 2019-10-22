@@ -22,9 +22,9 @@
 import {Entity, Column, ManyToOne, Unique, JoinColumn, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
 import { BaseModel } from './baseModel';
 import { User } from './user';
-import { SessionActivity } from './userSessionActivity';
+import { SessionActivity } from './session.activity';
 import { DataModelController } from '../data.model.controller';
-import { UserSchema, UserSessionSchema} from '../database-schema'
+import { UserSchema, UserSessionSchema} from '../database-schema';
 
 /**
  * @description Model class to hold and handle user session data
@@ -46,6 +46,7 @@ export class UserSession extends BaseModel {
 
 
     @Column({
+        name: UserSessionSchema.columns.token,
         nullable: true
     })
     token: string;
@@ -74,8 +75,8 @@ export class UserSession extends BaseModel {
     // User
     @ManyToOne(type => User, user => user.sessions, { eager: true})
     @JoinColumn({
-        name: UserSessionSchema.schema.columns.refUserId,
-        referencedColumnName: UserSchema.schema.columns.id
+        name: UserSessionSchema.columns.user,
+        referencedColumnName: UserSchema.id
     })
     user: User;
 
@@ -94,7 +95,7 @@ export class UserSessionDataController extends DataModelController<UserSession> 
      * @description Getter for shared instance
      */
     public static get shared(): UserSessionDataController {
-        return this.sharedInstance<UserSession>(UserSession, UserSessionSchema);
+        return this.sharedInstance<UserSession>(UserSession, UserSessionSchema) as UserSessionDataController;
     }
 }
 

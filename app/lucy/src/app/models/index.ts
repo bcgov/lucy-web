@@ -3,7 +3,9 @@ export * from './User';
 
 export * from './category';
 
-export * from './species';
+export * from './observation';
+
+export * from './FormMode';
 
 export interface RemoteAPIStatus {
     success: boolean;

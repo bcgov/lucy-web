@@ -14,13 +14,45 @@ export class AppConstants {
     };
 
     // API
-    static API_baseURL = 'http://localhost:80/api/v1';
+    static API_baseURL = 'http://localhost:80/api';
+
+    // Default Config
+    static CONFIG = {
+        apiHost: 'localhost',
+        changeVersion: 'NA',
+        env: 'prod',
+        version: 'NA'
+    };
 
     // API authenticated user endpoints
     static get API_me(): string { return `${AppConstants.API_baseURL}/account/me`; }
     static get API_DataEntryAccessRequest(): string { return `${AppConstants.API_baseURL}/request-access`; }
     static get API_messages(): string { return `${AppConstants.API_baseURL}/account/message`; }
     static get API_allUsers(): string { return `${AppConstants.API_baseURL}/account/users`; }
+
+    // Form Config Mechanical
+    static get API_Form_MechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical/config`; }
+    // Form Config Observation
+    static get API_Form_Observation(): string { return `${AppConstants.API_baseURL}/observation/config`; }
+     // Form Config Chemical
+     static get API_Form_ChemicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/chemical/config`; }
+
+    // Observation
+    static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }
+    static get API_observationSpecies(): string { return `${AppConstants.API_baseURL}/observation/species`; }
+
+    // Code Tables
+    static get API_CodeTables(): string { return `${AppConstants.API_baseURL}/codes`; }
+
+    static API_observationWith(id: number): string {
+         return `${AppConstants.API_baseURL}/observation/${id}`;
+    }
+
+    // Mechanical Treatment
+    static get API_mechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical`; }
+    static API_mechanicalTreatmentWith(id: number): string {
+        return `${AppConstants.API_baseURL}/treatment/mechanical/${id}`;
+   }
 
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
@@ -46,11 +78,7 @@ export class AppConstants {
     }
 
     // API Reference data
-    static API_refrenceData = {
-        roles: `${AppConstants.API_baseURL}/account/roles`
-    }
-    
-
+    static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
 }
 
 

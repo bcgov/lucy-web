@@ -169,7 +169,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             const result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.migrationsTableName}`);
             AppDatabaseMigrationManager.logger.info(`revert | Migration count: ${JSON.stringify(result)}`);
             if (result[0].count > 0) {
-                await this._revert(connection, parseInt(result[0].count));
+                await this._revert(connection, parseInt(result[0].count, 10));
             } else {
                 AppDatabaseMigrationManager.logger.info('No migration to revert');
             }

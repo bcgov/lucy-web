@@ -1,0 +1,23 @@
+<div class="animated overlay overly-animation" [ngClass]="presenting ? 'fadeIn' : 'fadeOut'">
+<div class="alert-position animated message-container-animation" [ngClass]="presenting ? 'fadeIn' : ''">
+    <div class="container container-fluid alert-container animated message-animation" [ngClass]="presenting ? 'bounceInDown' : 'bounceOutUp'">
+      <div class="row">
+        <div class="col-12 header">
+            {{title}}
+        </div>
+      </div>
+      <div class="row" >
+        <div class="col-12 message" *ngFor="let line of body; let i = index">
+            {{line}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col options" *ngFor="let button of buttons; let i = index" >
+            <button mat-raised-button class="button" (click)="buttonPressed(button)">
+                {{button.name}}
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

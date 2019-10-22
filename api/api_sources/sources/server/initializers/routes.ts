@@ -19,9 +19,15 @@
 /**
  * Imports
  */
-import { Application} from 'express';
-import { accountRoute, requestAccessRoutes} from '../modules';
-import { defaultRoute} from '../modules';
+import { Application } from 'express';
+import { accountRoute,
+    requestAccessRoutes,
+    observationRoute,
+    mechanicalTreatmentRoute,
+    CodeTableRouteController,
+    ChemicalTreatmentRouteController
+} from '../modules';
+import { defaultRoute, miscellaneousRouter } from '../modules';
 
 /**
  * @description Configuring main app routes
@@ -29,10 +35,25 @@ import { defaultRoute} from '../modules';
  */
 export const routes = (app: Application) => {
     // Add account
-    app.use('/api/v1/account', accountRoute());
+    app.use('/api/account', accountRoute());
 
     // Request Access routes
-    app.use('/api/v1/request-access', requestAccessRoutes());
+    app.use('/api/request-access', requestAccessRoutes());
+
+    // Observation
+    app.use('/api/observation', observationRoute());
+
+    // Mechanical Treatment
+    app.use('/api/treatment/mechanical', mechanicalTreatmentRoute());
+
+    // Chemical Treatment
+    app.use('/api/treatment/chemical', ChemicalTreatmentRouteController.shared.router);
+
+    // Codes
+    app.use('/api/codes', CodeTableRouteController.shared.router);
+
+    // Miscellaneous
+    app.use('/api/misc', miscellaneousRouter());
 
     // Default Route
     app.use('*', defaultRoute());

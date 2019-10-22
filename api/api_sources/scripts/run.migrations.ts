@@ -19,16 +19,26 @@
 //
 
 /**
+ * Imports
+ */
+import 'reflect-metadata';
+
+/**
  * Application Migration task
  */
 import { AppDatabaseMigrationManager } from '../sources/database/migration.helpers';
+import { AppEnvConstant } from '../sources/app-constants';
 /**
  * Script
  */
 (() => {
-    // Refreshing database: Drop all existing migration and re
-    AppDatabaseMigrationManager.shared.refresh();
-    // AppDatabaseMigrationManager.shared.migrate();
+    if (process.env.DB_MIGRATION_TYPE === AppEnvConstant.DB_MIGRATION_TYPE_REFRESH) {
+        // Refreshing database: Drop all existing migration and refresh
+        AppDatabaseMigrationManager.shared.refresh();
+    } else {
+        // Migrating db
+        AppDatabaseMigrationManager.shared.migrate();
+    }
 })();
 
 // -----

@@ -1,0 +1,65 @@
+<br />
+<div class="container">
+    <!-- Basic User Info -->
+    <div class="row">
+        <!-- Name and Role -->
+        <div class="col-auto col-md-1 d-none d-md-block">
+            <button mat-fab [matMenuTriggerFor]="userOptionsInProfile" class="user-icon">
+        {{ userInitials }}
+      </button>
+            <mat-menu #userOptionsInProfile="matMenu">
+                <!-- Update Info -->
+                <button mat-menu-item (click)="navigateToUserInfo()" class="btn-with-icon">
+          Update Information
+        </button>
+            </mat-menu>
+        </div>
+        <div class="col-auto col-md-7">
+            <div class="col-12">
+                <h3>{{ userFullName }}</h3>
+            </div>
+            <div class="col-auto col-12 body-text">
+                {{ userRoleAndOrganization }}
+            </div>
+        </div>
+    </div>
+    <br />
+    <!-- access request -->
+    <div class="row" *ngIf="showRequestDataEntryAccessMessage">
+        <div class="col-12 user-access-request">
+            <div class="col-12">
+                <h5>Need Data Entry Access?</h5>
+            </div>
+            <div class="col-12 body-text">
+                if you or your organization need to be able to edit data you'll need to request access to the relevant database. You can adjust your access settings in the profile management screen.
+            </div>
+            <br />
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-auto col-md-6 to-the-right">
+                        <button class="btn user-access-request-button button-fill" (click)="requestDataEntryAccess()">
+              Request Data Entry Access
+            </button>
+                    </div>
+                    <div class="col-auto col-md-6 to-the-left">
+                        <button class="btn user-access-request-button button-hollow" (click)="hideRequestDataEntryAccessMessage()">
+              Hide this Message
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div class="container under-construction animated zoomInDown">
+        <div class="row justify-content-center">
+            <h3>We're working on it...</h3>
+        </div>
+        <div class="row justify-content-center">
+            <lottie-animation-view [options]="lottieConfig" [width]="300" [height]="300" (animCreated)="handleAnimation($event)">
+            </lottie-animation-view>
+        </div>
+    </div>
+</div>

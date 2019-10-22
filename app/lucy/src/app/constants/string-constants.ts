@@ -1,5 +1,16 @@
 export const StringConstants = {
 
+    //////////////////////////////////////////////////////////
+    // Strings for UI
+    app_Title: (() => {
+        return 'InvasivesBC';
+    })(),
+
+    database_Title: (() => {
+        return 'InvasivesBC Database';
+    })(),
+    //////////////////////////////////////////////////////////
+
     /** DB Access Related text **/
 
     // Badges for access types
@@ -12,6 +23,19 @@ export const StringConstants = {
     })(),
 
     databaseAccess_Admin_Badge: (() => {
+        return 'Admin Access';
+    })(),
+    ////////////////////////////////////////////
+    // Badges for access types
+    databaseAccess_View_Desc: (() => {
+        return 'View Only Database Access';
+    })(),
+
+    databaseAccess_DataEntry_Desc: (() => {
+        return 'You are now have Data Editor database access. You are now able to add observations.';
+    })(),
+
+    databaseAccess_Admin_Desc: (() => {
         return 'Admin Access';
     })(),
     ////////////////////////////////////////////

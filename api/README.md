@@ -1,29 +1,39 @@
-# Lucy - Invasive species management tools (ISMT)
+# invasiveBC - Invasive species management tools (ISMT) - API
+This is the application source code for the Restful API of the Invasive species database.
 
-
-
-# Set-up
-### Note: Please use the below instructions as written to run the app seamlessly
-* Install Docker
-    link: https://gist.github.com/rstacruz/297fc799f094f55d062b982f7dac9e41
+## Setting Up
+### Requirements
+* Install Docker following the instructions in the project root README
 * Install GMAKE
 * Clone repository
 * Change to project dir (from command line or terminal)
-* oc for open shift build and deployment
+* `oc` for open shift build and deployment
 
-## Docker
+### Setting Up Env
 
-### Unix/Linux/Mac/Windows
+* Duplicate `env.example` to `env.local` file
+* Create empty `.env` file in root dir
+* Update app secret values in `env.local` (env.local is .gitignored and will not be committed)
 
-### Setting up Env
+## Running the Application
 
-* Duplicate env.example to env.local file
-* Create Empty .env file in root dir
-* Update app secret values in env.local (env.local is .gitignored)
+*Run App in Local env*
 
-### Run App in Local env
+* RUN APP: `make local`
+* DEBUG APP: `make local_debug`
+* Stop App: `make close_local`
+* Clean App: `make clean_local`
 
-* RUN APP : make local
-* DEBUG APP: make local_debug
-* Stop App: make close_local
-* Clean App: make clean_local
+## Closing the Application
+
+## Clean Remote Instance of the application
+
+Clean Remote:  
+`make clean-remote PR={PR_NUM | static deployment name like dev/test/prod} ENV={dev | test | prod}`
+
+*Examples*
+
+* make clean-remote PR=99 ENV=dev
+* make clean-remote PR=dev ENV=dev
+
+## Running Tests

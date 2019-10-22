@@ -1,0 +1,25 @@
+.login-card { 
+    max-width: 400px;
+    max-height: 400px;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.center {
+    align-content: center;
+    text-align: center;  
+}
+
+.login-btn {
+    width: 90%;
+    color: #FFFFFF !important;
+    background-color: #234075 !important;
+}
+
+.page-bg {
+    background: #F5F6FA;
+    min-height: 100%;
+}

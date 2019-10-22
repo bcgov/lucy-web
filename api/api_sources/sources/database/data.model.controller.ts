@@ -19,10 +19,20 @@
 /**
  * Imports
  */
-import {Connection, getConnection, Repository, ObjectLiteral} from 'typeorm';
-import { LoggerBase} from '../server/logger';
+import {
+    Connection,
+    getConnection,
+    ObjectLiteral
+} from 'typeorm';
 import { SharedDBManager} from './dataBaseManager';
-import { ApplicationTable } from './applicationSchemaInterface';
+import {
+    BaseDataController,
+    BaseDataModelController
+} from '../libs/core-database';
+// import { ModelFactory } from './factory';
+
+
+export type DataController = BaseDataController;
 
 /**
  * @description Base DataModelController. This class provides -
@@ -31,140 +41,17 @@ import { ApplicationTable } from './applicationSchemaInterface';
  *  3. Generic in nature associated with model and schema
  * @export class DataModelController<T>
  */
-export class DataModelController<T extends ObjectLiteral> extends LoggerBase {
-    // Shared instance: Managed by subclasses
-    protected static shareInstance: any;
-
-    // Entity Class object (constructor)
-    entity: any;
-    // Schema interface for Entity
-    schemaInterface: any;
-
-    /**
-     * @description Constructing object with entity and schema associated with entity
-     * @param any entity
-     * @param schema schema
-     */
-    constructor(entity: any, schema?: any) {
-        super();
-        this.entity = entity;
-        this.schemaInterface = schema;
-    }
-    /**
-     * @description Creator and Getter of shared instance, manage by subclasses
-     * @param any entity
-     * @param any schema
-     */
-    static sharedInstance<U>(entity: any, schema?: any): DataModelController<U> {
-        return (this.shareInstance || (this.shareInstance = new this(entity, schema)));
-    }
-
+export class DataModelController<T extends ObjectLiteral> extends BaseDataModelController<T> {
     /**
      * @description Getter of db connection
      * @getter connection Connection
      */
-    private get connection(): Connection {
+    protected get connection(): Connection {
         return SharedDBManager.connection || getConnection();
     }
 
-    /**
-     * @description Create query object for primary key (*id) of associated data model
-     * @method idQuery
-     * @param number value
-     */
-    idQuery(value: number): object {
-       const qry = {};
-       qry[this.schema.columns.id] = value;
-       return qry;
-    }
-
-    /**
-     * @description Create model object
-     * @method create
-     */
-    create(): T {
-        return new this.entity() as T;
-    }
-
-    /**
-     * @description Returns typeorm repo of associated entity
-     * @getter repo Repository<T>
-     */
-    public get repo(): Repository<T> {
-        return this.connection.getRepository(this.entity);
-    }
-
-
-    /**
-     * @description Method to remove object by id
-     * @param number id
-     */
-    async removeById( id: number): Promise<void> {
-    }
-
-    /**
-     * @description Method to find object by id
-     * @param number id
-     */
-    async findById(id: number): Promise<T> {
-        return await this.repo.findOne(this.idQuery(id)) as T;
-    }
-
-    /**
-     * @description Method to get all object filtered by query
-     * @param object query
-     */
-    async all(query?: object): Promise<T[]> {
-        const items: T[] = await this.repo.find(query) as T[];
-        return items;
-    }
-
-    /**
-     * @description Method to fetch single object filtered by query
-     * @param object query
-     */
-    async fetchOne(query: object): Promise<T> {
-        const item: T = await this.repo.findOne(query) as T;
-        return item;
-    }
-
-    /**
-     * @description Method to save model in db
-     * @param T value
-     */
-    async saveInDB(value: T): Promise<void> {
-        await this.repo.save(value);
-        return;
-    }
-
-    /**
-     * @description Method to find or create object with given info
-     * @param object info
-     */
-    async findOneOrCreate(info: object): Promise<T> {
-        try {
-            const item: T = await this.repo.findOne(info) as T;
-            if (item) {
-                return item;
-            } else {
-                const manager = this.connection.manager;
-                const newItem: T = await manager.create(this.entity, info) as T;
-                return newItem;
-            }
-        } catch (exp) {
-            DataModelController.logger.error(`findOneOrCreate: exception: ${exp}`);
-            throw exp;
-        }
-    }
-
-    async remove(data: T): Promise<void> {
-        const repo =  this.connection.getRepository(this.entity);
-        await repo.remove(data);
-        return;
-    }
-
-    get schema(): ApplicationTable {
-        return this.schemaInterface.schema;
-    }
+    /*factory(): Promise<T> {
+        return ModelFactory(this, this.dependencies)();
+    }*/
 }
 // --------------------------------------------------------------------------------------------

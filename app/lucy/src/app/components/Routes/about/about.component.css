@@ -1,0 +1,70 @@
+/**
+ * Copyright 2019 Province of British Columbia
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.header-container {
+    width: 100%;
+    background: linear-gradient(135deg, #0053A4 0%, #002C71 100%);
+    /* box-shadow: 0 -20px rgba(190, 190, 205, 0.5); */
+}
+
+.header-container-title {
+    color: white;
+    font-size: 20px;
+    line-height: 32px;
+    padding: 15px 0px;
+    font-weight: 500;
+}
+
+.section-container {
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 5px 0 #E5E9F2;
+    padding: 25px 15px;
+}
+
+.section-title {
+    color: #000000;
+    font-size: 20px;
+    line-height: 24px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 500;
+}
+
+.section-divider {
+    box-sizing: border-box;
+    height: 1px;
+    width: 100%;
+    border: 2px solid #E2A014;
+}
+
+.body {
+    padding-left: 50px;
+}
+
+.subsection-header {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 300;
+    color: darkgrey;
+    padding: 10px 0px 10px 0px;
+}
+
+.bg {
+    background: #F5F6FA;
+    min-height: 100%;
+    padding-top: 25px;
+}

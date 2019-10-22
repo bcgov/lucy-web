@@ -1,0 +1,19 @@
+<div *ngIf="!readonly" class="col-12 field d-inline-block animated" id="{{fieldId}}">
+    <mat-form-field>
+        <mat-select [formControl]="optionCtrl" placeholder="{{fieldHeader}}" [(ngModel)]="selectedItemName" #singleSelect>
+          <app-mat-select-search [formControl]="optionFilterCtrl"></app-mat-select-search>
+          <mat-option *ngFor="let item of filteredItems; let i = index" [value]="item.name" (click)="selected(item)">
+              {{item.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    <!-- https://stackblitz.com/edit/mat-select-search -->
+</div>
+
+<div *ngIf="readonly">
+    <app-field
+    [mode]="mode"
+    [header]="fieldHeader"
+    [value]="selectedItemName">
+  </app-field>
+</div>

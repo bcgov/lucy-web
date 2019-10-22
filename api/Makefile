@@ -30,6 +30,14 @@ all 		: help
 local:      |  setup-local close-local build-local run-local         ## Task-Alias -- Run the steps for a local-build.
 local-debug: | setup-local close-local build-local run-debug
 
+schema-spy: | close-local build-local run-local wait-for-app schema-spy-run
+
+deploy-remote: | remote-build remote-deploy
+deploy-api: | build-remote-api deploy-remote-api
+deploy-app: | build-remote-app deploy-remote-app
+remote-build: | build-remote-api build-remote-app
+remote-deploy: | deploy-remote-api deploy-remote-app
+
 
 # ------------------------------------------------------------------------------
 # Status Output
@@ -86,7 +94,55 @@ pod:
 	@echo "+\n++ Make: Creating Pod ...\n+"
 	@oc new-app  -e POSTGRESQL_USER=$(DB_USER) -e POSTGRESQL_PASSWORD=$(DB_PASS) -e POSTGRESQL_DATABASE=$(DB_DATABASE) centos/postgresql-95-centos7
 
+clean-dev:
+	@echo "+\n++ Make: Clean Remote Env with pr=$$PR"
+	@echo "+\n++ Cleanin API"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=dev 
+	@echo "+\n++ Cleaning App"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=dev
 
+clean-remote:
+	@echo "+\n++ Make: Clean Remote Env with pr=$$PR env=$$ENV"
+	@echo "+\n Cleaning API {Build}"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
+	@echo "+\n++ Cleanin API {Deploy}"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+	@echo "+\n++ Cleaning App {Build}"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
+	@echo "+\n++ Cleaning App {Deploy}"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+build-remote-api:
+	@echo "+\n++ Make: Building API with ref = $$PR"
+	@cd ./.pipeline && DEBUG=* npm run build -- --pr=$$PR
+build-remote-app:
+	@echo "+\n++ Make: Building APP with ref = $$PR"
+	@cd ../app/.pipeline && DEBUG=* npm run build -- --pr=$$PR
+deploy-remote-api:
+	@echo "+\n++ Make: Deploying API with ref = $$PR and env=$$ENV type=$$TYPE"
+	@cd ./.pipeline && DEBUG=* npm run pre-deploy -- --pr=$$PR --env=$$ENV
+	@cd ./.pipeline && DEBUG=* npm run setup -- --pr=$$PR --env=$$ENV
+	@cd ./.pipeline && DEBUG=* npm run test -- --pr=$$PR --env=$$ENV
+	@cd ./.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV --type=static
+deploy-remote-app:
+	@echo "+\n++ Make: Deploying APP with ref = $$PR and env=$$ENV"
+	@cd ../app/.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV --type=static
+sonarqube:
+	@echo "+\n Make: Sonarqube analysis"
+	@mkdir -p ~/.docker-vol/sonarqube/data
+	@mkdir -p ~/.docker-vol/sonarqube/logs
+	@docker run -d --name sonarqube -p 9090:9000 -v ~/.docker-vol/sonarqube/data:/opt/sonarqube/data -v ~/.docker-vol/sonarqube/logs:/opt/sonarqube/logs sonarqube || echo "Sonar Container is already exists" && docker start sonarqube || "Sonar Container is running"
+	@echo "\n\n Waiting for sonarqube to start .... (90 sec)"
+	@sleep 30
+	@echo "Waiting .... (60 sec)"
+	@sleep 20
+	@echo "Waiting .... (40 sec)"
+	@sleep 20
+	@echo "Waiting .... (20 sec)"
+	@sleep 20
+	@docker-compose run app_api npm run sonar-analysis
+test-remote-api:
+	@echo "+\n Make: Test Remote API"
+	@cd ./.pipeline && DEBUG=* npm run test -- --pr=$$PR --env=$$ENV
 
 # ------------------------------------------------------------------------------
 # Helper Commands
@@ -111,3 +167,11 @@ app: ## <Helper> :: Executes into the app container.
 
 help:  ## ** Display this help screen.
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+schema-spy-run:
+	@echo "Running Schema Spy on local env"
+	cd ./.docker/schemaSpy/local && sh local-run.sh
+
+wait-for-app:
+	@echo "Waiting 30 sec for app to start"
+	sleep 30
