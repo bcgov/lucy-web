@@ -59,7 +59,8 @@ export class InventoryComponent implements OnInit {
   /************ Sorting Variables ************/
   sortAscending = false;
   sortingByObservationId = false;
-  sortingByDate = false;
+  sortingByDateObserved = false;
+  sortingByDateUpdated = false;
   sortingBySpecies = false;
   sortingByObserver = false;
   /************ End of Sorting Variables ************/
@@ -87,7 +88,7 @@ export class InventoryComponent implements OnInit {
 
 
   /************ Material Table ************/
-  displayedColumns: string[] = ['Observation_id', 'location', 'species', 'date', 'observer', 'actions'];
+  displayedColumns: string[] = ['Observation_id', 'species', 'date_observed', 'last_updated', 'observer', 'actions'];
   dataSource = new MatTableDataSource<Observation>(this.observations);
   @ViewChild(MatPaginator) paginator: MatPaginator;
    /************ END OF Material Table ************/
@@ -182,10 +183,10 @@ export class InventoryComponent implements OnInit {
   // }
 
   /************ Sorting Function ************/
-  sortByDate() {
+  sortByDateObserved() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
-    if (this.sortingByDate) {
+    if (this.sortingByDateObserved) {
       this.sortAscending = !this.sortAscending;
     } else {
       this.sortAscending = false;
@@ -193,7 +194,7 @@ export class InventoryComponent implements OnInit {
 
     // Set sort flags
     this.resetSortFields();
-    this.sortingByDate = true;
+    this.sortingByDateObserved = true;
 
     // Sort objects
     this.observations.sort((left, right): number => {
@@ -205,6 +206,40 @@ export class InventoryComponent implements OnInit {
         }
       }
       if (left.date > right.date) {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    this.initMaterialTable();
+  }
+
+  sortByDateUpdated() {
+    // If aready sorting by this criteria,
+    // Flip between ascending and descending
+    if (this.sortingByDateUpdated) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortAscending = false;
+    }
+
+    // Set sort flags
+    this.resetSortFields();
+    this.sortingByDateUpdated = true;
+
+    // Sort objects
+    this.observations.sort((left, right): number => {
+      if (left.updatedAt < right.updatedAt) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      if (left.updatedAt > right.updatedAt) {
         if (this.sortAscending) {
           return -1;
         } else {
@@ -343,7 +378,8 @@ export class InventoryComponent implements OnInit {
   }
 
   resetSortFields() {
-    this.sortingByDate = false;
+    this.sortingByDateObserved = false;
+    this.sortingByDateUpdated = false;
     this.sortingBySpecies = false;
     this.sortingByObserver = false;
     this.sortingByObservationId = false;
