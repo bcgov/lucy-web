@@ -25,6 +25,7 @@ import * as path from 'path';
 
 const sqlDirPath = 'schema-migration-sql';
 
+export const getSQLDirPath = () => path.resolve(__dirname, `../../../${sqlDirPath}`);
 export const getSQLFilePath = (fileName: string) => path.resolve(__dirname, `../../../${sqlDirPath}/${fileName}`);
 
 export const getSQLFileData = (fileName: string) => fs.readFileSync(getSQLFilePath(fileName), 'utf8')

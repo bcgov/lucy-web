@@ -23,8 +23,8 @@
 // Imports
 import * as assert from 'assert';
 import * as _ from 'underscore';
-import { yaml, verifyObject } from './helpers.utilities';
-import { TableColumnDefinition, getYAMLFilePath } from '../core-database';
+import { yaml, verifyObject, unWrap } from './helpers.utilities';
+import { TableColumnDefinition, getYAMLFilePath, TableVersionDefinition, ColumnChangeOptions } from '../core-database';
 
 export class SchemaCache {
     static _cached: {[key: string]: SchemaLoader} = {};
@@ -45,6 +45,8 @@ interface Schema {
     name: string;
     description: string;
     columns: {[key: string]: TableColumnDefinition };
+    versions?: TableVersionDefinition[];
+    processed?: boolean;
 }
 
 const ValidName = {
@@ -90,6 +92,9 @@ export class SchemaLoader {
                     if (includedSchema.schemaFileObj.externalTables) {
                         schemaFileObj.externalTables = [ ...existing, ...includedSchema.schemaFileObj.externalTables];
                     }
+                    if (includedSchema.tables) {
+                        this.tables = { ...this.tables, ...includedSchema.tables};
+                    }
                 }
             }
             this.schemaFileObj = schemaFileObj;
@@ -102,11 +107,14 @@ export class SchemaLoader {
         this.tables = {};
     }
 
+    label(tag: string, message: string) {
+        return `SchemaLoader (${tag}): ${this.filePath} => ${message}`;
+    }
+
     verify() {
         try {
             _.each(this.schemaFileObj.schemas, (schema, key: string) => this.verifySchema(schema, key));
             this.verifyForeignTable();
-            this.clean();
             return true;
         } catch (excp) {
             console.log(`${this.filePath} : Excp: ${excp}`);
@@ -114,22 +122,47 @@ export class SchemaLoader {
             return false;
         }
     }
-
     verifySchema(rawSchema: any, schemaName: string) {
+        if (rawSchema.skipVerification) {
+            return;
+        }
         const schema: Schema = rawSchema as Schema;
         // console.log(`1. ${JSON.stringify(schema)} <= ${JSON.stringify(rawSchema)} `);
         assert(schema, new Error(`SchemaLoader(v): ${this.filePath}: Unknown schema format: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
         assert(schema.columns, new Error(`SchemaLoader(v): ${this.filePath}: Schema should have columns: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
         assert((
             Object.keys(schema.columns).length > 0),
-            new Error(`SchemaLoader(v): ${this.filePath}: Unknown schema format: ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
+            new Error(`SchemaLoader(v): ${this.filePath}: Unknown schema format(1): ${JSON.stringify(rawSchema)} for schema: ${schemaName}`));
         const tableName = schema.name;
         assert(tableName.match(ValidName.sqlName) !== null, new Error(`SchemaLoader(v): ${this.filePath}: Schema ${schemaName} table name ${tableName} is invalid`));
+        if (schema.processed) {
+            return;
+        }
         const obj = {};
         obj[tableName] = { schema: schemaName, columns: []};
         this.tables = { ...this.tables, ...obj};
         _.each(schema.columns, (column, key: string) => this.verifyColumn(column, key, tableName));
+        schema.versions = schema.versions || [];
+        _.each(schema.versions, (ver, index: number) => this.verifyVersions(ver, index, tableName));
+        schema.processed = true;
         return;
+    }
+
+    verifyVersions(rawVersion: any, index: number, table: string) {
+        const schemaVersion: TableVersionDefinition = rawVersion as TableVersionDefinition;
+        assert(schemaVersion, new Error(this.label('vv', `Unable to load version ${index}`)));
+        assert(schemaVersion.name, new Error(this.label('vv', `Unable to load version.name ${index}`)));
+        if (schemaVersion.columns) {
+            // Checking all columns
+            _.each(schemaVersion.columns, (col, key: string) => this.verifyColumn(col, key, table));
+        }
+        if (schemaVersion.columnChanges) {
+            _.each(schemaVersion.columnChanges, (col: ColumnChangeOptions) => {
+                if (col.column) {
+                    this.verifyColumn(col.column, col.existingKey, table);
+                }
+            });
+        }
     }
 
     verifyColumn(rawColumn: any, columnName: string, table: string) {
@@ -163,6 +196,18 @@ export class SchemaLoader {
 
     verifySchemaForeignTable(schema: Schema) {
         _.each(schema.columns, (col, name: string) => this.verifyColumnForeignTable(col, name));
+        // Checking each version of the schema
+        if (schema.versions) {
+            _.each(schema.versions, (ver: TableVersionDefinition) => {
+                _.each(unWrap(ver.columns, [] as TableColumnDefinition[]), (col: TableColumnDefinition, key: string) => this.verifyColumnForeignTable(col, key));
+
+                _.each(unWrap(ver.columnChanges, [] as ColumnChangeOptions[]), (change: ColumnChangeOptions) => {
+                    if (change.column) {
+                        this.verifyColumnForeignTable(change.column, change.existingKey);
+                    }
+                });
+            });
+        }
     }
 
     verifyColumnForeignTable(column: TableColumnDefinition, columnKey: string) {

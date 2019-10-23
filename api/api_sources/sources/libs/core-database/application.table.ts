@@ -21,7 +21,36 @@
  * -----
  */
 import * as _ from 'underscore';
-import { ApplicationTableColumn} from './application.column';
+import { ApplicationTableColumn, ColumnChangeOptions} from './application.column';
+
+export const ColumnChangeType = {
+    RENAME: 'rename',
+    DROP: 'drop',
+    KEY_CHANGE: 'key-change',
+    CUSTOM: 'custom'
+};
+export interface ColumnChangeDefinition extends ColumnChangeOptions {
+    existingKey: string;
+    newKey?: string;
+    column?: ApplicationTableColumn;
+    existingColumn: ApplicationTableColumn;
+    newColumnName?: string;
+    type: string;
+}
+
+export interface TableVersionDefinition {
+    name: string;
+    columns?: {[key: string]: any};
+    columnChanges?: any[];
+    info?: string;
+}
+export interface TableVersion extends TableVersionDefinition {
+    name: string;
+    fileName: string;
+    columns: {[key: string]: ApplicationTableColumn};
+    columnChanges: ColumnChangeDefinition[];
+    info?: string;
+}
 
 /**
  * @description Table definition descriptor class
@@ -30,6 +59,7 @@ import { ApplicationTableColumn} from './application.column';
 export class ApplicationTable {
     name: string;
     columnsDefinition: {[key: string]: ApplicationTableColumn} = {};
+    initialColumns: {[key: string]: ApplicationTableColumn} = {};
     description = 'Application table';
     private _columnNames: {[key: string]: string};
     meta: any;
@@ -38,6 +68,7 @@ export class ApplicationTable {
     computedFields: any;
     relations: any;
     modelName?: string;
+    versions: TableVersion[] = [];
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
@@ -61,16 +92,16 @@ export class ApplicationTable {
     public createTableSql(): string {
         let sql = '';
         const createTable = `CREATE TABLE ${this.name} ();`;
-        const allColumns: string[] = _.map(this.columnsDefinition, (column: ApplicationTableColumn) => column.createColumnSql(this.name));
+        const allColumns: string[] = _.map(this.initialColumns, (column: ApplicationTableColumn) => column.createColumnSql(this.name));
         _.each(allColumns, (sqlString: string) => (sql = sql + `${sqlString}\n`));
         return `${createTable}\n${sql}`;
     }
 
     public createCommentsForTable(): string {
         let commentForColumns = ``;
-        for (const key in this.columnsDefinition) {
+        for (const key in this.initialColumns) {
             if (this.columnsDefinition.hasOwnProperty(key)) {
-                const column: ApplicationTableColumn = this.columnsDefinition[key];
+                const column: ApplicationTableColumn = this.initialColumns[key];
                 commentForColumns = commentForColumns + `COMMENT ON COLUMN ${this.name}.${column.name} IS '${column.comment}';\n`;
             }
         }
@@ -124,5 +155,30 @@ export class ApplicationTable {
             };
         }
         return null;
+    }
+
+    handleColumnChanges(columnChange: ColumnChangeOptions): ColumnChangeDefinition {
+        const key = columnChange.newKey || columnChange.existingKey;
+        const existingColumnDef = this.columnsDefinition[columnChange.existingKey];
+        const type = columnChange.type || ColumnChangeType.KEY_CHANGE;
+        if (this.columnsDefinition[columnChange.existingKey]) {
+            delete (this.columnsDefinition[columnChange.existingKey]);
+        }
+
+        if ( type !== ColumnChangeType.DROP) {
+            if (columnChange.column) {
+                this.columnsDefinition[key] = ApplicationTableColumn.createColumn(columnChange.column);
+            } else {
+                this.columnsDefinition[key] = existingColumnDef;
+            }
+        }
+        return {
+            existingKey: columnChange.existingKey,
+            newKey: columnChange.newKey,
+            existingColumn: existingColumnDef,
+            column: this.columnsDefinition[key],
+            newColumnName: columnChange.newColumnName,
+            type: type
+        };
     }
 }
