@@ -3,7 +3,7 @@ const {OpenShiftClientX} = require('pipeline-cli')
 
 module.exports = (resourceName, settings, countArg, timeoutArg) => {
     const timeout = timeoutArg || 20000;
-    var count = countArg || 10;
+    var count = countArg || 20;
     const phases = settings.phases
     const options= settings.options
     const phase = options.env
@@ -23,7 +23,7 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
             console.log(`Getting POD Status: ${resourceName}`);
             const data = list[0];
             const status = data.status || { conditions: [], containerStatuses: []};
-            if (( status.conditions && status.conditions.length === 0) || (status.containerStatuses && status.containerStatuses.length === 0)) {
+            if (( status.conditions && status.conditions.length === 0)) {
                 console.log(`Unable to fetch API resource: ${resourceName} status`);
                 console.log(`${JSON.stringify(data)}`)
 
@@ -37,6 +37,40 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
                 }
                 
             }
+
+            if (!status.containerStatuses) {
+                console.log(`Unable to fetch API resource: ${resourceName} container state (not defined)`);
+                console.log(`${JSON.stringify(data)}`)
+
+                // Retry if count is not zero
+                if (count > 0) {
+                    console.log(`Retry until count is 0: ${resourceName}`);
+                    count = count - 1;
+                    setTimeout(check, timeout);
+                    return;
+                } else {
+                    throw new Error(`Unable to fetch API resource: ${resourceName} status`);
+                }
+            }
+
+            // Checking Container state
+            if ((status.containerStatuses && status.containerStatuses.length === 0)) {
+                console.log(`Unable to fetch API resource: ${resourceName} container state`);
+                console.log(`${JSON.stringify(data)}`)
+
+                // Retry if count is not zero
+                if (count > 0) {
+                    console.log(`Retry until count is 0: ${resourceName}`);
+                    count = count - 1;
+                    setTimeout(check, timeout);
+                    return;
+                } else {
+                    throw new Error(`Unable to fetch API resource: ${resourceName} status`);
+                }
+                
+            }
+
+            
 
             console.log(`Checking Container State: ${resourceName}`);
             const containerStatus = status.containerStatuses[0] || {};

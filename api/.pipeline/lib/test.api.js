@@ -34,11 +34,14 @@ module.exports = (settings) => {
       'ENVIRONMENT': phases[phase].env || 'dev',
       'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
       'IMAGE': imageStream.image.dockerImageReference,
-      'CERTIFICATE_URL': 'https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs'
+      'CERTIFICATE_URL': 'https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs',
+      'DB_MIGRATION_TYPE': phases[phase].migrationInfo.type,
+      'DB_CLEAN_UP': phases[phase].migrationInfo.cleanup,
+      'DB_SEED': phases[phase].migrationInfo.dbSeed
     }
   }))
   
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
-  wait(`pod/${podName}`, settings, 15);
+  wait(`pod/${podName}`, settings, 25);
 }
