@@ -3,7 +3,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.
 
 ## Development server
-- To run the application locally: 
+### To run the application locally: 
 1) Navigate to the App's root directory `/lucy-web/app/ and execute:
 ```bash
 ng serve
@@ -11,28 +11,28 @@ ng serve
 2) Navigate to `http://localhost:4200/`
 The app will automatically reload if you change any of the source files.
 
-- To run the application locally with a `Production` build, execute:
+### To run the application locally with a `Production` build, execute:
 ```bash
 ng serve --prod
 ```
 
 ## Code scaffolding
-- To generate a new component:
+### To generate a new component:
 1) Navigate to `lucy-web/app/lucy/src/app/components`
 2) execute `ng g c component-name`
 
-- To add a new service:
+### To add a new service:
 1) Navigate to `lucy-web/app/lucy/src/app/services`
 2) execute `ng g s service-name`
 
 ## Build
-- Execute the following command to build the project:
+###  Execute the following command to build the project:
 ```bash
 ng build
 ```
 The build artifacts will be stored in the `dist/` directory.
 
-- For a `Production` build, execute the following command:
+### For a `Production` build, execute the following command:
 ```bash
 ng build --prod
 ```
