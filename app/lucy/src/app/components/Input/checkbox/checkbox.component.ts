@@ -30,7 +30,7 @@ export class CheckboxComponent implements OnInit {
     this._checked = checked;
     this.emit();
   }
-  
+
   // Optional Input
   @Input() editable = true;
 
