@@ -292,7 +292,8 @@ export class SsoService {
       const result = await this.httpClient.post<any>(this.SSO_RefreshTokenEndpoint(), queryString.stringify(data), { headers: this.getHeaders() }).toPromise();
       return this.getTokensFromAPIResult(result);
     } catch (error) {
-      console.log(`Refresh token failed with Error: ${error}`);
+      console.log(`Refresh token failed with Error:`);
+      console.dir(error);
       return undefined;
     }
   }
@@ -377,6 +378,7 @@ export class SsoService {
    */
   private async fetchAndStoreTokenFromCode(code: string): Promise<boolean> {
     const result = await this.getTokensFromCode(code);
+    console.dir(result);
     if (result.success) {
       this.storeAccessToken(result.accessToken, result.accessTokenExpiery);
       this.storeRefreshToken(result.refreshToken, result.refreshTokenTokenExpiery);
@@ -435,7 +437,7 @@ export class SsoService {
    * @param token
    * @param expiery
    */
-  private storeAccessToken(token: string, expiery: number) {
+  storeAccessToken(token: string, expiery: number) {
     this.bearerToken = token;
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
@@ -450,7 +452,7 @@ export class SsoService {
    * @param token
    * @param expiery
    */
-  private storeRefreshToken(token: string, expiery: number) {
+  storeRefreshToken(token: string, expiery: number) {
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
     const expieryDateUTC = expieryDate.toUTCString();
