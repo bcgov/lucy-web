@@ -64,4 +64,5 @@ export * from './controllers/chemicalTreatment.controller';
 export * from './controllers/projectManagementPlanCode.controller';
 export * from './controllers/chemicalTreatmentEmployee.controller';
 export * from './controllers/speciesAgencyCode.controller';
+export * from './controllers/pesticideEmployerCode.controller';
 // ----------------------------------------------------------------------------------------------------------------
