@@ -1,6 +1,7 @@
 import { MechanicalTreatment } from './MechanicalTreatment';
 
 export interface Observation {
+  updatedAt: any;
     // Basic //
     // Location
     observation_id: number;
