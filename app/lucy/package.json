@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build-prod": "node --max_old_space_size=1024 ./node_modules/@angular/cli/bin/ng build --prod",
     "build": "ng build",
-    "test": "ng test",
+    "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "deploy_run": "ng serve --host 0.0.0.0 --port 3030 --disableHostCheck",
@@ -19,8 +19,8 @@
   
   "husky": {
     "hooks": {
-      "pre-commit": "ng test --watch=false",
-      "pre-push": "ng test --watch=false"
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
     }
   },
   "private": true,
