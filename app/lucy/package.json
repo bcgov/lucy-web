@@ -20,7 +20,6 @@
     "hooks": {
       "pre-commit": "ng test --watch=false",
       "pre-push": "ng test --watch=false",
-      "...": "..."
     }
   },
   "private": true,
