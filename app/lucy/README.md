@@ -1,18 +1,41 @@
-# Lucy
+# Angular
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.
 
 ## Development server
+- To run the application locally, execute the following command from the App's root directory `/lucy-web/app/l
+1)
+```bash
+ng serve
+```
+2) Navigate to `http://localhost:4200/`
+The app will automatically reload if you change any of the source files.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- To run the application locally with a `Production` build, execute:
+```bash
+ng serve --prod
+```
 
 ## Code scaffolding
+- To generate a new component:
+1) Navigate to `lucy-web/app/lucy/src/app/components`
+2) execute `ng g c component-name`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- To add a new service:
+1) Navigate to `lucy-web/app/lucy/src/app/services`
+2) execute `ng g s service-name`
 
 ## Build
+- Execute the following command to build the project:
+```bash
+ng build
+```
+The build artifacts will be stored in the `dist/` directory.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- For a `Production` build, execute the following command:
+```bash
+ng build --prod
+```
 
 ## Further help
 
@@ -54,6 +77,6 @@ ng test --watch=false
 
 ## How our tests are created
 
-We Use [Karma](https://karma-runner.github.io/latest/index.html) for unit testing.
-Karma is included with Angular and each component or service created through the [Angular CLI](https://angular.io/cli), will include a `.spec.ts` file used for writing a test for that component or service.
-We have setup karma to be tested with a [headless chrome browser through Puppeteer](https://github.com/karma-runner/karma-chrome-launcher#headless-chrome-with-puppeteer). 
+- The Angular CLI takes care of [Jasmine](https://jasmine.github.io) and [Karma](https://karma-runner.github.io/latest/index.html) configuration.
+- Each Angular component or service created through the [Angular CLI](https://angular.io/cli), Includes a `.spec.ts` file used for writing a test for that component or service.
+- We have setup karma to be tested with a [headless chrome browser through Puppeteer](https://github.com/karma-runner/karma-chrome-launcher#headless-chrome-with-puppeteer). 
