@@ -4,6 +4,7 @@ import { MapPreviewPoint, MapMarker } from 'src/app/components/Utilities/map-pre
 import { ConverterService } from 'src/app/services/coordinateConversion/location.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService } from 'src/app/services/dropdown.service';
+import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 
 @Component({
   selector: 'app-location-input',
@@ -39,7 +40,7 @@ export class LocationInputComponent implements OnInit {
   }
   ////////////////////
 
-  ///// Mechanical Treatment object
+  ///// Location object
   private _object: any;
   get object(): any {
     return this._object;
@@ -64,6 +65,22 @@ export class LocationInputComponent implements OnInit {
     }
   }
   ////////////////////
+
+  get latitudeField(): FormConfigField {
+    if (this.object && this.object.latitude) {
+      return this.object.latitude;
+    } else {
+      return this.formService.getEmptyConfigField();
+    }
+  }
+
+  get longitudeField(): FormConfigField {
+    if (this.object && this.object.longitude) {
+      return this.object.longitude;
+    } else {
+      return this.formService.getEmptyConfigField();
+    }
+  }
 
   northingsVerification = {
     isNorthingsUTM: true,
@@ -117,7 +134,7 @@ export class LocationInputComponent implements OnInit {
   }
 
   @Output() locationChanged = new EventEmitter<any>();
-  constructor(private converterService: ConverterService, private validation: ValidationService, private dropdownService: DropdownService) { }
+  constructor(private converterService: ConverterService, private validation: ValidationService, private formService: FormService) { }
 
   ngOnInit() {
   }

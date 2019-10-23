@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SsoService, SSOLoginProvider } from '../../../services/sso.service';
+import { SsoService, SSOLoginProvider } from 'src/app/services/sso.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { StringConstants } from 'src/app/constants/string-constants';
 import { RouterService } from 'src/app/services/router.service';
