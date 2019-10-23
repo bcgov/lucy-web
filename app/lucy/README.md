@@ -3,8 +3,8 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.
 
 ## Development server
-- To run the application locally, execute the following command from the App's root directory `/lucy-web/app/l
-1)
+- To run the application locally: 
+1) Navigate to the App's root directory `/lucy-web/app/ and execute:
 ```bash
 ng serve
 ```
