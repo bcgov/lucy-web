@@ -16,13 +16,6 @@
     "build-storybook": "build-storybook",
     "sonar-analysis": "sonar-scanner"
   },
-  
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
-    }
-  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^7.2.15",
@@ -85,7 +78,6 @@
     "@types/node": "~8.9.4",
     "babel-loader": "^8.0.6",
     "codelyzer": "~4.5.0",
-    "husky": "^3.0.9",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",
