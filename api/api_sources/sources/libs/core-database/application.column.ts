@@ -1,4 +1,5 @@
 import { schemaForTable } from './schema.storage';
+import { unWrap } from '../utilities';
 
 /*
  * Copyright © 2019 Province of British Columbia
@@ -43,7 +44,6 @@ export interface TableColumnVerification {
     isDate?: boolean;
 }
 
-
 export interface TableColumnDefinition {
     name: string;
     comment: string;
@@ -58,6 +58,16 @@ export interface TableColumnDefinition {
     meta?: any;
     layout?: any;
     eager?: boolean;
+}
+
+export interface ColumnChangeOptions {
+    existingKey: string;
+    newKey?: string;
+    column?: TableColumnDefinition;
+    newColumnName?: string;
+    type?: string;
+    sqlStatement?: string;
+    downSqlStatement?: string;
 }
 
 
@@ -106,6 +116,25 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         }
     }
 
+    static createColumn(value: TableColumnDefinition): ApplicationTableColumn {
+        const column: ApplicationTableColumn = new ApplicationTableColumn(
+            value.name,
+            value.comment,
+            value.definition,
+            value.foreignTable,
+            value.refColumn,
+            value.deleteCascade,
+            value.refSchema,
+            value.refModel
+        );
+        column.columnVerification = value.columnVerification;
+        column.meta = value.meta;
+        column.layout = value.layout;
+        column.eager = unWrap(value.eager, true);
+        column.required = (value.required !== undefined) ? value.required : true;
+        return column;
+    }
+
     ref(reference?: string, refColumn?: string, deleteCascade?: boolean): string {
         const ref = reference || this.foreignTable;
         const refCol = refColumn || this.refColumn;
@@ -126,6 +155,10 @@ export class ApplicationTableColumn implements TableColumnDefinition {
 
     public createColumnSql(tableName: string, definition?: string, reference?: string, refColumn?: string, deleteCascade?: boolean): string {
         return `ALTER TABLE ${tableName} ADD COLUMN ${this.sql(definition, reference, refColumn, deleteCascade)};`;
+    }
+
+    public dropColumnSql(tableName: string) {
+        return `ALTER TABLE ${tableName} DROP COLUMN IF EXISTS ${this.name};`;
     }
 
     get type(): string {
