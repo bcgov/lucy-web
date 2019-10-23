@@ -16,6 +16,7 @@
     "build-storybook": "build-storybook",
     "sonar-analysis": "sonar-scanner"
   },
+  
   "husky": {
     "hooks": {
       "pre-commit": "ng test --watch=false",
