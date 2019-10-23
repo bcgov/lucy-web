@@ -1352,4 +1352,21 @@ export class FormService {
     }
   }
   /////////////////////////////////// End Route helpers ////////////////////////////////////
+
+  public getEmptyConfigField(): FormConfigField {
+    return {
+      key: '',
+      header: '',
+      description: '',
+      required: false,
+      type: '',
+      verification: '',
+      meta: {},
+      cssClasses: '',
+      codeTable: '',
+      codeTableMeta: {},
+      displayKey: '',
+      condition: '',
+    }
+  }
 }

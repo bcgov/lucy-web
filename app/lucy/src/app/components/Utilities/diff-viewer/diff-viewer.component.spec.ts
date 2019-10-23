@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MatExpansionModule } from '@angular/material/expansion';
 import { DiffViewerComponent } from './diff-viewer.component';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DiffViewerComponent', () => {
   let component: DiffViewerComponent;
@@ -8,7 +10,9 @@ describe('DiffViewerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DiffViewerComponent ]
+      imports: [ MatExpansionModule, BrowserAnimationsModule ],
+      declarations: [ DiffViewerComponent ],
+      schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

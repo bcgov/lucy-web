@@ -23,10 +23,15 @@ export class ToastComponent implements OnInit {
   presenting = true;
   closedEarly = false;
 
-  private _model: ToastModel;
+  private _model: ToastModel = {
+    message: '',
+    icon: ToastIconType.none
+  };
+
   get model(): ToastModel {
     return this._model;
   }
+
   @Input()
   set model(model: ToastModel) {
      this._model = model;
