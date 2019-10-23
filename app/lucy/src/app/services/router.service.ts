@@ -200,7 +200,6 @@ export class RouterService {
   }
 
   private preventReload() {
-    console.log('initialized prevent reload');
     window.addEventListener(`beforeunload`, (event) => {
       if (this.isCreateRoute || this.isEditRoute) {
         // Cancel the event as stated by the standard.

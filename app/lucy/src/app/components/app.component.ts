@@ -144,6 +144,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private unSubscribeFromLoadingService() {
+    if (!this.loadingSubscription) {return; }
     this.loadingSubscription.unsubscribe();
   }
 
@@ -161,6 +162,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private unSubscribeFromAlertService() {
+    if (!this.alertsSubscription) {return; }
     this.alertsSubscription.unsubscribe();
   }
   /******** End Alerts ********/
@@ -177,6 +179,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private unSubscribeFromToastService() {
+    if (!this.toastSubscription) {return; }
     this.toastSubscription.unsubscribe();
   }
   /******** End Toasts ********/

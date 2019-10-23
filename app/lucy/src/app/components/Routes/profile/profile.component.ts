@@ -18,7 +18,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { StringConstants } from 'src/app/constants/string-constants';
-import { Router } from '@angular/router';
 import { AppRoutes } from 'src/app/constants';
 import { UserAccessType } from 'src/app/models/Role';
 import { AlertService } from 'src/app/services/alert.service';
