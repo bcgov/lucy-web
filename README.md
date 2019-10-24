@@ -91,7 +91,7 @@ This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Container
 ## Requirements
 
 * [Docker](https://store.docker.com/search?type=edition&offering=community) installed.
-* The ability to run Makefile commands, using a comman line tool such as [GMAKE](https://www.gnu.org/software/make/)
+* The ability to run Makefile commands, using a command line tool such as [GMAKE](https://www.gnu.org/software/make/)
 
 On Windows, you may require a tool like [Visual Studio Code](https://code.visualstudio.com/) or [Cygwin](http://www.cygwin.com/) in order to use the Makefile.
 
@@ -124,6 +124,20 @@ The following commands are defined in the respective `Makefile` for each directo
 
 2. Run the app container  
 `make run-local`
+
+*Running the App Locally:*
+
+To run the client (frontend) locally, execute the following command inside the `app` directory.
+
+`ng serve`
+
+This will perform hotloading of any changes made to the frontend code (i.e., your browser will automatically refresh whenever any client-side code changes are saved).
+
+To quit the local client, type `<Ctrl> + C`.
+
+To run the server (backend) within a Docker container, execute
+`make local-debug`
+This will print additional logging statements to the console, which may be useful when debugging the backend.
 
 *View the App:*
 

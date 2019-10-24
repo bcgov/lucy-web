@@ -1,6 +1,6 @@
 # Setting Up
 
-For running locally, use locally installed npm/node. The command snippets provided bellow assume you have npm/node installed. Also, the command examples here are provided as subshell commands (within parenthesis) so that they will work regardless of your current shell's working directory, as long as it is within the git working directory.
+For running locally, use locally installed npm/node. The command snippets provided below assume you have npm/node installed. Also, the command examples here are provided as subshell commands (within parentheses) so that they will work regardless of your current shell's working directory, as long as it is within the git working directory.
 
 For running from a Jenkinsfile, replace `npm` with the provided `npmw` as it will download and install node/npm using `nvm`.
 
