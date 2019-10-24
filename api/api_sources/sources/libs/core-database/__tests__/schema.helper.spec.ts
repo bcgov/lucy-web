@@ -68,10 +68,6 @@ describe('Test Schema Helper Utility', () => {
             should().exist(getSQLFileData(sqlFiles.revertMigrations.test, schema.className));
             should().exist(getSQLFileData(sqlFiles.revertMigrations.test2, schema.className));
         }
-
-        // Remove all migration file
-        const r = SchemaHelper.shared.removeAllMigrationFile(schema, dryRun);
-        should().exist(r);
     });
 
     it('should give migration files', () => {
