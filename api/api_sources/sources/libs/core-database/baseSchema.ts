@@ -39,6 +39,7 @@ import {
 import { ApplicationTable, TableVersion } from './application.table';
 import { registerSchema, schemaWithName } from './schema.storage';
 import { SchemaHelper } from './schema.helper';
+import { getSQLDirPath } from './sql.loader';
 
 export interface TableColumnOption extends TableColumnDefinition {
     refSchemaObject?: BaseSchema;
@@ -107,6 +108,10 @@ export class  BaseSchema {
         return this.table.name;
     }
 
+    public get sqlFileDir(): string {
+        return `${getSQLDirPath()}/${this.className}`;
+    }
+
     /**
      * @description Constructor
      */
@@ -123,6 +128,11 @@ export class  BaseSchema {
             this.joinTables = this.defineJoinTable();
         }
         assert(this.table.id, `No {id} column for schema ${this.table.name}`);
+
+        // Check and create dir in SQL Path
+        if (!fs.existsSync(this.sqlFileDir)) {
+            fs.mkdirSync(this.sqlFileDir);
+        }
 
         // Register schema
         registerSchema(this);
