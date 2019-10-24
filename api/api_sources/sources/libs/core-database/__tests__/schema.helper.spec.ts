@@ -34,11 +34,11 @@ class Test2Schema extends BaseSchema {
     }
 
     migrationFilePath(): string {
-        return getSQLFilePath(`${this.className}.sql`);
+        return getSQLFilePath(`${this.className}.sql`, this.className);
     }
 
     get migrationSQL(): string {
-        return getSQLFileData(`${this.className}.sql`);
+        return getSQLFileData(`${this.className}.sql`, this.className);
     }
 }
 
@@ -52,9 +52,8 @@ describe('Test Schema Helper Utility', () => {
         should().exist(r1);
         should().exist(r2);
         if (!dryRun) {
-            const sqlFiles = SchemaHelper.shared.allSqlFiles(schema); 
+            const sqlFiles = SchemaHelper.shared.allSqlFiles(schema);
             _.each(sqlFiles.allFiles, (path: string) => {
-                console.log(`${path}`);
                 expect(fs.existsSync(path)).to.be.equal(true);
             });
 
@@ -62,12 +61,12 @@ describe('Test Schema Helper Utility', () => {
             should().exist(schema.migrationSQL);
 
             // Check() a version migration sql file content
-            should().exist(getSQLFileData(sqlFiles.migrations.test2));
-            should().exist(getSQLFileData(sqlFiles.migrations.test));
+            should().exist(getSQLFileData(sqlFiles.migrations.test2, schema.className));
+            should().exist(getSQLFileData(sqlFiles.migrations.test, schema.className));
 
             // Check() revert migration sql file which will us as down cmd
-            should().exist(getSQLFileData(sqlFiles.revertMigrations.test));
-            should().exist(getSQLFileData(sqlFiles.revertMigrations.test2));
+            should().exist(getSQLFileData(sqlFiles.revertMigrations.test, schema.className));
+            should().exist(getSQLFileData(sqlFiles.revertMigrations.test2, schema.className));
         }
 
         // Remove all migration file
@@ -83,6 +82,18 @@ describe('Test Schema Helper Utility', () => {
 
         // Migration file name of particular version
         expect(fileInfo.test2).to.be.equal(`${schema.className}-${schema.table.versions[1].fileName}.up.sql`);
+    });
+
+    it('should add version column to schema', () => {
+        // Check version columns are added to columnDef
+        should().exist(schema.table.columns.address);
+        expect(schema.table.columns.address).to.be.equal('sample_address');
+        should().exist(schema.table.columns.tag);
+        expect(schema.table.columns.tag).to.be.equal('tag');
+        should().exist(schema.table.columns.count);
+        expect(schema.table.columns.count).to.be.equal('count');
+        should().exist(schema.table.columns.top);
+        expect(schema.table.columns.top).to.be.equal('top');
     });
 });
 

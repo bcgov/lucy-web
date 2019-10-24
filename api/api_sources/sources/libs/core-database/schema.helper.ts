@@ -184,7 +184,7 @@ export class SchemaHelper {
      * @param string ver
      */
     _versionMigrationFilePath(schema: BaseSchema, ver: TableVersion) {
-        return `${getSQLDirPath()}/${this._versionFileName(schema, ver)}`;
+        return `${getSQLDirPath()}/${schema.className}/${this._versionFileName(schema, ver)}`;
     }
 
     /**
@@ -193,7 +193,7 @@ export class SchemaHelper {
      * @param string ver
      */
     _versionRevertMigrationFilePath(schema: BaseSchema, ver: TableVersion) {
-        return `${getSQLDirPath()}/${this._versionRevertMigrationFileName(schema, ver)}`;
+        return `${getSQLDirPath()}/${schema.className}/${this._versionRevertMigrationFileName(schema, ver)}`;
     }
 
     /**
@@ -305,7 +305,7 @@ export class SchemaHelper {
             if (fs.existsSync(info.filePath)) {
 
                 // Check existing version file content
-                const existing = getSQLFileData(info.fileName);
+                const existing = getSQLFileData(info.fileName, schema.className);
                 if (existing !== info.fileContent) {
                     this._write(info.filePath, info.fileContent, dryRun, true);
 
@@ -397,15 +397,10 @@ export class SchemaHelper {
      * @param boolean dryRun
      */
     removeAllMigrationFile (schema: BaseSchema, dryRun?: boolean) {
-        const files: string[] = this.allSqlFiles(schema).allFiles;
-        console.dir(files);
         if (!dryRun) {
-            // Remove them
-            for (const file of files) {
-                fs.unlinkSync(file);
-            }
+            fs.unlinkSync(schema.sqlFileDir);
         }
-        return files;
+        return true;
     }
 
     // Get all migration file name
