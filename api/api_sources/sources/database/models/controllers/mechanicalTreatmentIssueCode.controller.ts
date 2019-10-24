@@ -43,7 +43,8 @@ export class MechanicalTreatmentIssueCodeController extends RecordController<Mec
      * (which matches the preferred ordering of issue descriptions)
 	 * @param object query
 	 * ** Sorting Code
-	 * ** (a, b) => ((a.businessName > b.businessName) ? 1 : (b.businessName > a.businessName) ? -1 : 0 )
+	 * ** (a, b) => ((a.mechanical_treatment_issue_code_id > b.mechanical_treatment_issue_code_id) ? 1 :
+     *  (b.mechanical_treatment_issue_code_id > a.mechanical_treatment_issue_code_id) ? -1 : 0 )
 	 */
 	async all(query?: object) {
 		const d = await super.all(query);
