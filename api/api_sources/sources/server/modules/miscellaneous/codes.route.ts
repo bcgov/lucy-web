@@ -38,7 +38,6 @@ import {
     MechanicalMethodCodeController,
     MechanicalSoilDisturbanceCodeController,
     MechanicalRootRemovalCodeController,
-    MechanicalTreatmentIssueCodeController,
     TreatmentProviderContractorController,
     ProjectManagementPlanCodeController
 } from '../../../database/models';
@@ -46,6 +45,7 @@ import { DataController } from '../../../database/data.model.controller';
 import { ChemicalTreatmentEmployeeController } from '../../../database/models/controllers/chemicalTreatmentEmployee.controller';
 import { PesticideEmployerCodeController } from '../../../database/models/controllers/pesticideEmployerCode.controller';
 import { MechanicalDisposalMethodCodeController } from '../../../database/models/controllers/mechanicalDisposalMethodCode.controller';
+import { MechanicalTreatmentIssueCodeController } from '../../../database/models/controllers/mechanicalTreatmentIssueCode.controller';
 
 export class CodeTableRouteController extends SecureRouteController<any> {
     static get shared(): CodeTableRouteController {
