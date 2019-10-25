@@ -18,7 +18,7 @@
 // Created by Pushan Mitra on 2019-07-04.
 import * as path from 'path';
 import { should, expect} from 'chai';
-import { CSV } from './csv';
+import { CSV, GenericCSV } from './csv';
 
 interface Test {
     name: string;
@@ -33,6 +33,17 @@ describe('Test CSV utility', () => {
         should().exist(csv);
         expect(csv.filePath).to.equal(csvPath);
         const json: Test[]  = await csv.load();
+        should().exist(json);
+        expect(json.length).to.equal(3);
+        const header = csv.headers;
+        should().exist(header);
+        expect(header).to.eql(['name', 'age', 'work']);
+    });
+
+    it('should load csv as generic csv loader', async () => {
+        const csvPath = path.resolve(__dirname, '../../test-resources/test.csv');
+        const csv =  new GenericCSV(csvPath);
+        const json: any[] = await csv.load();
         should().exist(json);
         expect(json.length).to.equal(3);
         const header = csv.headers;

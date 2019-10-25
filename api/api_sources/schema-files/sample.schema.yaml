@@ -71,3 +71,11 @@ schemas:
             comment: Name of the sample
         # --
       # ---
+    ## -- end version
+    imports:
+      init:
+        fileName: AspectCode.csv
+        entryColumns: 
+          - name
+          - address
+      # --

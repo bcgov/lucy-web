@@ -53,6 +53,16 @@ export interface TableVersion extends TableVersionDefinition {
 }
 
 /**
+ * @description CSV import options for table
+ */
+export interface CSVImportOptions {
+    fileName: string;
+    entryColumns: string[];
+    info?: string;
+    transformer?: string;
+}
+
+/**
  * @description Table definition descriptor class
  * @export class ApplicationTable
  */
@@ -69,6 +79,7 @@ export class ApplicationTable {
     relations: any;
     modelName?: string;
     versions: TableVersion[] = [];
+    importOptions: {[key: string]: CSVImportOptions} = {};
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {

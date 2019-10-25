@@ -23,24 +23,9 @@
 import * as fs from 'fs';
 import * as _ from 'underscore';
 import { should, expect } from 'chai';
-import { BaseSchema } from '../baseSchema';
-import { getYAMLFilePath } from '../schemaYaml.loader';
 import { SchemaHelper } from '../schema.helper';
-import { getSQLFilePath, getSQLFileData } from '../sql.loader';
-
-class Test2Schema extends BaseSchema {
-    get schemaFilePath(): string {
-        return getYAMLFilePath('sample.schema.yaml');
-    }
-
-    migrationFilePath(): string {
-        return getSQLFilePath(`${this.className}.sql`, this.className);
-    }
-
-    get migrationSQL(): string {
-        return getSQLFileData(`${this.className}.sql`, this.className);
-    }
-}
+import {  getSQLFileData } from '../sql.loader';
+import { Test2Schema } from './test.schema';
 
 const schema = new Test2Schema();
 describe('Test Schema Helper Utility', () => {

@@ -28,7 +28,8 @@ import {
     saveYaml,
     SchemaCache,
     SchemaLoader,
-    incrementalWrite
+    incrementalWrite,
+    CSVFieldTransformer
 } from '../utilities';
 
 import {
@@ -55,6 +56,15 @@ export class  BaseSchema {
 
     // Join table definitions associated with table
     joinTables: {[key: string]: ApplicationTable};
+
+    /**
+     * CSV Field Transformer options
+     * NOTE:
+     *      Subclass should provide csv field transformer
+     */
+    get csvFieldTransformer(): {[key: string]: {[key: string]: CSVFieldTransformer}} {
+        return {};
+    }
 
     /**
      * @description Timestamps column associated with schema
@@ -201,6 +211,11 @@ export class  BaseSchema {
                 // Increment index
                 index = index + 1;
             }
+        }
+
+        // CSV Import Options
+        if (def.imports) {
+            table.importOptions = def.imports;
         }
 
         assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
