@@ -52,6 +52,8 @@ export const getSQLFileData = (fileName: string, subPath?: string) => {
                 // Remove file from
                 fs.unlinkSync(mainPath);
                 return fs.readFileSync(filePath, 'utf8');
+            } else {
+                return;
             }
         }
     }

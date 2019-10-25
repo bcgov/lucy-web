@@ -70,4 +70,6 @@ export class CSV<T extends ObjectLiteral> {
     }
 }
 
+export class GenericCSV extends CSV<any> {}
+
 // --------------------------------------------------------------------
