@@ -48,10 +48,6 @@ RUN mkdir -p ${HOME}/.config/configstore
 RUN chmod -R 777 ${HOME}/.config
 RUN chmod -R 777 ${HOME}/.config/configstore
 
-# Running test schema
-RUN mkdir -p ${HOME}/schema-migration-sql/Test2Schema
-RUN chmod -R 777 ${HOME}/schema-migration-sql/Test2Schema
-
 # Application VOLUME
 VOLUME ${HOME}
 

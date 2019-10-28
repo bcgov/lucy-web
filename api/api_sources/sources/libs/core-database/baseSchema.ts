@@ -90,6 +90,10 @@ export class  BaseSchema {
         return '';
     }
 
+    public get createSQLDir(): boolean {
+        return true;
+    }
+
     /**
      * className
      * @description Class name of schema
@@ -141,7 +145,9 @@ export class  BaseSchema {
 
         // Check and create dir in SQL Path
         if (!fs.existsSync(this.sqlFileDir)) {
-            fs.mkdirSync(this.sqlFileDir);
+            if (this.createSQLDir) {
+                fs.mkdirSync(this.sqlFileDir);
+            }
         }
 
         // Register schema
