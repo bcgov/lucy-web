@@ -14,4 +14,10 @@ export class Test2Schema extends BaseSchema {
     get migrationSQL(): string {
         return getSQLFileData(`${this.className}.sql`, this.className);
     }
+
+    get createSQLDir(): boolean {
+        return process.env.ENVIRONMENT === 'local' ? true : false;
+    }
 }
+
+// ------------------------------------------
