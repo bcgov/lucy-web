@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { Subject, ReplaySubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { MatSelect } from '@angular/material';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 
 @Component({
   selector: 'app-dropdown',
@@ -89,6 +90,10 @@ export class DropdownComponent implements OnInit {
   @Input() set items(array: DropdownObject[]) {
     this.filteredItems = array;
     this._items = array;
+    if (this._items.length === 0) {
+      this.toast.show('Must create at least one ' + this.fieldHeader + ' first!', ToastIconType.fail);
+
+    }
   }
   ////////////////////
 
@@ -107,7 +112,7 @@ export class DropdownComponent implements OnInit {
   // Response
   @Output() selectionChanged = new EventEmitter<DropdownObject>();
 
-  constructor() { }
+  constructor( private toast: ToastService ) {  }
 
   ngOnInit() {
     // set initial selection
@@ -124,8 +129,6 @@ export class DropdownComponent implements OnInit {
     this.selectedItem = item;
     this.selectionChanged.emit(this.selectedItem);
   }
-
-  focus
 
   filterOptions() {
     if (!this.items) {
