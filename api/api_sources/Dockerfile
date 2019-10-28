@@ -47,7 +47,10 @@ RUN chmod 777 ${HOME}/node_modules
 RUN mkdir -p ${HOME}/.config/configstore
 RUN chmod -R 777 ${HOME}/.config
 RUN chmod -R 777 ${HOME}/.config/configstore
-RUN chmod -R 777 ${HOME}/schema-migration-sql
+
+# Running test schema
+RUN mkdir -p ${HOME}/schema-migration-sql/Test2Schema
+RUN chmod -R 777 ${HOME}/schema-migration-sql/Test2Schema
 
 # Application VOLUME
 VOLUME ${HOME}
