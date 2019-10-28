@@ -6,10 +6,6 @@ import { Subject, ReplaySubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { MatSelect } from '@angular/material';
 
-interface Bank {
-  id: string;
-  name: string;
- }
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
@@ -128,6 +124,8 @@ export class DropdownComponent implements OnInit {
     this.selectedItem = item;
     this.selectionChanged.emit(this.selectedItem);
   }
+
+  focus
 
   filterOptions() {
     if (!this.items) {
