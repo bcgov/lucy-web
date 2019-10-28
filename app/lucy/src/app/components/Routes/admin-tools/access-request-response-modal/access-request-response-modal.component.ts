@@ -1,14 +1,28 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
-import { FormsModule } from '@angular/forms';
 import { AccessRequest } from 'src/app/models/AccessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { EventEmitter } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
-import * as bootstrap from 'bootstrap';
-import * as $AB from 'jquery';
 import { Role } from 'src/app/models/Role';
-import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * Output of Access request modal
@@ -109,7 +123,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
   @Output() acessRequestModalEmitter = new EventEmitter<AccessRequestResponseModalEmitterResponse>();
   @ViewChild('requestResponseModal') private content;
 
-  constructor(private admin: AdminService, private roles: RolesService, private formsModule: FormsModule, private userService: UserService, private modalService: NgbModal) { }
+  constructor(private admin: AdminService, private roles: RolesService, private userService: UserService, private modalService: NgbModal) { }
 
   ngOnInit() {
     this.roles.getRoles().then((value) => {
