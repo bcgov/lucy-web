@@ -53,7 +53,7 @@ export const getSQLFileData = (fileName: string, subPath?: string) => {
                 fs.unlinkSync(mainPath);
                 return fs.readFileSync(filePath, 'utf8');
             } else {
-                return;
+                throw new Error(`getSQLFileData: ${fileName}: ${subPath}: Item not exists`);
             }
         }
     }
