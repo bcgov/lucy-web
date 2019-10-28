@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observation } from 'src/app/models';
 import { CodeTableService } from 'src/app/services/code-table.service';
@@ -59,7 +76,8 @@ export class InventoryComponent implements OnInit {
   /************ Sorting Variables ************/
   sortAscending = false;
   sortingByObservationId = false;
-  sortingByDate = false;
+  sortingByDateObserved = false;
+  sortingByDateUpdated = true;   // default sorting mechanism is by date last updated
   sortingBySpecies = false;
   sortingByObserver = false;
   /************ End of Sorting Variables ************/
@@ -87,7 +105,7 @@ export class InventoryComponent implements OnInit {
 
 
   /************ Material Table ************/
-  displayedColumns: string[] = ['Observation_id', 'location', 'species', 'date', 'observer', 'actions'];
+  displayedColumns: string[] = ['Observation_id', 'species', 'date_observed', 'last_updated', 'observer', 'actions'];
   dataSource = new MatTableDataSource<Observation>(this.observations);
   @ViewChild(MatPaginator) paginator: MatPaginator;
    /************ END OF Material Table ************/
@@ -182,10 +200,14 @@ export class InventoryComponent implements OnInit {
   // }
 
   /************ Sorting Function ************/
-  sortByDate() {
+  /**
+   * Sorts observations based on the date that the
+   * observation was made
+   */
+  sortByDateObserved() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
-    if (this.sortingByDate) {
+    if (this.sortingByDateObserved) {
       this.sortAscending = !this.sortAscending;
     } else {
       this.sortAscending = false;
@@ -193,7 +215,7 @@ export class InventoryComponent implements OnInit {
 
     // Set sort flags
     this.resetSortFields();
-    this.sortingByDate = true;
+    this.sortingByDateObserved = true;
 
     // Sort objects
     this.observations.sort((left, right): number => {
@@ -205,6 +227,44 @@ export class InventoryComponent implements OnInit {
         }
       }
       if (left.date > right.date) {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    this.initMaterialTable();
+  }
+
+  /**
+   * Sorts observations based on the date that the observation
+   * info was last updated (updatedAt property)
+   */
+  sortByDateUpdated() {
+    // If aready sorting by this criteria,
+    // Flip between ascending and descending
+    if (this.sortingByDateUpdated) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortAscending = false;
+    }
+
+    // Set sort flags
+    this.resetSortFields();
+    this.sortingByDateUpdated = true;
+
+    // Sort objects
+    this.observations.sort((left, right): number => {
+      if (left.updatedAt < right.updatedAt) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      if (left.updatedAt > right.updatedAt) {
         if (this.sortAscending) {
           return -1;
         } else {
@@ -343,7 +403,8 @@ export class InventoryComponent implements OnInit {
   }
 
   resetSortFields() {
-    this.sortingByDate = false;
+    this.sortingByDateObserved = false;
+    this.sortingByDateUpdated = false;
     this.sortingBySpecies = false;
     this.sortingByObserver = false;
     this.sortingByObservationId = false;
