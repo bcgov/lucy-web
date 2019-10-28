@@ -1,11 +1,11 @@
 treatment_issues_code,description
-0,none
-1,adverse weather
-2,fencing
-3,private land
-4,range animals
-5,river bank
-6,silt release
-7,stability 
-8,wash out
-9,wildfire 
+NA,none
+AW,adverse weather
+FC,fencing
+PL,private land
+RA,range animals
+RB,river bank
+SR,silt release
+ST,stability 
+WO,wash out
+WF,wildfire 

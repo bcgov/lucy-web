@@ -39,17 +39,17 @@ export class MechanicalTreatmentIssueCodeController extends RecordController<Mec
 		return this.sharedInstance<MechanicalTreatmentIssueCode>(MechanicalTreatmentIssueCode, MechanicalTreatmentIssueCodeSchema) as MechanicalTreatmentIssueCodeController;
     }
     /**
-	 * @description Overriding all method to sort alphabetically by treatment issue code
-     * (which matches the preferred ordering of issue descriptions)
+	 * @description Overriding all method to sort alphabetically by treatment issue description,
+	 * with the exception that "None" should be the first option in the list
 	 * @param object query
 	 * ** Sorting Code
-	 * ** (a, b) => ((a.mechanical_treatment_issue_code_id > b.mechanical_treatment_issue_code_id) ? 1 :
-     *  (b.mechanical_treatment_issue_code_id > a.mechanical_treatment_issue_code_id) ? -1 : 0 )
+	 * ** (a, b) => (( a.description === `None` ? 1 : b.description === `None` ? -1 : 
+	 *                 a.description > b.description ? 1 : b.description > a.description ? -1 : 0))
 	 */
 	async all(query?: object) {
 		const d = await super.all(query);
-        d.sort( (a, b) => ((a.mechanical_treatment_issue_code_id > b.mechanical_treatment_issue_code_id) ? 1 :
-             (b.mechanical_treatment_issue_code_id > a.mechanical_treatment_issue_code_id) ? -1 : 0 ));
+        d.sort( (a, b) => ((a.description === `None` ? 1 : b.description === `None` ? -1 : a.description > b.description) ? 1 :
+             (b.description > a.description) ? -1 : 0 ));
 		return d;
     }
 }
