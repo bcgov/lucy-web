@@ -13,7 +13,6 @@ describe('Test Schema CSV Loader', () => {
         const dryRun = process.env.ENVIRONMENT === 'local' ? false : true;
         const report = await SchemaCSVLoader.shared.createImportMigrations(schema);
         should().exist(report);
-        console.dir(report);
         if (!dryRun) {
             _.each(SchemaCSVLoader.shared.importMigrationFiles(schema), (file: string) => {
                 console.log(`${file}: ${schema.className}`);
