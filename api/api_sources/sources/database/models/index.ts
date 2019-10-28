@@ -67,4 +67,5 @@ export * from './controllers/speciesAgencyCode.controller';
 export * from './controllers/pesticideEmployerCode.controller';
 export * from './controllers/mechanicalDisposalMethodCode.controller';
 export * from './controllers/mechanicalTreatmentIssueCode.controller';
+export * from './controllers/mechanicalMethodCode.controller';
 // ----------------------------------------------------------------------------------------------------------------

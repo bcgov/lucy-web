@@ -26,9 +26,4 @@ export class MechanicalMethodCodeController extends RecordController<MechanicalM
 	public static get shared(): MechanicalMethodCodeController {
 		return this.sharedInstance<MechanicalMethodCode>(MechanicalMethodCode, MechanicalMethodCodeSchema) as MechanicalMethodCodeController;
     }
-    
-    /**
-     * Note that there is no methood to override sorting for the MechanicalMethodCode
-     * because the ordering of the codes is custom. Ordering is taken directly from the CSV file.
-     */
 }
