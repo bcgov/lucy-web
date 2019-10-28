@@ -30,7 +30,7 @@
       <!-- lat long input  -->
       <div *ngIf="locationEntryModeLatLong">
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="object.latitude.header"
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="object.longitude.header"
@@ -59,36 +59,36 @@
       <!-- UTM input  -->
       <div *ngIf="!locationEntryModeLatLong">
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="'Eastings'"
               [value]="eastings"
-              [validationFunc]="validation.isValidUTMEastings.bind(validation)"
+              [verification]="eastingsVerification"
               (valueChanged)="eastingChanged($event)"
             >
             </app-field>
           </div>
         </div>
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeIn animationDuration">
             <app-field
               [mode]="mode"
               [header]="'Northings'"
               [value]="northings"
-              [validationFunc]="validation.isValidUTMNorthings.bind(validation)"
+              [verification]="northingsVerification"
               (valueChanged)="northingsChanged($event)"
             >
             </app-field>
           </div>
         </div>
         <div class="row">
-          <div class="full-width">
+          <div class="full-width animated fadeInDown animationDuration">
             <app-field
               [mode]="mode"
               [header]="'Zone'"
               [value]="zone"
-              [validationFunc]="validation.isValidInteger.bind(validation)"
+              [verification]="zonesVerification"
               (valueChanged)="zoneChanged($event)"
             >
             </app-field>

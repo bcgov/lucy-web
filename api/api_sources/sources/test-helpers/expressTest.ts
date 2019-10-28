@@ -23,12 +23,11 @@
 import * as request from 'supertest';
 import * as _ from 'underscore';
 import {
-    should,
     expect
 } from 'chai';
 import { DataController } from '../database/data.model.controller';
 import { BaseSchema } from '../libs/core-database';
-import { AuthType, verifySuccessBody, verifyErrorBody } from './testHelpers';
+import { AuthType, verifySuccessBody, verifyErrorBody, testModel } from './testHelpers';
 import { adminToken, editorToken, viewerToken } from './token';
 import { ModelSpecFactory, RequestFactory, Destroyer, ModelFactory } from '../database/factory';
 
@@ -41,16 +40,7 @@ export interface ExpressSetup {
 
 export class ExpressResourceTest {
     static verifyObjectBody(body: any, schema: BaseSchema) {
-        _.each(schema.table.columnsDefinition, (col, key) => {
-            if (key === 'id') {
-                return;
-            }
-            const typeInfo = col.typeDetails;
-            should().exist(body[key]);
-            expect(typeof body[key]).to.be.equal(typeInfo.type);
-        });
-        const keyId = schema.table.id;
-        should().exist(body[keyId]);
+       testModel(body, schema);
     }
 
     /**

@@ -1,6 +1,5 @@
 <!-- Editable -->
-<div *ngIf="!readonly" class="col-12 field animated" id="{{fieldId}}">
-
+<div *ngIf="!readonly" class="col-12 field animated" id="{{ fieldId }}">
   <!-- Input field -->
   <mat-form-field *ngIf="!multiline">
     <input
@@ -33,7 +32,7 @@
         fieldFormControl.hasError('positiveNumber')
       "
     >
-      {{ fieldFormControl.errors.positiveNumberError}}
+      {{ fieldFormControl.errors.positiveNumberError }}
     </mat-error>
     <!-- Regex  -->
     <mat-error
@@ -61,6 +60,19 @@
       "
     >
       {{ fieldFormControl.errors.invalidLongitudeError }}
+    </mat-error>
+
+    <!-- Eastings -->
+    <mat-error *ngIf="fieldFormControl.hasError('validEastingsUTM')">
+      {{ fieldFormControl.errors.invalidEastingsUTMError }}
+    </mat-error>
+    <!-- Northings -->
+    <mat-error *ngIf="fieldFormControl.hasError('validNorthingsUTM')">
+      {{ fieldFormControl.errors.invalidNorthingsUTMError }}
+    </mat-error>
+    <!-- Zone -->
+    <mat-error *ngIf="fieldFormControl.hasError('validZoneUTM')">
+      {{ fieldFormControl.errors.invalidZoneUTMError }}
     </mat-error>
   </mat-form-field>
 
