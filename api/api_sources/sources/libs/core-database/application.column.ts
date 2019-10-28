@@ -177,6 +177,10 @@ export class ApplicationTableColumn implements TableColumnDefinition {
             return 'number';
         } else if (def.includes('date') || def.includes('day')) {
             return 'string';
+        } else if (def.includes('jsonb') || def.includes('json')) {
+            return 'object';
+        } else if (def.includes('timestamp') || def.includes('timestamptz')) {
+            return 'string';
         } else {
             return 'object';
         }
@@ -216,6 +220,17 @@ export class ApplicationTableColumn implements TableColumnDefinition {
                 type: typeof 'str',
                 subType: 'date',
                 isDate: true
+            };
+        } else if (def.includes('jsonb') || def.includes('json')) {
+            typeInfo = {
+                type: 'object',
+                subType: 'json'
+            };
+        } else if (def.includes('timestamp') || def.includes('timestamptz')) {
+            typeInfo = {
+                type: 'string',
+                subType: 'timestamp',
+                isTimestamp: true
             };
         } else {
             typeInfo = {

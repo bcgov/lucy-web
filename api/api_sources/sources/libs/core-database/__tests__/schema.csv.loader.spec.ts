@@ -10,8 +10,8 @@ import { getSQLFileData } from '../sql.loader';
 const schema = new Test2Schema();
 describe('Test Schema CSV Loader', () => {
     it('should create csv', async () => {
-        const dryRun = process.env.ENVIRONMENT === 'local' ? false : true;
-        const report = await SchemaCSVLoader.shared.createImportMigrations(schema);
+        const dryRun = process.env.ENVIRONMENT === 'local' ? true : false;
+        const report = await SchemaCSVLoader.shared.createImportMigrations(schema, dryRun);
         should().exist(report);
         if (!dryRun) {
             _.each(SchemaCSVLoader.shared.importMigrationFiles(schema), (file: string) => {
