@@ -46,8 +46,8 @@ export class LoginAccessCodeCreate1557785001021 extends AppLogger implements Mig
         // SCHEMA
 
         // TIMEZONE
-        const timezone = process.env.TIMEZONE || 'Canada/Vancouver';
-        await queryRunner.query(`SET TIMEZONE ${timezone};`);
+        // const timezone = process.env.TIMEZONE || 'Canada/Vancouver';
+        // await queryRunner.query(`SET TIMEZONE ${timezone};`);
 
         await queryRunner.query(this.roleCodeSchema.migrationSQL);
         // Put default values
