@@ -32,7 +32,7 @@ schemas:
       api: /observation
     # End-meta
     displayLayout:
-      displayLabel: '#(species.commonName)# - #(date)#'
+      displayLabel: '#(species.commonName) - #(date)'
       fields:
         - header:
             key: 'species'
@@ -587,6 +587,9 @@ schemas:
     name: species_agency_code
     description: 'Any BC Ministry, Federal Department, local government (Regional District, municipality, etc), corporation, non-profit or other organization that funds and/or manages invasive plant species on the land base for which they are responsible.  The Agency that oversees a particular activity concerning the Invasive Alien Plant Program. It is the originating agency that data belongs to or the agency that funded the activity.'
     baseSchema: CodeTableSchema
+    meta:
+      baseModel: Record
+      resource: true
     columns:
       id: 
         name: 'species_agency_code_id'

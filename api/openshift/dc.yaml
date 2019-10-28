@@ -77,6 +77,12 @@ objects:
             value: ${ENVIRONMENT}
           - name: VERSION
             value: ${VERSION}
+          - name: DB_MIGRATION_TYPE
+            value: ${DB_MIGRATION_TYPE}
+          - name: DB_CLEAN_UP
+            value: ${DB_CLEAN_UP}
+          - name: DB_SEED
+            value: ${DB_SEED}
           image: " "
           imagePullPolicy: Always
           name: api
@@ -187,6 +193,9 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     host: ${HOST}
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
     port:
       targetPort: ${NAME}-${APP_PORT_DEFAULT}
     to:
@@ -242,3 +251,9 @@ parameters:
   value: '8080-tcp'
 - name: PORT
   value: '3001'
+- name: DB_MIGRATION_TYPE
+  value: 'refresh'
+- name: DB_CLEAN_UP
+  value: 'none'
+- name: DB_SEED
+  value: 'yes'

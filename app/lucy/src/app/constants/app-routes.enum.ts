@@ -5,6 +5,8 @@ export enum AppRoutes {
     // User Routes
     UserInfo = 'info',
     Profile = 'profile',
+    // Help Routes
+    About = 'about',
     // Admin Routes
     AdminTools = 'admin',
     // Inventory
