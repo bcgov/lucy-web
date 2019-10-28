@@ -35,7 +35,6 @@ import {
     SlopeCodeController,
     AspectCodeController,
     ProposedActionCodeController,
-    MechanicalMethodCodeController,
     MechanicalSoilDisturbanceCodeController,
     MechanicalRootRemovalCodeController,
     TreatmentProviderContractorController,
@@ -46,7 +45,7 @@ import { ChemicalTreatmentEmployeeController } from '../../../database/models/co
 import { PesticideEmployerCodeController } from '../../../database/models/controllers/pesticideEmployerCode.controller';
 import { MechanicalDisposalMethodCodeController } from '../../../database/models/controllers/mechanicalDisposalMethodCode.controller';
 import { MechanicalTreatmentIssueCodeController } from '../../../database/models/controllers/mechanicalTreatmentIssueCode.controller';
-
+import { MechanicalMethodCodeController } from '../../../database/models/controllers/mechanicalMethodCode.controller';
 export class CodeTableRouteController extends SecureRouteController<any> {
     static get shared(): CodeTableRouteController {
         return this.sharedInstance<CodeTableRouteController>() as CodeTableRouteController;
