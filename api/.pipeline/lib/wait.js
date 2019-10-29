@@ -83,9 +83,9 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
             if (state.terminated) {
                 if (state.terminated.reason.toLowerCase() === 'completed') {
                     console.log(`${resourceName}: Finished [Successfully]`)
-                    console.log(`${resourceName}: Deleting`)
+                    // console.log(`${resourceName}: Deleting`)
                     // Remove Pod
-                    oc.delete([resourceName], {'ignore-not-found':'true', 'wait':'true'})
+                    // oc.delete([resourceName], {'ignore-not-found':'true', 'wait':'true'})
                     return;
                 } else {
                     console.log(`Unable to fetch API resource: ${resourceName} terminated with error`);

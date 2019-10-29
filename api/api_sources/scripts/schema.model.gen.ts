@@ -122,7 +122,7 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
     defClass = defClass + exportRelatedSchema(schema);
     defClass = defClass + `${n}import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';`;
-    defClass = defClass + `\nimport { NumericTransformer, DateTransformer } from '../../libs/transformer';`;
+    defClass = defClass + `\nimport { NumericTransformer, DateTransformer, DateTimeTransformer } from '../../libs/transformer';`;
     defClass = defClass + exportModel(schema);
     defClass = defClass + exportBaseModel(schema);
     if (!schema.table.meta.resource) {

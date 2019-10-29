@@ -54,15 +54,15 @@ export class CreateChemicalTreatment1570467225818 extends AppLogger implements M
         // Employer Code
         await queryRunner.query(this.employerSchema.migrationSQL);
         // PreLoad Data
-        await queryRunner.query(getSQLFileData(this.employerSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.employerSchema.dataSQLPath(), this.employerSchema.className));
 
         // PMP
         await queryRunner.query(this.pmpSchema.migrationSQL);
-        await queryRunner.query(getSQLFileData(this.pmpSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.pmpSchema.dataSQLPath(), this.pmpSchema.className));
 
         // Employee
         await queryRunner.query(this.employeeSchema.migrationSQL);
-        await queryRunner.query(getSQLFileData(this.employeeSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.employeeSchema.dataSQLPath(), this.employeeSchema.className));
 
         // Chemical Treatment
         await queryRunner.query(this.chemicalTreatmentSchema.migrationSQL);

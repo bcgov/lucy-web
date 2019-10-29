@@ -5,6 +5,7 @@ schemas:
     name: '#tableName'
     description: '---' 
     baseSchema: RecordSchema
+    skipVerification: true
     meta:
       resource: true
       api: '#path'
@@ -41,3 +42,40 @@ schemas:
             default: ''
           classes:
             - none
+    versions:
+      - name: 'test'
+        id: '12.12'
+        info: 'Test version added'
+        columns: 
+          address:
+            name: sample_address
+            definition: VARCHAR(20) NOT NULL
+            comment: Name of the sample
+          tag:
+            name: tag
+            definition: VARCHAR(200) NOT NULL
+            comment: Name of the sample
+        # --
+      # ---
+      - name: 'test2'
+        id: '12.13'
+        info: 'Test version added'
+        columns: 
+          count:
+            name: count
+            definition: VARCHAR(20) NOT NULL
+            comment: Name of the sample
+          top:
+            name: top
+            definition: VARCHAR(200) NOT NULL
+            comment: Name of the sample
+        # --
+      # ---
+    ## -- end version
+    imports:
+      init:
+        fileName: AspectCode.csv
+        entryColumns: 
+          - name
+          - address
+      # --
