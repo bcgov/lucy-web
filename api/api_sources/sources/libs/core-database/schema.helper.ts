@@ -351,10 +351,7 @@ export class SchemaHelper {
         // Check each version revert migration file
         _.each(schema.table.versions, (version: TableVersion) => {
             const info = this.versionRevertMigrationInfo(schema, version);
-            fs.writeFileSync(info.filePath, info.fileContent, {
-                flag: 'w',
-                encoding: 'utf8'
-            });
+            this._write(info.filePath, info.filePath, dryRun);
             report.versions[version.name] = {
                 migrationFilePath: info.filePath,
                 comment: 'Revert migration file'
