@@ -220,7 +220,7 @@ export class SchemaCSVLoader {
         const reports: Promise<any>[] = [];
         // Run migration gen for all import options
         _.each(csvImports, async (options: CSVImportOptions, key: string) => {
-            reports.push(this.crateMigrationForCSVImport(schema, options, key));
+            reports.push(this.crateMigrationForCSVImport(schema, options, key, dryRun));
         });
         return await Promise.all(reports);
     }
