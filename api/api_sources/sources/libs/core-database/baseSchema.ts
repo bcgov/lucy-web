@@ -495,7 +495,7 @@ export class  BaseSchema {
 
     /**
      * @description Get all migration sql file related to schema
-     * @returns sting []
+     * @returns string []
      */
     public get migrationFiles(): {[key: string]: string} {
         return SchemaHelper.shared.migrationFiles(this);
@@ -503,7 +503,7 @@ export class  BaseSchema {
 
     /**
      * @description Get all revert migration sql file related to schema
-     * @returns sting []
+     * @returns object: {[key: string]: string}
      */
     public get revertMigrationFiles(): {[key: string]: string} {
         return SchemaHelper.shared.revertMigrationFiles(this);
