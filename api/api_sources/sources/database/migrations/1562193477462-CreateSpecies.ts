@@ -40,7 +40,7 @@ export class CreateSpecies1562193477462 extends AppLogger implements MigrationIn
         await queryRunner.query(this.speciesSchema.migrationSQL);
 
         // Pre-load species
-        await queryRunner.query(getSQLFileData(this.speciesSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.speciesSchema.dataSQLPath(), this.speciesSchema.className));
         this.info('[DONE]');
     }
 
