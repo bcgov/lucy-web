@@ -31,7 +31,7 @@ const schema = new Test2Schema();
 describe('Test Schema Helper Utility', () => {
     before(() => {});
     it('should create migration files', () => {
-        const dryRun = process.env.ENVIRONMENT === 'local' ? true : false;
+        const dryRun = process.env.ENVIRONMENT === 'local' ? false : true;
         const r1 = SchemaHelper.shared.createMigrationFiles(schema, dryRun);
         const r2 = SchemaHelper.shared.createRevertMigrationFiles(schema, dryRun);
         should().exist(r1);
