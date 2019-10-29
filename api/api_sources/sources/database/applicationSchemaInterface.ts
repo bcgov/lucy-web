@@ -56,6 +56,10 @@ export class  BaseTableSchema extends BaseSchema {
     migrationFilePath(): string {
         return getSQLFilePath(`${this.className}.sql`, this.className);
     }
+
+    get createSQLDir(): boolean {
+        return process.env.ENVIRONMENT === 'local' ? true : false;
+    }
 }
 
 export const defineColumn = (name: string, comment: string, definition?: string, foreignTable?: string, refColumn?: string, deleteCascade?: boolean): ApplicationTableColumn => {
