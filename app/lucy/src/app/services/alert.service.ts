@@ -26,7 +26,7 @@ export interface AlertModel {
 
 export interface AlertModalButton {
   name: string;
-  canDismiss: boolean,
+  canDismiss: boolean;
   eventEmitter: EventEmitter<boolean> | undefined;
 }
 
