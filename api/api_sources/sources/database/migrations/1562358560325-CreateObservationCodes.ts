@@ -65,7 +65,7 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
         await queryRunner.query(getSQLFileData(this.agencyCodeSchema.dataSQLPath(), this.agencyCodeSchema.className));
         await queryRunner.query(getSQLFileData(this.observationTypeCodeSchema.dataSQLPath(), this.observationTypeCodeSchema.className));
         await queryRunner.query(getSQLFileData(this.soilTextureCodeSchema.dataSQLPath(), this.soilTextureCodeSchema.className));
-        await queryRunner.query(getSQLFileData(this.observationGeometryCodeSchema.dataSQLPath(), this.observationTypeCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.observationGeometryCodeSchema.dataSQLPath(), this.observationGeometryCodeSchema.className));
         await queryRunner.query(getSQLFileData(this.specificUseCodeSchema.dataSQLPath(), this.specificUseCodeSchema.className));
         await queryRunner.query(getSQLFileData(this.slopeCodeSchema.dataSQLPath(), this.slopeCodeSchema.className));
         await queryRunner.query(getSQLFileData(this.aspectCodeSchema.dataSQLPath(), this.aspectCodeSchema.className));
