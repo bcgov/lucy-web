@@ -2,6 +2,7 @@
 const {OpenShiftClientX} = require('pipeline-cli')
 const path = require('path');
 const wait = require('./wait');
+const checkAndClean = require('./checkAndClean');
 
 module.exports = (settings) => {
   const phases = settings.phases
@@ -40,7 +41,7 @@ module.exports = (settings) => {
       'DB_SEED': phases[phase].migrationInfo.dbSeed
     }
   }))
-  
+  checkAndClean(`pod/${podName}`, oc);
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
   wait(`pod/${podName}`, settings, 25);
