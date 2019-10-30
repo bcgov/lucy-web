@@ -5,11 +5,10 @@ import { FormControl } from '@angular/forms';
 import { Subject, ReplaySubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { MatSelect } from '@angular/material';
+import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
+import { RouterService } from 'src/app/services/router.service';
+import { AppRoutes} from 'src/app/constants/app-routes.enum';
 
-interface Bank {
-  id: string;
-  name: string;
- }
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
@@ -29,6 +28,8 @@ export class DropdownComponent implements OnInit {
   @Input() fieldHeader = ``;
   // Optional Input
   @Input() editable = true;
+  actionButtons: AlertModalButton[];
+  emitter: EventEmitter<boolean>;
 
   get fieldId(): string {
     return this.camelize(this.fieldHeader);
@@ -93,6 +94,20 @@ export class DropdownComponent implements OnInit {
   @Input() set items(array: DropdownObject[]) {
     this.filteredItems = array;
     this._items = array;
+
+    // Create EventEmitter to be used with AlertModalButton.
+    // If there are no items available to be added to dropdown,
+    // assume that an error has occurred somewhere.
+    // (e.g., user is trying to add a new mechanical treatment before any observations have been created)
+    this.emitter = new EventEmitter<boolean>();
+    this.emitter.subscribe(item => {
+      this.routerService.navigateTo(AppRoutes.AddEntry, null, false);
+      this.emitter.unsubscribe();
+    });
+
+    if (this._items.length === 0) {
+      this.alert.show('Error', 'Must create at least one ' + this.fieldHeader + ' first', [{name: `Okay`, canDismiss: true, eventEmitter: this.emitter}]);
+    }
   }
   ////////////////////
 
@@ -111,7 +126,7 @@ export class DropdownComponent implements OnInit {
   // Response
   @Output() selectionChanged = new EventEmitter<DropdownObject>();
 
-  constructor() { }
+  constructor( private alert: AlertService, private routerService: RouterService ) {  }
 
   ngOnInit() {
     // set initial selection
