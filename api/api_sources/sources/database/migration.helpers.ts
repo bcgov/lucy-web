@@ -158,7 +158,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
                     await connection.close();
                     res();
                 }).catch( err => {
-                    AppDatabaseMigrationManager.logger.error('Unable to perform setup DATABASE{1}');
+                    AppDatabaseMigrationManager.logger.error(`Unable to perform setup DATABASE{1}: ${err}`);
                     res();
                 });
             });
