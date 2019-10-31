@@ -1,0 +1,31 @@
+# Water-Craft Risk Assessment Form Schema
+version: '1.0'
+includes: 
+  - waterCraftObservation.schema.yaml
+schemas: 
+  ## -- WaterCraftRiskAssessmentSchema
+  WatercraftRiskAssessmentSchema:
+    name: watercraft_risk_assessment
+    description: 'This is schema for data model of water craft observation for invasive aquatic species specially Mussels. This data model will be used to capture all kind of variables related to a water craft observation'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: /observation/watercraft/risk-assessment
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    columns: 
+      id: 
+        name: 'watercraft_risk_assessment_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      timestamp: 
+        name: timestamp
+        comment: 'Date and time of watercraft observation.'
+        definition: 'TIMESTAMP NOT NULL'
+      formData:
+        name: watercraft_form
+        comment: 'Stored JSON structure for whole form data'
+        definition: JSONB NULL
+  ## --
+

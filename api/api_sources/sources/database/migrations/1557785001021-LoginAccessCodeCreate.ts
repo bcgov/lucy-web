@@ -41,14 +41,7 @@ export class LoginAccessCodeCreate1557785001021 extends AppLogger implements Mig
         // Creating table
         // Schema
         this.info(`[Running]`);
-
-        // RUN INITIAL DB SETUP QUERY
-        // SCHEMA
-
-        // TIMEZONE
-        // const timezone = process.env.TIMEZONE || 'Canada/Vancouver';
-        // await queryRunner.query(`SET TIMEZONE ${timezone};`);
-
+        // Create Table
         await queryRunner.query(this.roleCodeSchema.migrationSQL);
         // Put default values
         for (const code of DefaultLoginAccessCodes) {

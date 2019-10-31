@@ -19,7 +19,7 @@
 /**
  * Imports
  */
-import { Connection, MigrationInterface } from 'typeorm';
+import { Connection, MigrationInterface, createConnection } from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SharedDBManager } from './dataBaseManager';
 
@@ -134,6 +134,41 @@ export class AppDatabaseMigrationManager extends LoggerBase {
         return this.instance || (this.instance = new this());
     }
 
+    async setupDatabase() {
+       try {
+            // Delete schema
+            const newConfig: any = {
+                type: dbConfig.type,
+                host: dbConfig.host,
+                username: dbConfig.username,
+                password: dbConfig.password
+            };
+            return new Promise( res => {
+                AppDatabaseMigrationManager.logger.info(`Setting up database`);
+                createConnection(newConfig).then(async (connection: Connection) => {
+                    // Get Schema
+                    const schema = process.env.DB_SCHEMA || 'invasivesbc';
+                    await connection.query(`CREATE SCHEMA IF NOT EXISTS ${schema};`);
+                    await connection.query(`SET search_path TO ${schema}, public;`);
+                    await connection.query(`SET SCHEMA '${schema}';`);
+                    // Set Timezone
+                    const timezone = process.env.TIMEZONE || 'America/Vancouver';
+                    await connection.query(`SET TIME ZONE '${timezone}';`);
+                    // await connection.query(`CREATE TABLE IF NOT EXISTS ${dbConfig.migrationsTableName}();`);
+                    await connection.close();
+                    res();
+                }).catch( err => {
+                    AppDatabaseMigrationManager.logger.error('Unable to perform setup DATABASE{1}');
+                    res();
+                });
+            });
+       } catch (excp) {
+           AppDatabaseMigrationManager.logger.error('Unable to perform setup DATABASE{0}');
+           return;
+       }
+
+    }
+
     /**
      * @description Recursively revert each migration
      * @param Connection con
@@ -166,7 +201,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
      */
     public async revert(connection: Connection) {
         try {
-            const result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.migrationsTableName}`);
+            const result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.schema}.${dbConfig.migrationsTableName}`);
             AppDatabaseMigrationManager.logger.info(`revert | Migration count: ${JSON.stringify(result)}`);
             if (result[0].count > 0) {
                 await this._revert(connection, parseInt(result[0].count, 10));
@@ -185,6 +220,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
      */
     public async refresh(): Promise<void> {
         try {
+            await this.setupDatabase();
             await SharedDBManager.connect();
             const connection = SharedDBManager.connection;
             AppDatabaseMigrationManager.logger.info('Connection Created');
@@ -202,6 +238,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
      */
     public async migrate(): Promise<void> {
         try {
+            await this.setupDatabase();
             await SharedDBManager.connect();
             const connection: Connection = SharedDBManager.connection;
             await connection.runMigrations({transaction: true});
