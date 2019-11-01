@@ -47,7 +47,6 @@ export class ApplicationEvent1559071014193 extends AppLogger implements Migratio
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`ALTER TABLE ${this.eventSchema.tableName} DROP CONSTRAINT IF EXISTS FK_2019052812h49m`);
         await queryRunner.query(this.eventSchema.dropTable());
     }
 

@@ -33,7 +33,7 @@ export class CreateJurisdictionCode1562358560315 implements MigrationInterface {
         // Creating Table
         await queryRunner.query(this.schema.migrationSQL);
         // Pre-load species
-        await queryRunner.query(getSQLFileData(this.schema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.schema.dataSQLPath(), this.schema.className));
     }
 
     /**

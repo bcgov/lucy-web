@@ -20,7 +20,7 @@
  * Imports
  */
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { UserSessionSchema, UserSchema } from '../database-schema';
+import { UserSessionSchema } from '../database-schema';
 import { AppLogger } from '../../Applogger';
 
 /**
@@ -48,9 +48,7 @@ export class UserSessionCreate1557796183879 extends AppLogger implements Migrati
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`ALTER TABLE ${UserSchema.dbTable} DROP CONSTRAINT IF EXISTS fk_20190926`);
         await queryRunner.query(`DROP TABLE IF EXISTS user_active_session`);
-        await queryRunner.query(`ALTER TABLE ${UserSchema.dbTable} DROP CONSTRAINT IF EXISTS FK_20190606d9h38m`);
         await queryRunner.query(this.sessionSchema.dropTable());
     }
 }

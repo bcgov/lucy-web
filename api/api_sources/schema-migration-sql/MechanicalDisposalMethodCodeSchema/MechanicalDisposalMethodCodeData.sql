@@ -2,7 +2,7 @@
 -- ## Inserting Item: 0  ## --
 INSERT INTO mechanical_disposal_method_code(mechanical_disposal_method_code, description)
 VALUES
-('IS','In situ');
+('IS','None - in situ');
 -- ## End of item: 0 ## --
 -- ## Inserting Item: 1  ## --
 INSERT INTO mechanical_disposal_method_code(mechanical_disposal_method_code, description)
