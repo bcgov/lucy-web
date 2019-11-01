@@ -141,7 +141,8 @@ export class AppDatabaseMigrationManager extends LoggerBase {
                 type: dbConfig.type,
                 host: dbConfig.host,
                 username: dbConfig.username,
-                password: dbConfig.password
+                password: dbConfig.password,
+                database: dbConfig.database
             };
             return new Promise( res => {
                 AppDatabaseMigrationManager.logger.info(`Setting up database`);
