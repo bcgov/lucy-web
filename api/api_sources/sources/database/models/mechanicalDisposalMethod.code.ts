@@ -5,7 +5,6 @@ import { MechanicalDisposalMethodCodeSchema } from '../database-schema';
 
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './generic.data.models';
 
 
@@ -75,21 +74,6 @@ export class MechanicalDisposalMethodCode extends ApplicationCode {
 	@ModelProperty({type: PropertyType.boolean})
 	activeIndicator: boolean;
 
-}
-
-
-// ** DataModel controller of MechanicalDisposalMethodCode **
-
-/**
- * @description Data Model Controller Class for MechanicalDisposalMethodCodeSchema and MechanicalDisposalMethodCode
- */
-export class MechanicalDisposalMethodCodeController extends DataModelController<MechanicalDisposalMethodCode> {
-	/**
-	* @description Getter for shared instance
-	*/
-	public static get shared(): MechanicalDisposalMethodCodeController {
-		return this.sharedInstance<MechanicalDisposalMethodCode>(MechanicalDisposalMethodCode, MechanicalDisposalMethodCodeSchema) as MechanicalDisposalMethodCodeController;
-	}
 }
 
 // -------------------------------------

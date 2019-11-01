@@ -41,6 +41,7 @@ export class LoginAccessCodeCreate1557785001021 extends AppLogger implements Mig
         // Creating table
         // Schema
         this.info(`[Running]`);
+        // Create Table
         await queryRunner.query(this.roleCodeSchema.migrationSQL);
         // Put default values
         for (const code of DefaultLoginAccessCodes) {

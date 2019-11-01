@@ -7,12 +7,12 @@ VALUES
 -- ## Inserting Item: 1  ## --
 INSERT INTO mechanical_treatment_issue_code(mechanical_treatment_issue_code, description)
 VALUES
-('FC','Fencing');
+('AW','Adverse weather');
 -- ## End of item: 1 ## --
 -- ## Inserting Item: 2  ## --
 INSERT INTO mechanical_treatment_issue_code(mechanical_treatment_issue_code, description)
 VALUES
-('AW','Adverse weather');
+('FC','Fencing');
 -- ## End of item: 2 ## --
 -- ## Inserting Item: 3  ## --
 INSERT INTO mechanical_treatment_issue_code(mechanical_treatment_issue_code, description)

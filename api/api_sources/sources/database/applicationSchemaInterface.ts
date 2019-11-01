@@ -45,16 +45,20 @@ export class  BaseTableSchema extends BaseSchema {
         const data = await this.csvData(context);
         const entryString = this.entryString(context, inputColumns);
         const sqlString = this.createDataEntrySql(entryString, data);
-        const saveFilePath = getSQLFilePath(this.dataSQLPath(context));
+        const saveFilePath = getSQLFilePath(this.dataSQLPath(context), this.className);
         incrementalWrite(saveFilePath, sqlString);
     }
 
     get migrationSQL(): string {
-        return getSQLFileData(`${this.className}.sql`);
+        return getSQLFileData(`${this.className}.sql`, this.className);
     }
 
     migrationFilePath(): string {
-        return getSQLFilePath(`${this.className}.sql`);
+        return getSQLFilePath(`${this.className}.sql`, this.className);
+    }
+
+    get createSQLDir(): boolean {
+        return process.env.ENVIRONMENT === 'local' ? true : false;
     }
 }
 

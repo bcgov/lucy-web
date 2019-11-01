@@ -74,6 +74,18 @@ export class SpeciesController extends DataModelController<Species> {
     public static get shared(): SpeciesController {
         return this.sharedInstance<Species>(Species, SpeciesSchema) as SpeciesController;
     }
+
+    /**
+	 * @description Overriding all method to sort alphabetically by common name
+	 * @param object query
+	 * ** Sorting Code
+	 * ** (a, b) => ((a.commonName > b.commonName) ? 1 : (b.commonName > a.commonName) ? -1 : 0 )
+	 */
+	async all(query?: object) {
+		const d = await super.all(query);
+		d.sort( (a, b) => ((a.commonName > b.commonName) ? 1 : (b.commonName > a.commonName) ? -1 : 0 ));
+		return d;
+	}
 }
 
 /**

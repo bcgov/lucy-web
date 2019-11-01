@@ -55,6 +55,24 @@ export class DateTransformer {
         }
     }
 }
+
+export class DateTimeTransformer {
+    to(date: any) {
+        return date;
+    }
+
+    from(date: any) {
+        if (typeof date === 'string') {
+            return date;
+        }
+        try {
+            const ds = `${moment(date).format('YYYY-MM-DD hh:mm:ss')}`;
+            return ds;
+        } catch (excp) {
+            return `${date}`;
+        }
+    }
+}
 // -------------------------------------------------------------------
 
 

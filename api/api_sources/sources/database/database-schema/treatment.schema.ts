@@ -49,7 +49,11 @@ export class TreatmentCodeSchema extends CodeTableSchema {
 /**
  * @description Schema Handler class for Mechanical Treatment Schema
  */
-export class MechanicalTreatmentSchema extends TreatmentSchema {}
+export class MechanicalTreatmentSchema extends TreatmentSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('mechanicalTreatment.schema.yaml');
+    }
+}
 
 /**
  * @description Schema Handler for Mechanical Treatment Code
