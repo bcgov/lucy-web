@@ -23,8 +23,9 @@
 import * as _ from 'underscore';
 import * as minimist from 'minimist';
 import * as schema from '../sources/database/database-schema';
-import { arrayToString } from '../sources/libs/utilities';
+import { arrayToString, unWrap } from '../sources/libs/utilities';
 import { modelClassCreator } from './schema.model.gen';
+import { BaseSchema, SchemaHelper } from '../sources/libs/core-database';
 
 
 /**
@@ -57,6 +58,8 @@ const usage = (option: OptionInfo, value?: string) => {
 
 const optionCheck = async (options: any, option: OptionInfo, handler: (value: string) => void) => {
     const allNames = option.alias.concat(option.name);
+    // console.dir(options);
+    // console.dir(allNames);
     const check = Object.keys(options).filter(k => allNames.includes(k));
     let success = false;
     if (check) {
@@ -81,6 +84,37 @@ const optionCheck = async (options: any, option: OptionInfo, handler: (value: st
     }
 };
 
+const manageSchema = (schemaObj: BaseSchema) => {
+    let report: any = SchemaHelper.shared.createMigrationFiles(schemaObj);
+    let requireModelUpdate = false;
+    const printVersionReport = (r: any, key: string) => {
+        console.log(`*** Schema Version => ${key}`);
+        console.log(`*** SQL File Name => ${r.migrationFilePath}`);
+        console.log(`*** Is new root migration file created?  => ${unWrap(r.createNew, false)}`);
+        console.log(`*** Is existing migration file updated? => ${unWrap(r.updateExisting, false)} `);
+        console.log(`*** Comment on root migration: ${r.comment}`);
+    };
+    console.log(`*** Report on ${schemaObj.className}`);
+    printVersionReport(report.rootVersion, 'root');
+    _.each(report.versions, (r, k: string) => printVersionReport(r, k));
+    requireModelUpdate = report.requireDataModelUpdate;
+    console.log(`*** Schema Need Class Update => ${requireModelUpdate}`);
+    report = SchemaHelper.shared.createRevertMigrationFiles(schemaObj);
+    console.log(`*** Revert Migration Classes`);
+    if (Object.keys(report.versions).length > 0) {
+        _.each(report.versions, (r, k: string) => printVersionReport(r, k));
+    } else {
+        console.log(`*** None`);
+    }
+    if (requireModelUpdate) {
+        console.log(`*** Require Model Update for schema`);
+        console.log(`*** Model Name => ${schemaObj.modelName}`);
+        const r = modelClassCreator(schemaObj);
+        console.log(`*** Model File Creation Details`);
+        console.dir(r);
+    }
+};
+
 /**
  * @description Script Method
  */
@@ -95,8 +129,15 @@ const optionCheck = async (options: any, option: OptionInfo, handler: (value: st
             description: 'Name of the schema',
         },
         {
-            name: 'migration',
+            name: 'manage',
             alias: ['m'],
+            expected: [],
+            required: false,
+            description: 'Manage schema'
+        },
+        {
+            name: 'migration',
+            alias: ['mg'],
             expected: ['yes', 'y', 'Y', 'YES'],
             required: false,
             description: 'Create Migration File'
@@ -156,6 +197,10 @@ const optionCheck = async (options: any, option: OptionInfo, handler: (value: st
                     case 'migration':
                         console.log('Creating migration file...');
                         schemaObj.createMigrationFile();
+                        break;
+                    case 'manage':
+                        console.log('Managing schema');
+                        manageSchema(schemaObj);
                         break;
                     case 'data':
                         let entryString;
