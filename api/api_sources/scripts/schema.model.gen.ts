@@ -89,6 +89,15 @@ const exportBaseModel = (schema: BaseTableSchema) => {
 };
 
 export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
+    const ret = {
+        content: '',
+        fileName: '',
+        filePath: '',
+        controllerFileName: '',
+        controllerFilePath: ''
+    };
+    const modelFilesDir = '../sources/database/models';
+    const controllerDir = `${modelFilesDir}/controllers`;
     const className = cls || schema.modelName || 'SampleClass';
     const schemaName = schema.className;
     const n = '\n';
@@ -158,7 +167,7 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         // Creating model and controller separate
         const final = `${defClass}${n}// -------------------------------------${n}`;
         // Writing Model
-        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
+        const p = incrementalWrite(path.resolve(__dirname, `${modelFilesDir}/${reverseCapitalize(className)}.ts`), final);
 
         // Writing Controller
         // Adding some export
@@ -169,18 +178,27 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         defClassController = conImp + `\n\n` + defClassController;
 
         writeIfNotExists(
-            path.resolve(__dirname, `../sources/database/models/controllers/${reverseCapitalize(className)}.controller.ts`),
+            path.resolve(__dirname, `${controllerDir}/${reverseCapitalize(className)}.controller.ts`),
             `${defClassController}// ----------------\n`);
 
-        return final;
+        ret.content = final;
+        ret.fileName = reverseCapitalize(className);
+        ret.filePath = p;
+        ret.controllerFileName = `${reverseCapitalize(className)}.controller.ts`;
+        ret.controllerFilePath = `${controllerDir}/${reverseCapitalize(className)}.controller.ts`;
     } else {
         // Writing model and controller together
         defClassController = `// ** ${className}Controller ** //\n\n` + defClassController;
         const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
 
-        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
-        return final;
+        const p = incrementalWrite(path.resolve(__dirname, `../sources/database/models/${reverseCapitalize(className)}.ts`), final);
+
+        ret.content = final;
+        ret.fileName = reverseCapitalize(className);
+        ret.filePath = p;
     }
+
+    return ret;
 };
 
 
