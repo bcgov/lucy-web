@@ -37,9 +37,6 @@ import { AppEnvConstant } from '../sources/app-constants';
         // Refreshing database: Drop all existing migration and refresh
         console.log('[MIGRATION]: REFRESH');
         AppDatabaseMigrationManager.shared.refresh();
-    } else if (TYPE === AppEnvConstant.DB_MIGRATION_TYPE_REVERT_LATEST) {
-        console.log('[MIGRATION]: REVERTING LATEST');
-        AppDatabaseMigrationManager.shared.revertLatestAndRun();
     } else {
         // Migrating db
         console.log('[MIGRATION]: NORMAL');
