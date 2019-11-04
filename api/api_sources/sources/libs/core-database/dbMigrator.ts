@@ -70,6 +70,10 @@ export class DBMigrator {
         return Array.from(this.importMigrationFiles);
     }
 
+    addSchemaInitVersion(schema: BaseSchema) {
+        this.upMigrationFiles.add([`${schema.className}.sql`, schema.className]);
+    }
+
     /**
      * @description Adding version info for migrator
      * @param BaseSchema schema
@@ -133,6 +137,11 @@ export class DBMigrator {
         throw new Error('DBMigrator: sub-class must implement this methods');
     }
 
+    /**
+     * @description Logging migration activity
+     * @param string info
+     * @param string tag
+     */
     log(info: string, tag: string = 'None') {
         console.log(this.getLogString(info, tag));
     }

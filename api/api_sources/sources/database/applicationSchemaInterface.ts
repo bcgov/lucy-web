@@ -17,12 +17,13 @@
 //
 // Created by Pushan Mitra on 2019-05-17.
 import { unWrap, incrementalWrite } from '../libs/utilities';
-import { getSQLFileData, getSQLFilePath } from '../libs/core-database';
+import { getSQLFileData, getSQLFilePath, DBMigrator } from '../libs/core-database';
 import {
     ApplicationTableColumn,
     TableColumnOption,
     BaseSchema
 } from '../libs/core-database';
+import { Logger } from '../server/logger';
 
 /**
  * @description Schema holder for entity
@@ -73,5 +74,28 @@ export const createColumn = (option: TableColumnOption): ApplicationTableColumn 
     const def = option.definition;
     return defineColumn(option.name, option.comment, def, refTable, refColumn, option.deleteCascade);
 };
+
+export class AppDBMigrator extends DBMigrator {
+
+    /**
+     * @description Logger instance
+     */
+    logger: Logger;
+
+    /**
+     * @description Constructor
+     */
+    constructor() {
+        super();
+        this.logger = new Logger(this.className);
+    }
+
+    /**
+     * @description Overriding logging application specific data
+     */
+    log(info: string, tag: string = 'None') {
+        this.logger.info(`${tag} | ${info}`);
+    }
+}
 
 // ---------------------------------------------------------------------------------
