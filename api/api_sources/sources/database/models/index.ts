@@ -53,6 +53,7 @@ export * from './chemicalTreatment';
 export * from './pesticideEmployer.code';
 export * from './projectManagementPlan.code';
 export * from './chemicalTreatmentEmployee';
+export * from './watercraftRiskAssessment';
 
 /**
  * Controllers
@@ -68,4 +69,5 @@ export * from './controllers/pesticideEmployerCode.controller';
 export * from './controllers/mechanicalDisposalMethodCode.controller';
 export * from './controllers/mechanicalTreatmentIssueCode.controller';
 export * from './controllers/mechanicalMethodCode.controller';
+export * from './controllers/watercraftRiskAssessment.controller';
 // ----------------------------------------------------------------------------------------------------------------
