@@ -416,5 +416,14 @@ export class SchemaHelper {
     revertMigrationFiles(schema: BaseSchema): {[key: string]: string} {
         return this.allSqlFiles(schema).revertMigrations;
     }
+
+    // Get version migration and revert migration
+    versionMigrationFileName(schema: BaseSchema, version: TableVersion) {
+        return this._versionFileName(schema, version);
+    }
+
+    versionRevertMigrationFileName(schema: BaseSchema, version: TableVersion) {
+        return this._versionRevertMigrationFileName(schema, version);
+    }
 }
 // ----------------------
