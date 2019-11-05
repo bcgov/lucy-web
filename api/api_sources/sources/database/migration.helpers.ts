@@ -234,6 +234,22 @@ export class AppDatabaseMigrationManager extends LoggerBase {
     }
 
     /**
+     * @description Revert latest migration and run
+     */
+    public async revertLatestAndRun(): Promise<void> {
+        try {
+            await this.setupDatabase();
+            await SharedDBManager.connect();
+            const connection = SharedDBManager.connection;
+            await connection.undoLastMigration();
+            await connection.runMigrations({ transaction: true});
+            await SharedDBManager.close();
+        } catch (excp) {
+            AppDatabaseMigrationManager.logger.error(`revertLatestAndRun | Exception received while refresh database: ${excp}`);
+        }
+    }
+
+    /**
      * @description Run fresh migrations
      * @return Promise<void>
      */

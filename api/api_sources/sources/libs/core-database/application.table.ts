@@ -192,4 +192,12 @@ export class ApplicationTable {
             type: type
         };
     }
+
+    getVersion(version: number | string): TableVersion {
+        if (typeof version === typeof '') {
+            return this.versions.filter( v => v.name === version)[0];
+        } else {
+            return this.versions[version];
+        }
+    }
 }
