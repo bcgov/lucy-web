@@ -11,22 +11,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: cmd.ts
  * Project: lucy
- * File Created: Friday, 30th August 2019 1:31:37 pm
+ * File Created: Friday, 1st November 2019 4:04:02 pm
  * Author: pushan (you@you.you)
  * -----
- * Last Modified: Friday, 30th August 2019 1:34:22 pm
+ * Last Modified: Friday, 1st November 2019 4:04:06 pm
  * Modified By: pushan (you@you.you>)
  * -----
  */
-
-export * from './application.column';
-export * from './application.table';
-export * from './baseSchema';
-export * from './schema.storage';
-export * from './base.data.controller';
-export * from './schemaYaml.loader';
-export * from './sql.loader';
-export * from './schema.helper';
-export * from './dbMigrator';
+/**
+ * Imports
+ */
+import * as util from 'util';
+import { exec } from 'child_process';
+const pExec = util.promisify(exec);
+export const run = async (cmd: string) => await pExec(cmd);
+// -------------------

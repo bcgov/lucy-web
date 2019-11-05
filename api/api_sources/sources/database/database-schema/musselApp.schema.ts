@@ -11,22 +11,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: musselApp.schema.ts
  * Project: lucy
- * File Created: Friday, 30th August 2019 1:31:37 pm
+ * File Created: Friday, 1st November 2019 6:05:55 pm
  * Author: pushan (you@you.you)
  * -----
- * Last Modified: Friday, 30th August 2019 1:34:22 pm
+ * Last Modified: Friday, 1st November 2019 6:07:12 pm
  * Modified By: pushan (you@you.you>)
  * -----
  */
 
-export * from './application.column';
-export * from './application.table';
-export * from './baseSchema';
-export * from './schema.storage';
-export * from './base.data.controller';
-export * from './schemaYaml.loader';
-export * from './sql.loader';
-export * from './schema.helper';
-export * from './dbMigrator';
+/**
+ * Imports
+ */
+import { RecordTableSchema } from './base.record.schema';
+import { getYAMLFilePath } from '../../libs/core-database';
+
+export class WatercraftRiskAssessmentSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('watercraftRiskAssessment.schema.yaml');
+    }
+}
