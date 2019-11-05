@@ -435,10 +435,14 @@ export interface ValidationInfo {
 export const ValidatorCheck = (query: {[key: string]: ValidationInfo}) => {
     const result: any[] = [];
     _.each(query, ( info: ValidationInfo, key) => {
-        if (info.optional !== undefined && info.optional === true) {
-            result.push(info.validate(check(key)).optional().withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
-        } else {
-            result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+        try {
+            if (info.optional !== undefined && info.optional === true) {
+                result.push(info.validate(check(key)).optional().withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+            } else {
+                result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
+            }
+        } catch (excp) {
+            throw new Error(`ValidatorCheck: ${key} error: ${excp} \n ${JSON.stringify(info, null, 2)}`);
         }
     });
     return result;

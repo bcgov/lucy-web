@@ -10,7 +10,8 @@ schemas:
     baseSchema: RecordSchema
     meta:
       resource: true
-      api: /observation/watercraft/risk-assessment
+      api: /mussels/wra
+      base: /api
     displayLayout: {}
     layout: {}
     computedFields: {}

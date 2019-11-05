@@ -168,6 +168,14 @@ export class BaseResourceRouteController extends RouteController {
                             message: 'should be string in YYYY-MM-DD format',
                             optional: !column.required
                         };
+                    } else if (typeInfo.isTimestamp) {
+                        validateKey[key] = {
+                            validate: validate => validate.isString().custom(async (val: string, {req}) => {
+                                assert(moment(val, 'YYYY-MM-DD hh:mm:ss').isValid(), `${key}: should be string in YYYY-MM-DD hh:mm:ss format`);
+                            }),
+                            message: 'should be string in YYYY-MM-DD format',
+                            optional: !column.required
+                        };
                     } else {
                         validateKey[key] = {
                             validate: validate => validate.isString().custom(async (value: string, {req}) => {
@@ -205,6 +213,22 @@ export class BaseResourceRouteController extends RouteController {
                     if (filterOnly) {
                         break;
                     }
+
+                    // Check json type or not
+                    if (typeInfo.subType === 'json') {
+                        validateKey[key] = {
+                            validate: validate => validate.custom(async (value: any, {req}) => {
+                                // Check json or not
+                                assert(value, `${key}: should be json`);
+                                assert(typeof value === typeof {}, `${key}: should be json, received ${typeof value}`);
+                                // TODO: Add logic to verify json-schema
+                            }),
+                            message: 'should be json',
+                            optional: !column.required
+                        };
+                        break;
+                    }
+
                     // Get schema name
                     const schemaName = typeInfo.schema;
                     // console.log(`${key}: 1: ${schemaName}`);
