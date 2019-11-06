@@ -8,14 +8,14 @@ import {
     AuthType
 } from '../../../../test-helpers/testHelpers';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
-import { WatercraftRiskAssessmentController } from '../../../../database/models';
+import { WaterBodyController } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
 
 /**
  * Test Function
  */
-const resourceName = 'Watercraft Risk Assessment';
-const controller: DataController = WatercraftRiskAssessmentController.shared;
+const resourceName = 'Water-body';
+const controller: DataController = WaterBodyController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
         await SharedExpressApp.initExpress();
@@ -25,18 +25,6 @@ describe(`Test for ${resourceName}`, () => {
         await commonTestTearDownAction();
     });
 
-    // Test1: Create
-    it(`should create ${resourceName}`, async () => {
-        await ExpressResourceTest.testCreate(SharedExpressApp.app, {
-            auth: AuthType.admin
-        }, controller);
-    });
-
-    // Test2: Update
-    it(`should update ${resourceName}`, async () => {
-        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.admin}, controller);
-    });
-
     // Test3: Get Single
     it(`should get ${resourceName} {single}`, async () => {
         await ExpressResourceTest.testGetSingle(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
@@ -44,7 +32,7 @@ describe(`Test for ${resourceName}`, () => {
 
     // Test3: Get Single
     it(`should get ${resourceName} {all}`, async () => {
-        await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
+        await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer, ignoreSchemaVerification: true}, controller);
     });
 
     // Test4: Fail To Create For Viewer

@@ -1,7 +1,7 @@
 # Water-Craft Risk Assessment Form Schema
 version: '1.0'
 includes: 
-  - waterCraftObservation.schema.yaml
+  - watercraftObservation.schema.yaml
 schemas: 
   ## -- WaterCraftRiskAssessmentSchema
   WatercraftRiskAssessmentSchema:
@@ -24,9 +24,29 @@ schemas:
         name: timestamp
         comment: 'Date and time of watercraft observation.'
         definition: 'TIMESTAMP NOT NULL'
-      formData:
-        name: watercraft_form
-        comment: 'Stored JSON structure for whole form data'
+      highRiskAssessmentForm:
+        name: high_risk_assessment_form
+        comment: 'Stored JSON structure for whole high risk form data'
         definition: JSONB NULL
+      lowRiskAssessmentForm:
+        name: low_risk_assessment_form
+        comment: 'Stored JSON structure for whole high low risk form data'
+        definition: JSONB NULL
+    ## -- end columns
+    versions:
+      ## -- version: workflow
+      - name: 'workflow'
+        id: '20191106'
+        info: 'Adding workflow foreign key reference'
+        columns: 
+          workflow:
+            name: observer_workflow_id
+            comment: Foreign key reference to reference to observer_workflow table
+            definition: INT NULL
+            foreignTable: observer_workflow
+            refColumn: observer_workflow_id
+            meta: {}
+      ## -- end: workflow
+    ## -- end version
   ## --
 

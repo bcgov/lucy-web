@@ -13,13 +13,12 @@
  * limitations under the License.
  * File: index.ts
  * Project: lucy
- * File Created: Tuesday, 5th November 2019 10:16:12 am
- * Author: pushan
- * Last Modified: Tuesday, 5th November 2019 11:07:10 am
- * Modified By: pushan
+ * File Created: Wednesday, 6th November 2019 9:58:12 am
+ * Author: pushan (you@you.you)
+ * -----
+ * Last Modified: Wednesday, 6th November 2019 10:11:58 am
+ * Modified By: pushan (you@you.you>)
  * -----
  */
-export * from './watercraftRiskAssessment/watercraftRiskAssessment.route';
-export * from './observerWorkflow/observerWorkflow.route';
-// ------------------------------
-
+export * from './waterBody/waterBody.route';
+// --------------

@@ -36,6 +36,7 @@ export interface ExpressSetup {
     auth?: AuthType;
     token?: string;
     expect?: number;
+    ignoreSchemaVerification?: boolean;
 }
 
 export class ExpressResourceTest {
@@ -233,7 +234,9 @@ export class ExpressResourceTest {
                         expect(dataAll.length).to.be.greaterThan(0);
                         const filter = _.filter(dataAll, item => controller.getIdValue(item) === controller.getIdValue(model));
                         expect(filter.length).to.be.equal(1);
-                        this.verifyObjectBody(filter[0], schema);
+                        if (!setup.ignoreSchemaVerification) {
+                            this.verifyObjectBody(filter[0], schema);
+                        }
                         await Destroyer(controller)(model);
                     } else {
                         await Destroyer(controller)(model);

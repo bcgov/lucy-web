@@ -111,7 +111,7 @@ export class BaseResourceRouteController extends RouteController {
      */
     get create(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: create`, async (data: any, req: Request) => {
-            return [201, await this.dataController.createNewObject(data, req.user)];
+            return await this.createResource(req, data);
         });
     }
 
@@ -120,8 +120,7 @@ export class BaseResourceRouteController extends RouteController {
      */
     get update(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: update`, async (data: any, req: any) => {
-            assert(req.resource, `${this.className}: update: No resource object found`);
-            return [200, await this.dataController.updateObject(req.resource, data, req.user)];
+            return await this.updateResource(req, data);
         });
     }
 
@@ -130,7 +129,7 @@ export class BaseResourceRouteController extends RouteController {
      */
     get index(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: index`, async (d: any, req: any) => {
-            return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
+            return await this.all(req, d);
         });
     }
 
@@ -141,6 +140,38 @@ export class BaseResourceRouteController extends RouteController {
         return this.routeConfig<any>(`${this.className}: config`, async () => {
             return [200, this.dataController.schemaObject.config()];
         });
+    }
+
+    /**
+     *
+     * Methods for subclass to handle actions
+     */
+    /**
+     * @description Create New Object
+     * @param Request req
+     * @param any data
+     */
+    public async createResource(req: any, data: any): Promise<[number, any]> {
+        return [201, await this.dataController.createNewObject(data, req.user)];
+    }
+
+    /**
+     * @description Update existing
+     * @param Request req
+     * @param any data
+     */
+    public async updateResource(req: any, data: any): Promise<[number, any]> {
+        assert(req.resource, `${this.className}: update: No resource object found`);
+        return [200, await this.dataController.updateObject(req.resource, data, req.user)];
+    }
+
+    /**
+     * @description Fetch object
+     * @param Request req
+     * @param any data
+     */
+    public async all(req: any, data?: any): Promise<[number, any]> {
+        return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
     }
 
     /**

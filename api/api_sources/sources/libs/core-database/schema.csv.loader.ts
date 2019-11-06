@@ -65,6 +65,60 @@ export class SchemaCSVLoader {
         return this._instance || ( this._instance = new this());
     }
 
+    _validRow(row: any[]) {
+        if (row.length === 0) {
+            return false;
+        }
+        let inValidCount = 0;
+        for (const item of row) {
+            if (item === '' || item === ' ') {
+                inValidCount = inValidCount + 1;
+                // console.log(`count: ${inValidCount} => ${row.length} => ${arrayToString(row)}`);
+            }
+        }
+        // console.log(`[${arrayToString(row)}]`);
+        return (row.length !== inValidCount);
+    }
+    sqlString(schema: BaseSchema, data: any[], columns: string) {
+       // Now Create sql string
+       const tableName = schema.tableName;
+       const values = data;
+       let base = `-- ## Inserting into table: ${tableName} ## --\n`;
+       _.each(values, (row, index) => {
+           if (!this._validRow(row)) {
+               return;
+           }
+           let rowStr = ``;
+           _.each(row, (col) => {
+               if (typeof col === 'string' && col !== '') {
+                   let strCol: string = col as string;
+                   strCol = strCol.trim();
+                   if (strCol === 'Y' || strCol === 'y' || strCol === 'YES' || strCol === 'N' || strCol === 'NO') {
+                       rowStr = `${rowStr}'${strCol}',`;
+                   } else if (strCol.includes(`'`)) {
+                       strCol = strCol.replace(/'/gi, `''`);
+                       rowStr = `${rowStr}'${strCol}',`;
+                   }  else if (strCol.includes(`"`)) {
+                       strCol = strCol.replace(/"/gi, `""`);
+                       rowStr = `${rowStr}'${strCol}',`;
+                   } else {
+                       rowStr = `${rowStr}'${strCol}',`;
+                   }
+               } else {
+                   rowStr = `${rowStr}${col}`;
+               }
+           });
+           if (rowStr.length === 0) {
+               return;
+           }
+           base = `${base}-- ## Inserting Item: ${index}  ## --\n`;
+           base = `${base}INSERT INTO ${tableName}(${columns})\nVALUES\n`;
+           rowStr = rowStr.replace(/.$/, '');
+           base = `${base}(${rowStr});\n-- ## End of item: ${index} ## --\n`;
+       });
+       return base;
+    }
+
     /**
      * Methods
      */
@@ -75,10 +129,15 @@ export class SchemaCSVLoader {
      */
     async _generateSQL(schema: BaseSchema, options: CSVImportOptions): Promise<string> {
         // Get keys
-        const keys: string[] = options.entryColumns;
+        let keys: string[] = options.entryColumns;
         const columnNames: string[] = [];
         // Check keys are present in columnDef
         const schemaKeys: string[] = Object.keys(schema.table.columnsDefinition);
+
+        // Checking entry for all columns or not
+        if (options.allColumns) {
+            keys = Object.keys(schema.table.columnsDefinition).filter( k => k !== 'id');
+        }
 
         // Check keys are included or not
         for (const k of keys) {
@@ -110,38 +169,10 @@ export class SchemaCSVLoader {
             throw new Error(`schema.csv: ${schema.className}: sql data: CSV Data error: ${options.fileName}`);
         }
 
-        // Now Create sql string
-        const tableName = schema.tableName;
+        // Entry columns
         const columns = arrayToString(columnNames);
-        const values = data;
-        let base = `-- ## Inserting into table: ${tableName} ## --\n`;
-        _.each(values, (row, index) => {
-            base = `${base}-- ## Inserting Item: ${index}  ## --\n`;
-            base = `${base}INSERT INTO ${tableName}(${columns})\nVALUES\n`;
-            let rowStr = ``;
-            _.each(row, (col) => {
-                if (typeof col === 'string') {
-                    let strCol: string = col as string;
-                    strCol = strCol.trim();
-                    if (strCol === 'Y' || strCol === 'y' || strCol === 'YES' || strCol === 'N' || strCol === 'NO') {
-                        rowStr = `${rowStr}'${strCol}',`;
-                    } else if (strCol.includes(`'`)) {
-                        strCol = strCol.replace(/'/gi, `''`);
-                        rowStr = `${rowStr}'${strCol}',`;
-                    }  else if (strCol.includes(`"`)) {
-                        strCol = strCol.replace(/"/gi, `""`);
-                        rowStr = `${rowStr}'${strCol}',`;
-                    } else {
-                        rowStr = `${rowStr}'${strCol}',`;
-                    }
-                } else {
-                    rowStr = `${rowStr}${col}`;
-                }
-            });
-            rowStr = rowStr.replace(/.$/, '');
-            base = `${base}(${rowStr});\n-- ## End of item: ${index} ## --\n`;
-        });
-        return base;
+        // Now Create sql string
+        return this.sqlString(schema, data, columns);
     }
 
     /**

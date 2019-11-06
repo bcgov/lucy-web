@@ -27,8 +27,33 @@
 import { RecordTableSchema } from './base.record.schema';
 import { getYAMLFilePath } from '../../libs/core-database';
 
+/**
+ * @description Schema Class for WatercraftRiskAssessmentSchema
+ */
 export class WatercraftRiskAssessmentSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('watercraftRiskAssessment.schema.yaml');
+    }
+}
+
+/**
+ * @description Schema Class for WaterBodySchema
+ */
+export class WaterBodySchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('waterBody.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
+/**
+ * @description Schema Class for ObserverWorkflowSchema
+ */
+export class ObserverWorkflowSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('watercraftObservation.schema.yaml');
     }
 }
