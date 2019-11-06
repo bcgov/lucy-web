@@ -4,7 +4,7 @@ schemas:
   ## -- ObserverWorkflowSchema
   ObserverWorkflowSchema:
     name: observer_workflow
-    description: 'Table to store typical work flow data for watercraft observer. Which includes start of the day form and end of the day form. This table is used to store refer from WatercraftRiskAssessment and WaterCraftPassport schema'
+    description: 'Table to store typical work flow data for watercraft observer. Which includes start of the day form and end of the day form. This table is used to store refer from WatercraftRiskAssessment and WaterCraft quick pass schema'
     baseSchema: RecordSchema
     meta:
       resource: true
