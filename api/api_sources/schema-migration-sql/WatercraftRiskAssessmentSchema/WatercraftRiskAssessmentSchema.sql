@@ -4,7 +4,8 @@
 CREATE TABLE watercraft_risk_assessment ();
 ALTER TABLE watercraft_risk_assessment ADD COLUMN watercraft_risk_assessment_id SERIAL PRIMARY KEY;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN timestamp TIMESTAMP NOT NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN watercraft_form JSONB NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_assessment_form JSONB NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN low_risk_assessment_form JSONB NULL;
 
 
         
@@ -14,7 +15,8 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN watercraft_form JSONB NULL;
 COMMENT ON TABLE watercraft_risk_assessment IS 'This is schema for data model of water craft observation for invasive aquatic species specially Mussels. This data model will be used to capture all kind of variables related to a water craft observation';
 COMMENT ON COLUMN watercraft_risk_assessment.watercraft_risk_assessment_id IS 'Auto generated primary key';
 COMMENT ON COLUMN watercraft_risk_assessment.timestamp IS 'Date and time of watercraft observation.';
-COMMENT ON COLUMN watercraft_risk_assessment.watercraft_form IS 'Stored JSON structure for whole form data';
+COMMENT ON COLUMN watercraft_risk_assessment.high_risk_assessment_form IS 'Stored JSON structure for whole high risk form data';
+COMMENT ON COLUMN watercraft_risk_assessment.low_risk_assessment_form IS 'Stored JSON structure for whole high low risk form data';
 
 
         

@@ -7,6 +7,7 @@ export * from './request.access';
 export * from './observation';
 export * from './treatments';
 export * from './forms';
+export * from './watercraftObservation';
 
 // --------------------------------------
 

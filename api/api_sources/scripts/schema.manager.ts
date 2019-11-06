@@ -26,6 +26,7 @@ import * as schema from '../sources/database/database-schema';
 import { arrayToString, unWrap } from '../sources/libs/utilities';
 import { modelClassCreator } from './schema.model.gen';
 import { BaseSchema, SchemaHelper } from '../sources/libs/core-database';
+import { SchemaCSVLoader } from '../sources/libs/core-database/schema.csv.loader';
 
 
 /**
@@ -84,7 +85,7 @@ const optionCheck = async (options: any, option: OptionInfo, handler: (value: st
     }
 };
 
-const manageSchema = (schemaObj: BaseSchema) => {
+const manageSchema = async (schemaObj: BaseSchema, options: any) => {
     let report: any = SchemaHelper.shared.createMigrationFiles(schemaObj);
     let requireModelUpdate = false;
     const printVersionReport = (r: any, key: string) => {
@@ -106,12 +107,21 @@ const manageSchema = (schemaObj: BaseSchema) => {
     } else {
         console.log(`*** None`);
     }
-    if (requireModelUpdate) {
+    if (requireModelUpdate && !options['ignore-model']) {
         console.log(`*** Require Model Update for schema`);
         console.log(`*** Model Name => ${schemaObj.modelName}`);
         const r = modelClassCreator(schemaObj);
         console.log(`*** Model File Creation Details`);
         console.dir(r);
+    }
+
+    // Create import sql files
+    const reports: any[] = await SchemaCSVLoader.shared.createImportMigrations(schemaObj);
+    for (const r of reports) {
+        console.log(`********* Import: ${r.importName}`);
+        console.log(`*** Import SQL File Name: ${r.sqlFileName}`);
+        console.log(`*** Import CSV File Name: ${r.csvFile}`);
+        console.log(`*** Import Action: ${r.comment}`);
     }
 };
 
@@ -200,7 +210,7 @@ const manageSchema = (schemaObj: BaseSchema) => {
                         break;
                     case 'manage':
                         console.log('Managing schema');
-                        manageSchema(schemaObj);
+                        manageSchema(schemaObj, options);
                         break;
                     case 'data':
                         let entryString;

@@ -8,14 +8,14 @@ import {
     AuthType
 } from '../../../../test-helpers/testHelpers';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
-import { WatercraftRiskAssessmentController } from '../../../../database/models';
+import { ObserverWorkflowController } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
 
 /**
  * Test Function
  */
-const resourceName = 'Watercraft Risk Assessment';
-const controller: DataController = WatercraftRiskAssessmentController.shared;
+const resourceName = 'ObserverWorkFlow';
+const controller: DataController = ObserverWorkflowController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
         await SharedExpressApp.initExpress();
