@@ -21,7 +21,7 @@ module.exports = (settings) => {
   const image = `${isName}:${setupTag}`;
 
   // Clean existing image 
-  checkAndClean(`istag/${image}`);
+  checkAndClean(`istag/${image}`, oc);
 
   // Creating image stream for setup
   is.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/is.api.yaml`, {
