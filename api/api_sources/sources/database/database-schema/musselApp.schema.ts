@@ -54,6 +54,6 @@ export class WaterBodySchema extends RecordTableSchema {
  */
 export class ObserverWorkflowSchema extends RecordTableSchema {
     get schemaFilePath(): string {
-        return getYAMLFilePath('watercraftObservation.schema.yaml');
+        return getYAMLFilePath('observerWorkflow.schema.yaml');
     }
 }

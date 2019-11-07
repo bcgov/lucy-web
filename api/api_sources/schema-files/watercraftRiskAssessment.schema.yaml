@@ -1,7 +1,7 @@
 # Water-Craft Risk Assessment Form Schema
 version: '1.0'
 includes: 
-  - watercraftObservation.schema.yaml
+  - observerWorkflow.schema.yaml
 schemas: 
   ## -- WaterCraftRiskAssessmentSchema
   WatercraftRiskAssessmentSchema:
