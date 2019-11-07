@@ -35,6 +35,8 @@ describe('Mussel app db element tests', () => {
         should().exist(ft.highRiskAssessmentForm);
         should().exist(ft.highRiskAssessmentForm['test']);
         should().exist(ft.lowRiskAssessmentForm);
+        should().exist(ft.fullObservationForm);
+        should().exist(ft.additionalInfo);
         await Destroyer(WatercraftRiskAssessmentController.shared)(w);
     });
 

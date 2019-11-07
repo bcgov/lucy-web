@@ -45,6 +45,8 @@ export interface WatercraftRiskAssessmentSpec {
 	timestamp: string;
 	highRiskAssessmentForm: object;
 	lowRiskAssessmentForm: object;
+	fullObservationForm: object;
+	additionalInfo: object;
 	workflow: ObserverWorkflow;
 }
 // -- End: WatercraftRiskAssessmentSpec --
@@ -56,7 +58,11 @@ export interface WatercraftRiskAssessmentSpec {
  */
 export interface WatercraftRiskAssessmentUpdateSpec {
 	timestamp?: string;
-	formData?: object;
+	highRiskAssessmentForm?: object;
+	lowRiskAssessmentForm?: object;
+	fullObservationForm?: object;
+	additionalInfo?: object;
+	workflow?: ObserverWorkflow;
 }
 // -- End: WatercraftRiskAssessmentUpdateSpec --
 
@@ -100,11 +106,25 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	highRiskAssessmentForm: object;
 
 	/**
-	 * @description Getter/Setter property for column {low_risk_assessment_form}
+	 * @description Getter/Setter property for column {additional_info}
 	 */
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.lowRiskAssessmentForm, type: 'jsonb'})
 	@ModelProperty({type: PropertyType.object})
 	lowRiskAssessmentForm: object;
+
+	/**
+	 * @description Getter/Setter property for column {full_observation_form}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.fullObservationForm, type: 'jsonb'})
+	@ModelProperty({type: PropertyType.object})
+	fullObservationForm: object;
+
+	/**
+	 * @description Getter/Setter property for column {additional_info}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.additionalInfo, type: 'jsonb'})
+	@ModelProperty({type: PropertyType.object})
+	additionalInfo: object;
 
 	/**
 	 * @description Getter/Setter property for column {observer_workflow_id}
