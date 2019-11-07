@@ -249,6 +249,8 @@ export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec): a
                     if (val && typeof val === typeof 1) {
                         result[key] = val;
                     }
+                } else {
+                    result[key] = spec[key];
                 }
             }
         }

@@ -20,6 +20,9 @@ module.exports = (settings) => {
   const setupTag = `${phases[phase].tag}-setup`
   const image = `${isName}:${setupTag}`;
 
+  // Clean existing image 
+  checkAndClean(`istag/${image}`, oc);
+
   // Creating image stream for setup
   is.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/is.api.yaml`, {
     'param': {

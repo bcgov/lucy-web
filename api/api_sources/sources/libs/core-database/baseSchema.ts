@@ -41,6 +41,7 @@ import { ApplicationTable, TableVersion } from './application.table';
 import { registerSchema, schemaWithName } from './schema.storage';
 import { SchemaHelper } from './schema.helper';
 import { getSQLDirPath } from './sql.loader';
+import { SchemaCSVLoader } from './schema.csv.loader';
 
 export interface TableColumnOption extends TableColumnDefinition {
     refSchemaObject?: BaseSchema;
@@ -285,34 +286,7 @@ export class  BaseSchema {
     }
 
     createDataEntrySql(columns: string, values: any[]): string {
-        let base = `-- ## Inserting into table: ${this.table.name} ## --\n`;
-        _.each(values, (row, index) => {
-            base = `${base}-- ## Inserting Item: ${index}  ## --\n`;
-            base = `${base}INSERT INTO ${this.table.name}(${columns})\nVALUES\n`;
-            let rowStr = ``;
-            _.each(row, (col) => {
-                if (typeof col === 'string') {
-                    let strCol: string = col as string;
-                    strCol = strCol.trim();
-                    if (strCol === 'Y' || strCol === 'y' || strCol === 'YES' || strCol === 'N' || strCol === 'NO') {
-                        rowStr = `${rowStr}'${strCol}',`;
-                    } else if (strCol.includes(`'`)) {
-                        strCol = strCol.replace(/'/gi, `''`);
-                        rowStr = `${rowStr}'${strCol}',`;
-                    }  else if (strCol.includes(`"`)) {
-                        strCol = strCol.replace(/"/gi, `""`);
-                        rowStr = `${rowStr}'${strCol}',`;
-                    } else {
-                        rowStr = `${rowStr}'${strCol}',`;
-                    }
-                } else {
-                    rowStr = `${rowStr}${col}`;
-                }
-            });
-            rowStr = rowStr.replace(/.$/, '');
-            base = `${base}(${rowStr});\n-- ## End of item: ${index} ## --\n`;
-        });
-        return base;
+        return SchemaCSVLoader.shared.sqlString(this, values, columns);
     }
 
     public dataSQLPath(context?: string): string {
