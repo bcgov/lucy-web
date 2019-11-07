@@ -1,0 +1,80 @@
+# Code Tables yaml
+version: '1.0'
+includes: []
+schemas: 
+  ## -- WaterBodySchema
+  WaterBodySchema:
+    name: water_body
+    description: 'The table to store all lake/water body information. Watercraft observation require  information regarding its source and destination.'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: /mussels/water-body
+      base: api
+    displayLayout:
+      displayLabel: '#(name)'
+      header:
+        key: WaterBodySchema
+        default: 'Lake and River'
+    layout: {}
+    computedFields: {}
+    columns: 
+      id: 
+        name: 'water_body_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      typeEnum:
+        name: 'type_enum'
+        comment: Type of the water-body. This type is application specific enum values
+        definition: SMALLINT NOT NULL
+      name:
+        name: name
+        comment: Common or popular name of the water-body
+        definition: VARCHAR(100) NOT NULL
+      typeName:
+        name: 'type_name'
+        comment: 'Type of the water-body. This type is application specific string enum values. Like lake/river'
+        definition: VARCHAR(50) NOT NULL
+      typeCode:
+        name: type_code
+        comment: Type of the water-body. This type is application specific enum values.
+        definition: INT NOT NULL
+      latitude: 
+        name: 'water_body_location_latitude'
+        comment: 'Latitude of treatment  location'
+        definition: NUMERIC(10, 7) NOT NULL
+      longitude:
+        name: 'water_body_location_longitude'
+        comment: 'Longitude of treatment location'
+        definition: NUMERIC(10, 7) NOT NULL
+        meta: {}
+      country:
+        name: country
+        comment: Country of the water-body
+        definition: VARCHAR(100) NOT NULL
+      province:
+        name: province
+        comment: Province of the water-body location
+        definition: VARCHAR(100) NOT NULL
+      abbrev:
+        name: abbrev
+        comment: Abbreviation of the water state/province 
+        definition: VARCHAR(50) NOT NULL
+      closest:
+        name: closest
+        comment: Closest landmark
+        definition: VARCHAR(100) NOT NULL
+      distance:
+        name: distance
+        comment: Distance from closest landmark
+        definition: NUMERIC(10, 5)
+    ## -- columns
+    imports:
+      init:
+        fileName: WaterBody.csv
+        allColumns: true
+  ## --    
+
+
+
+  

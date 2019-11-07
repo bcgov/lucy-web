@@ -215,6 +215,30 @@ export class AppDatabaseMigrationManager extends LoggerBase {
         }
     }
 
+    public async revertLastMigration() {
+        await this.setupDatabase();
+        await SharedDBManager.connect();
+        const connection = SharedDBManager.connection;
+        await connection.undoLastMigration();
+        await SharedDBManager.close();
+        return;
+    }
+
+    async runMigration(connection: Connection) {
+        try {
+            await connection.runMigrations({transaction: true});
+        } catch (excp) {
+            AppDatabaseMigrationManager.logger.error(`RunMigration | Exception received while running migration on database: ${excp}`);
+
+            // Close DB Connection
+            await SharedDBManager.close();
+            // Reopen
+            await SharedDBManager.connect();
+            // Run Migration Again
+            await SharedDBManager.connection.runMigrations();
+        }
+    }
+
     /**
      * @description Revert all existing migration then run fresh migrations
      * @return Promise<void>
@@ -226,7 +250,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             const connection = SharedDBManager.connection;
             AppDatabaseMigrationManager.logger.info('Connection Created');
             await this.revert(connection);
-            await connection.runMigrations({transaction: true});
+            await this.runMigration(connection);
             await SharedDBManager.close();
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`refresh | Exception received while refresh database: ${excp}`);
@@ -242,7 +266,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             await SharedDBManager.connect();
             const connection = SharedDBManager.connection;
             await connection.undoLastMigration();
-            await connection.runMigrations({ transaction: true});
+            await this.runMigration(connection);
             await SharedDBManager.close();
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`revertLatestAndRun | Exception received while refresh database: ${excp}`);
@@ -258,7 +282,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             await this.setupDatabase();
             await SharedDBManager.connect();
             const connection: Connection = SharedDBManager.connection;
-            await connection.runMigrations({transaction: true});
+            await this.runMigration(connection);
             await SharedDBManager.close();
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`migrate | Exception received while refresh database: ${excp}`);

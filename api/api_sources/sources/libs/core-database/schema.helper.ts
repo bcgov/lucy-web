@@ -70,7 +70,7 @@ export class SchemaHelper {
     _genColumnDef(col: ApplicationTableColumn, tableName: string): string {
         const colDef = col.createColumnSql(tableName);
         const colComment = `COMMENT ON COLUMN ${tableName}.${col.name} IS '${col.comment}'`;
-        return `\n## -- Adding Column ${col.name} on table ${tableName}\n${colDef}\n${colComment}\n ## --\n`;
+        return `\n-- ## Adding Column ${col.name} on table ${tableName}\n${colDef}\n${colComment}\n-- ## --\n`;
     }
 
     /**
@@ -87,20 +87,20 @@ export class SchemaHelper {
                 // Dropping Column
                 comment = `## -- Dropping Column ${existingColumn} on table ${tableName} --`;
                 const dropCol = existingColumn.dropColumnSql(tableName);
-                result = result + `\n${comment}\n${dropCol}\n## --`;
+                result = result + `\n${comment}\n${dropCol}\n-- ## --`;
                 break;
             }
             case ColumnChangeType.RENAME: {
-                comment = `## -- Renaming Column ${existingColumn.name} on table ${tableName} --`;
+                comment = `-- ## Renaming Column ${existingColumn.name} on table ${tableName} --`;
                 const rename = `ALTER TABLE ${tableName} RENAME ${existingColumn.name} TO ${ unWrap(change.column, {}).name || 'NA'};`;
-                result = result + `\n${comment}\n${rename}\n## --`;
+                result = result + `\n${comment}\n${rename}\n-- ## --`;
                 break;
             }
         }
 
         if (change.sqlStatement) {
             comment = `-- ## Adding Custom Change SQL Statement -- ##`;
-            result = result + `\n${comment}\n${change.sqlStatement};\n## --`;
+            result = result + `\n${comment}\n${change.sqlStatement};\n-- ## --`;
         }
         return result;
     }
@@ -112,7 +112,7 @@ export class SchemaHelper {
      */
     _downChangeColumn(change: ColumnChangeDefinition, tableName: string) {
         if (change.downSqlStatement) {
-            return `-- ## Reverting changes --\n${change.downSqlStatement};\n ## --`;
+            return `-- ## Reverting changes --\n${change.downSqlStatement};\n--  ## --`;
         } else {
             return `-- ## No Revert Changes for ${change.existingKey} and ${change.type} ## --`;
         }
@@ -351,7 +351,7 @@ export class SchemaHelper {
         // Check each version revert migration file
         _.each(schema.table.versions, (version: TableVersion) => {
             const info = this.versionRevertMigrationInfo(schema, version);
-            this._write(info.filePath, info.filePath, dryRun);
+            this._write(info.filePath, info.fileContent, dryRun);
             report.versions[version.name] = {
                 migrationFilePath: info.filePath,
                 comment: 'Revert migration file'

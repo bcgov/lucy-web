@@ -11,29 +11,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: route.info.ts
+ * File: index.ts
  * Project: lucy
- * File Created: Monday, 26th August 2019 9:41:04 am
+ * File Created: Tuesday, 5th November 2019 10:16:12 am
  * Author: pushan
- * -----
- * Last Modified: Monday, 26th August 2019 9:41:07 am
+ * Last Modified: Tuesday, 5th November 2019 11:07:10 am
  * Modified By: pushan
  * -----
  */
-import { DataController} from '../../database/data.model.controller';
+export * from './watercraftRiskAssessment/watercraftRiskAssessment.route';
+export * from './observerWorkflow/observerWorkflow.route';
+// ------------------------------
 
-export interface ResourceInfo {
-    dataController: DataController;
-    path?: string;
-    description?: string;
-    secure?: boolean;
-    users?: any[];
-    validators?: () => any[];
-    middleware?: () => any[];
-    createMiddleware?: () => any[];
-    updateMiddleware?: () => any[];
-    viewMiddleware?: () => any[];
-    dependency?: () => any[];
-}
-
-// ----------------------------------------------------------------------
