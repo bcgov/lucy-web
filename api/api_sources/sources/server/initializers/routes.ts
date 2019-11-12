@@ -28,7 +28,8 @@ import { accountRoute,
     ChemicalTreatmentRouteController,
     WatercraftRiskAssessmentRouteController,
     WaterBodyRouteController,
-    ObserverWorkflowRouteController
+    ObserverWorkflowRouteController,
+    MusselsAppCodesRouteController
 } from '../modules';
 import { defaultRoute, miscellaneousRouter } from '../modules';
 
@@ -63,6 +64,9 @@ export const routes = (app: Application) => {
 
     // Observer Workflow
     app.use('/api/mussels/workflow', ObserverWorkflowRouteController.shared.router);
+
+    // Mussels App Codes
+    app.use('/api/mussels/codes', MusselsAppCodesRouteController.shared.router);
 
     // Miscellaneous
     app.use('/api/misc', miscellaneousRouter());

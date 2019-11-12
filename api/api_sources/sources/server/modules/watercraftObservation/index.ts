@@ -21,4 +21,5 @@
  * -----
  */
 export * from './waterBody/waterBody.route';
+export * from './constantData/mussels.code.route';
 // --------------
