@@ -49,17 +49,17 @@
     },
     "migrationInfo" : {
         "dev": {
-            "type": "revertLatest",
+            "type": "refresh",
             "cleanup": "none",
             "dbSeed": "yes"
         },
         "test": {
-            "type": "normal",
+            "type": "refresh",
             "cleanup": "none",
             "dbSeed": "yes"
         },
         "prod": {
-            "type": "normal",
+            "type": "refresh",
             "cleanup": "none",
             "dbSeed": "yes"
         }

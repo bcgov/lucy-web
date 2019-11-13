@@ -60,6 +60,7 @@ export interface CSVImportOptions {
     entryColumns: string[];
     info?: string;
     transformer?: string;
+    allColumns?: boolean;
 }
 
 /**

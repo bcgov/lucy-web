@@ -49,8 +49,11 @@ import {
     ChemicalTreatmentEmployeeController,
     ProjectManagementPlanCodeController,
     ChemicalTreatmentController,
-    PesticideEmployerCodeController
+    PesticideEmployerCodeController,
+    WatercraftRiskAssessmentController,
+    ObserverWorkflowController
 } from './models';
+import { WaterBodySchema } from './database-schema';
 const dbConfig = require('../../ormconfig');
 
 /**
@@ -150,8 +153,10 @@ export class DBManager extends LoggerBase {
             ChemicalTreatmentEmployeeController.shared,
             ProjectManagementPlanCodeController.shared,
             ChemicalTreatmentController.shared,
-            PesticideEmployerCodeController.shared
-
+            PesticideEmployerCodeController.shared,
+            ObserverWorkflowController.shared,
+            WatercraftRiskAssessmentController.shared,
+            WaterBodySchema.shared
         ];
     }
 
