@@ -1,0 +1,59 @@
+[
+  {
+    "Station_Name": "Other"
+  },
+  {
+    "Station_Name": "Cascade / Grand Forks"
+  },
+  {
+    "Station_Name": "Dawson Creek"
+  },
+  {
+    "Station_Name": "Cutts Hwy 93"
+  },
+  {
+    "Station_Name": "Golden"
+  },
+  {
+    "Station_Name": "Laidlaw / Chilliwack"
+  },
+  {
+    "Station_Name": "Mt. Robson"
+  },
+  {
+    "Station_Name": "Olsen Hwy 3"
+  },
+  {
+    "Station_Name": "Osoyoos"
+  },
+  {
+    "Station_Name": "Pacific / Surrey"
+  },
+  {
+    "Station_Name": "Radium"
+  },
+  {
+    "Station_Name": "Salmo"
+  },
+  {
+    "Station_Name": "Calemount"
+  },
+  {
+    "Station_Name": "Yahk"
+  },
+  {
+    "Station_Name": "Scheduled inspection (RAPP notification)"
+  },
+  {
+    "Station_Name": "Scheduled inspection (CBSA referral)"
+  },
+  {
+    "Station_Name": "Scheduled inspection (AB notification)"
+  },
+  {
+    "Station_Name": "Scheduled inspection (other notification)"
+  },
+  {
+    "Station_Name": "Scheduled inspection (new boat)"
+  }
+]

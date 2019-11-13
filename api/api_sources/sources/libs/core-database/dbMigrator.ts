@@ -130,6 +130,42 @@ export class DBMigrator {
         return results;
     }
 
+    processSQLString(query: string) {
+        const lines: string[] = query.split('\n');
+        const sqlLines: string[] = lines.filter( l => !l.startsWith('--'));
+        let newStr = ``;
+        for (const l of sqlLines) {
+            newStr = newStr + l + '\n';
+        }
+        return newStr;
+    }
+
+    async runSQLFileAsync(files: [string, string][], queryRunner: SQLQueryRunner, dryRun?: boolean) {
+        const results: any[] = [];
+        for (const file of files) {
+            const fileName = file[0];
+            const dir = file[1];
+            let query = '';
+            if (!dryRun) {
+                query = getSQLFileData(fileName, dir);
+                query = this.processSQLString(query);
+                // Get each line
+                const lines: string[] = query.split(';\n');
+                // Remove last element
+                lines.pop();
+                for (const l of lines) {
+                    try {
+                        results.push(await queryRunner.query(`${l};`));
+                    } catch (excp) {
+                        this.log(`FileName: ${fileName},\nFailQuery: ${l}\nExcp: ${excp}`, 'runSQLFileAsync');
+                    }
+                }
+            }
+            this.log(`Migrate File => ${dir}/${fileName}`, 'runQuerySqlFiles');
+        }
+        return results;
+    }
+
     /**
      * @description Subclass to add all migration related info
      */
