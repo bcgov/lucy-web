@@ -66,12 +66,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    */
   public isProd: boolean = false;
 
-  /**
-   * Boolean to indicate whether app is running in 
-   * test environment
-   */
-  public isTest: boolean = false;
-
   private _responseBody = {};
   get responseBody(): any {
     // return JSON.parse(JSON.stringify(this._responseBody));
@@ -290,7 +284,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.isProd = AppConstants.CONFIG.env === `prod` ? true : false;
-    this.isTest = AppConstants.CONFIG.env === `test` ? true : false;
     this.initialize();
   }
 
