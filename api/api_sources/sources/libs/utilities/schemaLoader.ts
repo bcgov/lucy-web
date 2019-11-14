@@ -23,7 +23,7 @@
 // Imports
 import * as assert from 'assert';
 import * as _ from 'underscore';
-import { yaml, verifyObject, unWrap } from './helpers.utilities';
+import { yaml, verifyObject, unWrap, copyKeyAndSubKeys } from './helpers.utilities';
 import { TableColumnDefinition, getYAMLFilePath, TableVersionDefinition, ColumnChangeOptions } from '../core-database';
 
 export class SchemaCache {
@@ -40,13 +40,24 @@ export class SchemaCache {
     }
 }
 
+interface SchemaCopyOptions {
+    columns?: string[];
+    versions?: string[];
+    relations?: string[];
+    computedFields?: string[];
+    fields?: string[];
+}
 
 interface Schema {
     name: string;
     description: string;
-    columns: {[key: string]: TableColumnDefinition };
+    columns: {[key: string]: TableColumnDefinition};
     versions?: TableVersionDefinition[];
     processed?: boolean;
+    relations?: {[key: string]: any};
+    computedFields?: {[key: string]: any};
+    fields?: {[key: string]: any};
+    copyFrom: {[key: string]: SchemaCopyOptions};
 }
 
 const ValidName = {
@@ -144,8 +155,49 @@ export class SchemaLoader {
         _.each(schema.columns, (column, key: string) => this.verifyColumn(column, key, tableName));
         schema.versions = schema.versions || [];
         _.each(schema.versions, (ver, index: number) => this.verifyVersions(ver, index, tableName));
+        this.copyFrom(schema);
         schema.processed = true;
         return;
+    }
+
+    _copyKeys(mainKey: string, source: Schema, destination: Schema, keys?: string[]) {
+        copyKeyAndSubKeys(mainKey, source, destination, keys);
+    }
+
+    copyFrom(schema: Schema) {
+        if (schema.copyFrom && Object.keys(schema.copyFrom).length > 0) {
+            const copyFrom: {[key: string]: SchemaCopyOptions} = schema.copyFrom || {};
+            _.each(copyFrom, (info: SchemaCopyOptions, schemaName: string) => {
+                // Get Schema from
+                if (this.schemaFileObj.schemas[schemaName]) {
+                    const copySchema: Schema = this.schemaFileObj.schemas[schemaName] as Schema;
+                    // Copy columns
+                    this._copyKeys('columns', copySchema, schema, info.columns);
+                    // Relations
+                    if (info.relations) {
+                        this._copyKeys('relations', copySchema, schema, info.relations);
+                    }
+                    // Computed Fields
+                    if (info.computedFields) {
+                        this._copyKeys('computedFields', copySchema, schema, info.computedFields);
+                    }
+                    // Non-db fields
+                    this._copyKeys('fields', copySchema, schema, info.fields);
+
+                    // Now copy versions
+                    if (info.versions && copySchema.versions) {
+                        const copyVersions: TableVersionDefinition[] = [];
+                        for (const v of copySchema.versions) {
+                            if (info.versions.includes(v.name)) {
+                                copyVersions.push(v);
+                            }
+                        }
+                        schema.versions = [ ...(schema.versions || []), ...copyVersions ];
+                    }
+
+                }
+            });
+        }
     }
 
     verifyVersions(rawVersion: any, index: number, table: string) {
