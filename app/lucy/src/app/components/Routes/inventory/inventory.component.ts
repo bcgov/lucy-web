@@ -63,6 +63,12 @@ export class InventoryComponent implements OnInit {
   public isProd: boolean = false;
 
   /**
+   * Boolean to indicate whether app is running in 
+   * test environment
+   */
+  public isTest: boolean = false;
+
+  /**
    * Show/Hide Add edit observation button
    * This value will only change
    * when is called ngOnInit().
@@ -122,7 +128,8 @@ export class InventoryComponent implements OnInit {
     private dummy: DummyService) { }
 
   ngOnInit() {
-    this.isProd = AppConstants.CONFIG.env == `prod` ? true : false;
+    this.isProd = AppConstants.CONFIG.env === `prod` ? true : false;
+    this.isTest = AppConstants.CONFIG.env === `test` ? true : false;
     this.fetchObservations();
     this.setAccessType();
     this.setDatabaseTitle();
