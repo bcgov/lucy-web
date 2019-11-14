@@ -25,4 +25,5 @@ export * from './csv';
 export * from './schemaLoader';
 export * from './date.utilities';
 export * from './cmd';
+export * from './string.util';
 // ---------------------------
