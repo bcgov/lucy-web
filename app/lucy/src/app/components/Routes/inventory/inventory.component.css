@@ -1,19 +1,19 @@
 .view-title-section {
     background-color: #F7F7F7;
     position: sticky;
-    top:0;
+    top: 0;
     /* height: 100px; */
     padding-top: 20px;
     padding-bottom: 20px;
     align-items: center;
-    z-index:1;
+    z-index: 1;
 }
 
 .view-title {
     height: 34px;
-	color: #000000;
-	font-size: 28px;
-	font-weight: bold;
+    color: #000000;
+    font-size: 28px;
+    font-weight: bold;
     line-height: 34px;
 }
 
@@ -34,7 +34,7 @@
 
 .toggle-btn-off {
     height: 32px;
-	width: 32px;
+    width: 32px;
     background-color: #D8D8D8;
     color: #000000;
     border-radius: 5;
@@ -51,11 +51,11 @@
 }
 
 .action-btn {
-	height: 29px;
-	color: #000000;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 16px;
+    height: 29px;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
     text-align: center;
     border: 1px solid #000000;
     width: 100%;
@@ -106,4 +106,12 @@ table {
     margin: 0 auto;
     width: 100%;
     background: transparent;
+}
+
+.material-icons.opaque {
+    opacity: 1;
+}
+
+.material-icons.hidden {
+    opacity: 0;
 }

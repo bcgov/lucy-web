@@ -32,11 +32,14 @@ import { AppEnvConstant } from '../sources/app-constants';
  * Script
  */
 (() => {
-    if (process.env.DB_MIGRATION_TYPE === AppEnvConstant.DB_MIGRATION_TYPE_REFRESH) {
+    const TYPE = process.env.DB_MIGRATION_TYPE || '';
+    if (TYPE === AppEnvConstant.DB_MIGRATION_TYPE_REFRESH) {
         // Refreshing database: Drop all existing migration and refresh
+        console.log('[MIGRATION]: REFRESH');
         AppDatabaseMigrationManager.shared.refresh();
     } else {
         // Migrating db
+        console.log('[MIGRATION]: NORMAL');
         AppDatabaseMigrationManager.shared.migrate();
     }
 })();

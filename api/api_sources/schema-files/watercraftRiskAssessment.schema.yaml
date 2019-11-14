@@ -1,0 +1,60 @@
+# Water-Craft Risk Assessment Form Schema
+version: '1.0'
+includes: 
+  - observerWorkflow.schema.yaml
+schemas: 
+  ## -- WaterCraftRiskAssessmentSchema
+  WatercraftRiskAssessmentSchema:
+    name: watercraft_risk_assessment
+    description: 'This is schema for data model of water craft observation for invasive aquatic species specially Mussels. This data model will be used to capture all kind of variables related to a water craft observation'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: /mussels/wra
+      base: /api
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    columns: 
+      id: 
+        name: 'watercraft_risk_assessment_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      timestamp: 
+        name: timestamp
+        comment: 'Date and time of watercraft observation.'
+        definition: 'TIMESTAMP NOT NULL'
+      highRiskAssessmentForm:
+        name: high_risk_assessment_form
+        comment: 'Stored JSON structure for whole high risk assessment form data'
+        definition: JSONB NULL
+      lowRiskAssessmentForm:
+        name: low_risk_assessment_form
+        comment: 'Stored JSON structure for whole low risk assessment form data'
+        definition: JSONB NULL
+      fullObservationForm:
+        name: full_observation_form
+        comment: 'Stored JSON structure for full observation questionnaire'
+        definition: JSONB NULL
+      additionalInfo:
+        name: additional_info
+        comment: 'Stored JSON structure for additional information'
+        definition: JSONB NULL
+    ## -- end columns
+    versions:
+      ## -- version: workflow
+      - name: 'workflow'
+        id: '20191106'
+        info: 'Adding workflow foreign key reference'
+        columns: 
+          workflow:
+            name: observer_workflow_id
+            comment: Foreign key reference to reference to observer_workflow table
+            definition: INT NULL
+            foreignTable: observer_workflow
+            refColumn: observer_workflow_id
+            meta: {}
+      ## -- end: workflow
+    ## -- end version
+  ## --
+

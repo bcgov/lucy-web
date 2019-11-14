@@ -57,12 +57,12 @@ export class TreatmentCodes1565631204586 implements MigrationInterface {
         await queryRunner.query(this.contractor.migrationSQL);
 
         // Load data
-        await queryRunner.query(getSQLFileData(this.mechanicalTreatmentMethodCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.mechanicalDisposalMethodCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.soilDisturbanceCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.rootRemovalCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.treatmentIssueSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.contractor.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.mechanicalTreatmentMethodCodeSchema.dataSQLPath(), this.mechanicalTreatmentMethodCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.mechanicalDisposalMethodCodeSchema.dataSQLPath(), this.mechanicalDisposalMethodCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.soilDisturbanceCodeSchema.dataSQLPath(), this.soilDisturbanceCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.rootRemovalCodeSchema.dataSQLPath(), this.rootRemovalCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.treatmentIssueSchema.dataSQLPath(), this.treatmentIssueSchema.className));
+        await queryRunner.query(getSQLFileData(this.contractor.dataSQLPath(), this.contractor.className));
     }
 
     /**

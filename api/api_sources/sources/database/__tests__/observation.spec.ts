@@ -53,7 +53,7 @@ import {
     SpecificUseCodeSchema,
     SlopeCodeSchema,
     AspectCodeSchema,
-    ProposedActionCodeSchema 
+    ProposedActionCodeSchema
 } from '../database-schema';
 
 describe('Observation tests', () => {

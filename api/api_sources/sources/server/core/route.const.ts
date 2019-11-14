@@ -24,8 +24,8 @@ import { DataController} from '../../database/data.model.controller';
 
 export interface ResourceInfo {
     dataController: DataController;
-    path: string;
-    description: string;
+    path?: string;
+    description?: string;
     secure?: boolean;
     users?: any[];
     validators?: () => any[];

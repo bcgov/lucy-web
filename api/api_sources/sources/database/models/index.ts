@@ -53,6 +53,9 @@ export * from './chemicalTreatment';
 export * from './pesticideEmployer.code';
 export * from './projectManagementPlan.code';
 export * from './chemicalTreatmentEmployee';
+export * from './watercraftRiskAssessment';
+export * from './waterBody';
+export * from './observerWorkflow';
 
 /**
  * Controllers
@@ -64,4 +67,11 @@ export * from './controllers/chemicalTreatment.controller';
 export * from './controllers/projectManagementPlanCode.controller';
 export * from './controllers/chemicalTreatmentEmployee.controller';
 export * from './controllers/speciesAgencyCode.controller';
+export * from './controllers/pesticideEmployerCode.controller';
+export * from './controllers/mechanicalDisposalMethodCode.controller';
+export * from './controllers/mechanicalTreatmentIssueCode.controller';
+export * from './controllers/mechanicalMethodCode.controller';
+export * from './controllers/watercraftRiskAssessment.controller';
+export * from './controllers/waterBody.controller';
+export * from './controllers/observerWorkflow.controller';
 // ----------------------------------------------------------------------------------------------------------------

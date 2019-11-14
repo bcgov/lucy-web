@@ -89,6 +89,16 @@ const exportBaseModel = (schema: BaseTableSchema) => {
 };
 
 export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
+    const ret = {
+        content: '',
+        fileName: '',
+        filePath: '',
+        controllerFileName: '',
+        controllerFilePath: '',
+        modelFilePath: ''
+    };
+    const modelFilesDir = '../sources/database/models';
+    const controllerDir = `${modelFilesDir}/controllers`;
     const className = cls || schema.modelName || 'SampleClass';
     const schemaName = schema.className;
     const n = '\n';
@@ -122,7 +132,7 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
     defClass = defClass + exportRelatedSchema(schema);
     defClass = defClass + `${n}import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';`;
-    defClass = defClass + `\nimport { NumericTransformer, DateTransformer } from '../../libs/transformer';`;
+    defClass = defClass + `\nimport { NumericTransformer, DateTransformer, DateTimeTransformer } from '../../libs/transformer';`;
     defClass = defClass + exportModel(schema);
     defClass = defClass + exportBaseModel(schema);
     if (!schema.table.meta.resource) {
@@ -152,13 +162,13 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClassController = defClassController + `${n}${t}public static get shared(): ${className}Controller {`;
     defClassController = defClassController + `${n}${t}${t}return this.sharedInstance<${className}>(${className}, ${schemaName}) as ${className}Controller;`;
     defClassController = defClassController + `${n}${t}}\n}\n`;
-
-
+    const modelFilePath = `${modelFilesDir}/${reverseCapitalize(className)}.ts`;
+    ret.modelFilePath = modelFilePath;
     if (schema.table.meta.resource) {
         // Creating model and controller separate
         const final = `${defClass}${n}// -------------------------------------${n}`;
         // Writing Model
-        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
+        const p = incrementalWrite(path.resolve(__dirname, modelFilePath), final);
 
         // Writing Controller
         // Adding some export
@@ -169,18 +179,27 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
         defClassController = conImp + `\n\n` + defClassController;
 
         writeIfNotExists(
-            path.resolve(__dirname, `../sources/database/models/controllers/${reverseCapitalize(className)}.controller.ts`),
+            path.resolve(__dirname, `${controllerDir}/${reverseCapitalize(className)}.controller.ts`),
             `${defClassController}// ----------------\n`);
 
-        return final;
+        ret.content = final;
+        ret.fileName = reverseCapitalize(className);
+        ret.filePath = p;
+        ret.controllerFileName = `${reverseCapitalize(className)}.controller.ts`;
+        ret.controllerFilePath = `${controllerDir}/${reverseCapitalize(className)}.controller.ts`;
     } else {
         // Writing model and controller together
         defClassController = `// ** ${className}Controller ** //\n\n` + defClassController;
         const final = `${defClass}${n}${n}${defClassController}${n}// -------------------------------------${n}`;
 
-        incrementalWrite(path.resolve(__dirname, `../sources/database/models/${className}.ts`), final);
-        return final;
+        const p = incrementalWrite(path.resolve(__dirname, modelFilePath), final);
+
+        ret.content = final;
+        ret.fileName = reverseCapitalize(className);
+        ret.filePath = p;
     }
+
+    return ret;
 };
 
 

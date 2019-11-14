@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -275,7 +292,8 @@ export class SsoService {
       const result = await this.httpClient.post<any>(this.SSO_RefreshTokenEndpoint(), queryString.stringify(data), { headers: this.getHeaders() }).toPromise();
       return this.getTokensFromAPIResult(result);
     } catch (error) {
-      console.log(`Refresh token failed with Error: ${error}`);
+      console.log(`Refresh token failed with Error:`);
+      console.dir(error);
       return undefined;
     }
   }
@@ -360,6 +378,7 @@ export class SsoService {
    */
   private async fetchAndStoreTokenFromCode(code: string): Promise<boolean> {
     const result = await this.getTokensFromCode(code);
+    console.dir(result);
     if (result.success) {
       this.storeAccessToken(result.accessToken, result.accessTokenExpiery);
       this.storeRefreshToken(result.refreshToken, result.refreshTokenTokenExpiery);
@@ -418,7 +437,7 @@ export class SsoService {
    * @param token
    * @param expiery
    */
-  private storeAccessToken(token: string, expiery: number) {
+  storeAccessToken(token: string, expiery: number) {
     this.bearerToken = token;
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
@@ -433,7 +452,7 @@ export class SsoService {
    * @param token
    * @param expiery
    */
-  private storeRefreshToken(token: string, expiery: number) {
+  storeRefreshToken(token: string, expiery: number) {
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
     const expieryDateUTC = expieryDate.toUTCString();
