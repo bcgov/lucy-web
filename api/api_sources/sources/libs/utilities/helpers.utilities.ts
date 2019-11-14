@@ -236,4 +236,38 @@ export const valueAtKeyPath = (obj: any, keyPath: string) => {
     return getValue(obj, keys);
 };
 
+/**
+ * @description This function copy a key of the source object to same key of destination object and if set of subKeys supplied then only coy subKeys.
+ * @param string key: key of the source object
+ * @param any source: source object
+ * @param any destination: Destination object
+ * @param string[] keys: array of sub keys with key object of the source
+ */
+export const copyKeyAndSubKeys = (key: string, source: any, destination: any, subKeys?: string[]) => {
+    // Check main key exists in destination
+    if (!destination[key]) {
+        return;
+    }
+    // Copy Obj
+    let copy = {};
+    if (subKeys && subKeys.length > 0) {
+        // Copy keys only
+        for (const k of subKeys) {
+            if (k !== 'id' && source[key][k]) {
+                copy[k] = source[key][k];
+            }
+        }
+    } else {
+        // Copy enter object
+        const all: any = { ...source[key] };
+        if (all.id) {
+            delete all.id;
+        }
+        copy = { ...all };
+    }
+
+    // Now update destinations key
+    destination[key] = { ...(destination[key] || {}), ...copy };
+};
+
 // -------------------------------

@@ -40,6 +40,7 @@ export interface ColumnChangeDefinition extends ColumnChangeOptions {
 
 export interface TableVersionDefinition {
     name: string;
+    id?: string;
     columns?: {[key: string]: any};
     columnChanges?: any[];
     info?: string;

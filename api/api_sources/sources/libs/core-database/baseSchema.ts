@@ -198,7 +198,8 @@ export class  BaseSchema {
                     columns: {},
                     info: v.info,
                     columnChanges: [],
-                    fileName: fileName
+                    fileName: fileName,
+                    id: v.id
                 };
 
                 // Now add all columns of version to column def

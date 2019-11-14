@@ -28,6 +28,7 @@ import {  getSQLFileData } from '../sql.loader';
 import { Test2Schema } from './test.schema';
 
 const schema = new Test2Schema();
+console.dir(schema);
 describe('Test Schema Helper Utility', () => {
     before(() => {});
     it('should create migration files', () => {
@@ -75,6 +76,11 @@ describe('Test Schema Helper Utility', () => {
         expect(schema.table.columns.count).to.be.equal('count');
         should().exist(schema.table.columns.top);
         expect(schema.table.columns.top).to.be.equal('top');
+    });
+
+    it('should copy from other schema', () => {
+        should().exist(schema.table.columns.copy1);
+        should().exist(schema.table.getVersion('test-copy'));
     });
 });
 
