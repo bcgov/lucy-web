@@ -18,12 +18,27 @@ schemas:
     ## -- computedFields
     computedFields: {}
     ## --
+    ## -- Relationships
+    relations: {}
+    ## --
     ## Columns
     columns: {}
+    ## -- Versions
+    versions: {}
+    ## --
+    ## -- Fields: Non data base fields
+    fields: {}
+    ## --
   ## -- End Schema
   Test2Schema:
     name: sample2_table
     description: Sample application table
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key is Schema name
+      CopySchema:
+        versions:
+          - test-copy
     columns:
       id:
         comment: Sample column pk
@@ -79,3 +94,33 @@ schemas:
           - name
           - address
       # --
+    # -- end Imports
+  ## -- end Schema
+  ## --
+  CopySchema:
+    name: 'test_copy'
+    description: 'Copy schema'
+    columns: 
+      id:
+        comment: Sample column pk
+        required: true
+        name: sample_id
+        definition: SERIAL PRIMARY KEY
+      copy1:
+        comment: Sample Copy column
+        required: true
+        name: copy_1
+        definition: INT NOT NULL
+    ## -- end columns
+    ## -- ver
+    versions: 
+      - name: 'test-copy'
+        id: '12.13'
+        info: 'Test version added'
+        columns: 
+          tag1:
+            name: tag_1
+            definition: VARCHAR(200) NOT NULL
+            comment: Tag 1 column
+    ## -- end ver
+  ## --
