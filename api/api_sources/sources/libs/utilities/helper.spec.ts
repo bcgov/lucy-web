@@ -30,7 +30,8 @@ import {
     ifDefined,
     writeIfNotExists,
     reverseCapitalize,
-    valueAtKeyPath
+    valueAtKeyPath,
+    copyKeyAndSubKeys
 } from './helpers.utilities';
 
 
@@ -114,5 +115,24 @@ describe('Test Helper/Utilities', () => {
     it('should not fetch values', () => {
         const o = {};
         expect(valueAtKeyPath(o, 'x.y.z')).to.be.equal(undefined);
+    });
+
+    it('should copy key', () => {
+        const x = { x: 'abc', y: { a: 'a', b: 'b', c: 'c'}};
+        const y = { n: 'n', y: { l: 'l'}};
+        copyKeyAndSubKeys('y', x, y);
+        should().exist(y.y.l);
+        should().exist(y.y['a']);
+        should().exist(y.y['b']);
+    });
+
+    it('should copy key with subKeys', () => {
+        const x = { x: 'abc', y: { a: 'a', b: 'b', c: 'c'}};
+        const y = { n: 'n', y: { l: 'l'}};
+        copyKeyAndSubKeys('y', x, y, ['a', 'b']);
+        should().exist(y.y.l);
+        should().exist(y.y['a']);
+        should().exist(y.y['b']);
+        should().not.exist(y.y['c']);
     });
 });

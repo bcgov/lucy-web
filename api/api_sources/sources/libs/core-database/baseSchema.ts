@@ -29,15 +29,19 @@ import {
     SchemaCache,
     SchemaLoader,
     incrementalWrite,
-    unWrap
+    CSVFieldTransformer
 } from '../utilities';
 
 import {
     ApplicationTableColumn,
-    TableColumnDefinition
+    TableColumnDefinition,
+    ColumnChangeOptions
 } from './application.column';
-import { ApplicationTable } from './application.table';
+import { ApplicationTable, TableVersion } from './application.table';
 import { registerSchema, schemaWithName } from './schema.storage';
+import { SchemaHelper } from './schema.helper';
+import { getSQLDirPath } from './sql.loader';
+import { SchemaCSVLoader } from './schema.csv.loader';
 
 export interface TableColumnOption extends TableColumnDefinition {
     refSchemaObject?: BaseSchema;
@@ -53,6 +57,15 @@ export class  BaseSchema {
 
     // Join table definitions associated with table
     joinTables: {[key: string]: ApplicationTable};
+
+    /**
+     * CSV Field Transformer options
+     * NOTE:
+     *      Subclass should provide csv field transformer
+     */
+    get csvFieldTransformer(): {[key: string]: {[key: string]: CSVFieldTransformer}} {
+        return {};
+    }
 
     /**
      * @description Timestamps column associated with schema
@@ -76,6 +89,10 @@ export class  BaseSchema {
 
     public get schemaFilePath(): string {
         return '';
+    }
+
+    public get createSQLDir(): boolean {
+        return true;
     }
 
     /**
@@ -106,6 +123,10 @@ export class  BaseSchema {
         return this.table.name;
     }
 
+    public get sqlFileDir(): string {
+        return `${getSQLDirPath()}/${this.className}`;
+    }
+
     /**
      * @description Constructor
      */
@@ -123,8 +144,22 @@ export class  BaseSchema {
         }
         assert(this.table.id, `No {id} column for schema ${this.table.name}`);
 
+        // Check and create dir in SQL Path
+        if (!fs.existsSync(this.sqlFileDir)) {
+            if (this.createSQLDir) {
+                fs.mkdirSync(this.sqlFileDir);
+            }
+        }
+
         // Register schema
         registerSchema(this);
+    }
+
+    _createColumn(value: TableColumnOption, key: string ) {
+        const result = {};
+        const column: ApplicationTableColumn = ApplicationTableColumn.createColumn(value);
+        result[key] = column;
+        return result;
     }
 
     loadSchema(): boolean {
@@ -145,26 +180,52 @@ export class  BaseSchema {
         table.relations = def.relations || {};
         table.modelName = def.modelName;
         table.displayLayout = def.displayLayout;
-        _.each(def.columns, (value: TableColumnOption, key) => {
-            const result = {};
-            const column: ApplicationTableColumn = new ApplicationTableColumn(
-                value.name,
-                value.comment,
-                value.definition,
-                value.foreignTable,
-                value.refColumn,
-                value.deleteCascade,
-                value.refSchema,
-                value.refModel
-            );
-            column.columnVerification = value.columnVerification;
-            column.meta = value.meta;
-            column.layout = value.layout;
-            column.eager = unWrap(def.eager, true);
-            column.required = (value.required !== undefined) ? value.required : true;
-            result[key] = column;
+        _.each(def.columns, (value: TableColumnOption, key: string) => {
+            const result = this._createColumn(value, key);
+            table.initialColumns = {...table.initialColumns, ...result};
             table.columnsDefinition = {...table.columnsDefinition, ...result};
         });
+
+        // Check version for tables
+        if (def.versions) {
+            let index = 1;
+            for (const v of def.versions) {
+                // Create Table version info
+                const vname = v.name || `${index}`;
+                const fileName = v.fileName || `${vname}-${v.id || index}`;
+                const version: TableVersion = {
+                    name: vname,
+                    columns: {},
+                    info: v.info,
+                    columnChanges: [],
+                    fileName: fileName,
+                    id: v.id
+                };
+
+                // Now add all columns of version to column def
+                _.each(v.columns, (columnOpt: TableColumnOption, key: string) => {
+                    const result = this._createColumn(columnOpt, key);
+                    table.columnsDefinition = {...table.columnsDefinition, ...result};
+                    version.columns = { ...version.columns, ...result};
+                });
+
+                // Now check all changes in the columns
+                _.each(v.columnChanges, (change: ColumnChangeOptions) => version.columnChanges.push(table.handleColumnChanges(change)
+                ));
+
+                // Now Add version to table
+                table.versions.push(version);
+
+                // Increment index
+                index = index + 1;
+            }
+        }
+
+        // CSV Import Options
+        if (def.imports) {
+            table.importOptions = def.imports;
+        }
+
         assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
         this.table = table;
         return true;
@@ -198,7 +259,7 @@ export class  BaseSchema {
         throw new Error('BaseSchema: migrationFilePath: Subclass must override');
     }
 
-    createMigrationFile(inputFileToSave?: string) {
+    createMigrationFile(inputFileToSave?: string, skipSaving?: boolean) {
         const fileToSave = inputFileToSave || this.migrationFilePath();
         assert(fileToSave, `${this.className}: createMigrationFile: [NO PATH TO SAVE]`);
         const create = this.createTable();
@@ -215,7 +276,9 @@ export class  BaseSchema {
         \n-- ### Creating User Audit Columns ### --\n
         \n${auditColumns}\n -- ### End: ${this.table.name} ### --\n`;
         // console.log(`${final}`);
-        incrementalWrite(fileToSave, final);
+        if (!skipSaving) {
+            incrementalWrite(fileToSave, final);
+        }
         return final;
     }
 
@@ -224,34 +287,7 @@ export class  BaseSchema {
     }
 
     createDataEntrySql(columns: string, values: any[]): string {
-        let base = `-- ## Inserting into table: ${this.table.name} ## --\n`;
-        _.each(values, (row, index) => {
-            base = `${base}-- ## Inserting Item: ${index}  ## --\n`;
-            base = `${base}INSERT INTO ${this.table.name}(${columns})\nVALUES\n`;
-            let rowStr = ``;
-            _.each(row, (col) => {
-                if (typeof col === 'string') {
-                    let strCol: string = col as string;
-                    strCol = strCol.trim();
-                    if (strCol === 'Y' || strCol === 'y' || strCol === 'YES' || strCol === 'N' || strCol === 'NO') {
-                        rowStr = `${rowStr}'${strCol}',`;
-                    } else if (strCol.includes(`'`)) {
-                        strCol = strCol.replace(/'/gi, `''`);
-                        rowStr = `${rowStr}'${strCol}',`;
-                    }  else if (strCol.includes(`"`)) {
-                        strCol = strCol.replace(/"/gi, `""`);
-                        rowStr = `${rowStr}'${strCol}',`;
-                    } else {
-                        rowStr = `${rowStr}'${strCol}',`;
-                    }
-                } else {
-                    rowStr = `${rowStr}${col}`;
-                }
-            });
-            rowStr = rowStr.replace(/.$/, '');
-            base = `${base}(${rowStr});\n-- ## End of item: ${index} ## --\n`;
-        });
-        return base;
+        return SchemaCSVLoader.shared.sqlString(this, values, columns);
     }
 
     public dataSQLPath(context?: string): string {
@@ -430,6 +466,22 @@ export class  BaseSchema {
      */
     public static get id(): string {
         return this.shared.table.columns.id;
+    }
+
+    /**
+     * @description Get all migration sql file related to schema
+     * @returns string []
+     */
+    public get migrationFiles(): {[key: string]: string} {
+        return SchemaHelper.shared.migrationFiles(this);
+    }
+
+    /**
+     * @description Get all revert migration sql file related to schema
+     * @returns object: {[key: string]: string}
+     */
+    public get revertMigrationFiles(): {[key: string]: string} {
+        return SchemaHelper.shared.revertMigrationFiles(this);
     }
 }
 

@@ -8,6 +8,8 @@
 /env_config/env.local
 .env
 .nvm
+Test2Schema/
+TestSchema/
 
 
 # Example

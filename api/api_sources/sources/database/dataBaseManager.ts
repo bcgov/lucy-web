@@ -49,8 +49,11 @@ import {
     ChemicalTreatmentEmployeeController,
     ProjectManagementPlanCodeController,
     ChemicalTreatmentController,
-    PesticideEmployerCodeController
+    PesticideEmployerCodeController,
+    WatercraftRiskAssessmentController,
+    ObserverWorkflowController
 } from './models';
+import { WaterBodySchema } from './database-schema';
 const dbConfig = require('../../ormconfig');
 
 /**
@@ -99,10 +102,10 @@ export class DBManager extends LoggerBase {
             });
         }
         return new Promise<boolean>((resolve, reject) => {
-            DBManager.logger.info('Connecting DB ...');
+            DBManager.logger.info('CONNECTING DB ...');
             createConnection(dbConfig).then((connection: Connection) => {
                 this.connection = connection;
-                // DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
+                DBManager.logger.info('[DB CONNECTED]');
                 resolve(true);
             }).catch((err) => {
                 DBManager.logger.error(`[DB Connection] Error: ${err}`);
@@ -150,9 +153,23 @@ export class DBManager extends LoggerBase {
             ChemicalTreatmentEmployeeController.shared,
             ProjectManagementPlanCodeController.shared,
             ChemicalTreatmentController.shared,
-            PesticideEmployerCodeController.shared
-
+            PesticideEmployerCodeController.shared,
+            ObserverWorkflowController.shared,
+            WatercraftRiskAssessmentController.shared,
+            WaterBodySchema.shared
         ];
+    }
+
+    /**
+     * @description Setup data base structure
+     */
+    async setupDB() {
+        const connection = this.connection;
+        // Get Schema
+        const schema = process.env.DB_SCHEMA || 'invasivesbc';
+        await connection.query(`CREATE SCHEMA IF NOT EXISTS ${schema};`);
+        await connection.query(`SET search_path TO ${schema}, public;`);
+        await connection.query(`SET SCHEMA '${schema}';`);
     }
 
     /**
@@ -162,6 +179,7 @@ export class DBManager extends LoggerBase {
     async connect(): Promise<void> {
         try {
             await this._connect();
+            await this.setupDB();
             this.loadControllers();
             return;
         } catch (err) {

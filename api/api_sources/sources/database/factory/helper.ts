@@ -129,6 +129,8 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                 case 'string':
                     if (typeInfo.isDate) {
                         obj[key] = `${moment(faker.date.recent()).format('YYYY-MM-DD')}`;
+                    } else if (typeInfo.isTimestamp) {
+                        obj[key] = `${moment(faker.date.recent()).format('YYYY-MM-DD hh:mm:ss')}`;
                     } else {
                         // console.log(`${key}:${JSON.stringify(typeInfo)}`);
                         if (keyname.includes('firstname')) {
@@ -159,6 +161,13 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                     obj[key] = faker.random.boolean();
                     break;
                 case 'object':
+                    // Check type is jsonb or not
+                    if (typeInfo.subType === 'json') {
+                        obj[key] = {
+                            test: faker.random.word()
+                        };
+                        break;
+                    }
                     // Get schema name
                     const schemaName = typeInfo.schema;
                     // console.log(`${key}: 1: ${schemaName}`);
@@ -189,6 +198,9 @@ export function Destroyer(controller: DataController) {
             }
             const typeInfo: any = column.typeDetails;
             if (typeInfo === 'object' && item[key]) {
+                if (typeInfo.subType === 'json') {
+                    return;
+                }
                 const schemaName = typeInfo.schema;
                 // console.log(`${key}: 1: ${schemaName}`);
                 const dbCon: DataController = controllerForSchemaName(schemaName) as DataController;
@@ -237,6 +249,8 @@ export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec): a
                     if (val && typeof val === typeof 1) {
                         result[key] = val;
                     }
+                } else {
+                    result[key] = spec[key];
                 }
             }
         }

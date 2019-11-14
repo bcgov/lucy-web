@@ -28,3 +28,5 @@ export * from './schema.storage';
 export * from './base.data.controller';
 export * from './schemaYaml.loader';
 export * from './sql.loader';
+export * from './schema.helper';
+export * from './dbMigrator';

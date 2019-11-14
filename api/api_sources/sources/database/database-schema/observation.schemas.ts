@@ -103,7 +103,7 @@ export class JurisdictionCodeSchema extends CodeTableSchema {
  */
 export class ObservationSchema extends RecordTableSchema {
     get schemaFilePath(): string {
-        return getYAMLFilePath('observation.codes.schema.yaml');
+        return getYAMLFilePath('observation.schema.yaml');
     }
 }
 

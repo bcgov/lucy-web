@@ -1,13 +1,30 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { StringConstants } from 'src/app/constants/string-constants';
-import { Router } from '@angular/router';
 import { AppRoutes } from 'src/app/constants';
 import { UserAccessType } from 'src/app/models/Role';
 import { AlertService } from 'src/app/services/alert.service';
 import { RouterService } from 'src/app/services/router.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { RolesService } from 'src/app/services/roles.service';
+import { SsoService } from 'src/app/services/sso.service';
 
 @Component({
   selector: 'app-profile',
@@ -49,7 +66,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   /////////////////
 
 
-  constructor(private userService: UserService, private router: RouterService, private alertService: AlertService, private loadingService: LoadingService, private roleService: RolesService) {
+  constructor(private userService: UserService, private router: RouterService, private alertService: AlertService, private loadingService: LoadingService, private roleService: RolesService, private ssoService: SsoService) {
     this.lottieConfig = {
       path: 'https://assets3.lottiefiles.com/datafiles/cS8pm9FZK13Qo6e/data.json',
       renderer: 'canvas',
@@ -62,39 +79,61 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadingService.add();
-    this.userService.getFullName().then((value) => {
-      this.userFullName = value;
-      this.loadingService.remove();
-    });
+    this.initialize();
+    // this.loadingService.add();
+    // this.userService.getFullName().then((value) => {
+    //   this.userFullName = value;
+    //   this.loadingService.remove();
+    // });
 
-    this.loadingService.add();
-    this.userService.getInitials().then((value) => {
-      this.userInitials = value;
-      this.loadingService.remove();
-    });
+    // this.loadingService.add();
+    // this.userService.getInitials().then((value) => {
+    //   this.userInitials = value;
+    //   this.loadingService.remove();
+    // });
 
-    this.loadingService.add();
-    this.userService.getOrganizationAndRole().then((value) => {
-      this.userRoleAndOrganization = value;
-      this.loadingService.remove();
-    });
+    // this.loadingService.add();
+    // this.userService.getOrganizationAndRole().then((value) => {
+    //   this.userRoleAndOrganization = value;
+    //   this.loadingService.remove();
+    // });
 
-    // Redirect to user info page if basic information isnt filled
-    this.loadingService.add();
-    this.userService.basicInformationExists().then((exists) => {
-      this.loadingService.remove();
-      if (!exists) {
-        this.navigateToUserInfo();
-      }
-    });
+    // // Redirect to user info page if basic information isnt filled
+    // this.loadingService.add();
+    // this.userService.basicInformationExists().then((exists) => {
+    //   this.loadingService.remove();
+    //   if (!exists) {
+    //     this.navigateToUserInfo();
+    //   }
+    // });
 
-    // Check Access type
+    // // Check Access type
+    // this.loadingService.add();
+    // this.userService.getAccess().then((value) => {
+    //   this.userAccessType = value;
+    //   this.loadingService.remove();
+    // });
+  }
+
+  async initialize() {
+    if (!this.ssoService.isAuthenticated()) {
+      return;
+    }
     this.loadingService.add();
-    this.userService.getAccess().then((value) => {
-      this.userAccessType = value;
+    const basicInfoExists = await this.userService.basicInformationExists();
+    if (!basicInfoExists) {
       this.loadingService.remove();
-    });
+      this.navigateToUserInfo();
+      return;
+    }
+    this.userFullName = await this.userService.getFullName();
+
+    this.userInitials = await this.userService.getInitials();
+
+    this.userRoleAndOrganization = await this.userService.getOrganizationAndRole();
+
+    this.userAccessType = await this.userService.getAccess();
+    this.loadingService.remove();
   }
 
   /////////// Lottie ///////////
