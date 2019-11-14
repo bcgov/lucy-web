@@ -36,6 +36,7 @@ import { DiffResult } from 'src/app/services/diff.service';
 import { ElementRef } from '@angular/core';
 import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 import { DummyService } from 'src/app/services/dummy.service';
+import { AppConstants } from 'src/app/constants/app-constants';
 
 export enum FormType {
   Observation,
@@ -58,6 +59,18 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
 
   public componentName = ` `;
+
+  /**
+   * Boolean to indicate whether app is running in 
+   * production environment
+   */
+  public isProd: boolean = false;
+
+  /**
+   * Boolean to indicate whether app is running in 
+   * test environment
+   */
+  public isTest: boolean = false;
 
   private _responseBody = {};
   get responseBody(): any {
@@ -276,6 +289,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.isProd = AppConstants.CONFIG.env === `prod` ? true : false;
+    this.isTest = AppConstants.CONFIG.env === `test` ? true : false;
     this.initialize();
   }
 
