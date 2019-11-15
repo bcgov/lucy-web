@@ -23,7 +23,7 @@ import * as assert from 'assert';
 import * as _ from 'underscore';
 import * as express from 'express';
 import * as passport from 'passport';
-import { validationResult, check, ValidationChain } from 'express-validator';
+import { validationResult, check } from 'express-validator';
 // SOURCE
 import { Logger } from '../logger';
 import { errorBody } from '../core';
@@ -399,53 +399,5 @@ export class WriterRouteController<T extends DataController> extends SecureRoute
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]));
     }
 }
-
-/**
- * @description Create Validator to check item exists on db or not
- * @param any[] items: check input array with key in req and dataController to verify
- * @returns any[]
- */
-export const ValidatorExists = (items: {[key: string]: DataController}): any[] => {
-    const result: any[] = [];
-    _.each(items, (con: DataController, key: string) => {
-        result.push(check(key).isInt().custom(async (val: number, {req}) => {
-            const item = await con.findById(val);
-            assert(item, `${key}: Item not exists with id: ${val}`);
-            if (!req.body) {
-                req.body = {};
-            }
-            req.body[key] = item;
-        }));
-    });
-    return result;
-};
-
-export type Validate = (chain: ValidationChain) => ValidationChain;
-export interface ValidationInfo {
-    message?: string;
-    validate: Validate;
-    optional?: boolean;
-}
-
-/**
- * @description Create array of check validators
- * @param object query: Fields with verify function
- * @returns any[]: Array of check validators
- */
-export const ValidatorCheck = (query: {[key: string]: ValidationInfo}) => {
-    const result: any[] = [];
-    _.each(query, ( info: ValidationInfo, key) => {
-        try {
-            if (info.optional !== undefined && info.optional === true) {
-                result.push(info.validate(check(key)).optional().withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
-            } else {
-                result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
-            }
-        } catch (excp) {
-            throw new Error(`ValidatorCheck: ${key} error: ${excp} \n ${JSON.stringify(info, null, 2)}`);
-        }
-    });
-    return result;
-};
 // --------------------------------------------------------------------------------------------------
 
