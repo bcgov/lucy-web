@@ -1,0 +1,37 @@
+﻿SEISM_Herbicide_Code,Composite Name for Dropdown, Active_Ingredient,Trade_Name,PMRA_REG_NUMBER,Formulation,Application_Rate,Application_Units
+AM500b,"AM500b  [2,4-D 2,4-D Amine 500 ]","2,4-D","2,4-D Amine 500",9528,liquid,4.75,L/ha
+AM500a,"AM500a  [2,4-D 2,4-D Amine 500 ]","2,4-D","2,4-D Amine 500",14725,liquid,9.5,L/ha
+AM600b,"AM600b  [2,4-D 2,4-D Amine 600 ]","2,4-D","2,4-D Amine 600",14726,liquid,5.5,L/ha
+AM600a,"AM600a  [2,4-D 2,4-D Amine 600 ]","2,4-D","2,4-D Amine 600",5931,liquid,4,L/ha
+Arsenal,Arsenal  [imazapyr Arsenal ],imazapyr,Arsenal,23713,liquid,3,L/ha
+Aspect,"Aspect  [picloram/2,4-D Aspect ]","picloram/2,4-D",Aspect,31641,liquid,11.5,L/ha
+Banvel2,Banvel2  [dicamba Banvel II ],dicamba,Banvel II,23957,liquid,4.6,L/ha
+BanvelVM,BanvelVM  [dicamba Banvel VM ],dicamba,Banvel VM,29249,liquid,5.2,L/ha
+CreditX,CreditX  [glyphosate Credit Xtreme ],glyphosate,Credit Xtreme,29888,liquid,8,L/ha
+Dyvel,"Dyvel  [dicamba/2,4-D/mecoprop-p Dyvel DSp ]","dicamba/2,4-D/mecoprop-p",Dyvel DSp,27856,liquid,3.25,L/ha
+Garlon4,Garlon4  [triclopyr Garlon 4 ],triclopyr,Garlon 4,21053,liquid,8,L/ha
+GarlonXRT,GarlonXRT  [triclopyr Garlon XRT ],triclopyr,Garlon XRT,28945,liquid,5,L/ha
+Grazon,"Grazon  [picloram/2,4-D Grazon ]","picloram/2,4-D",Grazon,27634,liquid,9.3,L/ha
+GrazonXC,"GrazonXC  [picloram/2,4-D Grazon XC ]","picloram/2,4-D",Grazon XC,31642,liquid,6.2,L/ha
+Habitat,Habitat  [imazapyr Habitat ],imazapyr,Habitat,30841,liquid,7,L/ha
+Killex,"Killex  [2,4-D/mecoprop-p/dicamba Killex ]","2,4-D/mecoprop-p/dicamba",Killex,27801,liquid,12,L/ha
+Lontrel360,Lontrel360  [clopyralid Lontrel 360 ],clopyralid,Lontrel 360,23545,liquid,0.83,L/ha
+Method240SL,Method240SL  [aminocyclopyrachlor Method 240SL ],aminocyclopyrachlor,Method 240SL,32957,liquid,0.292,L/ha
+Millstone,Millstone  [aminopyralid Milestone ],aminopyralid,Milestone,28517,liquid,0.5,L/ha
+Oracle,Oracle  [dicamba Oracle ],dicamba,Oracle,26722,liquid,4.6,L/ha
+Par3,"Par3  [mecoprop-p/2,4-D/dicamba Par III ]","mecoprop-p/2,4-D/dicamba",Par III,27884,liquid,3,L/ha
+PowerLN,PowerLN  [imazapyr Powerline ],imazapyr,Powerline,30203,liquid,4.68,L/ha
+ReclaimIIB,"ReclaimIIB  [2,4-D Reclaim II B ]","2,4-D",Reclaim II B,30063,liquid,1.7,L/ha
+RestoreA,RestoreA  [Aminopyralid Restore A ],Aminopyralid,Restore A,28551,liquid,0.5,L/ha
+RestoreB,"RestoreB  [2,4-D Restore B ]","2,4-D",Restore B,28552,liquid,2.6,L/ha
+RoundupSC,RoundupSC  [glyphosate Roundup Super Concentrate ],glyphosate,Roundup Super Concentrate,22759,liquid,10,L/ha
+RoundupTR,RoundupTR  [glyphosate Roundup Transorb HC ],glyphosate,Roundup Transorb HC,28198,liquid,8,L/ha
+RoundupWM,RoundupWM  [glyphosate Roundup Weathermax ],glyphosate,Roundup Weathermax,27487,liquid,8,L/ha
+StartUp,StartUp  [glyphosate StartUp ],glyphosate,StartUp,29498,liquid,8,L/ha
+Tordon101,"Tordon101  [picloram/2,4-D Tordon 101 ]","picloram/2,4-D",Tordon 101,9007,liquid,17.3,L/ha
+Tordon22K,Tordon22K  [picloram Tordon 22K ],picloram,Tordon 22K,9005,liquid,4.67,L/ha
+Trillion,"Trillion  [2,4-D/mecoprop-p/dicamba Trillion ]","2,4-D/mecoprop-p/dicamba",Trillion,27972,liquid,5.5,L/ha
+Vanquish,Vanquish  [dicamba Vanquish ],dicamba,Vanquish,26980,liquid,9.2,L/ha
+VantagePMs,VantagePMs  [glyphosate Vantage Plus Max / VPM II ],glyphosate,Vantage Plus Max / VPM II,27615,liquid,9,L/ha
+VantageXRT,VantageXRT  [glyphosate Vantage XRT ],glyphosate,Vantage XRT,29994,liquid,9,L/ha
+VP480,VP480  [glyphosate VP480 ],glyphosate,VP480,28840,liquid,9,L/ha
