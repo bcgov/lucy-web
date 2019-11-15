@@ -34,12 +34,14 @@ import {
     ProjectManagementPlanCode,
     ProjectManagementPlanCodeController,
     ChemicalTreatmentEmployee,
-    ChemicalTreatmentSpec
+    ChemicalTreatmentSpec,
+    Herbicide,
+    HerbicideController
 } from '../models';
 import { ModelFactory, Destroyer, ModelSpecFactory, userFactory } from '../factory';
 import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
 import {
-    PesticideEmployerCodeSchema, ProjectManagementPlanCodeSchema, ChemicalTreatmentEmployeeSchema, ChemicalTreatmentSchema
+    PesticideEmployerCodeSchema, ProjectManagementPlanCodeSchema, ChemicalTreatmentEmployeeSchema, ChemicalTreatmentSchema, HerbicideSchema, HerbicideTankMixSchema
 } from '../database-schema';
 
 // ** Test Function
@@ -86,6 +88,25 @@ describe('Test Chemical Treatment', () => {
         expect(ch.firstApplicator.chemical_treatment_employee_id).to.be.equal(chObj.firstApplicator.chemical_treatment_employee_id);
         expect(ch.secondApplicator.chemical_treatment_employee_id).to.be.equal(chObj.secondApplicator.chemical_treatment_employee_id);
         await Destroyer(ChemicalTreatmentController.shared)(ch);
+    });
+
+    it('should create Herbicide schema', () => {
+        const schema: HerbicideSchema = new HerbicideSchema();
+        should().exist(schema);
+        should().exist(schema.table.columnsDefinition.compositeName);
+    });
+
+    it('should fetch herbicide from database', async () => {
+        const herbicide: Herbicide = await HerbicideController.shared.findById(1);
+        should().exist(herbicide);
+        expect(herbicide.herbicide_id).to.be.equal(1);
+        const random = await HerbicideController.shared.random();
+        should().exist(random);
+    });
+
+    it('should create HerbicideTankMixSchema', () => {
+        const htms = new HerbicideTankMixSchema();
+        should().exist(htms);
     });
 
 });

@@ -107,7 +107,7 @@ const manageSchema = async (schemaObj: BaseSchema, options: any) => {
     } else {
         console.log(`*** None`);
     }
-    if (requireModelUpdate && !options['ignore-model']) {
+    if ((requireModelUpdate && !options['ignore-model']) || options['update-model']) {
         console.log(`*** Require Model Update for schema`);
         console.log(`*** Model Name => ${schemaObj.modelName}`);
         const r = modelClassCreator(schemaObj);

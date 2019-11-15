@@ -165,5 +165,17 @@ export class ChemicalTreatmentEmployeeSchema extends ChemicalTreatmentStaticData
     }
 }
 
+export class HerbicideSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('herbicide.schema.yaml');
+    }
+}
+
+export class HerbicideTankMixSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('herbicideMix.schema.yaml');
+    }
+}
+
 // ----------------------------------------------------------
 
