@@ -30,13 +30,13 @@ export interface TableColumnStruct {
     definition?: string;
 }
 
-export interface ColumnRegxInfo {
+export interface DataRegxInfo {
     re: string;
     flag?: string;
 }
 
-export interface TableColumnVerification {
-    regx?: ColumnRegxInfo;
+export interface DataFieldVerification {
+    regx?: DataRegxInfo;
     max?: number;
     min?: number;
     dateFormat?: string;
@@ -44,21 +44,49 @@ export interface TableColumnVerification {
     isDate?: boolean;
 }
 
-export interface TableColumnDefinition {
+/**
+ * Field Details
+ */
+export interface DataFieldDefinition {
     name: string;
+    refModel?: string;
+    refSchema?: string;
+    required?: boolean;
+    verification?: DataFieldVerification;
+    meta?: any;
+    layout?: any;
+    type: string;
+    typeDetails: any;
+    fieldVerification(): DataFieldVerification | undefined;
+}
+
+export interface TableColumnDefinition extends DataFieldDefinition {
     comment: string;
     definition?: string;
     foreignTable?: string;
     refColumn?: string;
     deleteCascade?: boolean;
-    refModel?: string;
-    refSchema?: string;
-    required?: boolean;
-    columnVerification?: TableColumnVerification;
-    meta?: any;
-    layout?: any;
+    columnVerification?: DataFieldVerification;
     eager?: boolean;
 }
+
+export type TableColumnDataOption = Pick<
+    TableColumnDefinition,
+    'name'
+    |'refModel'
+    |'refSchema'
+    | 'required'
+    | 'verification'
+    | 'meta'
+    | 'layout'
+    | 'columnVerification'
+    | 'verification'
+    | 'eager'
+    | 'foreignTable'
+    | 'deleteCascade'
+    | 'refColumn'
+    | 'comment'
+    | 'definition' >;
 
 export interface ColumnChangeOptions {
     existingKey: string;
@@ -69,6 +97,8 @@ export interface ColumnChangeOptions {
     sqlStatement?: string;
     downSqlStatement?: string;
 }
+
+
 
 
 /**
@@ -85,7 +115,8 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     refSchema?: string;
     refModel?: string;
     required = true;
-    columnVerification?: TableColumnVerification;
+    verification?: DataFieldVerification;
+    columnVerification?: DataFieldVerification;
     meta?: any;
     layout?: any;
     eager = true;
@@ -116,7 +147,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         }
     }
 
-    static createColumn(value: TableColumnDefinition): ApplicationTableColumn {
+    static createColumn(value: TableColumnDataOption): ApplicationTableColumn {
         const column: ApplicationTableColumn = new ApplicationTableColumn(
             value.name,
             value.comment,
@@ -127,6 +158,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
             value.refSchema,
             value.refModel
         );
+        column.verification = value.verification;
         column.columnVerification = value.columnVerification;
         column.meta = value.meta;
         column.layout = value.layout;
@@ -145,6 +177,10 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         } else {
             return '';
         }
+    }
+
+    public fieldVerification(): DataFieldVerification | undefined {
+        return this.verification || this.columnVerification;
     }
 
     public sql(definition?: string, reference?: string, refColumn?: string, deleteCascade?: boolean): string {
