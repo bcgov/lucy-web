@@ -1,0 +1,156 @@
+version: '1.0'
+description: 'Schema models for HerbicideApplicationSchema and SpeciesHerbicideApplicationSchema'
+externalTables:
+  - name: species
+    schema: SpeciesSchema
+    description: Species table
+schemas:
+  ## -- Herbicide Application Schema
+  HerbicideApplicationSchema:
+    name: 'herbicide_application'
+    description: '---' 
+    baseSchema: RecordSchema
+    meta:
+      baseModel: Record
+      resource: true
+      api: '#path'
+      base: '/api'
+    ## -- DisplayLayout
+    displayLayout: 
+      displayLabel: 'Herbicide Application #(date)'
+    ## --
+    # -- layout
+    layout:
+      title:
+        key: 'herbicideApplication'
+        default: 'Herbicide Application'
+      sections:
+        - title:
+            key: 'herbicideApplication.speciesSelection.title'
+            default: 'Select Invasive Species to be treated at this location'
+          groups:
+            - title:
+                key: ''
+                default: 'Being Treated'
+            - title:
+                key: ''
+                default: 'Not Being Treated'
+    # --
+    ## -- computedFields
+    computedFields: {}
+    ## --
+    ## -- Relationships
+    relations: {}
+    ## --
+    ## Columns
+    columns: 
+      ## Data columns
+      id: 
+        name: herbicide_application_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      ## Relation columns
+    versions: {}
+    ## -- Fields: Non data base fields
+    fields: {}
+    ## --
+    imports:
+      init:
+        fileName: HerbicideCode.csv
+        entryColumns: 
+          - herbicide_code
+          - composite_name
+          - active_ingredient
+          - trade_name
+          - pmra_reg_num
+          - formulation
+          - application_rate
+          - application_units
+      # --
+    # -- end Imports
+  ## -- End Herbicide Application Schema
+  ## -- start SpeciesTreatmentSchema
+  SpeciesTreatmentSchema:
+    name: 'species_treatment'
+    description: 'A record of one targeted species within the treatment area'
+    baseSchema: RecordSchema
+    meta: {}
+    layout: {}
+    columns:
+      ## data columns
+      id: 
+        name: species_treatment_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      treatmentAreaCoverage:
+        name: species_treatment_area_coverage
+        comment: 'Percentage of treatment area covered by selected species'
+        definition: NUMERIC(4,1) NULL
+      # relation columns
+      observation:
+        name: observation_id
+        comment: 'Foreign key reference to observation ID that records the species being treated'
+        definition: INT NULL FOREIGN KEY
+        foreignTable: observation
+        refColumn: observation_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header:
+            key: 'observation'
+            default: 'Observation ID'
+          classes:
+            - none
+  ## -- end SpeciesTreatmentSchema
+  ## -- start HerbicideTankMixSchema
+  HerbicideTankMixSchema:  
+    name: herbicide_tank_mix
+    description: 'Record of one herbicide included in the tank mix used for chemical treatment application. A tank mix includes one or more herbicides.'
+    baseSchema: RecordSchema
+    meta: {}
+    layout: {}
+    columns:
+      ## data columns
+      id: 
+        name: herbicide_tank_mix_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      applicationRate:
+        name: application_rate
+        comment: 'Application rate of herbicide to treatment area, in units of L/hectare'
+        definition: NUMERIC(6,3)
+      dilutionRate:
+        name: dilution_rate
+        comment: 'Dilution rate of herbicide, as percentage of concentrate to total volume'
+        definition: NUMERIC(6,3)
+      ## code table relations
+      herbicide:
+        name: 'herbicide_id'
+        comment: Foreign key reference to herbicide code table 
+        definition: INT NULL FOREIGN KEY
+        foreignTable: 'herbicide'
+        refColumn: herbicide_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'herbicide'
+            default: 'Herbicide'
+          classes:
+            - none
+      ## relation columns
+      applicationID:
+        name: herbicide_application_id
+        comment: 'Foreign key reference to herbicide application ID that records the chemical treatment'
+        definition: INT NULL FOREIGN KEY
+        foreignTable: herbicide_application
+        refColumn: herbicide_application_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header:
+            key: 'chemicalTreatmentID'
+            default: 'Chemical Treatment ID'
+          classes:
+            - none
+  ## -- end HerbicideTankMixSchema
+## -- end schemas
