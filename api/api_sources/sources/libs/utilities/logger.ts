@@ -11,23 +11,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: logger.ts
  * Project: lucy
- * File Created: Friday, 30th August 2019 1:31:37 pm
- * Author: pushan (you@you.you)
+ * File Created: Monday, 18th November 2019 11:46:03 am
+ * Author: Pushan  (you@you.you)
  * -----
- * Last Modified: Friday, 30th August 2019 1:34:22 pm
- * Modified By: pushan (you@you.you>)
+ * Last Modified: Monday, 18th November 2019 11:46:21 am
+ * Modified By: Pushan  (you@you.you>)
  * -----
  */
+export interface BaseLogger {
+    log(start: string, ...other: any[]): any;
+    info(start: string, ...other: any[]): any;
+    warning(start: string, ...other: any[]): any;
+    error(start: string, ...other: any[]): any;
 
-export * from './application.column';
-export * from './application.table';
-export * from './baseSchema';
-export * from './schema.storage';
-export * from './base.data.controller';
-export * from './schemaYaml.loader';
-export * from './sql.loader';
-export * from './schema.helper';
-export * from './dbMigrator';
-export * from './db.bootstrap';
+}
+// ----------------------------

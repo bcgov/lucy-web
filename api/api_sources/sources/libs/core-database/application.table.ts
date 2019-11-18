@@ -23,12 +23,19 @@
 import * as _ from 'underscore';
 import { ApplicationTableColumn, ColumnChangeOptions} from './application.column';
 
+/**
+ * @description Change column type constants in schema version
+ */
 export const ColumnChangeType = {
     RENAME: 'rename',
     DROP: 'drop',
     KEY_CHANGE: 'key-change',
     CUSTOM: 'custom'
 };
+
+/**
+ * @description Interface to check column changes
+ */
 export interface ColumnChangeDefinition extends ColumnChangeOptions {
     existingKey: string;
     newKey?: string;
@@ -38,6 +45,9 @@ export interface ColumnChangeDefinition extends ColumnChangeOptions {
     type: string;
 }
 
+/**
+ * @description Interface to store table version information in schema file
+ */
 export interface TableVersionDefinition {
     name: string;
     id?: string;
@@ -45,6 +55,10 @@ export interface TableVersionDefinition {
     columnChanges?: any[];
     info?: string;
 }
+
+/**
+ * @description Interface to store detailed schema version info and migration file associated that
+ */
 export interface TableVersion extends TableVersionDefinition {
     name: string;
     fileName: string;
@@ -64,6 +78,16 @@ export interface CSVImportOptions {
     allColumns?: boolean;
 }
 
+export interface TableRelation {
+    header?: any;
+    description?: any;
+    type: string;
+    relationshipType: string;
+    schema?: string;
+    tableName?: string;
+    meta?: any;
+}
+
 /**
  * @description Table definition descriptor class
  * @export class ApplicationTable
@@ -78,7 +102,7 @@ export class ApplicationTable {
     layout: any;
     displayLayout: any;
     computedFields: any;
-    relations: any;
+    relations: {[key: string]: TableRelation};
     modelName?: string;
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
