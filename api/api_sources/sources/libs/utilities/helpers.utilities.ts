@@ -192,6 +192,17 @@ export const reverseCapitalize = (s: any) => {
 };
 
 /**
+ * @description Return capitalize string of any given string
+ * @param string s
+ */
+export const capitalize = (s: any) => {
+    if (typeof s !== 'string') {
+        return '';
+    }
+    return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+/**
  * @description Check status of value and return if defined or return default
  * @param any value
  * @param any defaultValue

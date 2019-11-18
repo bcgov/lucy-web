@@ -201,6 +201,7 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
             return;
         } catch (excp) {
             console.error(`${this.className}: Save Error: ${excp}`);
+            console.dir(value);
             throw excp;
         }
     }

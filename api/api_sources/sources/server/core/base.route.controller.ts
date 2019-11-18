@@ -70,19 +70,6 @@ export const UpdateRequest = (req: any, obj: object) => {
     req.validation = { ...existing, ...obj};
 };
 
-/**
- * @description Convert any validator chain to optional one
- * @param closure validators : Closure which return array of validator
- */
-export const MakeOptionalValidator = (validators: (() => any[])) => _.map(validators(), checkVal => checkVal.optional());
-
-export function idValidator<Controller extends DataController>(fieldName: string, controller: Controller, handle: (data: any, req: any) => Promise<void>) {
-    return check(fieldName).isInt().custom(async (value: number, {req}) => {
-        const data = await controller.findById(value);
-        assert(data, `${fieldName}: No such item exists with id: ${value}`);
-        await handle(data, req);
-    });
-}
 
 export enum HTTPMethod {
     get = 'get',
