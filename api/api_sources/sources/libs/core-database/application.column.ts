@@ -238,10 +238,38 @@ export class ApplicationTableColumn implements TableColumnDefinition {
                 size: parseInt(matchSize[0], undefined)
             };
         } else if (def.includes('serial') || def.includes('numeric')) {
+            let max: number | undefined;
+            let min: number | undefined;
+            let precision = 3;
+            if (def.includes('numeric')) {
+                const regx1 = /^numeric\([0-9]+[\s]*,[\s]*[0-9]+\)/g;
+                const regx2 = /\([0-9]+[\s]*,[\s]*[0-9]+\)/g;
+                const m1 = def.match(regx1) || [''];
+                const m2 = m1[0].match(regx2) || [''];
+                const numDef = m2[0].replace(/[\s]*/, '');
+                const parts = numDef.split(',');
+                if (parts.length > 1) {
+                    const numOfDigit = parseFloat(parts[0]);
+                    const p = parseFloat(parts[1]);
+                    if (numOfDigit > p) {
+                        const total = numOfDigit - p;
+                        max = Math.pow(10, total) - 1;
+                        min = (-1 * max) - 1;
+                    }
+                    precision = p;
+                }
+            }
             typeInfo = {
                 type: typeof 1.0,
-                subType: 'numeric'
+                subType: 'numeric',
+                precision: precision
             };
+            if (max) {
+                typeInfo.max = max;
+            }
+            if (min) {
+                typeInfo.min = min;
+            }
         } else if (def.includes('boolean')) {
             typeInfo = {
                 type: typeof true

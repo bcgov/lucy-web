@@ -154,7 +154,11 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                     } else if (keyname.includes('longitude') || keyname.includes('long') || keyname.includes('lon')) {
                         obj[key] = parseFloat(faker.address.longitude());
                     } else {
-                        obj[key] = faker.random.number();
+                        if (typeInfo.max && typeInfo.min) {
+                            obj[key] = faker.random.number({max: typeInfo.max, min: typeInfo.min, precision: typeInfo.precision});
+                        } else {
+                            obj[key] = faker.random.number();
+                        }
                     }
                     break;
                 case 'boolean':
