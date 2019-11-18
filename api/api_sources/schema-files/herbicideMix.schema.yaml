@@ -31,7 +31,7 @@ schemas:
       observation:
         name: observation_id
         comment: 'Foreign key reference to observation ID that records the species being treated'
-        definition: INT NULL FOREIGN KEY
+        definition: INT NULL
         foreignTable: observation
         refColumn: observation_id
         deleteCascade: false
