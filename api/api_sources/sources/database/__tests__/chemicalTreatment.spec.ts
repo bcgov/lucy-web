@@ -36,12 +36,20 @@ import {
     ChemicalTreatmentEmployee,
     ChemicalTreatmentSpec,
     Herbicide,
-    HerbicideController
+    HerbicideController,
+    SpeciesTreatment,
+    SpeciesTreatmentController
 } from '../models';
 import { ModelFactory, Destroyer, ModelSpecFactory, userFactory } from '../factory';
 import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
 import {
-    PesticideEmployerCodeSchema, ProjectManagementPlanCodeSchema, ChemicalTreatmentEmployeeSchema, ChemicalTreatmentSchema, HerbicideSchema, HerbicideTankMixSchema
+    PesticideEmployerCodeSchema,
+    ProjectManagementPlanCodeSchema,
+    ChemicalTreatmentEmployeeSchema,
+    ChemicalTreatmentSchema,
+    HerbicideSchema,
+    HerbicideTankMixSchema,
+    SpeciesTreatmentSchema
 } from '../database-schema';
 
 // ** Test Function
@@ -107,6 +115,11 @@ describe('Test Chemical Treatment', () => {
     it('should create HerbicideTankMixSchema', () => {
         const htms = new HerbicideTankMixSchema();
         should().exist(htms);
+    });
+
+    it('should create SpeciesTreatmentSchema', () => {
+        const sts = new SpeciesTreatmentSchema();
+        should().exist(sts);
     });
 
 });
