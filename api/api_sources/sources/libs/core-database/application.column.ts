@@ -243,7 +243,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
             let precision = 3;
             if (def.includes('numeric')) {
                 const regx1 = /^numeric\([0-9]+[\s]*,[\s]*[0-9]+\)/g;
-                const regx2 = /\([0-9]+[\s]*,[\s]*[0-9]+\)/g;
+                const regx2 = /[0-9]+[\s]*,[\s]*[0-9]+/g;
                 const m1 = def.match(regx1) || [''];
                 const m2 = m1[0].match(regx2) || [''];
                 const numDef = m2[0].replace(/[\s]*/, '');
@@ -253,8 +253,8 @@ export class ApplicationTableColumn implements TableColumnDefinition {
                     const p = parseFloat(parts[1]);
                     if (numOfDigit > p) {
                         const total = numOfDigit - p;
-                        max = Math.pow(10, total) - 1;
-                        min = (-1 * max) - 1;
+                        max = Math.pow(10, total) - 1.0;
+                        min = (-1 * max);
                     }
                     precision = p;
                 }
