@@ -70,8 +70,8 @@ describe('Observation tests', () => {
         should().exist(f);
         const obs = await ObservationController.shared.findById(f.observation_id);
         testModel(obs, ObservationSchema.shared);
-        expect(obs.createdBy.user_id).to.equal(f.createdBy.user_id);
-        expect(obs.updatedBy.user_id).to.equal(f.updatedBy.user_id);
+        // expect(obs.createdBy.user_id).to.equal(f.createdBy.user_id);
+        // expect(obs.updatedBy.user_id).to.equal(f.updatedBy.user_id);
         expect(obs.observation_id).to.equal(f.observation_id);
         await destroyObservation(obs);
     });
