@@ -6,7 +6,7 @@ ALTER TABLE herbicide_tank_mix ADD COLUMN herbicide_tank_mix_id SERIAL PRIMARY K
 ALTER TABLE herbicide_tank_mix ADD COLUMN application_rate NUMERIC(6,3);
 ALTER TABLE herbicide_tank_mix ADD COLUMN dilution_rate NUMERIC(6,3);
 ALTER TABLE herbicide_tank_mix ADD COLUMN herbicide_id INT NULL REFERENCES herbicide(herbicide_id) ON DELETE SET NULL;
-ALTER TABLE herbicide_tank_mix ADD COLUMN chemical_treatment_id INT NULL REFERENCES chemical_treatment(chemical_treatment_id) ON DELETE SET NULL;
+ALTER TABLE herbicide_tank_mix ADD COLUMN chemical_treatment_id INT NULL REFERENCES chemical_treatment(chemical_treatment_id) ON DELETE CASCADE;
 
 
         

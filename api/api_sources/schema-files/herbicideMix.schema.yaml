@@ -11,16 +11,17 @@ includes:
 schemas:
   ## -- Herbicide Application Schema
   ## -- start SpeciesTreatmentSchema
-  SpeciesTreatmentSchema:
-    name: 'species_treatment'
+  ObservationChemicalTreatmentSchema:
+    name: 'observation_chemical_treatment'
     description: 'A record of one targeted species within the treatment area'
     baseSchema: RecordSchema
-    meta: {}
+    meta: 
+      resource: true
     layout: {}
     columns:
       ## data columns
       id: 
-        name: species_treatment_id
+        name: observation_chemical_treatment_id
         comment: 'Auto generated primary key. This is auto incremental field'
         definition: SERIAL PRIMARY KEY
       treatmentAreaCoverage:
@@ -40,6 +41,20 @@ schemas:
           header:
             key: 'observation'
             default: 'Observation ID'
+          classes:
+            - none
+      chemicalTreatment:
+        name: chemical_treatment_id
+        comment: 'Foreign key reference to parent chemical treatment table'
+        definition: INT NULL
+        foreignTable: chemical_treatment
+        refColumn: chemical_treatment_id
+        deleteCascade: true
+        meta: {}
+        layout:
+          header:
+            key: 'chemicalTreatment'
+            default: 'Chemical Treatment'
           classes:
             - none
   ## -- end SpeciesTreatmentSchema
@@ -86,7 +101,7 @@ schemas:
         definition: INT NULL
         foreignTable: 'chemical_treatment'
         refColumn: chemical_treatment_id
-        deleteCascade: false
+        deleteCascade: true
         layout:
           header:
             key: 'chemicalTreatment'

@@ -138,7 +138,6 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.pesticideEmployer, referencedColumnName: PesticideEmployerCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	pesticideEmployer: PesticideEmployerCode;
-]
 	/**
 	 * @description Getter/Setter property for column {project_management_plan_code_id}
 	 */

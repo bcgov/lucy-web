@@ -58,7 +58,7 @@ export * from './waterBody';
 export * from './observerWorkflow';
 export * from './herbicide';
 export * from './herbicideTankMix';
-export * from './speciesTreatment';
+export * from './observationChemicalTreatment';
 
 /**
  * Controllers
@@ -79,5 +79,5 @@ export * from './controllers/waterBody.controller';
 export * from './controllers/observerWorkflow.controller';
 export * from './controllers/herbicide.controller';
 export * from './controllers/herbicideTankMix.controller';
-export * from './controllers/speciesTreatment.controller';
+export * from './controllers/observationChemicalTreatment.controller';
 // ----------------------------------------------------------------------------------------------------------------

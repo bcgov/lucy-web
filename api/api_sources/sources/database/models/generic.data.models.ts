@@ -43,14 +43,14 @@ import { DataModelController } from '../data.model.controller';
  * @description Base class for record
  */
 export abstract class Record extends BaseModel {
-    @ManyToOne( type => User, {eager : true})
+    @ManyToOne( type => User, {eager : false})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.createdBy,
         referencedColumnName: UserSchema.schema.columns.id
     })
     createdBy: User;
 
-    @ManyToOne( type => User, { eager: true})
+    @ManyToOne( type => User, { eager: false})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.updatedBy,
         referencedColumnName: UserSchema.schema.columns.id
