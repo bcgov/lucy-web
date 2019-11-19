@@ -92,7 +92,6 @@ To create a new database schema (or to update an existing schema), follow these 
   * If modifying an existing schema, the .yaml file can be located inside the [api/api_sources/schema-files](https://github.com/bcgov/lucy-web/tree/dev/api/api_sources/schema-files) directory
   * To create a new schema, you can begin with a template by running the command `ts-node scripts/create.schema.ts -s <SchemaName>` from within the "api/api_sources" directory. This generates a bare-bones .yaml file with the desired schema name, and places it inside the correct directory.   
     * If you haven't already, this step will require you to install [ts-node](https://www.npmjs.com/package/ts-node) by running `npm install ts-node`  
-    * *Note that there is currently a minor bug in the create.schema script. The* `versions: {}` *line should be replaced with* `versions: []`.
     * If your schema references other schemas, there are two ways to indicate this in the .yaml file. Either method can be used:
       * `includes:` specifies the dependent schema's .yaml filename
       * `externalTables:` specifies the name of the schema's table in the database   
