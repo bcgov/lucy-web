@@ -38,7 +38,11 @@ import {
     Herbicide,
     HerbicideController,
     SpeciesTreatment,
-    SpeciesTreatmentController
+    SpeciesTreatmentController,
+    SpeciesTreatmentSpec,
+    HerbicideTankMixSpec,
+    HerbicideTankMixController,
+    HerbicideTankMix
 } from '../models';
 import { ModelFactory, Destroyer, ModelSpecFactory, userFactory } from '../factory';
 import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
@@ -117,9 +121,42 @@ describe('Test Chemical Treatment', () => {
         should().exist(htms);
     });
 
+    it('should create/fetch HerbicideTankMix Object', async () => {
+        const obj: HerbicideTankMix = await ModelFactory(HerbicideTankMixController.shared)();
+        should().exist(obj);
+        testModel(obj, HerbicideTankMixSchema.shared, true);
+    });
+
+    it('should create HerbicideTankMix Object', async() => {
+        const htmObj: HerbicideTankMix = await ModelFactory(HerbicideTankMixController.shared)();
+        const htm: HerbicideTankMix = await HerbicideTankMixController.shared.findById(htmObj.herbicide_tank_mix_id);
+        expect(htm.herbicide_tank_mix_id).to.be.equal(htmObj.herbicide_tank_mix_id);
+        expect(htm.applicationRate).to.be.equal(htmObj.applicationRate);
+        expect(htm.dilutionRate).to.be.equal(htmObj.dilutionRate);
+        await Destroyer(HerbicideTankMixController.shared)(htm);
+    });
+
     it('should create SpeciesTreatmentSchema', () => {
         const sts = new SpeciesTreatmentSchema();
         should().exist(sts);
+    });
+
+    it('should create/fetch SpeciesTreatment Object', async () => {
+        const obj: SpeciesTreatment = await ModelFactory(SpeciesTreatmentController.shared)();
+        testModel(obj, SpeciesTreatmentSchema.shared);
+        const st = await SpeciesTreatmentController.shared.findById(obj.species_treatment_id);
+        should().exist(st);
+        testModel(st, SpeciesTreatmentSchema.shared);
+        await Destroyer(SpeciesTreatmentController.shared)(obj);
+    });
+
+    it('should create SpeciesTreatment Object', async () => {
+        const obj: SpeciesTreatmentSpec = await ModelSpecFactory(SpeciesTreatmentController.shared)();
+        const stObj: SpeciesTreatment = await SpeciesTreatmentController.shared.createNewObject(obj, await userFactory());
+        const st: SpeciesTreatment = await SpeciesTreatmentController.shared.findById(stObj.species_treatment_id);
+        expect(st.species_treatment_id).to.be.equal(stObj.species_treatment_id);
+        expect(st.treatmentAreaCoverage).to.be.equal(stObj.treatmentAreaCoverage);
+        await Destroyer(SpeciesTreatmentController.shared)(st);
     });
 
 });

@@ -46,7 +46,7 @@ schemas:
       applicationRate:
         name: 'application_rate'
         comment: 'Manufacturer-recommended application rate of herbicide'
-        definition: NUMERIC(5,3)
+        definition: NUMERIC(6,3)
       applicationUnits:
         name: 'application_units'
         comment: 'Units used to describe application rate of herbicide'

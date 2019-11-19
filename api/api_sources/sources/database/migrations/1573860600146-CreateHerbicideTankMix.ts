@@ -12,7 +12,6 @@ export class CreateHerbicideTankMix1573860600146 extends AppDBMigrator implement
         // Adding Herbicide init schema to migrator
         this.herbicideSchema = new HerbicideTankMixSchema();
         this.addSchemaInitVersion(this.herbicideSchema);
-        this.addDataImportMigration(this.herbicideSchema, 'init');
     }
 
     /**
@@ -23,7 +22,6 @@ export class CreateHerbicideTankMix1573860600146 extends AppDBMigrator implement
          this.log('[START]', 'UP');
          // Running all up migration files
          await this.runQuerySqlFiles(this.upMigrations(), queryRunner);
-         await this.runSQLFileAsync(this.importMigrations(), queryRunner);
          this.log('[END]', 'UP');
     }
 
