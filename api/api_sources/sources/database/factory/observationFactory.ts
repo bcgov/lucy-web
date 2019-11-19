@@ -42,7 +42,9 @@ export const observationFactory = async (noSave?: boolean): Promise<Observation>
  */
 export const destroyObservation =
 Destroy<Observation, ObservationController>(ObservationController.shared, async (obj: Observation) => {
+  if (obj.createdBy) {
     await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
     return;
+  }
 });
 // -------------------------------------------------------------

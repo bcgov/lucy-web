@@ -104,7 +104,7 @@ describe('Treatment Test', () => {
         expect(mt.rootRemoval.mechanical_root_removal_code_id).to.be.equal(f.rootRemoval.mechanical_root_removal_code_id);
         expect(mt.issue.mechanical_treatment_issue_code_id).to.be.equal(f.issue.mechanical_treatment_issue_code_id);
         expect(mt.providerContractor.treatment_provider_contractor_id).to.be.equal(f.providerContractor.treatment_provider_contractor_id);
-        await destroyMechanicalTreatment(mt);
+        await destroyMechanicalTreatment(f);
     });
 
     // Test2: Create Treatment with specification
@@ -116,7 +116,7 @@ describe('Treatment Test', () => {
         should().exist(mt);
         should().exist(mt.observation);
         expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
-        await destroyMechanicalTreatment(mt);
+        await destroyMechanicalTreatment(obj);
     });
 
     // Test2: Create Treatment with specification
@@ -130,9 +130,8 @@ describe('Treatment Test', () => {
         should().exist(mt.observation);
         const updateObs = spec.observation || {observation_id: 0};
         expect(mt.observation.observation_id).to.be.equal(updateObs.observation_id);
-        await destroyMechanicalTreatment(mt);
+        await destroyMechanicalTreatment(f);
         await Destroy<User, UserDataController>(UserDataController.shared)(user);
-        await destroyObservation(f.observation);
     });
 
     // Test3: Fetch Mechanical Treatments of observation
