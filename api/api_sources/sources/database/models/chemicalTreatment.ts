@@ -1,6 +1,6 @@
 // ** Model: ChemicalTreatment from schema ChemicalTreatmentSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMany} from 'typeorm';
 import { ChemicalTreatmentSchema } from '../database-schema';
 import {
 	SpeciesAgencyCodeSchema,
@@ -19,6 +19,7 @@ import {
 } from '../models';
 
 import { Record } from './generic.data.models';
+import { HerbicideTankMix } from './herbicideTankMix';
 
 /** Interface **/
 /**
@@ -161,6 +162,12 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.secondApplicator, referencedColumnName: ChemicalTreatmentEmployeeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	secondApplicator: ChemicalTreatmentEmployee;
+
+	/**
+	 * @description Getter/Setter property for tankMixes
+	 */
+	@OneToMany( type => HerbicideTankMix, tankMix => tankMix.chemicalTreatment, {eager: true})
+	tankMixes: HerbicideTankMix[];
 
 }
 

@@ -76,6 +76,20 @@ schemas:
     ## -- computedFields
     computedFields: {}
     ## --
+    ## Relations
+    relations: 
+      tankMixes:
+        header:
+          key: 'observation.mechanicalTreatments'
+          default: Mechanical Treatments
+        description: 
+          key: 'observation.mechanicalTreatments.description'
+          default: 'Mechanical treatments performed on observation'
+        type: array
+        relationshipType: one-to-many
+        schema: HerbicideTankMixSchema
+        meta: 
+          embedded: true
     ## Columns
     columns: 
       ## Data Columns

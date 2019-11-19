@@ -29,6 +29,11 @@ import { DataController} from '../../database/data.model.controller';
 import { Logger } from '../logger';
 import { unWrap } from '../../libs/utilities';
 
+export interface SchemaValidationOption {
+    embedded?: boolean;
+    caller?: string;
+}
+
 export class SchemaValidator {
     /**
      * Shared instance
@@ -45,9 +50,15 @@ export class SchemaValidator {
         this.logger = new Logger(this.constructor.name);
     }
 
-    validators(schema: BaseSchema, filterOnly?: boolean, rootKey?: string): any[] {
+    validators(schema: BaseSchema, filterOnly?: boolean, rootKey?: string, options?: SchemaValidationOption): any[] {
+        if (options && options.caller) {
+            this.logger = new Logger(`${this.constructor.name}(${options.caller} | ${schema.className})`);
+        } else {
+            this.logger = new Logger(`${this.constructor.name} | ${schema.className}`);
+        }
+
         // Getting validator from schema column
-        let allValidators = this._fieldValidators(schema.table.columnsDefinition, filterOnly, rootKey);
+        let allValidators = this._fieldValidators(schema.table.columnsDefinition, filterOnly, rootKey, options);
 
         // Getting validation from embedded schema relation
         if (schema.table.relations && Object.keys(schema.table.relations).length > 0) {
@@ -66,11 +77,12 @@ export class SchemaValidator {
         if (controller) {
             // Get schema
             const schema = controller.schemaObject;
-            const mainRootKey = rootKey ? `${rootKey}.${key}` : key;
+            const updatedRootKey = relation.type === 'array' ? `${key}.*` : key;
+            const mainRootKey = rootKey ? `${rootKey}.${updatedRootKey}` : updatedRootKey;
             if (optional) {
                 return MakeOptionalValidator(() => this.validators(schema, undefined, key));
             }
-            return  this.validators(schema, undefined, mainRootKey);
+            return  this.validators(schema, undefined, mainRootKey, { embedded: true});
         } else {
             this.logger.info(`Controller Not available for schema: ${relation.schema || 'NA'}`);
         }
@@ -116,10 +128,11 @@ export class SchemaValidator {
         return info;
     }
 
-    private _fieldValidators(fields: {[key: string]: DataFieldDefinition}, filterOnly?: boolean, rootKey?: string): any[] {
+    private _fieldValidators(fields: {[key: string]: DataFieldDefinition}, filterOnly?: boolean, rootKey?: string, inputOptions?: SchemaValidationOption): any[] {
         let results: any[] = [];
         let validatorCheck = {};
         let validatorExists = {};
+        const options =  inputOptions || {};
         _.each(fields, (field: DataFieldDefinition, key: string) => {
             if (key === 'id') {
                 return;
@@ -163,6 +176,11 @@ export class SchemaValidator {
                             message: 'should be json',
                             optional: !field.required
                         };
+                        break;
+                    }
+
+                    // Check skip for embedded or not
+                    if (unWrap(field.meta, {}).skipForEmbedded && options.embedded) {
                         break;
                     }
 
@@ -217,7 +235,7 @@ export class SchemaValidator {
             return results.concat(ValidatorCheck(validatorCheck, rootKey));
         }
         const existsValidator = ValidatorExists(validatorExists);
-        const checkValidator = ValidatorCheck(validatorCheck);
+        const checkValidator = ValidatorCheck(validatorCheck, rootKey);
         results = results.concat(existsValidator);
         results = results.concat(checkValidator);
         return results;
