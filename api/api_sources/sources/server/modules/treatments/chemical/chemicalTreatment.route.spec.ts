@@ -32,14 +32,14 @@ import {
     AuthType
 } from '../../../../test-helpers/testHelpers';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
-import { ChemicalTreatmentController } from '../../../../database/models';
+import { ChemicalTreatmentController, HerbicideTankMixController } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
 
 /**
- * Test Function
+ * Test Functions for Chemical Treatment controller
  */
-const resourceName = 'chemical treatment';
-const controller: DataController = ChemicalTreatmentController.shared;
+let resourceName = 'chemical treatment';
+let controller: DataController = ChemicalTreatmentController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
         await SharedExpressApp.initExpress();
@@ -66,22 +66,22 @@ describe(`Test for ${resourceName}`, () => {
         await ExpressResourceTest.testGetSingle(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
     });
 
-    // Test3: Get Single
+    // Test4: Get All
     it(`should get ${resourceName} {all}`, async () => {
         await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
     });
 
-    // Test4: Fail To Create For Viewer
+    // Test5: Fail To Create For Viewer
     it(`should not create ${resourceName} for {viewer}`, async () => {
         await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
     });
 
-    // Test5: Fail to create for Viewer
+    // Test6: Fail to Update for Viewer
     it(`should not update ${resourceName} for {viewer}`, async () => {
         await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
     });
 
-    // Test6: Get Filter elements
+    // Test7: Get Filter elements
     it(`should fetch filtered item ${resourceName}`, async () => {
         await ExpressResourceTest.testGetFilteredItem(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller, {
             latitude: faker.address.latitude(),
@@ -90,6 +90,52 @@ describe(`Test for ${resourceName}`, () => {
     });
 });
 
+/**
+ * Test Functions for HerbicideTankMix controller
+ */
+resourceName = 'herbicide tank mix';
+controller = HerbicideTankMixController.shared;
+describe(`Test for ${resourceName}`, () => {
+    before(async () => {
+        await SharedExpressApp.initExpress();
+        await commonTestSetupAction();
+    });
+    after(async () => {
+        await commonTestTearDownAction();
+    });
+
+    // Test1: Create
+    it(`should create ${resourceName}`, async () => {
+        await ExpressResourceTest.testCreate(SharedExpressApp.app, {
+            auth: AuthType.admin
+        }, controller);
+    });
+
+    // Test2: Update
+    it(`should update ${resourceName}`, async () => {
+        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.admin}, controller);
+    });
+
+    // Test3: Get Single
+    it(`should get ${resourceName} {single}`, async () => {
+        await ExpressResourceTest.testGetSingle(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
+    });
+
+    // Test4: Get All
+    it(`should get ${resourceName} {all}`, async () => {
+        await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
+    });
+
+    // Test5: Fail To Create For Viewer
+    it(`should not create ${resourceName} for {viewer}`, async () => {
+        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
+    });
+
+    // Test6: Fail to update for Viewer
+    it(`should not update ${resourceName} for {viewer}`, async () => {
+        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
+    });
+});
 // -------------------------------------------------------------------------------
 
 
