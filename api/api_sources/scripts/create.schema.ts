@@ -110,7 +110,7 @@ const printUsage = () => {
                 definition: 'SERIAL PRIMARY KEY'
             }
         },
-        versions: {},
+        versions: [],
         fields: {}
     };
     // Add data to existing
