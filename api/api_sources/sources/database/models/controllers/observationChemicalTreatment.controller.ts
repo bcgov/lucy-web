@@ -3,7 +3,6 @@
 import { RecordController } from '../generic.data.models';
 import { ObservationChemicalTreatment} from '../../models';
 import { ObservationChemicalTreatmentSchema } from '../../database-schema';
-import { FindManyOptions } from 'typeorm';
 
 
 /**

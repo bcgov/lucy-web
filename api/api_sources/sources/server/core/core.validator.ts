@@ -61,6 +61,7 @@ const getValidator = (key: string, info: ValidationInfo): ValidationChain => {
     } else {
         item = info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`);
     }
+    // console.log(`Add Validator for key => ${key}`);
     return item;
 };
 
@@ -73,8 +74,8 @@ export const ValidatorCheck = (query: {[key: string]: ValidationInfo}, rootKey?:
     const result: any[] = [];
     _.each(query, ( info: ValidationInfo, key) => {
         try {
-            // const validatorKey = rootKey ? `${rootKey}.${key}` : key;
-            result.push(getValidator(key, info));
+            const finalKey = rootKey ? `${rootKey}.${key}` : key;
+            result.push(getValidator(finalKey, info));
         } catch (excp) {
             throw new Error(`ValidatorCheck: ${key} error: ${excp} \n ${JSON.stringify(info, null, 2)}`);
         }

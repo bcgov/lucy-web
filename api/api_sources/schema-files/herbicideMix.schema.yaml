@@ -102,6 +102,8 @@ schemas:
         foreignTable: 'chemical_treatment'
         refColumn: chemical_treatment_id
         deleteCascade: true
+        meta: 
+          skipForEmbedded: true
         layout:
           header:
             key: 'chemicalTreatment'
