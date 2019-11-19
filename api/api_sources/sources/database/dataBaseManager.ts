@@ -19,10 +19,10 @@
 /**
  * Imports
  */
-import {createConnection, Connection} from 'typeorm';
+import {createConnection, Connection } from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SeedManager } from './seed.manager';
-import * as modelsModule from './models'; 
+import * as modelsModule from './models';
 import { ApplicationDataControllers, DBControllerLoader } from '../libs/core-database';
 const dbConfig = require('../../ormconfig');
 

@@ -107,6 +107,16 @@ export class ApplicationTable {
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
 
+    get relationalColumnKeys(): string[] {
+        const r: string[] = [];
+        _.each(this.columnsDefinition, (col: ApplicationTableColumn, key) => {
+            if (col.foreignTable || col.refSchema) {
+                r.push(key);
+            }
+        });
+        return r;
+    }
+
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
             return this._columnNames;

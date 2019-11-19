@@ -1,17 +1,17 @@
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
-import { SpeciesTreatmentSchema } from '../database-schema';
+import { ObservationChemicalTreatmentSchema } from '../database-schema';
 
 export class CreateSpeciesTreatment1574106157222 extends AppDBMigrator implements MigrationInterface {
 
-    speciesTreatmentSchema: SpeciesTreatmentSchema;
+    speciesTreatmentSchema: ObservationChemicalTreatmentSchema;
 
     /**
      * Setup
      */
     setup() {
         // Adding Herbicide init schema to migrator
-        this.speciesTreatmentSchema = new SpeciesTreatmentSchema();
+        this.speciesTreatmentSchema = new ObservationChemicalTreatmentSchema();
         this.addSchemaInitVersion(this.speciesTreatmentSchema);
     }
 
@@ -31,6 +31,7 @@ export class CreateSpeciesTreatment1574106157222 extends AppDBMigrator implement
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[STAR]', 'DOWN');
+        await queryRunner.query(`DROP TABLE IF species_treatment`);
         await queryRunner.query(this.speciesTreatmentSchema.dropTable());
         this.log('[END]', 'DOWN');
     }

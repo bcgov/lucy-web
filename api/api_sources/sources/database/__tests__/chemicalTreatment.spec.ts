@@ -37,10 +37,9 @@ import {
     ChemicalTreatmentSpec,
     Herbicide,
     HerbicideController,
-    SpeciesTreatment,
-    SpeciesTreatmentController,
-    SpeciesTreatmentSpec,
-    HerbicideTankMixSpec,
+    ObservationChemicalTreatment,
+    ObservationChemicalTreatmentSpec,
+    ObservationChemicalTreatmentController,
     HerbicideTankMixController,
     HerbicideTankMix
 } from '../models';
@@ -53,7 +52,7 @@ import {
     ChemicalTreatmentSchema,
     HerbicideSchema,
     HerbicideTankMixSchema,
-    SpeciesTreatmentSchema
+    ObservationChemicalTreatmentSchema,
 } from '../database-schema';
 
 // ** Test Function
@@ -124,7 +123,7 @@ describe('Test Chemical Treatment', () => {
     it('should create/fetch HerbicideTankMix Object', async () => {
         const obj: HerbicideTankMix = await ModelFactory(HerbicideTankMixController.shared)();
         should().exist(obj);
-        testModel(obj, HerbicideTankMixSchema.shared, true);
+        testModel(obj, HerbicideTankMixSchema.shared);
     });
 
     it('should create HerbicideTankMix Object', async() => {
@@ -137,26 +136,25 @@ describe('Test Chemical Treatment', () => {
     });
 
     it('should create SpeciesTreatmentSchema', () => {
-        const sts = new SpeciesTreatmentSchema();
+        const sts = new ObservationChemicalTreatmentSchema();
         should().exist(sts);
     });
 
     it('should create/fetch SpeciesTreatment Object', async () => {
-        const obj: SpeciesTreatment = await ModelFactory(SpeciesTreatmentController.shared)();
-        testModel(obj, SpeciesTreatmentSchema.shared);
-        const st = await SpeciesTreatmentController.shared.findById(obj.species_treatment_id);
+        const obj: ObservationChemicalTreatment = await ModelFactory(ObservationChemicalTreatmentController.shared)();
+        testModel(obj, ObservationChemicalTreatmentSchema.shared);
+        const st = await ObservationChemicalTreatmentController.shared.findById(obj.observation_chemical_treatment_id);
         should().exist(st);
-        testModel(st, SpeciesTreatmentSchema.shared);
-        await Destroyer(SpeciesTreatmentController.shared)(obj);
+        testModel(st, ObservationChemicalTreatmentSchema.shared);
+        await Destroyer(ObservationChemicalTreatmentController.shared)(obj);
     });
 
-    it('should create SpeciesTreatment Object', async () => {
-        const obj: SpeciesTreatmentSpec = await ModelSpecFactory(SpeciesTreatmentController.shared)();
-        const stObj: SpeciesTreatment = await SpeciesTreatmentController.shared.createNewObject(obj, await userFactory());
-        const st: SpeciesTreatment = await SpeciesTreatmentController.shared.findById(stObj.species_treatment_id);
-        expect(st.species_treatment_id).to.be.equal(stObj.species_treatment_id);
-        expect(st.treatmentAreaCoverage).to.be.equal(stObj.treatmentAreaCoverage);
-        await Destroyer(SpeciesTreatmentController.shared)(st);
+    it('should create ObservationChemicalTreatment Object', async () => {
+        const obj: ObservationChemicalTreatmentSpec = await ModelSpecFactory(ObservationChemicalTreatmentController.shared)();
+        const stObj: ObservationChemicalTreatment = await ObservationChemicalTreatmentController.shared.createNewObject(obj, await userFactory());
+        const st: ObservationChemicalTreatment = await ObservationChemicalTreatmentController.shared.findById(stObj.observation_chemical_treatment_id);
+        expect(st.observation.observation_id).to.be.equal(stObj.observation.observation_id);
+        await Destroyer(ObservationChemicalTreatmentController.shared)(st);
     });
 
 });

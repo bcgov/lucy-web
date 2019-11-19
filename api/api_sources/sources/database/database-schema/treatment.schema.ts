@@ -181,7 +181,7 @@ export class HerbicideTankMixSchema extends RecordTableSchema {
     }
 }
 
-export class SpeciesTreatmentSchema extends RecordTableSchema {
+export class ObservationChemicalTreatmentSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('herbicideMix.schema.yaml');
     }
