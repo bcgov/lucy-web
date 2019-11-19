@@ -13,7 +13,6 @@ export class CreateSpeciesTreatment1574106157222 extends AppDBMigrator implement
         // Adding Herbicide init schema to migrator
         this.speciesTreatmentSchema = new SpeciesTreatmentSchema();
         this.addSchemaInitVersion(this.speciesTreatmentSchema);
-        this.addDataImportMigration(this.speciesTreatmentSchema, 'init');
     }
 
     /**
@@ -24,7 +23,6 @@ export class CreateSpeciesTreatment1574106157222 extends AppDBMigrator implement
          this.log('[START]', 'UP');
          // Running all up migration files
          await this.runQuerySqlFiles(this.upMigrations(), queryRunner);
-         await this.runSQLFileAsync(this.importMigrations(), queryRunner);
          this.log('[END]', 'UP');
     }
 

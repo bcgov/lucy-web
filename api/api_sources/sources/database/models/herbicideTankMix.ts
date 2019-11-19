@@ -87,7 +87,7 @@ export class HerbicideTankMix extends Record implements HerbicideTankMixSpec {
 	/**
 	 * @description Getter/Setter property for column {chemical_treatment_id}
 	 */
-	@ManyToOne( type => ChemicalTreatment, { eager: true})
+	@ManyToOne( type => ChemicalTreatment, { eager: false})
 	@JoinColumn({ name: HerbicideTankMixSchema.columns.chemicalTreatment, referencedColumnName: ChemicalTreatmentSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	chemicalTreatment: ChemicalTreatment;

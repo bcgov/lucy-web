@@ -169,6 +169,10 @@ export class HerbicideSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('herbicide.schema.yaml');
     }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
 }
 
 export class HerbicideTankMixSchema extends RecordTableSchema {
