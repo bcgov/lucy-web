@@ -59,6 +59,7 @@ export * from './observerWorkflow';
 export * from './herbicide';
 export * from './herbicideTankMix';
 export * from './observationChemicalTreatment';
+export * from './windDirectionCodes';
 
 /**
  * Controllers

@@ -114,11 +114,10 @@ To create a new database schema (or to update an existing schema), follow these 
     * The following code block is required in the .yaml file if you want to auto-generate a controller for the schema (step 3).
     ```yaml
     meta:
-        resource:
-          true
+        resource: true
     ```
 
-2. **Create/update the Handler class for the schema.** The purpose of this handler is to match the schema class (as it is named in our Typescript code) to the schema's .yaml file created in step 1. This is done very simply by using the `getYAMLFilePath()` method, and passing the name of the schema's .yaml file. The handler class should extend `RecordTableSchema`.
+2. **Create/update the Handler class for the schema.** The purpose of this handler is to match the schema class (as it is named in our Typescript code) to the schema's .yaml file created in step 1. This is done very simply by using the `getYAMLFilePath()` method, and passing the name of the schema's .yaml file. The handler class should extend `RecordTableSchema` if the schema is for a record that will be created by the user; if the schema is for a code table, the handler class should extend `CodeTableSchema`.
 
   * If modifying an existing schema, the handler class for the schema can be found inside the [api/api_sources/sources/database/database-schema](https://github.com/bcgov/lucy-web/tree/dev/api/api_sources/sources/database/database-schema) directory.
   * If creating a new schema, create a new file within the above directory, or simply append the handler class to an existing file within the directory.
@@ -130,7 +129,9 @@ To create a new database schema (or to update an existing schema), follow these 
   ```
 
 3. **Create a model and an SQL file for the schema.**
+  * If creating a new schema, first create a new (empty) sub-directory inside the "api/api_sources/schema-migration-sql/" directory. This sub-directory must exactly match the name you've assigned to the schema.
   * From within the "api/api_sources" directory, run the command `ts-node scripts/schema.manager.ts -s <SchemaName> -m`.
+  * The schema-manager script will generate an SQL file inside the "api/api_sources/schema-migration-sql/<SchemaName>" directory with the code to create and configure the schema's table in the database. The schema-manager script also generates a Typescript file inside "api/api_sources/sources/database/models/". In some cases, this generated Typescript file may benefit from re-factoring (typically, it contains some unnecessary imports).
   * Add the generated controller and model to the list of exports in [api/api_sources/sources/database/models/index.ts](https://github.com/bcgov/lucy-web/blob/INS-623-ChemicalApplicationSchema/api/api_sources/sources/database/models/index.ts).
 
 
