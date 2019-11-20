@@ -112,4 +112,40 @@ schemas:
         comment: Last name of the employee
         definition: VARCHAR(99) NOT NULL
   ## --
+  ## --
+  ChemicalTreatmentMethodCodeSchema:
+    name: chemical_treatment_method
+    description: The method used to apply the chemical to the treatment area.
+    baseScheme: RecordSchema
+    meta: 
+      baseModel: Record
+      resource: true
+    displayLayout: 
+      displayLabel: '#(treatmentMethodDescription)'
+      header:
+        key: ChemicalTreatmentMethodCodeSchema
+        default: 'Chemical Treatment Method Code'
+      fields:
+        - header:
+            key: 'ChemicalTreatmentMethodCode.name'
+            default: 'Chemical Treatment Method Code'
+          key: treatmentMethodCode
+    columns:
+      id:
+        name: chemical_treatment_method_id
+        comment: Auto generated primary key. This is auto incremental field
+        definition: SERIAL PRIMARY KEY
+      treatmentMethodCode:
+        name: treatment_method_code
+        comment: The 3-letter code used to identify the treatment method
+        definition: VARCHAR(3) NOT NULL
+      treatmentMethodDescription:
+        name: treatment_method_description
+        comment: The name of the treatment method as it should be displayed to users
+        definition: VARCHAR(30) NOT NULL
+    imports:
+      init:
+        fileName: ChemicalMethodCode.csv
+        allColumns: true
+  ## --
 ## --------------

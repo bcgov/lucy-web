@@ -43,7 +43,9 @@ import {
     HerbicideTankMixController,
     HerbicideTankMix,
     WindDirectionCodes,
-    WindDirectionCodesController
+    WindDirectionCodesController,
+    ChemicalTreatmentMethodCode,
+    ChemicalTreatmentMethodCodeController
 } from '../models';
 import { ModelFactory, Destroyer, ModelSpecFactory, userFactory } from '../factory';
 import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
@@ -55,7 +57,8 @@ import {
     HerbicideSchema,
     HerbicideTankMixSchema,
     ObservationChemicalTreatmentSchema,
-    WindDirectionCodesSchema
+    WindDirectionCodesSchema,
+    ChemicalTreatmentMethodCodeSchema
 } from '../database-schema';
 
 // ** Test Function
@@ -104,15 +107,27 @@ describe('Test Chemical Treatment', () => {
         await Destroyer(ChemicalTreatmentController.shared)(ch);
     });
 
+    it('should create ChemicalTreatmentMethodCodes schema', () => {
+        const schema: ChemicalTreatmentMethodCodeSchema = new ChemicalTreatmentMethodCodeSchema();
+        should().exist(schema);
+        should().exist(schema.table.columnsDefinition.treatmentMethodDescription);
+    });
+
+    it('should fetch chemical treatment method codes from database', async () => {
+        const ctmc: ChemicalTreatmentMethodCode = await ChemicalTreatmentMethodCodeController.shared.findById(1);
+        should().exist(ctmc);
+        expect(ctmc.chemical_treatment_method_id).to.be.equal(1);
+        const random = await ChemicalTreatmentMethodCodeController.shared.random();
+        should().exist(random);
+    });
+
     it('should create WindDirectionCodes schema', () => {
         const schema: WindDirectionCodesSchema = new WindDirectionCodesSchema();
-        console.dir(schema);
         should().exist(schema);
     });
 
     it('should fetch wind direction from database', async () => {
         const wd: WindDirectionCodes = await WindDirectionCodesController.shared.findById(1);
-        console.dir(wd);
         should().exist(wd);
         expect(wd.wind_direction_code_id).to.be.equal(1);
         const random = await WindDirectionCodesController.shared.random();
