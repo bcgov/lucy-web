@@ -187,5 +187,15 @@ export class ObservationChemicalTreatmentSchema extends RecordTableSchema {
     }
 }
 
+export class WindDirectionCodesSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('windDirection.codes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
 // ----------------------------------------------------------
 

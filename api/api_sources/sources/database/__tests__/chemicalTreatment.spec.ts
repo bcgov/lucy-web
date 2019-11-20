@@ -41,7 +41,9 @@ import {
     ObservationChemicalTreatmentSpec,
     ObservationChemicalTreatmentController,
     HerbicideTankMixController,
-    HerbicideTankMix
+    HerbicideTankMix,
+    WindDirectionCodes,
+    WindDirectionCodesController
 } from '../models';
 import { ModelFactory, Destroyer, ModelSpecFactory, userFactory } from '../factory';
 import { ChemicalTreatmentEmployeeController } from '../models/controllers/chemicalTreatmentEmployee.controller';
@@ -53,6 +55,7 @@ import {
     HerbicideSchema,
     HerbicideTankMixSchema,
     ObservationChemicalTreatmentSchema,
+    WindDirectionCodesSchema
 } from '../database-schema';
 
 // ** Test Function
@@ -99,6 +102,21 @@ describe('Test Chemical Treatment', () => {
         expect(ch.firstApplicator.chemical_treatment_employee_id).to.be.equal(chObj.firstApplicator.chemical_treatment_employee_id);
         expect(ch.secondApplicator.chemical_treatment_employee_id).to.be.equal(chObj.secondApplicator.chemical_treatment_employee_id);
         await Destroyer(ChemicalTreatmentController.shared)(ch);
+    });
+
+    it('should create WindDirectionCodes schema', () => {
+        const schema: WindDirectionCodesSchema = new WindDirectionCodesSchema();
+        console.dir(schema);
+        should().exist(schema);
+    });
+
+    it('should fetch wind direction from database', async () => {
+        const wd: WindDirectionCodes = await WindDirectionCodesController.shared.findById(1);
+        console.dir(wd);
+        should().exist(wd);
+        expect(wd.wind_direction_code_id).to.be.equal(1);
+        const random = await WindDirectionCodesController.shared.random();
+        should().exist(random);
     });
 
     it('should create Herbicide schema', () => {
