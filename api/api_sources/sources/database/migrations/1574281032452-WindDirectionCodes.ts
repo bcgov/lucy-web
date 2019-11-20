@@ -10,7 +10,7 @@ export class WindDirectionCodes1574281032452 extends AppDBMigrator implements Mi
      * Setup
      */
     setup() {
-        // Adding Herbicide init schema to migrator
+        // Adding wind direction init schema to migrator
         this.windDirectionCodesSchema = new WindDirectionCodesSchema();
         this.addSchemaInitVersion(this.windDirectionCodesSchema);
         this.addDataImportMigration(this.windDirectionCodesSchema, 'init');
