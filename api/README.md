@@ -2,6 +2,16 @@
 
 This is the application source code for the Restful API of the invasive species database.
 
+-----
+
+## Table of Contents
+
+* [Setting Up](#SettingUp)
+  * [Requirements](#Requirements)
+* [Running the Application](#RunningtheApplication)
+
+-----
+
 ## Setting Up
 ### Requirements
 
