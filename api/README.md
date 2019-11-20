@@ -14,7 +14,7 @@ This is the application source code for the Restful API of the invasive species 
 * [Clean Remote Instance of the application](#Clean-Remote-Instance-of-the-application)
 * [Running Tests and SonarQube Analysis](#Running-Tests-and-SonarQube-Analysis)
 * [SchemaSpy](#SchemaSpy)
-* [Modifying the Database Model & Schema](#Modifying-the-Database-Model-&-Schema)
+* [Modifying the Database Model & Schema](#Modifying-the-Database-Model--Schema)
 
 -----
 
