@@ -9,11 +9,18 @@ ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_date DATE NOT NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_primary_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_secondary_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN pesticide_use_permit VARCHAR(60) NULL;
+ALTER TABLE chemical_treatment ADD COLUMN plot_width NUMERIC(6,2) NULL;
+ALTER TABLE chemical_treatment ADD COLUMN plot_length NUMERIC(6,2) NULL;
+ALTER TABLE chemical_treatment ADD COLUMN temperature SMALLINT NULL;
+ALTER TABLE chemical_treatment ADD COLUMN humidity SMALLINT NULL;
+ALTER TABLE chemical_treatment ADD COLUMN wind_speed NUMERIC(4,1) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN species_agency_code_id INT NULL REFERENCES species_agency_code(species_agency_code_id) ON DELETE SET NULL;
 ALTER TABLE chemical_treatment ADD COLUMN pesticide_employer_code_id INT NULL REFERENCES pesticide_employer_code(pesticide_employer_code_id) ON DELETE SET NULL;
 ALTER TABLE chemical_treatment ADD COLUMN project_management_plan_code_id INT NULL REFERENCES project_management_plan_code(project_management_plan_code_id) ON DELETE SET NULL;
 ALTER TABLE chemical_treatment ADD COLUMN first_applicator_chemical_treatment_employee_id INT NULL REFERENCES chemical_treatment_employee(chemical_treatment_employee_id) ON DELETE SET NULL;
 ALTER TABLE chemical_treatment ADD COLUMN second_applicator_chemical_treatment_employee_id INT NULL REFERENCES chemical_treatment_employee(chemical_treatment_employee_id) ON DELETE SET NULL;
+ALTER TABLE chemical_treatment ADD COLUMN wind_direction_code VARCHAR(3) NULL REFERENCES wind_direction_codes(wind_direction_code) ON DELETE SET NULL;
+ALTER TABLE chemical_treatment ADD COLUMN treatment_method_code VARCHAR(3) NULL REFERENCES chemical_treatment_method(treatment_method_code) ON DELETE SET NULL;
 
 
         
@@ -29,11 +36,18 @@ COMMENT ON COLUMN chemical_treatment.chemical_treatment_date IS 'Date of the tre
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_primary_paper_file_ref IS 'Primary paper file Paper file reference associated with treatment';
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_secondary_paper_file_ref IS 'Secondary paper file Paper file reference associated with treatment';
 COMMENT ON COLUMN chemical_treatment.pesticide_use_permit IS 'Use permit code of pesticide usage. This is free form information';
+COMMENT ON COLUMN chemical_treatment.plot_width IS 'The width of the treatment area, in metres';
+COMMENT ON COLUMN chemical_treatment.plot_length IS 'The length of the treatment area, in metres';
+COMMENT ON COLUMN chemical_treatment.temperature IS 'The recorded air temperature at the site of the treatment area at the time of treatment, in degrees Celsius';
+COMMENT ON COLUMN chemical_treatment.humidity IS 'The recorded air humidity at the site of the treatment area at the time of treatment, as a percentage';
+COMMENT ON COLUMN chemical_treatment.wind_speed IS 'The recorded wind speed at the site of the treatment area at the time of treatment, in km/h';
 COMMENT ON COLUMN chemical_treatment.species_agency_code_id IS 'Foreign key reference to Species Agency Code table';
 COMMENT ON COLUMN chemical_treatment.pesticide_employer_code_id IS 'Foreign key reference to Pesticide employer table';
 COMMENT ON COLUMN chemical_treatment.project_management_plan_code_id IS 'Foreign key reference to Project management plan code table';
 COMMENT ON COLUMN chemical_treatment.first_applicator_chemical_treatment_employee_id IS 'Foreign key reference to Chemical treatment employee table';
 COMMENT ON COLUMN chemical_treatment.second_applicator_chemical_treatment_employee_id IS 'Foreign key reference to Chemical treatment employee table';
+COMMENT ON COLUMN chemical_treatment.wind_direction_code IS 'Foreign key reference to wind_direction code table';
+COMMENT ON COLUMN chemical_treatment.treatment_method_code IS 'Foreign key reference to chemical_treatment_method code table';
 
 
         

@@ -15,6 +15,10 @@ externalTables:
     schema: ProjectManagementPlanCodeSchema
   - name: chemical_treatment_employee
     schema: ChemicalTreatmentEmployeeSchema
+  - name: chemical_treatment_method
+    schema: ChemicalTreatmentMethodCodeSchema
+  - name: wind_direction_codes
+    schema: WindDirectionCodesSchema
 schemas:
   ## -- ChemicalTreatmentSchema
   ChemicalTreatmentSchema:
@@ -70,11 +74,36 @@ schemas:
                 - speciesAgency
                 - pmp
               style: {}
+              groups:
+                - title:
+                    key: ''
+                    default: Treatment Method and Application
+                  fields:
+                    - chemicalTreatmentMethodCode
+                    - plotWidth
+                    - plotLength
+                    - temperature
+                    - humidity
+                    - windSpeed
+                    - windDirection
+                - title:
+                    key: ''
+                    default: Herbicide and Application
             ## -- group { Treatment Details }
         # -- section {Location}
     # --
     ## -- computedFields
-    computedFields: {}
+    computedFields: 
+      calculatedArea:
+        header:
+          key: calculatedArea
+          default: 'Total Calculated Area (m^2)'
+        computationRules:
+          - name: Calculate Area
+            keys:
+              - plotWidth
+              - plotLength
+            method: calculateArea
     ## --
     ## Relations
     relations: 
@@ -164,6 +193,61 @@ schemas:
             default: 'PUP'
           classes:
             - none
+      plotWidth:
+        name: plot_width
+        comment: The width of the treatment area, in metres
+        definition: NUMERIC(6,2) NULL
+        meta: {}
+        layout:
+          header:
+            key: 'plotWidth'
+            default: 'Plot Width'
+          classes:
+            - none
+      plotLength:
+        name: plot_length
+        comment: The length of the treatment area, in metres
+        definition: NUMERIC(6,2) NULL
+        meta: {}
+        layout:
+          header:
+            key: 'plotLength'
+            default: 'Plot Length'
+          classes:
+            - none
+      temperature:
+        name: temperature
+        comment: The recorded air temperature at the site of the treatment area at the time of treatment, in degrees Celsius
+        definition: SMALLINT NULL
+        meta: {}
+        layout:
+          header:
+            key: 'temperature'
+            default: 'Temperature (C)'
+          classes:
+            - none
+      humidity:
+        name: humidity
+        comment: The recorded air humidity at the site of the treatment area at the time of treatment, as a percentage
+        definition: SMALLINT NULL
+        meta: {}
+        layout:
+          header:
+            key: 'humidity'
+            default: 'Humidity (%)'
+          classes:
+            - none
+      windSpeed:
+        name: wind_speed
+        comment: The recorded wind speed at the site of the treatment area at the time of treatment, in km/h
+        definition: NUMERIC(4,1) NULL
+        meta: {}
+        layout:
+          header:
+            key: 'windSpeed'
+            default: 'Wind Speed (km/h)'
+          classes:
+            - none
       ## Relation Column
       speciesAgency:
         name: 'species_agency_code_id'
@@ -230,6 +314,32 @@ schemas:
           header: 
             key: 'chemicalTreatment.secondApplicator' 
             default:  'Second Applicator'
+          classes:
+            - none
+      windDirection:
+        name: wind_direction_code
+        comment: Foreign key reference to wind_direction code table
+        definition: VARCHAR(3) NULL
+        foreignTable: wind_direction_codes
+        refColumn: wind_direction_code
+        meta: {}
+        layout:
+          header:
+            key: 'chemicalTreatment.windDirection'
+            default: 'Wind Direction'
+          classes:
+            - none
+      chemicalTreatmentMethodCode:
+        name: treatment_method_code
+        comment: Foreign key reference to chemical_treatment_method code table
+        definition: VARCHAR(3) NULL
+        foreignTable: chemical_treatment_method
+        refColumn: treatment_method_code
+        meta: {}
+        layout:
+          header:
+            key: 'chemicalTreatment.treatmentMethodCode'
+            default: 'Treatment Method'
           classes:
             - none
       # -- End Columns
