@@ -38,8 +38,8 @@ import { DataController } from '../../../../database/data.model.controller';
 /**
  * Test Functions for Chemical Treatment controller
  */
-let resourceName = 'chemical treatment';
-let controller: DataController = ChemicalTreatmentController.shared;
+const resourceName = 'chemical treatment';
+const controller: DataController = ChemicalTreatmentController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
         await SharedExpressApp.initExpress();
@@ -87,53 +87,6 @@ describe(`Test for ${resourceName}`, () => {
             latitude: faker.address.latitude(),
             longitude: faker.address.longitude()
         });
-    });
-});
-
-/**
- * Test Functions for HerbicideTankMix controller
- */
-resourceName = 'herbicide tank mix';
-controller = HerbicideTankMixController.shared;
-describe(`Test for ${resourceName}`, () => {
-    before(async () => {
-        await SharedExpressApp.initExpress();
-        await commonTestSetupAction();
-    });
-    after(async () => {
-        await commonTestTearDownAction();
-    });
-
-    // Test1: Create
-    it(`should create ${resourceName}`, async () => {
-        await ExpressResourceTest.testCreate(SharedExpressApp.app, {
-            auth: AuthType.admin
-        }, controller);
-    });
-
-    // Test2: Update
-    it(`should update ${resourceName}`, async () => {
-        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.admin}, controller);
-    });
-
-    // Test3: Get Single
-    it(`should get ${resourceName} {single}`, async () => {
-        await ExpressResourceTest.testGetSingle(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
-    });
-
-    // Test4: Get All
-    it(`should get ${resourceName} {all}`, async () => {
-        await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
-    });
-
-    // Test5: Fail To Create For Viewer
-    it(`should not create ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
-    });
-
-    // Test6: Fail to update for Viewer
-    it(`should not update ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
     });
 });
 // -------------------------------------------------------------------------------

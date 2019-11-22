@@ -19,8 +19,6 @@ ALTER TABLE chemical_treatment ADD COLUMN pesticide_employer_code_id INT NULL RE
 ALTER TABLE chemical_treatment ADD COLUMN project_management_plan_code_id INT NULL REFERENCES project_management_plan_code(project_management_plan_code_id) ON DELETE SET NULL;
 ALTER TABLE chemical_treatment ADD COLUMN first_applicator_chemical_treatment_employee_id INT NULL REFERENCES chemical_treatment_employee(chemical_treatment_employee_id) ON DELETE SET NULL;
 ALTER TABLE chemical_treatment ADD COLUMN second_applicator_chemical_treatment_employee_id INT NULL REFERENCES chemical_treatment_employee(chemical_treatment_employee_id) ON DELETE SET NULL;
-ALTER TABLE chemical_treatment ADD COLUMN wind_direction_code VARCHAR(3) NULL REFERENCES wind_direction_codes(wind_direction_code) ON DELETE SET NULL;
-ALTER TABLE chemical_treatment ADD COLUMN treatment_method_code VARCHAR(3) NULL REFERENCES chemical_treatment_method(treatment_method_code) ON DELETE SET NULL;
 
 
         
@@ -46,8 +44,6 @@ COMMENT ON COLUMN chemical_treatment.pesticide_employer_code_id IS 'Foreign key 
 COMMENT ON COLUMN chemical_treatment.project_management_plan_code_id IS 'Foreign key reference to Project management plan code table';
 COMMENT ON COLUMN chemical_treatment.first_applicator_chemical_treatment_employee_id IS 'Foreign key reference to Chemical treatment employee table';
 COMMENT ON COLUMN chemical_treatment.second_applicator_chemical_treatment_employee_id IS 'Foreign key reference to Chemical treatment employee table';
-COMMENT ON COLUMN chemical_treatment.wind_direction_code IS 'Foreign key reference to wind_direction code table';
-COMMENT ON COLUMN chemical_treatment.treatment_method_code IS 'Foreign key reference to chemical_treatment_method code table';
 
 
         

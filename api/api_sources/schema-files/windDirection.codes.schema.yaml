@@ -4,7 +4,7 @@ externalTables: []
 includes: []
 schemas:
   WindDirectionCodesSchema:
-    name: wind_direction_codes
+    name: wind_direction_code
     description: 'List of valid menu items to be displayed in dropdown menu for Wind Direction'
     baseSchema: CodeTableSchema
     columns:

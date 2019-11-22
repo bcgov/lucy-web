@@ -316,31 +316,6 @@ schemas:
             default:  'Second Applicator'
           classes:
             - none
-      windDirection:
-        name: wind_direction_code
-        comment: Foreign key reference to wind_direction code table
-        definition: VARCHAR(3) NULL
-        foreignTable: wind_direction_codes
-        refColumn: wind_direction_code
-        meta: {}
-        layout:
-          header:
-            key: 'chemicalTreatment.windDirection'
-            default: 'Wind Direction'
-          classes:
-            - none
-      chemicalTreatmentMethodCode:
-        name: treatment_method_code
-        comment: Foreign key reference to chemical_treatment_method code table
-        definition: VARCHAR(3) NULL
-        foreignTable: chemical_treatment_method
-        refColumn: treatment_method_code
-        meta: {}
-        layout:
-          header:
-            key: 'chemicalTreatment.treatmentMethodCode'
-            default: 'Treatment Method'
-          classes:
-            - none
       # -- End Columns
+    versions: {}
   ## --

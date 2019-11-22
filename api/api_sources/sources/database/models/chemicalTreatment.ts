@@ -15,7 +15,7 @@ import {
 	SpeciesAgencyCode,
 	PesticideEmployerCode,
 	ProjectManagementPlanCode,
-	ChemicalTreatmentEmployee
+	ChemicalTreatmentEmployee,
 } from '../models';
 
 import { Record } from './generic.data.models';
@@ -33,11 +33,16 @@ export interface ChemicalTreatmentSpec {
 	primaryPaperFileReference: string;
 	secondaryPaperFileReference: string;
 	pup: string;
+	plotWidth: number;
+	plotLength: number;
+	temperature: number;
+	humidity: number;
+	windSpeed: number;
 	speciesAgency: SpeciesAgencyCode;
 	pesticideEmployer: PesticideEmployerCode;
 	pmp: ProjectManagementPlanCode;
-	firstApplicator?: ChemicalTreatmentEmployee;
-	secondApplicator?: ChemicalTreatmentEmployee;
+	firstApplicator: ChemicalTreatmentEmployee;
+	secondApplicator: ChemicalTreatmentEmployee;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -53,6 +58,11 @@ export interface ChemicalTreatmentUpdateSpec {
 	primaryPaperFileReference?: string;
 	secondaryPaperFileReference?: string;
 	pup?: string;
+	plotWidth?: number;
+	plotLength?: number;
+	temperature?: number;
+	humidity?: number;
+	windSpeed?: number;
 	speciesAgency?: SpeciesAgencyCode;
 	pesticideEmployer?: PesticideEmployerCode;
 	pmp?: ProjectManagementPlanCode;
@@ -126,6 +136,41 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	pup: string;
 
 	/**
+	 * @description Getter/Setter property for column {plot_width}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.plotWidth, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	plotWidth: number;
+
+	/**
+	 * @description Getter/Setter property for column {plot_length}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.plotLength, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	plotLength: number;
+
+	/**
+	 * @description Getter/Setter property for column {temperature}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.temperature, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	temperature: number;
+
+	/**
+	 * @description Getter/Setter property for column {humidity}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.humidity, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	humidity: number;
+
+	/**
+	 * @description Getter/Setter property for column {wind_speed}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.windSpeed, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	windSpeed: number;
+
+	/**
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
 	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
@@ -140,6 +185,7 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.pesticideEmployer, referencedColumnName: PesticideEmployerCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	pesticideEmployer: PesticideEmployerCode;
+
 	/**
 	 * @description Getter/Setter property for column {project_management_plan_code_id}
 	 */
@@ -159,7 +205,7 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	/**
 	 * @description Getter/Setter property for column {second_applicator_chemical_treatment_employee_id}
 	 */
-	@ManyToOne( type => ChemicalTreatmentEmployee )
+	@ManyToOne( type => ChemicalTreatmentEmployee)
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.secondApplicator, referencedColumnName: ChemicalTreatmentEmployeeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	secondApplicator: ChemicalTreatmentEmployee;
