@@ -33,6 +33,7 @@ export class WindDirectionCodes1574281032452 extends AppDBMigrator implements Mi
     */
    public async down(queryRunner: QueryRunner): Promise<any> {
        this.log('[STAR]', 'DOWN');
+       await queryRunner.query(`DROP TABLE IF EXISTS wind_direction_codes`);
        await queryRunner.query(this.windDirectionCodesSchema.dropTable());
        this.log('[END]', 'DOWN');
    }
