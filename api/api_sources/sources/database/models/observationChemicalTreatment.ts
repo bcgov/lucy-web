@@ -79,7 +79,7 @@ export class ObservationChemicalTreatment extends Record implements ObservationC
 	/**
 	 * @description Getter/Setter property for column {chemical_treatment_id}
 	 */
-	@ManyToOne( type => ChemicalTreatment, { eager: true})
+	@ManyToOne( type => ChemicalTreatment, { eager: false})
 	@JoinColumn({ name: ObservationChemicalTreatmentSchema.columns.chemicalTreatment, referencedColumnName: ChemicalTreatmentSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	chemicalTreatment: ChemicalTreatment;

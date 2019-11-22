@@ -51,6 +51,7 @@ schemas:
         refColumn: chemical_treatment_id
         deleteCascade: true
         meta: {}
+        eager: false
         layout:
           header:
             key: 'chemicalTreatment'

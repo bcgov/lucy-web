@@ -213,7 +213,7 @@ export const  testModel = (model: any, schema: BaseSchema, log: boolean = false)
         }
         const info = col.typeDetails;
         const val = model[key];
-        if (col.required === true) {
+        if (col.required === true && col.eager === true) {
             should().exist(val);
         }
         if (val) {

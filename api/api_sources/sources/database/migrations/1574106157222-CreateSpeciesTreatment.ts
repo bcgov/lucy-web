@@ -31,7 +31,7 @@ export class CreateSpeciesTreatment1574106157222 extends AppDBMigrator implement
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[STAR]', 'DOWN');
-        await queryRunner.query(`DROP TABLE IF species_treatment`);
+        await queryRunner.query(`DROP TABLE IF EXISTS species_treatment;`);
         await queryRunner.query(this.speciesTreatmentSchema.dropTable());
         this.log('[END]', 'DOWN');
     }
