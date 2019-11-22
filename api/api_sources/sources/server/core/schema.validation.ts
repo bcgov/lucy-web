@@ -28,10 +28,14 @@ import { ValidatorCheck, ValidatorExists, ValidationInfo, MakeOptionalValidator}
 import { DataController} from '../../database/data.model.controller';
 import { Logger } from '../logger';
 import { unWrap } from '../../libs/utilities';
+import { check } from 'express-validator';
 
 export interface SchemaValidationOption {
     embedded?: boolean;
     caller?: string;
+    updateOnly?: boolean;
+    controller?: DataController;
+    rootSchema?: string;
 }
 
 export class SchemaValidator {
@@ -48,30 +52,43 @@ export class SchemaValidator {
 
     constructor() {
         this.logger = new Logger(this.constructor.name);
+        this.logger.disableInfo = true;
     }
 
     validators(schema: BaseSchema, filterOnly?: boolean, rootKey?: string, options?: SchemaValidationOption): any[] {
         if (options && options.caller) {
-            this.logger = new Logger(`${this.constructor.name}(${options.caller} | ${schema.className})`);
+            this.logger.tag = `${this.constructor.name}(${options.caller} | ${schema.className})`;
         } else {
-            this.logger = new Logger(`${this.constructor.name} | ${schema.className}`);
+            this.logger.tag = `${this.constructor.name} | ${schema.className}`;
         }
 
+        this.logger.info(`Adding Validator (root: ${rootKey || 'NA'})`);
+
+        const rootSchema = rootKey ? (unWrap(options, {}).rootSchema || 'NA') : schema.className;
+        const opt: SchemaValidationOption = options ? Object.assign(options, { rootSchema: rootSchema}) : { rootSchema: rootSchema};
         // Getting validator from schema column
-        let allValidators = this._fieldValidators(schema.table.columnsDefinition, filterOnly, rootKey, options);
+        let allValidators = this._fieldValidators(schema.table.columnsDefinition, filterOnly, rootKey, opt);
 
         // Getting validation from embedded schema relation
         if (schema.table.relations && Object.keys(schema.table.relations).length > 0) {
             _.each(schema.table.relations, (rel: TableRelation, key: string) => {
                 if (unWrap(rel.meta, {}).embedded) {
-                    allValidators = allValidators.concat(this._relationshipValidators(key, rel, rootKey, unWrap(rel.meta, {}).optional || false));
+                    const relKey: string = rootKey ? `${rootKey}.${key}` : key;
+                    const optional = unWrap(rel.meta, {}).optional || false;
+                    const errorMessage = `${relKey}: should exists as ${rel.type}`;
+                    if (optional) {
+                        allValidators = allValidators.concat(check(relKey).exists().optional().withMessage(errorMessage));
+                    } else {
+                        allValidators = allValidators.concat(check(relKey).exists().withMessage(errorMessage));
+                    }
+                    allValidators = allValidators.concat(this._relationshipValidators(key, rel, rootKey, optional, opt));
                 }
             });
         }
         return allValidators;
     }
 
-    _relationshipValidators(key: string, relation: TableRelation , rootKey?: string, optional?: boolean): any[] {
+    _relationshipValidators(key: string, relation: TableRelation , rootKey?: string, optional?: boolean, options?: SchemaValidationOption): any[] {
         // Get controller
         const controller: DataController = controllerForSchemaName(relation.schema || '');
         if (controller) {
@@ -79,10 +96,12 @@ export class SchemaValidator {
             const schema = controller.schemaObject;
             const updatedRootKey = relation.type === 'array' ? `${key}.*` : key;
             const mainRootKey = rootKey ? `${rootKey}.${updatedRootKey}` : updatedRootKey;
+            const opt: SchemaValidationOption = { embedded: true, controller: controller};
+            const inputOptions = options ? Object.assign(options, opt) : opt;
             if (optional) {
-                return MakeOptionalValidator(() => this.validators(schema, undefined, key));
+                return MakeOptionalValidator(() => this.validators(schema, undefined, key, inputOptions));
             }
-            return  this.validators(schema, undefined, mainRootKey, { embedded: true});
+            return  this.validators(schema, undefined, mainRootKey, inputOptions);
         } else {
             this.logger.info(`Controller Not available for schema: ${relation.schema || 'NA'}`);
         }
@@ -128,13 +147,42 @@ export class SchemaValidator {
         return info;
     }
 
+    /*private _handleRelationshipData(req: any, data: any, key: string) {
+        const newKey = key.replace('.*', '.');
+        const keys: string [] = newKey.split('.');
+        const last: string = keys.pop();
+        for (const k of keys) {
+            if (!req.body[k] || req.body[k].constructor !== Array) {
+                req.body[k]
+            }
+        }
+    }*/
+
     private _fieldValidators(fields: {[key: string]: DataFieldDefinition}, filterOnly?: boolean, rootKey?: string, inputOptions?: SchemaValidationOption): any[] {
         let results: any[] = [];
         let validatorCheck = {};
         let validatorExists = {};
         const options =  inputOptions || {};
         _.each(fields, (field: DataFieldDefinition, key: string) => {
+            const printKey: string = rootKey ? `${rootKey}.${key}` : key;
             if (key === 'id') {
+                // Check options
+                if (options.embedded && options.updateOnly && !filterOnly) {
+                    if (options.controller) {
+                        const dc: DataController = options.controller;
+                        const obj: {[key: string]: ValidationInfo} = {};
+                        const checkKey = `${dc.idKey}`;
+                        obj[checkKey] = {
+                            validate: validate => validate.isInt().custom(async (value: any, {req}) => {
+                                const item = await dc.findById(value);
+                                assert(item, `${printKey}: Item should exists`);
+                            }),
+                            message: 'Item should exists on database',
+                            optional: false
+                        };
+                        validatorCheck  = { ... validatorCheck, ...obj};
+                    }
+                }
                 return;
             }
             const typeInfo: any = field.typeDetails;
@@ -169,8 +217,8 @@ export class SchemaValidator {
                         validateKey[key] = {
                             validate: validate => validate.custom(async (value: any, {req}) => {
                                 // Check json or not
-                                assert(value, `${key}: should be json`);
-                                assert(typeof value === typeof {}, `${key}: should be json, received ${typeof value}`);
+                                assert(value, `${printKey}: should be json`);
+                                assert(typeof value === typeof {}, `${printKey}: should be json, received ${typeof value}`);
                                 // TODO: Add logic to verify json-schema
                             }),
                             message: 'should be json',
@@ -180,7 +228,7 @@ export class SchemaValidator {
                     }
 
                     // Check skip for embedded or not
-                    if (unWrap(field.meta, {}).skipForEmbedded && options.embedded) {
+                    if ((unWrap(field.meta, {}).skipForEmbedded && options.embedded) || (field.refSchema === options.rootSchema)) {
                         break;
                     }
 
@@ -205,6 +253,10 @@ export class SchemaValidator {
                             } else {
                                 results = results.concat(this.validators(schema, undefined, key));
                             }
+
+                            results.push(check(key).exists().custom(async (val: any, {req}) => {
+                                req.body[key] = val;
+                            }));
                             handled = true;
                         }
                     }
@@ -215,11 +267,14 @@ export class SchemaValidator {
                                 const con = controllerForSchemaName(schemaName);
                                 if (con) {
                                     const item = await con.findById(val);
-                                    assert(item, `${key}: Item not exists with id: ${val}`);
+                                    assert(item, `${printKey}: Item not exists with id: ${val}`);
                                     if (!req.body) {
                                         req.body = {};
                                     }
-                                    req.body[key] = item;
+                                    this.logger.info(`k => ${key}`);
+                                    if (key.split('.').length === 1) {
+                                        req.body[key] = item;
+                                    }
                                 }
                             }),
                             optional: !field.required
@@ -231,11 +286,12 @@ export class SchemaValidator {
             validatorExists = {...validatorExists, ...validateExists};
         });
         // console.dir(validatorExists);
-        if (filterOnly) {
-            return results.concat(ValidatorCheck(validatorCheck, rootKey));
-        }
         const existsValidator = ValidatorExists(validatorExists);
-        const checkValidator = ValidatorCheck(validatorCheck, rootKey);
+        const checkValidator = ValidatorCheck(validatorCheck, rootKey, this.logger);
+        if (filterOnly) {
+            results.concat(checkValidator);
+            return results;
+        }
         results = results.concat(existsValidator);
         results = results.concat(checkValidator);
         return results;

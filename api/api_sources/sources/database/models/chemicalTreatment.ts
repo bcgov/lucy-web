@@ -20,6 +20,7 @@ import {
 
 import { Record } from './generic.data.models';
 import { HerbicideTankMix } from './herbicideTankMix';
+import { ObservationChemicalTreatment } from './observationChemicalTreatment';
 
 /** Interface **/
 /**
@@ -168,6 +169,12 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	 */
 	@OneToMany( type => HerbicideTankMix, tankMix => tankMix.chemicalTreatment, {eager: true})
 	tankMixes: HerbicideTankMix[];
+
+	/**
+	 *  @description Getter/Setter property for related observations
+	 */
+	@OneToMany( type => ObservationChemicalTreatment, obj => obj.chemicalTreatment, { eager: true})
+	speciesObservations: ObservationChemicalTreatment[];
 
 }
 

@@ -66,6 +66,16 @@ export const unWrap = (value?: any, defaultValue?: any): any => {
 };
 
 /**
+ * @description Unwrap object or return default
+ * @param any value
+ * @param T defaultValue
+ * @returns T
+ */
+export function unWrapType<T> (value: any, defaultValue: T): T  {
+    return value !== undefined ? (value as T) : defaultValue;
+}
+
+/**
  * @description Load json from yaml file
  * @param string yamlPath Path of yml file
  * @returns any

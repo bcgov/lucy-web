@@ -29,7 +29,7 @@ import {
 } from './base.route.controller';
 import { ResourceInfo } from './route.const';
 import { roleAuthenticationMiddleware } from './auth.middleware';
-import { SchemaValidator } from './schema.validation';
+import { SchemaValidator, SchemaValidationOption } from './schema.validation';
 import { MakeOptionalValidator } from './core.validator';
 
 /**
@@ -70,8 +70,15 @@ export class BaseResourceRouteController extends RouteController {
             }
             // Getting validator
             const validators: any[] = this._createValidator();
-            const optional: any[] = MakeOptionalValidator(() => this._createValidator());
-            // const filters: any = MakeOptionalValidator(() => this._createValidator(true));
+            // Options
+            const opt: SchemaValidationOption = {
+                updateOnly: true,
+                caller: 'update'
+            };
+            const optional: any[] = MakeOptionalValidator(() => this._createValidator(opt));
+            const filters: any = MakeOptionalValidator(() => this._createValidator({
+                caller: 'filter'
+            }, true));
 
             // Getting operation specific middleware
             const createMiddleware: any[] = info.createMiddleware ? info.createMiddleware() : [];
@@ -84,7 +91,7 @@ export class BaseResourceRouteController extends RouteController {
             this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
 
             // Configuring View all Route with filter
-            this.router.get(`/`, this.combineValidator(viewMiddleware), this.index);
+            this.router.get(`/`, this.combineValidator(viewMiddleware, filters), this.index);
 
             // Configuring config route
             this.router.get(`/config`, viewMiddleware, this.config);
@@ -168,8 +175,8 @@ export class BaseResourceRouteController extends RouteController {
     /**
      * @description Create Validator Logic based on Schema
      */
-    private _createValidator(filterOnly?: boolean): any[] {
-        return SchemaValidator.shared.validators(this.dataController.schemaObject, filterOnly);
+    private _createValidator(options?: SchemaValidationOption, filterOnly?: boolean): any[] {
+        return SchemaValidator.shared.validators(this.dataController.schemaObject, filterOnly, undefined, options);
     }
 }
 
