@@ -95,6 +95,15 @@ schemas:
                 - windSpeed
                 - windDirection
             ## -- group {Advance details}
+            - title:
+                key: ''
+                default: Herbicide And Application
+              fields: []
+              style: 
+                custom: {
+                  formComponent: HerbicideMix
+                }
+            ## -- group
         ## -- end Section
     # --
     ## -- computedFields
