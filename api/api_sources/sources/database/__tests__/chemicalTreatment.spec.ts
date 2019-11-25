@@ -87,6 +87,16 @@ describe('Test Chemical Treatment', () => {
         testModel(code, ChemicalTreatmentEmployeeSchema.shared);
     });
 
+    it('should fetch wind-direction code', async () => {
+        const code: WindDirectionCodes = await WindDirectionCodesController.shared.random();
+        testModel(code, WindDirectionCodesSchema.shared);
+    });
+
+    it('should fetch chemical treatment method codes', async () => {
+        const code: ChemicalTreatmentMethodCode = await ChemicalTreatmentMethodCodeController.shared.random();
+        testModel(code, ChemicalTreatmentMethodCodeSchema.shared);
+    });
+
     it('should create/fetch chemical treatment Object', async () => {
         const obj: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
         testModel(obj, ChemicalTreatmentSchema.shared);

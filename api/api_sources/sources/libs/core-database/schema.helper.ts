@@ -69,7 +69,7 @@ export class SchemaHelper {
      */
     _genColumnDef(col: ApplicationTableColumn, tableName: string): string {
         const colDef = col.createColumnSql(tableName);
-        const colComment = `COMMENT ON COLUMN ${tableName}.${col.name} IS '${col.comment}'`;
+        const colComment = `COMMENT ON COLUMN ${tableName}.${col.name} IS '${col.comment}';`;
         return `\n-- ## Adding Column ${col.name} on table ${tableName}\n${colDef}\n${colComment}\n-- ## --\n`;
     }
 
