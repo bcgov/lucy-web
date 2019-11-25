@@ -678,7 +678,7 @@ export class FormService {
       }
     }
     let cssClasses = ``;
-    const classes = field.layout.classes;
+    const classes = field.layout.classes || [];
     for (const item of classes) {
       cssClasses = item + ` `;
     }

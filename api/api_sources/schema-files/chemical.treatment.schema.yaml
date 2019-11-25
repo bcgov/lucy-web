@@ -73,24 +73,29 @@ schemas:
                 - pup
                 - speciesAgency
                 - pmp
-              style: {}
-              groups:
-                - title:
-                    key: ''
-                    default: Treatment Method and Application
-                  fields:
-                    - chemicalTreatmentMethodCode
-                    - plotWidth
-                    - plotLength
-                    - temperature
-                    - humidity
-                    - windSpeed
-                    - windDirection
-                - title:
-                    key: ''
-                    default: Herbicide and Application
+              style: {}  
             ## -- group { Treatment Details }
         # -- section {Location}
+        ## Section: Method and application
+        - title: 
+            key: 'chemicalTreatment.details.title'
+            default: ''
+          groups:
+            ## Group Treatment Advance details
+            - title:
+                key: ''
+                default: Treatment Method and Application
+              fields:
+                - methodCode
+                - plotWidth
+                - plotLength
+                - calculatedArea
+                - temperature
+                - humidity
+                - windSpeed
+                - windDirection
+            ## -- group {Advance details}
+        ## -- end Section
     # --
     ## -- computedFields
     computedFields: 
@@ -225,7 +230,7 @@ schemas:
             key: 'temperature'
             default: 'Temperature (C)'
           classes:
-            - none
+            - col-3
       humidity:
         name: humidity
         comment: The recorded air humidity at the site of the treatment area at the time of treatment, as a percentage
@@ -236,7 +241,7 @@ schemas:
             key: 'humidity'
             default: 'Humidity (%)'
           classes:
-            - none
+            - col-3
       windSpeed:
         name: wind_speed
         comment: The recorded wind speed at the site of the treatment area at the time of treatment, in km/h
@@ -247,7 +252,7 @@ schemas:
             key: 'windSpeed'
             default: 'Wind Speed (km/h)'
           classes:
-            - none
+            - col-3
       ## Relation Column
       speciesAgency:
         name: 'species_agency_code_id'
@@ -328,12 +333,26 @@ schemas:
             definition: INT NULL
             foreignTable: wind_direction_code
             refColumn: wind_direction_code_id
+            meta: {}
+            layout:
+              header: 
+                key: 'chemicalTreatment.windDirection' 
+                default:  'Wind direction'
+              classes:
+                - col-3
           methodCode:
             name: chemical_treatment_method_id
             comment: 'Foreign key reference to Chemical Treatment Method codes'
             definition: INT NULL
             foreignTable: chemical_treatment_method
             refColumn: chemical_treatment_method_id
+            meta: {}
+            layout:
+              header: 
+                key: 'chemicalTreatment.methodCode' 
+                default:  'Chemical Treatment Method'
+              classes:
+                - col-12
         ## -- end Columns
 
   ## --
