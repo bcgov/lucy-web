@@ -358,11 +358,17 @@ export class FormService {
           requiredFieldKeys = groupInfo.requiredFieldKeys;
           dropdownFieldKeys = groupInfo.dropdownFieldKeys;
           fieldHeaders = groupInfo.fieldHeaders;
+          let isCustom = false;
+          if (group.style && group.style.custom) {
+            isCustom = true;
+          }
           // Add Group/Subsection
           subSections.push({
             title: group.title,
             boxed: false,
-            fields: groupInfo.fields
+            fields: groupInfo.fields,
+            isCustom: isCustom,
+            custom: isCustom ? group.style.custom : {}
           });
         }
         // Add Section
