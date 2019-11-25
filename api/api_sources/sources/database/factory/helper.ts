@@ -32,7 +32,7 @@ import {
     TableRelation
 } from '../../libs/core-database';
 import { userFactory } from './userFactory';
-import { unWrap, unWrapType } from '../../libs/utilities';
+import { unWrap } from '../../libs/utilities';
 import { ObjectLiteral } from 'typeorm';
 
 /**
