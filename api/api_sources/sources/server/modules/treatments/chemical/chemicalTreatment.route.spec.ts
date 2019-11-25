@@ -32,7 +32,7 @@ import {
     AuthType
 } from '../../../../test-helpers/testHelpers';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
-import { ChemicalTreatmentController, HerbicideTankMixController } from '../../../../database/models';
+import { ChemicalTreatmentController } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
 
 /**

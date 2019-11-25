@@ -31,7 +31,6 @@ import {
     mechanicalTreatmentCreateSpecFactory,
     userFactory,
     mechanicalTreatmentUpdateSpecFactory,
-    destroyObservation,
     mechanicalMethodCodeFactory,
     mechanicalDisposalMethodCodeFactory,
     mechanicalSoilDisturbanceCodeFactory,
