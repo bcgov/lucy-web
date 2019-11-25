@@ -6,7 +6,9 @@ import {
 	SpeciesAgencyCodeSchema,
 	PesticideEmployerCodeSchema,
 	ProjectManagementPlanCodeSchema,
-	ChemicalTreatmentEmployeeSchema
+    ChemicalTreatmentEmployeeSchema,
+	WindDirectionCodesSchema,
+	ChemicalTreatmentMethodCodeSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -16,6 +18,8 @@ import {
 	PesticideEmployerCode,
 	ProjectManagementPlanCode,
 	ChemicalTreatmentEmployee,
+	WindDirectionCodes,
+	ChemicalTreatmentMethodCode
 } from '../models';
 
 import { Record } from './generic.data.models';
@@ -43,6 +47,8 @@ export interface ChemicalTreatmentSpec {
 	pmp: ProjectManagementPlanCode;
 	firstApplicator: ChemicalTreatmentEmployee;
 	secondApplicator: ChemicalTreatmentEmployee;
+	windDirection: WindDirectionCodes;
+	methodCode: ChemicalTreatmentMethodCode;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -68,6 +74,8 @@ export interface ChemicalTreatmentUpdateSpec {
 	pmp?: ProjectManagementPlanCode;
 	firstApplicator?: ChemicalTreatmentEmployee;
 	secondApplicator?: ChemicalTreatmentEmployee;
+	windDirection?: WindDirectionCodes;
+	methodCode?: ChemicalTreatmentMethodCode;
 }
 // -- End: ChemicalTreatmentUpdateSpec --
 
@@ -209,6 +217,22 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.secondApplicator, referencedColumnName: ChemicalTreatmentEmployeeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	secondApplicator: ChemicalTreatmentEmployee;
+
+	/**
+	 * @description Getter/Setter property for column {wind_direction_code_id}
+	 */
+	@ManyToOne( type => WindDirectionCodes, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.windDirection, referencedColumnName: WindDirectionCodesSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	windDirection: WindDirectionCodes;
+
+	/**
+	 * @description Getter/Setter property for column {chemical_treatment_method_id}
+	 */
+	@ManyToOne( type => ChemicalTreatmentMethodCode, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.methodCode, referencedColumnName: ChemicalTreatmentMethodCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	methodCode: ChemicalTreatmentMethodCode;
 
 	/**
 	 * @description Getter/Setter property for tankMixes

@@ -17,7 +17,7 @@ externalTables:
     schema: ChemicalTreatmentEmployeeSchema
   - name: chemical_treatment_method
     schema: ChemicalTreatmentMethodCodeSchema
-  - name: wind_direction_codes
+  - name: wind_direction_code
     schema: WindDirectionCodesSchema
 schemas:
   ## -- ChemicalTreatmentSchema
@@ -317,5 +317,23 @@ schemas:
           classes:
             - none
       # -- End Columns
-    versions: {}
+    versions: 
+      - name: codes ## This version name should be unique
+        id: '20191125'
+        info: 'Adding chemical treatment method and wind direction speed code tables reference to chemical treatment'
+        columns:
+          windDirection:
+            name: wind_direction_code_id
+            comment: 'Foreign key reference to WindDirectionSchema'
+            definition: INT NULL
+            foreignTable: wind_direction_code
+            refColumn: wind_direction_code_id
+          methodCode:
+            name: chemical_treatment_method_id
+            comment: 'Foreign key reference to Chemical Treatment Method codes'
+            definition: INT NULL
+            foreignTable: chemical_treatment_method
+            refColumn: chemical_treatment_method_id
+        ## -- end Columns
+
   ## --
