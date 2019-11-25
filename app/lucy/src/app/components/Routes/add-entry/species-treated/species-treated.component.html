@@ -10,13 +10,15 @@
         <div class="col-12">
             <label>Being Treated</label>
             <div *ngFor="let s of _speciesBeingTreated" class="col-6">
-                {{ s.commonName }}
+                <p><b>{{ s.commonName }}</b></p>
+                <p>50%</p>
             </div>
         </div>
         <div class="col-12">
             <label>Not Being Treated</label>
             <div *ngFor="let n of _speciesNotBeingTreated" class="col-6">
-                <b>{{ n.commonName }}</b>
+                <p>{{ n.commonName }}</p>
+                <button>Treat</button>
             </div>
         </div>
         <div class="col-12">
