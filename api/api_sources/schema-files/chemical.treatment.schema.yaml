@@ -95,6 +95,20 @@ schemas:
                 - windSpeed
                 - windDirection
             ## -- group {Advance details}
+            ## Group Herbicide and Application
+            - title:
+                key: ''
+                default: Herbicide and Application
+              fields:
+                - none
+            ## -- end group {Herbicide and Application}
+            ## Group Invasive Species to be treated
+            - title:
+                key: ''
+                default: Invasive Species to be treated at this location
+              fields:
+                - none
+            ## -- end group {Invasive Species to be treated}
         ## -- end Section
     # --
     ## -- computedFields
@@ -102,7 +116,7 @@ schemas:
       calculatedArea:
         header:
           key: calculatedArea
-          default: 'Total Calculated Area (m^2)'
+          default: 'Total Calculated Area (m²)'
         computationRules:
           - name: Calculate Area
             keys:
@@ -206,7 +220,7 @@ schemas:
         layout:
           header:
             key: 'plotWidth'
-            default: 'Plot Width'
+            default: 'Plot Width (m)'
           classes:
             - none
       plotLength:
@@ -217,7 +231,7 @@ schemas:
         layout:
           header:
             key: 'plotLength'
-            default: 'Plot Length'
+            default: 'Plot Length (m)'
           classes:
             - none
       temperature:

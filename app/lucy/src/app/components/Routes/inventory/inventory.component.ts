@@ -437,7 +437,7 @@ export class InventoryComponent implements OnInit {
     if (!random) {
       this.toast.show('Feature is not available', ToastIconType.fail);
       this.loadingService.remove();
-      return 
+      return; 
     }
     console.log(`generated`);
     this.observations = random;
