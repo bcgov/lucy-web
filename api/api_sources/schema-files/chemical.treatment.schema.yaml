@@ -99,9 +99,17 @@ schemas:
                 key: ''
                 default: Herbicide And Application
               fields: []
-              style: 
+              style:
                 custom: {
                   formComponent: HerbicideMix
+                }
+            - title:
+                key: ''
+                default: Invasive Species to be treated at this location
+              fields: []
+              style: 
+                custom: {
+                  formComponent: SpeciesTreated
                 }
             ## -- group
         ## -- end Section
