@@ -20,15 +20,19 @@
  * Modified By: pushan (you@you.you>)
  * -----
  */
+import * as _ from 'underscore';
 import {
     Connection,
     Repository,
     ObjectLiteral,
     QueryRunner
 } from 'typeorm';
-import { ApplicationTable } from './application.table';
+import { ApplicationTable, TableRelation } from './application.table';
 import { BaseSchema } from './baseSchema';
-import { registerDataModelController } from './schema.storage';
+import { registerDataModelController, controllerForSchemaName } from './schema.storage';
+import { DataController } from '../../database/data.model.controller';
+import { unWrap } from '../utilities';
+import { DataFieldDefinition } from './application.column';
 
 export interface ControllerMetaData {
     modelName: string;
@@ -39,6 +43,7 @@ export interface BaseDataController {
     schemaObject: BaseSchema;
     dependencies: any[];
     meta: ControllerMetaData;
+    idKey: string;
     findById(id: number): Promise<any>;
     remove(object: any): Promise<void>;
     removeById( id: number): Promise<void>;
@@ -48,6 +53,7 @@ export interface BaseDataController {
     random(): Promise<any>;
     createNewObject(newObj: any, creator: any, ...others: any[]): Promise<any>;
     updateObject(existing: any, update: any, modifier: any, ...others: any[]): Promise<any>;
+    checkObject(obj: any, user: any): Promise<any>;
     factory (): Promise<any>;
     getIdValue(obj: any): any;
 }
@@ -106,6 +112,13 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
      */
     protected get connection(): Connection {
         throw Error('BaseDataModelController: Subclass must override');
+    }
+
+    /**
+     * @description Get table primary id column
+     */
+    get idKey(): string {
+        return this.schema.columns.id;
     }
 
     /**
@@ -254,6 +267,8 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 
     async updateObj<U extends ObjectLiteral>(obj: T, update: U): Promise<T> {
         const o: any = obj;
+        // Update relationship
+
         for (const key in o) {
             if (obj.hasOwnProperty(key) && update.hasOwnProperty(key)) {
                 if (update[key] && typeof obj[key] === typeof update[key]) {
@@ -266,8 +281,63 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
     }
 
     newObject(data: any): T {
-        return this.repo.manager.create(this.entity, data);
+        const d: T = this.repo.manager.create(this.entity, data);
+        return d;
     }
+
+    async checkObject(obj: any, user: any): Promise<any> {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const info: DataFieldDefinition = this.schema.columnsDefinition[key];
+                if (!info) {
+                    continue;
+                }
+                const value: any = obj[key];
+                if (info.refSchema && typeof value === typeof 1) {
+                    // Get controller
+                    const con: DataController = controllerForSchemaName(info.refSchema);
+                    if (con) {
+                        obj[key] = await con.findById(value);
+                        // console.log(`Resolved => ${key} : ${info.refSchema}`);
+                        // console.dir(obj);
+                    }
+                }
+            }
+        }
+
+        // Create New Obj
+        // Get idKey
+        if (obj[this.idKey]) {
+            return await this.updateObject(obj, obj, user);
+        } else {
+            return await this.createNewObject(obj, user);
+        } 
+    }
+
+    async checkRelationship(data: any, user: any, caller: string = 'NONE'): Promise<void> {
+        const fetcher: any[] = [];
+        _.each(this.schema.relations, async (r: TableRelation, k: string) => {
+            const con: DataController = controllerForSchemaName(r.schema || '');
+            if (data[k] && con && unWrap(r.meta, {}).embedded) {
+                const array: any[] = data[k];
+                const newArray: Promise<any>[] = [];
+                for (const item of array) {
+                    // console.log(`Checking: ${k} => ${con.schemaObject.className}`);
+                    // console.dir(r);
+                    // console.dir(data[k]);
+                    // console.dir(item);
+                    newArray.push(con.checkObject(item, user));
+                }
+                fetcher.push( { key: k, prom: newArray});
+            }
+        });
+        for (const i of fetcher) {
+            data[i.key] = await Promise.all(i.prom);
+        }
+
+        // console.dir(data);
+    }
+
 
     async createNewObject(newObj: any, creator: any): Promise<T> {
         const newModelObj = this.newObject(newObj);

@@ -21,7 +21,8 @@
  * -----
  */
 import * as _ from 'underscore';
-import { ApplicationTableColumn, ColumnChangeOptions} from './application.column';
+import { ApplicationTableColumn, ColumnChangeOptions, DataFieldDefinition} from './application.column';
+import { unWrap } from '../utilities';
 
 /**
  * @description Change column type constants in schema version
@@ -106,6 +107,16 @@ export class ApplicationTable {
     modelName?: string;
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
+
+    get relationalColumnKeys(): string[] {
+        const r: string[] = [];
+        _.each(this.columnsDefinition, (col: ApplicationTableColumn, key) => {
+            if (col.foreignTable || col.refSchema) {
+                r.push(key);
+            }
+        });
+        return r;
+    }
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
@@ -225,5 +236,20 @@ export class ApplicationTable {
         } else {
             return this.versions[version];
         }
+    }
+
+    get embeddedRelations(): string[] {
+        const r: string[] = [];
+        _.each(this.columnsDefinition, (c: DataFieldDefinition, k: string) => {
+            if (unWrap(c.meta, {}).embedded) {
+                r.push(k);
+            }
+        });
+        _.each(this.relations, (rel: TableRelation, k: string) => {
+            if (unWrap(rel.meta).embedded) {
+                r.push(k);
+            }
+        });
+        return r;
     }
 }

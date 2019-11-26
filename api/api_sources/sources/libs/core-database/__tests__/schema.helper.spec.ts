@@ -28,7 +28,6 @@ import {  getSQLFileData } from '../sql.loader';
 import { Test2Schema } from './test.schema';
 
 const schema = new Test2Schema();
-console.dir(schema);
 describe('Test Schema Helper Utility', () => {
     before(() => {});
     it('should create migration files', () => {

@@ -5,6 +5,7 @@ import { check, ValidationChain } from 'express-validator';
 import * as assert from 'assert';
 import * as _ from 'underscore';
 import { DataController} from '../../database/data.model.controller';
+import { Logger } from '../logger';
 
 /**
  * @description Convert any validator chain to optional one
@@ -54,12 +55,15 @@ export interface ValidationInfo {
     optional?: boolean;
 }
 
-const getValidator = (key: string, info: ValidationInfo): ValidationChain => {
+const getValidator = (key: string, info: ValidationInfo, logger?: Logger): ValidationChain => {
     let item: ValidationChain;
     if (info.optional !== undefined && info.optional === true) {
         item = info.validate(check(key)).optional().withMessage(`${key}: ${ info.message || 'Invalid variable'}`);
     } else {
         item = info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`);
+    }
+    if (logger) {
+        logger.info(`Validator[${key}] => optional: ${info.optional}`);
     }
     return item;
 };
@@ -69,12 +73,12 @@ const getValidator = (key: string, info: ValidationInfo): ValidationChain => {
  * @param object query: Fields with verify function
  * @returns any[]: Array of check validators
  */
-export const ValidatorCheck = (query: {[key: string]: ValidationInfo}, rootKey?: string) => {
+export const ValidatorCheck = (query: {[key: string]: ValidationInfo}, rootKey?: string, logger?: Logger) => {
     const result: any[] = [];
     _.each(query, ( info: ValidationInfo, key) => {
         try {
-            // const validatorKey = rootKey ? `${rootKey}.${key}` : key;
-            result.push(getValidator(key, info));
+            const finalKey = rootKey ? `${rootKey}.${key}` : key;
+            result.push(getValidator(finalKey, info, logger));
         } catch (excp) {
             throw new Error(`ValidatorCheck: ${key} error: ${excp} \n ${JSON.stringify(info, null, 2)}`);
         }
