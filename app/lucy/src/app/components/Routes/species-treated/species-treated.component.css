@@ -1,0 +1,90 @@
+.speciesTreatedLabel {
+    text-transform: uppercase;
+    color: #636363;
+    padding-top: 16pt;
+    padding-bottom: 6pt;
+    letter-spacing: 1pt;
+}
+
+.speciesContainer {
+    border-style: solid;
+    border-radius: 4pt;
+    border-width: 1pt;
+    border-color: #E5E9F2;
+    font-size: smaller;
+    padding: 16px;
+    box-shadow: 0 0 5pt #E5E9F2;
+    margin-top: 16pt;
+}
+
+.speciesTreatedCard {
+    border-style: solid;
+    border-radius: 4pt;
+    border-color: #F4B634;
+    border-width: 2pt;
+    height: auto;
+    display: flex;
+    overflow: auto;
+    align-items: center;
+    text-align: left;
+    padding-top: 16pt;
+    padding-bottom: 16pt;
+    margin-top: 6pt;
+}
+
+.percentageField {
+    width: auto;
+    min-width: 30pt;
+    max-width: 40pt;
+    padding: 3pt;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    text-align: right;
+}
+
+.speciesNotTreatedCard {
+    border-style: solid;
+    border-radius: 4pt;
+    border-color: #f1f1f3;
+    border-width: 2pt;
+    display: flex;
+    overflow: auto;
+    align-items: center;
+    text-align: left;
+    padding-top: 16pt;
+    padding-bottom: 16pt;
+    margin-top: 6pt;
+}
+
+.addSpeciesCard {
+    background-color: #F5F6FA;
+    border-radius: 4pt;
+    text-align: center;
+    padding: 16pt;
+    margin: 10pt;
+    display: flex;
+}
+
+.treatButton {
+    height: auto;
+    width: auto;
+    font-size: smaller;
+    display: flex;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.addSpeciesButton {
+    background-color: white;
+    vertical-align: middle;
+    height: 30pt;
+    border-width: 1pt;
+    border-color: #5E739B;
+    font-size: smaller;
+    margin-left: 16pt;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}

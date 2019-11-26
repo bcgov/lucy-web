@@ -1,34 +1,69 @@
-<div class="container">
+<div class="container-fluid speciesContainer">
     <div class="row">
         <div class="col-12">
-            <p><b>Select Invasive Species treated with Herbicide selected</b></p>
-            <p><b>If species found at treatment is not found below an additional survey record is required.</b></p>
+            <p><b>Select Invasive Species treated with Herbicide selected
+                <br>
+            If species found at treatment is not found below an additional survey record is required.</b></p>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
-            <label>Being Treated</label>
-            <div *ngFor="let s of speciesBeingTreated" class="col-6">
-                <p><b>{{ s.commonName }}</b></p>
-                <p>50%</p>
+            <label class="speciesTreatedLabel">Being Treated</label>
+            <div class="row">
+                <div *ngFor="let s of speciesBeingTreated" class="col-6">
+                    <div class="container-fluid speciesTreatedCard">
+                        <div class="row">
+                            <div class="col-7">
+                                <p><b>{{ s.commonName }} ({{ s.species }} {{ s.genus }})</b></p>
+                            </div>
+                            <div class="container col-5">
+                                <div class="row">
+                                    <input class="percentageField col-9" style="margin-left: auto;" required type="number" min="0" max="100" step="5">%
+                                    <button class="btn button-empty col-3" (click)="moveBeingTreatedToNotTreated(s)">
+                                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                                        </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
-            <label>Not Being Treated</label>
-            <div *ngFor="let n of speciesNotBeingTreated" class="col-6">
-                <p>{{ n.commonName }}</p>
-                <button>Treat</button>
+            <label class="speciesTreatedLabel">Not Being Treated</label>
+            <hr />
+            <div class="row">
+                <div *ngFor="let n of speciesNotBeingTreated" class="col-6">
+                    <div class="container-fluid speciesNotTreatedCard">
+                        <div class="row">
+                            <div class="col-7">
+                                <p>{{ n.commonName }} ({{ n.species }} {{ n.genus }})</p>
+                            </div>
+                            <div class="col-5">
+                                <div class="row" style="margin-left: auto;">
+                                    <button class="btn button-fill treatButton" (click)="moveNotTreatedToBeingTreated(n)">Treat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid addSpeciesCard">
+            <div class="row col-12" style="display: inline-flex; margin-left: auto; margin-right: auto;">
+                <p>Is there an additional species in this area that is not shown above?</p>
+                <button class="btn addSpeciesButton">Add Additional Species</button>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
+            <hr />
             <mat-form-field class="col-12">
                 <textarea matInput placeholder="Additional Comments"></textarea>
             </mat-form-field>
         </div>
     </div>
-    <hr />
 </div>
