@@ -26,61 +26,20 @@ import * as moment from 'moment';
 import { DiffResult } from '../diff.service';
 import { TableModel, TableColumn, TableRowModel } from 'src/app/components/base-form/table/table.component';
 import { CodeTableService } from '../code-table.service';
+import {
+  InputConfig,
+  RemoteFormConfig
+} from '../../../lib';
 
-export interface FormConfigField {
-  key: string;
-  header: string;
-  description: string;
-  required: boolean;
-  type: string;
-  verification: any;
-  meta: any;
-  cssClasses: string;
-  codeTable: string;
-  codeTableMeta: {};
-  displayKey: string;
-  condition: string;
-}
+/**
+ * @description Type define InputConfig as FormConfigField
+ */
+export type FormConfigField = InputConfig;
 
-export interface FormConfig {
-  idKey: string;
-  schemaName: string;
-  modelName: string;
-  description: string;
-  meta: {
-    resource: boolean;
-    api: string;
-  };
-  layout: {
-    title: string;
-    sections: {
-      title: string;
-      groups: {
-        title: string;
-        fields: string[];
-        style: {};
-      }[];
-    }[];
-  };
-  computedFields: {
-
-  };
-  relations: {
-
-  };
-  fields: {
-    key: string;
-    layout: {
-      header: string;
-      description: string;
-      classes: string[];
-    };
-    meta: {};
-    type: number;
-    verification: {};
-    required: boolean;
-  }[];
-}
+/**
+ * @description Type defining RemoteFormConfig as FormConfig
+ */
+export type FormConfig = RemoteFormConfig;
 
 export interface UIConfigObject {
   api: string;
