@@ -25,5 +25,8 @@
 				"-----",
 			]
 		}
-	]
+	],
+	"[typescript]": {
+		"editor.tabSize": 4
+	}
 }
