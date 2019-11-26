@@ -106,7 +106,10 @@ schemas:
             - title:
                 key: ''
                 default: Invasive Species to be treated at this location
-              fields: []
+              fields:
+                - beingTreated
+                - notBeingTreated
+                - comments
               style: 
                 custom: {
                   formComponent: SpeciesTreated
