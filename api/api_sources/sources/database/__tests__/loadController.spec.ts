@@ -1,7 +1,7 @@
 /**
  * Imports
  */
-import {should, expect } from 'chai';
+import {should } from 'chai';
 import { DBControllerLoader } from '../../libs/core-database/db.bootstrap';
 import * as models from '../models';
 import { DBManager } from '../dataBaseManager';

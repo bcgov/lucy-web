@@ -56,8 +56,12 @@ export const mechanicalTreatmentFactory = async () => {
  * @description MechanicalTreatment factory obj destroyer
  */
 export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, MechanicalTreatmentController>(MechanicalTreatmentController.shared, async (obj: MechanicalTreatment) => {
-  await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
-  await Destroy<Observation, ObservationController>(ObservationController.shared)(obj.observation);
+  if (obj.createdBy) {
+    await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
+  }
+  if (obj.observation) {
+    await Destroy<Observation, ObservationController>(ObservationController.shared)(obj.observation);
+  }
 });
 
 
