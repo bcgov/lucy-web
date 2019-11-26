@@ -11,12 +11,13 @@ import * as faker from 'faker';
 })
 export class SpeciesTreatedComponent implements OnInit {
 
-  private _speciesBeingTreated: InvasivePlantSpecies[];
-  private _speciesNotBeingTreated: InvasivePlantSpecies[];
-    species: InvasivePlantSpecies[];
+  _speciesBeingTreated: InvasivePlantSpecies[] = [];
+  _speciesNotBeingTreated: InvasivePlantSpecies[] = [];
+  species: InvasivePlantSpecies[];
 
 
   constructor(private codeTables: CodeTableService) { }
+
 
   async ngOnInit() {
     this.species = await this.codeTables.getInvasivePlantSpecies();
@@ -40,7 +41,7 @@ export class SpeciesTreatedComponent implements OnInit {
       return this._speciesBeingTreated;
   }
 
-  // TODO speciesNotBeingTreated is list of plant species that have been observed within the treatment area but are not being addressed by the current treatment record
+  // // TODO speciesNotBeingTreated is list of plant species that have been observed within the treatment area but are not being addressed by the current treatment record
   set speciesNotBeingTreated(s: InvasivePlantSpecies[]) {
       for (const elem of s) {
         this._speciesNotBeingTreated.push(elem);
