@@ -51,4 +51,20 @@ export class SpeciesTreatedComponent implements OnInit {
   get speciesNotBeingTreated(): InvasivePlantSpecies[] {
       return this._speciesNotBeingTreated;
   }
+
+  moveNotTreatedToBeingTreated(s: InvasivePlantSpecies) {
+    this._speciesBeingTreated.push(s);
+    if (this._speciesNotBeingTreated.includes(s)) {
+      const index = this._speciesNotBeingTreated.findIndex((element) => element === s);
+      this._speciesNotBeingTreated.splice(index, 1);
+    }
+  }
+
+  moveBeingTreatedToNotTreated(s: InvasivePlantSpecies) {
+    this._speciesNotBeingTreated.push(s);
+    if (this._speciesBeingTreated.includes(s)) {
+      const index = this._speciesBeingTreated.findIndex((element) => element === s);
+      this._speciesBeingTreated.splice(index, 1);
+    }
+  }
 }
