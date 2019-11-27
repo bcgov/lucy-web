@@ -25,8 +25,15 @@ import * as moment from 'moment';
 import * as faker from 'faker';
 import { DataController} from '../data.model.controller';
 import { getClassInfo } from '../../libs/core-model';
-import { ApplicationTableColumn, controllerForSchemaName, schemaWithName, BaseSchema } from '../../libs/core-database';
+import {
+    ApplicationTableColumn,
+    controllerForSchemaName,
+    schemaWithName, BaseSchema,
+    TableRelation
+} from '../../libs/core-database';
 import { userFactory } from './userFactory';
+import { unWrap } from '../../libs/utilities';
+import { ObjectLiteral } from 'typeorm';
 
 /**
  * @description Destroy model object
@@ -88,22 +95,71 @@ export function CodeTableFactory(controller: DataController) {
     };
 }
 
-export const fetcher = async (input: any, list: any[]) => {
+export interface FactoryOptions {
+    embedded?: boolean;
+    isSpecification?: boolean;
+    rootSchema?: string;
+    schemaChain: string[];
+}
+
+export const fetcher = async (input: any, list: any[], options: FactoryOptions = { schemaChain: []}) => {
     // Check
     if (list.length === 0) {
         return input;
     }
     // Get info
-    const {key, controller, isCode} = list.pop();
+    const {key, controller, isCode, fieldMeta} = list.pop();
     if (isCode) {
         input[key] = await CodeTableFactory(controller)();
     } else {
-        input[key] = await ModelFactory(controller)();
+        // Now check field data
+        let r: any;
+        if (unWrap(fieldMeta.meta, {}).embedded) {
+            r = await ModelSpecFactory(controller)(options);
+        } else {
+            r = await ModelFactory(controller)(options);
+        }
+        if (r && Object.keys(r).length > 0) {
+            input[key] = r;
+        } else {
+            input[key] = { ...input };
+        }
     }
 
-    await fetcher(input, list);
+    await fetcher(input, list, options);
 };
 
+interface TableRelationInfo {
+    relation: TableRelation;
+    key: string;
+    rootController?: DataController;
+}
+export const createRelation = async (input: any, list: TableRelationInfo[], options: FactoryOptions = { schemaChain: []}) => {
+    if (list.length === 0) {
+        return input;
+    }
+    const info: TableRelationInfo | undefined = list.pop();
+    let con;
+    if (info && unWrap(info.relation.meta, {}).embedded && (con = controllerForSchemaName(info.relation.schema || ''))) {
+        if (info.relation.schema === options.rootSchema) {
+            // console.dir(info.relation);
+            return input;
+        }
+        let r: any;
+        if (options.isSpecification) {
+            r = await ModelSpecFactory(con)(options);
+        } else {
+            r = await ModelFactory(con)(options);
+        }
+        if (Object.keys(r).length > 0) {
+            input[info.key] = [r];
+        } else {
+            input[info.key] = { ...input };
+        }
+    }
+    // return input;
+    await createRelation(input, list, options);
+};
 export const deleteObjects = async (list: any[]) => {
     if (list.length === 0) {
         return;
@@ -114,17 +170,24 @@ export const deleteObjects = async (list: any[]) => {
     await deleteObjects(list);
 };
 
+
 export function ModelSpecFactory(controller: DataController, dependency?: any[]) {
-    return async (): Promise<any> => {
+    return async (options: FactoryOptions = { schemaChain: []}, inputData?: any): Promise<any> => {
         const obj: any = {};
         const fetchList: any[] = [];
-        // console.log(`${controller.constructor.name}: `);
+        if (options.schemaChain.includes(controller.schemaObject.className)) {
+            return obj;
+        }
         _.each(controller.schema.columnsDefinition, async (column: ApplicationTableColumn, key: string) => {
             if (key === 'id') {
                 return;
             }
             const typeInfo: any = column.typeDetails;
             const keyname = key.toLocaleLowerCase();
+            if (inputData && inputData[key]) {
+                obj[key] = inputData[key];
+                return;
+            }
             switch  (typeInfo.type) {
                 case 'string':
                     if (typeInfo.isDate) {
@@ -154,7 +217,11 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                     } else if (keyname.includes('longitude') || keyname.includes('long') || keyname.includes('lon')) {
                         obj[key] = parseFloat(faker.address.longitude());
                     } else {
-                        obj[key] = faker.random.number();
+                        if (typeInfo.max && typeInfo.min) {
+                            obj[key] = faker.random.number({max: typeInfo.max, min: typeInfo.min, precision: typeInfo.precision});
+                        } else {
+                            obj[key] = faker.random.number();
+                        }
                     }
                     break;
                 case 'boolean':
@@ -170,21 +237,46 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                     }
                     // Get schema name
                     const schemaName = typeInfo.schema;
+                    if (schemaName === controller.schemaObject.className || schemaName === options.rootSchema) {
+                        break;
+                    }
                     // console.log(`${key}: 1: ${schemaName}`);
                     const dbCon: DataController = controllerForSchemaName(schemaName) as DataController;
+
+
                     // Get schema
                     const schema: BaseSchema = schemaWithName(schemaName);
                     if (dbCon && schema) {
                         fetchList.push({
                             key: key,
                             controller: dbCon,
-                            isCode: schema.hasDefaultValues
+                            isCode: schema.hasDefaultValues,
+                            fieldMeta: column,
+                            isSpec: options.isSpecification,
+                            rootSchema: options.rootSchema
                         });
                     }
                     break;
             }
         });
-        await fetcher(obj, fetchList);
+
+        if (options.isSpecification === undefined) {
+            options.isSpecification = true;
+        }
+        if (!options.rootSchema) {
+            options.rootSchema = controller.schemaObject.className;
+        }
+        options.schemaChain.push(controller.schemaObject.className);
+        await fetcher(obj, fetchList,  options);
+        const relationList: TableRelationInfo[] = [];
+        _.each(controller.schema.relations, (r: TableRelation, k: string) => relationList.push({
+            relation: r,
+            key: k,
+            rootController: controller
+        }));
+        if (relationList.length > 0) {
+            await createRelation(obj, relationList, options);
+        }
         return obj;
     };
 }
@@ -224,14 +316,23 @@ export function Destroyer(controller: DataController) {
 }
 
 export function ModelFactory(controller: DataController) {
-    return async (): Promise<any> => {
-        const spec = await ModelSpecFactory(controller)();
+    return async (options: FactoryOptions = { schemaChain: []}, inputData?: any): Promise<any> => {
+        const opts: FactoryOptions = Object.assign(options, {
+            isSpecification: false,
+        });
+        const spec = await ModelSpecFactory(controller)(opts, inputData);
         // console.dir(spec);
-        return await controller.createNewObject(spec, await userFactory());
+        if (Object.keys(spec).length > 0) {
+            return await controller.createNewObject(spec, await userFactory());
+        }
     };
 }
 
-export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec): any {
+export interface RequestOption {
+    schema?: BaseSchema;
+}
+
+export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec, options: RequestOption = {}): any {
     const result: any = {};
     for (const key in spec) {
         if (spec.hasOwnProperty(key)) {
@@ -244,6 +345,15 @@ export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec): a
             } else if (type === 'object') {
                 const obj: any = spec[key];
                 const info: any = getClassInfo(obj.constructor.name) || {};
+                if (options.schema && options.schema.table.embeddedRelations.includes(key)) {
+                    if (obj.constructor === Array) {
+                        const array: ObjectLiteral[] = obj as ObjectLiteral[];
+                        result[key] = array.map((item) => RequestFactory<ObjectLiteral>(item));
+                    } else {
+                        result[key] = RequestFactory<ObjectLiteral>(spec[key]);
+                    }
+                    continue;
+                }
                 if (info.schema && info.schema.columns.id && typeof obj[info.schema.columns.id] === 'number') {
                     const val = obj[info.schema.columns.id];
                     if (val && typeof val === typeof 1) {

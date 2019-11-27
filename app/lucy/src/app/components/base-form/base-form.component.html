@@ -133,7 +133,7 @@
                                 <br /> {{ subSection["title"].default }}
                             </div>
                             <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
-                                <div class="row">
+                                <div class="row" *ngIf="!subSection.isCustom">
                                     <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index" [ngClass]="field.cssClasses">
                                         <!-- Location Field -->
                                         <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]="field" (locationChanged)="fieldChanged(field, $event)">
@@ -168,6 +168,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="subSection.isCustom">
+                                    <div *ngIf="subSection.custom.formComponent === 'HerbicideMix'">
+                                        <div>
+                                            <p>herbicides go here</p>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated'">
+                                        <app-species-treated></app-species-treated>
                                     </div>
                                 </div>
                             </div>

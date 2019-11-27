@@ -85,7 +85,7 @@ export class ExpressResourceTest {
             const schema: BaseSchema = controller.schemaObject;
             // Create Data
             const spec: any = await ModelSpecFactory(controller)();
-            const req: any = RequestFactory<any>(spec);
+            const req: any = RequestFactory<any>(spec, { schema: schema});
             // Url
             const url: string = setup.url || controller.schemaObject.apiPath();
             // Checking token
@@ -126,7 +126,7 @@ export class ExpressResourceTest {
             // Create Data
             const model = await ModelFactory(controller)();
             const spec = await ModelSpecFactory(controller)();
-            const req: any = RequestFactory<any>(spec);
+            const req: any = RequestFactory<any>(spec, {schema: schema});
 
             // Url
             const baseUrl: string = setup.url || controller.schemaObject.apiPath();

@@ -30,13 +30,13 @@ export interface TableColumnStruct {
     definition?: string;
 }
 
-export interface ColumnRegxInfo {
+export interface DataRegxInfo {
     re: string;
     flag?: string;
 }
 
-export interface TableColumnVerification {
-    regx?: ColumnRegxInfo;
+export interface DataFieldVerification {
+    regx?: DataRegxInfo;
     max?: number;
     min?: number;
     dateFormat?: string;
@@ -44,21 +44,49 @@ export interface TableColumnVerification {
     isDate?: boolean;
 }
 
-export interface TableColumnDefinition {
+/**
+ * Field Details
+ */
+export interface DataFieldDefinition {
     name: string;
+    refModel?: string;
+    refSchema?: string;
+    required?: boolean;
+    verification?: DataFieldVerification;
+    meta?: any;
+    layout?: any;
+    type: string;
+    typeDetails: any;
+    fieldVerification(): DataFieldVerification | undefined;
+}
+
+export interface TableColumnDefinition extends DataFieldDefinition {
     comment: string;
     definition?: string;
     foreignTable?: string;
     refColumn?: string;
     deleteCascade?: boolean;
-    refModel?: string;
-    refSchema?: string;
-    required?: boolean;
-    columnVerification?: TableColumnVerification;
-    meta?: any;
-    layout?: any;
+    columnVerification?: DataFieldVerification;
     eager?: boolean;
 }
+
+export type TableColumnDataOption = Pick<
+    TableColumnDefinition,
+    'name'
+    |'refModel'
+    |'refSchema'
+    | 'required'
+    | 'verification'
+    | 'meta'
+    | 'layout'
+    | 'columnVerification'
+    | 'verification'
+    | 'eager'
+    | 'foreignTable'
+    | 'deleteCascade'
+    | 'refColumn'
+    | 'comment'
+    | 'definition' >;
 
 export interface ColumnChangeOptions {
     existingKey: string;
@@ -69,6 +97,8 @@ export interface ColumnChangeOptions {
     sqlStatement?: string;
     downSqlStatement?: string;
 }
+
+
 
 
 /**
@@ -85,7 +115,8 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     refSchema?: string;
     refModel?: string;
     required = true;
-    columnVerification?: TableColumnVerification;
+    verification?: DataFieldVerification;
+    columnVerification?: DataFieldVerification;
     meta?: any;
     layout?: any;
     eager = true;
@@ -116,7 +147,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         }
     }
 
-    static createColumn(value: TableColumnDefinition): ApplicationTableColumn {
+    static createColumn(value: TableColumnDataOption): ApplicationTableColumn {
         const column: ApplicationTableColumn = new ApplicationTableColumn(
             value.name,
             value.comment,
@@ -127,6 +158,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
             value.refSchema,
             value.refModel
         );
+        column.verification = value.verification;
         column.columnVerification = value.columnVerification;
         column.meta = value.meta;
         column.layout = value.layout;
@@ -145,6 +177,10 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         } else {
             return '';
         }
+    }
+
+    public fieldVerification(): DataFieldVerification | undefined {
+        return this.verification || this.columnVerification;
     }
 
     public sql(definition?: string, reference?: string, refColumn?: string, deleteCascade?: boolean): string {
@@ -202,10 +238,38 @@ export class ApplicationTableColumn implements TableColumnDefinition {
                 size: parseInt(matchSize[0], undefined)
             };
         } else if (def.includes('serial') || def.includes('numeric')) {
+            let max: number | undefined;
+            let min: number | undefined;
+            let precision = 3;
+            if (def.includes('numeric')) {
+                const regx1 = /^numeric\([0-9]+[\s]*,[\s]*[0-9]+\)/g;
+                const regx2 = /[0-9]+[\s]*,[\s]*[0-9]+/g;
+                const m1 = def.match(regx1) || [''];
+                const m2 = m1[0].match(regx2) || [''];
+                const numDef = m2[0].replace(/[\s]*/, '');
+                const parts = numDef.split(',');
+                if (parts.length > 1) {
+                    const numOfDigit = parseFloat(parts[0]);
+                    const p = parseFloat(parts[1]);
+                    if (numOfDigit > p) {
+                        const total = numOfDigit - p;
+                        max = Math.pow(10, total) - 1.0;
+                        min = (-1 * max);
+                    }
+                    precision = p;
+                }
+            }
             typeInfo = {
                 type: typeof 1.0,
-                subType: 'numeric'
+                subType: 'numeric',
+                precision: precision
             };
+            if (max) {
+                typeInfo.max = max;
+            }
+            if (min) {
+                typeInfo.min = min;
+            }
         } else if (def.includes('boolean')) {
             typeInfo = {
                 type: typeof true
