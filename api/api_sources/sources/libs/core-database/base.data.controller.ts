@@ -311,7 +311,7 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
             return await this.updateObject(obj, obj, user);
         } else {
             return await this.createNewObject(obj, user);
-        } 
+        }
     }
 
     async checkRelationship(data: any, user: any, caller: string = 'NONE'): Promise<void> {

@@ -134,14 +134,26 @@ schemas:
     relations: 
       tankMixes:
         header:
-          key: 'observation.mechanicalTreatments'
-          default: Mechanical Treatments
+          key: 'chemicalTreatment.tankMixes'
+          default: Herbicide Mix
         description: 
-          key: 'observation.mechanicalTreatments.description'
-          default: 'Mechanical treatments performed on observation'
+          key: 'chemicalTreatment.tankMixes.description'
+          default: 'Herbicide mix used for chemical treatment'
         type: array
         relationshipType: one-to-many
         schema: HerbicideTankMixSchema
+        meta: 
+          embedded: true
+      speciesObservations:
+        header:
+          key: 'chemicalTreatment.speciesObservations'
+          default: Invasive Species
+        description: 
+          key: 'chemicalTreatment.speciesObservations.description'
+          default: 'Species treated'
+        type: array
+        relationshipType: one-to-many
+        schema: ObservationChemicalTreatmentSchema
         meta: 
           embedded: true
     ## Columns

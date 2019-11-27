@@ -272,7 +272,7 @@ export class SchemaValidator {
                                         req.body = {};
                                     }
                                     this.logger.info(`k => ${key}`);
-                                    if (key.split('.').length === 1) {
+                                    if (printKey.split('.').length === 1) {
                                         req.body[key] = item;
                                     }
                                 }
