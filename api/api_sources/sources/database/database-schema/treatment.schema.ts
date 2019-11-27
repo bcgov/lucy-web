@@ -165,5 +165,47 @@ export class ChemicalTreatmentEmployeeSchema extends ChemicalTreatmentStaticData
     }
 }
 
+export class HerbicideSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('herbicide.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
+export class HerbicideTankMixSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('herbicideMix.schema.yaml');
+    }
+}
+
+export class ObservationChemicalTreatmentSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('herbicideMix.schema.yaml');
+    }
+}
+
+export class WindDirectionCodesSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('windDirection.codes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
+export class ChemicalTreatmentMethodCodeSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('chemical.treatment.codes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
 // ----------------------------------------------------------
 

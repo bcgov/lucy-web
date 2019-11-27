@@ -1,12 +1,14 @@
 // ** Model: ChemicalTreatment from schema ChemicalTreatmentSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMany} from 'typeorm';
 import { ChemicalTreatmentSchema } from '../database-schema';
 import {
 	SpeciesAgencyCodeSchema,
 	PesticideEmployerCodeSchema,
 	ProjectManagementPlanCodeSchema,
-	ChemicalTreatmentEmployeeSchema
+    ChemicalTreatmentEmployeeSchema,
+	WindDirectionCodesSchema,
+	ChemicalTreatmentMethodCodeSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -15,10 +17,14 @@ import {
 	SpeciesAgencyCode,
 	PesticideEmployerCode,
 	ProjectManagementPlanCode,
-	ChemicalTreatmentEmployee
+	ChemicalTreatmentEmployee,
+	WindDirectionCodes,
+	ChemicalTreatmentMethodCode
 } from '../models';
 
 import { Record } from './generic.data.models';
+import { HerbicideTankMix } from './herbicideTankMix';
+import { ObservationChemicalTreatment } from './observationChemicalTreatment';
 
 /** Interface **/
 /**
@@ -31,11 +37,18 @@ export interface ChemicalTreatmentSpec {
 	primaryPaperFileReference: string;
 	secondaryPaperFileReference: string;
 	pup: string;
+	plotWidth: number;
+	plotLength: number;
+	temperature: number;
+	humidity: number;
+	windSpeed: number;
 	speciesAgency: SpeciesAgencyCode;
 	pesticideEmployer: PesticideEmployerCode;
 	pmp: ProjectManagementPlanCode;
-	firstApplicator?: ChemicalTreatmentEmployee;
-	secondApplicator?: ChemicalTreatmentEmployee;
+	firstApplicator: ChemicalTreatmentEmployee;
+	secondApplicator: ChemicalTreatmentEmployee;
+	windDirection: WindDirectionCodes;
+	methodCode: ChemicalTreatmentMethodCode;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -51,11 +64,18 @@ export interface ChemicalTreatmentUpdateSpec {
 	primaryPaperFileReference?: string;
 	secondaryPaperFileReference?: string;
 	pup?: string;
+	plotWidth?: number;
+	plotLength?: number;
+	temperature?: number;
+	humidity?: number;
+	windSpeed?: number;
 	speciesAgency?: SpeciesAgencyCode;
 	pesticideEmployer?: PesticideEmployerCode;
 	pmp?: ProjectManagementPlanCode;
 	firstApplicator?: ChemicalTreatmentEmployee;
 	secondApplicator?: ChemicalTreatmentEmployee;
+	windDirection?: WindDirectionCodes;
+	methodCode?: ChemicalTreatmentMethodCode;
 }
 // -- End: ChemicalTreatmentUpdateSpec --
 
@@ -124,6 +144,41 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	pup: string;
 
 	/**
+	 * @description Getter/Setter property for column {plot_width}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.plotWidth, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	plotWidth: number;
+
+	/**
+	 * @description Getter/Setter property for column {plot_length}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.plotLength, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	plotLength: number;
+
+	/**
+	 * @description Getter/Setter property for column {temperature}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.temperature, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	temperature: number;
+
+	/**
+	 * @description Getter/Setter property for column {humidity}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.humidity, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	humidity: number;
+
+	/**
+	 * @description Getter/Setter property for column {wind_speed}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.windSpeed, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	windSpeed: number;
+
+	/**
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
 	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
@@ -158,10 +213,38 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	/**
 	 * @description Getter/Setter property for column {second_applicator_chemical_treatment_employee_id}
 	 */
-	@ManyToOne( type => ChemicalTreatmentEmployee )
+	@ManyToOne( type => ChemicalTreatmentEmployee)
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.secondApplicator, referencedColumnName: ChemicalTreatmentEmployeeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	secondApplicator: ChemicalTreatmentEmployee;
+
+	/**
+	 * @description Getter/Setter property for column {wind_direction_code_id}
+	 */
+	@ManyToOne( type => WindDirectionCodes, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.windDirection, referencedColumnName: WindDirectionCodesSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	windDirection: WindDirectionCodes;
+
+	/**
+	 * @description Getter/Setter property for column {chemical_treatment_method_id}
+	 */
+	@ManyToOne( type => ChemicalTreatmentMethodCode, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.methodCode, referencedColumnName: ChemicalTreatmentMethodCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	methodCode: ChemicalTreatmentMethodCode;
+
+	/**
+	 * @description Getter/Setter property for tankMixes
+	 */
+	@OneToMany( type => HerbicideTankMix, tankMix => tankMix.chemicalTreatment, {eager: true})
+	tankMixes: HerbicideTankMix[];
+
+	/**
+	 *  @description Getter/Setter property for related observations
+	 */
+	@OneToMany( type => ObservationChemicalTreatment, obj => obj.chemicalTreatment, { eager: true})
+	speciesObservations: ObservationChemicalTreatment[];
 
 }
 

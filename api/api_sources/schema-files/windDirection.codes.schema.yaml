@@ -1,0 +1,28 @@
+version: '1.0'
+description: Schema file for table wind_direction_codes
+externalTables: []
+includes: []
+schemas:
+  WindDirectionCodesSchema:
+    name: wind_direction_code
+    description: 'List of valid menu items to be displayed in dropdown menu for Wind Direction'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'wind_direction_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: wind_direction_code
+        comment: Identifier as code
+        definition: VARCHAR(3) NOT NULL
+      description:
+        name: description
+        comment: Description of wind direction code
+        definition: VARCHAR(50) NOT NULL
+    imports:
+      init:
+        fileName: WindDirectionCodes.csv
+        allColumns: true
+    versions: []
+    fields: {}

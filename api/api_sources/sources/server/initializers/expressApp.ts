@@ -109,11 +109,22 @@ class ExpressApp {
      * @description Initializing server
      */
     public async init() {
-        this.logger.info('Starting API Server');
+        // Create Data base connection
         ApplicationManager.shared.init();
         try {
             await SharedDBManager.connect();
-            ApplicationManager.shared.state.isDBUp = true;
+        } catch (err) {
+            this.logger.error(`*** Unable to start Connect DB ***`);
+            this.logger.error(`*** Error: ${err} **`);
+            process.exit(1);
+        }
+
+        // Init Express stack
+        await this.initExpress();
+
+        // Start Application
+        this.logger.info('Starting API Server');
+        try {
             this.start();
         } catch (err) {
             this.logger.error(`*** Unable to start API ***`);
