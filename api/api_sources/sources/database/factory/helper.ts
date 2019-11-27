@@ -157,8 +157,8 @@ export const createRelation = async (input: any, list: TableRelationInfo[], opti
             input[info.key] = { ...input };
         }
     }
-    return input;
-    // await createRelation(input, list, options);
+    // return input;
+    await createRelation(input, list, options);
 };
 export const deleteObjects = async (list: any[]) => {
     if (list.length === 0) {
