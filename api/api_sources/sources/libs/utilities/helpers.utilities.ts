@@ -66,6 +66,16 @@ export const unWrap = (value?: any, defaultValue?: any): any => {
 };
 
 /**
+ * @description Unwrap object or return default
+ * @param any value
+ * @param T defaultValue
+ * @returns T
+ */
+export function unWrapType<T> (value: any, defaultValue: T): T  {
+    return value !== undefined ? (value as T) : defaultValue;
+}
+
+/**
  * @description Load json from yaml file
  * @param string yamlPath Path of yml file
  * @returns any
@@ -189,6 +199,17 @@ export const reverseCapitalize = (s: any) => {
         return '';
     }
     return s.charAt(0).toLocaleLowerCase() + s.slice(1);
+};
+
+/**
+ * @description Return capitalize string of any given string
+ * @param string s
+ */
+export const capitalize = (s: any) => {
+    if (typeof s !== 'string') {
+        return '';
+    }
+    return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
 /**

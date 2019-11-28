@@ -56,6 +56,11 @@ export * from './chemicalTreatmentEmployee';
 export * from './watercraftRiskAssessment';
 export * from './waterBody';
 export * from './observerWorkflow';
+export * from './herbicide';
+export * from './herbicideTankMix';
+export * from './observationChemicalTreatment';
+export * from './windDirectionCodes';
+export * from './chemicalTreatmentMethodCode';
 
 /**
  * Controllers
@@ -74,4 +79,8 @@ export * from './controllers/mechanicalMethodCode.controller';
 export * from './controllers/watercraftRiskAssessment.controller';
 export * from './controllers/waterBody.controller';
 export * from './controllers/observerWorkflow.controller';
+export * from './controllers/herbicide.controller';
+export * from './controllers/herbicideTankMix.controller';
+export * from './controllers/observationChemicalTreatment.controller';
+export * from './controllers/chemicalTreatmentMethodCode.controller';
 // ----------------------------------------------------------------------------------------------------------------

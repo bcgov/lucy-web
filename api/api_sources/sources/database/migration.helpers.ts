@@ -233,9 +233,9 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             // Close DB Connection
             await SharedDBManager.close();
             // Reopen
-            await SharedDBManager.connect();
+            // await SharedDBManager.connect();
             // Run Migration Again
-            await SharedDBManager.connection.runMigrations();
+            // await SharedDBManager.connection.runMigrations();
         }
     }
 
