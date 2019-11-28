@@ -43,14 +43,14 @@ import { DataModelController } from '../data.model.controller';
  * @description Base class for record
  */
 export abstract class Record extends BaseModel {
-    @ManyToOne( type => User, {eager : true})
+    @ManyToOne( type => User, {eager : false})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.createdBy,
         referencedColumnName: UserSchema.schema.columns.id
     })
     createdBy: User;
 
-    @ManyToOne( type => User, { eager: true})
+    @ManyToOne( type => User, { eager: false})
     @JoinColumn({
         name: RecordTableSchema.auditColumns.updatedBy,
         referencedColumnName: UserSchema.schema.columns.id
@@ -70,11 +70,13 @@ export abstract class ApplicationCode extends Record {
 
 export class RecordController<T extends Record> extends DataModelController<T> {
     async createNewObject(spec: any, creator: User, ...other: any[]): Promise<T> {
+        await this.checkRelationship(spec, creator, this.className);
         const newObj: T = this.newObject(spec);
         newObj.createdBy = creator;
         newObj.updatedBy = creator;
         try {
             await this.saveInDB(newObj);
+            // const obj = await this.handleRelationship(spec, creator);
             return newObj;
         } catch (excp) {
             throw excp;
@@ -82,6 +84,7 @@ export class RecordController<T extends Record> extends DataModelController<T> {
     }
 
     async updateObject(existing: T, update: ObjectLiteral, modifier: User): Promise<T> {
+        await this.checkRelationship(update, modifier, this.className);
         existing.updatedBy = modifier;
         await this.updateObj<ObjectLiteral>(existing, update);
         return existing;

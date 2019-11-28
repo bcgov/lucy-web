@@ -81,6 +81,7 @@ import { MatSelectSearchModule } from './components/Input/mat-select-search/mat-
 import { CheckboxComponent } from './components/Input/checkbox/checkbox.component';
 import { AddEntryComponent } from './components/Routes/add-entry/add-entry.component';
 import { DatePickerComponent } from './components/Input/date-picker/date-picker.component';
+import { SpeciesTreatedComponent } from './components/Routes/species-treated/species-treated.component';
 import { InventoryComponent } from './components/Routes/inventory/inventory.component';
 import { ErrorComponent } from './components/Routes/error/error.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
@@ -117,6 +118,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     DropdownComponent,
     FieldComponent,
     InventoryComponent,
+    SpeciesTreatedComponent,
     DatePickerComponent,
     MomentPipe,
     CheckboxComponent,

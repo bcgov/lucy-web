@@ -21,14 +21,22 @@
  * -----
  */
 import * as _ from 'underscore';
-import { ApplicationTableColumn, ColumnChangeOptions} from './application.column';
+import { ApplicationTableColumn, ColumnChangeOptions, DataFieldDefinition} from './application.column';
+import { unWrap } from '../utilities';
 
+/**
+ * @description Change column type constants in schema version
+ */
 export const ColumnChangeType = {
     RENAME: 'rename',
     DROP: 'drop',
     KEY_CHANGE: 'key-change',
     CUSTOM: 'custom'
 };
+
+/**
+ * @description Interface to check column changes
+ */
 export interface ColumnChangeDefinition extends ColumnChangeOptions {
     existingKey: string;
     newKey?: string;
@@ -38,6 +46,9 @@ export interface ColumnChangeDefinition extends ColumnChangeOptions {
     type: string;
 }
 
+/**
+ * @description Interface to store table version information in schema file
+ */
 export interface TableVersionDefinition {
     name: string;
     id?: string;
@@ -45,6 +56,10 @@ export interface TableVersionDefinition {
     columnChanges?: any[];
     info?: string;
 }
+
+/**
+ * @description Interface to store detailed schema version info and migration file associated that
+ */
 export interface TableVersion extends TableVersionDefinition {
     name: string;
     fileName: string;
@@ -64,6 +79,16 @@ export interface CSVImportOptions {
     allColumns?: boolean;
 }
 
+export interface TableRelation {
+    header?: any;
+    description?: any;
+    type: string;
+    relationshipType: string;
+    schema?: string;
+    tableName?: string;
+    meta?: any;
+}
+
 /**
  * @description Table definition descriptor class
  * @export class ApplicationTable
@@ -78,10 +103,20 @@ export class ApplicationTable {
     layout: any;
     displayLayout: any;
     computedFields: any;
-    relations: any;
+    relations: {[key: string]: TableRelation};
     modelName?: string;
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
+
+    get relationalColumnKeys(): string[] {
+        const r: string[] = [];
+        _.each(this.columnsDefinition, (col: ApplicationTableColumn, key) => {
+            if (col.foreignTable || col.refSchema) {
+                r.push(key);
+            }
+        });
+        return r;
+    }
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
@@ -201,5 +236,20 @@ export class ApplicationTable {
         } else {
             return this.versions[version];
         }
+    }
+
+    get embeddedRelations(): string[] {
+        const r: string[] = [];
+        _.each(this.columnsDefinition, (c: DataFieldDefinition, k: string) => {
+            if (unWrap(c.meta, {}).embedded) {
+                r.push(k);
+            }
+        });
+        _.each(this.relations, (rel: TableRelation, k: string) => {
+            if (unWrap(rel.meta).embedded) {
+                r.push(k);
+            }
+        });
+        return r;
     }
 }

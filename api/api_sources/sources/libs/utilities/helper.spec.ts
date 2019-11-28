@@ -31,7 +31,8 @@ import {
     writeIfNotExists,
     reverseCapitalize,
     valueAtKeyPath,
-    copyKeyAndSubKeys
+    copyKeyAndSubKeys,
+    capitalize
 } from './helpers.utilities';
 
 
@@ -134,5 +135,10 @@ describe('Test Helper/Utilities', () => {
         should().exist(y.y['a']);
         should().exist(y.y['b']);
         should().not.exist(y.y['c']);
+    });
+
+    it('should capitalize string', () => {
+        const string = 'helloWorld';
+        expect(capitalize(string)).to.be.equal('HelloWorld');
     });
 });

@@ -34,8 +34,9 @@ import {
 
 import {
     ApplicationTableColumn,
-    TableColumnDefinition,
-    ColumnChangeOptions
+    TableColumnDataOption,
+    ColumnChangeOptions,
+    TableColumnDefinition
 } from './application.column';
 import { ApplicationTable, TableVersion } from './application.table';
 import { registerSchema, schemaWithName } from './schema.storage';
@@ -43,7 +44,7 @@ import { SchemaHelper } from './schema.helper';
 import { getSQLDirPath } from './sql.loader';
 import { SchemaCSVLoader } from './schema.csv.loader';
 
-export interface TableColumnOption extends TableColumnDefinition {
+export interface TableColumnOption extends TableColumnDataOption {
     refSchemaObject?: BaseSchema;
 }
 
@@ -346,7 +347,7 @@ export class  BaseSchema {
                 return;
             }
             const typeDetails = col.typeDetails;
-            const verification = col.columnVerification || {};
+            const verification = col.verification || {};
             const refSchema = col.refSchema || '';
             const schemaObj: BaseSchema = schemaWithName(refSchema) || { config: () => {}};
             const fieldLayout = col.layout || {};
