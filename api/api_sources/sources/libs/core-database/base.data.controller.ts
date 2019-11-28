@@ -308,10 +308,16 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
         // Create New Obj
         // Get idKey
         if (obj[this.idKey]) {
-            return await this.updateObject(obj, obj, user);
+            // Get Actual Object
+            const actualObj = await this.findById(obj[this.idKey]);
+            if (actualObj) {
+                return await this.updateObject(actualObj, obj, user);
+            } else {
+                return await this.createNewObject(obj, user);
+            }
         } else {
             return await this.createNewObject(obj, user);
-        } 
+        }
     }
 
     async checkRelationship(data: any, user: any, caller: string = 'NONE'): Promise<void> {
