@@ -94,6 +94,10 @@ schemas:
                 - humidity
                 - windSpeed
                 - windDirection
+              validators:
+                - windSpeed:
+                  - minimumValue: 0
+                  - maximumValue: 15
             ## -- group {Advance details}
             - title:
                 key: ''
@@ -386,5 +390,19 @@ schemas:
               classes:
                 - col-12
         ## -- end Columns
-
+      - name: addCommentsColumn
+        id: '20191129'
+        info: 'Adding new column to chemical treatment to capture optional free-form comments'
+        columns:
+          additionalComments:
+            name:
+            comment: 'Free-form comments added by chemical treatment provider'
+            definition: VARCHAR(500) NULL
+            meta: {}
+            layout:
+              header:
+                key: 'chemicalTreatment.additionalComments'
+                default: 'Additional Comments'
+              classes:
+                - col-12
   ## --
