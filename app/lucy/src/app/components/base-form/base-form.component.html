@@ -172,13 +172,11 @@
                                 </div>
                                 <div class="row" *ngIf="subSection.isCustom">
                                     <div *ngIf="subSection.custom.formComponent === 'HerbicideMix'">
-                                        <div>
-                                            <p>herbicides go here</p>
-                                        </div>
+                                        <app-herbicide-application></app-herbicide-application>
                                     </div>
-                                    <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated'">
+                                    <!-- <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated'">
                                         <app-species-treated></app-species-treated>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

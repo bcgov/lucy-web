@@ -1,0 +1,32 @@
+.herbicideContainer {
+    border-style: solid;
+    border-radius: 4pt;
+    border-width: 1pt;
+    border-color: #E5E9F2;
+    font-size: smaller;
+    padding: 16px;
+    box-shadow: 0 0 5pt #E5E9F2;
+    margin-top: 16pt;
+    width: 100%;
+}
+
+.addHerbicideButton {
+    background-color: white;
+    vertical-align: middle;
+    height: 30pt;
+    border-width: 1pt;
+    border-color: #5E739B;
+    font-size: smaller;
+    margin: 16pt;
+}
+
+.labelsRow {
+    color: #AFAFAF;
+    font-size: smaller;
+}
+
+input {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}

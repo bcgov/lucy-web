@@ -26,6 +26,7 @@ import {
   ProposedActionCodes, AspectCodes, SlopeCodes
 } from '../models';
 import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
 import { Key } from 'protractor';
 
 @Injectable({
@@ -54,6 +55,8 @@ export class CodeTableService {
   private mechanicalRootRemovalCodes: MechanicalRootRemovalCodes[];
   private mechanicalIssueCodes: MechanicalIssueCodes[];
   private mechanicalTreatmentProviders: MechanicalTreatmentProviders[];
+
+  private herbicideCodes: HerbicideCodes[];
 
   private codeTables: any | null = null;
 
@@ -131,6 +134,24 @@ export class CodeTableService {
     if (speciesCodes && (Array.isArray(speciesCodes) && this.objectValidator.isInvasivePlantSpeciesObject(speciesCodes[0]))) {
       this.invasivePlantSpecies = speciesCodes;
       return speciesCodes;
+    }
+    return [];
+  }
+
+  public async getHerbicideCodes(): Promise<HerbicideCodes[]> {
+    if (this.herbicideCodes && this.herbicideCodes.length > 0) {
+      return this.herbicideCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const herbicideCodes = codes.Herbicide;
+    if (herbicideCodes && (Array.isArray(herbicideCodes) && this.objectValidator.isHerbicideObject(herbicideCodes[0]))) {
+      this.herbicideCodes = herbicideCodes;
+      return herbicideCodes;
     }
     return [];
   }

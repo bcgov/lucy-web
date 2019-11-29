@@ -20,6 +20,7 @@ import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCo
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { HerbicideCodes } from '../models/ChemicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,15 @@ export class ObjectValidatorService {
   public isInvasivePlantSpeciesObject(species: any): species is InvasivePlantSpecies {
     if (species === undefined || species === null) {return false; }
     return (<InvasivePlantSpecies>species.species) !== undefined;
+  }
+
+  /**
+   * Check if object is a herbicide object
+   * @param herbicide object
+   */
+  public isHerbicideObject(herbicide: any): herbicide is HerbicideCodes {
+    if (herbicide === undefined || herbicide === null) {return false; }
+    return (<HerbicideCodes>herbicide.herbicideCode) !== undefined;
   }
 
   /**
