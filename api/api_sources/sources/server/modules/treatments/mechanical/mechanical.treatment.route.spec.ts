@@ -57,8 +57,8 @@ import { viewerToken } from '../../../../test-helpers/token';
 
 describe('Test for mechanical treatment', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();

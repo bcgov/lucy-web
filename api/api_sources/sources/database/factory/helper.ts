@@ -324,6 +324,8 @@ export function ModelFactory(controller: DataController) {
         // console.dir(spec);
         if (Object.keys(spec).length > 0) {
             return await controller.createNewObject(spec, await userFactory());
+        } else {
+            console.log(`Get Empty Response for ${controller.schemaObject.className}`);
         }
     };
 }
@@ -346,11 +348,14 @@ export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec, op
                 const obj: any = spec[key];
                 const info: any = getClassInfo(obj.constructor.name) || {};
                 if (options.schema && options.schema.table.embeddedRelations.includes(key)) {
+                    const newOptions: RequestOption = {
+                        schema: info.schema
+                    };
                     if (obj.constructor === Array) {
                         const array: ObjectLiteral[] = obj as ObjectLiteral[];
-                        result[key] = array.map((item) => RequestFactory<ObjectLiteral>(item));
+                        result[key] = array.map((item) => RequestFactory<ObjectLiteral>(item, newOptions));
                     } else {
-                        result[key] = RequestFactory<ObjectLiteral>(spec[key]);
+                        result[key] = RequestFactory<ObjectLiteral>(spec[key], newOptions);
                     }
                     continue;
                 }

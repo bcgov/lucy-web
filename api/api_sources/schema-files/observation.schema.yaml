@@ -1,6 +1,7 @@
 version: '1.0'
 includes:
   - observation.codes.schema.yaml
+  - spaceGeom.schema.yaml
 schemas:
   # -- Observation schema ** Observation
   ObservationSchema:
@@ -518,4 +519,14 @@ schemas:
             default: 'Proposed Action'
           classes:
             - none
+    ## End - Columns
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
   # --

@@ -3,7 +3,7 @@
         
 CREATE TABLE space_geom ();
 ALTER TABLE space_geom ADD COLUMN space_geom_id SERIAL PRIMARY KEY;
-ALTER TABLE space_geom ADD COLUMN latitude NUMERIC(8, 6) NOT NULL;
+ALTER TABLE space_geom ADD COLUMN latitude NUMERIC(9, 6) NOT NULL;
 ALTER TABLE space_geom ADD COLUMN longitude NUMERIC(9, 6) NOT NULL;
 ALTER TABLE space_geom ADD COLUMN hex_id VARCHAR(50) NULL;
 ALTER TABLE space_geom ADD COLUMN sub_hex_id VARCHAR(50) NULL;
