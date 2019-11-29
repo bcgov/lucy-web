@@ -1,0 +1,114 @@
+<!-- Summary Line Section -->
+<div class="col-12">
+    <form>
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field>
+                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Amount of Mix Used">
+                    <span matSuffix> L</span>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Dilution">
+                    <span matSuffix> %</span>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('max')">Must enter a value less than 100</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Application Rate">
+                    <span matSuffix> L/ha</span>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Mix Delivery Rate">
+                    <span matSuffix> L/ha</span>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
+                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="herbicideContainer">
+    <!-- Herbicide Selection Section -->
+    <div class="col-12">
+        <div class="row">
+            <label>Select Herbicides</label>
+        </div>
+    </div>
+
+    <!-- View when zero herbicides selected -->
+    <div class="col-12" *ngIf="herbicidesUsed.length == 0">
+        <div class="row">
+            <div class="col-5">
+                <app-dropdown [mode]="mode" fieldHeader="Herbicide" [items]="herbicides">
+                </app-dropdown>
+                <!-- <mat-form-field>
+                    <mat-label>Select Herbicide</mat-label>
+                    <mat-select [(value)]="herbicideSelected">
+                        <mat-option *ngFor="let herb of herbicides" [value]="herb">{{herb.compositeName}}</mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- View when 1+ herbicides selected -->
+    <div class="col-12" *ngIf="herbicidesUsed.length > 0">
+        <div class="row labelsRow">
+            <div class="col-5">
+                <label>Select Herbicide(s) to add to treatment:</label>
+            </div>
+            <div class="col-3">
+                <label>Application Rate (L/ha)</label>
+            </div>
+            <div class="col-2">
+                <label>Dilution (%)</label>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngFor="let h of herbicidesUsed">
+                <div class="col-5">
+                    <mat-form-field>
+                        <mat-label>Select Herbicide</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let herb of herbicides" [value]="herb">{{herb.compositeName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <input required type="number" min="0" value="h.applicationRate">
+                </div>
+                <div class="col-2">
+                    <input required type="number" min="0" max="100" style="margin-right: 4pt;">
+                </div>
+                <div class="col-2" style="display: inline-flex; margin-left: auto;">
+                    <button class="btn button-empty" (click)="removeHerbicide(h)">
+                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add herbicide button is always displayed -->
+    <div class="col-12">
+        <div class="row">
+            <button class="btn addHerbicideButton" (click)="addEmptyTableRow">Add Additional Herbicide</button>
+        </div>
+    </div>
+</div>
