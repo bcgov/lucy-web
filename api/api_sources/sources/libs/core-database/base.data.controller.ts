@@ -56,6 +56,7 @@ export interface BaseDataController {
     checkObject(obj: any, user: any): Promise<any>;
     factory (): Promise<any>;
     getIdValue(obj: any): any;
+    validate(data: any): boolean;
 }
 
 
@@ -163,6 +164,9 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
      * @param number id
      */
     async findById(id: number): Promise<T> {
+        if (typeof id === typeof {}) {
+            throw new Error(`${this.className}: Invalid id: ${typeof id}`);
+        }
         const items: T[] = await this.repo.find(this.idQuery(id)) as T[];
         return items[0];
     }
@@ -322,6 +326,9 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 
     async checkRelationship(data: any, user: any, caller: string = 'NONE'): Promise<void> {
         const fetcher: any[] = [];
+        const itemFetcher: any[] = [];
+
+        // Handling OneToMany Embedded relationship
         _.each(this.schema.relations, async (r: TableRelation, k: string) => {
             const con: DataController = controllerForSchemaName(r.schema || '');
             if (data[k] && con && unWrap(r.meta, {}).embedded) {
@@ -337,6 +344,27 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
                 fetcher.push( { key: k, prom: newArray});
             }
         });
+
+        // Embedded ManyToOne Relationship
+        _.each(this.schema.columnsDefinition, async (col: DataFieldDefinition, k: string) => {
+            if (col.refSchema && unWrap(col.meta, {}).embedded) {
+                const con: DataController = controllerForSchemaName(col.refSchema || '');
+                if (con && data[k]) {
+                    itemFetcher.push({
+                        key: k,
+                        prom: con.checkObject(data[k], user)
+                    });
+                }
+            }
+        });
+
+        // Fetch or create relationship object
+
+        // ManyToOne
+        for (const f of itemFetcher) {
+            data[f.key] = await f.prom;
+        }
+        // OneToMany
         for (const i of fetcher) {
             data[i.key] = await Promise.all(i.prom);
         }
@@ -362,6 +390,28 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
     getIdValue(obj: any): any {
         const idKey: string = this.schema.id;
         return obj[idKey];
+    }
+
+    validate(data: any): boolean {
+        let r = true;
+        _.each(this.schema.columnsDefinition, (col: DataFieldDefinition, k: string) => {
+            if (k === 'id') {
+                r = r && true;
+                return;
+            }
+            const isRelationShip = col.refSchema && typeof data[k] === typeof 1;
+            if (col.required && data[k] && (col.type === typeof data[k] || isRelationShip)) {
+                r = r && true;
+            } else {
+                if (data[k] && (col.type === typeof data[k] || isRelationShip)) {
+                    r = r && true;
+                } else {
+                    console.log(`${this.className} | Fail For key: ${k} => ${data[k]}`);
+                    r = r && false;
+                }
+            }
+        });
+        return r;
     }
 }
 

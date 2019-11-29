@@ -18,8 +18,8 @@ const resourceName = 'Watercraft Risk Assessment';
 const controller: DataController = WatercraftRiskAssessmentController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();

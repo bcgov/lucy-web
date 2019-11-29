@@ -58,6 +58,7 @@ describe('Test SpaceGeomSchema and SpaceGeom Data Model', () => {
         should().exist(dbItem);
         expect(dbItem.space_geom_id).to.be.equal(m.space_geom_id);
         expect(dbItem.geometry.observation_geometry_code_id).to.be.equal(m.geometry.observation_geometry_code_id);
+        testModel(dbItem, SpaceGeomSchema.shared);
     });
 });
 

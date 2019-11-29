@@ -25,7 +25,7 @@ schemas:
       latitude:
         name: 'latitude'
         comment: 'Latitude of treatment  location'
-        definition: NUMERIC(8, 6) NOT NULL
+        definition: NUMERIC(9, 6) NOT NULL
         meta: {}
         layout:
           header: 
@@ -74,6 +74,7 @@ schemas:
         foreignTable: observation_geometry_code
         refColumn: observation_geometry_code_id
         deleteCascade: false
+        meta: {}
         layout:
           header:
             key: 'observationGeometry'
@@ -108,6 +109,9 @@ schemas:
             definition: INT NULL
             foreignTable: space_geom
             refColumn: space_geom_id
+            required: false
+            meta:
+              embedded: true
           ## --
       ## -- END: spaceGeom
     fields: {}
