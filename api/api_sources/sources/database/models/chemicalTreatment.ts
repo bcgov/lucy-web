@@ -49,6 +49,7 @@ export interface ChemicalTreatmentSpec {
 	secondApplicator: ChemicalTreatmentEmployee;
 	windDirection: WindDirectionCodes;
 	methodCode: ChemicalTreatmentMethodCode;
+    additionalComments: string;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -76,6 +77,7 @@ export interface ChemicalTreatmentUpdateSpec {
 	secondApplicator?: ChemicalTreatmentEmployee;
 	windDirection?: WindDirectionCodes;
 	methodCode?: ChemicalTreatmentMethodCode;
+    additionalComments?: string;
 }
 // -- End: ChemicalTreatmentUpdateSpec --
 
@@ -233,6 +235,13 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.methodCode, referencedColumnName: ChemicalTreatmentMethodCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	methodCode: ChemicalTreatmentMethodCode;
+    
+    	/**
+	 * @description Getter/Setter property for column {null}
+	 */
+	@Column({ name: ChemicalTreatmentSchema.columns.additionalComments})
+	@ModelProperty({type: PropertyType.string})
+	additionalComments: string;
 
 	/**
 	 * @description Getter/Setter property for tankMixes
