@@ -170,7 +170,7 @@ describe('Treatment Test', () => {
         await destroyMechanicalTreatment(f);
     });
 
-    /*it('should create treatment with spaceGeom factory', async () => {
+    it('should create treatment with spaceGeom factory', async () => {
         const mt: MechanicalTreatment = await ModelFactory(MechanicalTreatmentController.shared)();
         should().exist(mt);
         should().exist(mt.spaceGeom);
@@ -184,7 +184,7 @@ describe('Treatment Test', () => {
         const mt: any = await ModelSpecFactory(MechanicalTreatmentController.shared)();
         should().exist(mt);
         should().exist(mt.spaceGeom);
-    });*/
+    });
 
 });
 
