@@ -160,7 +160,8 @@ To create a new database schema (or to update an existing schema), follow these 
     This Typescript file requires some minor modifications:
     * the class should extend AppDBMigrator
     * declare an instance of the schema within the class
-    * override the `setup()` method; within it create an instance of the schema and add the init version of the schema to the migrator
+    * override the `setup()` method; if creating a new schema, within the setup() method create an instance of the schema and add the init version of the schema to the migrator using `this.addSchemaInitVersion(this.<SchemaName>);`. If also migrating a data file into the schema, add another line to the setup() method with `this.addDataImportMigration(this.<SchemaName>, 'init');
+`. If modifying an existing schema, add the updated version of the schema using `   this.addSchemaVersion(this.schema, <versionName>);`. The version name used here must match the version name as specified in the .yaml file for the schema
     * complete the `up()` and `down()` methods to specify the desired process for upgrading and downgrading the schema in the database
   * Add the revised migration file and link it to the schema.
 
