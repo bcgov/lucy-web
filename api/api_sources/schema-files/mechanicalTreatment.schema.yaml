@@ -1,6 +1,7 @@
 version: '1.0'
 includes:
   - treatment.schema.yaml
+  - spaceGeom.schema.yaml
 schemas:
   ## -- MechanicalTreatmentSchema
   MechanicalTreatmentSchema:
@@ -396,5 +397,14 @@ schemas:
             default: 'Contractor'
           classes:
             - none
-
+    # End - Columns
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
   ## --

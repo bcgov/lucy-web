@@ -52,6 +52,7 @@ import {
     MechanicalTreatmentUpdateSpec
 } from '../../../../database/models';
 import { viewerToken } from '../../../../test-helpers/token';
+import { MechanicalTreatmentSchema } from '../../../../database/database-schema';
 // import { request } from 'http';
 
 
@@ -66,7 +67,9 @@ describe('Test for mechanical treatment', () => {
 
     it('should create mechanical treatment for {admin}', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create, { 
+            schema: MechanicalTreatmentSchema.shared
+        });
         await testRequest(SharedExpressApp.app , {
             url: '/api/treatment/mechanical/',
             type: HttpMethodType.post,
@@ -111,7 +114,9 @@ describe('Test for mechanical treatment', () => {
 
     it('should not create mechanical treatment for {admin}: missing * fields', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create, {
+            schema: MechanicalTreatmentSchema.shared
+        });
         // Removing some required fields
         delete (createReq.longitude);
         delete (createReq.applicatorLastName);
@@ -130,7 +135,9 @@ describe('Test for mechanical treatment', () => {
 
     it('should not create mechanical treatment for {viewer}', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentSpec>(create);
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create, {
+            schema: MechanicalTreatmentSchema.shared
+        });
         await testRequest(SharedExpressApp.app , {
             url: '/api/treatment/mechanical/',
             type: HttpMethodType.post,
@@ -170,7 +177,9 @@ describe('Test for mechanical treatment', () => {
         await ObservationController.shared.remove(create.observation);
         delete create.observation;
         delete create.applicatorLastName;
-        const updateReq = RequestFactory<MechanicalTreatmentUpdateSpec>(create);
+        const updateReq = RequestFactory<MechanicalTreatmentUpdateSpec>(create, {
+            schema: MechanicalTreatmentSchema.shared
+        });
         await testRequest(SharedExpressApp.app , {
             url: `/api/treatment/mechanical/${mt.mechanical_treatment_id}`,
             type: HttpMethodType.put,

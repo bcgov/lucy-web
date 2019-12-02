@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
-import { ObservationSchema } from '../database-schema';
+import { ObservationSchema, MechanicalTreatmentSchema } from '../database-schema';
 
 /**
  * Migration Class
@@ -8,13 +8,18 @@ import { ObservationSchema } from '../database-schema';
 export class RecordUpdate1574980110379 extends AppDBMigrator implements MigrationInterface {
 
     observationSchema: ObservationSchema;
+    mechanicalTreatmentSchema: MechanicalTreatmentSchema;
     /**
      * Schemas
      */
     setup() {
         // Add observation schema update sql files
         this.observationSchema = new ObservationSchema();
+        this.mechanicalTreatmentSchema = MechanicalTreatmentSchema.shared;
+
+        // Adding space geom version
         this.addSchemaVersion(this.observationSchema, 'spaceGeom');
+        this.addSchemaVersion(this.mechanicalTreatmentSchema, 'spaceGeom');
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {

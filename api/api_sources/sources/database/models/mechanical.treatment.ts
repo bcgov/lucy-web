@@ -34,7 +34,8 @@ import {
 	MechanicalSoilDisturbanceCodeSchema,
 	MechanicalRootRemovalCodeSchema,
 	MechanicalTreatmentIssueCodeSchema,
-	TreatmentProviderContractorSchema
+	TreatmentProviderContractorSchema,
+	SpaceGeomSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -47,7 +48,8 @@ import {
 	MechanicalSoilDisturbanceCode,
 	MechanicalRootRemovalCode,
 	MechanicalTreatmentIssueCode,
-	TreatmentProviderContractor
+	TreatmentProviderContractor,
+	SpaceGeom
 } from '../models';
 import { Record } from './generic.data.models';
 import { NumericTransformer, DateTransformer } from '../../libs/transformer';
@@ -79,6 +81,7 @@ export interface MechanicalTreatmentSpec {
 	rootRemoval: MechanicalRootRemovalCode;
 	issue: MechanicalTreatmentIssueCode;
 	providerContractor: TreatmentProviderContractor;
+	spaceGeom: SpaceGeom;
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -109,6 +112,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	rootRemoval?: MechanicalRootRemovalCode;
 	issue?: MechanicalTreatmentIssueCode;
 	providerContractor?: TreatmentProviderContractor;
+	spaceGeom?: SpaceGeom;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -293,26 +297,13 @@ export class MechanicalTreatment extends Record {
 	@ModelProperty({type: PropertyType.object})
 	providerContractor: TreatmentProviderContractor;
 
+	/**
+	 * @description Getter/Setter property for column {space_geom_id}
+	 */
+	@ManyToOne( type => SpaceGeom, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.spaceGeom, referencedColumnName: SpaceGeomSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	spaceGeom: SpaceGeom;
+
 }
-
-// ** DataModel controller of MechanicalTreatment **
-
-/**
- * @description Data Model Controller Class for MechanicalTreatmentSchema and MechanicalTreatment
- */
-// export class MechanicalTreatmentController extends RecordController<MechanicalTreatment> {
-// 	/**
-// 	* @description Getter for shared instance
-// 	*/
-// 	public static get shared(): MechanicalTreatmentController {
-// 		return this.sharedInstance<MechanicalTreatment>(MechanicalTreatment, MechanicalTreatmentSchema) as MechanicalTreatmentController;
-// 	}
-
-// 	async all(query?: object): Promise<MechanicalTreatment[]> {
-// 		// console.log('*** 1a');
-// 		// console.dir(query);
-//         return super.all(query);
-//     }
-// }
-
 // -------------------------------------
