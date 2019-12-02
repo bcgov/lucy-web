@@ -330,11 +330,10 @@ export function ModelFactory(controller: DataController) {
             isSpecification: false,
         });
         const spec = await ModelSpecFactory(controller)(opts, inputData);
-        // console.dir(spec);
         if (Object.keys(spec).length > 0) {
             return await controller.createNewObject(spec, await userFactory());
         } else {
-            console.log(`Get Empty Response for ${controller.schemaObject.className}`);
+            // console.log(`Get Empty Response for ${controller.schemaObject.className} root: ${options.rootSchema}, chain: ${options.schemaChain}`);
         }
     };
 }
