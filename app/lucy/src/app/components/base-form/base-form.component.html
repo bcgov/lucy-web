@@ -139,7 +139,7 @@
                                         <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]="field" (locationChanged)="fieldChanged(field, $event)">
                                         </app-location-input>
                                         <!-- Input field  -->
-                                        <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]="field.value" [verification]="field.verification" [required]="field.required" (valueChanged)="fieldChanged(field, $event)">
+                                        <app-field *ngIf="field.isInputField" [mode]="mode" [header]="field.header" [value]="field.value" [suffix]="field.suffix" [verification]="field.verification" [required]="field.required" (valueChanged)="fieldChanged(field, $event)">
                                         </app-field>
                                         <!-- Text Area field -->
                                         <app-field *ngIf="field.isTextAreaField" [mode]="mode" [multiline]="true" [header]="field.header" [value]="field.value" [verification]="field.verification" [required]="field.required" (valueChanged)="fieldChanged(field, $event)">
@@ -155,7 +155,7 @@
                                             </app-checkbox>
                                             <!-- Computed field -->
                                         </div>
-                                        <app-computed-field *ngIf="field.isComputedField" [mode]="mode" [header]="field.header" [formBody]="responseBody" [config]="config" [computationRules]="field.computationRules">
+                                        <app-computed-field *ngIf="field.isComputedField" [mode]="mode" [header]="field.header" [suffix]="field.suffix" [formBody]="responseBody" [config]="config" [computationRules]="field.computationRules">
                                         </app-computed-field>
                                     </div>
                                     <div class="col nopadding" *ngIf="subSection.fields.length === 0">
@@ -174,9 +174,9 @@
                                     <div *ngIf="subSection.custom.formComponent === 'HerbicideMix'">
                                         <app-herbicide-application></app-herbicide-application>
                                     </div>
-                                    <!-- <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated'">
+                                    <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated'">
                                         <app-species-treated></app-species-treated>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
