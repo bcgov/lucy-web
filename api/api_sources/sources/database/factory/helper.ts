@@ -277,6 +277,15 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
         if (relationList.length > 0) {
             await createRelation(obj, relationList, options);
         }
+
+        // Update options
+        if (options && options.schemaChain) {
+            const sc: string = options.schemaChain.pop() || '';
+            if (sc && sc !== controller.schemaObject.className) {
+                console.error(`Wrong Last Element: ${sc}, \n** root: ${options.rootSchema || 'NA'}, \n** chain: ${options.schemaChain}`);
+                options.schemaChain.push(sc);
+            }
+        }
         return obj;
     };
 }
