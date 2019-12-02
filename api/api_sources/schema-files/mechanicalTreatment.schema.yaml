@@ -131,7 +131,8 @@ schemas:
       latitude:
         name: 'mechanical_treatment_location_latitude'
         comment: 'Latitude of treatment  location'
-        definition: NUMERIC(8, 6) NOT NULL
+        definition: NUMERIC(8, 6) NULL
+        required: false
         meta: {}
         layout:
           header: 
@@ -143,7 +144,8 @@ schemas:
       longitude:
         name: 'mechanical_treatment_location_longitude'
         comment: 'Longitude of treatment location'
-        definition: NUMERIC(9, 6) NOT NULL
+        definition: NUMERIC(9, 6) NULL
+        required: false
         meta: {}
         layout:
           header: 
@@ -154,7 +156,8 @@ schemas:
       width:
         name: 'mechanical_treatment_area_width'
         comment: 'Width of the area of treatment'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        definition: NUMERIC(7, 2) NULL
+        required: false
         meta: {}
         layout:
           header: 
@@ -165,7 +168,8 @@ schemas:
       length:
         name: 'mechanical_treatment_area_length'
         comment: 'Length of the area of treatment'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        definition: NUMERIC(7, 2) NULL
+        required: false
         meta: {}
         layout:
           header: 
