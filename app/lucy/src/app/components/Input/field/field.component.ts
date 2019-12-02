@@ -50,6 +50,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() header = '';
   // Field header
   @Input() tabIndex = 0;
+  // Optional mat-suffix
+  @Input() suffix = '';
 
   ///// Verification
   private _verification: any;
@@ -162,6 +164,7 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   ngAfterViewInit(): void {
     this.setFormControlVerification();
+    console.dir(this);
   }
 
   ngAfterViewChecked(): void {

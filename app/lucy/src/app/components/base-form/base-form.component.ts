@@ -40,7 +40,8 @@ import { AppConstants } from 'src/app/constants/app-constants';
 
 export enum FormType {
   Observation,
-  MechanicalTreeatment
+  MechanicalTreeatment,
+  ChemicalTreatment
 }
 @Component({
   selector: 'app-base-form',
@@ -340,12 +341,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
     if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
-      // console.log('setting lat long in body to undefined')
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
     } else if (event === `` && this.responseBody[field.key] !== undefined) {
-      // console.log(`setting ${field.key} to undefined`)
-      // console.dir(event);
       this.responseBody[field.key] = undefined;
     }
     // handle valid input cases

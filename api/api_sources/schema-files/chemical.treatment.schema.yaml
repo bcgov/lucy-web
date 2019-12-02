@@ -79,7 +79,7 @@ schemas:
         ## Section: Method and application
         - title: 
             key: 'chemicalTreatment.details.title'
-            default: ''
+            default: 'Chemical Treatment Details'
           groups:
             ## Group Treatment Advance details
             - title:
@@ -94,10 +94,6 @@ schemas:
                 - humidity
                 - windSpeed
                 - windDirection
-              validators:
-                - windSpeed:
-                  - minimumValue: 0
-                  - maximumValue: 15
             ## -- group {Advance details}
             - title:
                 key: ''
@@ -113,7 +109,6 @@ schemas:
               fields:
                 - beingTreated
                 - notBeingTreated
-                - comments
               style: 
                 custom: {
                   formComponent: SpeciesTreated
@@ -126,7 +121,8 @@ schemas:
       calculatedArea:
         header:
           key: calculatedArea
-          default: 'Total Calculated Area (m²)'
+          default: 'Total Calculated Area'
+        suffix: 'm²'
         computationRules:
           - name: Calculate Area
             keys:
@@ -242,7 +238,8 @@ schemas:
         layout:
           header:
             key: 'plotWidth'
-            default: 'Plot Width (m)'
+            default: 'Plot Width'
+          suffix: 'm'
           classes:
             - none
       plotLength:
@@ -253,7 +250,8 @@ schemas:
         layout:
           header:
             key: 'plotLength'
-            default: 'Plot Length (m)'
+            default: 'Plot Length'
+          suffix: 'm'
           classes:
             - none
       temperature:
@@ -264,7 +262,8 @@ schemas:
         layout:
           header:
             key: 'temperature'
-            default: 'Temperature (C)'
+            default: 'Temperature'
+          suffix: '°C'
           classes:
             - col-3
       humidity:
@@ -275,7 +274,8 @@ schemas:
         layout:
           header:
             key: 'humidity'
-            default: 'Humidity (%)'
+            default: 'Humidity'
+          suffix: '%'
           classes:
             - col-3
       windSpeed:
@@ -283,12 +283,27 @@ schemas:
         comment: The recorded wind speed at the site of the treatment area at the time of treatment, in km/h
         definition: NUMERIC(4,1) NULL
         meta: {}
+        # verification:
+        #   - minimumValue: 0
+        #   - maximumValue: 15
         layout:
           header:
             key: 'windSpeed'
-            default: 'Wind Speed (km/h)'
+            default: 'Wind Speed'
+          suffix: 'km/h'
           classes:
             - col-3
+      # additionalComments:
+      #   name: additional_comments
+      #   comment: Freeform text-area for user to provide additional comments
+      #   definition: VARCHAR(500) NULL
+      #   meta: {}
+      #   layout:
+      #     header:
+      #       key: 'comments'
+      #       default: 'Additional Comments'
+      #     classes:
+      #       - col-12
       ## Relation Column
       speciesAgency:
         name: 'species_agency_code_id'
@@ -395,7 +410,7 @@ schemas:
         info: 'Adding new column to chemical treatment to capture optional free-form comments'
         columns:
           additionalComments:
-            name:
+            name: additional_comments
             comment: 'Free-form comments added by chemical treatment provider'
             definition: VARCHAR(500) NULL
             meta: {}

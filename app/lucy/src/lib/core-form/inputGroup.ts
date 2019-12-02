@@ -32,6 +32,7 @@ export interface InputConfig {
     description: string;
     required: boolean;
     type: string;
+    suffix: string;
     verification: any;
     meta: any;
     cssClasses: string;
@@ -80,6 +81,7 @@ export interface RemoteFormConfig {
         };
         meta: {};
         type: number;
+        suffix: string;
         verification: {};
         required: boolean;
     }[];
