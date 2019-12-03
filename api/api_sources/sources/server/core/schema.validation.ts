@@ -236,7 +236,6 @@ export class SchemaValidator {
                     const schemaName = typeInfo.schema;
 
                     // Check column is embedded or not
-                    // console.log(`${key}: 1: ${schemaName}`);
                     const controller: DataController = controllerForSchemaName(schemaName);
                     let handled = false;
                     if (controller) {
@@ -247,16 +246,16 @@ export class SchemaValidator {
                             // Get schema
                             const schema = controller.schemaObject;
                             if (!field.required) {
-                                results = results.concat(
-                                    MakeOptionalValidator(() => this.validators(schema, undefined, key))
-                                );
+                                results = results.concat(MakeOptionalValidator(() => this.validators(schema, undefined, key)));
+                                results.push(check(printKey).optional().custom(async (val1: any, {req}) => {
+                                    assert(controller.validate(val1), `${printKey}: The object is invalid, ${JSON.stringify(val1, null, 2)}`);
+                                }));
                             } else {
                                 results = results.concat(this.validators(schema, undefined, key));
+                                results.push(check(printKey).exists().custom(async (val2: any, {req}) => {
+                                    // req.body[key] = val;
+                                }));
                             }
-
-                            results.push(check(key).exists().custom(async (val: any, {req}) => {
-                                req.body[key] = val;
-                            }));
                             handled = true;
                         }
                     }
@@ -264,17 +263,22 @@ export class SchemaValidator {
                     if (!handled) {
                         validateKey[key] = {
                             validate: validate => validate.isInt().custom(async (val: number, {req}) => {
-                                const con = controllerForSchemaName(schemaName);
-                                if (con) {
-                                    const item = await con.findById(val);
-                                    assert(item, `${printKey}: Item not exists with id: ${val}`);
-                                    if (!req.body) {
-                                        req.body = {};
+                                if (typeof val !== typeof {}) {
+                                    const con = controllerForSchemaName(schemaName);
+                                    if (con) {
+                                        const item = await con.findById(val);
+                                        assert(item, `${printKey}: Item not exists with id: ${val}`);
+                                        if (!req.body) {
+                                            req.body = {};
+                                        }
+                                        // this.logger.info(`k => ${key}`);
+                                        if (printKey.split('.').length === 1) {
+                                            req.body[key] = item;
+                                        }
                                     }
-                                    this.logger.info(`k => ${key}`);
-                                    if (printKey.split('.').length === 1) {
-                                        req.body[key] = item;
-                                    }
+                                } else {
+                                    assert(val, `${printKey}: Value is invalid`);
+                                    assert(typeof val === typeof 1, `${printKey}: Value is invalid`);
                                 }
                             }),
                             optional: !field.required

@@ -277,6 +277,15 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
         if (relationList.length > 0) {
             await createRelation(obj, relationList, options);
         }
+
+        // Update options
+        if (options && options.schemaChain) {
+            const sc: string = options.schemaChain.pop() || '';
+            if (sc && sc !== controller.schemaObject.className) {
+                console.error(`Wrong Last Element: ${sc}, \n** root: ${options.rootSchema || 'NA'}, \n** chain: ${options.schemaChain}`);
+                options.schemaChain.push(sc);
+            }
+        }
         return obj;
     };
 }
@@ -321,9 +330,10 @@ export function ModelFactory(controller: DataController) {
             isSpecification: false,
         });
         const spec = await ModelSpecFactory(controller)(opts, inputData);
-        // console.dir(spec);
         if (Object.keys(spec).length > 0) {
             return await controller.createNewObject(spec, await userFactory());
+        } else {
+            // console.log(`Get Empty Response for ${controller.schemaObject.className} root: ${options.rootSchema}, chain: ${options.schemaChain}`);
         }
     };
 }
@@ -346,11 +356,14 @@ export function RequestFactory<Spec extends {[key: string]: any}>(spec: Spec, op
                 const obj: any = spec[key];
                 const info: any = getClassInfo(obj.constructor.name) || {};
                 if (options.schema && options.schema.table.embeddedRelations.includes(key)) {
+                    const newOptions: RequestOption = {
+                        schema: info.schema
+                    };
                     if (obj.constructor === Array) {
                         const array: ObjectLiteral[] = obj as ObjectLiteral[];
-                        result[key] = array.map((item) => RequestFactory<ObjectLiteral>(item));
+                        result[key] = array.map((item) => RequestFactory<ObjectLiteral>(item, newOptions));
                     } else {
-                        result[key] = RequestFactory<ObjectLiteral>(spec[key]);
+                        result[key] = RequestFactory<ObjectLiteral>(spec[key], newOptions);
                     }
                     continue;
                 }

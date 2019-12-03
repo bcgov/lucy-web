@@ -4,10 +4,10 @@
 CREATE TABLE observation ();
 ALTER TABLE observation ADD COLUMN observation_id SERIAL PRIMARY KEY;
 ALTER TABLE observation ADD COLUMN observation_date DATE NULL;
-ALTER TABLE observation ADD COLUMN observation_location_lat NUMERIC(8, 6) NOT NULL;
-ALTER TABLE observation ADD COLUMN observation_location_long NUMERIC(9, 6) NOT NULL;
-ALTER TABLE observation ADD COLUMN horizontal_dimension NUMERIC(7, 2) NULL DEFAULT 0.0;
-ALTER TABLE observation ADD COLUMN vertical_dimension NUMERIC(7, 2) NULL DEFAULT 0.0;
+ALTER TABLE observation ADD COLUMN observation_location_lat NUMERIC(8, 6) NULL;
+ALTER TABLE observation ADD COLUMN observation_location_long NUMERIC(9, 6) NULL;
+ALTER TABLE observation ADD COLUMN horizontal_dimension NUMERIC(7, 2) NULL;
+ALTER TABLE observation ADD COLUMN vertical_dimension NUMERIC(7, 2) NULL;
 ALTER TABLE observation ADD COLUMN access_description VARCHAR(500) NULL;
 ALTER TABLE observation ADD COLUMN observer_first_name VARCHAR(100) NULL;
 ALTER TABLE observation ADD COLUMN observer_last_name VARCHAR(100) NULL;
