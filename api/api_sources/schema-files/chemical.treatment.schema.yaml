@@ -235,6 +235,8 @@ schemas:
         comment: The width of the treatment area, in metres
         definition: NUMERIC(6,2) NULL
         meta: {}
+        verification:
+          positiveNumber: true
         layout:
           header:
             key: 'plotWidth'
@@ -247,6 +249,8 @@ schemas:
         comment: The length of the treatment area, in metres
         definition: NUMERIC(6,2) NULL
         meta: {}
+        verification:
+          positiveNumber: true
         layout:
           header:
             key: 'plotLength'
@@ -259,6 +263,9 @@ schemas:
         comment: The recorded air temperature at the site of the treatment area at the time of treatment, in degrees Celsius
         definition: SMALLINT NULL
         meta: {}
+        verification:
+          minimumValue: -40
+          maximumValue: 50
         layout:
           header:
             key: 'temperature'
@@ -271,6 +278,9 @@ schemas:
         comment: The recorded air humidity at the site of the treatment area at the time of treatment, as a percentage
         definition: SMALLINT NULL
         meta: {}
+        verification:
+          minimumValue: 0
+          maximumValue: 100
         layout:
           header:
             key: 'humidity'
@@ -283,9 +293,9 @@ schemas:
         comment: The recorded wind speed at the site of the treatment area at the time of treatment, in km/h
         definition: NUMERIC(4,1) NULL
         meta: {}
-        # verification:
-        #   - minimumValue: 0
-        #   - maximumValue: 15
+        verification:
+          minimumValue: 0
+          maximumValue: 15
         layout:
           header:
             key: 'windSpeed'
