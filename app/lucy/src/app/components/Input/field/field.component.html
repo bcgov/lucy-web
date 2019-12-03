@@ -23,6 +23,16 @@
       ">
             {{ fieldFormControl.errors.positiveNumberError }}
         </mat-error>
+        <!-- Exceeds maximum value -->
+        <mat-error *ngIf="!fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('max')">
+            Cannot exceed {{ verification.maximumValue }}
+        </mat-error>
+        <!-- Below minimum value -->
+        <mat-error *ngIf="!fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('min')">
+            Must be at least {{ verification.minimumValue }}
+        </mat-error>
         <!-- Regex  -->
         <mat-error *ngIf="
         !fieldFormControl.hasError('required') &&
@@ -81,7 +91,11 @@
     <label class="field-header">{{ header }}</label>
 
     <!-- Input Field -->
-    <input *ngIf="!multiline" type="text" [(ngModel)]="value" class="form-control view view-field-background" [attr.id]="fieldId" [readonly]="readonly" />
+    <mat-form-field *ngIf="!multiline">
+        <input matInput type="text" [(ngModel)]="value" class="form-control view view-field-background" [attr.id]="fieldId" [readonly]="readonly">
+        <span matSuffix class="form-control view view-field-background">{{ suffix }}</span>
+    </mat-form-field>
+
     <!-- multiLine -->
     <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control view-field-background" [attr.id]="fieldId" [readonly]="readonly"></textarea>
 </div>

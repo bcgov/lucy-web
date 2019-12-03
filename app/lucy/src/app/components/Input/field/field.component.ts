@@ -52,6 +52,10 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() tabIndex = 0;
   // Optional mat-suffix
   @Input() suffix = '';
+  // Optional minimum numeric value
+  @Input() min: Number;
+  // Optional maximum numeric value
+  @Input() max: Number;
 
   ///// Verification
   private _verification: any;
@@ -164,7 +168,6 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   ngAfterViewInit(): void {
     this.setFormControlVerification();
-    console.dir(this);
   }
 
   ngAfterViewChecked(): void {
@@ -186,6 +189,15 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     // Positive numbers
     if (this.verification.positiveNumber) {
       validatorOptions.push(this.positiveNumber);
+    }
+    // Minimum numeric value
+    if (this.verification.minimumValue) {
+      validatorOptions.push(Validators.min(this.verification.minimumValue));
+    }
+    // Maximum numeric value
+    if (this.verification.maximumValue) {
+      // validatorOptions.push(this.maximumValue);
+      validatorOptions.push(Validators.max(this.verification.maximumValue));
     }
     // Required field
     if (this.verification.required !== undefined && this.verification.required) {

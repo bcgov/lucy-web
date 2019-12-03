@@ -666,13 +666,6 @@ export class FormService {
       verification.isLatitude = true;
     }
 
-    if (
-      field.type.toLowerCase() === `number` &&
-      (!verification.isLatitude && !verification.isLongitude)
-    ) {
-      verification.positiveNumber = true;
-    }
-
     ///// END Tweak verification object received
     return {
       key: field.key,
