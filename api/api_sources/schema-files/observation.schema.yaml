@@ -185,6 +185,8 @@ schemas:
         name: 'horizontal_dimension'
         comment: 'Width or horizontal dimension of the area observed'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        verification:
+          positiveNumber: true
         layout:
           header:
             key: 'generic.width'
@@ -195,6 +197,8 @@ schemas:
         name: 'vertical_dimension'
         comment: 'Length or vertical dimension of the area observed'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        verification:
+          positiveNumber: true
         meta: 
           dependencies:
             key: observationGeometry.observation_geometry_code_id

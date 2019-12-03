@@ -144,6 +144,8 @@ schemas:
         comment: 'Longitude of treatment location'
         definition: NUMERIC(9, 6) NOT NULL
         meta: {}
+        verification:
+          positiveNumber: true
         layout:
           header: 
             key: 'longitude' 
@@ -155,6 +157,8 @@ schemas:
         comment: 'Width of the area of treatment'
         definition: NUMERIC(7, 2) NULL DEFAULT 0.0
         meta: {}
+        verification:
+          positiveNumber: true
         layout:
           header: 
             key: 'width' 
