@@ -224,7 +224,7 @@ export class SsoService {
          break;
       }
       default: {
-        console.log(`where am i`);
+         console.log(`where am i`);
          window.open(this.SSO_LoginEndpoint(), `_self`);
          break;
       }
@@ -353,7 +353,10 @@ export class SsoService {
    * then clear query parameters.
    */
   private async handleLoginOnRedirect(): Promise<boolean> {
+    console.log("** We were re-directed... getting code from route\n")
     const codeFromRoute = this.extractCodeFromRoute();
+    console.log("** Code: \n")
+    console.log(codeFromRoute);
 
     /**
      * This function gets called from listenForRidirect().
@@ -368,6 +371,8 @@ export class SsoService {
       this.code = codeFromRoute;
     }
 
+    console.log("\nhere")
+
     return await this.fetchAndStoreTokenFromCode(codeFromRoute);
   }
 
@@ -377,6 +382,7 @@ export class SsoService {
    * @param code
    */
   private async fetchAndStoreTokenFromCode(code: string): Promise<boolean> {
+    console.log("**getting tokens from code\n")
     const result = await this.getTokensFromCode(code);
     console.dir(result);
     if (result.success) {
