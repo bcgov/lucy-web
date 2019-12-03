@@ -34,6 +34,7 @@ import { SpeciesDistributionCode } from './speciesDistribution.code';
 import { SlopeCode } from './slope.code';
 import { AspectCode } from './observationAspect.code';
 import { ProposedActionCode } from './proposedAction.code';
+import { SpaceGeom } from './spaceGeom';
 import {
     SpeciesSchema,
     JurisdictionCodeSchema,
@@ -47,7 +48,8 @@ import {
     SpecificUseCodeSchema,
     SlopeCodeSchema,
     AspectCodeSchema,
-    ProposedActionCodeSchema
+    ProposedActionCodeSchema,
+  SpaceGeomSchema
 } from '../database-schema';
 import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 import { MechanicalTreatment } from './mechanical.treatment';
@@ -84,6 +86,7 @@ export interface ObservationCreateModel {
 	slopeCode: SlopeCode;
 	aspectCode: AspectCode;
 	proposedAction: ProposedActionCode;
+	spaceGeom: SpaceGeom;
 }
 
 export interface ObservationUpdateModel {
@@ -117,6 +120,7 @@ export interface ObservationUpdateModel {
 	slopeCode?: SlopeCode;
 	aspectCode?: AspectCode;
 	proposedAction?: ProposedActionCode;
+	spaceGeom?: SpaceGeom;
 }
 
 @Entity({ name: ObservationSchema.dbTable})
@@ -355,6 +359,14 @@ export class Observation extends Record implements ObservationCreateModel {
     })
 	@ModelProperty({type: PropertyType.object})
     proposedAction: ProposedActionCode;
+
+  /**
+	 * @description Getter/Setter property for column {space_geom_id}
+	 */
+	@ManyToOne( type => SpaceGeom, { eager: true})
+	@JoinColumn({ name: ObservationSchema.columns.spaceGeom, referencedColumnName: SpaceGeomSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	spaceGeom: SpaceGeom;
 
     // Calculated Properties
     @OneToMany(

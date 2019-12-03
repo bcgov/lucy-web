@@ -18,8 +18,8 @@ const resourceName = 'ObserverWorkFlow';
 const controller: DataController = ObserverWorkflowController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();

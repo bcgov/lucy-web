@@ -246,7 +246,7 @@ export class ApplicationTable {
             }
         });
         _.each(this.relations, (rel: TableRelation, k: string) => {
-            if (unWrap(rel.meta).embedded) {
+            if (unWrap(rel.meta, {}).embedded) {
                 r.push(k);
             }
         });
