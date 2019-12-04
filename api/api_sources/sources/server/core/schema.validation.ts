@@ -293,7 +293,7 @@ export class SchemaValidator {
         const existsValidator = ValidatorExists(validatorExists);
         const checkValidator = ValidatorCheck(validatorCheck, rootKey, this.logger);
         if (filterOnly) {
-            results.concat(checkValidator);
+            results = results.concat(checkValidator);
             return results;
         }
         results = results.concat(existsValidator);
