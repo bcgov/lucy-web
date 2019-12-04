@@ -264,8 +264,8 @@ schemas:
         definition: SMALLINT NULL
         meta: {}
         verification:
-          minimumValue: -40
-          maximumValue: 50
+          minimumValue: 10
+          maximumValue: 30
         layout:
           header:
             key: 'temperature'
