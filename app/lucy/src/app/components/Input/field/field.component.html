@@ -88,14 +88,17 @@
 
 <!-- Read only -->
 <div *ngIf="readonly" class="col-12 field">
-    <label class="field-header">{{ header }}</label>
-
+    <div class="row">
+        <label class="field-header">{{ header }}</label>
+    </div>
     <!-- Input Field -->
-    <mat-form-field *ngIf="!multiline">
-        <input matInput type="text" [(ngModel)]="value" class="form-control view view-field-background" [attr.id]="fieldId" [readonly]="readonly">
-        <span matSuffix class="form-control view view-field-background">{{ suffix }}</span>
-    </mat-form-field>
-
+    <div *ngIf="!multiline" class="container row input-group form-control view view-field-background">
+        <!-- If field has suffix -->
+        <input *ngIf="suffix?.length > 0" class="col-8" type="text" [(ngModel)]="value" readonly />
+        <span *ngIf="suffix?.length > 0" class="input-group-addon col-4">{{ suffix }}</span>
+        <!-- If field has no suffix -->
+        <input *ngIf="suffix?.length == 0" class="col-12" type="text" [(ngModel)]="value" readonly />
+    </div>
     <!-- multiLine -->
     <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control view-field-background" [attr.id]="fieldId" [readonly]="readonly"></textarea>
 </div>
