@@ -1,114 +1,76 @@
 <!-- Summary Line Section -->
 <div class="col-12">
-    <form>
-        <div class="row">
-            <div class="col-3">
-                <mat-form-field>
-                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Amount of Mix Used">
-                    <span matSuffix> L</span>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-3">
-                <mat-form-field>
-                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Dilution">
-                    <span matSuffix> %</span>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('max')">Must enter a value less than 100</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-3">
-                <mat-form-field>
-                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Application Rate">
-                    <span matSuffix> L/ha</span>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-3">
-                <mat-form-field>
-                    <input matInput [errorStateMatcher]="matcher" [formControl]="herbicideMixFormControl" #number placeholder="Mix Delivery Rate">
-                    <span matSuffix> L/ha</span>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('required')">required</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('pattern')">Not a valid number</mat-error>
-                    <mat-error *ngIf="herbicideMixFormControl.hasError('min')">Must enter a positive number</mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-    </form>
+    <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="console.dir($event)">
+    </app-field>
 </div>
 
-<div class="herbicideContainer">
+<div class="container herbicideContainer col-12">
     <!-- Herbicide Selection Section -->
-    <div class="col-12">
-        <div class="row">
-            <label>Select Herbicides</label>
-        </div>
+    <div class="row col-12">
+        <label>Select Herbicides</label>
     </div>
 
     <!-- View when zero herbicides selected -->
-    <div class="col-12" *ngIf="herbicidesUsed.length == 0">
-        <div class="row">
-            <div class="col-5">
-                <app-dropdown [mode]="mode" fieldHeader="Herbicide" [items]="herbicides">
-                </app-dropdown>
-                <!-- <mat-form-field>
-                    <mat-label>Select Herbicide</mat-label>
-                    <mat-select [(value)]="herbicideSelected">
-                        <mat-option *ngFor="let herb of herbicides" [value]="herb">{{herb.compositeName}}</mat-option>
-                    </mat-select>
-                </mat-form-field> -->
-            </div>
-        </div>
+    <div class="row" *ngIf="tankMixesUsed.length == 0">
+        <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
+        </app-dropdown>
     </div>
 
     <!-- View when 1+ herbicides selected -->
-    <div class="col-12" *ngIf="herbicidesUsed.length > 0">
+    <div class="col-12 container" *ngIf="tankMixesUsed.length > 0">
         <div class="row labelsRow">
             <div class="col-5">
                 <label>Select Herbicide(s) to add to treatment:</label>
             </div>
             <div class="col-3">
-                <label>Application Rate (L/ha)</label>
+                <label>Application Rate</label>
             </div>
-            <div class="col-2">
-                <label>Dilution (%)</label>
+            <div class="col-3">
+                <label>Amount of Chemical Used</label>
             </div>
         </div>
-        <div class="row">
-            <div *ngFor="let h of herbicidesUsed">
+        <div class="container">
+            <div *ngFor="let h of tankMixesUsed" class="row full-width animated fadeInLeft animationDuration">
                 <div class="col-5">
-                    <mat-form-field>
-                        <mat-label>Select Herbicide</mat-label>
-                        <mat-select>
-                            <mat-option *ngFor="let herb of herbicides" [value]="herb">{{herb.compositeName}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <app-dropdown [mode]="mode" [fieldHeader]="h.displayLabel" (selectionChanged)="herbicideChanged($event)">{{ dropdown }}
+                    </app-dropdown>
                 </div>
                 <div class="col-3">
-                    <input required type="number" min="0" value="h.applicationRate">
+                    <app-field [mode]="mode" [verification]="applicationRateVerification" [fieldformControl]="applicationRateFieldControl" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)"></app-field>
                 </div>
-                <div class="col-2">
-                    <input required type="number" min="0" max="100" style="margin-right: 4pt;">
+                <div class="col-3">
+                    <app-field [mode]="mode" [verification]="amountUsedVerification" [fieldFormControl]="amountUsedFieldControl" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
                 </div>
-                <div class="col-2" style="display: inline-flex; margin-left: auto;">
+                <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
                     <button class="btn button-empty" (click)="removeHerbicide(h)">
                             <mat-icon style="color: #CDCED2;">delete</mat-icon>
                         </button>
                 </div>
             </div>
+            <div *ngIf="showEmptyRow" style="display: inline-flex;">
+                <div class="row full-width animated fadeIn animationDuration">
+                    <div class="col-5">
+                        <app-dropdown [mode]="mode" [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)"></app-dropdown>
+                    </div>
+                    <div class="col-3">
+                        <app-field type="number" [mode]="mode" suffix="L/ha"></app-field>
+                    </div>
+                    <div class="col-3">
+                        <app-field type="number" [mode]="mode" suffix="L"></app-field>
+                    </div>
+                    <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
+                        <button class="btn button-empty" (click)="removeEmptyRow()">
+                                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Add herbicide button is always displayed -->
-    <div class="col-12">
+    <div *ngIf="tankMixesUsed.length > 0 && !showEmptyRow" class="container col-6">
         <div class="row">
-            <button class="btn addHerbicideButton" (click)="addEmptyTableRow">Add Additional Herbicide</button>
+            <button class="btn addHerbicideButton" (click)="addEmptyTableRow()"><strong>Add Additional Herbicide</strong></button>
         </div>
     </div>
 </div>

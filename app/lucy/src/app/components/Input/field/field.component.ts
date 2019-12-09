@@ -191,12 +191,11 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       validatorOptions.push(this.positiveNumber);
     }
     // Minimum numeric value
-    if (this.verification.minimumValue) {
+    if (this.verification.minimumValue !== undefined) {
       validatorOptions.push(Validators.min(this.verification.minimumValue));
     }
     // Maximum numeric value
-    if (this.verification.maximumValue) {
-      // validatorOptions.push(this.maximumValue);
+    if (this.verification.maximumValue !== undefined) {
       validatorOptions.push(Validators.max(this.verification.maximumValue));
     }
     // Required field
