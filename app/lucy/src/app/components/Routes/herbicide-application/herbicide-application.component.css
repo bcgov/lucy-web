@@ -15,14 +15,15 @@
     vertical-align: middle;
     height: 30pt;
     border-width: 1pt;
-    border-color: #5E739B;
-    font-size: smaller;
+    border-color: #284578;
+    font-size: small;
     margin: 16pt;
+    color: #284578;
 }
 
 .labelsRow {
     color: #AFAFAF;
-    font-size: smaller;
+    font-size: small;
 }
 
 input {

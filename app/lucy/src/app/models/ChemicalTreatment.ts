@@ -11,3 +11,14 @@ export interface HerbicideCodes {
     applicationRate: number;
     applicationUnits: string;
 }
+
+export interface HerbicideTankMix {
+    displayLabel: string;
+    applicationRate: number;
+    amountUsed: number;
+    herbicide: HerbicideCodes;
+}
+
+export interface ChemicalTreatment {
+
+}

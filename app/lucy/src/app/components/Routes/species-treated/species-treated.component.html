@@ -14,11 +14,11 @@
                     <div class="container-fluid speciesTreatedCard">
                         <div class="row">
                             <div class="col-7">
-                                <p><b>{{ s.commonName }} ({{ s.species }} {{ s.genus }})</b></p>
+                                <p><b>{{ s.species.commonName }} ({{ s.species.species }} {{ s.species.genus }})</b></p>
                             </div>
                             <div class="container col-5">
                                 <div class="row">
-                                    <input class="percentageField col-9" style="margin-left: auto;" required type="number" min="0" max="100" step="5">%
+                                    <app-field class="col-6" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.percentage"></app-field>
                                     <button class="btn button-empty col-3" (click)="moveBeingTreatedToNotTreated(s)">
                                             <mat-icon style="color: #CDCED2;">delete</mat-icon>
                                         </button>

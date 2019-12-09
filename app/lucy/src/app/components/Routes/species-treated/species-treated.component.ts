@@ -1,43 +1,80 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges, OnChanges, Input } from '@angular/core';
 import { CodeTableService } from 'src/app/services/code-table.service';
-import { InvasivePlantSpecies } from 'src/app/models/observation';
+import { ObservationService } from 'src/app/services/observation.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { InvasivePlantSpecies, Observation } from 'src/app/models/observation';
 import * as faker from 'faker';
+import { FormControl, Validators } from '@angular/forms';
+
+export interface SpeciesTreatedRecord {
+  species: InvasivePlantSpecies;
+  percentage: number;
+}
 
 @Component({
   selector: 'app-species-treated',
   templateUrl: './species-treated.component.html',
   styleUrls: ['./species-treated.component.css']
 })
-export class SpeciesTreatedComponent implements OnInit {
+export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
-  _speciesBeingTreated: InvasivePlantSpecies[] = [];
+  // Base form response body
+  private _responseBody: any = {};
+  get responseBody(): any {
+    return this._responseBody;
+  }
+  @Input() set responseBody(responseBody: any) {
+    this._responseBody = responseBody;
+  }
+
+  _speciesBeingTreated: SpeciesTreatedRecord[] = [];
   _speciesNotBeingTreated: InvasivePlantSpecies[] = [];
   species: InvasivePlantSpecies[];
 
+  observations: Observation[] = [];
 
-  constructor(private codeTables: CodeTableService) { }
+  percentageFieldVerification = {
+    required: true,
+    positiveNumber: true,
+    maximumValue: 100,
+  };
+
+  constructor(private codeTables: CodeTableService, 
+              private loadingService: LoadingService, 
+              private observationService: ObservationService) { }
 
 
   async ngOnInit() {
-    this.species = await this.codeTables.getInvasivePlantSpecies();
-    for (let i = 0; i < 2; i++) {
-        this._speciesBeingTreated.push(this.species[faker.random.number(this.species.length)]);
-    }
-    for (let i = 0; i < 2; i++) {
-        this._speciesNotBeingTreated.push(this.species[faker.random.number(this.species.length)]);
-    }
+    // this.species = await this.codeTables.getInvasivePlantSpecies();
+  }
 
+  async ngOnChanges(changes: SimpleChanges) {
+    if (changes.responseBody.currentValue.latitude !== undefined && changes.responseBody.currentValue.longitude !== undefined) {
+      const lat = changes.responseBody.currentValue.latitude;
+      const long = changes.responseBody.currentValue.longitude;
+      await this.fetchObservationsForLocation(lat, long);
+      for (const o of this.observations) {
+        this._speciesBeingTreated.push({species: o.species, percentage: undefined});
+      }
+    }
+  }
+
+  private async fetchObservationsForLocation(lat: number, long: number) {
+    this.loadingService.add();
+    const observations = await this.observationService.getByLocation(lat, long);
+    this.observations = observations;
+    this.loadingService.remove();
   }
 
   // TODO speciesBeingTreated is list of plant species taken from ???
-  set speciesBeingTreated(s: InvasivePlantSpecies[]) {
+  set speciesBeingTreated(s: SpeciesTreatedRecord[]) {
     for (const elem of s) {
         this._speciesBeingTreated.push(elem);
     }
   }
 
-  get speciesBeingTreated(): InvasivePlantSpecies[] {
+  get speciesBeingTreated(): SpeciesTreatedRecord[] {
       return this._speciesBeingTreated;
   }
 
@@ -53,18 +90,16 @@ export class SpeciesTreatedComponent implements OnInit {
   }
 
   moveNotTreatedToBeingTreated(s: InvasivePlantSpecies) {
-    this._speciesBeingTreated.push(s);
+    this._speciesBeingTreated.push({species: s, percentage: 0});
     if (this._speciesNotBeingTreated.includes(s)) {
       const index = this._speciesNotBeingTreated.findIndex((element) => element === s);
       this._speciesNotBeingTreated.splice(index, 1);
     }
   }
 
-  moveBeingTreatedToNotTreated(s: InvasivePlantSpecies) {
-    this._speciesNotBeingTreated.push(s);
-    if (this._speciesBeingTreated.includes(s)) {
-      const index = this._speciesBeingTreated.findIndex((element) => element === s);
-      this._speciesBeingTreated.splice(index, 1);
-    }
+  moveBeingTreatedToNotTreated(s: SpeciesTreatedRecord) {
+    this._speciesNotBeingTreated.push(s.species);
+    const index = this._speciesBeingTreated.findIndex((element) => element === s);
+    this._speciesBeingTreated.splice(index, 1);
   }
 }

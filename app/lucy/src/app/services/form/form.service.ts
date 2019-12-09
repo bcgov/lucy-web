@@ -611,7 +611,6 @@ export class FormService {
         if (fieldOfInterest.isDropdown) {
           fieldOfInterest.dropdown = await this.dropdownfor(
             fieldOfInterest.codeTable,
-            fieldOfInterest.displayKey,
             fieldOfInterest.codeTableMeta
           );
         }
@@ -713,7 +712,6 @@ export class FormService {
    */
   private async dropdownfor(
     code: string,
-    displayKey: string,
     meta: any
   ): Promise<DropdownObject[]> {
     if (!code) {
@@ -729,10 +727,7 @@ export class FormService {
         codeTable = apiResult.response;
       }
     }
-    return this.dropdownService.createDropdownObjectsFrom(
-      codeTable,
-      displayKey
-    );
+    return this.dropdownService.createDropdownObjectsFrom(codeTable);
   }
 
   /**
@@ -748,7 +743,7 @@ export class FormService {
     selectedObject: any,
     codeTableMeta: any,
   ): Promise<DropdownObject> {
-    const dropdowns = await this.dropdownfor(codeTableName, displayedKey, codeTableMeta);
+    const dropdowns = await this.dropdownfor(codeTableName, codeTableMeta);
     let selectedID: number;
     for (const key in selectedObject) {
       if (key.toLowerCase().indexOf(`id`) !== -1) {
