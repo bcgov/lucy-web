@@ -36,8 +36,8 @@ import { adminToken, viewerToken } from '../../../../test-helpers/token';
 let admin: User;
 describe('Test User Messages', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         const resp: any = await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
         admin = resp.admin;
     });
     after(async () => {

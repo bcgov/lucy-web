@@ -19,6 +19,8 @@ externalTables:
     schema: ChemicalTreatmentMethodCodeSchema
   - name: wind_direction_code
     schema: WindDirectionCodesSchema
+includes:
+  - spaceGeom.schema.yaml
 schemas:
   ## -- ChemicalTreatmentSchema
   ChemicalTreatmentSchema:
@@ -156,7 +158,7 @@ schemas:
         schema: ObservationChemicalTreatmentSchema
         meta: 
           embedded: true
-    ## Columns
+    ## -- Columns
     columns: 
       ## Data Columns
       id: 
@@ -166,7 +168,8 @@ schemas:
       latitude:
         name: 'chemical_treatment_location_latitude'
         comment: 'Latitude of treatment  location'
-        definition: NUMERIC(8, 6) NOT NULL
+        definition: NUMERIC(8, 6) NULL
+        required: true
         meta: {}
         layout:
           header: 
@@ -178,7 +181,8 @@ schemas:
       longitude:
         name: 'chemical_treatment_location_longitude'
         comment: 'Longitude of treatment location'
-        definition: NUMERIC(9, 6) NOT NULL
+        definition: NUMERIC(9, 6) NULL
+        required: true
         meta: {}
         layout:
           header: 
@@ -234,6 +238,7 @@ schemas:
         name: plot_width
         comment: The width of the treatment area, in metres
         definition: NUMERIC(6,2) NULL
+        required: true
         meta: {}
         layout:
           header:
@@ -245,6 +250,7 @@ schemas:
         name: plot_length
         comment: The length of the treatment area, in metres
         definition: NUMERIC(6,2) NULL
+        required: true
         meta: {}
         layout:
           header:
@@ -354,6 +360,8 @@ schemas:
           classes:
             - none
       # -- End Columns
+    ## -- End: Columns
+    ## -- Versions
     versions: 
       - name: codes ## This version name should be unique
         id: '20191125'
@@ -386,5 +394,14 @@ schemas:
               classes:
                 - col-12
         ## -- end Columns
-
+    ## -- End: Versions
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
   ## --

@@ -42,8 +42,8 @@ const resourceName = 'chemical treatment';
 const controller: DataController = ChemicalTreatmentController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();

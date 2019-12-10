@@ -1,6 +1,7 @@
 version: '1.0'
 includes:
   - observation.codes.schema.yaml
+  - spaceGeom.schema.yaml
 schemas:
   # -- Observation schema ** Observation
   ObservationSchema:
@@ -164,7 +165,8 @@ schemas:
       lat:
         name: 'observation_location_lat'
         comment: 'Latitude of observation location'
-        definition: NUMERIC(8, 6) NOT NULL
+        definition: NUMERIC(8, 6) NULL
+        required: true
         layout:
           header:
             key: 'generic.latitude'
@@ -174,7 +176,8 @@ schemas:
       long:
         name: 'observation_location_long'
         comment: 'Longitude of observation location'
-        definition: NUMERIC(9, 6) NOT NULL
+        definition: NUMERIC(9, 6) NULL
+        required: true
         layout:
           header:
             key: 'generic.longitude'
@@ -184,7 +187,8 @@ schemas:
       horizontalDimension:
         name: 'horizontal_dimension'
         comment: 'Width or horizontal dimension of the area observed'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        definition: NUMERIC(7, 2) NULL
+        required: true
         layout:
           header:
             key: 'generic.width'
@@ -194,7 +198,8 @@ schemas:
       verticalDimension:
         name: 'vertical_dimension'
         comment: 'Length or vertical dimension of the area observed'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
+        definition: NUMERIC(7, 2) NULL
+        required: true
         meta: 
           dependencies:
             key: observationGeometry.observation_geometry_code_id
@@ -460,6 +465,7 @@ schemas:
         foreignTable: observation_geometry_code
         refColumn: observation_geometry_code_id
         deleteCascade: false
+        required: false
         layout:
           header:
             key: 'observationGeometry'
@@ -518,4 +524,14 @@ schemas:
             default: 'Proposed Action'
           classes:
             - none
+    ## End - Columns
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
   # --
