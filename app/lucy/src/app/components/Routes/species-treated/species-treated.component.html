@@ -10,6 +10,11 @@
         <div class="col-12">
             <label class="speciesTreatedLabel">Being Treated</label>
             <div class="row">
+                <div *ngIf="speciesBeingTreated.length == 0" class="col-12">
+                    <div class="container" id="emptySpeciesTreatedContainer">
+                        <span class="align-middle">Select a species below to add it to this chemical treatment record</span>
+                    </div>
+                </div>
                 <div *ngFor="let s of speciesBeingTreated" class="col-6">
                     <div class="container-fluid speciesTreatedCard">
                         <div class="row">
@@ -51,11 +56,14 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid addSpeciesCard">
+        <div *ngIf="!inViewMode" class="container-fluid addSpeciesCard">
             <div class="row col-12" style="display: inline-flex; margin-left: auto; margin-right: auto;">
                 <p>Is there an additional species in this area that is not shown above?</p>
-                <button class="btn addSpeciesButton">Add Additional Species</button>
+                <button class="btn addSpeciesButton" (click)="showAddQuickObservationModal()">Add Additional Species</button>
             </div>
         </div>
     </div>
+
+    <app-add-quick-observation-modal *ngIf="showQuickObservationModal" [mode]="mode">
+    </app-add-quick-observation-modal>
 </div>

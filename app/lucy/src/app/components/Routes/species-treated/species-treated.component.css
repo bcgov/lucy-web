@@ -88,3 +88,10 @@
     margin-top: auto;
     margin-bottom: auto;
 }
+
+#emptySpeciesTreatedContainer {
+    background-color: #E1E1E6;
+    border-radius: 4pt;
+    text-align: center;
+    padding: 15pt;
+}

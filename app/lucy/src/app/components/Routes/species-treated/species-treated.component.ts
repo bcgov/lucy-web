@@ -1,11 +1,10 @@
 
 import { Component, OnInit, SimpleChanges, OnChanges, Input } from '@angular/core';
-import { CodeTableService } from 'src/app/services/code-table.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { InvasivePlantSpecies, Observation } from 'src/app/models/observation';
-import * as faker from 'faker';
 import { FormControl, Validators } from '@angular/forms';
+import { FormMode } from 'src/app/models';
 
 export interface SpeciesTreatedRecord {
   species: InvasivePlantSpecies;
@@ -33,6 +32,8 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   species: InvasivePlantSpecies[];
 
   observations: Observation[] = [];
+  inViewMode = false;
+  showQuickObservationModal = false;
 
   percentageFieldVerification = {
     required: true,
@@ -40,13 +41,11 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     maximumValue: 100,
   };
 
-  constructor(private codeTables: CodeTableService, 
-              private loadingService: LoadingService, 
+  constructor(private loadingService: LoadingService,
               private observationService: ObservationService) { }
 
 
   async ngOnInit() {
-    // this.species = await this.codeTables.getInvasivePlantSpecies();
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -55,7 +54,14 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       const long = changes.responseBody.currentValue.longitude;
       await this.fetchObservationsForLocation(lat, long);
       for (const o of this.observations) {
-        this._speciesBeingTreated.push({species: o.species, percentage: undefined});
+        this._speciesNotBeingTreated.push(o.species);
+      }
+    }
+    if (changes.responseBody.currentValue.mode !== undefined) {
+      if (changes.responseBody.currentValue.mode === FormMode.View) {
+        this.inViewMode = true;
+      } else {
+        this.inViewMode = false;
       }
     }
   }
@@ -67,7 +73,6 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     this.loadingService.remove();
   }
 
-  // TODO speciesBeingTreated is list of plant species taken from ???
   set speciesBeingTreated(s: SpeciesTreatedRecord[]) {
     for (const elem of s) {
         this._speciesBeingTreated.push(elem);
@@ -78,7 +83,6 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       return this._speciesBeingTreated;
   }
 
-  // // TODO speciesNotBeingTreated is list of plant species that have been observed within the treatment area but are not being addressed by the current treatment record
   set speciesNotBeingTreated(s: InvasivePlantSpecies[]) {
       for (const elem of s) {
         this._speciesNotBeingTreated.push(elem);
@@ -101,5 +105,20 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     this._speciesNotBeingTreated.push(s.species);
     const index = this._speciesBeingTreated.findIndex((element) => element === s);
     this._speciesBeingTreated.splice(index, 1);
+  }
+
+  showAddQuickObservationModal() {
+    this.showQuickObservationModal = true;
+    this.delay(1).then(() => {
+      $(`#addQuickObservationModal`).modal('show');
+    });
+  }
+
+    /**
+   * Create a delay
+   * @param ms milliseconds
+   */
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
