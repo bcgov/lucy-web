@@ -67,7 +67,7 @@ describe('Test for mechanical treatment', () => {
 
     it('should create mechanical treatment for {admin}', async () => {
         const create = await mechanicalTreatmentCreateSpecFactory();
-        const createReq = RequestFactory<MechanicalTreatmentSpec>(create, { 
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create, {
             schema: MechanicalTreatmentSchema.shared
         });
         await testRequest(SharedExpressApp.app , {
