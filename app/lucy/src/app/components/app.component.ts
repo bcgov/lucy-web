@@ -30,6 +30,7 @@ import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
 import { StringConstants } from 'src/app/constants/string-constants';
 import { ToastService, ToastModel, ToastIconType } from '../services/toast/toast.service';
+import { ConverterService } from '../services/coordinateConversion/location.service';
 
 @Component({
   selector: 'app-root',
@@ -74,6 +75,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private errorService: ErrorService,
+    private coodrinateConvert: ConverterService,
     private routerService: RouterService,
     private ssoService: SsoService,
     private messageService: MessageService,
@@ -89,6 +91,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    const first = this.coodrinateConvert.isInsideBC(-125.12345, 51.12345);
+    const second = this.coodrinateConvert.isInsideBC(-151.21, 55.49);
+    const third = this.coodrinateConvert.isInsideBC(-138.12, 48.9215);
+    const forth = this.coodrinateConvert.isInsideBC(-123.0164, 48.7951);
+    const fifth = this.coodrinateConvert.isInsideBC(-123.0, 53.0);
+    console.log('-125.12345, 51.12345 -> ' + first);
+    console.log('-151.21, 55.49 -> ' + second);
+    console.log('-138.12, 48.9215 ->' + third);
+    console.log('-123.0164, 48.7951 ->' + forth);
+  console.log('-123.0, 53.0 -> ' + fifth);
   }
 
   ngOnDestroy() {
