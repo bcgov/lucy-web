@@ -20,8 +20,7 @@
         "tslint": "tslint",
         "test:lint": "tslint --project .",
         "snyk-protect": "snyk protect",
-        "merge-report": "",
-        "sonar-analysis": "sonar-generic-coverage-convertor && sonar-scanner",
+        "sonar-analysis": "sonar-scanner",
         "remote:test": "npm run test:all && npm run sonar-analysis"
     },
     "author": "Pushan Mitra",
@@ -60,7 +59,6 @@
         "gulp-util": "^3.0.8",
         "nodemon": "^1.19.1",
         "nyc": "^14.1.1",
-        "sonar-js-coverage-convertor": "^0.2.9",
         "sonarqube-scanner": "^2.5.0",
         "source-map-support": "^0.5.12",
         "supertest": "^4.0.2",
