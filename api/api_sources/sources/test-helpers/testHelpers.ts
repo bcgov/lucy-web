@@ -123,9 +123,8 @@ export const commonTestSetupAction = async (): Promise<any> => {
     // Set Certificate url to prod
     // Check certificate url
     // Test Certificate url
-    const certificateURL = 'https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs';
-    if (process.env.APP_CERTIFICATE_URL && process.env.APP_CERTIFICATE_URL !== certificateURL) {
-        process.env.APP_CERTIFICATE_URL = certificateURL;
+    if (process.env.APP_CERTIFICATE_URL && process.env.APP_CERTIFICATE_URL_TEST &&  process.env.APP_CERTIFICATE_URL !== process.env.APP_CERTIFICATE_URL_TEST) {
+        process.env.APP_CERTIFICATE_URL = process.env.APP_CERTIFICATE_URL_TEST;
     }
     return resp;
 };

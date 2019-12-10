@@ -78,7 +78,7 @@ export class TemplateResolver {
     }
 
     static resolveRepeatMarker(sentence: string, source: TemplateTokenResolver, logger: TemplateLogger = DefaultLogger): string {
-        return sentence.replace(RepeatMarker, (sub, ...args: []) => {
+        return sentence.replace(RepeatMarker, (sub, ...args: any[]) => {
             const propMarker = /[a-zA-Z0-9]+/gi;
             let returnLines = sub;
             // Get Functional part
@@ -129,7 +129,7 @@ export class TemplateResolver {
             const itemMarker: RegExp = new RegExp(`#\{${dataMarker}[.a-zA-Z0-9]*\}`, 'gi');
             // Now check
             for (const dat of dataArray) {
-                const updatedContent = content.replace(itemMarker, (dataSub, ...values: []) => {
+                const updatedContent = content.replace(itemMarker, (dataSub, ...values: any[]) => {
                     const newMatch = dataSub.match(/[.a-zA-Z0-9]+/gi) || [];
                     if (newMatch.length === 0) {
                         return `${dat}`;
