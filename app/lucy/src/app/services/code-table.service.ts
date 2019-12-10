@@ -210,7 +210,7 @@ export class CodeTableService {
     return this.agencies;
   }
 
-  public async observationTypeCodes(): Promise<ObservationTypeCodes[]> {
+  public async getObservationTypeCodes(): Promise<ObservationTypeCodes[]> {
     if (this.surveyTypes && this.surveyTypes.length > 0) {
       return this.surveyTypes;
     }

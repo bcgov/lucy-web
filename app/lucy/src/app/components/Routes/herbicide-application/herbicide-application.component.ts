@@ -104,11 +104,13 @@ export class HerbicideApplicationComponent implements OnInit {
   }
 
   async prepareDropdownMenus() {
+    console.dir(`preparing herbicide dropdowns`);
     await this.codeTables.getHerbicideCodes().then((codes) => {
       this.herbicides = codes;
+      this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(codes);
     });
-    this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.herbicides);
-    this._dropdown.items = this.herbicideDropdowns;
+    console.dir(`herbicide dropdowns created`);
+    // this._dropdown.items = this.herbicideDropdowns;
   }
 
   removeHerbicide(h: HerbicideTankMix) {
