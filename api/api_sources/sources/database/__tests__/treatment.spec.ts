@@ -51,12 +51,15 @@ import {
     MechanicalRootRemovalCode,
     MechanicalTreatmentIssueCode
 } from '../models';
-import { Destroy, ModelFactory } from '../factory/helper';
+import { Destroy, ModelFactory, ModelSpecFactory } from '../factory/helper';
+// import { MechanicalTreatmentSchema } from '../database-schema';
 // import { SharedDBManager } from '../dataBaseManager';
 
 describe('Treatment Test', () => {
     before(async () => {
         await commonTestSetupAction();
+        // console.dir(MechanicalTreatmentController.shared.schemaObject.table.columnsDefinition);
+        // console.dir(ObservationController.shared.schemaObject.table.columnsDefinition);
     });
     after(async () => {
         await commonTestTearDownAction();
@@ -165,6 +168,22 @@ describe('Treatment Test', () => {
         should().exist(mtArray);
         expect(mtArray.length).to.be.greaterThan(0);
         await destroyMechanicalTreatment(f);
+    });
+
+    it('should create treatment with spaceGeom factory', async () => {
+        const mt: MechanicalTreatment = await ModelFactory(MechanicalTreatmentController.shared)();
+        should().exist(mt);
+        should().exist(mt.spaceGeom);
+        const f: MechanicalTreatment = await MechanicalTreatmentController.shared.findById(mt.mechanical_treatment_id);
+        should().exist(f);
+        should().exist(f.spaceGeom);
+        expect(f.spaceGeom.space_geom_id).to.be.equal(mt.spaceGeom.space_geom_id);
+    });
+
+    it('should create treatment with spaceGeom spec factory', async () => {
+        const mt: any = await ModelSpecFactory(MechanicalTreatmentController.shared)();
+        should().exist(mt);
+        should().exist(mt.spaceGeom);
     });
 
 });

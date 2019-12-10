@@ -51,11 +51,12 @@ import {
     RequestFactory
 } from '../../../../database/factory';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
+import { ObservationSchema } from '../../../../database/database-schema';
 
 describe('Test for observation routes', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();
@@ -149,7 +150,9 @@ describe('Test for observation routes', () => {
 
     it('should create observation', async () => {
         const spec = await ModelSpecFactory(ObservationController.shared)();
-        const create = RequestFactory<any>(spec);
+        const create = RequestFactory<any>(spec, {
+            schema: ObservationSchema.shared
+        });
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
             url: '/api/observation',
