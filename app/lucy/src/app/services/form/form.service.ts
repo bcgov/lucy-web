@@ -1212,6 +1212,11 @@ export class FormService {
           break;
       }
     }
+    const relationsConfigs = uiConfig.relationsConfigs;
+    // tslint:disable-next-line: forin
+    for (const index in relationsConfigs) {
+      cleanBody[index] = body[index];
+    }
     return JSON.parse(JSON.stringify(cleanBody));
   }
 

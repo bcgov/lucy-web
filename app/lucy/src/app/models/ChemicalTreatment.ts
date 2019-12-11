@@ -1,3 +1,4 @@
+import { InvasivePlantSpecies, Observation } from './observation';
 
 
 export interface HerbicideCodes {
@@ -19,6 +20,8 @@ export interface HerbicideTankMix {
     herbicide: HerbicideCodes;
 }
 
-export interface ChemicalTreatment {
-
+export interface SpeciesObservedTreated {
+    observationObject: Observation;
+    observation: number;
+    treatmentAreaCoverage: number;
 }

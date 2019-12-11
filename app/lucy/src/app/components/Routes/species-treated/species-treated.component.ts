@@ -1,15 +1,15 @@
 
-import { Component, OnInit, SimpleChanges, OnChanges, Input } from '@angular/core';
+import { Component, OnInit, SimpleChanges, OnChanges, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ObservationService } from 'src/app/services/observation.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { CodeTableService } from 'src/app/services/code-table.service';
+import { DropdownService } from 'src/app/services/dropdown.service';
 import { InvasivePlantSpecies, Observation } from 'src/app/models/observation';
+import { SpeciesObservedTreated } from 'src/app/models/ChemicalTreatment';
 import { FormControl, Validators } from '@angular/forms';
+import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { FormMode } from 'src/app/models';
-
-export interface SpeciesTreatedRecord {
-  species: InvasivePlantSpecies;
-  percentage: number;
-}
+import { AddQuickObservationModalComponent } from '../../Utilities/add-quick-observation-modal/add-quick-observation-modal.component';
 
 @Component({
   selector: 'app-species-treated',
@@ -17,6 +17,8 @@ export interface SpeciesTreatedRecord {
   styleUrls: ['./species-treated.component.css']
 })
 export class SpeciesTreatedComponent implements OnInit, OnChanges {
+
+  @ViewChild(AddQuickObservationModalComponent) addObsModal: AddQuickObservationModalComponent;
 
   // Base form response body
   private _responseBody: any = {};
@@ -27,13 +29,16 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     this._responseBody = responseBody;
   }
 
-  _speciesBeingTreated: SpeciesTreatedRecord[] = [];
-  _speciesNotBeingTreated: InvasivePlantSpecies[] = [];
+  _speciesBeingTreated: SpeciesObservedTreated[] = [];
+  _speciesNotBeingTreated: SpeciesObservedTreated[] = [];
   species: InvasivePlantSpecies[];
+
+  // addQuickObservationModal: AddQuickObservationModalComponent = new AddQuickObservationModalComponent(this.modalService, this.codeTables, this.dropdowns);
 
   observations: Observation[] = [];
   inViewMode = false;
-  showQuickObservationModal = false;
+  addQuickObs = false;
+  object: any;
 
   percentageFieldVerification = {
     required: true,
@@ -41,8 +46,13 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     maximumValue: 100,
   };
 
+  @Output() speciesTreatedChanged = new EventEmitter<SpeciesObservedTreated[]>();
+
   constructor(private loadingService: LoadingService,
-              private observationService: ObservationService) { }
+              private observationService: ObservationService,
+              private modalService: NgbModal,
+              private codeTables: CodeTableService,
+              private dropdowns: DropdownService) { }
 
 
   async ngOnInit() {
@@ -54,7 +64,7 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       const long = changes.responseBody.currentValue.longitude;
       await this.fetchObservationsForLocation(lat, long);
       for (const o of this.observations) {
-        this._speciesNotBeingTreated.push(o.species);
+        this._speciesNotBeingTreated.push({observationObject: o, observation: o.observation_id, treatmentAreaCoverage: 0});
       }
     }
     if (changes.responseBody.currentValue.mode !== undefined) {
@@ -73,52 +83,92 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     this.loadingService.remove();
   }
 
-  set speciesBeingTreated(s: SpeciesTreatedRecord[]) {
+  private notifyChangeEvent() {
+    if (this.speciesBeingTreated && !this.inViewMode) {
+      this.speciesTreatedChanged.emit(this.speciesBeingTreated);
+    }
+  }
+
+  set speciesBeingTreated(s: SpeciesObservedTreated[]) {
     for (const elem of s) {
         this._speciesBeingTreated.push(elem);
     }
   }
 
-  get speciesBeingTreated(): SpeciesTreatedRecord[] {
+  get speciesBeingTreated(): SpeciesObservedTreated[] {
       return this._speciesBeingTreated;
   }
 
-  set speciesNotBeingTreated(s: InvasivePlantSpecies[]) {
+  set speciesNotBeingTreated(s: SpeciesObservedTreated[]) {
       for (const elem of s) {
         this._speciesNotBeingTreated.push(elem);
       }
   }
 
-  get speciesNotBeingTreated(): InvasivePlantSpecies[] {
+  get speciesNotBeingTreated(): SpeciesObservedTreated[] {
       return this._speciesNotBeingTreated;
   }
 
-  moveNotTreatedToBeingTreated(s: InvasivePlantSpecies) {
-    this._speciesBeingTreated.push({species: s, percentage: 0});
-    if (this._speciesNotBeingTreated.includes(s)) {
-      const index = this._speciesNotBeingTreated.findIndex((element) => element === s);
-      this._speciesNotBeingTreated.splice(index, 1);
+  moveNotTreatedToBeingTreated(s: SpeciesObservedTreated) {
+    // remove s object from speciesNotBeingTreated
+    let index = this.speciesNotBeingTreated.indexOf(s);
+    this.speciesNotBeingTreated.splice(index, 1);
+
+    // check for duplicates in speciesBeingTreated
+    index = this.indexOfSpeciesInSpeciesBeingTreated(s.observationObject.species);
+    if ( index >= 0) {
+      this.speciesBeingTreated.splice(index, 1);
     }
+
+    this._speciesBeingTreated.push(s);
+
+
+    this.notifyChangeEvent();
   }
 
-  moveBeingTreatedToNotTreated(s: SpeciesTreatedRecord) {
-    this._speciesNotBeingTreated.push(s.species);
+  moveBeingTreatedToNotTreated(s: SpeciesObservedTreated) {
+    // remove s object from speciesBeingTreated
+    let index = this.speciesBeingTreated.indexOf(s);
+    this.speciesBeingTreated.splice(index, 1);
+
+    // check for duplicates in speciesNotBeingTreated
+    index = this.speciesNotBeingTreated.indexOf(s);
+    if (index >= 0) {
+      this.speciesNotBeingTreated.splice(index, 1);
+    }
+
+    s.treatmentAreaCoverage = 0;
+    this._speciesNotBeingTreated.push(s);
+
+    this.notifyChangeEvent();
+  }
+
+  updatedAreaCoverage(event: any, s: SpeciesObservedTreated) {
     const index = this._speciesBeingTreated.findIndex((element) => element === s);
-    this._speciesBeingTreated.splice(index, 1);
+    this._speciesBeingTreated[index].treatmentAreaCoverage = event;
+    this.notifyChangeEvent();
   }
 
-  showAddQuickObservationModal() {
-    this.showQuickObservationModal = true;
-    this.delay(1).then(() => {
-      $(`#addQuickObservationModal`).modal('show');
+  open() {
+    // this.modalService.open(this.addObsModal);
+    this.modalService.open(`Feature in progress`);
+  }
+
+  indexOfSpeciesInSpeciesBeingTreated(sp: InvasivePlantSpecies): number {
+    this.speciesBeingTreated.forEach((item, index) => {
+      if (item.observationObject.species === sp) {
+        return index;
+      }
     });
+    return -1;
   }
 
-    /**
-   * Create a delay
-   * @param ms milliseconds
-   */
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  indexOfSpeciesInSpeciesNotBeingTreated(sp: InvasivePlantSpecies): number {
+    this.speciesNotBeingTreated.forEach((item, index) => {
+      if (item.observationObject.species === sp) {
+        return index;
+      }
+    });
+    return -1;
   }
 }

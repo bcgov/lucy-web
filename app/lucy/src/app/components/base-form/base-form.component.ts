@@ -380,6 +380,28 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   /**
+   * handle changes in species treated custom subsection
+   * @param event changed list of speciesObservation records
+   */
+  speciesTreatedChanged(event: any) {
+    this.responseBody['speciesObservations'] = [];
+    event.forEach(element => {
+      this.responseBody['speciesObservations'].push({'observation': element.observation, 'treatmentAreaCoverage': +element.treatmentAreaCoverage});
+    });
+  }
+
+  /**
+   * handle changes in herbicide tank mixes custom subsection
+   * @param event changed list of herbicideTankMix records
+   */
+  tankMixesChanged(event: any) {
+    this.responseBody['tankMixes'] = [];
+    event.forEach(element => {
+      this.responseBody['tankMixes'].push({'applicationRate': element.applicationRate, 'dilutionRate': element.amountUsed, 'herbicide': element.herbicide.herbicide_id});
+    });
+  }
+
+  /**
    * Form submission
    */
   async submitAction() {
@@ -394,7 +416,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         return;
       }
       this.loadingService.add();
-      // const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify({key: 'hello'})), this.config);
+      console.dir(JSON.stringify(this.responseBody));
+      console.dir(JSON.parse(JSON.stringify(this.responseBody)));
       const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
       if (submissionResult.success) {
