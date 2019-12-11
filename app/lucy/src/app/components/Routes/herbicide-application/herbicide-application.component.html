@@ -1,6 +1,6 @@
 <!-- Summary Line Section -->
 <div class="col-12">
-    <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="console.dir($event)">
+    <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="deliveryRateChanged($event)">
     </app-field>
 </div>
 
@@ -36,10 +36,10 @@
                     </app-dropdown>
                 </div>
                 <div class="col-3">
-                    <app-field [mode]="mode" [verification]="applicationRateVerification" [fieldformControl]="applicationRateFieldControl" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)"></app-field>
+                    <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)"></app-field>
                 </div>
                 <div class="col-3">
-                    <app-field [mode]="mode" [verification]="amountUsedVerification" [fieldFormControl]="amountUsedFieldControl" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
+                    <app-field [mode]="mode" [verification]="amountUsedVerification" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
                 </div>
                 <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
                     <button class="btn button-empty" (click)="removeHerbicide(h)">

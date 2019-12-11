@@ -26,10 +26,9 @@ export class HerbicideApplicationErrorStateMatcher implements ErrorStateMatcher 
 })
 export class HerbicideApplicationComponent implements OnInit {
 
+  @Output() tankMixesChanged = new EventEmitter<HerbicideTankMix[]>();
+
   // Summary Line section variables
-  amountUsed: number;
-  overallDilution: number;
-  overallApplicationRate: number;
   mixDeliveryRate: number;
 
   amountOfMixVerification = {
@@ -52,16 +51,12 @@ export class HerbicideApplicationComponent implements OnInit {
     required: true,
     positiveNumber: true
   };
+  amountUsedVerification = {
+    required: true,
+    positiveNumber: true
+  };
 
   deliveryRateFieldControl = new FormControl('', [
-    Validators.required,
-    Validators.min(0)
-  ]);
-  applicationRateFieldControl = new FormControl('', [
-    Validators.required,
-    Validators.min(0)
-  ]);
-  amountUsedFieldControl = new FormControl('', [
     Validators.required,
     Validators.min(0)
   ]);
@@ -94,6 +89,12 @@ export class HerbicideApplicationComponent implements OnInit {
       return this._tankMixesUsed;
   }
 
+  private notifyChangeEvent() {
+    if (this.tankMixesUsed && this.mode !== FormMode.View) {
+      this.tankMixesChanged.emit(this.tankMixesUsed);
+    }
+  }
+
   addEmptyTableRow() {
     this.showEmptyRow = true;
 
@@ -104,13 +105,10 @@ export class HerbicideApplicationComponent implements OnInit {
   }
 
   async prepareDropdownMenus() {
-    console.dir(`preparing herbicide dropdowns`);
     await this.codeTables.getHerbicideCodes().then((codes) => {
       this.herbicides = codes;
       this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(codes);
     });
-    console.dir(`herbicide dropdowns created`);
-    // this._dropdown.items = this.herbicideDropdowns;
   }
 
   removeHerbicide(h: HerbicideTankMix) {
@@ -137,18 +135,24 @@ export class HerbicideApplicationComponent implements OnInit {
     }
 
     // reset this flag - something has been entered in empty row
-      this.showEmptyRow = false;
+    this.showEmptyRow = false;
+
+    this.notifyChangeEvent();
   }
 
   applicationRateChanged(event: any, htm: HerbicideTankMix) {
-    if (this.applicationRateFieldControl.errors === null) {
-      htm.applicationRate = event;
-    }
+    htm.applicationRate = event;
+    this.notifyChangeEvent();
   }
 
   amountUsedChanged(event: any, htm: HerbicideTankMix) {
-    if (this.amountUsedFieldControl.errors === null) {
-      htm.amountUsed = event;
+    htm.amountUsed = event;
+    this.notifyChangeEvent();
+  }
+
+  deliveryRateChanged(event: any) {
+    if (this.deliveryRateFieldControl.errors === null) {
+      this.mixDeliveryRate = event;
     }
   }
 

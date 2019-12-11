@@ -19,11 +19,11 @@
                     <div class="container-fluid speciesTreatedCard">
                         <div class="row">
                             <div class="col-7">
-                                <p><b>{{ s.species.commonName }} ({{ s.species.species }} {{ s.species.genus }})</b></p>
+                                <p><b>{{ s.observationObject.species.commonName }} ({{ s.observationObject.species.species }} {{ s.observationObject.species.genus }})</b></p>
                             </div>
                             <div class="container col-5">
                                 <div class="row">
-                                    <app-field class="col-6" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.percentage"></app-field>
+                                    <app-field class="col-6" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.treatmentAreaCoverage" (valueChanged)="updatedAreaCoverage($event, s)"></app-field>
                                     <button class="btn button-empty col-3" (click)="moveBeingTreatedToNotTreated(s)">
                                             <mat-icon style="color: #CDCED2;">delete</mat-icon>
                                         </button>
@@ -44,7 +44,7 @@
                     <div class="container-fluid speciesNotTreatedCard">
                         <div class="row">
                             <div class="col-7">
-                                <p>{{ n.commonName }} ({{ n.species }} {{ n.genus }})</p>
+                                <p>{{ n.observationObject.species.commonName }} ({{ n.observationObject.species.species }} {{ n.observationObject.species.genus }})</p>
                             </div>
                             <div class="col-5">
                                 <div class="row" style="margin-left: auto;">
@@ -59,11 +59,11 @@
         <div *ngIf="!inViewMode" class="container-fluid addSpeciesCard">
             <div class="row col-12" style="display: inline-flex; margin-left: auto; margin-right: auto;">
                 <p>Is there an additional species in this area that is not shown above?</p>
-                <button class="btn addSpeciesButton" (click)="showAddQuickObservationModal()">Add Additional Species</button>
+                <button class="btn addSpeciesButton" (click)="addQuickObs = true">Add Additional Species</button>
             </div>
         </div>
     </div>
-
-    <app-add-quick-observation-modal *ngIf="showQuickObservationModal" [mode]="mode">
-    </app-add-quick-observation-modal>
 </div>
+
+<app-add-quick-observation-modal *ngIf="addQuickObs">
+</app-add-quick-observation-modal>

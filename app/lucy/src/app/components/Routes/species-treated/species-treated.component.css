@@ -95,3 +95,7 @@
     text-align: center;
     padding: 15pt;
 }
+
+app-add-quick-observation-modal {
+    opacity: 1;
+}
