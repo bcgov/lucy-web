@@ -68,6 +68,7 @@ import { AboutComponent } from './components/Routes/about/about.component';
 import { AdminToolsComponent } from './components/Routes/admin-tools/admin-tools.component';
 import { RouterService } from './services/router.service';
 import { AccessRequestResponseModalComponent} from './components/Routes/admin-tools/access-request-response-modal/access-request-response-modal.component';
+import { AddQuickObservationModalComponent } from './components/Utilities/add-quick-observation-modal/add-quick-observation-modal.component';
 import { UserCellComponent } from './components/Routes/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/Routes/admin-tools/request-cell/request-cell.component';
 import { AppBootService } from './services/bootstrap.service';
@@ -111,6 +112,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     UserInformationComponent,
     AdminToolsComponent,
     AccessRequestResponseModalComponent,
+    AddQuickObservationModalComponent,
     UserCellComponent,
     RequestCellComponent,
     UserAccessUpdatedModalComponent,
@@ -132,6 +134,9 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     ComputedFieldComponent,
     TableComponent,
     ToastComponent,
+  ],
+  entryComponents: [
+    AddQuickObservationModalComponent
   ],
   imports: [
     BrowserModule,

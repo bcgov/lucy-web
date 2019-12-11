@@ -15,7 +15,7 @@
  *
  * 	Created by Andrea Williams on 2019-12-09.
  */
-import { Component, OnInit, Input, Output, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, AfterViewInit, EventEmitter, ViewChild } from '@angular/core';
 import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, ObservationTypeCodes, SoilTextureCodes } from 'src/app/models';
 import { CodeTableService } from 'src/app/services/code-table.service';
@@ -42,6 +42,7 @@ export class AddQuickObservationModalComponent implements OnInit, AfterViewInit 
 
   private modalReference: NgbModalRef;
 
+  @Output() addQuickObservationModalEventEmitter = new EventEmitter<boolean>();
   @ViewChild('addQuickObservationModal') private content;
 
   constructor(private modalService: NgbModal, private codeTables: CodeTableService, private dropdowns: DropdownService) { }
@@ -66,7 +67,7 @@ export class AddQuickObservationModalComponent implements OnInit, AfterViewInit 
       await this.codeTables.getSoilTextureCodes()
         .then((codes) => {
             this.soilTextureDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
-        })
+        });
   }
 
   ngAfterViewInit(): void {
@@ -88,20 +89,12 @@ export class AddQuickObservationModalComponent implements OnInit, AfterViewInit 
     const ngbModalOptions: NgbModalOptions = {
       backdrop : 'static',
       keyboard : false,
-      ariaLabelledBy: 'alertModalTitle'
+      ariaLabelledBy: 'alertModalTitle',
     };
 
     if (!this.modalReference) {
       this.modalReference = this.modalService.open(this.content, ngbModalOptions);
     }
-  }
-
-   /**
-   * Create a delay
-   * @param ms milliseconds
-   */
-  private delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
 }
