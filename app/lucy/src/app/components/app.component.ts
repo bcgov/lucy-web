@@ -91,6 +91,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.temp_testHex();
+  }
+
+  temp_testInOut() {
     const first = this.coodrinateConvert.isInsideBC(-125.12345, 51.12345);
     const second = this.coodrinateConvert.isInsideBC(-151.21, 55.49);
     const third = this.coodrinateConvert.isInsideBC(-138.12, 48.9215);
@@ -100,7 +104,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('-151.21, 55.49 -> ' + second);
     console.log('-138.12, 48.9215 ->' + third);
     console.log('-123.0164, 48.7951 ->' + forth);
-  console.log('-123.0, 53.0 -> ' + fifth);
+    console.log('-123.0, 53.0 -> ' + fifth);
+  }
+
+  temp_testHex() {
+    const test_1 = this.coodrinateConvert.getHexId(-126.000000, 54.000000);
+    console.log('1 -> ' + test_1.target.BCHexID);
+    console.dir(test_1);
   }
 
   ngOnDestroy() {

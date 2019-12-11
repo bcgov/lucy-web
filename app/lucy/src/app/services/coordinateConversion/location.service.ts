@@ -34,6 +34,18 @@ export interface AlbersCoordinate {
   x: number;
   y: number;
 }
+
+export interface NeighborOffset {
+  offX: number;
+  offY: number;
+}
+
+export interface HexResult {
+  strataId: Number;
+  target: any;
+  neighbors: number[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -156,10 +168,10 @@ export class ConverterService {
 
     if ((m10 - m20) !== 0) {
       x50 = (b20 - b10) / (m10 - m20);
-      y50 = m10 * (x50 + b10);
+      y50 = m10 * x50 + b10;
     } else {
       x50 = 0;
-      y50 = m10 * (x50 + b10);
+      y50 = m10 * x50 + b10;
     }
     if (x10 === 0 || x20 === 0 || x30 === 0 || x40 === 0 || x50 === 0) {
       console.log("x10 is zero: " + (x10 === 0));
@@ -452,7 +464,7 @@ export class ConverterService {
 
   // MARK: HEX Calculation
 
-  public getHexId(latitude: number, longitude: number): any {
+  public getHexId(longitude: number, latitude: number): HexResult {
     // const e271 = 2.718282;
     // const k0 = 0.9996;
     // const k1 = 0.9992;
@@ -467,7 +479,7 @@ export class ConverterService {
     let gridID = 0;
     const hexagons: any[] = [];
     let target: any;
-    const target19: any[] = [];
+    const target7: any[] = [];
     // Center of the province
     const startX = -126;
     const startY = 54;
@@ -534,7 +546,7 @@ export class ConverterService {
           yAlb0: tempy,
           xLon0: newLatLong.longitude,
           yLat0: newLatLong.latitude,
-        })
+        });
       }
     }
 
@@ -583,7 +595,7 @@ export class ConverterService {
     for (let i = 1; i <= totalHEX; i++) {
       const hexagon = hexagons.find(item => item.hexID === i);
       const dxy = Math.pow((Math.pow((hexagon.xAlb0 - target.xAlb0), 2) + Math.pow((hexagon.yAlb0 - target.yAlb0), 2)), 0.5);
-      if (dxy < 230) {
+      if (dxy < 130) {
         hexagon.keep = 1;
       }
     }
@@ -595,7 +607,7 @@ export class ConverterService {
         index: i
       };
       if (hexagon.keep === 1) {
-        kk = kk + 1
+        kk = kk + 1;
         newTarget.targetID = kk;
         newTarget.xAlb0 = hexagon.xAlb0;
         newTarget.yAlb0 = hexagon.yAlb0;
@@ -635,7 +647,7 @@ export class ConverterService {
             case 3: {
               newTarget.xAlb3 = hexagon.xAlb0 + xC1;
               newTarget.yAlb3 = hexagon.yAlb0 + yC1;
-              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb3, newTarget.yAlb3)
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb3, newTarget.yAlb3);
               newTarget.xLon3 = temp1.longitude;
               newTarget.yLat3 = temp1.latitude;
               hexagon.xLon3 = temp1.longitude;
@@ -645,7 +657,7 @@ export class ConverterService {
             case 4: {
               newTarget.xAlb4 = hexagon.xAlb0 + xC1;
               newTarget.yAlb4 = hexagon.yAlb0 + yC1;
-              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb4, newTarget.yAlb4)
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb4, newTarget.yAlb4);
               newTarget.xLon4 = temp1.longitude;
               newTarget.yLat4 = temp1.latitude;
               hexagon.xLon4 = temp1.longitude;
@@ -655,7 +667,7 @@ export class ConverterService {
             case 5: {
               newTarget.xAlb5 = hexagon.xAlb0 + xC1;
               newTarget.yAlb5 = hexagon.yAlb0 + yC1;
-              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb5, newTarget.yAlb5)
+              const temp1 = this.albersToLatLongCoordinate(newTarget.xAlb5, newTarget.yAlb5);
               newTarget.xLon5 = temp1.longitude;
               newTarget.yLat5 = temp1.latitude;
               hexagon.xLon5 = temp1.longitude;
@@ -678,15 +690,15 @@ export class ConverterService {
           }
         }
       }
-      target19.push(newTarget);
+      target7.push(newTarget);
     }
     /* Part 3 Determine the StrataID of the raw within the hexagon */
-    for (let j = 1; j <= 19; j++) {
+    for (let j = 1; j <= 7; j++) {
       for (let i = 1; i <= 157; i++) {
-        const currentTarget19 = target19.find(item => item.index === j);
+        const currentTarget7 = target7.find(item => item.index === j);
         const hexaPT = hexPTS.find(item => item.index === i);
-        hexaPT.absX = currentTarget19.xAlb0 + hexaPT.offX;
-        hexaPT.absY = currentTarget19.yAlb0 + hexaPT.offY;
+        hexaPT.absX = currentTarget7.xAlb0 + hexaPT.offX;
+        hexaPT.absY = currentTarget7.yAlb0 + hexaPT.offY;
       }
     }
 
@@ -700,7 +712,7 @@ export class ConverterService {
     dxyOLD = 1000;
     let dxyID = 0;
     for (let i = 62; i <= 157; i++) {
-      const hexaPT = hexPTS.find(item => item.index == i);
+      const hexaPT = hexPTS.find(item => item.index === i);
 
       hexaPT.absX = target.xAlb0 + hexaPT.offX;
       hexaPT.absY = target.yAlb0 + hexaPT.offY;
@@ -712,13 +724,89 @@ export class ConverterService {
       }
     }
 
-    const hexPT = hexPTS.find(item => item.index == dxyID);
+    const hexPT = hexPTS.find(item => item.index === dxyID);
     const strataID = hexPT.ptID;
 
+    const neighborOffsets: NeighborOffset[] = [
+      {
+        offX: 0,
+        offY: 0,
+      },
+      {
+        offX: 60,
+        offY: 100,
+      },
+      {
+        offX: 100,
+        offY: 0,
+      },
+      {
+        offX: 60,
+        offY: -100,
+      },
+      {
+        offX: -60,
+        offY: -100,
+      },
+      {
+        offX: -100,
+        offY: 0,
+      },
+      {
+        offX: -60,
+        offY: 100,
+      },
+    ];
+
+    // Clean array so that only objects with a target id exist
+    const cleanTargets: any[] = [];
+    for(const item of target7) {
+      if (item.targetID !== undefined) {
+        cleanTargets.push(item);
+      }
+    }
+
+    const neighbors = this.getNeighbor(neighborOffsets, target, cleanTargets, []);
+
     return {
+      strataId: strataID,
       target: target,
-      strataID: strataID
+      neighbors: neighbors
     };
+  }
+
+  getNeighbor(offsets: NeighborOffset[], target: any, target7: any[], neighbors: number[]): number[] {
+    if (offsets.length < 1) {
+      return neighbors;
+    }
+
+    let dxy = 100;
+
+    const offset: NeighborOffset = offsets.shift();
+    const offX = offset.offX;
+    const offy = offset.offY;
+
+    let closestIndex = -1;
+    for (let i = 0; i < target7.length; i++) {
+      dxy = Math.pow((Math.pow((target7[i].xAlb0 - target.xAlb0 - offX), 2) + Math.pow((target7[i].yAlb0 - target.yAlb0 - offy), 2)), 0.5);
+      if (dxy < 50) {
+        closestIndex = i;
+      }
+    }
+
+    const final7: any = {};
+
+    final7.xAlb0 = target7[closestIndex].xAlb0;
+    final7.yAlb0 = target7[closestIndex].yAlb0;
+    final7.xLon0 = target7[closestIndex].xLon0;
+    final7.yLat0 = target7[closestIndex].yLat0;
+
+    let bchexID = (Math.round(final7.yLat0) * 10000 + Math.round((final7.yLat0 - Math.round(final7.yLat0)) * 10000));
+    bchexID = bchexID * 1000000;
+    bchexID = Math.round(bchexID + ((Math.round(-1 * final7.xLon0)) - 100) * 10000 + (-1 * final7.xLon0 - Math.round(-1 * final7.xLon0)) * 10000);
+
+    neighbors.push((bchexID));
+    return this.getNeighbor(offsets, target, target7, neighbors);
   }
 
   getHexRules(): any[] {
