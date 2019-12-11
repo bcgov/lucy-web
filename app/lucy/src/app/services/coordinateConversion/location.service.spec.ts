@@ -52,12 +52,12 @@ describe('ConverterService', () => {
         let success = 0;
         let fail = 0;
         for (const item of obj) {
-          const x = service.getHexId(item.latitude, item.longitude);
+          const x = service.getHexId(item.longitude, item.latitude);
           let passed = true;
           if (item.hexID != x.target.BCHexID) {
             passed = false;
           }
-          if (item.strataID != x.strataID) {
+          if (item.strataID != x.strataId) {
             passed = false;
           }
           if (!passed) {
@@ -66,7 +66,7 @@ describe('ConverterService', () => {
             console.log(`expected hexID: ${item.hexID}`);
             console.log(`received hexID: ${x.target.BCHexID}`);
             console.log(`expected strataID: ${item.strataID}`);
-            console.log(`received strataID: ${x.strataID}`);
+            console.log(`received strataID: ${x.strataId}`);
             // break;
           } else {
             success ++;
