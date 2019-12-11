@@ -109,7 +109,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   temp_testHex() {
     const test_1 = this.coodrinateConvert.getHexId(-126.000000, 54.000000);
-    console.log('1 -> ' + test_1.target.BCHexID);
+    console.log('1 -> ' + test_1.cc);
     console.dir(test_1);
   }
 

@@ -41,9 +41,13 @@ export interface NeighborOffset {
 }
 
 export interface HexResult {
-  strataId: Number;
-  target: any;
-  neighbors: number[];
+  cc: number;
+  ur: number;
+  cr: number;
+  lr: number;
+  ll: number;
+  cl: number;
+  ul: number;
 }
 
 @Injectable({
@@ -769,9 +773,13 @@ export class ConverterService {
     const neighbors = this.getNeighbor(neighborOffsets, target, cleanTargets, []);
 
     return {
-      strataId: strataID,
-      target: target,
-      neighbors: neighbors
+      cc: neighbors[0],
+      ur: neighbors[1],
+      cr: neighbors[2],
+      lr: neighbors[3],
+      ll: neighbors[4],
+      cl: neighbors[5],
+      ul: neighbors[6],
     };
   }
 
