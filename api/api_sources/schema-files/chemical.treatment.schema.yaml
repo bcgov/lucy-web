@@ -424,6 +424,7 @@ schemas:
             comment: 'Free-form comments added by chemical treatment provider'
             definition: VARCHAR(500) NULL
             meta: {}
+            required: false
             layout:
               header:
                 key: 'chemicalTreatment.additionalComments'
