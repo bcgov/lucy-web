@@ -120,6 +120,12 @@ export const commonTestSetupAction = async (): Promise<any> => {
     } else {
         await SharedDBManager.connect();
     }
+    // Set Certificate url to prod
+    // Check certificate url
+    // Test Certificate url
+    if (process.env.APP_CERTIFICATE_URL && process.env.APP_CERTIFICATE_URL_TEST &&  process.env.APP_CERTIFICATE_URL !== process.env.APP_CERTIFICATE_URL_TEST) {
+        process.env.APP_CERTIFICATE_URL = process.env.APP_CERTIFICATE_URL_TEST;
+    }
     return resp;
 };
 
