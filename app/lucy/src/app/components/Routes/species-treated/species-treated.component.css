@@ -6,6 +6,14 @@
     letter-spacing: 1pt;
 }
 
+.sub-section-title {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 22px;
+    margin-left: 2pt;
+}
+
 .speciesContainer {
     border-style: solid;
     border-radius: 4pt;

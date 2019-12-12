@@ -95,23 +95,34 @@ schemas:
                 - windSpeed
                 - windDirection
             ## -- group {Advance details}
+            ## HerbicideMix subsection is only viewable in Create mode
             - title:
                 key: ''
-                default: Herbicide And Application
+                default: ''
               fields: []
               style:
                 custom: {
                   formComponent: HerbicideMix
                 }
+            ## SpeciesTreated subsection is only viewable in Create mode    
             - title:
                 key: ''
-                default: Invasive Species to be treated at this location
+                default: ''
               fields:
                 - beingTreated
                 - notBeingTreated
               style: 
                 custom: {
                   formComponent: SpeciesTreated
+                }
+            ## TreatmentDetails subsection is only viewable in View mode
+            - title:
+                key: ''
+                default: ''
+              fields: []
+              style:
+                custom: {
+                  formComponent: TreatmentDetails
                 }
             ## -- group
         ## -- end Section
