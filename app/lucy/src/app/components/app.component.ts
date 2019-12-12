@@ -91,7 +91,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.temp_testHex();
+    this.temp_testInOut();
+    // this.temp_testHex();
   }
 
   temp_testInOut() {
