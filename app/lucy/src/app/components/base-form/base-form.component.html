@@ -171,11 +171,14 @@
                                     </div>
                                 </div>
                                 <div class="row" *ngIf="subSection.isCustom">
-                                    <div *ngIf="subSection.custom.formComponent === 'HerbicideMix'">
+                                    <div *ngIf="subSection.custom.formComponent === 'HerbicideMix' && !inReviewMode">
                                         <app-herbicide-application [mode]="mode" (tankMixesChanged)="tankMixesChanged($event)"></app-herbicide-application>
                                     </div>
-                                    <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated'">
+                                    <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated' && !inReviewMode">
                                         <app-species-treated [responseBody]="responseBody" [mode]="mode" (speciesTreatedChanged)="speciesTreatedChanged($event)"></app-species-treated>
+                                    </div>
+                                    <div *ngIf="subSection.custom.formComponent === 'TreatmentDetails' && inReviewMode">
+                                        <app-treatment-details [responseBody]="responseBody"></app-treatment-details>
                                     </div>
                                 </div>
                             </div>

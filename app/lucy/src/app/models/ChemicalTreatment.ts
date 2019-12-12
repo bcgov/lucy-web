@@ -25,3 +25,10 @@ export interface SpeciesObservedTreated {
     observation: number;
     treatmentAreaCoverage: number;
 }
+
+export interface SpeciesHerbicideSummary {
+    speciesName: string;
+    herbicideName: string;
+    amountUsed: number;
+    applicationRate: number;
+}

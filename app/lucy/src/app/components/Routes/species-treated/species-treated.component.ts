@@ -55,7 +55,7 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
               private dropdowns: DropdownService) { }
 
 
-  async ngOnInit() {
+  ngOnInit() {
   }
 
   async ngOnChanges(changes: SimpleChanges) {
