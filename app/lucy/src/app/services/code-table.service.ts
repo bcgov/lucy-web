@@ -156,6 +156,10 @@ export class CodeTableService {
     return [];
   }
 
+  public async getHerbicideWithId(id: number): Promise<HerbicideCodes> {
+    return this.herbicideCodes.filter(item => item.herbicide_id == id)[0];
+  }
+
   public async getDensityCodes(): Promise<SpeciesDensityCodes[]> {
     if (this.density && this.density.length > 0) {
       return this.density;

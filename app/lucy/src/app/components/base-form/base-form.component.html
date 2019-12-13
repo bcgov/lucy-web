@@ -177,8 +177,8 @@
                                     <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated' && !inReviewMode">
                                         <app-species-treated [responseBody]="responseBody" [mode]="mode" (speciesTreatedChanged)="speciesTreatedChanged($event)"></app-species-treated>
                                     </div>
-                                    <div *ngIf="subSection.custom.formComponent === 'TreatmentDetails' && inReviewMode">
-                                        <app-treatment-details [responseBody]="responseBody"></app-treatment-details>
+                                    <div *ngIf="subSection.custom.formComponent === 'TreatmentDetails' && inReviewMode" class="col-12">
+                                        <app-treatment-details [mode]="mode" [responseBody]="responseBody"></app-treatment-details>
                                     </div>
                                 </div>
                             </div>
