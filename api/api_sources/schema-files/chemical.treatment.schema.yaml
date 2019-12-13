@@ -125,6 +125,17 @@ schemas:
                   formComponent: TreatmentDetails
                 }
             ## -- group
+        ## Comments section
+        - title:
+            key: ''
+            default: 'Comments'
+          groups:
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - additionalComments
+              style: {}
         ## -- end Section
     # --
     ## -- computedFields
@@ -314,17 +325,6 @@ schemas:
           suffix: 'km/h'
           classes:
             - col-3
-      # additionalComments:
-      #   name: additional_comments
-      #   comment: Freeform text-area for user to provide additional comments
-      #   definition: VARCHAR(500) NULL
-      #   meta: {}
-      #   layout:
-      #     header:
-      #       key: 'comments'
-      #       default: 'Additional Comments'
-      #     classes:
-      #       - col-12
       ## Relation Column
       speciesAgency:
         name: 'species_agency_code_id'
