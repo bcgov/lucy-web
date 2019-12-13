@@ -84,6 +84,7 @@ import { AddEntryComponent } from './components/Routes/add-entry/add-entry.compo
 import { DatePickerComponent } from './components/Input/date-picker/date-picker.component';
 import { SpeciesTreatedComponent } from './components/Routes/species-treated/species-treated.component';
 import { HerbicideApplicationComponent } from './components/Routes/herbicide-application/herbicide-application.component';
+import { TreatmentDetailsComponent } from './components/Routes/treatment-details/treatment-details.component';
 import { InventoryComponent } from './components/Routes/inventory/inventory.component';
 import { ErrorComponent } from './components/Routes/error/error.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
@@ -123,6 +124,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     InventoryComponent,
     SpeciesTreatedComponent,
     HerbicideApplicationComponent,
+    TreatmentDetailsComponent,
     DatePickerComponent,
     MomentPipe,
     CheckboxComponent,
