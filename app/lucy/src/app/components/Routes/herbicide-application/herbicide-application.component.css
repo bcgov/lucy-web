@@ -39,3 +39,8 @@ input {
     border-right: none;
     border-left: none;
 }
+
+.thinOrangeDivider {
+    border: 1px solid #F3B229;
+    margin-top: -4pt;
+}

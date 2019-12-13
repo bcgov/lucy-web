@@ -1,14 +1,19 @@
+<hr class="thinOrangeDivider" />
+
 <div class="row sub-section-title">
     <p>Herbicide and Application</p>
 </div>
 
 <!-- Summary Line Section -->
-<div class="col-12">
-    <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="deliveryRateChanged($event)">
-    </app-field>
+<div class="row">
+    <div class="col-12">
+        <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="deliveryRateChanged($event)">
+        </app-field>
+    </div>
 </div>
 
-<div class="container-fluid herbicideContainer col-12">
+
+<div class="container-fluid herbicideContainer">
     <!-- Herbicide Selection Section -->
     <div class="row col-12">
         <label>Select Herbicides</label>
@@ -16,8 +21,10 @@
 
     <!-- View when zero herbicides selected -->
     <div class="row" *ngIf="tankMixesUsed.length == 0">
-        <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
-        </app-dropdown>
+        <div class="col-12">
+            <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
+            </app-dropdown>
+        </div>
     </div>
 
     <!-- View when 1+ herbicides selected -->

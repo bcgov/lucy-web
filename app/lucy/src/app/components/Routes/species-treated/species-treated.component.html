@@ -1,3 +1,5 @@
+<hr class="thinOrangeDivider" />
+
 <div class="container-fluid speciesContainer">
     <div class="row sub-section-title">
         <p>Invasive Species to be treated at this location</p>
@@ -59,9 +61,9 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="!inViewMode" class="container-fluid addSpeciesCard">
-            <div class="row col-12" style="display: inline-flex; margin-left: auto; margin-right: auto;">
-                <p>Is there an additional species in this area that is not shown above?</p>
+        <div *ngIf="!inViewMode" class="container-fluid add-species-card">
+            <div class="row add-species-card-content">
+                <span class="align-middle" style="margin-top: auto; margin-bottom: auto;">Is there an additional species in this area that is not shown above?</span>
                 <button class="btn addSpeciesButton" (click)="addQuickObs = true">Add Additional Species</button>
             </div>
         </div>

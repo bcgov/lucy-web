@@ -58,17 +58,23 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
-    if (changes.responseBody.currentValue.latitude !== undefined && changes.responseBody.currentValue.longitude !== undefined) {
-      const lat = changes.responseBody.currentValue.latitude;
-      const long = changes.responseBody.currentValue.longitude;
-      await this.fetchObservationsForLocation(lat, long);
-      for (const o of this.observations) {
-        this._speciesNotBeingTreated.push({observationObject: o, observation: o.observation_id, treatmentAreaCoverage: 0});
+  async ngOnChanges(change: SimpleChanges) {
+    if (change.responseBody.currentValue.latitude !== undefined && change.responseBody.currentValue.longitude !== undefined) {
+      const latChanged = change.responseBody.currentValue.latitude !== change.responseBody.previousValue.latitude;
+      const longChanged = change.responseBody.currentValue.longitude !== change.responseBody.previousValue.longitude;
+      if (latChanged || longChanged) {
+        console.dir(change);
+        const lat = change.responseBody.currentValue.latitude;
+        const long = change.responseBody.currentValue.longitude;
+        await this.fetchObservationsForLocation(lat, long);
+        for (const o of this.observations) {
+          this._speciesNotBeingTreated.push({observationObject: o, observation: o.observation_id, treatmentAreaCoverage: 0});
+        }
       }
     }
-    if (changes.responseBody.currentValue.mode !== undefined) {
-      if (changes.responseBody.currentValue.mode === FormMode.View) {
+
+    if (change.responseBody.currentValue.mode !== undefined) {
+      if (change.responseBody.currentValue.mode === FormMode.View) {
         this.inViewMode = true;
       } else {
         this.inViewMode = false;
@@ -90,6 +96,7 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   }
 
   set speciesBeingTreated(s: SpeciesObservedTreated[]) {
+    this.speciesBeingTreated = [];
     for (const elem of s) {
         this._speciesBeingTreated.push(elem);
     }
@@ -100,8 +107,9 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   }
 
   set speciesNotBeingTreated(s: SpeciesObservedTreated[]) {
+      this.speciesNotBeingTreated = [];
       for (const elem of s) {
-        this._speciesNotBeingTreated.push(elem);
+        this.speciesNotBeingTreated.push(elem);
       }
   }
 
