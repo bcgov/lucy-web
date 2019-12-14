@@ -291,4 +291,25 @@ export const copyKeyAndSubKeys = (key: string, source: any, destination: any, su
     destination[key] = { ...(destination[key] || {}), ...copy };
 };
 
+/**
+ * @description Create a query string from input object
+ * @param object input
+ */
+export const getHTTPReqQueryString = (input: {[key: string]: any}) => {
+    let result = '';
+    _.each(input, (val: any, k: string) => {
+        result = result + `${encodeURIComponent(k)}=${encodeURIComponent(val)}&`;
+    });
+    result = result.slice(0, -1);
+    return `?${result}`;
+};
+
+export const Key = (input: {[key: string]: any}): string => {
+    if (Object.keys(input).length > 0) {
+        return Object.keys(input)[0];
+    } else {
+        return '';
+    }
+};
+
 // -------------------------------

@@ -32,7 +32,8 @@ import {
     reverseCapitalize,
     valueAtKeyPath,
     copyKeyAndSubKeys,
-    capitalize
+    capitalize,
+    getHTTPReqQueryString
 } from './helpers.utilities';
 
 
@@ -140,5 +141,16 @@ describe('Test Helper/Utilities', () => {
     it('should capitalize string', () => {
         const string = 'helloWorld';
         expect(capitalize(string)).to.be.equal('HelloWorld');
+    });
+
+    it('should get url encoded string', () => {
+        const obj = {
+            x: 'x',
+            y: 'y',
+            z: '1.2',
+            p: 'ESPG:4236'
+        };
+        const r = getHTTPReqQueryString(obj);
+        expect(r).to.be.equal(`?x=x&y=y&z=1.2&p=ESPG%3A4236`);
     });
 });

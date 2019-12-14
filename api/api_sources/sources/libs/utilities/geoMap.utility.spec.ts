@@ -27,7 +27,7 @@
  * Imports
  */
 import { expect } from 'chai';
-import { GeoMapUtility, PointTuple, LocationTuple } from './geoMap.utility';
+import { GeoMapUtility, PointTuple, GeoLocation } from './geoMap.utility';
 
 describe('Test for Geo Map Utility', () => {
 
@@ -56,8 +56,32 @@ describe('Test for Geo Map Utility', () => {
     it('should convert to lat / lon', () => {
         const x = -13469658.39;
         const y = 6403092.288;
-        const r: LocationTuple = GeoMapUtility.webMercatorToLongitudeLatitude(x, y);
+        const r: GeoLocation = GeoMapUtility.webMercatorToLongitudeLatitude(x, y);
         expect(Math.round(r.longitude * 10000) / 10000).to.be.equal(-121.0000);
         expect(Math.round(r.latitude * 1000) / 1000).to.be.equal(49.7500);
+    });
+
+    it('should calculate distance between two geo location', () => {
+        const loc1: GeoLocation = {
+            latitude: 48.424578999999994,
+            longitude: -123.36466990000001
+        };
+        const loc2: GeoLocation = {
+            latitude: 48.450602,
+            longitude: -123.344242
+        };
+        const d = GeoMapUtility.distance(loc1, loc2, true);
+        expect(Math.round(d * 100) / 100).to.be.equal(3.26);
+    });
+
+    it('should covert lat/lon to BC Albers', () => {
+        const loc: GeoLocation = {
+            latitude: 48.424578999999994,
+            longitude: -123.36466990000001
+        };
+
+        const point: PointTuple = GeoMapUtility.longitudeLatitudeCoordinateToAlbers(loc.latitude, loc.longitude);
+        expect(Math.round(point.x * 100) / 100).to.be.equal(1195412.61);
+        expect(Math.round(point.y * 100) / 100).to.be.equal(382390.94);
     });
 });
