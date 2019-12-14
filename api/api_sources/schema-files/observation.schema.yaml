@@ -90,7 +90,7 @@ schemas:
         # End-Section
         - title: 
             key: '' 
-            default: Advance Data Element
+            default: Advanced Data Element
           groups:
             - title: 
                 key: 'indicators' 
@@ -442,7 +442,7 @@ schemas:
         layout:
           header:
             key: 'speciesAgency'
-            default: 'Complete Behalf of'
+            default: 'Completed on Behalf of'
           classes:
             - none
       soilTexture: 
