@@ -50,27 +50,30 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
   constructor(private loadingService: LoadingService,
               private observationService: ObservationService,
-              private modalService: NgbModal,
-              private codeTables: CodeTableService,
-              private dropdowns: DropdownService) { }
+              private modalService: NgbModal) { }
 
 
   ngOnInit() {
   }
 
   async ngOnChanges(change: SimpleChanges) {
+    if (change.responseBody.currentValue === change.responseBody.previousValue) {
+      return;
+    }
     if (change.responseBody.currentValue.latitude !== undefined && change.responseBody.currentValue.longitude !== undefined) {
-      const latChanged = change.responseBody.currentValue.latitude !== change.responseBody.previousValue.latitude;
-      const longChanged = change.responseBody.currentValue.longitude !== change.responseBody.previousValue.longitude;
-      if (latChanged || longChanged) {
-        console.dir(change);
-        const lat = change.responseBody.currentValue.latitude;
-        const long = change.responseBody.currentValue.longitude;
-        await this.fetchObservationsForLocation(lat, long);
+      const lat = change.responseBody.currentValue.latitude;
+      const long = change.responseBody.currentValue.longitude;
+      await this.fetchObservationsForLocation(lat, long)
+      .then(() => {
         for (const o of this.observations) {
-          this._speciesNotBeingTreated.push({observationObject: o, observation: o.observation_id, treatmentAreaCoverage: 0});
+          const treatedIndex = this.indexOfSpeciesInSpeciesBeingTreated(o.species);
+          const notTreatedIndex = this.indexOfSpeciesInSpeciesNotBeingTreated(o.species);
+          // check to make sure that species aren't being duplicated in species lists
+          if (treatedIndex === -1 && notTreatedIndex === -1) {
+            this._speciesNotBeingTreated.push({observationObject: o, observation: o.observation_id, treatmentAreaCoverage: 0});
+          }
         }
-      }
+      });
     }
 
     if (change.responseBody.currentValue.mode !== undefined) {
@@ -117,7 +120,7 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       return this._speciesNotBeingTreated;
   }
 
-  moveNotTreatedToBeingTreated(s: SpeciesObservedTreated) {
+  moveNotTreatedToBeingTreated(s: SpeciesObservedTreated, speciesCard: HTMLElement) {
     // remove s object from speciesNotBeingTreated
     let index = this.speciesNotBeingTreated.indexOf(s);
     this.speciesNotBeingTreated.splice(index, 1);
@@ -130,11 +133,12 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
     this._speciesBeingTreated.push(s);
 
+    $(speciesCard).addClass('animated bounceOutUp');
 
     this.notifyChangeEvent();
   }
 
-  moveBeingTreatedToNotTreated(s: SpeciesObservedTreated) {
+  moveBeingTreatedToNotTreated(s: SpeciesObservedTreated, speciesCard: HTMLElement) {
     // remove s object from speciesBeingTreated
     let index = this.speciesBeingTreated.indexOf(s);
     this.speciesBeingTreated.splice(index, 1);
@@ -147,6 +151,8 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
     s.treatmentAreaCoverage = 0;
     this._speciesNotBeingTreated.push(s);
+
+    $(speciesCard).addClass('animated bounceOutDown').add('style="animation-duration = 1s"');
 
     this.notifyChangeEvent();
   }
@@ -163,20 +169,12 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   }
 
   indexOfSpeciesInSpeciesBeingTreated(sp: InvasivePlantSpecies): number {
-    this.speciesBeingTreated.forEach((item, index) => {
-      if (item.observationObject.species === sp) {
-        return index;
-      }
-    });
-    return -1;
+    const speciesInArray = (element) => element.observationObject.species.species_id === sp.species_id;
+    return this.speciesBeingTreated.findIndex(speciesInArray);
   }
 
   indexOfSpeciesInSpeciesNotBeingTreated(sp: InvasivePlantSpecies): number {
-    this.speciesNotBeingTreated.forEach((item, index) => {
-      if (item.observationObject.species === sp) {
-        return index;
-      }
-    });
-    return -1;
+    const speciesInArray = (element) => element.observationObject.species.species_id === sp.species_id;
+    return this.speciesNotBeingTreated.findIndex(speciesInArray);
   }
 }

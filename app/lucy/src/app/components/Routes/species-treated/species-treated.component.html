@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div *ngFor="let s of speciesBeingTreated" class="col-6">
-                    <div class="container-fluid speciesTreatedCard">
+                    <div class="container-fluid speciesTreatedCard" id="speciesCard">
                         <div class="row">
                             <div class="col-7">
                                 <p><b>{{ s.observationObject.species.commonName }} ({{ s.observationObject.species.species }} {{ s.observationObject.species.genus }})</b></p>
@@ -29,7 +29,7 @@
                             <div class="container col-5">
                                 <div class="row">
                                     <app-field class="col-6" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.treatmentAreaCoverage" (valueChanged)="updatedAreaCoverage($event, s)"></app-field>
-                                    <button class="btn button-empty col-3" (click)="moveBeingTreatedToNotTreated(s)">
+                                    <button class="btn button-empty col-3" (click)="moveBeingTreatedToNotTreated(s, speciesCard)">
                                             <mat-icon style="color: #CDCED2;">delete</mat-icon>
                                         </button>
                                 </div>
@@ -46,14 +46,14 @@
             <hr />
             <div class="row">
                 <div *ngFor="let n of speciesNotBeingTreated" class="col-6">
-                    <div class="container-fluid speciesNotTreatedCard">
+                    <div class="container-fluid speciesNotTreatedCard" id="speciesCard">
                         <div class="row">
                             <div class="col-7">
                                 <p>{{ n.observationObject.species.commonName }} ({{ n.observationObject.species.species }} {{ n.observationObject.species.genus }})</p>
                             </div>
                             <div class="col-5">
                                 <div class="row" style="margin-left: auto;">
-                                    <button class="btn button-fill treatButton" (click)="moveNotTreatedToBeingTreated(n)">Treat</button>
+                                    <button class="btn button-fill treatButton" (click)="moveNotTreatedToBeingTreated(n, speciesCard)">Treat</button>
                                 </div>
                             </div>
                         </div>
