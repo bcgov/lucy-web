@@ -70,7 +70,8 @@ export class LocationRouteController extends RouteController {
             check('latitude').isNumeric(),
             check('longitude').isNumeric(),
             check('distance').isNumeric().optional()
-        ]
+        ],
+        secure: true
     })
     get wells(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: codes`, async (d: any, req: any) => [200, await this.fetchWellsData(req.query)]);
