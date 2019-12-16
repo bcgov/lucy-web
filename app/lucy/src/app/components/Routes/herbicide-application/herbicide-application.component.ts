@@ -5,10 +5,8 @@ import { FormMode } from 'src/app/models';
 import { CodeTableService } from 'src/app/services/code-table.service';
 import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
 import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
-import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
-import * as faker from 'faker';
 import { ErrorStateMatcher } from '@angular/material';
 import { DropdownComponent } from '../../Input/dropdown/dropdown.component';
 
@@ -38,10 +36,9 @@ export class HerbicideApplicationComponent implements OnInit {
 
   // Herbicide Selection section variables
   _tankMixesUsed: HerbicideTankMix[] = [];
-  herbicides: HerbicideCodes[];
-  herbicideDropdowns: DropdownObject[];
+  unusedHerbicides: HerbicideCodes[]; // dynamic list of unused herbicides (used to create dropdown menu)
+  herbicideDropdowns: DropdownObject[]; // dynamic list of dropdown objects built from this.unusedHerbicides
   showEmptyRow = false;
-  _dropdown: DropdownComponent;
 
   applicationRateVerification = {
     required: true,
@@ -72,7 +69,7 @@ export class HerbicideApplicationComponent implements OnInit {
     this._mode = mode;
   }
 
-  constructor(private codeTables: CodeTableService, private validation: ValidationService, private formService: FormService, private dropdownService: DropdownService) { }
+  constructor(private codeTables: CodeTableService, private formService: FormService, private dropdownService: DropdownService) { }
 
 
   ngOnInit() {
@@ -106,8 +103,8 @@ export class HerbicideApplicationComponent implements OnInit {
 
   async prepareDropdownMenus() {
     await this.codeTables.getHerbicideCodes().then((codes) => {
-      this.herbicides = codes;
-      this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(codes);
+      this.unusedHerbicides = codes;
+      this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     });
   }
 
@@ -116,8 +113,20 @@ export class HerbicideApplicationComponent implements OnInit {
       // remove the deleted tank mix from the array of tankMixes
       const index = this.tankMixesUsed.findIndex((element) => element === h);
       this.tankMixesUsed.splice(index, 1);
+    }
 
-      this._dropdown.filteredItems.push(this.dropdownService.createDropdownObjectsFrom([h.herbicide])[0]);
+    // return the deleted herbicide to the list of unusedHerbicides
+    if (!this.unusedHerbicides.includes(h.herbicide)) {
+      this.unusedHerbicides.push(h.herbicide);
+
+      // sort unusedHerbicides list alphabetically by compositeName
+      const sortAlpha = (h1: HerbicideCodes, h2: HerbicideCodes) => {
+        if (h1.compositeName > h2.compositeName) { return 1; }
+        if (h1.compositeName < h2.compositeName) { return -1; }
+        return 0;
+      }
+      this.unusedHerbicides.sort(sortAlpha);
+      this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     }
   }
 
@@ -127,11 +136,13 @@ export class HerbicideApplicationComponent implements OnInit {
     if (!this.tankMixesUsedContainsHerbicide(herbicideCodeSelected)) {
       const htm = this.createTankMixForHerbicide(herbicideCodeSelected);
       this.tankMixesUsed.push(htm);
+    }
 
-      const index = this._dropdown.filteredItems.findIndex((element) => element === herbicideCodeSelected);
-      if (index > 0) {
-        this._dropdown.filteredItems.splice(index, 1);
-      }
+    // remove the selected herbicide from the list of unusedHerbicides so it can't be selected again in dropdowns
+    if (this.unusedHerbicides.includes(herbicideCodeSelected)) {
+      const index = this.unusedHerbicides.findIndex((element) => element === herbicideCodeSelected);
+      this.unusedHerbicides.splice(index, 1);
+      this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     }
 
     // reset this flag - something has been entered in empty row
