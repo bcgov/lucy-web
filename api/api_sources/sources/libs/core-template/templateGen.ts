@@ -147,7 +147,7 @@ export class TemplateResolver {
     }
 
     static resolveTemplate(template: string, tokenResolver: TemplateTokenResolver, logger: TemplateLogger = DefaultLogger): string {
-        let result = template;
+        let result = '';
         // Resolve all repeat
         result = TemplateResolver.resolveRepeatMarker(template, tokenResolver, logger);
 
