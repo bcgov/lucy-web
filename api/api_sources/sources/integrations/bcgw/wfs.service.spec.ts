@@ -33,7 +33,7 @@ describe('Test for WFSService', () => {
         should().exist(r.id);
         should().exist(r.geometry);
         should().exist(r.properties);
-        should().exist(r.distance);
+        should().exist(r.properties.distance);
     });
 });
 // ---------------------------

@@ -123,8 +123,8 @@ export class WFSService {
                 }
                 count++;
             }
-            result.features[index].distance = gap;
-            result.features[index].indexOnFeatureSet = index;
+            result.features[index].properties.distance = gap;
+            result.features[index].properties.indexOnFeatureSet = index;
             return result.features[index];
         } else {
             logger.error(`WFSService: getNearest: No feature return form url ${baseURL}`);
