@@ -23,7 +23,7 @@
 /**
  * Tests for location  route
  */
-import { should, expect } from 'chai';
+import { should } from 'chai';
 import { SharedExpressApp } from '../../initializers';
 import {
     verifySuccessBody,
@@ -52,6 +52,7 @@ describe('Test for location route', () => {
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.get,
             url: '/api/location/gwells-data',
+            auth: AuthType.viewer,
             expect: 200
         }).query(query).then(resp => {
             verifySuccessBody(resp.body, async (r: any) => {
@@ -71,7 +72,8 @@ describe('Test for location route', () => {
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.get,
             url: '/api/location/gwells-data',
-            expect: 422
+            expect: 422,
+            auth: AuthType.viewer,
         }).query(query).then(resp => {
             verifyErrorBody(resp.body);
         });
@@ -84,7 +86,8 @@ describe('Test for location route', () => {
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.get,
             url: '/api/location/gwells-data',
-            expect: 422
+            expect: 422,
+            auth: AuthType.viewer,
         }).query(query).then(resp => {
             verifyErrorBody(resp.body);
         });
@@ -98,7 +101,22 @@ describe('Test for location route', () => {
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.get,
             url: '/api/location/gwells-data',
-            expect: 422
+            expect: 422,
+            auth: AuthType.viewer,
+        }).query(query).then(resp => {
+            verifyErrorBody(resp.body);
+        });
+    });
+
+    it('should not return well data for unauthorized user', async () => {
+        const query: any = {
+            latitude: 48.424578999999994,
+            longitude: -123.36466990000001
+        };
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/location/gwells-data',
+            expect: 401
         }).query(query).then(resp => {
             verifyErrorBody(resp.body);
         });

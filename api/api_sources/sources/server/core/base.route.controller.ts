@@ -96,6 +96,7 @@ export interface RouteDescription {
     index?: number;
     method: HTTPMethod;
     responses?: {[key: number]: APIResponse};
+    secure?: boolean;
 }
 
 
@@ -184,7 +185,10 @@ export class RouteController {
                 const endPoint: string = config.description.path.split('#')[1];
                 const validators = config.description.validators ? config.description.validators() : [];
                 const middleware = config.description.middleware ? config.description.middleware() : [];
-                const allMiddleware = this.combineValidator(middleware, validators);
+                let allMiddleware = this.combineValidator(middleware, validators);
+                if (config.description.secure) {
+                    allMiddleware = [this.authHandle, ...allMiddleware];
+                }
                 this.router[config.description.method](endPoint, allMiddleware, this[config.handler]);
             } catch (excp) {
                 this.logger.error(`Exception  while applying route config: ${excp}`);
