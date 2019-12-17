@@ -58,7 +58,6 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
 
     constructor() {
         super();
-        this.applyRouteConfig();
     }
 
     get versionString(): string {
