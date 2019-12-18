@@ -189,12 +189,14 @@ describe('Test template gen', () => {
                             {
                                 type: 'number',
                                 name: 'p1',
-                                des: 'Value to store p1'
+                                des: 'Value to store p1',
                             },
                             {
                                 type: 'string',
                                 name: 'p2',
-                                des: 'Value to store p2'
+                                des: 'Value to store p2',
+                                comment: 'Line commented with if'
+
                             }
                         ]
                     },
