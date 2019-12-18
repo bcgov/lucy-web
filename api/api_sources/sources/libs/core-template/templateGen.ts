@@ -127,9 +127,9 @@ export class TemplateResolver {
             }
             returnLines = ``;
             const itemMarker: RegExp = new RegExp(`#\{${dataMarker}[.a-zA-Z0-9]*\}`, 'gi');
-            const itemIfMarker: RegExp = new RegExp(`#if\(${dataMarker}[.a-zA-Z0-9]*\)\s*\[(.*)\]`, 'gi');
             // Now check
             for (const dat of dataArray) {
+                // Resolve data specific #if(*) marker
                 const insideIfResolver: TemplateTokenResolver = {
                     getValueFor: (insideKeyPath: string) => {
                         const split = insideKeyPath.split('.');
@@ -142,6 +142,7 @@ export class TemplateResolver {
                     }
                 };
                 const contentWithoutIf = this.resolveIfMarker(content, insideIfResolver, logger);
+                // Resolve other data markers
                 const updatedContent = contentWithoutIf.replace(itemMarker, (dataSub: string, ...values: any[]) => {
                     const newMatch = dataSub.match(/[.a-zA-Z0-9]+/gi) || [];
                     if (newMatch.length === 0) {
