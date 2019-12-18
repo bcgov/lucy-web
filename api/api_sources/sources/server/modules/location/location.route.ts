@@ -31,8 +31,7 @@ import { check } from 'express-validator';
 import {
     RouteController,
     Route,
-    HTTPMethod,
-    RouteHandler
+    HTTPMethod
 } from '../../core';
 import { WFSService, BCGWFeatures, BCGWConst } from '../../../integrations';
 /**
@@ -51,7 +50,6 @@ export class LocationRouteController extends RouteController {
 
     constructor() {
         super();
-        this.applyRouteConfig();
     }
 
     @Route({
@@ -73,8 +71,8 @@ export class LocationRouteController extends RouteController {
         ],
         secure: true
     })
-    get wells(): RouteHandler {
-        return this.routeConfig<any>(`${this.className}: codes`, async (d: any, req: any) => [200, await this.fetchWellsData(req.query)]);
+    async wells(req: any) {
+        return [200, await this.fetchWellsData(req.query)];
     }
 
     async fetchWellsData(query: any) {
@@ -84,5 +82,6 @@ export class LocationRouteController extends RouteController {
         assert(longitude && latitude, `fetchWellsData: Invalid location`);
         return await WFSService.shared.getNearest(BCGWFeatures.well, {latitude: latitude, longitude: longitude}, distance);
     }
+
 }
 // ----------------------------------

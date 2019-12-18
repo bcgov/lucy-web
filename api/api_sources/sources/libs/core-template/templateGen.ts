@@ -1,7 +1,7 @@
 /**
  * Imports
  */
-import { unWrap } from '../utilities';
+import { unWrap, valueAtKeyPath, arrayToString } from '../utilities';
 
  /**
   * Exports: Regular Expression
@@ -55,7 +55,7 @@ export class TemplateResolver {
     }
 
     static resolveIfMarker(line: string, source: TemplateTokenResolver, logger: TemplateLogger = DefaultLogger): string {
-        return line.replace(IfMarker, (m, ...args: any[]) => {
+        return line.replace(IfMarker, (m: string, ...args: any[]) => {
             logger.log(`${m} => ${args}`);
             if (args.length > 0) {
                 // Get Condition
@@ -129,7 +129,21 @@ export class TemplateResolver {
             const itemMarker: RegExp = new RegExp(`#\{${dataMarker}[.a-zA-Z0-9]*\}`, 'gi');
             // Now check
             for (const dat of dataArray) {
-                const updatedContent = content.replace(itemMarker, (dataSub, ...values: any[]) => {
+                // Resolve data specific #if(*) marker
+                const insideIfResolver: TemplateTokenResolver = {
+                    getValueFor: (insideKeyPath: string) => {
+                        const split = insideKeyPath.split('.');
+                        if (split.length === 1) {
+                            return true;
+                        }
+                        split.shift();
+                        const newKey = arrayToString(split, '.');
+                        return valueAtKeyPath(dat, newKey);
+                    }
+                };
+                const contentWithoutIf = this.resolveIfMarker(content, insideIfResolver, logger);
+                // Resolve other data markers
+                const updatedContent = contentWithoutIf.replace(itemMarker, (dataSub: string, ...values: any[]) => {
                     const newMatch = dataSub.match(/[.a-zA-Z0-9]+/gi) || [];
                     if (newMatch.length === 0) {
                         return `${dat}`;
