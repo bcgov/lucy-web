@@ -2,6 +2,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ObservationService } from 'src/app/services/observation.service';
 import { CodeTableService } from 'src/app/services/code-table.service';
+import { FormService } from 'src/app/services/form/form.service';
+import { FormMode } from 'src/app/models';
 import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated } from 'src/app/models/ChemicalTreatment';
 
 @Component({
@@ -19,13 +21,26 @@ export class TreatmentDetailsComponent implements OnInit {
       this._responseBody = responseBody;
     }
 
+    ///// Form Mode
+    private _mode: FormMode = FormMode.View;
+    get mode(): FormMode {
+      return this._mode;
+    }
+    @Input() set mode(mode: FormMode) {
+      this._mode = mode;
+      if (this.mode === FormMode.View) {
+        this.inViewMode = true;
+      } else { this.inViewMode = false; }
+    }
+
     speciesHerbicides: SpeciesHerbicideSummary[] = [];
+    inViewMode: boolean;
+    config: any; 
 
-    readonly = true;
+    constructor(private observationService: ObservationService, private codeTables: CodeTableService, private formService: FormService) {}
 
-    constructor(private observationService: ObservationService, private codeTables: CodeTableService) {}
-
-    ngOnInit() {
+    async ngOnInit() {
+        this.config = await this.formService.getFormConfigForCurrentRoute();
         this.compileSpeciesHerbicidesList();
     }
 
@@ -48,4 +63,15 @@ export class TreatmentDetailsComponent implements OnInit {
             });
         });
     }
+
+    getTankMixesForTreatment(): HerbicideTankMix[] {
+        let htm: HerbicideTankMix[] = [];
+        const treatmentId = this.config.objectId;
+        const treatmentKey = this.config.idKey;
+        return htm;
+    }
+
+    // getSpeciesObservationsForTreatment(): SpeciesObservedTreated[] {
+
+    // }
 }

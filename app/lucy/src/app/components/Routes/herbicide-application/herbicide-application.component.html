@@ -1,87 +1,89 @@
 <hr class="thinOrangeDivider" />
 
-<div class="row sub-section-title">
-    <p>Herbicide and Application</p>
-</div>
-
-<!-- Summary Line Section -->
-<div class="row">
-    <div class="col-12">
-        <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="deliveryRateChanged($event)">
-        </app-field>
-    </div>
-</div>
-
-
-<div class="container-fluid herbicideContainer">
-    <!-- Herbicide Selection Section -->
-    <div class="row col-12">
-        <label>Select Herbicides</label>
+<div *ngIf=!inViewMode>
+    <div class="row sub-section-title">
+        <p>Herbicide and Application</p>
     </div>
 
-    <!-- View when zero herbicides selected -->
-    <div class="row" *ngIf="tankMixesUsed.length == 0">
+    <!-- Summary Line Section -->
+    <div class="row">
         <div class="col-12">
-            <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
-            </app-dropdown>
+            <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="deliveryRateChanged($event)">
+            </app-field>
         </div>
     </div>
 
-    <!-- View when 1+ herbicides selected -->
-    <div class="col-12 container" *ngIf="tankMixesUsed.length > 0">
-        <div class="row labelsRow">
-            <div class="col-5">
-                <label>Select Herbicide(s) to add to treatment:</label>
-            </div>
-            <div class="col-3">
-                <label>Application Rate</label>
-            </div>
-            <div class="col-3">
-                <label>Amount of Chemical Used</label>
+
+    <div class="container-fluid herbicideContainer">
+        <!-- Herbicide Selection Section -->
+        <div class="row col-12">
+            <label>Select Herbicides</label>
+        </div>
+
+        <!-- View when zero herbicides selected -->
+        <div class="row" *ngIf="tankMixesUsed.length == 0">
+            <div class="col-12">
+                <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
+                </app-dropdown>
             </div>
         </div>
-        <div class="container">
-            <div *ngFor="let h of tankMixesUsed" class="row full-width animated fadeInLeft animationDuration">
+
+        <!-- View when 1+ herbicides selected -->
+        <div class="col-12 container" *ngIf="tankMixesUsed.length > 0">
+            <div class="row labelsRow">
                 <div class="col-5">
-                    <app-dropdown [mode]="mode" [fieldHeader]="h.displayLabel" (selectionChanged)="herbicideChanged($event)">{{ dropdown }}
-                    </app-dropdown>
+                    <label>Select Herbicide(s) to add to treatment:</label>
                 </div>
                 <div class="col-3">
-                    <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)"></app-field>
+                    <label>Application Rate</label>
                 </div>
                 <div class="col-3">
-                    <app-field [mode]="mode" [verification]="amountUsedVerification" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
-                </div>
-                <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
-                    <button class="btn button-empty" (click)="removeHerbicide(h)">
-                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
-                        </button>
+                    <label>Amount of Chemical Used</label>
                 </div>
             </div>
-            <div *ngIf="showEmptyRow" style="display: inline-flex;">
-                <div class="row full-width animated fadeIn animationDuration">
+            <div class="container">
+                <div *ngFor="let h of tankMixesUsed" class="row full-width animated fadeInLeft animationDuration">
                     <div class="col-5">
-                        <app-dropdown [mode]="mode" [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)"></app-dropdown>
+                        <app-dropdown [mode]="mode" [fieldHeader]="h.displayLabel" (selectionChanged)="herbicideChanged($event)">{{ dropdown }}
+                        </app-dropdown>
                     </div>
                     <div class="col-3">
-                        <app-field type="number" [mode]="mode" suffix="L/ha"></app-field>
+                        <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)"></app-field>
                     </div>
                     <div class="col-3">
-                        <app-field type="number" [mode]="mode" suffix="L"></app-field>
+                        <app-field [mode]="mode" [verification]="amountUsedVerification" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
                     </div>
                     <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
-                        <button class="btn button-empty" (click)="removeEmptyRow()">
+                        <button class="btn button-empty" (click)="removeHerbicide(h)">
+                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="showEmptyRow" style="display: inline-flex;">
+                    <div class="row full-width animated fadeIn animationDuration">
+                        <div class="col-5">
+                            <app-dropdown [mode]="mode" [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)"></app-dropdown>
+                        </div>
+                        <div class="col-3">
+                            <app-field type="number" [mode]="mode" suffix="L/ha"></app-field>
+                        </div>
+                        <div class="col-3">
+                            <app-field type="number" [mode]="mode" suffix="L"></app-field>
+                        </div>
+                        <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
+                            <button class="btn button-empty" (click)="removeEmptyRow()">
                                             <mat-icon style="color: #CDCED2;">delete</mat-icon>
                                         </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div *ngIf="tankMixesUsed.length > 0 && !showEmptyRow" class="container col-6">
-        <div class="row">
-            <button class="btn addHerbicideButton" (click)="addEmptyTableRow()"><strong>Add Additional Herbicide</strong></button>
+        <div *ngIf="tankMixesUsed.length > 0 && !showEmptyRow" class="container col-6">
+            <div class="row">
+                <button class="btn addHerbicideButton" (click)="addEmptyTableRow()"><strong>Add Additional Herbicide</strong></button>
+            </div>
         </div>
     </div>
 </div>

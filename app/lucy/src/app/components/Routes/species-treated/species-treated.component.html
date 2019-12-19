@@ -1,6 +1,6 @@
-<hr class="thinOrangeDivider" />
+<hr class="thinOrangeDivider" *ngIf="!inViewMode" />
 
-<div class="container-fluid speciesContainer">
+<div class="container-fluid speciesContainer" *ngIf="!inViewMode">
     <div class="row sub-section-title">
         <p>Invasive Species to be treated at this location</p>
     </div>
@@ -20,19 +20,15 @@
                         <span class="align-middle">Select a species below to add it to this chemical treatment record</span>
                     </div>
                 </div>
-                <div *ngFor="let s of speciesBeingTreated" class="col-6">
-                    <div class="container-fluid speciesTreatedCard" id="speciesCard">
-                        <div class="row">
-                            <div class="col-7">
-                                <p><b>{{ s.observationObject.species.commonName }} ({{ s.observationObject.species.species }} {{ s.observationObject.species.genus }})</b></p>
-                            </div>
-                            <div class="container col-5">
-                                <div class="row">
-                                    <app-field class="col-6" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.treatmentAreaCoverage" (valueChanged)="updatedAreaCoverage($event, s)"></app-field>
-                                    <button class="btn button-empty col-3" (click)="moveBeingTreatedToNotTreated(s, speciesCard)">
-                                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
-                                        </button>
-                                </div>
+                <div *ngFor="let s of speciesBeingTreated" class="col-md-6 col-sm-12">
+                    <div [id]="s.observationObject.species.commonName" class="card speciesTreatedCard container animated animation-config">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="card-title col-7">{{ s.observationObject.species.commonName }} ({{ s.observationObject.species.species }} {{ s.observationObject.species.genus }})</div>
+                                <app-field class="card-text col-4" id="percentageField" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.treatmentAreaCoverage" (valueChanged)="updatedAreaCoverage($event, s)"></app-field>
+                                <button class="card-link btn button-empty col-1" id="deleteButton" (click)="moveBeingTreatedToNotTreated(s)">
+                                        <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                                    </button>
                             </div>
                         </div>
                     </div>
@@ -45,15 +41,15 @@
             <label class="speciesTreatedLabel">Not Being Treated</label>
             <hr />
             <div class="row">
-                <div *ngFor="let n of speciesNotBeingTreated" class="col-6">
-                    <div class="container-fluid speciesNotTreatedCard" id="speciesCard">
-                        <div class="row">
-                            <div class="col-7">
-                                <p>{{ n.observationObject.species.commonName }} ({{ n.observationObject.species.species }} {{ n.observationObject.species.genus }})</p>
-                            </div>
-                            <div class="col-5">
-                                <div class="row" style="margin-left: auto;">
-                                    <button class="btn button-fill treatButton" (click)="moveNotTreatedToBeingTreated(n, speciesCard)">Treat</button>
+                <div *ngFor="let n of speciesNotBeingTreated" class="col-md-6 col-sm-12 align-items-stretch">
+                    <div [id]="n.observationObject.species.commonName" class="card speciesNotTreatedCard container animated animation-config">
+                        <div class="card-body">
+                            <div class="row align-items-center justify-content-between">
+                                <div class="card-title col-7">
+                                    <p>{{ n.observationObject.species.commonName }} ({{ n.observationObject.species.species }} {{ n.observationObject.species.genus }})</p>
+                                </div>
+                                <div class="col-5">
+                                    <button class="btn button-fill treatButton" (click)="moveNotTreatedToBeingTreated(n)">Treat</button>
                                 </div>
                             </div>
                         </div>
@@ -70,5 +66,5 @@
     </div>
 </div>
 
-<app-add-quick-observation-modal *ngIf="addQuickObs">
+<app-add-quick-observation-modal *ngIf="addQuickObs && !inViewMode">
 </app-add-quick-observation-modal>
