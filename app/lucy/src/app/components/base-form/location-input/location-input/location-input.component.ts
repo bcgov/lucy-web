@@ -23,6 +23,16 @@ import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 
+interface SpaceGeomData {
+  geometry: any;
+  hexId?: string;
+  subHexId?: string;
+  inputGeometry?: object;
+  latitude: number;
+  longitude: number;
+  metaData?: string;
+}
+
 @Component({
   selector: 'app-location-input',
   templateUrl: './location-input.component.html',
@@ -66,15 +76,19 @@ export class LocationInputComponent implements OnInit {
     this._object = { ...object};
     let latExists = false;
     let longExists = false;
-
+    console.dir(object);
     if (this.object && this.object.latitude && this.object.latitude.value) {
-      // console.log(`setting ${this.object.latitude.value}`);
       this.lat = `${this.object.latitude.value}`;
       latExists = true;
     }
     if (this.object && this.object.longitude && this.object.longitude.value) {
-      // console.log(`setting ${this.object.longitude.value}`);
       this.long = `${this.object.longitude.value}`;
+      longExists = true;
+    }
+    if (this.object && this.object.isSpaceGeom && this.object.spaceGeom.value) {
+      this.lat = this.object.spaceGeom.value.latitude;
+      this.long = this.object.spaceGeom.value.longitude;
+      latExists = true;
       longExists = true;
     }
     if (latExists && longExists) {
@@ -83,17 +97,33 @@ export class LocationInputComponent implements OnInit {
   }
   ////////////////////
 
+  get fieldObject(): any {
+    if (this.object.isSpaceGeom) {
+      return this.object.spaceGeom.embeddedFields;
+    } else {
+      return this.object;
+    }
+  }
+
   get latitudeField(): FormConfigField {
-    if (this.object && this.object.latitude) {
-      return this.object.latitude;
+    if (this.object.isSpaceGeom) {
+      const spaceGeom: FormConfigField = this.object.spaceGeom;
+      return spaceGeom.embeddedFields.latitude;
+    }
+    if (this.object && this.fieldObject.latitude) {
+      return this.fieldObject.latitude;
     } else {
       return this.formService.getEmptyConfigField();
     }
   }
 
   get longitudeField(): FormConfigField {
-    if (this.object && this.object.longitude) {
-      return this.object.longitude;
+    if (this.object.isSpaceGeom) {
+      const spaceGeom: FormConfigField = this.object.spaceGeom;
+      return spaceGeom.embeddedFields.longitude;
+    }
+    if (this.object && this.fieldObject.longitude) {
+      return this.fieldObject.longitude;
     } else {
       return this.formService.getEmptyConfigField();
     }
@@ -162,16 +192,27 @@ export class LocationInputComponent implements OnInit {
 
   private notifyChangeEvent() {
     if (this.object && !this.isViewMode) {
+      if (this.object.isSpaceGeom) {
+        // Calculate value
+        const value: SpaceGeomData = {
+          latitude: parseFloat(this.fieldObject.latitude.value),
+          longitude: parseFloat(this.fieldObject.longitude.value),
+          geometry: 1,
+          inputGeometry: {},
+          metaData: 'NONE'
+        };
+        this.object.spaceGeom.value = value;
+      }
       this.locationChanged.emit(this.object);
     }
   }
 
   setUTMFromLatLong() {
-    if (!this.object || !this.validation.isValidLatitude(String(this.object.latitude.value)) || !this.validation.isValidLongitude(String(this.object.longitude.value))) {
+    if (!this.object || !this.validation.isValidLatitude(String(this.fieldObject.latitude.value)) || !this.validation.isValidLongitude(String(this.fieldObject.longitude.value))) {
       return;
     }
 
-    const converted = this.converterService.convertLatLongCoordinateToUTM(this.object.latitude.value, this.object.longitude.value);
+    const converted = this.converterService.convertLatLongCoordinateToUTM(this.fieldObject.latitude.value, this.fieldObject.longitude.value);
     this.zoneChanged(`${(converted.zone)}`);
     this.northingsChanged(`${(converted.northings.toFixed(0))}`);
     this.eastingChanged(`${(converted.eastings.toFixed(0))}`);
@@ -197,7 +238,11 @@ export class LocationInputComponent implements OnInit {
    */
   latChanged(value: string) {
     if ((this.object && Number(value) && this.validation.isValidLatitude(value)) || (value === ``)) {
-      this.object.latitude.value = value;
+      if (this.object.isSpaceGeom) {
+        this.object.spaceGeom.embeddedFields.latitude.value = value;
+      } else {
+        this.fieldObject.latitude.value = value;
+      }
       this.notifyChangeEvent();
     }
     this.latLongChanged();
@@ -209,7 +254,11 @@ export class LocationInputComponent implements OnInit {
    */
   longChanged(value: string) {
     if ((this.object && Number(value) && this.validation.isValidLongitude(value)) || (value === ``)) {
-      this.object.longitude.value = value;
+      if (this.object.isSpaceGeom) {
+        this.object.spaceGeom.embeddedFields.longitude.value = value;
+      } else {
+        this.fieldObject.longitude.value = value;
+      }
       this.notifyChangeEvent();
     }
     this.latLongChanged();
@@ -278,18 +327,18 @@ export class LocationInputComponent implements OnInit {
 
     // 3) Check if converted lat long are valid
     if (!converted || !this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {
-      this.object.latitude.value = '';
-      this.object.longitude.value = '';
+      this.fieldObject.latitude.value = '';
+      this.fieldObject.longitude.value = '';
       this.lat = ``;
       this.long = ``;
       return;
     }
 
     // 4) Store lat / long
-    this.object.latitude.value = parseFloat(converted.latitude.toFixed(6));
-    this.object.longitude.value = parseFloat(converted.longitude.toFixed(6));
-    this.lat = `${this.object.latitude.value}`;
-    this.long = `${this.object.longitude.value}`;
+    this.fieldObject.latitude.value = parseFloat(converted.latitude.toFixed(6));
+    this.fieldObject.longitude.value = parseFloat(converted.longitude.toFixed(6));
+    this.lat = `${this.fieldObject.latitude.value}`;
+    this.long = `${this.fieldObject.longitude.value}`;
 
     // 5) Set Map
     this.setMapToCurrentLocation();
@@ -299,11 +348,11 @@ export class LocationInputComponent implements OnInit {
    * Show map and add pin at the current observation lat/long
    */
   private setMapToCurrentLocation() {
-    if (!this.object.latitude.value || !this.object.longitude.value) {
+    if (!this.fieldObject.latitude.value || !this.fieldObject.longitude.value) {
       console.log(`invalid location`);
       return;
     }
-    this.setMapTo(this.object.latitude.value, this.object.longitude.value);
+    this.setMapTo(this.fieldObject.latitude.value, this.fieldObject.longitude.value);
   }
 
   /**

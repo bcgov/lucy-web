@@ -339,7 +339,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   fieldChanged(field: any, event: any) {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
-    if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+    if (field.isSpaceGeom) {
+      this.responseBody['spaceGeom'] = event.spaceGeom.value;
+    } else if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
       // console.log('setting lat long in body to undefined')
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
@@ -347,9 +349,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       // console.log(`setting ${field.key} to undefined`)
       // console.dir(event);
       this.responseBody[field.key] = undefined;
-    }
-    // handle valid input cases
-     else if (field.isLocationField) {
+    } else if (field.isLocationField) {
+      // handle valid input cases
       // location field - needs lat long extraction
       this.responseBody[field.latitude.key] = event.latitude.value;
       this.responseBody[field.longitude.key] = event.longitude.value;
