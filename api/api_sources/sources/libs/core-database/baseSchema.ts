@@ -29,7 +29,8 @@ import {
     SchemaCache,
     SchemaLoader,
     incrementalWrite,
-    CSVFieldTransformer
+    CSVFieldTransformer,
+    unWrap
 } from '../utilities';
 
 import {
@@ -314,7 +315,11 @@ export class  BaseSchema {
         throw new Error('Subclass must override');
     }
 
-    config(skipDetail?: boolean): any {
+    config(skipDetail?: boolean, list: string[] = []): any {
+        if (list.includes(this.className)) {
+            return {};
+        }
+        list.push(this.className);
         const result: any = {};
         const layout: any = this.table.layout || {};
         result.schemaName = this.className;
@@ -336,7 +341,7 @@ export class  BaseSchema {
         _.each(this.table.relations, (rel: any, key: string) => {
             const schema = rel.schema || '';
             const schemaObj = schemaWithName(schema) || { config: () => {}};
-            rel.refSchema = schemaObj.config(true);
+            rel.refSchema = schemaObj.config(true, list);
             const updatedRel = {};
             updatedRel[key] = rel;
             result.relations = {...result.relations, ...updatedRel};
@@ -358,6 +363,11 @@ export class  BaseSchema {
                 default: col.comment
             };
             layout.header = layout.header || key;
+            if (typeDetails.subType) {
+                verification.subType = typeDetails.subType;
+            }
+            const embedded = unWrap(col.meta, {}).embedded;
+            const requireDetailRefSchema = embedded ? true : false;
 
             const field = {
                 key: key,
@@ -366,11 +376,12 @@ export class  BaseSchema {
                 type: typeDetails.type || '',
                 verification: verification,
                 idKey: col.refColumn,
-                refSchema: schemaObj.config(true),
+                refSchema: schemaObj.config(!requireDetailRefSchema, list),
                 required: col.required
             };
             result.fields.push(field);
         });
+        list.pop();
         return result;
     }
 
