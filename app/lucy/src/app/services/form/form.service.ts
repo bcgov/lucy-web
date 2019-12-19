@@ -290,6 +290,7 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
+    const relations = serverConfig.relations;
     let requiredFieldKeys: string[] = [];
     let dropdownFieldKeys: string[] = [];
     let fieldHeaders: {} = {};
@@ -313,7 +314,7 @@ export class FormService {
         // Loop thorugh groups in server config lay out
         for (const group of groups) {
           // Process group
-          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, relations, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
           requiredFieldKeys = groupInfo.requiredFieldKeys;
           dropdownFieldKeys = groupInfo.dropdownFieldKeys;
           fieldHeaders = groupInfo.fieldHeaders;
@@ -349,7 +350,7 @@ export class FormService {
       }
     }
     if (orphanFields.length > 0) {
-      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, null, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
       requiredFieldKeys = orphanGroupInfo.requiredFieldKeys;
       dropdownFieldKeys = orphanGroupInfo.dropdownFieldKeys;
       fieldHeaders = orphanGroupInfo.fieldHeaders;
@@ -383,6 +384,7 @@ export class FormService {
     groupFields: string[],
     fields: any[],
     computedFields: any[],
+    relations: any[],
     _requiredFieldKeys: string[],
     _dropdownFieldKeys: string[],
     _fieldHeaders: {}
@@ -401,64 +403,77 @@ export class FormService {
     let cachedLatOrLongField: any;
     // Now loop through field keys specified in group layout
     for (let i = 0; i < groupFields.length; i++) {
+      let newField: any;
       // Get key for field
       const fieldKey = groupFields[i];
-      // Add type flags to field (to help with html generation) & convert data structure
-      let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
-      // If field key wasnt found in fields
-      if (!newField) {
-        // Could be a computed field
-        newField = await this.configComputedField(fieldKey, computedFields);
-        if (!newField) {
-          // If it wasnt, just skip it
+      // if fieldKey doesn't appear in fields array
+      if (fields.find((element) => element.key === fieldKey) === undefined) {
+        // check if the fieldKey is in relations array
+        const relation = relations[fieldKey];
+        if (relation === undefined) {
           continue;
-        }
-      }
-      // Store required fields in a separate array
-      if (newField.required) {
-        requiredFieldKeys.push(newField.key);
-      }
-      // Store dropdown fields in a separate array
-      if (newField.isDropdown) {
-        dropdownFieldKeys.push(newField.key);
-      }
-      // Store field headers in a separate array
-      fieldHeaders[newField.key] = newField.header;
-
-      // Add Bootstrap column size
-      newField.cssClasses = this.addColumnClass(
-        newField.cssClasses,
-        i,
-        groupFields.length,
-        newField.isTextAreaField
-      );
-
-      ////// Special case for lat or long fields //////
-      if (
-        newField.isLocationLatitudeField ||
-        newField.isLocationLongitudeField
-      ) {
-        // if its a latitude or logitude field, and we havent cached such field before, cache it
-        // if its already chached, generate special location field to add to subsection
-        if (cachedLatOrLongField) {
-          const cachedFieldIsLatitude =
-            cachedLatOrLongField.isLocationLatitudeField === true;
-          const locationField = {
-            key: `location`,
-            isLocationField: true,
-            latitude: cachedFieldIsLatitude ? cachedLatOrLongField : newField,
-            longitude: cachedFieldIsLatitude ? newField : cachedLatOrLongField
-          };
-          // Add Location field
-          subSectionFields.push(locationField);
         } else {
-          cachedLatOrLongField = newField;
+          newField = await this.configRelationField(fieldKey, relations);
         }
-        ////// END Special case for lat or long field //////
       } else {
-        // Add field to group fields
-        subSectionFields.push(newField);
+        // Add type flags to field (to help with html generation) & convert data structure
+        newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
+        // If field key wasnt found in fields
+        if (!newField) {
+          // Could be a computed field
+          newField = await this.configComputedField(fieldKey, computedFields);
+          if (!newField) {
+            // If it wasnt, just skip it
+            continue;
+          }
+        }
       }
+        // Store required fields in a separate array
+        if (newField.required) {
+          requiredFieldKeys.push(newField.key);
+        }
+        // Store dropdown fields in a separate array
+        if (newField.isDropdown) {
+          dropdownFieldKeys.push(newField.key);
+        }
+        // Store field headers in a separate array
+        fieldHeaders[newField.key] = newField.header;
+  
+        // Add Bootstrap column size
+        newField.cssClasses = this.addColumnClass(
+          newField.cssClasses,
+          i,
+          groupFields.length,
+          newField.isTextAreaField
+        );
+  
+        ////// Special case for lat or long fields //////
+        if (
+          newField.isLocationLatitudeField ||
+          newField.isLocationLongitudeField
+        ) {
+          // if its a latitude or logitude field, and we havent cached such field before, cache it
+          // if its already chached, generate special location field to add to subsection
+          if (cachedLatOrLongField) {
+            const cachedFieldIsLatitude =
+              cachedLatOrLongField.isLocationLatitudeField === true;
+            const locationField = {
+              key: `location`,
+              isLocationField: true,
+              latitude: cachedFieldIsLatitude ? cachedLatOrLongField : newField,
+              longitude: cachedFieldIsLatitude ? newField : cachedLatOrLongField
+            };
+            // Add Location field
+            subSectionFields.push(locationField);
+          } else {
+            cachedLatOrLongField = newField;
+          }
+          ////// END Special case for lat or long field //////
+        } else {
+          // Add field to group fields
+          subSectionFields.push(newField);
+        }
+      
     }
     return {
       fields: subSectionFields,
@@ -504,6 +519,37 @@ export class FormService {
     return result;
   }
 
+  private async configRelationField(
+    key: string,
+    relations: any
+  ): Promise<any> {
+    // if key is not in relations, return undefined
+    if (!relations[key]) {
+      return undefined;
+    }
+    const relationField = relations[key];
+    // set css classes // TODO: Server doesnt send this yet
+        let cssClasses = ``;
+        if (relationField.layout && relationField.layout.classes) {
+          const classes = relationField.layout.classes;
+          for (const item of classes) {
+            cssClasses = cssClasses + ` `;
+          }
+        }
+    return {
+      key: key,
+      header: relationField.header.default,
+      description: relationField.description,
+      required: true,
+      type: relationField.type,
+      verification: relationField.verification,
+      meta: relationField.meta,
+      cssClasses: cssClasses,
+      codeTable: '',
+      condition: '',
+    }
+  }
+
   private async configComputedField(
     key: string,
     computedFields: any
@@ -546,8 +592,12 @@ export class FormService {
     key: string,
     fields: any[]
   ): Promise<any> {
-    for (const field of fields) {
-      if (field['key'] === key) {
+    const field = fields.find((element) => element.key === key);
+    // for (const field of fields) {
+    //   if (field['key'] === key) {
+      if (field === undefined) {
+        return null;
+      } else {
         // convert server config field
         const fieldOfInterest: any = this.createFormConfigField(field);
         // initialize value field
@@ -615,10 +665,11 @@ export class FormService {
           );
         }
         return fieldOfInterest;
-      }
-    }
-    return null;
+    //   }
+    // }
+    // return null;
   }
+}
 
   /**
    * Convert a server generated field object to one that
@@ -799,39 +850,43 @@ export class FormService {
     // Sections/ subsections/ fields
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
-        for (const field of subSection.fields) {
-          if (field.isLocationField) {
-            field.latitude.value = this.formatLatLongForDisplay(
-              object[field.latitude.key]
-            );
-            field.longitude.value = this.formatLatLongForDisplay(
-              object[field.longitude.key]
-            );
-          } else {
-            if (object[field.key] !== undefined) {
-              const key = object[field.key];
-              if (typeof key === 'object' && key !== null) {
-                field.value = await this.getDropdownObjectWithId(
-                  field.codeTable,
-                  field.displayKey,
-                  object[field.key],
-                  field.codeTableMeta
-                );
-              } else {
-                field.value = object[field.key];
-              }
+        if (subSection.isCustom === false) {
+          for (const field of subSection.fields) {
+            if (field.isLocationField) {
+              field.latitude.value = this.formatLatLongForDisplay(
+                object[field.latitude.key]
+              );
+              field.longitude.value = this.formatLatLongForDisplay(
+                object[field.longitude.key]
+              );
             } else {
-              // UNCOMMENT for debugging/ when adding new form support. it helps
-              // console.log(
-              //   `**** config key ${field.key} does not exist in object`
-              // );
+              if (object[field.key] !== undefined) {
+                const key = object[field.key];
+                if (typeof key === 'object' && key !== null) {
+                  field.value = await this.getDropdownObjectWithId(
+                    field.codeTable,
+                    field.displayKey,
+                    object[field.key],
+                    field.codeTableMeta
+                  );
+                } else {
+                  field.value = object[field.key];
+                }
+              } else {
+                // UNCOMMENT for debugging/ when adding new form support. it helps
+                // console.log(
+                //   `**** config key ${field.key} does not exist in object`
+                // );
+              }
             }
           }
         }
+
       }
     }
     for (const relationKey of configuration.relationKeys) {
-      if (object[relationKey]) {
+      // only create UI config for table if the relationKey is not a custom component (embedded == true)
+      if (object[relationKey] && configuration.relationsConfigs[relationKey].meta.embedded !== true) {
         configuration.relationsConfigs[relationKey].objects =
           object[relationKey];
         configuration.relationsConfigs[
@@ -935,6 +990,7 @@ export class FormService {
    * Convert keys recieved from server to array of strings
    */
   private getTableColumnKeys(tableDataConfig: any[]): string[][] {
+    if (tableDataConfig === undefined) { return; }
     const keys: string[][] = [];
     for (const element of tableDataConfig) {
       const currentKey = element.key;

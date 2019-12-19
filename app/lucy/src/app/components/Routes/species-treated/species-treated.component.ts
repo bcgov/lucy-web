@@ -38,13 +38,24 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   observations: Observation[] = [];
   inViewMode = false;
   addQuickObs = false;
-  object: any;
 
   percentageFieldVerification = {
     required: true,
     positiveNumber: true,
     maximumValue: 100,
   };
+
+    ///// Form Mode
+    private _mode: FormMode = FormMode.View;
+    get mode(): FormMode {
+      return this._mode;
+    }
+    @Input() set mode(mode: FormMode) {
+      this._mode = mode;
+      if (this.mode === FormMode.View) {
+        this.inViewMode = true;
+      } else { this.inViewMode = false; }
+    }
 
   @Output() speciesTreatedChanged = new EventEmitter<SpeciesObservedTreated[]>();
 
@@ -120,10 +131,13 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       return this._speciesNotBeingTreated;
   }
 
-  moveNotTreatedToBeingTreated(s: SpeciesObservedTreated, speciesCard: HTMLElement) {
+  moveNotTreatedToBeingTreated(s: SpeciesObservedTreated) {
     // remove s object from speciesNotBeingTreated
     let index = this.speciesNotBeingTreated.indexOf(s);
     this.speciesNotBeingTreated.splice(index, 1);
+
+    const el = document.getElementById(s.observationObject.species.commonName);
+    el.className = 'card speciesNotTreatedCard container animated animation-config bounceOutUp';
 
     // check for duplicates in speciesBeingTreated
     index = this.indexOfSpeciesInSpeciesBeingTreated(s.observationObject.species);
@@ -133,15 +147,23 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
     this._speciesBeingTreated.push(s);
 
-    $(speciesCard).addClass('animated bounceOutUp');
+    el.className = 'card speciesNotTreatedCard container animated animation-config bounceInUp';
+
+    // this.exitNBT = true;
+    // this.enterBT = true;
+    // this.exitBT = false;
+    // this.enterNBT = false;
 
     this.notifyChangeEvent();
   }
 
-  moveBeingTreatedToNotTreated(s: SpeciesObservedTreated, speciesCard: HTMLElement) {
+  moveBeingTreatedToNotTreated(s: SpeciesObservedTreated) {
     // remove s object from speciesBeingTreated
     let index = this.speciesBeingTreated.indexOf(s);
     this.speciesBeingTreated.splice(index, 1);
+
+    $(s.observationObject.species.commonName).removeClass('bounceInUp');
+    $(s.observationObject.species.commonName).addClass('bounceOutDown');
 
     // check for duplicates in speciesNotBeingTreated
     index = this.speciesNotBeingTreated.indexOf(s);
@@ -152,7 +174,14 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     s.treatmentAreaCoverage = 0;
     this._speciesNotBeingTreated.push(s);
 
-    $(speciesCard).addClass('animated bounceOutDown').add('style="animation-duration = 1s"');
+    $(s.observationObject.species.commonName).removeClass('bounceOutDown');
+    $(s.observationObject.species.commonName).addClass('bounceInDown');
+
+
+    // this.exitBT = true;
+    // this.enterNBT = true;
+    // this.exitNBT = false;
+    // this.enterBT = false;
 
     this.notifyChangeEvent();
   }

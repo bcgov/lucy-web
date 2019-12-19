@@ -26,6 +26,8 @@ export class HerbicideApplicationComponent implements OnInit {
 
   @Output() tankMixesChanged = new EventEmitter<HerbicideTankMix[]>();
 
+  inViewMode = true;
+
   // Summary Line section variables
   mixDeliveryRate: number;
 
@@ -67,6 +69,9 @@ export class HerbicideApplicationComponent implements OnInit {
   }
   @Input() set mode(mode: FormMode) {
     this._mode = mode;
+    if (this.mode === FormMode.View) {
+      this.inViewMode = true;
+    } else { this.inViewMode = false; }
   }
 
   constructor(private codeTables: CodeTableService, private formService: FormService, private dropdownService: DropdownService) { }
@@ -103,7 +108,7 @@ export class HerbicideApplicationComponent implements OnInit {
 
   async prepareDropdownMenus() {
     await this.codeTables.getHerbicideCodes().then((codes) => {
-      this.unusedHerbicides = codes;
+      this.unusedHerbicides = Object.assign([], codes);
       this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     });
   }

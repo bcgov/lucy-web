@@ -94,12 +94,14 @@ schemas:
                 - humidity
                 - windSpeed
                 - windDirection
+              style: {}
             ## -- group {Advance details}
             ## HerbicideMix subsection is only viewable in Create mode
             - title:
                 key: ''
                 default: ''
-              fields: []
+              fields:
+                - tankMixes
               style:
                 custom: {
                   formComponent: HerbicideMix
@@ -109,8 +111,7 @@ schemas:
                 key: ''
                 default: ''
               fields:
-                - beingTreated
-                - notBeingTreated
+                - speciesObservations
               style: 
                 custom: {
                   formComponent: SpeciesTreated

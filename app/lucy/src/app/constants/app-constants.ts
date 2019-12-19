@@ -72,6 +72,12 @@ export class AppConstants {
         return `${AppConstants.API_baseURL}/treatment/mechanical/${id}`;
    }
 
+   // Chemical Treatment
+   static get API_chemicalTreatment(): string { return `${AppConstants.API_baseURL}.treatment.chemical`; }
+   static API_chemicalTreatmentWith(id: number): string {
+       return `${AppConstants.API_baseURL}/treatment/chemical/${id}`;
+   }
+
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
         const baseAuthEndpoint = `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;
