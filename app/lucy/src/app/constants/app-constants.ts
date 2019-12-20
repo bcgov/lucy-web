@@ -73,10 +73,12 @@ export class AppConstants {
    }
 
    // Chemical Treatment
-   static get API_chemicalTreatment(): string { return `${AppConstants.API_baseURL}.treatment.chemical`; }
+   static get API_chemicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/chemical`; }
    static API_chemicalTreatmentWith(id: number): string {
        return `${AppConstants.API_baseURL}/treatment/chemical/${id}`;
    }
+   static API_tankMix(): string { return `${AppConstants.API_baseURL}/tankmix`; }
+   static API_observationChemicallyTreated(): string { return `${AppConstants.API_baseURL}/obschem`; }
 
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {

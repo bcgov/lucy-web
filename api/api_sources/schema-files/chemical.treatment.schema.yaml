@@ -101,6 +101,7 @@ schemas:
                 key: ''
                 default: ''
               fields:
+                - mixDeliveryRate
                 - tankMixes
               style:
                 custom: {
@@ -441,6 +442,22 @@ schemas:
               header:
                 key: 'chemicalTreatment.additionalComments'
                 default: 'Additional Comments'
+              classes:
+                - col-12
+      - name: addMixDeliveryRateColumn
+        id: '20191219'
+        info: 'Adding calibrated mix delivery rate to chemical treatment'
+        columns:
+          mixDeliveryRate:
+            name: mix_delivery_rate
+            comment: 'Delivery rate of herbicide tank mix in L/ha'
+            definition: INT NULL
+            meta: {}
+            required: true 
+            layout:
+              header:
+                key: 'chemicalTreatment.mixDeliveryRate'
+                default: 'Mix Delivery Rate (calibrated)'
               classes:
                 - col-12
   ## --

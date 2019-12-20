@@ -81,7 +81,7 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
           const notTreatedIndex = this.indexOfSpeciesInSpeciesNotBeingTreated(o.species);
           // check to make sure that species aren't being duplicated in species lists
           if (treatedIndex === -1 && notTreatedIndex === -1) {
-            this._speciesNotBeingTreated.push({observationObject: o, observation: o.observation_id, treatmentAreaCoverage: 0});
+            this._speciesNotBeingTreated.push({observationObject: o, observation: o.observation_id, treatmentAreaCoverage: 0, chemicalTreatmentId: undefined});
           }
         }
       });
