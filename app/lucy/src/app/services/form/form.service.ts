@@ -1233,14 +1233,41 @@ export class FormService {
     Object.keys(obj1 || {})
       .concat(Object.keys(obj2 || {}))
       .forEach(key => {
-        if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-          result[key] = obj2[key];
-        }
-        if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+        const t1 = typeof obj1[key];
+        const t2 = typeof obj2[key];
+        if (t1 === t2 && t1 === typeof {}) {
           const value = this.diff(obj1[key], obj2[key]);
-          if (value !== undefined) {
-            result[key] = value;
+          if (value !== undefined && Object.keys(value).length > 0) {
+            result[key] = JSON.stringify(value, null, 2);
           }
+        } else if (t1 !== t2 && (t1 === typeof {} || t2 === typeof {})) {
+          let nonObjValue;
+          if (t1 === typeof {} && t2 !== typeof {}) {
+            nonObjValue = obj2[key];
+          } else {
+            nonObjValue = JSON.stringify(obj2, null, 2);
+          }
+          if (t2 === typeof {}) {
+            result[key] = nonObjValue;
+          } else {
+            const obj = obj1[key];
+            if (obj === undefined || obj === null) {
+              result[key] = nonObjValue;
+              return;
+            }
+            // Find id key from obj;
+            const idKeys: string[] = Object.keys(obj).filter(k => k.includes('_id'));
+            if (idKeys.length > 0) {
+              const idKey = idKeys[0];
+              if (nonObjValue !== obj[idKey]) {
+                result[key] = nonObjValue;
+              }
+            } else {
+              result[key] = nonObjValue;
+            }
+          }
+        } else if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+          result[key] = obj2[key];
         }
       });
     return result;
@@ -1256,9 +1283,9 @@ export class FormService {
    * @param uiConfig object
    */
   public cleanBodyForSubmission(body: JSON, uiConfig: any): JSON {
-    const cleanBody = {};
-    const configFilds = this.getFieldsInConfig(uiConfig);
-    for (const field of configFilds) {
+    const cleanBody: any = {};
+    const configFields = this.getFieldsInConfig(uiConfig);
+    for (const field of configFields) {
       switch (field.type.toLowerCase()) {
         case 'string':
           cleanBody[field.key] = String(body[field.key]);
@@ -1267,9 +1294,35 @@ export class FormService {
           cleanBody[field.key] = Number(body[field.key]);
           break;
         default:
-          cleanBody[field.key] = body[field.key];
+          const objBody: any = body[field.key];
+          for (const k in objBody) {
+            if (objBody.hasOwnProperty(k)) {
+              if (objBody[k] === null) {
+                // Removing null
+                delete objBody[k];
+              } else if (typeof objBody[k] === typeof {}) {
+                // Removing any db object ref and replacing with id key
+                for (const kk in objBody[k]) {
+                  // TODO: Replace _id with regx
+                  if (objBody[k].hasOwnProperty(kk) && kk.includes('_id')) {
+                    objBody[k] = objBody[k][kk];
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          cleanBody[field.key] = objBody;
           break;
       }
+      /*if (field.key === 'spaceGeom') {
+        const spaceGeom: any = body['spaceGeom'] || {};
+        // Remove its geometry object ref
+        if (spaceGeom.geometry && typeof spaceGeom.geometry === 'object') {
+          spaceGeom.geometry = spaceGeom.geometry.observation_geometry_code_id;
+        }
+        cleanBody.spaceGeom = spaceGeom;
+      }*/
     }
     return JSON.parse(JSON.stringify(cleanBody));
   }
