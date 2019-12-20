@@ -31,6 +31,7 @@ interface SpaceGeomData {
   latitude: number;
   longitude: number;
   metaData?: string;
+  space_geom_id?: number;
 }
 
 @Component({
@@ -49,6 +50,8 @@ export class LocationInputComponent implements OnInit {
   // Markers shown on map
   markers: MapMarker[] = [];
 
+  private _existingValue: SpaceGeomData;
+
   // Entry mode flag
   locationEntryModeLatLong = true;
   // UTM
@@ -62,6 +65,9 @@ export class LocationInputComponent implements OnInit {
   get mode(): FormMode {
     return this._mode;
   }
+
+  @Output() locationChanged = new EventEmitter<any>();
+
   @Input() set mode(mode: FormMode) {
     this._mode = mode;
   }
@@ -76,7 +82,10 @@ export class LocationInputComponent implements OnInit {
     this._object = { ...object};
     let latExists = false;
     let longExists = false;
-    console.dir(object);
+    if (object.spaceGeom && object.spaceGeom.value) {
+      this._existingValue = this.processInputValues(object.spaceGeom.value);
+      this.object.spaceGeom.value = this._existingValue;
+    }
     if (this.object && this.object.latitude && this.object.latitude.value) {
       this.lat = `${this.object.latitude.value}`;
       latExists = true;
@@ -179,9 +188,22 @@ export class LocationInputComponent implements OnInit {
   get isViewMode(): boolean {
     return this.mode === FormMode.View;
   }
-
-  @Output() locationChanged = new EventEmitter<any>();
   constructor(private converterService: ConverterService, private validation: ValidationService, private formService: FormService) { }
+
+  private processInputValues(input: SpaceGeomData) {
+    let geometry = input.geometry;
+    if (typeof geometry === typeof {}) {
+      geometry = geometry['observation_geometry_code_id'] || 1;
+    }
+    return {
+      latitude: input.latitude,
+      longitude: input.longitude,
+      space_geom_id: input.space_geom_id,
+      metaData: input.metaData,
+      inputGeometry: input.inputGeometry,
+      geometry: geometry
+    };
+  }
 
   ngOnInit() {
   }
@@ -195,11 +217,12 @@ export class LocationInputComponent implements OnInit {
       if (this.object.isSpaceGeom) {
         // Calculate value
         const value: SpaceGeomData = {
-          latitude: parseFloat(this.fieldObject.latitude.value),
-          longitude: parseFloat(this.fieldObject.longitude.value),
-          geometry: 1,
+          latitude: parseFloat(this.fieldObject.latitude.value || this._existingValue.latitude),
+          longitude: parseFloat(this.fieldObject.longitude.value || this._existingValue.longitude),
+          geometry: this._existingValue.geometry || 1,
           inputGeometry: {},
-          metaData: 'NONE'
+          metaData: 'NONE',
+          space_geom_id: this._existingValue.space_geom_id
         };
         this.object.spaceGeom.value = value;
       }
@@ -296,7 +319,7 @@ export class LocationInputComponent implements OnInit {
    */
   latLongChanged() {
     // If its NOT in lat long entry mode, dont run this function.
-    if (!this.locationEntryModeLatLong || !this.object) {
+    if (!this.locationEntryModeLatLong || !this.fieldObject) {
       return;
     }
 
@@ -313,7 +336,7 @@ export class LocationInputComponent implements OnInit {
     }
 
     // If its in lat long entry mode, dont run this function.
-    if (this.locationEntryModeLatLong || !this.object) {
+    if (this.locationEntryModeLatLong || !this.fieldObject) {
       return;
     }
 

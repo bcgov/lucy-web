@@ -30,6 +30,10 @@ export class Utility {
        return this.instance || (this.instance = new this());
    }
 
+   public static get shared(): Utility {
+       return Utility.getInstance();
+   }
+
    public appRoute(route: AppRoutes): string {
        return `/${route}`;
    }
@@ -40,6 +44,11 @@ export class Utility {
            message: message
        };
        return apiStatus;
+   }
+
+   toUpperCase(word: string): string {
+        if (!word) {return word; }
+        return word[0].toUpperCase() + word.substr(1).toLowerCase();
    }
 
 }
