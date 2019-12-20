@@ -216,13 +216,14 @@ export class LocationInputComponent implements OnInit {
     if (this.object && !this.isViewMode) {
       if (this.object.isSpaceGeom) {
         // Calculate value
+        const existing: any = this._existingValue || {};
         const value: SpaceGeomData = {
-          latitude: parseFloat(this.fieldObject.latitude.value || this._existingValue.latitude),
-          longitude: parseFloat(this.fieldObject.longitude.value || this._existingValue.longitude),
-          geometry: this._existingValue.geometry || 1,
+          latitude: parseFloat(this.fieldObject.latitude.value || existing.latitude),
+          longitude: parseFloat(this.fieldObject.longitude.value || existing.longitude),
+          geometry: existing.geometry || 1,
           inputGeometry: {},
           metaData: 'NONE',
-          space_geom_id: this._existingValue.space_geom_id
+          space_geom_id: existing.space_geom_id
         };
         this.object.spaceGeom.value = value;
       }

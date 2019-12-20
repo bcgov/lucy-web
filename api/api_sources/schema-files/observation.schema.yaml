@@ -56,10 +56,9 @@ schemas:
               fields:
                 - date
             - title: 
-                key: 'geometry' 
-                default: Geometry  
+                key: 'locationDescription' 
+                default: Location Description  
               fields:
-                - observationArea
                 - accessDescription
             # End-group(Geometry)
             - title: 
@@ -115,18 +114,7 @@ schemas:
       # End-Section
     # End-layout
     # Computed fields
-    computedFields:
-      observationArea:
-        header:
-          key: observationArea
-          default: Observed area
-        computationRules:
-          - name: Compute Area
-            keys:
-              - horizontalDimension
-              - verticalDimension
-              - observationGeometry
-            method: calculateArea
+    computedFields: {}
     # End - Computed fields
     # Relationship
     relations:
