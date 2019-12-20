@@ -319,7 +319,6 @@ export class  BaseSchema {
         if (list.includes(this.className)) {
             return {};
         }
-        list.push(this.className);
         const result: any = {};
         const layout: any = this.table.layout || {};
         result.schemaName = this.className;
@@ -335,6 +334,7 @@ export class  BaseSchema {
         if (skipDetail) {
             return result;
         }
+        list.push(this.className);
         result.layout = layout;
         result.computedFields = this.table.computedFields || {};
         result.relations = {};

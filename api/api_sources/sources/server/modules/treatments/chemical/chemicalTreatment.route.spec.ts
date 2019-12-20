@@ -84,8 +84,7 @@ describe(`Test for ${resourceName}`, () => {
     // Test7: Get Filter elements
     it(`should fetch filtered item ${resourceName}`, async () => {
         await ExpressResourceTest.testGetFilteredItem(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller, {
-            latitude: faker.address.latitude(),
-            longitude: faker.address.longitude()
+            date: '2019-08-21'
         });
     });
 });
