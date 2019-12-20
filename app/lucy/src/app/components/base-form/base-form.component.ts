@@ -227,6 +227,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
         requiredMissingFieldKeys.push(key);
+      } else {
+        if (key === 'spaceGeom' && this.responseBody[key]) {
+          const test: any = this.responseBody[key];
+          if (!test.latitude || !test.longitude || !test.geometry) {
+            requiredMissingFieldKeys.push(key);
+          }
+        }
       }
     }
     // let requiredMissingFieldHeaders: string[]= [];
@@ -235,7 +242,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of requiredMissingFieldKeys) {
       if (this.config.fieldHeaders[key] !== undefined) {
         // Group Lat long under "location" tag
-        if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
+        if (key === 'spaceGeom') {
           if (!locationIncluded) {
             missingFieldHeaders.push(`Location`);
             locationIncluded = true;

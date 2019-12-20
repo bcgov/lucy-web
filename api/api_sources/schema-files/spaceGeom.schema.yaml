@@ -135,7 +135,7 @@ schemas:
             definition: INT NULL
             foreignTable: space_geom
             refColumn: space_geom_id
-            required: false
+            required: true
             layout:
               header:
                 key: 'generic.spaceGeom'

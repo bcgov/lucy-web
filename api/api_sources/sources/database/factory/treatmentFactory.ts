@@ -23,7 +23,6 @@
 /**
   * Imports
   */
-import * as faker from 'faker';
 import { Destroy, ModelSpecFactory } from './helper';
 import { MechanicalTreatment,
   MechanicalTreatmentController,
@@ -67,9 +66,6 @@ export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, Mechanica
 
 export const mechanicalTreatmentUpdateSpecFactory = async (): Promise<MechanicalTreatmentUpdateSpec> => {
   return {
-    latitude: parseFloat(faker.address.latitude()) || 0.0,
-    width: faker.random.number(),
-    length: faker.random.number(),
     observation: (await observationFactory()),
   };
 };
