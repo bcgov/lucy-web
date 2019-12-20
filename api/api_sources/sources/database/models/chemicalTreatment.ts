@@ -235,24 +235,35 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.methodCode, referencedColumnName: ChemicalTreatmentMethodCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	methodCode: ChemicalTreatmentMethodCode;
-    
-    	/**
-	 * @description Getter/Setter property for column {null}
+
+	/**
+	 * @description Getter/Setter property for column {additional_comments}
 	 */
 	@Column({ name: ChemicalTreatmentSchema.columns.additionalComments})
 	@ModelProperty({type: PropertyType.string})
 	additionalComments: string;
 
 	/**
+	 * @description Getter/Setter property for column {mix_delivery_rate}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.mixDeliveryRate, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	mixDeliveryRate: number;
+
+	/**
 	 * @description Getter/Setter property for tankMixes
 	 */
 	@OneToMany( type => HerbicideTankMix, tankMix => tankMix.chemicalTreatment, {eager: true})
+	// tankMixesFetcher: Promise<HerbicideTankMix[]>;
+	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/HerbicideTankMix'})
 	tankMixes: HerbicideTankMix[];
 
 	/**
 	 *  @description Getter/Setter property for related observations
 	 */
 	@OneToMany( type => ObservationChemicalTreatment, obj => obj.chemicalTreatment, { eager: true})
+	// observationChemicalTreatmentsFetcher: Promise<ObservationChemicalTreatment[]>;
+	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/ObservationChemicalTreatment'})
 	speciesObservations: ObservationChemicalTreatment[];
 
 }

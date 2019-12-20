@@ -5,6 +5,7 @@ import { CodeTableService } from 'src/app/services/code-table.service';
 import { FormService } from 'src/app/services/form/form.service';
 import { FormMode } from 'src/app/models';
 import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated } from 'src/app/models/ChemicalTreatment';
+import { HerbicideTankMixService, ObservationChemicalTreatmentService } from 'src/app/services/chemical-treatment.service';
 
 @Component({
     selector: 'app-treatment-details',
@@ -35,9 +36,9 @@ export class TreatmentDetailsComponent implements OnInit {
 
     speciesHerbicides: SpeciesHerbicideSummary[] = [];
     inViewMode: boolean;
-    config: any; 
+    config: any;
 
-    constructor(private observationService: ObservationService, private codeTables: CodeTableService, private formService: FormService) {}
+    constructor(private observationService: ObservationService, private htmService: HerbicideTankMixService, private ocService: ObservationChemicalTreatmentService, private codeTables: CodeTableService, private formService: FormService) {}
 
     async ngOnInit() {
         this.config = await this.formService.getFormConfigForCurrentRoute();
@@ -45,33 +46,22 @@ export class TreatmentDetailsComponent implements OnInit {
     }
 
     async compileSpeciesHerbicidesList() {
-        const tankMixes: any[] = this.responseBody.tankMixes;
-        const speciesTreated: any[] = this.responseBody.speciesObservations;
+        const tankMixes: HerbicideTankMix[] = await this.htmService.getAllForTreatment(this.config.objectId);
+        const speciesTreated: SpeciesObservedTreated[] = await this.ocService.getAllForTreatment(this.config.objectId);
 
         tankMixes.forEach((hItem, hIndex) => {
             speciesTreated.forEach(async (sItem, sIndex) => {
                 const obs = await this.observationService.getWithId(sItem.observation);
                 const speciesCommonName = obs.species.commonName + ' (' + obs.species.species + ' ' + obs.species.genus + ')';
-                const herb = await this.codeTables.getHerbicideWithId(hItem.herbicide);
+                const herb = hItem.herbicide;
                 const summary: SpeciesHerbicideSummary = {
                     speciesName: speciesCommonName,
                     herbicideName: herb.compositeName,
-                    amountUsed: hItem.dilutionRate,
+                    amountUsed: hItem.amountUsed,
                     applicationRate: hItem.applicationRate
                 };
                 this.speciesHerbicides.push(summary);
             });
         });
     }
-
-    getTankMixesForTreatment(): HerbicideTankMix[] {
-        let htm: HerbicideTankMix[] = [];
-        const treatmentId = this.config.objectId;
-        const treatmentKey = this.config.idKey;
-        return htm;
-    }
-
-    // getSpeciesObservationsForTreatment(): SpeciesObservedTreated[] {
-
-    // }
 }

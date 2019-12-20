@@ -18,12 +18,14 @@ export interface HerbicideTankMix {
     applicationRate: number;
     amountUsed: number;
     herbicide: HerbicideCodes;
+    chemicalTreatmentId: number;
 }
 
 export interface SpeciesObservedTreated {
     observationObject: Observation;
     observation: number;
     treatmentAreaCoverage: number;
+    chemicalTreatmentId: number;
 }
 
 export interface SpeciesHerbicideSummary {
@@ -33,30 +35,44 @@ export interface SpeciesHerbicideSummary {
     applicationRate: number;
 }
 
+export interface ProjectManagementPlanCode {
+    pmpNumber: string;
+    description: string;
+    pmpHolder: string;
+    startDate: string;
+    endDate: string;
+}
+
+export interface ChemicalTreatmentEmployee {
+    certificate: string;
+    firstName: string;
+    lastName: string;
+}
+
 export interface ChemicalTreatment {
     chemical_treatment_id: number;
     latitude: number;
     longitude: number;
     length: number;
     width: number;
-    firstApplicator: string;
-    secondApplicator: string;
+    firstApplicator: ChemicalTreatmentEmployee;
+    secondApplicator: ChemicalTreatmentEmployee;
     pesticideEmployer: PesticideEmployerCode;
     speciesAgency: SpeciesAgencyCodes;
     date: string;
     primaryPaperFileReference: string;
     secondaryPaperFileReference: string;
     jurisdiction: Jurisdiction;
-    pmp: string;
+    pmp: ProjectManagementPlanCode;
     pup: string;
     treatmentMethod: ChemicalTreatmentMethodCode;
     humidity: number;
     temperature: number;
     windSpeed: number;
     windDirection: WindDirectionCode;
+    mixDeliveryRate: number;
     tankMixes: HerbicideTankMix[];
     speciesObservedTreated: SpeciesObservedTreated[];
-    speciesHerbicides: SpeciesHerbicideSummary[];
     comment: string;
 }
 

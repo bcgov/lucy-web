@@ -186,6 +186,7 @@ export class HerbicideApplicationComponent implements OnInit {
       applicationRate: h.applicationRate,
       amountUsed: undefined,
       herbicide: h,
+      chemicalTreatmentId: undefined
     };
     return htm;
   }
