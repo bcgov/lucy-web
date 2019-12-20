@@ -24,7 +24,6 @@
 /**
  * Imports
  */
-import * as faker from 'faker';
 import { SharedExpressApp } from '../../../initializers';
 import {
     commonTestSetupAction,
