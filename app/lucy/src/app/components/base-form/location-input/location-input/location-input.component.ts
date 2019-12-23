@@ -47,6 +47,10 @@ export class LocationInputComponent implements OnInit {
     zoom: 4
   };
 
+  private titles: object = {
+    geometrySection: `Geometry and Area`
+  };
+
   // Markers shown on map
   markers: MapMarker[] = [];
 
@@ -83,6 +87,10 @@ export class LocationInputComponent implements OnInit {
     let latExists = false;
     let longExists = false;
     if (object.spaceGeom && object.spaceGeom.value) {
+      this.fieldObject.geometry.value = {
+        name: object.spaceGeom.value.geometry.description,
+        value: object.spaceGeom.value.geometry
+      };
       this._existingValue = this.processInputValues(object.spaceGeom.value);
       this.object.spaceGeom.value = this._existingValue;
     }
@@ -124,6 +132,13 @@ export class LocationInputComponent implements OnInit {
     } else {
       return this.formService.getEmptyConfigField();
     }
+  }
+
+  get geometry(): FormConfigField {
+    const geo = this.fieldObject.geometry || this.formService.getEmptyConfigField();
+    // console.dir(this.fieldObject);
+    // console.dir(geo);
+    return geo;
   }
 
   get longitudeField(): FormConfigField {
@@ -366,6 +381,14 @@ export class LocationInputComponent implements OnInit {
 
     // 5) Set Map
     this.setMapToCurrentLocation();
+  }
+
+  geometryChanged(field: FormConfigField, event: any) {
+    // console.dir(field);
+    // console.dir(event);
+    this.fieldObject.geometry.value = event;
+    this._existingValue.geometry = event['observation_geometry_code_id'];
+    this.notifyChangeEvent();
   }
 
   /**

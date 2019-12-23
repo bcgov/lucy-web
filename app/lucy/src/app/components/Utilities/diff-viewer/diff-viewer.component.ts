@@ -39,7 +39,7 @@ export class DiffViewerComponent implements OnInit {
    * Boolean value to indicate whether app is running
    * in production environment
    */
-  public isProd: boolean = false;
+  public isProd = false;
 
   get changes(): ChangedField[] {
     if (!this.diffObject) {

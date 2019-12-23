@@ -219,7 +219,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
    /**
    * Returns an array of strings containing headers
-   * of missing fields 
+   * of missing fields
    * @returns string array of headers
    */
   get missingFields(): string[] {
