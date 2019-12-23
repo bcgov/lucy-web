@@ -626,6 +626,17 @@ export class FormService {
             fieldOfInterest.codeTableMeta
           );
         }
+
+        // Check Embedded fields
+        if (fieldOfInterest.embeddedFields && Object.keys(fieldOfInterest.embeddedFields)) {
+          for (const f of Object.keys(fieldOfInterest.embeddedFields)) {
+            const val = fieldOfInterest.embeddedFields[f];
+            if (val.type === 'object') {
+              val.isDropdown = true;
+              val.dropdown = await this.dropdownfor(val.codeTable, val.displayKey, val.codeTableMeta);
+            }
+          }
+        }
         return fieldOfInterest;
       }
     }
