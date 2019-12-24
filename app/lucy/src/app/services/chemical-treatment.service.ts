@@ -77,7 +77,7 @@ export class ChemicalTreatmentService {
       windDirection: object.windDirection.wind_direction_code_id,
       mixDeliveryRate: object.mixDeliveryRate,
       tankMixes: object.tankMixes,
-      speciesObservations: object.speciesObservedTreated,
+      speciesObservations: object.speciesObservations,
     };
 
     return body;
@@ -213,7 +213,7 @@ export class ChemicalTreatmentService {
       windDirection: undefined,
       mixDeliveryRate: undefined,
       tankMixes: undefined,
-      speciesObservedTreated: undefined,
+      speciesObservations: undefined,
       comment: undefined,
     };
     return object;

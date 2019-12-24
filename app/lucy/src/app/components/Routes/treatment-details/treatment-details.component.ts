@@ -4,7 +4,7 @@ import { ObservationService } from 'src/app/services/observation.service';
 import { CodeTableService } from 'src/app/services/code-table.service';
 import { FormService } from 'src/app/services/form/form.service';
 import { FormMode } from 'src/app/models';
-import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated } from 'src/app/models/ChemicalTreatment';
+import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated, ChemicalTreatment } from 'src/app/models/ChemicalTreatment';
 import { HerbicideTankMixService, ObservationChemicalTreatmentService } from 'src/app/services/chemical-treatment.service';
 
 @Component({
@@ -37,31 +37,53 @@ export class TreatmentDetailsComponent implements OnInit {
     speciesHerbicides: SpeciesHerbicideSummary[] = [];
     inViewMode: boolean;
     config: any;
+    treatment: ChemicalTreatment;
 
     constructor(private observationService: ObservationService, private htmService: HerbicideTankMixService, private ocService: ObservationChemicalTreatmentService, private codeTables: CodeTableService, private formService: FormService) {}
 
     async ngOnInit() {
         this.config = await this.formService.getFormConfigForCurrentRoute();
+        this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
         this.compileSpeciesHerbicidesList();
     }
 
     async compileSpeciesHerbicidesList() {
-        const tankMixes: HerbicideTankMix[] = await this.htmService.getAllForTreatment(this.config.objectId);
-        const speciesTreated: SpeciesObservedTreated[] = await this.ocService.getAllForTreatment(this.config.objectId);
+      if (this.mode === FormMode.Create) {
+        const tankMixes = this.responseBody.tankMixes;
+        const speciesTreated = this.responseBody.speciesObservations;
 
         tankMixes.forEach((hItem, hIndex) => {
-            speciesTreated.forEach(async (sItem, sIndex) => {
-                const obs = await this.observationService.getWithId(sItem.observation);
-                const speciesCommonName = obs.species.commonName + ' (' + obs.species.species + ' ' + obs.species.genus + ')';
-                const herb = hItem.herbicide;
-                const summary: SpeciesHerbicideSummary = {
-                    speciesName: speciesCommonName,
-                    herbicideName: herb.compositeName,
-                    amountUsed: hItem.amountUsed,
-                    applicationRate: hItem.applicationRate
-                };
-                this.speciesHerbicides.push(summary);
-            });
+          speciesTreated.forEach(async (sItem, sIndex) => {
+              const obs = sItem.observation;
+              const speciesCommonName = obs.species.commonName + ' (' + obs.species.species + ' ' + obs.species.genus + ')';
+              const herb = await this.codeTables.getHerbicideWithId(hItem.herbicide);
+              const summary: SpeciesHerbicideSummary = {
+                  speciesName: speciesCommonName,
+                  herbicideName: herb.compositeName,
+                  amountUsed: hItem.dilutionRate,
+                  applicationRate: hItem.applicationRate
+              };
+              this.speciesHerbicides.push(summary);
+          });
         });
+      } else if (this.mode === FormMode.Edit  || FormMode.View) {
+        const tankMixes = this.treatment.tankMixes;
+        const speciesTreated = this.treatment.speciesObservations;
+
+        tankMixes.forEach((hItem, hIndex) => {
+          speciesTreated.forEach(async (sItem, sIndex) => {
+              const obs = sItem.observation;
+              const speciesCommonName = obs.species.commonName + ' (' + obs.species.species + ' ' + obs.species.genus + ')';
+              const herb = await this.codeTables.getHerbicideWithId(hItem.herbicide.herbicide_id);
+              const summary: SpeciesHerbicideSummary = {
+                  speciesName: speciesCommonName,
+                  herbicideName: herb.compositeName,
+                  amountUsed: hItem.dilutionRate,
+                  applicationRate: hItem.applicationRate
+              };
+              this.speciesHerbicides.push(summary);
+          });
+      });
+      }
     }
 }

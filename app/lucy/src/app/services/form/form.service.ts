@@ -1169,7 +1169,7 @@ export class FormService {
    * @param endpoint API endpoint
    * @param id Id of the object
    */
-  private async getObjectWithId(endpoint: string, id: number): Promise<any> {
+  async getObjectWithId(endpoint: string, id: number): Promise<any> {
     const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
     const response = await this.api.request(
       APIRequestMethod.GET,
@@ -1295,6 +1295,16 @@ export class FormService {
     } else if (this.router.isCreateRoute) {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
       method = APIRequestMethod.POST;
+
+      // TODO refactor
+      // hacky way of replacing observation objects from front-end with
+      // observation IDs,which is what back-end expects
+      // for chemical treatments
+      if (uiConfig.api === '/treatment/chemical') {
+        for (const el of cleanBody['speciesObservations']) {
+          el.observation = el.observation.observation_id;
+        }
+      }
     } else {
       console.log('Not a route that can submit');
       return {

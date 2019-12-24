@@ -49,7 +49,9 @@ export class DropdownComponent implements OnInit {
   emitter: EventEmitter<boolean>;
 
   get fieldId(): string {
-    return this.camelize(this.fieldHeader);
+    if (this.fieldHeader !== undefined) {
+      return this.camelize(this.fieldHeader);
+    } else { return ``; }
   }
 
   ///// Form Mode
@@ -200,7 +202,7 @@ export class DropdownComponent implements OnInit {
 
   camelize(str: string): string {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
     }).replace(/\s+/g, '');
   }
 
