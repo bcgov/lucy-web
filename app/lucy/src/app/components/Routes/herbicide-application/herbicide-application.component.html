@@ -21,7 +21,7 @@
         </div>
 
         <!-- View when zero herbicides selected -->
-        <div class="row" *ngIf="tankMixesUsed.length == 0">
+        <div class="row" *ngIf="tankMixesUsed === undefined || tankMixesUsed.length === 0">
             <div class="col-12">
                 <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
                 </app-dropdown>
@@ -44,7 +44,7 @@
             <div class="container">
                 <div *ngFor="let h of tankMixesUsed" class="row full-width animated fadeInLeft animationDuration">
                     <div class="col-5">
-                        <app-dropdown [mode]="mode" [fieldHeader]="h.displayLabel" (selectionChanged)="herbicideChanged($event)">{{ dropdown }}
+                        <app-dropdown [mode]="mode" [fieldHeader]="h.herbicide.displayLabel" (selectionChanged)="herbicideChanged($event)">{{ dropdown }}
                         </app-dropdown>
                     </div>
                     <div class="col-3">

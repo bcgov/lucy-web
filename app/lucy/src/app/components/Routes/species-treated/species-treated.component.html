@@ -15,16 +15,16 @@
         <div class="col-12">
             <label class="speciesTreatedLabel">Being Treated</label>
             <div class="row">
-                <div *ngIf="speciesBeingTreated.length == 0" class="col-12">
+                <div *ngIf="speciesBeingTreated === undefined || speciesBeingTreated.length == 0" class="col-12">
                     <div class="container" id="emptySpeciesTreatedContainer">
                         <span class="align-middle">Select a species below to add it to this chemical treatment record</span>
                     </div>
                 </div>
                 <div *ngFor="let s of speciesBeingTreated" class="col-md-6 col-sm-12">
-                    <div [id]="s.observationObject.species.commonName" class="card speciesTreatedCard container animated animation-config">
+                    <div [id]="s.observation.species.commonName" class="card speciesTreatedCard container animated animation-config">
                         <div class="card-body">
                             <div class="row align-items-center">
-                                <div class="card-title col-7">{{ s.observationObject.species.commonName }} ({{ s.observationObject.species.species }} {{ s.observationObject.species.genus }})</div>
+                                <div class="card-title col-7">{{ s.observation.species.commonName }} ({{ s.observation.species.species }} {{ s.observation.species.genus }})</div>
                                 <app-field class="card-text col-4" id="percentageField" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.treatmentAreaCoverage" (valueChanged)="updatedAreaCoverage($event, s)"></app-field>
                                 <button class="card-link btn button-empty col-1" id="deleteButton" (click)="moveBeingTreatedToNotTreated(s)">
                                         <mat-icon style="color: #CDCED2;">delete</mat-icon>
@@ -42,11 +42,11 @@
             <hr />
             <div class="row">
                 <div *ngFor="let n of speciesNotBeingTreated" class="col-md-6 col-sm-12 align-items-stretch">
-                    <div [id]="n.observationObject.species.commonName" class="card speciesNotTreatedCard container animated animation-config">
+                    <div [id]="n.species.commonName" class="card speciesNotTreatedCard container animated animation-config">
                         <div class="card-body">
                             <div class="row align-items-center justify-content-between">
                                 <div class="card-title col-7">
-                                    <p>{{ n.observationObject.species.commonName }} ({{ n.observationObject.species.species }} {{ n.observationObject.species.genus }})</p>
+                                    <p>{{ n.species.commonName }} ({{ n.species.species }} {{ n.species.genus }})</p>
                                 </div>
                                 <div class="col-5">
                                     <button class="btn button-fill treatButton" (click)="moveNotTreatedToBeingTreated(n)">Treat</button>

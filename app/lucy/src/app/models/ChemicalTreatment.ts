@@ -14,18 +14,19 @@ export interface HerbicideCodes {
 }
 
 export interface HerbicideTankMix {
-    displayLabel: string;
     applicationRate: number;
+    dilutionRate: number;  // actually amount used, for now
     amountUsed: number;
     herbicide: HerbicideCodes;
     chemicalTreatmentId: number;
+    herbicide_tank_mix_id: number;
 }
 
 export interface SpeciesObservedTreated {
-    observationObject: Observation;
-    observation: number;
+    observation: Observation;
     treatmentAreaCoverage: number;
     chemicalTreatmentId: number;
+    observation_chemical_treatment_id: number;
 }
 
 export interface SpeciesHerbicideSummary {
@@ -72,7 +73,7 @@ export interface ChemicalTreatment {
     windDirection: WindDirectionCode;
     mixDeliveryRate: number;
     tankMixes: HerbicideTankMix[];
-    speciesObservedTreated: SpeciesObservedTreated[];
+    speciesObservations: SpeciesObservedTreated[];
     comment: string;
 }
 

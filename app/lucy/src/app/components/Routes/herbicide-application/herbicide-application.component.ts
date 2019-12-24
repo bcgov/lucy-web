@@ -73,12 +73,23 @@ export class HerbicideApplicationComponent implements OnInit {
       this.inViewMode = true;
     } else { this.inViewMode = false; }
   }
+  // Base form response body
+  private _responseBody: any = {};
+  get responseBody(): any {
+    return this._responseBody;
+  }
+  @Input() set responseBody(responseBody: any) {
+    this._responseBody = responseBody;
+  }
 
   constructor(private codeTables: CodeTableService, private formService: FormService, private dropdownService: DropdownService) { }
 
 
   ngOnInit() {
     this.prepareDropdownMenus();
+    if (this.mode === FormMode.Edit) {
+      this.compileTankMixesUsed();
+    }
   }
 
   set tankMixesUsed(h: HerbicideTankMix[]) {
@@ -111,6 +122,12 @@ export class HerbicideApplicationComponent implements OnInit {
       this.unusedHerbicides = Object.assign([], codes);
       this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     });
+  }
+
+  compileTankMixesUsed() {
+    for (const tm of this.responseBody.tankMixes) {
+      this.tankMixesUsed.push(tm);
+    }
   }
 
   removeHerbicide(h: HerbicideTankMix) {
@@ -162,6 +179,7 @@ export class HerbicideApplicationComponent implements OnInit {
   }
 
   amountUsedChanged(event: any, htm: HerbicideTankMix) {
+    htm.dilutionRate = event;
     htm.amountUsed = event;
     this.notifyChangeEvent();
   }
@@ -182,11 +200,12 @@ export class HerbicideApplicationComponent implements OnInit {
 
   createTankMixForHerbicide(h: HerbicideCodes): HerbicideTankMix {
     const htm: HerbicideTankMix = {
-      displayLabel: h.compositeName,
       applicationRate: h.applicationRate,
+      dilutionRate: undefined,  // actually amount used
       amountUsed: undefined,
       herbicide: h,
-      chemicalTreatmentId: undefined
+      chemicalTreatmentId: undefined,
+      herbicide_tank_mix_id: undefined
     };
     return htm;
   }
