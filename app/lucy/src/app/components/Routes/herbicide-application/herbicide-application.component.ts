@@ -9,6 +9,7 @@ import { DropdownService, DropdownObject } from 'src/app/services/dropdown.servi
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 import { ErrorStateMatcher } from '@angular/material';
 import { DropdownComponent } from '../../Input/dropdown/dropdown.component';
+import { LoadingService } from 'src/app/services/loading.service';
 
 export class HerbicideApplicationErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -30,6 +31,7 @@ export class HerbicideApplicationComponent implements OnInit {
 
   // Summary Line section variables
   mixDeliveryRate: number;
+  treatment: any;
 
   amountOfMixVerification = {
     required: true,
@@ -37,7 +39,7 @@ export class HerbicideApplicationComponent implements OnInit {
   };
 
   // Herbicide Selection section variables
-  _tankMixesUsed: HerbicideTankMix[] = [];
+  _tankMixes: HerbicideTankMix[] = [];
   unusedHerbicides: HerbicideCodes[]; // dynamic list of unused herbicides (used to create dropdown menu)
   herbicideDropdowns: DropdownObject[]; // dynamic list of dropdown objects built from this.unusedHerbicides
   showEmptyRow = false;
@@ -55,12 +57,7 @@ export class HerbicideApplicationComponent implements OnInit {
     positiveNumber: true
   };
 
-  deliveryRateFieldControl = new FormControl('', [
-    Validators.required,
-    Validators.min(0)
-  ]);
-
-  matcher = new HerbicideApplicationErrorStateMatcher();
+  // matcher = new HerbicideApplicationErrorStateMatcher();
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -82,29 +79,48 @@ export class HerbicideApplicationComponent implements OnInit {
     this._responseBody = responseBody;
   }
 
-  constructor(private codeTables: CodeTableService, private formService: FormService, private dropdownService: DropdownService) { }
+  // Base form config
+  private _config: any = {};
+  get config(): any {
+    return this._config;
+  }
+  @Input() set config(config: any) {
+    this._config = config;
+  }
+
+  constructor(private codeTables: CodeTableService,
+              private formService: FormService,
+              private dropdownService: DropdownService,
+              private loadingService: LoadingService) { }
 
 
-  ngOnInit() {
-    this.prepareDropdownMenus();
-    if (this.mode === FormMode.Edit) {
-      this.compileTankMixesUsed();
+  async ngOnInit() {
+    if (this.mode === FormMode.Create) {
+      this.prepareDropdownMenus();
+    } else if (this.mode === FormMode.Edit) {
+      // this.loadingService.add();
+      this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
+      // this.loadingService.remove();
+      this.responseBody = this.treatment;
+      this.mixDeliveryRate = this.responseBody.mixDeliveryRate;
+      this.prepareDropdownMenus();
+      this.compileTankMixes();
     }
   }
 
-  set tankMixesUsed(h: HerbicideTankMix[]) {
+  set tankMixes(h: HerbicideTankMix[]) {
     for (const elem of h) {
-        this._tankMixesUsed.push(elem);
+        this._tankMixes.push(elem);
     }
   }
 
-  get tankMixesUsed(): HerbicideTankMix[] {
-      return this._tankMixesUsed;
+  get tankMixes(): HerbicideTankMix[] {
+      return this._tankMixes;
   }
 
   private notifyChangeEvent() {
-    if (this.tankMixesUsed && this.mode !== FormMode.View) {
-      this.tankMixesChanged.emit(this.tankMixesUsed);
+    if (this.tankMixes && this.mode !== FormMode.View) {
+      this.tankMixesChanged.emit(this.tankMixes);
     }
   }
 
@@ -120,21 +136,25 @@ export class HerbicideApplicationComponent implements OnInit {
   async prepareDropdownMenus() {
     await this.codeTables.getHerbicideCodes().then((codes) => {
       this.unusedHerbicides = Object.assign([], codes);
+      for (const tm of this.tankMixes) {
+        this.unusedHerbicides.splice(this.unusedHerbicides.indexOf(tm.herbicide), 1);
+      }
       this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     });
   }
 
-  compileTankMixesUsed() {
+  compileTankMixes() {
     for (const tm of this.responseBody.tankMixes) {
-      this.tankMixesUsed.push(tm);
+      tm.amountUsed = tm.dilutionRate;
+      this.tankMixes.push(tm);
     }
   }
 
   removeHerbicide(h: HerbicideTankMix) {
-    if (this.tankMixesUsed.includes(h)) {
+    if (this.tankMixes.includes(h)) {
       // remove the deleted tank mix from the array of tankMixes
-      const index = this.tankMixesUsed.findIndex((element) => element === h);
-      this.tankMixesUsed.splice(index, 1);
+      const index = this.tankMixes.findIndex((element) => element === h);
+      this.tankMixes.splice(index, 1);
     }
 
     // return the deleted herbicide to the list of unusedHerbicides
@@ -155,9 +175,9 @@ export class HerbicideApplicationComponent implements OnInit {
   herbicideChanged(event: any) {
     // create new HerbicideTankMix for the selected herbicide, add it to array of tankMixes
     const herbicideCodeSelected = event.object;
-    if (!this.tankMixesUsedContainsHerbicide(herbicideCodeSelected)) {
+    if (!this.tankMixesContainsHerbicide(herbicideCodeSelected)) {
       const htm = this.createTankMixForHerbicide(herbicideCodeSelected);
-      this.tankMixesUsed.push(htm);
+      this.tankMixes.push(htm);
     }
 
     // remove the selected herbicide from the list of unusedHerbicides so it can't be selected again in dropdowns
@@ -185,8 +205,9 @@ export class HerbicideApplicationComponent implements OnInit {
   }
 
   deliveryRateChanged(event: any) {
-    if (this.deliveryRateFieldControl.errors === null) {
+    if (event !== '') {
       this.mixDeliveryRate = event;
+      this.responseBody.mixDeliveryRate = this.mixDeliveryRate;
     }
   }
 
@@ -210,8 +231,8 @@ export class HerbicideApplicationComponent implements OnInit {
     return htm;
   }
 
-  tankMixesUsedContainsHerbicide(h: HerbicideCodes): boolean {
-    for (const htm of this.tankMixesUsed) {
+  tankMixesContainsHerbicide(h: HerbicideCodes): boolean {
+    for (const htm of this.tankMixes) {
       if (h === htm.herbicide) {
         return true;
       }
