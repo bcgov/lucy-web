@@ -172,13 +172,13 @@
                                 </div>
                                 <div class="row" *ngIf="subSection.isCustom">
                                     <div *ngIf="subSection.custom.formComponent === 'HerbicideMix' && !inReviewMode" class="col-12">
-                                        <app-herbicide-application [responseBody]="responseBody" [mode]="mode" (tankMixesChanged)="tankMixesChanged($event)"></app-herbicide-application>
+                                        <app-herbicide-application [config]="config" [responseBody]="responseBody" [mode]="mode" (tankMixesChanged)="tankMixesChanged($event)"></app-herbicide-application>
                                     </div>
                                     <div *ngIf="subSection.custom.formComponent === 'SpeciesTreated' && !inReviewMode" class="col-12">
-                                        <app-species-treated [responseBody]="responseBody" [mode]="mode" (speciesTreatedChanged)="speciesTreatedChanged($event)"></app-species-treated>
+                                        <app-species-treated [config]="config" [responseBody]="responseBody" [mode]="mode" (speciesTreatedChanged)="speciesTreatedChanged($event)"></app-species-treated>
                                     </div>
                                     <div *ngIf="subSection.custom.formComponent === 'TreatmentDetails' && (inReviewMode || viewing)" class="col-12">
-                                        <app-treatment-details [mode]="mode" [responseBody]="responseBody"></app-treatment-details>
+                                        <app-treatment-details [config]="config" [mode]="mode" [responseBody]="responseBody"></app-treatment-details>
                                     </div>
                                 </div>
                             </div>

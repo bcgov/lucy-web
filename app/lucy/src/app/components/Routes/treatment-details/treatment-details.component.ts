@@ -4,8 +4,9 @@ import { ObservationService } from 'src/app/services/observation.service';
 import { CodeTableService } from 'src/app/services/code-table.service';
 import { FormService } from 'src/app/services/form/form.service';
 import { FormMode } from 'src/app/models';
-import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated, ChemicalTreatment } from 'src/app/models/ChemicalTreatment';
+import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated, ChemicalTreatment, HerbicideCodes } from 'src/app/models/ChemicalTreatment';
 import { HerbicideTankMixService, ObservationChemicalTreatmentService } from 'src/app/services/chemical-treatment.service';
+import { number } from 'prop-types';
 
 @Component({
     selector: 'app-treatment-details',
@@ -44,46 +45,38 @@ export class TreatmentDetailsComponent implements OnInit {
     async ngOnInit() {
         this.config = await this.formService.getFormConfigForCurrentRoute();
         this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
+        if (this.treatment !== undefined) {
+          this.responseBody = this.treatment;
+        }
         this.compileSpeciesHerbicidesList();
     }
 
     async compileSpeciesHerbicidesList() {
-      if (this.mode === FormMode.Create) {
-        const tankMixes = this.responseBody.tankMixes;
-        const speciesTreated = this.responseBody.speciesObservations;
+      const tankMixes = this.responseBody.tankMixes;
+      const speciesTreated = this.responseBody.speciesObservations;
+      tankMixes.forEach((hItem, hIndex) => {
+        speciesTreated.forEach(async (sItem, sIndex) => {
+            const obs = sItem.observation;
+            const speciesCommonName = obs.species.commonName + ' (' + obs.species.species + ' ' + obs.species.genus + ')';
+            let herb: HerbicideCodes;
 
-        tankMixes.forEach((hItem, hIndex) => {
-          speciesTreated.forEach(async (sItem, sIndex) => {
-              const obs = sItem.observation;
-              const speciesCommonName = obs.species.commonName + ' (' + obs.species.species + ' ' + obs.species.genus + ')';
-              const herb = await this.codeTables.getHerbicideWithId(hItem.herbicide);
-              const summary: SpeciesHerbicideSummary = {
-                  speciesName: speciesCommonName,
-                  herbicideName: herb.compositeName,
-                  amountUsed: hItem.dilutionRate,
-                  applicationRate: hItem.applicationRate
-              };
-              this.speciesHerbicides.push(summary);
-          });
+            // depending on form mode, hItem.herbicide may be a HerbicideCodes object
+            // or an int representing the herbicide_id
+            // if it's a number, get the HerbicideCodes object from the code table
+            if (typeof(hItem.herbicide) === 'number') {
+              herb = await this.codeTables.getHerbicideWithId(hItem.herbicide);
+            } else {
+              // else hItem.herbicide is already a HerbicideCodes object
+              herb = hItem.herbicide;
+            }
+            const summary: SpeciesHerbicideSummary = {
+                speciesName: speciesCommonName,
+                herbicideName: herb.compositeName,
+                amountUsed: hItem.dilutionRate,
+                applicationRate: hItem.applicationRate
+            };
+            this.speciesHerbicides.push(summary);
         });
-      } else if (this.mode === FormMode.Edit  || FormMode.View) {
-        const tankMixes = this.treatment.tankMixes;
-        const speciesTreated = this.treatment.speciesObservations;
-
-        tankMixes.forEach((hItem, hIndex) => {
-          speciesTreated.forEach(async (sItem, sIndex) => {
-              const obs = sItem.observation;
-              const speciesCommonName = obs.species.commonName + ' (' + obs.species.species + ' ' + obs.species.genus + ')';
-              const herb = await this.codeTables.getHerbicideWithId(hItem.herbicide.herbicide_id);
-              const summary: SpeciesHerbicideSummary = {
-                  speciesName: speciesCommonName,
-                  herbicideName: herb.compositeName,
-                  amountUsed: hItem.dilutionRate,
-                  applicationRate: hItem.applicationRate
-              };
-              this.speciesHerbicides.push(summary);
-          });
       });
-      }
     }
 }

@@ -8,7 +8,7 @@
     <!-- Summary Line Section -->
     <div class="row">
         <div class="col-12">
-            <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" [fieldFormControl]="deliveryRateFieldControl" (valueChanged)="deliveryRateChanged($event)">
+            <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" (valueChanged)="deliveryRateChanged($event)">
             </app-field>
         </div>
     </div>
@@ -21,7 +21,7 @@
         </div>
 
         <!-- View when zero herbicides selected -->
-        <div class="row" *ngIf="tankMixesUsed === undefined || tankMixesUsed.length === 0">
+        <div class="row" *ngIf="tankMixes === undefined || tankMixes.length === 0">
             <div class="col-12">
                 <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
                 </app-dropdown>
@@ -29,7 +29,7 @@
         </div>
 
         <!-- View when 1+ herbicides selected -->
-        <div class="col-12 container" *ngIf="tankMixesUsed.length > 0">
+        <div class="col-12 container" *ngIf="tankMixes.length > 0">
             <div class="row labelsRow">
                 <div class="col-5">
                     <label>Select Herbicide(s) to add to treatment:</label>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="container">
-                <div *ngFor="let h of tankMixesUsed" class="row full-width animated fadeInLeft animationDuration">
+                <div *ngFor="let h of tankMixes" class="row full-width animated fadeInLeft animationDuration">
                     <div class="col-5">
                         <app-dropdown [mode]="mode" [fieldHeader]="h.herbicide.displayLabel" (selectionChanged)="herbicideChanged($event)">{{ dropdown }}
                         </app-dropdown>
@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <div *ngIf="tankMixesUsed.length > 0 && !showEmptyRow" class="container col-6">
+        <div *ngIf="tankMixes.length > 0 && !showEmptyRow" class="container col-6">
             <div class="row">
                 <button class="btn addHerbicideButton" (click)="addEmptyTableRow()"><strong>Add Additional Herbicide</strong></button>
             </div>
