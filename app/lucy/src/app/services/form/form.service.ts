@@ -1231,7 +1231,11 @@ export class FormService {
       .concat(Object.keys(obj2 || {}))
       .forEach(key => {
         if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-          result[key] = obj2[key];
+          // filter out diff objects where both old and new values are ``
+          // (this is correction to hack for custom components in Chemical Treatment form)
+          if (obj2[key] !== `` || obj1[key] !== ``) {
+            result[key] = obj2[key];
+          }
         }
         if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
           const value = this.diff(obj1[key], obj2[key]);
@@ -1295,23 +1299,25 @@ export class FormService {
     } else if (this.router.isCreateRoute) {
       endpoint = `${AppConstants.API_baseURL}${uiConfig.api}`;
       method = APIRequestMethod.POST;
-
-      // TODO refactor
-      // hacky way of replacing observation objects from front-end with
-      // observation IDs,which is what back-end expects
-      // for chemical treatments
-      if (uiConfig.api === '/treatment/chemical') {
-        for (const el of cleanBody['speciesObservations']) {
-          el.observation = el.observation.observation_id;
-        }
-      }
     } else {
       console.log('Not a route that can submit');
       return {
         success: false
       };
     }
-
+    // TODO refactor
+    // hacky way of replacing observation objects from front-end with
+    // observation IDs,which is what back-end expects
+    // for chemical treatments
+    if (uiConfig.api === '/treatment/chemical') {
+      for (const el of cleanBody['speciesObservations']) {
+        // if el.observation is an Observation object,
+        // it needs to be replaced with just the observation_id of the object
+        if (typeof(el.observation) === `object`) {
+          el.observation = el.observation.observation_id;
+        }
+      }
+    }
     const result = await this.api.request(method, endpoint, cleanBody);
     return this.prosessSubmissionResult(result, uiConfig.idKey);
   }

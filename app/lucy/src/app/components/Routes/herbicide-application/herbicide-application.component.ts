@@ -98,11 +98,16 @@ export class HerbicideApplicationComponent implements OnInit {
     if (this.mode === FormMode.Create) {
       this.prepareDropdownMenus();
     } else if (this.mode === FormMode.Edit) {
-      // this.loadingService.add();
       this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
-      // this.loadingService.remove();
       this.responseBody = this.treatment;
       this.mixDeliveryRate = this.responseBody.mixDeliveryRate;
+
+      // hacky way of passing responseBody contents to base-form
+      // otherwise fields have to be touched by user before base-form recognizes
+      // that values exist
+      this.notifyDeliveryRateChangeEvent();
+      this.notifyTankMixChangeEvent();
+
       this.prepareDropdownMenus();
       this.compileTankMixes();
     }

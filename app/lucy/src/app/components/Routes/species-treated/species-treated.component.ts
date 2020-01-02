@@ -10,11 +10,32 @@ import { FormControl, Validators } from '@angular/forms';
 import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { FormMode } from 'src/app/models';
 import { AddQuickObservationModalComponent } from '../../Utilities/add-quick-observation-modal/add-quick-observation-modal.component';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { delay } from 'q';
+import { FormService } from 'src/app/services/form/form.service';
 
 @Component({
   selector: 'app-species-treated',
   templateUrl: './species-treated.component.html',
-  styleUrls: ['./species-treated.component.css']
+  styleUrls: ['./species-treated.component.css'],
+  animations: [
+    trigger('notTreated', [
+      transition(':leave',
+        animate('1s')
+      ),
+      transition(':enter',
+        animate('1s 1s')
+      )
+    ]),
+    trigger('treated', [
+      transition(':leave',
+        animate('1s')
+      ),
+      transition(':enter',
+        animate('1s 1s')
+      )
+    ])
+  ]
 })
 export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
@@ -28,10 +49,19 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   @Input() set responseBody(responseBody: any) {
     this._responseBody = responseBody;
   }
+  // Base form config
+  private _config: any = {};
+  get config(): any {
+    return this._config;
+  }
+  @Input() set config(config: any) {
+    this._config = config;
+  }
 
   speciesBeingTreated: SpeciesObservedTreated[];
   speciesNotBeingTreated: Observation[];
   species: InvasivePlantSpecies[];
+  treatment: any;
 
   // addQuickObservationModal: AddQuickObservationModalComponent = new AddQuickObservationModalComponent(this.modalService, this.codeTables, this.dropdowns);
 
@@ -60,6 +90,7 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
   constructor(private loadingService: LoadingService,
               private observationService: ObservationService,
+              private formService: FormService,
               private modalService: NgbModal) { }
 
 
@@ -68,9 +99,18 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       this.speciesBeingTreated = [];
       this.speciesNotBeingTreated = [];
     } else if (this.mode === FormMode.Edit) {
-      this.speciesBeingTreated = this.responseBody.speciesObservations;
       this.loadingService.add();
-      await this.fetchObservationsForLocation(this.responseBody.lat, this.responseBody.long);
+      this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
+      this.responseBody = this.treatment;
+      this.speciesBeingTreated = this.responseBody.speciesObservations;
+      this.speciesNotBeingTreated = [];
+
+      // hacky way of passing responseBody contents to base-form
+      // otherwise fields have to be touched by user before base-form recognizes
+      // that values exist
+      this.notifyChangeEvent();
+
+      await this.fetchObservationsForLocation(this.responseBody.latitude, this.responseBody.longitude);
       this.loadingService.remove();
     } else { // form is in view mode
       this.speciesBeingTreated = this.responseBody.speciesObservations;
@@ -89,9 +129,9 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     if (change.responseBody.currentValue.latitude !== undefined && change.responseBody.currentValue.longitude !== undefined) {
         const lat = change.responseBody.currentValue.latitude;
         const long = change.responseBody.currentValue.longitude;
-        this.loadingService.add();
+        // this.loadingService.add();
         await this.fetchObservationsForLocation(lat, long);
-        this.loadingService.remove();
+        // this.loadingService.remove();
     }
 
     if (change.responseBody.currentValue.mode !== undefined) {
@@ -123,18 +163,21 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     let index = this.speciesNotBeingTreated.indexOf(s);
     this.speciesNotBeingTreated.splice(index, 1);
 
-    const el = document.getElementById(s.species.commonName);
-    el.className = 'card speciesNotTreatedCard container animated animation-config bounceOutUp';
+    let card = document.getElementById(s.species.commonName);
+    card.style.animation = 'bounceOutUp';
+    card.style.animationDuration = '1s';
 
     // check for duplicates in speciesBeingTreated
     index = this.indexOfSpeciesInSpeciesBeingTreated(s);
-    if ( index >= 0) {
+          if ( index >= 0) {
       this.speciesBeingTreated.splice(index, 1);
     }
 
     this.speciesBeingTreated.push({observation: s, treatmentAreaCoverage: 0, chemicalTreatmentId: undefined, observation_chemical_treatment_id: undefined});
-
-    el.className = 'card speciesNotTreatedCard container animated animation-config bounceInUp';
+    card = document.getElementById(s.species.commonName);
+    card.style.animation = 'bounceInDown';
+    card.style.animationDuration = '1s';
+    card.style.animationDelay = '1s';
 
     this.notifyChangeEvent();
   }
@@ -144,9 +187,6 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     let index = this.speciesBeingTreated.indexOf(s);
     this.speciesBeingTreated.splice(index, 1);
 
-    // $(s.observation.species.commonName).removeClass('bounceInUp');
-    // $(s.observation.species.commonName).addClass('bounceOutDown');
-
     // check for duplicates in speciesNotBeingTreated
     index = this.speciesNotBeingTreated.indexOf(s.observation);
     if (index >= 0) {
@@ -155,9 +195,6 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
     s.treatmentAreaCoverage = 0;
     this.speciesNotBeingTreated.push(s.observation);
-
-    // $(s.observation.species.commonName).removeClass('bounceOutDown');
-    // $(s.observation.species.commonName).addClass('bounceInDown');
 
     this.notifyChangeEvent();
   }
