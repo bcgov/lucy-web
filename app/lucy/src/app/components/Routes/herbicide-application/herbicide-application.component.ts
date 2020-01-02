@@ -25,7 +25,7 @@ export class HerbicideApplicationErrorStateMatcher implements ErrorStateMatcher 
 })
 export class HerbicideApplicationComponent implements OnInit {
 
-  @Output() tankMixesChanged = new EventEmitter<HerbicideTankMix[]>();
+  @Output() tankMixesChanged = new EventEmitter<any>();
 
   inViewMode = true;
 
@@ -118,9 +118,15 @@ export class HerbicideApplicationComponent implements OnInit {
       return this._tankMixes;
   }
 
-  private notifyChangeEvent() {
+  private notifyTankMixChangeEvent() {
     if (this.tankMixes && this.mode !== FormMode.View) {
       this.tankMixesChanged.emit(this.tankMixes);
+    }
+  }
+
+  private notifyDeliveryRateChangeEvent() {
+    if (this.mixDeliveryRate && this.mode !== FormMode.View) {
+      this.tankMixesChanged.emit(this.mixDeliveryRate);
     }
   }
 
@@ -190,24 +196,25 @@ export class HerbicideApplicationComponent implements OnInit {
     // reset this flag - something has been entered in empty row
     this.showEmptyRow = false;
 
-    this.notifyChangeEvent();
+    this.notifyTankMixChangeEvent();
   }
 
   applicationRateChanged(event: any, htm: HerbicideTankMix) {
     htm.applicationRate = event;
-    this.notifyChangeEvent();
+    this.notifyTankMixChangeEvent();
   }
 
   amountUsedChanged(event: any, htm: HerbicideTankMix) {
     htm.dilutionRate = event;
     htm.amountUsed = event;
-    this.notifyChangeEvent();
+    this.notifyTankMixChangeEvent();
   }
 
   deliveryRateChanged(event: any) {
     if (event !== '') {
       this.mixDeliveryRate = event;
       this.responseBody.mixDeliveryRate = this.mixDeliveryRate;
+      this.notifyDeliveryRateChangeEvent();
     }
   }
 

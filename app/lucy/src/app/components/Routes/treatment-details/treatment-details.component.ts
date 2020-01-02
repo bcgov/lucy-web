@@ -1,12 +1,9 @@
 
 import { Component, OnInit, Input } from '@angular/core';
-import { ObservationService } from 'src/app/services/observation.service';
 import { CodeTableService } from 'src/app/services/code-table.service';
 import { FormService } from 'src/app/services/form/form.service';
 import { FormMode } from 'src/app/models';
 import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated, ChemicalTreatment, HerbicideCodes } from 'src/app/models/ChemicalTreatment';
-import { HerbicideTankMixService, ObservationChemicalTreatmentService } from 'src/app/services/chemical-treatment.service';
-import { number } from 'prop-types';
 
 @Component({
     selector: 'app-treatment-details',
@@ -40,7 +37,7 @@ export class TreatmentDetailsComponent implements OnInit {
     config: any;
     treatment: ChemicalTreatment;
 
-    constructor(private observationService: ObservationService, private htmService: HerbicideTankMixService, private ocService: ObservationChemicalTreatmentService, private codeTables: CodeTableService, private formService: FormService) {}
+    constructor(private codeTables: CodeTableService, private formService: FormService) {}
 
     async ngOnInit() {
         this.config = await this.formService.getFormConfigForCurrentRoute();
