@@ -395,6 +395,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @param event changed list of herbicideTankMix records
    */
   tankMixesChanged(event: any) {
+    // if 1 or more tank mixes have changed
     if (typeof(event) === `object`) {
       this.responseBody['tankMixes'] = [];
       event.forEach(element => {
@@ -404,7 +405,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     // if mix delivery rate has changed
     else if (typeof(event) === `number` || `string`) {
       this.responseBody['mixDeliveryRate'] = event;
-    } 
+    }
   }
 
   /**
@@ -422,14 +423,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         return;
       }
       this.loadingService.add();
-      // if submitting a chemical treatment, the observation objects have to be replaced with
-      // just the observation_id
-      if (this.config.api === `/treatment/chemical`) {
-        // tslint:disable-next-line: forin
-        for (const index in this.responseBody.speciesObservations) {
-          this.responseBody.speciesObservations[index].observation = this.responseBody.speciesObservations[index].observation.observation_id;
-        }
-      }
       console.dir(JSON.stringify(this.responseBody));
       console.dir(JSON.parse(JSON.stringify(this.responseBody)));
       const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
