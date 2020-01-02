@@ -49,7 +49,8 @@ export interface ChemicalTreatmentSpec {
 	secondApplicator: ChemicalTreatmentEmployee;
 	windDirection: WindDirectionCodes;
 	methodCode: ChemicalTreatmentMethodCode;
-    additionalComments: string;
+	additionalComments: string;
+	mixDeliveryRate: number;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -77,7 +78,8 @@ export interface ChemicalTreatmentUpdateSpec {
 	secondApplicator?: ChemicalTreatmentEmployee;
 	windDirection?: WindDirectionCodes;
 	methodCode?: ChemicalTreatmentMethodCode;
-    additionalComments?: string;
+	additionalComments?: string;
+	mixDeliveryRate?: number;
 }
 // -- End: ChemicalTreatmentUpdateSpec --
 
@@ -254,7 +256,6 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	 * @description Getter/Setter property for tankMixes
 	 */
 	@OneToMany( type => HerbicideTankMix, tankMix => tankMix.chemicalTreatment, {eager: true})
-	// tankMixesFetcher: Promise<HerbicideTankMix[]>;
 	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/HerbicideTankMix'})
 	tankMixes: HerbicideTankMix[];
 
@@ -262,7 +263,6 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	 *  @description Getter/Setter property for related observations
 	 */
 	@OneToMany( type => ObservationChemicalTreatment, obj => obj.chemicalTreatment, { eager: true})
-	// observationChemicalTreatmentsFetcher: Promise<ObservationChemicalTreatment[]>;
 	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/ObservationChemicalTreatment'})
 	speciesObservations: ObservationChemicalTreatment[];
 

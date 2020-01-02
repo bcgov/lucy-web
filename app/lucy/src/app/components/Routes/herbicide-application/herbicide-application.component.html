@@ -8,13 +8,13 @@
     <!-- Summary Line Section -->
     <div class="row">
         <div class="col-12">
-            <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" (valueChanged)="deliveryRateChanged($event)">
+            <app-field id="mixDeliveryRate" [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" (valueChanged)="deliveryRateChanged($event)">
             </app-field>
         </div>
     </div>
 
 
-    <div class="container-fluid herbicideContainer">
+    <div class="container-fluid herbicideContainer" id="herbicideMix">
         <!-- Herbicide Selection Section -->
         <div class="row col-12">
             <label>Select Herbicides</label>
