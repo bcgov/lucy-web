@@ -148,7 +148,12 @@ export class HerbicideApplicationComponent implements OnInit {
     await this.codeTables.getHerbicideCodes().then((codes) => {
       this.unusedHerbicides = Object.assign([], codes);
       for (const tm of this.tankMixes) {
-        this.unusedHerbicides.splice(this.unusedHerbicides.indexOf(tm.herbicide), 1);
+        const index = this.unusedHerbicides.findIndex((element) => element.herbicide_id === tm.herbicide.herbicide_id);
+        if (index > -1) {
+          this.unusedHerbicides.splice(index, 1);
+        } else {
+          console.dir(`Error. Couldn't find tank mix's herbicide in codes`);
+        }
       }
       this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     });
