@@ -438,7 +438,7 @@ export class FormService {
         }
         // Store field headers in a separate array
         fieldHeaders[newField.key] = newField.header;
-  
+
         // Add Bootstrap column size
         newField.cssClasses = this.addColumnClass(
           newField.cssClasses,
@@ -446,7 +446,7 @@ export class FormService {
           groupFields.length,
           newField.isTextAreaField
         );
-  
+
         ////// Special case for lat or long fields //////
         if (
           newField.isLocationLatitudeField ||
@@ -473,7 +473,7 @@ export class FormService {
           // Add field to group fields
           subSectionFields.push(newField);
         }
-      
+
     }
     return {
       fields: subSectionFields,
@@ -547,7 +547,7 @@ export class FormService {
       cssClasses: cssClasses,
       codeTable: '',
       condition: '',
-    }
+    };
   }
 
   private async configComputedField(
@@ -719,7 +719,7 @@ export class FormService {
     ///// END Tweak verification object received
     return {
       key: field.key,
-      header: field.layout.header.default,
+      header: field.layout.header.default || '',
       description: field.layout.description,
       required: field.required,
       type: field.type,
@@ -1416,6 +1416,6 @@ export class FormService {
       codeTableMeta: {},
       displayKey: '',
       condition: '',
-    }
+    };
   }
 }
