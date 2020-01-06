@@ -245,6 +245,23 @@ describe('Test Chemical Treatment', () => {
         should().exist(ct.tankMixes);
     });
 
+    it('should create chemical treatment spec with space geom', async () => {
+        const ct: ChemicalTreatmentSpec = await ModelSpecFactory(ChemicalTreatmentController.shared)();
+        should().exist(ct);
+        should().exist(ct.spaceGeom);
+    });
+
+    it('should create chemical treatment model with space geom', async() => {
+        const c: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
+        should().exist(c);
+        should().exist(c.spaceGeom);
+        // Fetch
+        const ct: ChemicalTreatment = await ChemicalTreatmentController.shared.findById(c.chemical_treatment_id);
+        should().exist(ct);
+        should().exist(ct.spaceGeom);
+        expect(ct.spaceGeom.space_geom_id).to.be.equal(c.spaceGeom.space_geom_id);
+    });
+
 
 });
 

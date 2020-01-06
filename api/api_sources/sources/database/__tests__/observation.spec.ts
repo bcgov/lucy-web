@@ -25,7 +25,6 @@ import { expect, should } from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction, testModel } from '../../test-helpers/testHelpers';
 import {
     observationFactory,
-    destroyObservation,
     speciesAgencyCodeFactory,
     observationTypeCodeFactory,
     soilTextureCodeFactory,
@@ -33,9 +32,12 @@ import {
     specificUseCodeFactory,
     slopeCodeFactory,
     aspectCodeFactory,
-    proposedActionCodeFactory
+    proposedActionCodeFactory,
+    ModelFactory,
+    Destroyer
 } from '../factory';
 import {
+    Observation,
     ObservationController
 } from '../models';
 import {
@@ -68,12 +70,14 @@ describe('Observation tests', () => {
     it('should create/fetch observation', async () => {
         const f = await observationFactory();
         should().exist(f);
+        should().exist(f.observation_id);
         const obs = await ObservationController.shared.findById(f.observation_id);
+        should().exist(obs);
         testModel(obs, ObservationSchema.shared);
         // expect(obs.createdBy.user_id).to.equal(f.createdBy.user_id);
         // expect(obs.updatedBy.user_id).to.equal(f.updatedBy.user_id);
         expect(obs.observation_id).to.equal(f.observation_id);
-        await destroyObservation(obs);
+        await Destroyer(ObservationController.shared)(f);
     });
 
 
@@ -135,6 +139,21 @@ describe('Observation tests', () => {
         const code = await proposedActionCodeFactory(2);
         testModel(code, ProposedActionCodeSchema.shared);
         expect(code.observation_proposed_action_code_id).to.be.equal(2);
+    });
+
+    it('should associate model spaceGeom', async () => {
+        // Create
+        const observation: Observation = await ModelFactory(ObservationController.shared)();
+        should().exist(observation);
+        should().exist(observation.spaceGeom);
+        // Fetch
+        const obs: Observation = await ObservationController.shared.findById(observation.observation_id);
+        should().exist(obs);
+        expect(obs.observation_id).to.be.equal(observation.observation_id);
+        should().exist(obs.spaceGeom);
+        expect(obs.spaceGeom.space_geom_id).to.be.equal(observation.spaceGeom.space_geom_id);
+        await Destroyer(ObservationController.shared)(observation);
+
     });
 });
 

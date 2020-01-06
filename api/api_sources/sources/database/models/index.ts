@@ -61,6 +61,7 @@ export * from './herbicideTankMix';
 export * from './observationChemicalTreatment';
 export * from './windDirectionCodes';
 export * from './chemicalTreatmentMethodCode';
+export * from './spaceGeom';
 
 /**
  * Controllers
@@ -83,4 +84,5 @@ export * from './controllers/herbicide.controller';
 export * from './controllers/herbicideTankMix.controller';
 export * from './controllers/observationChemicalTreatment.controller';
 export * from './controllers/chemicalTreatmentMethodCode.controller';
+export * from './controllers/spaceGeom.controller';
 // ----------------------------------------------------------------------------------------------------------------

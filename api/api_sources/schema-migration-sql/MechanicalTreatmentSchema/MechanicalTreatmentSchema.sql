@@ -3,10 +3,10 @@
         
 CREATE TABLE mechanical_treatment ();
 ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_id SERIAL PRIMARY KEY;
-ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_location_latitude NUMERIC(8, 6) NOT NULL;
-ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_location_longitude NUMERIC(9, 6) NOT NULL;
-ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_width NUMERIC(7, 2) NULL DEFAULT 0.0;
-ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_length NUMERIC(7, 2) NULL DEFAULT 0.0;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_location_latitude NUMERIC(8, 6) NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_location_longitude NUMERIC(9, 6) NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_width NUMERIC(7, 2) NULL;
+ALTER TABLE mechanical_treatment ADD COLUMN mechanical_treatment_area_length NUMERIC(7, 2) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN applicator_first_name VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN applicator_last_name VARCHAR(100) NULL;
 ALTER TABLE mechanical_treatment ADD COLUMN secondary_applicator_first_name VARCHAR(100) NULL;

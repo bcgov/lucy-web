@@ -3,8 +3,8 @@
         
 CREATE TABLE chemical_treatment ();
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_id SERIAL PRIMARY KEY;
-ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_location_latitude NUMERIC(8, 6) NOT NULL;
-ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_location_longitude NUMERIC(9, 6) NOT NULL;
+ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_location_latitude NUMERIC(8, 6) NULL;
+ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_location_longitude NUMERIC(9, 6) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_date DATE NOT NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_primary_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_secondary_paper_file_ref VARCHAR(100) NULL;
