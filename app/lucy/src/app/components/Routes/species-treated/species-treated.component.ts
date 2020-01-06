@@ -39,7 +39,7 @@ import { FormService } from 'src/app/services/form/form.service';
 })
 export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
-  @ViewChild(AddQuickObservationModalComponent) addObsModal: AddQuickObservationModalComponent;
+  // @ViewChild(AddQuickObservationModalComponent) addObsModal: AddQuickObservationModalComponent;
 
   // Base form response body
   private _responseBody: any = {};
@@ -62,8 +62,6 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
   speciesNotBeingTreated: Observation[];
   species: InvasivePlantSpecies[];
   treatment: any;
-
-  // addQuickObservationModal: AddQuickObservationModalComponent = new AddQuickObservationModalComponent(this.modalService, this.codeTables, this.dropdowns);
 
   inViewMode = false;
   addQuickObs = false;
@@ -205,9 +203,9 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     this.notifyChangeEvent();
   }
 
-  open() {
-    // this.modalService.open(this.addObsModal);
-    this.modalService.open(`Feature in progress`);
+  openModal() {
+    this.addQuickObs = true;
+    $(`#addQuickObservationModal`).modal('show');
   }
 
   indexOfSpeciesInSpeciesBeingTreated(o: Observation): number {
