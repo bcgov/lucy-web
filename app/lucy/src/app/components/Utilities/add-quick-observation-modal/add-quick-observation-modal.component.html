@@ -7,7 +7,15 @@
     </div>
     <!-- Modal Body -->
     <div class="modal-body text-center">
-        <div class="row">
+        <div class="col">
+            <div class="row">
+                <p>This feature coming soon...</p>
+                <lottie-animation-view [options]="lottieConfig" (animCreated)="handleAnimation($event)">
+                </lottie-animation-view>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row">
             <div class="col-6">
                 <app-dropdown [mode]="mode" fieldHeader="Species" [items]="speciesDropdownObjects"></app-dropdown>
             </div>
@@ -27,8 +35,7 @@
             <div class="col-6">
                 <app-dropdown [mode]="mode" fieldHeader="Soil Texture" [items]="soilTextureDropdownObjects"></app-dropdown>
             </div>
-        </div>
-    </div>
+        </div> -->
 
     <div class="modal-footer text-center">
         <div class="col">
@@ -36,11 +43,10 @@
               Back
             </button>
         </div>
-        <div class="col">
+        <!-- <div class="col">
             <button type="button" class="btn button-fill msg-modal-btn" (click)="submitObservation()">
               Add
             </button>
-        </div>
-
+        </div> -->
     </div>
 </ng-template>

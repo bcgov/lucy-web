@@ -17,6 +17,7 @@
  */
 import { Component, OnInit, Input, Output, AfterViewInit, EventEmitter, ViewChild } from '@angular/core';
 import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+
 import { InvasivePlantSpecies, SpeciesDensityCodes, SpeciesDistributionCodes, ObservationTypeCodes, SoilTextureCodes } from 'src/app/models';
 import { CodeTableService } from 'src/app/services/code-table.service';
 import { DropdownObject, DropdownService } from 'src/app/services/dropdown.service';
@@ -42,47 +43,82 @@ export class AddQuickObservationModalComponent implements OnInit, AfterViewInit 
 
   private modalReference: NgbModalRef;
 
+  // Lottie Animation
+  public lottieConfig: Object;
+  private anim: any;
+  private underConstructionIcon = 'https://assets8.lottiefiles.com/packages/lf20_hntzYU.json';
+
   @Output() addQuickObservationModalEventEmitter = new EventEmitter<boolean>();
   @ViewChild('addQuickObservationModal') private content;
 
-  constructor(private modalService: NgbModal, private codeTables: CodeTableService, private dropdowns: DropdownService) { }
+  constructor(private modalService: NgbModal, private codeTables: CodeTableService, private dropdowns: DropdownService) {
+    this.lottieConfig = {
+      path: this.underConstructionIcon,
+      renderer: 'canvas',
+      autoplay: true,
+      loop: true
+    };
+  }
 
   async ngOnInit() {
-      await this.codeTables.getInvasivePlantSpecies()
-        .then((codes) => {
-            this.speciesDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
-        });
-      await this.codeTables.getDensityCodes()
-        .then((codes) => {
-            this.densityDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
-        });
-      await this.codeTables.getDistributionCodes()
-        .then((codes) => {
-            this.distributionDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
-        });
-      await this.codeTables.getObservationTypeCodes()
-        .then((codes) => {
-            this.surveyTypeDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
-        });
-      await this.codeTables.getSoilTextureCodes()
-        .then((codes) => {
-            this.soilTextureDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
-        });
+      // await this.codeTables.getInvasivePlantSpecies()
+      //   .then((codes) => {
+      //       this.speciesDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
+      //   });
+      // await this.codeTables.getDensityCodes()
+      //   .then((codes) => {
+      //       this.densityDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
+      //   });
+      // await this.codeTables.getDistributionCodes()
+      //   .then((codes) => {
+      //       this.distributionDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
+      //   });
+      // await this.codeTables.getObservationTypeCodes()
+      //   .then((codes) => {
+      //       this.surveyTypeDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
+      //   });
+      // await this.codeTables.getSoilTextureCodes()
+      //   .then((codes) => {
+      //       this.soilTextureDropdownObjects = this.dropdowns.createDropdownObjectsFrom(codes);
+      //   });
   }
 
   ngAfterViewInit(): void {
+    this.showModal();
   }
+
+   /////////// Lottie ///////////
+   handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stop() {
+    this.anim.stop();
+  }
+
+  play() {
+    this.anim.play();
+  }
+
+  pause() {
+    this.anim.pause();
+  }
+
+  setSpeed(speed: number) {
+    this.anim.setSpeed(speed);
+  }
+  /////////// End Lottie ///////////
 
   private removeModal() {
     if (this.modalReference) {
-      this.modalReference.close();
+      this.modalReference.dismiss();
       delete(this.modalReference);
-      this.modalReference = undefined;
+      this.addQuickObservationModalEventEmitter.emit(true);
     }
   }
 
   private submitObservation() {
-
+    this.addQuickObservationModalEventEmitter.emit(true);
   }
 
   private async showModal() {

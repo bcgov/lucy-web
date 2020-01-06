@@ -11,7 +11,7 @@
             If species found at treatment is not found below an additional survey record is required.</b></p>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="invasiveSpecies">
         <div class="col-12">
             <label class="speciesTreatedLabel">Being Treated</label>
             <div class="row">
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div *ngFor="let s of speciesBeingTreated" class="col-md-6 col-sm-12">
-                    <div [id]="s.observation.species.commonName" class="card speciesTreatedCard container animated animation-config">
+                    <div [@treated] [id]="s.observation.species.commonName" class="card speciesTreatedCard container animated animation-config bounceUpIn">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="card-title col-7">{{ s.observation.species.commonName }} ({{ s.observation.species.species }} {{ s.observation.species.genus }})</div>
@@ -42,7 +42,7 @@
             <hr />
             <div class="row">
                 <div *ngFor="let n of speciesNotBeingTreated" class="col-md-6 col-sm-12 align-items-stretch">
-                    <div [id]="n.species.commonName" class="card speciesNotTreatedCard container animated animation-config">
+                    <div [@notTreated] [id]="n.species.commonName" class="card speciesNotTreatedCard container animated">
                         <div class="card-body">
                             <div class="row align-items-center justify-content-between">
                                 <div class="card-title col-7">
@@ -60,11 +60,11 @@
         <div *ngIf="!inViewMode" class="container-fluid add-species-card">
             <div class="row add-species-card-content">
                 <span class="align-middle" style="margin-top: auto; margin-bottom: auto;">Is there an additional species in this area that is not shown above?</span>
-                <button class="btn addSpeciesButton" (click)="addQuickObs = true">Add Additional Species</button>
+                <button class="btn addSpeciesButton" (click)="openModal()">Add Additional Species</button>
             </div>
         </div>
     </div>
 </div>
 
-<app-add-quick-observation-modal *ngIf="addQuickObs && !inViewMode">
+<app-add-quick-observation-modal *ngIf="addQuickObs" (addQuickObsModalEventEmitter)='addQuickObservationModalEventEmitter($event)'>
 </app-add-quick-observation-modal>
