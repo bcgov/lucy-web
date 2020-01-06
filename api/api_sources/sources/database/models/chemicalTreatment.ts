@@ -8,7 +8,8 @@ import {
 	ProjectManagementPlanCodeSchema,
     ChemicalTreatmentEmployeeSchema,
 	WindDirectionCodesSchema,
-	ChemicalTreatmentMethodCodeSchema
+	ChemicalTreatmentMethodCodeSchema,
+	SpaceGeomSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -19,7 +20,8 @@ import {
 	ProjectManagementPlanCode,
 	ChemicalTreatmentEmployee,
 	WindDirectionCodes,
-	ChemicalTreatmentMethodCode
+	ChemicalTreatmentMethodCode,
+	SpaceGeom
 } from '../models';
 
 import { Record } from './generic.data.models';
@@ -51,6 +53,7 @@ export interface ChemicalTreatmentSpec {
 	methodCode: ChemicalTreatmentMethodCode;
 	additionalComments: string;
 	mixDeliveryRate: number;
+	spaceGeom: SpaceGeom;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -80,6 +83,7 @@ export interface ChemicalTreatmentUpdateSpec {
 	methodCode?: ChemicalTreatmentMethodCode;
 	additionalComments?: string;
 	mixDeliveryRate?: number;
+	spaceGeom?: SpaceGeom;
 }
 // -- End: ChemicalTreatmentUpdateSpec --
 
@@ -237,6 +241,14 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@JoinColumn({ name: ChemicalTreatmentSchema.columns.methodCode, referencedColumnName: ChemicalTreatmentMethodCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	methodCode: ChemicalTreatmentMethodCode;
+
+    /**
+	 * @description Getter/Setter property for column {space_geom_id}
+	 */
+	@ManyToOne( type => SpaceGeom, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.spaceGeom, referencedColumnName: SpaceGeomSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	spaceGeom: SpaceGeom;
 
 	/**
 	 * @description Getter/Setter property for column {additional_comments}

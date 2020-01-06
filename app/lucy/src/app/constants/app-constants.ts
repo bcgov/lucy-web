@@ -24,7 +24,7 @@ export class AppConstants {
 
     // SSO
     static SSOConstants = {
-        SSO_CLIENT_ID : `lucy`,
+        SSO_CLIENT_ID : `invasives-bc`,
         SSO_BASE_URL : `https://sso-dev.pathfinder.gov.bc.ca`,
         SSO_REALM_NAME : `dfmlcg7z`,
         SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,

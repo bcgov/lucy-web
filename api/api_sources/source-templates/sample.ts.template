@@ -1,0 +1,11 @@
+// This is a sample template file
+export class #{className} {
+    #repeat(properties, prop) [
+        /**
+         * The Property: #{prop.des} 
+        */
+        #{prop.name}: #{prop.type};
+    ]
+} 
+
+// -------------------
