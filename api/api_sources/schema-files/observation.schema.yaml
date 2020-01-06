@@ -1,6 +1,7 @@
 version: '1.0'
 includes:
   - observation.codes.schema.yaml
+  - spaceGeom.schema.yaml
 schemas:
   # -- Observation schema ** Observation
   ObservationSchema:
@@ -89,7 +90,7 @@ schemas:
         # End-Section
         - title: 
             key: '' 
-            default: Advance Data Element
+            default: Advanced Data Element
           groups:
             - title: 
                 key: 'indicators' 
@@ -164,7 +165,8 @@ schemas:
       lat:
         name: 'observation_location_lat'
         comment: 'Latitude of observation location'
-        definition: NUMERIC(8, 6) NOT NULL
+        definition: NUMERIC(8, 6) NULL
+        required: true
         layout:
           header:
             key: 'generic.latitude'
@@ -174,7 +176,8 @@ schemas:
       long:
         name: 'observation_location_long'
         comment: 'Longitude of observation location'
-        definition: NUMERIC(9, 6) NOT NULL
+        definition: NUMERIC(9, 6) NULL
+        required: true
         layout:
           header:
             key: 'generic.longitude'
@@ -441,7 +444,7 @@ schemas:
         layout:
           header:
             key: 'speciesAgency'
-            default: 'Complete Behalf of'
+            default: 'Completed on Behalf of'
           classes:
             - none
       soilTexture: 
@@ -464,6 +467,7 @@ schemas:
         foreignTable: observation_geometry_code
         refColumn: observation_geometry_code_id
         deleteCascade: false
+        required: false
         layout:
           header:
             key: 'observationGeometry'
@@ -522,4 +526,14 @@ schemas:
             default: 'Proposed Action'
           classes:
             - none
+    ## End - Columns
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
   # --
