@@ -40,7 +40,7 @@ import {MatChipsModule} from '@angular/material/chips';
 
 // Third-party
 // ng-bootstrap
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 // InViewportModule
 import { InViewportModule } from 'ng-in-viewport';
@@ -177,6 +177,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     RouterService,
     Title,
     AppBootService,
+    NgbModal,
     {
       provide: APP_INITIALIZER,
       useFactory: bootstrapFactory,
