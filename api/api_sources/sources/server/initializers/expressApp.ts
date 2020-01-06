@@ -57,14 +57,14 @@ class ExpressApp {
     /**
      * Constructing
      */
-    constructor() {
-        this.logger.info('Creating express app...');
-    }
+    constructor() {}
 
     /**
      * @description Initializing express app
      */
     public async initExpress(): Promise<any> {
+        // Log
+        this.logger.info('Initiating express app');
         // Body parser
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({

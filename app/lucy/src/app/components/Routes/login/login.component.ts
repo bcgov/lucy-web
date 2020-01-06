@@ -37,13 +37,6 @@ export class LoginComponent implements OnInit {
     this.setAppTitle();
   }
 
-  loginWithBCeID() {
-    if (this.ssoService) {
-      this.loadingService.add();
-      this.ssoService.login(SSOLoginProvider.BCeID);
-    }
-  }
-
   private async setAppTitle() {
     this.appTitle = StringConstants.app_Title;
   }
@@ -53,6 +46,13 @@ export class LoginComponent implements OnInit {
     if (this.ssoService) {
       this.loadingService.add();
       this.ssoService.login(SSOLoginProvider.idir);
+    }
+  }
+
+  loginWithBCeID() {
+    if (this.ssoService) {
+      this.loadingService.add();
+      this.ssoService.login(SSOLoginProvider.BCeID);
     }
   }
 }
