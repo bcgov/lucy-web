@@ -120,7 +120,7 @@
   <!-- Input Row-->
   <div class="row">
       <!-- Geometry: Dropdown --->
-      <div class="col-12 nopadding">
+      <div class="col col-md-6 nopadding">
           <app-dropdown  
           [mode]="mode" 
           [items]="geometry.dropdown" 
@@ -128,6 +128,30 @@
           [selectedItem]="geometry.value" 
           (selectionChanged)="geometryChanged(field, $event)">
           </app-dropdown>
+      </div>
+      <!-- Geometry: Dimension X-->
+      <div class="col col-md-3 nopadding">
+        <app-field
+          [mode]="mode"
+          [header]="headerXDimension"
+          [value]="x"
+          [verification]="dimensionVerification"
+          [required]="true"
+          (valueChanged)="dimensionXChange($event)"
+        >
+        </app-field>
+      </div>
+       <!-- Geometry: Dimension Y-->
+       <div class="col col-md-3 nopadding" *ngIf="!showXOnly">
+        <app-field
+          [mode]="mode"
+          [header]="headerYDimension"
+          [value]="y"
+          [verification]="dimensionVerification"
+          [required]="true"
+          (valueChanged)="dimensionYChange($event)"
+        >
+        </app-field>
       </div>
     </div>
 </div>

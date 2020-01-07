@@ -22,18 +22,26 @@ import { ConverterService } from 'src/app/services/coordinateConversion/location
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
+import { GeometryJSON, InputGeometryJSON } from 'src/lib';
 
 interface SpaceGeomData {
   geometry: any;
   hexId?: string;
   subHexId?: string;
-  inputGeometry?: object;
+  inputGeometry?: any;
   latitude: number;
   longitude: number;
   metaData?: string;
   space_geom_id?: number;
 }
 
+const AreaFieldTitle = {
+  WIDTH: 'Width',
+  LENGTH: 'Length',
+  RADIUS: 'Radius'
+};
+
+type AreaFunction = (w: number, h?: number) => number;
 @Component({
   selector: 'app-location-input',
   templateUrl: './location-input.component.html',
@@ -54,7 +62,10 @@ export class LocationInputComponent implements OnInit {
   // Markers shown on map
   markers: MapMarker[] = [];
 
-  private _existingValue: SpaceGeomData;
+  // Empty existing value
+  private _existingValue: SpaceGeomData = { geometry: 1, latitude: 0, longitude: 0};
+
+  private areaCalculator: AreaFunction;
 
   // Entry mode flag
   locationEntryModeLatLong = true;
@@ -107,6 +118,7 @@ export class LocationInputComponent implements OnInit {
       this.long = this.object.spaceGeom.value.longitude;
       latExists = true;
       longExists = true;
+      this.processInputJSON(this.object.spaceGeom.value);
     }
     if (latExists && longExists) {
       this.autofill();
@@ -136,8 +148,6 @@ export class LocationInputComponent implements OnInit {
 
   get geometry(): FormConfigField {
     const geo = this.fieldObject.geometry || this.formService.getEmptyConfigField();
-    // console.dir(this.fieldObject);
-    // console.dir(geo);
     return geo;
   }
 
@@ -164,6 +174,26 @@ export class LocationInputComponent implements OnInit {
   zonesVerification = {
     isZoneUTM: true,
   };
+
+  dimensionVerification = {
+    positiveNumber: true
+  };
+
+  // Area Field Info
+  headerXDimension = AreaFieldTitle.WIDTH;
+  headerYDimension = AreaFieldTitle.LENGTH;
+  x = '';
+  y = '';
+  _showXOnly = false;
+
+  get showXOnly(): boolean {
+    return this._showXOnly;
+  }
+  set showXOnly(val: boolean) {
+    this._showXOnly = val;
+    this.areaCalculator = val === true ? this.calculatePoint : this.calculatePlot;
+    this.headerXDimension = val === true ? AreaFieldTitle.RADIUS : AreaFieldTitle.WIDTH;
+  }
 
   private _long = '';
   get long(): string {
@@ -220,6 +250,22 @@ export class LocationInputComponent implements OnInit {
     };
   }
 
+  private processInputJSON(input: SpaceGeomData) {
+    if (input.inputGeometry) {
+      const json: InputGeometryJSON = input.inputGeometry || { attributes: { area: {}}, geoJSON: {}};
+      // Read attribute
+      const x = json.attributes.area.radius || json.attributes.area.width;
+      const y = json.attributes.area.length;
+      // Setting bind props
+      this.x = x ? `${x}` : '';
+      this.y = y ? `${y}` : '';
+      this.showXOnly = json.attributes.area.radius ? true : false;
+    }
+  }
+
+  private calculatePlot(w: number, h: number): number { return w * h; }
+  private calculatePoint(r: number): number { return Math.PI * r * r; }
+
   ngOnInit() {
   }
 
@@ -236,7 +282,7 @@ export class LocationInputComponent implements OnInit {
           latitude: parseFloat(this.fieldObject.latitude.value || existing.latitude),
           longitude: parseFloat(this.fieldObject.longitude.value || existing.longitude),
           geometry: existing.geometry || 1,
-          inputGeometry: {},
+          inputGeometry: existing.inputGeometry || {},
           metaData: 'NONE',
           space_geom_id: existing.space_geom_id
         };
@@ -346,7 +392,7 @@ export class LocationInputComponent implements OnInit {
    * Validate, convert to Lat/Long, store and show location on map
    */
   utmValuesChanged() {
-    // If observation is being viewed, dont convert
+    // If observation is being viewed, don't convert
     if (this.mode === FormMode.View) {
       return;
     }
@@ -383,11 +429,59 @@ export class LocationInputComponent implements OnInit {
     this.setMapToCurrentLocation();
   }
 
+  /**
+   * @description Handling geometry change dropdown
+   * @param field FormConfigField
+   * @param event any
+   */
   geometryChanged(field: FormConfigField, event: any) {
-    // console.dir(field);
-    // console.dir(event);
-    this.fieldObject.geometry.value = event;
-    this._existingValue.geometry = event['observation_geometry_code_id'];
+    const existingObj = this.fieldObject.geometry.value || {} ;
+    const existing = existingObj.value || {};
+    const existingId = existing['observation_geometry_code_id'];
+    const eventData = event.object || event.value;
+    const changedId = eventData['observation_geometry_code_id'];
+    if (existingId !== changedId) {
+      this.fieldObject.geometry.value = event;
+      let geomID = 1;
+      if (this._existingValue && event.object) {
+        geomID =  changedId;
+        this._existingValue.geometry = geomID;
+      }
+      if (geomID === 1) {
+        this.showXOnly = true;
+        this.y = '';
+      } else {
+        this.showXOnly = false;
+      }
+      this.setGeometryData();
+    }
+  }
+
+  /**
+   * @description Handling X dimensionChange event
+   * @param value any
+   */
+  dimensionXChange(value: any) {
+    this.x = value;
+    this.setGeometryData();
+  }
+
+  /**
+   * @description Handling Y dimensionChange event
+   * @param value any
+   */
+  dimensionYChange(value: any) {
+    this.y = value;
+    this.setGeometryData();
+  }
+
+  private setGeometryData() {
+    const json = GeometryJSON.createGeometryJSON(
+      this._existingValue.geometry,
+      parseFloat(this.x) || 0.0,
+      parseFloat(this.y) || undefined
+      );
+    this._existingValue.inputGeometry = json;
     this.notifyChangeEvent();
   }
 
