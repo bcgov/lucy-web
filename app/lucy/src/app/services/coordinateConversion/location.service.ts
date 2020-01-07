@@ -134,10 +134,12 @@ export class ConverterService {
     return JSON.parse(JSON.stringify(bcAlbersBoundry)).default;
   }
 
-  isInsideBC(lat: number, long: number): boolean {
+  isInsideBC(latitude: number, longitude: number): boolean {
     const boundry = this.getBCAlbersBoundry();
-    const albers = this.latLongCoordinateToAlbers(lat, long);
-    // console.log("lat: " + lat + " long: " + long + " -> x:"+ albers.x + " y:" + albers.y);
+    const albers = this.latLongCoordinateToAlbers(latitude, longitude);
+    // console.log("lat: " + latitude + " long: " + longitude + "\n -> x:"+ albers.x + " y:" + albers.y);
+    const converBack = this.albersToLatLongCoordinate(albers.x, albers.y);
+    // console.log("lat: " + converBack.latitude + " long: " + converBack.longitude);
     let intersections = 0;
     for (let index = 0; index < boundry.length - 1 ; index++) {
       const found = this.intersect(1200000, 900000, albers.x, albers.y, boundry[index].x, boundry[index].y, boundry[index + 1].x, boundry[index + 1].y);
@@ -362,7 +364,7 @@ export class ConverterService {
     const angle1Squared = Math.pow(Math.sin(angle1), 2);
     const angle2Squared = Math.pow(Math.sin(angle2), 2);
 
-    const latY = this.toRadian(latitude);
+    const latY = this.toRadian(longitude);
     const m1 = Math.cos(angle1) / Math.pow(1 - e2 * angle1Squared, 0.5);
     const m2 = Math.cos(angle2) / Math.pow(1 - e2 * angle2Squared, 0.5);
     const q1 =
@@ -397,7 +399,7 @@ export class ConverterService {
           (1 - this.e * Math.sin(latY)) / (1 + this.e * Math.sin(latY))
         ));
     const p = (a * Math.pow(c - n * q, 0.5)) / n;
-    const theta = this.toRadian(n * (longitude - angle4));
+    const theta = this.toRadian(n * (latitude - angle4));
     const albersX = p * Math.sin(theta) + offsetX;
     const albersY = p0 - p * Math.cos(theta) + offsetY;
 
@@ -449,7 +451,7 @@ export class ConverterService {
     const p = Math.pow(Math.pow(albX, 2) + Math.pow(p0 - y, 2), 0.5);
     const q = (c - (Math.pow(p, 2) * Math.pow(n, 2)) / Math.pow(a, 2)) / n;
     const theta = (Math.atan(albX / (p0 - y)) * 180) / this.pi;
-    const NewLong = angle4 + theta / n;
+    const NewLat = angle4 + theta / n;
     const Xm = q / (1 - ((1 - e2) / (2 * e1)) * Math.log((1 - e1) / (1 + e1)));
     const Ba = (Math.atan(Xm / Math.pow(-Xm * Xm + 1, 0.5)) * 180) / this.pi;
     const series1 =
@@ -459,7 +461,7 @@ export class ConverterService {
         Math.sin((4 * Ba * this.pi) / 180)) *
         180) /
       this.pi;
-    const NewLat = Ba + series1;
+    const NewLong = Ba + series1;
     return {
       latitude: NewLat,
       longitude: NewLong
