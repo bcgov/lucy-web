@@ -1326,14 +1326,6 @@ export class FormService {
           cleanBody[field.key] = objBody;
           break;
       }
-      /*if (field.key === 'spaceGeom') {
-        const spaceGeom: any = body['spaceGeom'] || {};
-        // Remove its geometry object ref
-        if (spaceGeom.geometry && typeof spaceGeom.geometry === 'object') {
-          spaceGeom.geometry = spaceGeom.geometry.observation_geometry_code_id;
-        }
-        cleanBody.spaceGeom = spaceGeom;
-      }*/
     }
     return JSON.parse(JSON.stringify(cleanBody));
   }
