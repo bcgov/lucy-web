@@ -38,7 +38,8 @@ interface SpaceGeomData {
 const AreaFieldTitle = {
   WIDTH: 'Width',
   LENGTH: 'Length',
-  RADIUS: 'Radius'
+  RADIUS: 'Radius',
+  UNKNOWN: 'Unknown',
 };
 
 type AreaFunction = (w: number, h?: number) => number;
@@ -185,6 +186,7 @@ export class LocationInputComponent implements OnInit {
   x = '';
   y = '';
   _showXOnly = false;
+  areaLabel = AreaFieldTitle.UNKNOWN;
 
   get showXOnly(): boolean {
     return this._showXOnly;
@@ -260,6 +262,7 @@ export class LocationInputComponent implements OnInit {
       this.x = x ? `${x}` : '';
       this.y = y ? `${y}` : '';
       this.showXOnly = json.attributes.area.radius ? true : false;
+      this.setAreaLabel(x, y);
     }
   }
 
@@ -271,6 +274,11 @@ export class LocationInputComponent implements OnInit {
 
   autofill() {
     this.setUTMFromLatLong();
+  }
+
+  setAreaLabel(x: number, y: number) {
+    const a = this.areaCalculator(x, y);
+    this.areaLabel = a ? `${a.toFixed(1)} square meter` : AreaFieldTitle.UNKNOWN;
   }
 
   private notifyChangeEvent() {
@@ -476,12 +484,17 @@ export class LocationInputComponent implements OnInit {
   }
 
   private setGeometryData() {
+    const x = parseFloat(this.x) || 0.0;
+    const y =  parseFloat(this.y) || undefined;
     const json = GeometryJSON.createGeometryJSON(
       this._existingValue.geometry,
-      parseFloat(this.x) || 0.0,
-      parseFloat(this.y) || undefined
+      x,
+      y
       );
     this._existingValue.inputGeometry = json;
+
+    // Calculate Area
+    this.setAreaLabel(x, y);
     this.notifyChangeEvent();
   }
 
