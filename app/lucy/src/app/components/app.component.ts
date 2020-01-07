@@ -91,21 +91,30 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.temp_testInOut();
-    // this.temp_testHex();
+    // this.temp_testInOut();
+    this.temp_testHex();
   }
 
   temp_testInOut() {
-    const first = this.coodrinateConvert.isInsideBC(-125.12345, 51.12345);
-    const second = this.coodrinateConvert.isInsideBC(-151.21, 55.49);
-    const third = this.coodrinateConvert.isInsideBC(-138.12, 48.9215);
-    const forth = this.coodrinateConvert.isInsideBC(-123.0164, 48.7951);
-    const fifth = this.coodrinateConvert.isInsideBC(-123.0, 53.0);
-    console.log('-125.12345, 51.12345 -> ' + first);
-    console.log('-151.21, 55.49 -> ' + second);
-    console.log('-138.12, 48.9215 ->' + third);
-    console.log('-123.0164, 48.7951 ->' + forth);
-    console.log('-123.0, 53.0 -> ' + fifth);
+    let results = [];
+    results.push(this.temp_testInside(-125.12345, 51.12345, true));
+
+    results.push(this.temp_testInside(-131.21000, 55.49000, false));
+
+    results.push(this.temp_testInside(-138.12000, 59.67600, true));
+
+    results.push( this.temp_testInside(-112.97980, 48.92150, false));
+
+    results.push(this.temp_testInside(-123.01640, 48.79510, true));
+
+    console.log(results);
+  }
+
+  temp_testInside(lat: number, long: number, shouldBeIn: boolean): boolean {
+    const isIn = this.coodrinateConvert.isInsideBC(lat, long);
+    console.log('lat:' + lat + ' long:' + long + '\n-> ' + isIn);
+    console.log('Pass: ' + (isIn === shouldBeIn));
+    return (isIn === shouldBeIn);
   }
 
   temp_testHex() {
