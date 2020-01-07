@@ -40,6 +40,8 @@ export interface InputConfig {
     displayKey: string;
     condition: string;
     value?: any;
+    dropdown?: any;
+    embeddedFields?: {[key: string]: InputConfig};
 }
 
 /**

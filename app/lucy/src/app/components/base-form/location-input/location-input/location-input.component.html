@@ -1,4 +1,5 @@
 <div class="container min-map-height animated" id="location">
+  <!-- Location And Map--> 
   <div class="row">
     <!-- Left content  -->
     <div class="col-12 col-md-4">
@@ -107,4 +108,50 @@
       </app-map-preview>
     </div>
   </div>
+  <!-- Geometry amd Inputs-->
+  <div class="row">
+      <!-- Title: Row -->
+      <div class="row">
+        <div class="col sub-section-title">
+            {{titles.geometrySection}}
+        </div>
+      </div>
+  </div>
+  <!-- Input Row-->
+  <div class="row">
+      <!-- Geometry: Dropdown --->
+      <div class="col col-md-6 nopadding">
+          <app-dropdown  
+          [mode]="mode" 
+          [items]="geometry.dropdown" 
+          [fieldHeader]="geometry.header" 
+          [selectedItem]="geometry.value" 
+          (selectionChanged)="geometryChanged($event)">
+          </app-dropdown>
+      </div>
+      <!-- Geometry: Dimension X-->
+      <div class="col col-md-3 nopadding">
+        <app-field
+          [mode]="mode"
+          [header]="headerXDimension"
+          [value]="x"
+          [verification]="dimensionVerification"
+          [required]="true"
+          (valueChanged)="dimensionXChange($event)"
+        >
+        </app-field>
+      </div>
+       <!-- Geometry: Dimension Y-->
+       <div class="col col-md-3 nopadding" *ngIf="!showXOnly">
+        <app-field
+          [mode]="mode"
+          [header]="headerYDimension"
+          [value]="y"
+          [verification]="dimensionVerification"
+          [required]="true"
+          (valueChanged)="dimensionYChange($event)"
+        >
+        </app-field>
+      </div>
+    </div>
 </div>

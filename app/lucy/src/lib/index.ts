@@ -20,5 +20,6 @@
  * Modified By: Pushan
  * -----
  */
+export * from './core-form/geometryJSON';
 export * from './core-form/inputGroup';
 // ---------------------------------------------
