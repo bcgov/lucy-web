@@ -162,8 +162,8 @@ export class InventoryComponent implements OnInit {
     this.markers = [];
     for (const object of this.observations) {
       this.markers.push( {
-        latitude: object.lat,
-        longitude: object.long,
+        latitude: object.spaceGeom.latitude,
+        longitude: object.spaceGeom.longitude,
         observation: object,
       });
     }
