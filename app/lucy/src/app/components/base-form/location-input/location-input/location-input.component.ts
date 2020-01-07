@@ -55,7 +55,7 @@ export class LocationInputComponent implements OnInit {
     zoom: 4
   };
 
-  private titles: object = {
+  titles: any = {
     geometrySection: `Geometry and Area`
   };
 
@@ -434,7 +434,7 @@ export class LocationInputComponent implements OnInit {
    * @param field FormConfigField
    * @param event any
    */
-  geometryChanged(field: FormConfigField, event: any) {
+  geometryChanged(event: any) {
     const existingObj = this.fieldObject.geometry.value || {} ;
     const existing = existingObj.value || {};
     const existingId = existing['observation_geometry_code_id'];
