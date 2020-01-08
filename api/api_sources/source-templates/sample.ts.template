@@ -4,6 +4,7 @@ export class #{className} {
         /**
          * The Property: #{prop.des} 
         */
+        #if(prop.comment) [// Comment on line: #{prop.comment} #if(className) [Hello]]
         #{prop.name}: #{prop.type};
     ]
 } 

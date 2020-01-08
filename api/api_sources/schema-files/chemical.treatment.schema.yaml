@@ -50,10 +50,9 @@ schemas:
           groups:
             - title: 
                 key: '' 
-                default: Location
+                default: Location and Geometry
               fields: 
-                - latitude
-                - longitude
+                - spaceGeom
               style: {}
             ## -- group {Location}
             - title:
@@ -89,9 +88,6 @@ schemas:
                 default: Treatment Method and Application
               fields:
                 - methodCode
-                - plotWidth
-                - plotLength
-                - calculatedArea
                 - temperature
                 - humidity
                 - windSpeed
@@ -189,31 +185,6 @@ schemas:
         name: chemical_treatment_id
         comment: 'Auto generated primary key. This is auto incremental field'
         definition: SERIAL PRIMARY KEY
-      latitude:
-        name: 'chemical_treatment_location_latitude'
-        comment: 'Latitude of treatment  location'
-        definition: NUMERIC(8, 6) NULL
-        required: true
-        meta: {}
-        layout:
-          header: 
-            key: 'latitude' 
-            default: 'Latitude'
-          description: ''
-          classes:
-            - none
-      longitude:
-        name: 'chemical_treatment_location_longitude'
-        comment: 'Longitude of treatment location'
-        definition: NUMERIC(9, 6) NULL
-        required: true
-        meta: {}
-        layout:
-          header: 
-            key: 'longitude' 
-            default: 'Longitude'
-          classes:
-            - none
       date:
         name: chemical_treatment_date
         comment: 'Date of the treatment'
@@ -256,36 +227,6 @@ schemas:
           header: 
             key: 'pup' 
             default: 'PUP'
-          classes:
-            - none
-      plotWidth:
-        name: plot_width
-        comment: The width of the treatment area, in metres
-        definition: NUMERIC(6,2) NULL
-        required: true
-        meta: {}
-        verification:
-          positiveNumber: true
-        layout:
-          header:
-            key: 'plotWidth'
-            default: 'Plot Width'
-          suffix: 'm'
-          classes:
-            - none
-      plotLength:
-        name: plot_length
-        comment: The length of the treatment area, in metres
-        definition: NUMERIC(6,2) NULL
-        required: true
-        meta: {}
-        verification:
-          positiveNumber: true
-        layout:
-          header:
-            key: 'plotLength'
-            default: 'Plot Length'
-          suffix: 'm'
           classes:
             - none
       temperature:

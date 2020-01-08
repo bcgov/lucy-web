@@ -33,14 +33,10 @@ import { ObservationChemicalTreatment } from './observationChemicalTreatment';
  * @description ChemicalTreatment create interface
  */
 export interface ChemicalTreatmentSpec {
-	latitude: number;
-	longitude: number;
 	date: string;
 	primaryPaperFileReference: string;
 	secondaryPaperFileReference: string;
 	pup: string;
-	plotWidth: number;
-	plotLength: number;
 	temperature: number;
 	humidity: number;
 	windSpeed: number;
@@ -63,14 +59,10 @@ export interface ChemicalTreatmentSpec {
  * @description ChemicalTreatment update interface
  */
 export interface ChemicalTreatmentUpdateSpec {
-	latitude?: number;
-	longitude?: number;
 	date?: string;
 	primaryPaperFileReference?: string;
 	secondaryPaperFileReference?: string;
 	pup?: string;
-	plotWidth?: number;
-	plotLength?: number;
 	temperature?: number;
 	humidity?: number;
 	windSpeed?: number;
@@ -110,20 +102,6 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	chemical_treatment_id: number;
 
 	/**
-	 * @description Getter/Setter property for column {chemical_treatment_location_latitude}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.latitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	latitude: number;
-
-	/**
-	 * @description Getter/Setter property for column {chemical_treatment_location_longitude}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.longitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	longitude: number;
-
-	/**
 	 * @description Getter/Setter property for column {chemical_treatment_date}
 	 */
 	@Column({name: ChemicalTreatmentSchema.columns.date, transformer: new DateTransformer()})
@@ -150,20 +128,6 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@Column({ name: ChemicalTreatmentSchema.columns.pup})
 	@ModelProperty({type: PropertyType.string})
 	pup: string;
-
-	/**
-	 * @description Getter/Setter property for column {plot_width}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.plotWidth, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	plotWidth: number;
-
-	/**
-	 * @description Getter/Setter property for column {plot_length}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.plotLength, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	plotLength: number;
 
 	/**
 	 * @description Getter/Setter property for column {temperature}

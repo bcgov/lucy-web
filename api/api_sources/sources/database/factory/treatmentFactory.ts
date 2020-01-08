@@ -23,7 +23,6 @@
 /**
   * Imports
   */
-import * as faker from 'faker';
 import { Destroy, ModelSpecFactory } from './helper';
 import { MechanicalTreatment,
   MechanicalTreatmentController,
@@ -43,6 +42,7 @@ import { MechanicalTreatment,
 import { userFactory } from './userFactory';
 import { observationFactory } from './observationFactory';
 import { speciesAgencyCodeFactory } from './observationCodesFactory';
+import * as faker from 'faker';
 
 
 /**
@@ -75,9 +75,6 @@ export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, Mechanica
 
 export const mechanicalTreatmentUpdateSpecFactory = async (): Promise<MechanicalTreatmentUpdateSpec> => {
   return {
-    latitude: parseFloat(faker.address.latitude()) || 0.0,
-    width: faker.random.number(),
-    length: faker.random.number(),
     observation: (await observationFactory()),
   };
 };
@@ -93,9 +90,6 @@ export const chemicalTreatmentCreateSpecFactory = async (): Promise<ChemicalTrea
 
 export const chemicalTreatmentUpdateSpecFactory = async (): Promise<ChemicalTreatmentUpdateSpec> => {
   return {
-    latitude: parseFloat(faker.address.latitude()) || 0.0,
-    plotWidth: faker.random.number({min: 0, max: 1000}),
-    plotLength: faker.random.number({min: 0, max: 1000}),
     mixDeliveryRate: faker.random.number(),
     speciesAgency: (await speciesAgencyCodeFactory()),
   };

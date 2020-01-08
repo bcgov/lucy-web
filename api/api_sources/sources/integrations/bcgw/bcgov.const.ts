@@ -11,15 +11,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: bcgov.const.ts
  * Project: lucy
- * File Created: Tuesday, 26th November 2019 10:30:51 am
- * Author: Pushan
+ * File Created: Friday, 13th December 2019 3:28:02 pm
+ * Author: Pushan  (you@you.you)
  * -----
- * Last Modified: Tuesday, 26th November 2019 10:31:25 am
- * Modified By: Pushan
+ * Last Modified: Friday, 13th December 2019 3:29:39 pm
+ * Modified By: Pushan  (you@you.you>)
  * -----
  */
-export * from './core-form/geometryJSON';
-export * from './core-form/inputGroup';
-// ---------------------------------------------
+/**
+ * @description Available features set
+ */
+export const BCGWFeatures = {
+    well: 'WHSE_WATER_MANAGEMENT.GW_WATER_WELLS_WRBC_SVW'
+};
+
+/**
+ * @description BCGW other constant
+ */
+export const BCGWConst = {
+    minimalDistance: 750
+};

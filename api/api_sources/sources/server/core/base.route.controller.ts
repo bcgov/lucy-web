@@ -30,7 +30,8 @@ import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { RolesCodeValue, UserDataController } from '../../database/models';
 import { DataController} from '../../database/data.model.controller';
-import { isEmpty } from '../../libs/utilities';
+import { isEmpty, unWrap } from '../../libs/utilities';
+import { ResourceInfo } from './route.const';
 // import { getRouteConfigs } from './route.des';
 
 /**
@@ -92,17 +93,21 @@ export interface RouteDescription {
     path: string;
     validators?: () => any[];
     middleware?: () => any[];
-    description: string;
+    description?: string;
     index?: number;
     method: HTTPMethod;
     responses?: {[key: number]: APIResponse};
+    secure?: boolean;
 }
+
+export type RouteBasicDescription = Pick<RouteDescription, 'path' | 'validators' | 'middleware' |  'description' | 'index' | 'secure' | 'responses'>;
 
 
 
 export interface RouteConfig {
     description: RouteDescription;
     handler: string;
+    isMethod?: boolean;
 }
 /**
  * @description Base express route controller. Provides
@@ -144,10 +149,26 @@ export class RouteController {
     constructor() {
         // Initiate logger
         this.logger = new Logger(this.constructor.name);
+        if (this.isSecure) {
+            this.router.use(this.authHandle);
+        }
+        this.setup();
+        this.applyRouteConfig();
+    }
+
+    /**
+     * @description Additional setup method for sub-classes
+     */
+    setup() {
+        // Subclass to override additional setup method
     }
 
     get className(): string {
         return this.constructor.name;
+    }
+
+    get isSecure(): boolean {
+        return unWrap(this.controllerRouteInfo.secure, false);
     }
 
     apiName(request: express.Request) {
@@ -158,6 +179,10 @@ export class RouteController {
      * @description Adding config values
      */
     applyRouteConfig() {
+        // Check config applied or not
+        if (this.configs && this.configs.length > 0) {
+            return;
+        }
         // Get config
         this.configs = _.map(this.constructor.prototype._configMap, (val: RouteConfig) => val);
 
@@ -181,15 +206,61 @@ export class RouteController {
         // Apply config to route
         _.each(this.configs, (config: RouteConfig) => {
             try {
+                // Getting endpoint
                 const endPoint: string = config.description.path.split('#')[1];
+                // Getting validator middleware
                 const validators = config.description.validators ? config.description.validators() : [];
+                // Getting other middleware
                 const middleware = config.description.middleware ? config.description.middleware() : [];
-                const allMiddleware = this.combineValidator(middleware, validators);
-                this.router[config.description.method](endPoint, allMiddleware, this[config.handler]);
+                // Combining them
+                let allMiddleware = this.combineValidator(middleware, validators);
+
+                // Checking security level of the api
+                // 1. Skip if controller is secure
+                if (config.description.secure && !this.isSecure) {
+                    allMiddleware = [this.authHandle, ...allMiddleware];
+                }
+                if (config.isMethod) {
+                    const routeMethod: Function = this[config.handler].bind(this);
+                    this.router[config.description.method](endPoint, allMiddleware, async (req: express.Request, res: express.Response) => {
+                       await this.handleRoute(req, res, routeMethod, config.handler);
+                    });
+
+                } else {
+                    this.router[config.description.method](endPoint, allMiddleware, this[config.handler]);
+                }
             } catch (excp) {
                 this.logger.error(`Exception  while applying route config: ${excp}`);
             }
         });
+    }
+
+    async handleRoute(req: express.Request, res: express.Response, handler: any, tag: string, applyDataHandle?: boolean) {
+        // Check error
+        // Check for error
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            this.logger.error(`${tag}: Validation error:\n ${JSON.stringify(errors.array(), null, 2)}`);
+            this.logReq(req, tag);
+            return res.status(422).json({
+                message: 'Input validation error',
+                errors: errors.array()
+            });
+        }
+        // Get data
+        // Get Data From handler
+        try {
+            const data: any = req.body;
+            const [status, body]  = applyDataHandle ? await handler(data, req, res) : await handler(req, data, res);
+            if (status > 0) {
+                return res.status(status).json(this.successResp(body));
+            } else {
+                this.logger.error(`handleRouteMethod: ${tag}: [FAIL]`);
+                return this.commonError(500, `handleRouteMethod:${tag}`, new Error(`${tag} : Unable to process req`), res);
+            }
+        } catch (excp) {
+            return this.commonError(500, `handleRouteMethod:${tag}`, excp, res);
+        }
     }
 
     /**
@@ -311,30 +382,14 @@ export class RouteController {
      */
     routeConfig<T>(tag: string, handler: (data: T, req: express.Request, resp: express.Response) => Promise<[number, any]>): RouteHandler {
         return async (req: express.Request, resp: express.Response) => {
-            try {
-                // Check for error
-                const errors = validationResult(req);
-                if (!errors.isEmpty()) {
-                    this.logger.error(`${tag}: Validation error:\n ${JSON.stringify(errors.array(), null, 2)}`);
-                    this.logReq(req, tag);
-                    return resp.status(422).json({
-                        message: 'Input validation error',
-                        errors: errors.array()
-                    });
-                }
-                // Get data
-                const data = req.body as T;
-                assert(data, `Unexpected request body: tag:${tag}`);
-                const [status, body]  = await handler(data, req, resp);
-                if (status > 0) {
-                    return resp.status(status).json(this.successResp(body));
-                } else {
-                    this.logger.error(`${tag}: [FAIL]`);
-                    return;
-                }
-            } catch (excp) {
-                return this.commonError(500, `routeConfig:${tag}`, excp, resp);
-            }
+            await this.handleRoute(req, resp, handler, tag, true);
+        };
+    }
+
+    get controllerRouteInfo(): ResourceInfo {
+        return this.constructor.prototype._routeResourceInfo || {
+            dataController: this.dataController,
+            secure: false
         };
     }
 }
@@ -355,11 +410,13 @@ export class BaseRoutController<Controller extends DataController> extends Route
  * @export class SecureRouteController
  */
 export class SecureRouteController<T extends DataController> extends BaseRoutController<T> {
+    get isSecure(): boolean {
+        return true;
+    }
     constructor() {
         super();
         // Register auth middleware
         // this.router.use(passport.authenticate('jwt', {session : false}));
-        this.router.use(this.authHandle);
     }
 }
 
@@ -369,7 +426,9 @@ export class SecureRouteController<T extends DataController> extends BaseRoutCon
 export class BaseAdminRouteController<T extends DataController> extends SecureRouteController<T> {
     constructor() {
         super();
+    }
 
+    setup() {
         // Register role middleware
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin]));
     }
@@ -381,7 +440,9 @@ export class BaseAdminRouteController<T extends DataController> extends SecureRo
 export class WriterRouteController<T extends DataController> extends SecureRouteController<T> {
     constructor() {
         super();
+    }
 
+    setup() {
         // Register role middleware
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]));
     }
