@@ -66,8 +66,7 @@
     font-weight: bold;
     text-align: center;
     background-color: rgba(51, 51, 51, 0.08);
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px;
 }
 
 .area-value {
