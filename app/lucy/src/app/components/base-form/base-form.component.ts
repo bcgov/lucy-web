@@ -220,7 +220,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
    /**
    * Returns an array of strings containing headers
-   * of missing fields 
+   * of missing fields
    * @returns string array of headers
    */
   get missingFields(): string[] {
@@ -228,6 +228,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
         requiredMissingFieldKeys.push(key);
+      } else {
+        if (key === 'spaceGeom' && this.responseBody[key]) {
+          const test: any = this.responseBody[key];
+          if (!test.latitude || !test.longitude || !test.geometry) {
+            requiredMissingFieldKeys.push(key);
+          }
+        }
       }
     }
     // let requiredMissingFieldHeaders: string[]= [];
@@ -236,7 +243,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of requiredMissingFieldKeys) {
       if (this.config.fieldHeaders[key] !== undefined) {
         // Group Lat long under "location" tag
-        if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
+        if (key === 'spaceGeom') {
           if (!locationIncluded) {
             missingFieldHeaders.push(`Location`);
             locationIncluded = true;
@@ -340,14 +347,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   fieldChanged(field: any, event: any) {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
-    if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+    if (field.isSpaceGeom) {
+      this.responseBody['spaceGeom'] = event.spaceGeom.value;
+    } else if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+      // console.log('setting lat long in body to undefined')
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
     } else if (event === `` && this.responseBody[field.key] !== undefined) {
       this.responseBody[field.key] = undefined;
-    }
-    // handle valid input cases
-     else if (field.isLocationField) {
+    } else if (field.isLocationField) {
+      // handle valid input cases
       // location field - needs lat long extraction
       this.responseBody[field.latitude.key] = event.latitude.value;
       this.responseBody[field.longitude.key] = event.longitude.value;

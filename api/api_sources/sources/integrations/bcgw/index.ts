@@ -13,13 +13,15 @@
  * limitations under the License.
  * File: index.ts
  * Project: lucy
- * File Created: Tuesday, 26th November 2019 10:30:51 am
- * Author: Pushan
+ * File Created: Friday, 13th December 2019 3:28:21 pm
+ * Author: Pushan  (you@you.you)
  * -----
- * Last Modified: Tuesday, 26th November 2019 10:31:25 am
- * Modified By: Pushan
+ * Last Modified: Friday, 13th December 2019 3:28:51 pm
+ * Modified By: Pushan  (you@you.you>)
  * -----
  */
-export * from './core-form/geometryJSON';
-export * from './core-form/inputGroup';
-// ---------------------------------------------
+/**
+ * Exports
+ */
+export * from './bcgov.const';
+export * from './wfs.service';

@@ -96,8 +96,6 @@ describe('Test Chemical Treatment', () => {
             should().exist(ct.firstApplicator);
             should().exist(ct.secondApplicator);
             should().exist(ct.pup);
-            should().exist(ct.plotLength);
-            should().exist(ct.plotWidth);
             should().exist(ct.temperature);
             should().exist(ct.humidity);
             should().exist(ct.windDirection);
@@ -115,8 +113,6 @@ describe('Test Chemical Treatment', () => {
             expect(ct.firstApplicator.chemical_treatment_employee_id).to.be.equal(f.firstApplicator.chemical_treatment_employee_id);
             expect(ct.secondApplicator.chemical_treatment_employee_id).to.be.equal(f.secondApplicator.chemical_treatment_employee_id);
             expect(ct.pup).to.be.equal(f.pup);
-            expect(ct.plotLength).to.be.equal(f.plotLength);
-            expect(ct.plotWidth).to.be.equal(f.plotWidth);
             expect(ct.temperature).to.be.equal(f.temperature);
             expect(ct.humidity).to.be.equal(f.humidity);
             expect(ct.windDirection.wind_direction_code_id).to.be.equal(f.windDirection.wind_direction_code_id);

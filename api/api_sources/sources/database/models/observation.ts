@@ -44,7 +44,6 @@ import {
     ObservationTypeCodeSchema,
     SpeciesAgencyCodeSchema,
     SoilTextureCodeSchema,
-    ObservationGeometryCodeSchema,
     SpecificUseCodeSchema,
     SlopeCodeSchema,
     AspectCodeSchema,
@@ -57,10 +56,6 @@ import { MechanicalTreatment } from './mechanical.treatment';
 
 export interface ObservationCreateModel {
     date: string;
-	lat: number;
-	long: number;
-	horizontalDimension: number;
-	verticalDimension: number;
 	accessDescription: string;
 	observerFirstName: string;
 	observerLastName: string;
@@ -81,7 +76,6 @@ export interface ObservationCreateModel {
 	observationType: ObservationTypeCode;
 	speciesAgency: SpeciesAgencyCode;
 	soilTexture: SoilTextureCode;
-	observationGeometry: ObservationGeometryCode;
 	specificUseCode: SpecificUseCode;
 	slopeCode: SlopeCode;
 	aspectCode: AspectCode;
@@ -146,40 +140,6 @@ export class Observation extends Record implements ObservationCreateModel {
         nullable: false,
         transformer: new NumericTransformer()
     })
-    @ModelProperty({ type: PropertyType.number})
-    lat: number;
-
-    @Column({ name: ObservationSchema.columns.long,
-        nullable: false,
-        transformer: new NumericTransformer()
-    })
-    @ModelProperty({ type: PropertyType.number})
-    long: number;
-
-    @Column({ name: ObservationSchema.columns.width,
-        nullable: false,
-        transformer: new NumericTransformer()
-    })
-
-    /**
-	 * @description Getter/Setter property for column {horizontal_dimension}
-	 */
-	@Column({
-        name: ObservationSchema.columns.horizontalDimension,
-        transformer: new NumericTransformer()
-    })
-	@ModelProperty({type: PropertyType.number})
-	horizontalDimension: number;
-
-	/**
-	 * @description Getter/Setter property for column {vertical_dimension}
-	 */
-	@Column({
-        name: ObservationSchema.columns.verticalDimension,
-        transformer: new NumericTransformer()
-    })
-	@ModelProperty({type: PropertyType.number})
-	verticalDimension: number;
 
     @Column({ name: ObservationSchema.columns.accessDescription, nullable: false})
     @ModelProperty({ type: PropertyType.string})
@@ -319,14 +279,6 @@ export class Observation extends Record implements ObservationCreateModel {
     })
 	@ModelProperty({type: PropertyType.object})
 	soilTexture: SoilTextureCode;
-
-    @ManyToOne( type => ObservationGeometryCode, {eager: true})
-    @JoinColumn({
-        name: ObservationSchema.columns.observationGeometry,
-        referencedColumnName: ObservationGeometryCodeSchema.columns.id
-    })
-	@ModelProperty({type: PropertyType.object})
-	observationGeometry: ObservationGeometryCode;
 
     @ManyToOne( type => SpecificUseCode, {eager: true})
     @JoinColumn({

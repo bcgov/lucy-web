@@ -25,6 +25,10 @@ export interface Observation {
     observation_id: number;
     lat: number;
     long: number;
+    spaceGeom: {
+        latitude: number;
+        longitude: number;
+    };
     date: string;
     // Observer
     observerFirstName: string;

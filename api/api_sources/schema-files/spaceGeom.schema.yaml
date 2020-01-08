@@ -53,22 +53,48 @@ schemas:
         comment: 'Spatial methodology to store and stratify spatial data to a 1 hectare standardized provincial hexagonally shaped grid system.'
         definition: VARCHAR(50) NULL
         meta: {}
+        required: false
+        layout:
+          header: 
+            key: 'longitude' 
+            default: 'Longitude'
+          classes:
+            - none
       subHexId:
         name: 'sub_hex_id'
         comment: 'Unique spatial sub hex id to identify record location within a hex.'
         definition: VARCHAR(50) NULL
         meta: {}
+        required: false
+        layout:
+          header: 
+            key: 'longitude' 
+            default: 'Longitude'
+          classes:
+            - none
       inputGeometry:
         name: input_geometry
         comment: 'Input Geometry geometry of the spatial record as GeoJSON format'
         definition: JSONB
         meta: {}
+        layout:
+          header: 
+            key: 'spaceGeom.inputGeometry' 
+            default: 'Geometry'
+          classes:
+            - none
       metaData:
         name: meta_data
         comment: 'Application level meta data to identify associated spatial object'
         definition: VARCHAR(99) NULL
         required: false
         meta: {}
+        layout:
+          header: 
+            key: 'spaceGeom.metaData' 
+            default: 'Info'
+          classes:
+            - none
       ## Relationship
       geometry:
         name: 'observation_geometry_code_id'
@@ -80,8 +106,8 @@ schemas:
         meta: {}
         layout:
           header:
-            key: 'observationGeometry'
-            default: 'Geometry'
+            key: 'spaceGeom.geometry'
+            default: 'Geometry Type'
           classes:
             - none
     ## -- END: Columns
@@ -112,7 +138,13 @@ schemas:
             definition: INT NULL
             foreignTable: space_geom
             refColumn: space_geom_id
-            required: false
+            required: true
+            layout:
+              header:
+                key: 'generic.spaceGeom'
+                default: ''
+              classes:
+                - none
             meta:
               embedded: true
           ## --

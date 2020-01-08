@@ -21,7 +21,6 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
     }
     constructor() {
         super();
-        this.applyRouteConfig();
     }
 
     processList(list: any[], key: string) {
