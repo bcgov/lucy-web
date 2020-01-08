@@ -406,8 +406,12 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
                 if (data[k] && (col.type === typeof data[k] || isRelationShip)) {
                     r = r && true;
                 } else {
-                    console.log(`${this.className} | Fail For key: ${k} => ${data[k]}`);
-                    r = r && false;
+                    if (!col.required) {
+                        r = r && true;
+                    } else {
+                        console.log(`${this.className} | Fail For key: ${k} => ${data[k]}`);
+                        r = r && false;
+                    }
                 }
             }
         });

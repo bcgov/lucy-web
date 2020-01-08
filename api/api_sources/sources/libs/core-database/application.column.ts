@@ -42,6 +42,7 @@ export interface DataFieldVerification {
     dateFormat?: string;
     size?: number;
     isDate?: boolean;
+    subType?: string;
 }
 
 /**

@@ -172,7 +172,6 @@ describe('Test for mechanical treatment', () => {
     it('should update mechanical treatment for {admin}', async () => {
         const mt = await mechanicalTreatmentFactory();
         const create = await mechanicalTreatmentCreateSpecFactory();
-        delete create.latitude;
         delete create.species;
         await ObservationController.shared.remove(create.observation);
         delete create.observation;

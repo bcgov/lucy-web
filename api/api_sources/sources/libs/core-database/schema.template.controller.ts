@@ -11,15 +11,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: index.ts
+ * File: schema.template.controller.ts
  * Project: lucy
- * File Created: Tuesday, 26th November 2019 10:30:51 am
- * Author: Pushan
+ * File Created: Tuesday, 17th December 2019 7:41:14 pm
+ * Author: Pushan  (you@you.you)
  * -----
- * Last Modified: Tuesday, 26th November 2019 10:31:25 am
- * Modified By: Pushan
+ * Last Modified: Tuesday, 17th December 2019 7:41:32 pm
+ * Modified By: Pushan  (you@you.you>)
  * -----
  */
-export * from './core-form/geometryJSON';
-export * from './core-form/inputGroup';
-// ---------------------------------------------
+/**
+ * Imports
+ */
+import { BaseSchema } from './baseSchema';
+
+export class SchemaTemplateController {
+    static processSchema(schema: BaseSchema) {
+        
+    }
+}
+// ------------------

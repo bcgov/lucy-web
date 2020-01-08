@@ -1,0 +1,24 @@
+// Model #{modelName} class for schema #{className}
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    //- #if(hasManyToOne) [JoinColumn,
+    //- ManyToOne]
+} from 'typeorm';
+
+// -import {
+    // -#{className},
+    // -#repeat(schemaList, item) [
+    // -#{item}]
+// -} from './database-schema';
+
+// -import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
+// - #if(requireTransformer) [
+// - import {
+// - #if(requireNumberTransformer) [NumericTransformer]
+// - #if(requireDateTransformer) [DateTransformer]
+// -} from '../../libs/transformer'
+// -]
+// - #if(is)
+
