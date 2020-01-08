@@ -137,7 +137,7 @@ export class LocationInputComponent implements OnInit {
   }
 
   get latitudeField(): FormConfigField {
-    if (this.object.isSpaceGeom && this.object.isSpaceGeom.embeddedFields) {
+    if (this.object.isSpaceGeom &&  this.object.spaceGeom.embeddedFields) {
       const spaceGeom: FormConfigField = this.object.spaceGeom;
       return spaceGeom.embeddedFields.latitude;
     }
@@ -157,7 +157,7 @@ export class LocationInputComponent implements OnInit {
   }
 
   get longitudeField(): FormConfigField {
-    if (this.object.isSpaceGeom && this.object.isSpaceGeom.embeddedFields) {
+    if (this.object.isSpaceGeom &&  this.object.spaceGeom.embeddedFields) {
       const spaceGeom: FormConfigField = this.object.spaceGeom;
       return spaceGeom.embeddedFields.longitude;
     }
