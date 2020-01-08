@@ -23,6 +23,7 @@ import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 import { GeometryJSON, InputGeometryJSON } from 'src/lib';
+import { BcgwService } from 'src/app/services/bcgw/bcgw.service';
 
 interface SpaceGeomData {
   geometry: any;
@@ -136,11 +137,11 @@ export class LocationInputComponent implements OnInit {
   }
 
   get latitudeField(): FormConfigField {
-    if (this.object.isSpaceGeom) {
+    if (this.object.isSpaceGeom && this.object.isSpaceGeom.embeddedFields) {
       const spaceGeom: FormConfigField = this.object.spaceGeom;
       return spaceGeom.embeddedFields.latitude;
     }
-    if (this.object && this.fieldObject.latitude) {
+    if (this.object && this.fieldObject && this.fieldObject.latitude) {
       return this.fieldObject.latitude;
     } else {
       return this.formService.getEmptyConfigField();
@@ -148,16 +149,19 @@ export class LocationInputComponent implements OnInit {
   }
 
   get geometry(): FormConfigField {
+    if (this.fieldObject === undefined) {
+      return this.formService.getEmptyConfigField();
+    }
     const geo = this.fieldObject.geometry || this.formService.getEmptyConfigField();
     return geo;
   }
 
   get longitudeField(): FormConfigField {
-    if (this.object.isSpaceGeom) {
+    if (this.object.isSpaceGeom && this.object.isSpaceGeom.embeddedFields) {
       const spaceGeom: FormConfigField = this.object.spaceGeom;
       return spaceGeom.embeddedFields.longitude;
     }
-    if (this.object && this.fieldObject.longitude) {
+    if (this.object && this.fieldObject && this.fieldObject.longitude) {
       return this.fieldObject.longitude;
     } else {
       return this.formService.getEmptyConfigField();
@@ -212,6 +216,14 @@ export class LocationInputComponent implements OnInit {
     this._lat = value;
   }
 
+  private _wellDistance = -1;
+  get wellDistance(): number {
+    return this._wellDistance;
+  }
+  set wellDistance(value: number) {
+    this._wellDistance = value;
+  }
+
   // * Validations
   get validLat(): Boolean {
     return this.validation.isValidLatitude(this.lat);
@@ -235,7 +247,12 @@ export class LocationInputComponent implements OnInit {
   get isViewMode(): boolean {
     return this.mode === FormMode.View;
   }
-  constructor(private converterService: ConverterService, private validation: ValidationService, private formService: FormService) { }
+  constructor(
+    private converterService: ConverterService,
+    private validation: ValidationService,
+    private formService: FormService,
+    private BCGWService: BcgwService
+    ) { }
 
   private processInputValues(input: SpaceGeomData) {
     let geometry = input.geometry;
@@ -297,6 +314,28 @@ export class LocationInputComponent implements OnInit {
         this.object.spaceGeom.value = value;
       }
       this.locationChanged.emit(this.object);
+    }
+  }
+
+  private async findNearestWell() {
+    if (!this.object || !this.validation.isValidLatitude(String(this.fieldObject.latitude.value)) || !this.validation.isValidLongitude(String(this.fieldObject.longitude.value))) {
+      // hide nearest well tag
+      this.wellDistance = -1;
+      return;
+    }
+    const latitude = + this.fieldObject.latitude.value;
+    const longitude = + this.fieldObject.longitude.value;
+    if (latitude !== undefined && longitude !== undefined) {
+      const found = await this.BCGWService.findDistanceToClosestWell(latitude, longitude);
+      if (found != null) {
+        this.wellDistance = found;
+      } else {
+        // hide nearest well tag
+        this.wellDistance = -1;
+      }
+    } else {
+      // hide nearest well tag
+      this.wellDistance = -1;
     }
   }
 
@@ -393,6 +432,7 @@ export class LocationInputComponent implements OnInit {
       return;
     }
 
+    this.findNearestWell();
     this.setUTMFromLatLong();
   }
 
@@ -435,6 +475,8 @@ export class LocationInputComponent implements OnInit {
 
     // 5) Set Map
     this.setMapToCurrentLocation();
+
+    this.findNearestWell();
   }
 
   /**
