@@ -87,3 +87,8 @@
     width: 100%;
     border: 2px solid #E2A014;
 }
+
+.well-distance {
+    color: #000000;
+    font-size: 12px;
+}

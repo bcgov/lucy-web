@@ -105,6 +105,11 @@ export class AppConstants {
 
     // API Reference data
     static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
+
+    // BC Government Wearhouse
+    static API_BCGW_wellProximity(latitude: number, longitude: number): string {
+        return `${AppConstants.API_baseURL}/location/gwells-data?latitude=${latitude}&longitude=${longitude}`;
+    }
 }
 
 

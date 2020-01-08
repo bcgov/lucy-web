@@ -754,10 +754,11 @@ export class FormService {
     }
 
     ///// END Tweak verification object received
+    const header = field.layout.header ? field.layout.header.default : ``;
     try {
       return {
         key: field.key,
-        header: field.layout.header.default,
+        header: header,
         description: field.layout.description,
         required: field.required,
         type: field.type,
