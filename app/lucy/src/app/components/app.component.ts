@@ -30,6 +30,7 @@ import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
 import { StringConstants } from 'src/app/constants/string-constants';
 import { ToastService, ToastModel, ToastIconType } from '../services/toast/toast.service';
+import { BcgwService } from '../services/bcgw/bcgw.service';
 
 @Component({
   selector: 'app-root',
