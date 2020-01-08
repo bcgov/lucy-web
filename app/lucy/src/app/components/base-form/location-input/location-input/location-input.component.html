@@ -107,8 +107,8 @@
       >
       </app-map-preview>
      
-      <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance">
-        Nearest well is {{wellDistance}} km away.
+      <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance animated wobble">
+        There is a well <span class="well-distance-value">{{wellDistance}} meters</span> from this location.
       </div>
     </div>
   </div>
