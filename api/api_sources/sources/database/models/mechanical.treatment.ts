@@ -52,7 +52,7 @@ import {
 	SpaceGeom
 } from '../models';
 import { Record } from './generic.data.models';
-import { NumericTransformer, DateTransformer } from '../../libs/transformer';
+import { DateTransformer } from '../../libs/transformer';
 
 
 /** Interface **/
@@ -60,10 +60,6 @@ import { NumericTransformer, DateTransformer } from '../../libs/transformer';
  * @description MechanicalTreatment create interface
  */
 export interface MechanicalTreatmentSpec {
-	latitude: number;
-	longitude: number;
-	width: number;
-	length: number;
 	applicatorFirstName: string;
 	applicatorLastName: string;
 	secondaryApplicatorFirstName: string;
@@ -91,10 +87,6 @@ export interface MechanicalTreatmentSpec {
  * @description MechanicalTreatment update interface
  */
 export interface MechanicalTreatmentUpdateSpec {
-	latitude?: number;
-	longitude?: number;
-	width?: number;
-	length?: number;
 	applicatorFirstName?: string;
 	applicatorLastName?: string;
 	secondaryApplicatorFirstName?: string;
@@ -137,34 +129,6 @@ export class MechanicalTreatment extends Record {
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
 	mechanical_treatment_id: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_location_latitude}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.latitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	latitude: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_location_longitude}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.longitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	longitude: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_area_width}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.width, transformer: new NumericTransformer})
-	@ModelProperty({type: PropertyType.number})
-	width: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_area_length}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.length, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	length: number;
 
 	/**
 	 * @description Getter/Setter property for column {applicator_first_name}

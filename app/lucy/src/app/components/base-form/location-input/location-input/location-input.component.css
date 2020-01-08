@@ -54,3 +54,36 @@
 .animationDuration {
     animation-duration: 0.3s;
 }
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.area-calculated {
+	color: #000000;
+	font-size: 17px;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgba(51, 51, 51, 0.08);
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.area-value {
+    color: #234075;
+}
+
+.sub-section-title {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 22px;
+}
+
+.section-divider {
+    box-sizing: border-box;
+    height: 1px;
+    width: 100%;
+    border: 2px solid #E2A014;
+}

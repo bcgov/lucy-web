@@ -259,7 +259,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number' };
     }
     // Must have at least 5 decimal places
-    const separated = control.value.split('.');
+    const valueString = typeof control.value === typeof 'x' ? control.value : `${control.value}`;
+    const separated = valueString.split('.');
     if (separated.length > 2) {
       // This wont happend because number validation will catch it first
       return { invalidLatitude: true, invalidLatitudeError: 'There have extra dots' };
@@ -285,7 +286,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       return { validLongitude: true, invalidLongitudeError: 'Not a valid number' };
     }
     // Must have at least 5 decimal places
-    const separated = control.value.split('.');
+    const valueString = typeof control.value === typeof 'x' ? control.value : `${control.value}`;
+    const separated = valueString.split('.');
     if (separated.length > 2) {
       // This wont happend because number validation will catch it first
       return { validLongitude: true, invalidLongitudeError: 'There have extra dots' };

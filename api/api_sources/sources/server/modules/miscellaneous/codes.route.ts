@@ -56,7 +56,6 @@ export class CodeTableRouteController extends SecureRouteController<any> {
 
     constructor() {
         super();
-        this.applyRouteConfig();
     }
 
     codeTableObj: any;
