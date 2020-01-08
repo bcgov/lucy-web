@@ -89,6 +89,12 @@
 }
 
 .well-distance {
-    color: #000000;
-    font-size: 12px;
+    color: #234075;
+    font-size: 13px;
+}
+
+.well-distance-value { 
+    color: #E2A014;
+    font-size: 14px;
+    font-weight: bold;
 }
