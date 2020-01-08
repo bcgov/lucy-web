@@ -99,13 +99,17 @@
     </div>
     <!-- Map -->
     <div class="col-12 col-md-8 leaf">
-      <app-map-preview
+        <app-map-preview
         (centerPointChanged)="mapCenterChanged($event)"
         [cluster]="false"
         [center]="mapCenter"
         [markers]="markers"
       >
       </app-map-preview>
+     
+      <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance">
+        Nearest well is {{wellDistance}} km away.
+      </div>
     </div>
   </div>
   <!-- Geometry amd Inputs-->
