@@ -35,7 +35,12 @@ import {
     mechanicalDisposalMethodCodeFactory,
     mechanicalSoilDisturbanceCodeFactory,
     mechanicalRootRemovalCodeFactory,
-    mechanicalTreatmentIssuesCodeFactory
+    mechanicalTreatmentIssuesCodeFactory,
+    pesticideEmployerCodeFactory,
+    chemicalTreatmentMethodCodeFactory,
+    speciesAgencyCodeFactory,
+    windDirectionCodeFactory,
+    herbicideCodeFactory
 } from '../factory';
 import {
     MechanicalTreatmentController,
@@ -49,7 +54,12 @@ import {
     MechanicalDisposalMethodCode,
     MechanicalSoilDisturbanceCode,
     MechanicalRootRemovalCode,
-    MechanicalTreatmentIssueCode
+    MechanicalTreatmentIssueCode,
+    PesticideEmployerCode,
+    ChemicalTreatmentMethodCode,
+    WindDirectionCodes,
+    Herbicide,
+    SpeciesAgencyCode
 } from '../models';
 import { Destroy, ModelFactory, ModelSpecFactory } from '../factory/helper';
 // import { MechanicalTreatmentSchema } from '../database-schema';
@@ -67,7 +77,7 @@ describe('Treatment Test', () => {
     });
 
     // Test0: Test Code Factory
-    it('should create code factory', async () => {
+    it('should create code factories', async () => {
         const mm: MechanicalMethodCode = await mechanicalMethodCodeFactory();
         should().exist(mm);
         should().exist(mm.mechanical_method_code_id);
@@ -80,10 +90,21 @@ describe('Treatment Test', () => {
         should().exist(rrc);
         const issue: MechanicalTreatmentIssueCode = await mechanicalTreatmentIssuesCodeFactory();
         should().exist(issue);
+        const pestEmp: PesticideEmployerCode = await pesticideEmployerCodeFactory();
+        should().exist(pestEmp);
+        const ctm: ChemicalTreatmentMethodCode = await chemicalTreatmentMethodCodeFactory();
+        should().exist(ctm);
+        const wdc: WindDirectionCodes = await windDirectionCodeFactory();
+        should().exist(wdc);
+        const hc: Herbicide = await herbicideCodeFactory();
+        should().exist(hc);
+        should().exist(hc.herbicide_id);
+        const sac: SpeciesAgencyCode = await speciesAgencyCodeFactory();
+        should().exist(sac);
     });
 
     // Test1: Create Treatment fro factory
-    it('should create treatment from factory', async () => {
+    it('should create mechanical treatment from factory', async () => {
         const f = await ModelFactory(MechanicalTreatmentController.shared)();
         should().exist(f);
         const mt: MechanicalTreatment = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
@@ -110,7 +131,7 @@ describe('Treatment Test', () => {
     });
 
     // Test2: Create Treatment with specification
-    it('should create treatment with spec', async () => {
+    it('should create mechanical treatment with spec', async () => {
         const f = await mechanicalTreatmentCreateSpecFactory();
         const user = await userFactory();
         const obj = await MechanicalTreatmentController.shared.createNewObject(f, user);
@@ -122,7 +143,7 @@ describe('Treatment Test', () => {
     });
 
     // Test2: Create Treatment with specification
-    it('should update treatment with spec', async () => {
+    it('should update mechanical treatment with spec', async () => {
         const f = await mechanicalTreatmentFactory();
         const user = await userFactory();
         const spec: MechanicalTreatmentUpdateSpec = await mechanicalTreatmentUpdateSpecFactory();
@@ -170,7 +191,7 @@ describe('Treatment Test', () => {
         await destroyMechanicalTreatment(f);
     });
 
-    it('should create treatment with spaceGeom factory', async () => {
+    it('should create mechanical treatment with spaceGeom factory', async () => {
         const mt: MechanicalTreatment = await ModelFactory(MechanicalTreatmentController.shared)();
         should().exist(mt);
         should().exist(mt.spaceGeom);
@@ -180,13 +201,10 @@ describe('Treatment Test', () => {
         expect(f.spaceGeom.space_geom_id).to.be.equal(mt.spaceGeom.space_geom_id);
     });
 
-    it('should create treatment with spaceGeom spec factory', async () => {
+    it('should create mechanical treatment with spaceGeom spec factory', async () => {
         const mt: any = await ModelSpecFactory(MechanicalTreatmentController.shared)();
         should().exist(mt);
         should().exist(mt.spaceGeom);
     });
-
 });
-
 // ----------------------------------------------------------------------------------------
-

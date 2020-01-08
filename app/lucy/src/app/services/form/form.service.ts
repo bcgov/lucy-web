@@ -716,10 +716,14 @@ export class FormService {
       verification.isLatitude = true;
     }
 
+    if (field.layout.header === undefined) {
+      field.layout.header = {};
+    }
+
     ///// END Tweak verification object received
     return {
       key: field.key,
-      header: field.layout.header.default || '',
+      header: field.layout.header.default,
       description: field.layout.description,
       required: field.required,
       type: field.type,

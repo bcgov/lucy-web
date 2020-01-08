@@ -182,7 +182,7 @@ export class HerbicideApplicationComponent implements OnInit {
         if (h1.compositeName > h2.compositeName) { return 1; }
         if (h1.compositeName < h2.compositeName) { return -1; }
         return 0;
-      }
+      };
       this.unusedHerbicides.sort(sortAlpha);
       this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     }
