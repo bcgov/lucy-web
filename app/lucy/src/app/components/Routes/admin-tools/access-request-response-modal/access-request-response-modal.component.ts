@@ -121,7 +121,7 @@ export class AccessRequestResponseModalComponent implements OnInit {
   }
 
   @Output() acessRequestModalEmitter = new EventEmitter<AccessRequestResponseModalEmitterResponse>();
-  @ViewChild('requestResponseModal') private content;
+  @ViewChild('requestResponseModal', {static: false}) private content;
 
   constructor(private admin: AdminService, private roles: RolesService, private userService: UserService, private modalService: NgbModal) { }
 
