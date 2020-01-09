@@ -1354,7 +1354,7 @@ export class FormService {
         default:
           const objBody: any = body[field.key];
           // Checking not array
-          if (objBody.constructor !== [].constructor && typeof objBody === 'object') {
+          if (typeof objBody === 'object' && objBody.constructor !== [].constructor) {
             for (const k in objBody) {
               if (objBody.hasOwnProperty(k)) {
                 if (objBody[k] === null) {
