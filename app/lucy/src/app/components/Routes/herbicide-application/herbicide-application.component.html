@@ -21,7 +21,7 @@
         </div>
 
         <!-- View when zero herbicides selected -->
-        <div class="row" *ngIf="tankMixes === undefined || tankMixes.length === 0">
+        <div class="row" *ngIf="isTankMixEmpty">
             <div class="col-12">
                 <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
                 </app-dropdown>
@@ -29,7 +29,7 @@
         </div>
 
         <!-- View when 1+ herbicides selected -->
-        <div class="col-12 container" *ngIf="tankMixes.length > 0">
+        <div class="col-12 container" *ngIf="!isTankMixEmpty">
             <div class="row labelsRow">
                 <div class="col-5">
                     <label>Select Herbicide(s) to add to treatment:</label>

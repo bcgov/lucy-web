@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit} from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { FormMode } from 'src/app/models';
 import { CodeTableService } from 'src/app/services/code-table.service';
@@ -23,7 +23,7 @@ export class HerbicideApplicationErrorStateMatcher implements ErrorStateMatcher 
   templateUrl: './herbicide-application.component.html',
   styleUrls: ['./herbicide-application.component.css']
 })
-export class HerbicideApplicationComponent implements OnInit {
+export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   @Output() tankMixesChanged = new EventEmitter<any>();
 
@@ -40,8 +40,8 @@ export class HerbicideApplicationComponent implements OnInit {
 
   // Herbicide Selection section variables
   _tankMixes: HerbicideTankMix[] = [];
-  unusedHerbicides: HerbicideCodes[]; // dynamic list of unused herbicides (used to create dropdown menu)
-  herbicideDropdowns: DropdownObject[]; // dynamic list of dropdown objects built from this.unusedHerbicides
+  unusedHerbicides: HerbicideCodes[] = []; // dynamic list of unused herbicides (used to create dropdown menu)
+  herbicideDropdowns: DropdownObject[] = []; // dynamic list of dropdown objects built from this.unusedHerbicides
   showEmptyRow = false;
 
   applicationRateVerification = {
@@ -79,6 +79,10 @@ export class HerbicideApplicationComponent implements OnInit {
     this._responseBody = responseBody;
   }
 
+  get isTankMixEmpty(): boolean {
+    return (this.tankMixes ||  []).length === 0;
+  }
+
   // Base form config
   private _config: any = {};
   get config(): any {
@@ -95,9 +99,7 @@ export class HerbicideApplicationComponent implements OnInit {
 
 
   async ngOnInit() {
-    if (this.mode === FormMode.Create) {
-      this.prepareDropdownMenus();
-    } else if (this.mode === FormMode.Edit) {
+    if (this.mode === FormMode.Edit) {
       this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
       this.responseBody = this.treatment;
       this.mixDeliveryRate = this.responseBody.mixDeliveryRate;
@@ -108,9 +110,12 @@ export class HerbicideApplicationComponent implements OnInit {
       this.notifyDeliveryRateChangeEvent();
       this.notifyTankMixChangeEvent();
 
-      this.prepareDropdownMenus();
       this.compileTankMixes();
     }
+  }
+
+  ngAfterViewInit() {
+    this.prepareDropdownMenus();
   }
 
   set tankMixes(h: HerbicideTankMix[]) {
