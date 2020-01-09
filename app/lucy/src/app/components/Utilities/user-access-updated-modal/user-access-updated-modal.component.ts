@@ -70,7 +70,7 @@ export class UserAccessUpdatedModalComponent implements OnInit, AfterViewInit {
   }
 
   @Output() userAccessUpdatedModalEventEmitter = new EventEmitter<boolean>();
-  @ViewChild('userAccessMessageModal', {static: false}) private content;
+  @ViewChild('userAccessMessageModal') private content;
 
   constructor(private messageService: MessageService, private modalService: NgbModal, private userService: UserService) { }
 

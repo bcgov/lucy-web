@@ -113,7 +113,7 @@ export class InventoryComponent implements OnInit {
   /************ Material Table ************/
   displayedColumns: string[] = ['Observation_id', 'species', 'date_observed', 'last_updated', 'observer', 'actions'];
   dataSource = new MatTableDataSource<Observation>(this.observations);
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
    /************ END OF Material Table ************/
 
   constructor(

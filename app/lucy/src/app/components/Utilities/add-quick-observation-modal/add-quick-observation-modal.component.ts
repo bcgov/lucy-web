@@ -49,7 +49,7 @@ export class AddQuickObservationModalComponent implements OnInit, AfterViewInit 
   private underConstructionIcon = 'https://assets8.lottiefiles.com/packages/lf20_hntzYU.json';
 
   @Output() addQuickObservationModalEventEmitter = new EventEmitter<boolean>();
-  @ViewChild('addQuickObservationModal', {static: true}) private content;
+  @ViewChild('addQuickObservationModal') private content;
 
   constructor(private modalService: NgbModal, private codeTables: CodeTableService, private dropdowns: DropdownService) {
     this.lottieConfig = {
