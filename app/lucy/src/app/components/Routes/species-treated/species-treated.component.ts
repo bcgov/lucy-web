@@ -108,7 +108,7 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       // that values exist
       this.notifyChangeEvent();
 
-      await this.fetchObservationsForLocation(this.responseBody.latitude, this.responseBody.longitude);
+      await this.fetchObservationsForLocation();
       this.loadingService.remove();
     } else { // form is in view mode
       this.speciesBeingTreated = this.responseBody.speciesObservations;
@@ -124,12 +124,8 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (change.responseBody.currentValue.latitude !== undefined && change.responseBody.currentValue.longitude !== undefined) {
-        const lat = change.responseBody.currentValue.latitude;
-        const long = change.responseBody.currentValue.longitude;
-        // this.loadingService.add();
-        await this.fetchObservationsForLocation(lat, long);
-        // this.loadingService.remove();
+    if (change.responseBody.currentValue.spaceGeom !== undefined) {
+        await this.fetchObservationsForLocation();
     }
 
     if (change.responseBody.currentValue.mode !== undefined) {
@@ -141,8 +137,8 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     }
   }
 
-  private async fetchObservationsForLocation(lat: number, long: number) {
-    const observations = await this.observationService.getByLocation(lat, long);
+  private async fetchObservationsForLocation() {
+    const observations = await this.observationService.getAll();
     for (const o of observations) {
       if ((this.indexOfObservationInSpeciesNotBeingTreated(o) === -1) && (this.indexOfSpeciesInSpeciesBeingTreated(o) === -1)) {
         this.speciesNotBeingTreated.push(o);

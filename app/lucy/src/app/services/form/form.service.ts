@@ -30,8 +30,6 @@ import {
   InputConfig,
   RemoteFormConfig
 } from '../../../lib';
-import { LayoutModule } from '@angular/cdk/layout';
-import { splitTypescriptSuffix } from '@angular/compiler/src/aot/util';
 
 /**
  * @description Type define InputConfig as FormConfigField
@@ -292,7 +290,6 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
-    const relations = serverConfig.relations;
     let requiredFieldKeys: string[] = [];
     let dropdownFieldKeys: string[] = [];
     let fieldHeaders: {} = {};
@@ -316,7 +313,7 @@ export class FormService {
         // Loop thorugh groups in server config lay out
         for (const group of groups) {
           // Process group
-          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, relations, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
           requiredFieldKeys = groupInfo.requiredFieldKeys;
           dropdownFieldKeys = groupInfo.dropdownFieldKeys;
           fieldHeaders = groupInfo.fieldHeaders;
@@ -352,7 +349,7 @@ export class FormService {
       }
     }
     if (orphanFields.length > 0) {
-      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, null, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
       requiredFieldKeys = orphanGroupInfo.requiredFieldKeys;
       dropdownFieldKeys = orphanGroupInfo.dropdownFieldKeys;
       fieldHeaders = orphanGroupInfo.fieldHeaders;
@@ -386,7 +383,6 @@ export class FormService {
     groupFields: string[],
     fields: any[],
     computedFields: any[],
-    relations: any[],
     _requiredFieldKeys: string[],
     _dropdownFieldKeys: string[],
     _fieldHeaders: {}
@@ -405,46 +401,37 @@ export class FormService {
     let cachedLatOrLongField: any;
     // Now loop through field keys specified in group layout
     for (let i = 0; i < groupFields.length; i++) {
-      let newField: any;
       // Get key for field
       const fieldKey = groupFields[i];
-      // if fieldKey doesn't appear in fields array
-      if (fields.find((element) => element.key === fieldKey) === undefined) {
-        // check if the fieldKey is in relations array
-        const relation = relations[fieldKey];
-        if (relation === undefined) {
-          continue;
-        } else {
-        // Add type flags to field (to help with html generation) & convert data structure
-        newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
-        // If field key wasnt found in fields
+      // Add type flags to field (to help with html generation) & convert data structure
+      let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
+      // If field key wasnt found in fields
+      if (!newField) {
+        // Could be a computed field
+        newField = await this.configComputedField(fieldKey, computedFields);
         if (!newField) {
-          // Could be a computed field
-          newField = await this.configComputedField(fieldKey, computedFields);
-          if (!newField) {
-            // If it wasnt, just skip it
-            continue;
-          }
+          // If it wasn't, just skip it
+          continue;
         }
       }
-        // Store required fields in a separate array
-        if (newField.required) {
-          requiredFieldKeys.push(newField.key);
-        }
-        // Store dropdown fields in a separate array
-        if (newField.isDropdown) {
-          dropdownFieldKeys.push(newField.key);
-        }
-        // Store field headers in a separate array
-        fieldHeaders[newField.key] = newField.header;
+      // Store required fields in a separate array
+      if (newField.required) {
+        requiredFieldKeys.push(newField.key);
+      }
+      // Store dropdown fields in a separate array
+      if (newField.isDropdown) {
+        dropdownFieldKeys.push(newField.key);
+      }
+      // Store field headers in a separate array
+      fieldHeaders[newField.key] = newField.header;
 
-        // Add Bootstrap column size
-        newField.cssClasses = this.addColumnClass(
-          newField.cssClasses,
-          i,
-          groupFields.length,
-          newField.isTextAreaField
-        );
+      // Add Bootstrap column size
+      newField.cssClasses = this.addColumnClass(
+        newField.cssClasses,
+        i,
+        groupFields.length,
+        newField.isTextAreaField
+      );
 
       ////// Special case for lat or long fields //////
       if (
@@ -474,10 +461,13 @@ export class FormService {
           // Add Location field
           subSectionFields.push(locationField);
         } else {
-          // Add field to group fields
-          subSectionFields.push(newField);
+          cachedLatOrLongField = newField;
         }
-
+        ////// END Special case for lat or long field //////
+      } else {
+        // Add field to group fields
+        subSectionFields.push(newField);
+      }
     }
     return {
       fields: subSectionFields,
@@ -485,9 +475,7 @@ export class FormService {
       dropdownFieldKeys: dropdownFieldKeys,
       fieldHeaders: fieldHeaders
     };
-      
-  
-    }}}
+  }
 
   private addColumnClass(
     cssClasses: string,
@@ -523,37 +511,6 @@ export class FormService {
       }
     }
     return result;
-  }
-
-  private async configRelationField(
-    key: string,
-    relations: any
-  ): Promise<any> {
-    // if key is not in relations, return undefined
-    if (!relations[key]) {
-      return undefined;
-    }
-    const relationField = relations[key];
-    // set css classes // TODO: Server doesnt send this yet
-        let cssClasses = ``;
-        if (relationField.layout && relationField.layout.classes) {
-          const classes = relationField.layout.classes;
-          for (const item of classes) {
-            cssClasses = cssClasses + ` `;
-          }
-        }
-    return {
-      key: key,
-      header: relationField.header.default,
-      description: relationField.description,
-      required: true,
-      type: relationField.type,
-      verification: relationField.verification,
-      meta: relationField.meta,
-      cssClasses: cssClasses,
-      codeTable: '',
-      condition: '',
-    };
   }
 
   private async configComputedField(
@@ -598,12 +555,8 @@ export class FormService {
     key: string,
     fields: any[]
   ): Promise<any> {
-    const field = fields.find((element) => element.key === key);
-    // for (const field of fields) {
-    //   if (field['key'] === key) {
-      if (field === undefined) {
-        return null;
-      } else {
+    for (const field of fields) {
+      if (field['key'] === key) {
         // convert server config field
         const fieldOfInterest: any = this.createFormConfigField(field);
         // initialize value field
@@ -669,6 +622,7 @@ export class FormService {
         if (fieldOfInterest.isDropdown) {
           fieldOfInterest.dropdown = await this.dropdownfor(
             fieldOfInterest.codeTable,
+            fieldOfInterest.displayKey,
             fieldOfInterest.codeTableMeta
           );
         }
@@ -679,16 +633,15 @@ export class FormService {
             const val = fieldOfInterest.embeddedFields[f];
             if (val.type === 'object') {
               val.isDropdown = true;
-              val.dropdown = await this.dropdownfor(val.codeTable, val.codeTableMeta);
+              val.dropdown = await this.dropdownfor(val.codeTable, val.displayKey, val.codeTableMeta);
             }
           }
         }
         return fieldOfInterest;
-    //   }
-    // }
-    // return null;
+      }
+    }
+    return null;
   }
-}
 
   /**
    * Convert a server generated field object to one that
@@ -749,8 +702,11 @@ export class FormService {
       verification.isLatitude = true;
     }
 
-    if (field.layout.header === undefined) {
-      field.layout.header = {};
+    if (
+      field.type.toLowerCase() === `number` &&
+      (!verification.isLatitude && !verification.isLongitude)
+    ) {
+      verification.positiveNumber = true;
     }
 
     ///// END Tweak verification object received
@@ -762,7 +718,7 @@ export class FormService {
         description: field.layout.description,
         required: field.required,
         type: field.type,
-        suffix: field.layout.suffix,
+        suffix: field.suffix,
         verification: verification,
         meta: field.meta,
         cssClasses: cssClasses,
@@ -811,6 +767,7 @@ export class FormService {
    */
   private async dropdownfor(
     code: string,
+    displayKey: string,
     meta: any
   ): Promise<DropdownObject[]> {
     if (!code) {
@@ -826,7 +783,9 @@ export class FormService {
         codeTable = apiResult.response;
       }
     }
-    return this.dropdownService.createDropdownObjectsFrom(codeTable);
+    return this.dropdownService.createDropdownObjectsFrom(
+      codeTable
+    );
   }
 
   /**
@@ -842,7 +801,7 @@ export class FormService {
     selectedObject: any,
     codeTableMeta: any,
   ): Promise<DropdownObject> {
-    const dropdowns = await this.dropdownfor(codeTableName, codeTableMeta);
+    const dropdowns = await this.dropdownfor(codeTableName, displayedKey, codeTableMeta);
     let selectedID: number;
     for (const key in selectedObject) {
       if (key.toLowerCase().indexOf(`id`) !== -1) {
@@ -898,44 +857,43 @@ export class FormService {
     // Sections/ subsections/ fields
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
-        if (subSection.isCustom === false) {
-          for (const field of subSection.fields) {
-            if (field.isLocationField) {
-              if (field.isSpaceGeom) {
-                field.spaceGeom.value = object.spaceGeom || {};
+        for (const field of subSection.fields) {
+          if (field.isLocationField) {
+            if (field.isSpaceGeom) {
+              field.spaceGeom.value = object.spaceGeom || {};
+            } else {
+              field.latitude.value = this.formatLatLongForDisplay(
+                object[field.latitude.key]
+              );
+              field.longitude.value = this.formatLatLongForDisplay(
+                object[field.longitude.key]
+              );
+            }
+          } else {
+            if (object[field.key] !== undefined) {
+              const key = object[field.key];
+              if (typeof key === 'object' && key !== null) {
+                field.value = await this.getDropdownObjectWithId(
+                  field.codeTable,
+                  field.displayKey,
+                  object[field.key],
+                  field.codeTableMeta
+                );
               } else {
-                field.latitude.value = this.formatLatLongForDisplay(
-                  object[field.latitude.key]
-                );
-                field.longitude.value = this.formatLatLongForDisplay(
-                  object[field.longitude.key]
-                );
+                field.value = object[field.key];
               }
             } else {
-              if (object[field.key] !== undefined) {
-                const key = object[field.key];
-                if (typeof key === 'object' && key !== null) {
-                  field.value = await this.getDropdownObjectWithId(
-                    field.codeTable,
-                    field.displayKey,
-                    object[field.key],
-                    field.codeTableMeta
-                  );
-                } else {
-                  // UNCOMMENT for debugging/ when adding new form support. it helps
-                  // console.log(
-                  //   `**** config key ${field.key} does not exist in object`
-                  // );
-                }
-              }
+              // UNCOMMENT for debugging/ when adding new form support. it helps
+              // console.log(
+              //   `**** config key ${field.key} does not exist in object`
+              // );
             }
+          }
         }
-
       }
     }
     for (const relationKey of configuration.relationKeys) {
-      // only create UI config for table if the relationKey is not a custom component (embedded == true)
-      if (object[relationKey] && configuration.relationsConfigs[relationKey].meta.embedded !== true) {
+      if (object[relationKey]) {
         configuration.relationsConfigs[relationKey].objects =
           object[relationKey];
         configuration.relationsConfigs[
@@ -947,7 +905,6 @@ export class FormService {
     }
     return configuration;
   }
-}
 
   /**
    * Used by merge: Create UI config based on
@@ -1040,7 +997,6 @@ export class FormService {
    * Convert keys recieved from server to array of strings
    */
   private getTableColumnKeys(tableDataConfig: any[]): string[][] {
-    if (tableDataConfig === undefined) { return; }
     const keys: string[][] = [];
     for (const element of tableDataConfig) {
       const currentKey = element.key;
@@ -1289,13 +1245,6 @@ export class FormService {
     Object.keys(obj1 || {})
       .concat(Object.keys(obj2 || {}))
       .forEach(key => {
-        if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-          // filter out diff objects where both old and new values are ``
-          // (this is correction to hack for custom components in Chemical Treatment form)
-          if (obj2[key] !== `` || obj1[key] !== ``) {
-            result[key] = obj2[key];
-          }
-        }
         const t1 = typeof obj1[key];
         const t2 = typeof obj2[key];
         if (t1 === t2 && t1 === typeof {}) {
@@ -1379,11 +1328,6 @@ export class FormService {
           break;
       }
     }
-    const relationsConfigs = uiConfig.relationsConfigs;
-    // tslint:disable-next-line: forin
-    for (const index in relationsConfigs) {
-      cleanBody[index] = body[index];
-    }
     return JSON.parse(JSON.stringify(cleanBody));
   }
 
@@ -1412,19 +1356,7 @@ export class FormService {
         success: false
       };
     }
-    // TODO refactor
-    // hacky way of replacing observation objects from front-end with
-    // observation IDs,which is what back-end expects
-    // for chemical treatments
-    if (uiConfig.api === '/treatment/chemical') {
-      for (const el of cleanBody['speciesObservations']) {
-        // if el.observation is an Observation object,
-        // it needs to be replaced with just the observation_id of the object
-        if (typeof(el.observation) === `object`) {
-          el.observation = el.observation.observation_id;
-        }
-      }
-    }
+
     const result = await this.api.request(method, endpoint, cleanBody);
     return this.prosessSubmissionResult(result, uiConfig.idKey);
   }
