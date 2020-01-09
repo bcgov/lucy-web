@@ -47,7 +47,7 @@ export class MatSelectSearchComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() noEntriesFoundLabel = 'Not Found';
 
   /** Reference to the search input field */
-  @ViewChild('searchSelectInput', {read: ElementRef, static: false}) searchSelectInput: ElementRef;
+  @ViewChild('searchSelectInput', {read: ElementRef}) searchSelectInput: ElementRef;
 
   /** Current search value */
   get value(): string {

@@ -74,7 +74,7 @@ export class TableComponent implements OnInit {
   /************ Material Table ************/
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<MapObject>(this.tableRows);
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   /************ END OF Material Table ************/
   constructor(private router: RouterService) { }
 
