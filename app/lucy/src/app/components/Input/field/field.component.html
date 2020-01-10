@@ -94,10 +94,10 @@
     <!-- Input Field -->
     <div *ngIf="!multiline" class="container row input-group form-control view view-field-background">
         <!-- If field has suffix -->
-        <input *ngIf="suffix" class="col-8" type="text" [(ngModel)]="value" readonly />
-        <span *ngIf="suffix" class="input-group-addon col-4">{{ suffix }}</span>
+        <input *ngIf="hasSuffix" class="col-8" type="text" [(ngModel)]="value" readonly />
+        <span *ngIf="hasSuffix" class="input-group-addon col-4">{{ suffix }}</span>
         <!-- If field has no suffix -->
-        <input *ngIf="!suffix" class="col-12" type="text" [(ngModel)]="value" readonly />
+        <input *ngIf="!hasSuffix" class="col-12" type="text" [(ngModel)]="value" readonly />
     </div>
     <!-- multiLine -->
     <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control view-field-background" [attr.id]="fieldId" [readonly]="readonly"></textarea>
