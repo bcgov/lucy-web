@@ -901,7 +901,9 @@ export class FormService {
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
         if (subSection.isCustom) {
-          continue;
+          for (const field of subSection.fields) {
+            field.value = object[field.key];
+          }
         }
         for (const field of subSection.fields) {
           if (field.isLocationField) {
