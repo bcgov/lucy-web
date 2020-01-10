@@ -137,25 +137,18 @@ export class ConverterService {
   isInsideBC(latitude: number, longitude: number): boolean {
     const boundry = this.getBCAlbersBoundry();
     const albers = this.latLongCoordinateToAlbers(latitude, longitude);
-    // console.log("lat: " + latitude + " long: " + longitude + "\n -> x:"+ albers.x + " y:" + albers.y);
-    const converBack = this.albersToLatLongCoordinate(albers.x, albers.y);
-    // console.log("lat: " + converBack.latitude + " long: " + converBack.longitude);
     let intersections = 0;
     for (let index = 0; index < boundry.length - 1 ; index++) {
       const found = this.intersect(1200000, 900000, albers.x, albers.y, boundry[index].x, boundry[index].y, boundry[index + 1].x, boundry[index + 1].y);
 
       if (found) {
-        console.log('Found intersection at index: ' + index);
-        console.log('index ' + index + ' is ->\n' + 'x: ' + boundry[index].x + ' y: ' + boundry[index].y);
         intersections += 1;
       }
     }
-    console.log('Intersections:' + intersections);
     return intersections % 2 === 0;
   }
 
   intersect(x10: number, y10: number, x20: number, y20: number, x30: number, y30: number, x40: number, y40: number): boolean {
-    // console.log(x10 + ' ' + y10 + ' ' + x20 + ' ' + y20 + ' ' + x30 + ' ' + y30 + ' ' + x40 + ' ' + y40);
     if (x10 === x20) {
       x10 = x10 + 1;
     }
@@ -178,13 +171,6 @@ export class ConverterService {
     } else {
       x50 = 0;
       y50 = m10 * x50 + b10;
-    }
-    if (x10 === 0 || x20 === 0 || x30 === 0 || x40 === 0 || x50 === 0) {
-      console.log("x10 is zero: " + (x10 === 0));
-      console.log("x20 is zero: " + (x20 === 0));
-      console.log("x30 is zero: " + (x30 === 0));
-      console.log("x40 is zero: " + (x40 === 0));
-      console.log("x50 is zero: " + (x50 === 0));
     }
     if (
     ((x50 >= x30 && x50 <= x40) || (x50 >= x40 && x50 <= x30)) &&
