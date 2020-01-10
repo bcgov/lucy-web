@@ -111,7 +111,7 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
      * @description Getter of db connection
      * @getter connection Connection
      */
-    protected get connection(): Connection {
+    get connection(): Connection {
         throw Error('BaseDataModelController: Subclass must override');
     }
 
