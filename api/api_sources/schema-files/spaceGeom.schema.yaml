@@ -13,7 +13,10 @@ schemas:
       baseModel: Record
       resource: true
     displayLayout: {}
-    layout: {}
+    layout:
+      header:
+        key: ''
+        default: ''
     computedFields: {}
     relations: {}
     ## -- Columns

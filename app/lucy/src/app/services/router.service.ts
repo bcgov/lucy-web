@@ -193,6 +193,8 @@ export class RouterService {
         return AppRoutes.ViewMechanicalTreatment;
       case AppConstants.API_observation:
         return AppRoutes.ViewObservation;
+      case AppConstants.API_chemicalTreatment:
+        return AppRoutes.ViewChemicalTreatment;
       default:
         console.log(`${api} does not have a route`);
     }

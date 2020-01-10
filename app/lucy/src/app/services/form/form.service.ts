@@ -290,6 +290,7 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
+    const relations = serverConfig.relations;
     let requiredFieldKeys: string[] = [];
     let dropdownFieldKeys: string[] = [];
     let fieldHeaders: {} = {};
@@ -313,7 +314,7 @@ export class FormService {
         // Loop thorugh groups in server config lay out
         for (const group of groups) {
           // Process group
-          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, relations, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
           requiredFieldKeys = groupInfo.requiredFieldKeys;
           dropdownFieldKeys = groupInfo.dropdownFieldKeys;
           fieldHeaders = groupInfo.fieldHeaders;
@@ -349,7 +350,7 @@ export class FormService {
       }
     }
     if (orphanFields.length > 0) {
-      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, null, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
       requiredFieldKeys = orphanGroupInfo.requiredFieldKeys;
       dropdownFieldKeys = orphanGroupInfo.dropdownFieldKeys;
       fieldHeaders = orphanGroupInfo.fieldHeaders;
@@ -383,6 +384,7 @@ export class FormService {
     groupFields: string[],
     fields: any[],
     computedFields: any[],
+    relations: any[],
     _requiredFieldKeys: string[],
     _dropdownFieldKeys: string[],
     _fieldHeaders: {}
@@ -403,8 +405,19 @@ export class FormService {
     for (let i = 0; i < groupFields.length; i++) {
       // Get key for field
       const fieldKey = groupFields[i];
+
+      let relationField: any;
+      if (fields.find((element) => element.key === fieldKey) === undefined) {
+        // check if the fieldKey is in relations array
+        const relation = relations[fieldKey];
+        if (relation === undefined) {
+          continue;
+        } else {
+          relationField = await this.configRelationField(fieldKey, relations);
+        }
+      }
       // Add type flags to field (to help with html generation) & convert data structure
-      let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
+      let newField = relationField || await this.findFieldAndCreateConfigField(fieldKey, fields);
       // If field key wasnt found in fields
       if (!newField) {
         // Could be a computed field
@@ -511,6 +524,36 @@ export class FormService {
       }
     }
     return result;
+  }
+  private async configRelationField(
+    key: string,
+    relations: any
+  ): Promise<any> {
+    // if key is not in relations, return undefined
+    if (!relations[key]) {
+      return undefined;
+    }
+    const relationField = relations[key];
+    // set css classes // TODO: Server doesnt send this yet
+        let cssClasses = ``;
+        if (relationField.layout && relationField.layout.classes) {
+          const classes = relationField.layout.classes;
+          for (const item of classes) {
+            cssClasses = cssClasses + ` `;
+          }
+        }
+    return {
+      key: key,
+      header: relationField.header.default,
+      description: relationField.description,
+      required: true,
+      type: relationField.type,
+      verification: relationField.verification,
+      meta: relationField.meta,
+      cssClasses: cssClasses,
+      codeTable: '',
+      condition: '',
+    };
   }
 
   private async configComputedField(
@@ -710,13 +753,15 @@ export class FormService {
     }
 
     ///// END Tweak verification object received
+    const header = field.layout.header ? field.layout.header.default : ``;
     try {
       return {
         key: field.key,
-        header: field.layout.header.default,
+        header: header,
         description: field.layout.description,
         required: field.required,
         type: field.type,
+        suffix: field.suffix,
         verification: verification,
         meta: field.meta,
         cssClasses: cssClasses,
@@ -782,8 +827,7 @@ export class FormService {
       }
     }
     return this.dropdownService.createDropdownObjectsFrom(
-      codeTable,
-      displayKey
+      codeTable
     );
   }
 
@@ -856,6 +900,9 @@ export class FormService {
     // Sections/ subsections/ fields
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
+        if (subSection.isCustom) {
+          continue;
+        }
         for (const field of subSection.fields) {
           if (field.isLocationField) {
             if (field.isSpaceGeom) {
@@ -1183,7 +1230,7 @@ export class FormService {
    * @param endpoint API endpoint
    * @param id Id of the object
    */
-  private async getObjectWithId(endpoint: string, id: number): Promise<any> {
+  async getObjectWithId(endpoint: string, id: number): Promise<any> {
     const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
     const response = await this.api.request(
       APIRequestMethod.GET,
@@ -1306,18 +1353,21 @@ export class FormService {
           break;
         default:
           const objBody: any = body[field.key];
-          for (const k in objBody) {
-            if (objBody.hasOwnProperty(k)) {
-              if (objBody[k] === null) {
-                // Removing null
-                delete objBody[k];
-              } else if (typeof objBody[k] === typeof {}) {
-                // Removing any db object ref and replacing with id key
-                for (const kk in objBody[k]) {
-                  // TODO: Replace _id with regx
-                  if (objBody[k].hasOwnProperty(kk) && kk.includes('_id')) {
-                    objBody[k] = objBody[k][kk];
-                    break;
+          // Checking not array
+          if (typeof objBody === 'object' && objBody.constructor !== [].constructor) {
+            for (const k in objBody) {
+              if (objBody.hasOwnProperty(k)) {
+                if (objBody[k] === null) {
+                  // Removing null
+                  delete objBody[k];
+                } else if (typeof objBody[k] === typeof {}) {
+                  // Removing any db object ref and replacing with id key
+                  for (const kk in objBody[k]) {
+                    // TODO: Replace _id with regx
+                    if (objBody[k].hasOwnProperty(kk) && kk.includes('_id')) {
+                      objBody[k] = objBody[k][kk];
+                      break;
+                    }
                   }
                 }
               }
@@ -1446,6 +1496,7 @@ export class FormService {
       description: '',
       required: false,
       type: '',
+      suffix: '',
       verification: '',
       meta: {},
       cssClasses: '',

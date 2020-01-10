@@ -1,128 +1,104 @@
 <!-- Editable -->
 <div *ngIf="!readonly" class="col-12 field animated" id="{{ fieldId }}">
-  <!-- Input field -->
-  <mat-form-field *ngIf="!multiline">
-    <input
-      matInput
-      placeholder="{{ header }}"
-      [(ngModel)]="value"
-      [attr.id]="fieldId"
-      [formControl]="fieldFormControl"
-      [errorStateMatcher]="matcher"
-    />
-    <!-- ERROR MESSAGES  -->
-    <!-- Required  -->
-    <mat-error *ngIf="fieldFormControl.hasError('required')">
-      <strong>required</strong>
-    </mat-error>
-    <!-- Over max size  -->
-    <mat-error
-      *ngIf="
+    <!-- Input field -->
+    <mat-form-field *ngIf="!multiline">
+        <input matInput placeholder="{{ header }}" [(ngModel)]="value" [attr.id]="fieldId" [formControl]="fieldFormControl" [errorStateMatcher]="matcher" />
+        <span matSuffix>{{ suffix }}</span>
+        <!-- ERROR MESSAGES  -->
+        <!-- Required  -->
+        <mat-error *ngIf="fieldFormControl.hasError('required')">
+            <strong>required</strong>
+        </mat-error>
+        <!-- Over max size  -->
+        <mat-error *ngIf="
         !fieldFormControl.hasError('required') &&
         fieldFormControl.hasError('maxlength')
-      "
-    >
-      You are over the
-      {{ fieldFormControl.errors.maxlength.requiredLength }} character limit
-    </mat-error>
-    <!-- Positive Number  -->
-    <mat-error
-      *ngIf="
+      ">
+            You are over the {{ fieldFormControl.errors.maxlength.requiredLength }} character limit
+        </mat-error>
+        <!-- Positive Number  -->
+        <mat-error *ngIf="
         !fieldFormControl.hasError('required') &&
         fieldFormControl.hasError('positiveNumber')
-      "
-    >
-      {{ fieldFormControl.errors.positiveNumberError }}
-    </mat-error>
-    <!-- Regex  -->
-    <mat-error
-      *ngIf="
+      ">
+            {{ fieldFormControl.errors.positiveNumberError }}
+        </mat-error>
+        <!-- Exceeds maximum value -->
+        <mat-error *ngIf="!fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('max')">
+            Cannot exceed {{ verification.maximumValue }}
+        </mat-error>
+        <!-- Below minimum value -->
+        <mat-error *ngIf="!fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('min')">
+            Must be at least {{ verification.minimumValue }}
+        </mat-error>
+        <!-- Regex  -->
+        <mat-error *ngIf="
         !fieldFormControl.hasError('required') &&
         fieldFormControl.hasError('requiredPattern')
-      "
-    >
-      Invalid characters
-    </mat-error>
-    <!-- Latitude -->
-    <mat-error
-      *ngIf="
+      ">
+            Invalid characters
+        </mat-error>
+        <!-- Latitude -->
+        <mat-error *ngIf="
         !fieldFormControl.hasError('required') &&
         fieldFormControl.hasError('invalidLatitude')
-      "
-    >
-      {{ fieldFormControl.errors.invalidLatitudeError }}
-    </mat-error>
-    <!-- Longitude -->
-    <mat-error
-      *ngIf="
+      ">
+            {{ fieldFormControl.errors.invalidLatitudeError }}
+        </mat-error>
+        <!-- Longitude -->
+        <mat-error *ngIf="
         !fieldFormControl.hasError('required') &&
         fieldFormControl.hasError('validLongitude')
-      "
-    >
-      {{ fieldFormControl.errors.invalidLongitudeError }}
-    </mat-error>
+      ">
+            {{ fieldFormControl.errors.invalidLongitudeError }}
+        </mat-error>
 
-    <!-- Eastings -->
-    <mat-error *ngIf="fieldFormControl.hasError('validEastingsUTM')">
-      {{ fieldFormControl.errors.invalidEastingsUTMError }}
-    </mat-error>
-    <!-- Northings -->
-    <mat-error *ngIf="fieldFormControl.hasError('validNorthingsUTM')">
-      {{ fieldFormControl.errors.invalidNorthingsUTMError }}
-    </mat-error>
-    <!-- Zone -->
-    <mat-error *ngIf="fieldFormControl.hasError('validZoneUTM')">
-      {{ fieldFormControl.errors.invalidZoneUTMError }}
-    </mat-error>
-  </mat-form-field>
+        <!-- Eastings -->
+        <mat-error *ngIf="fieldFormControl.hasError('validEastingsUTM')">
+            {{ fieldFormControl.errors.invalidEastingsUTMError }}
+        </mat-error>
+        <!-- Northings -->
+        <mat-error *ngIf="fieldFormControl.hasError('validNorthingsUTM')">
+            {{ fieldFormControl.errors.invalidNorthingsUTMError }}
+        </mat-error>
+        <!-- Zone -->
+        <mat-error *ngIf="fieldFormControl.hasError('validZoneUTM')">
+            {{ fieldFormControl.errors.invalidZoneUTMError }}
+        </mat-error>
+    </mat-form-field>
 
-  <!-- MultiLine (TextArea) -->
+    <!-- MultiLine (TextArea) -->
 
-  <mat-form-field *ngIf="multiline" appearance="outline">
-    <mat-label>{{ header }}</mat-label>
-    <textarea
-      matInput
-      rows="4"
-      [attr.id]="fieldId"
-      [(ngModel)]="value"
-      [formControl]="fieldFormControl"
-      [errorStateMatcher]="matcher"
-    ></textarea>
-    <mat-error *ngIf="fieldFormControl.hasError('required')">
-      <strong>required</strong>
-    </mat-error>
-    <mat-error
-      *ngIf="
+    <mat-form-field *ngIf="multiline" appearance="outline">
+        <mat-label>{{ header }}</mat-label>
+        <textarea matInput rows="4" [attr.id]="fieldId" [(ngModel)]="value" [formControl]="fieldFormControl" [errorStateMatcher]="matcher"></textarea>
+        <mat-error *ngIf="fieldFormControl.hasError('required')">
+            <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="
         !fieldFormControl.hasError('required') &&
         fieldFormControl.hasError('maxlength')
-      "
-    >
-      You are over the
-      {{ fieldFormControl.errors.maxlength.requiredLength }} character limit
-    </mat-error>
-  </mat-form-field>
+      ">
+            You are over the {{ fieldFormControl.errors.maxlength.requiredLength }} character limit
+        </mat-error>
+    </mat-form-field>
 </div>
 
 <!-- Read only -->
 <div *ngIf="readonly" class="col-12 field">
-  <label class="field-header">{{ header }}</label>
-
-  <!-- Input Field -->
-  <input
-    *ngIf="!multiline"
-    type="text"
-    [(ngModel)]="value"
-    class="form-control view view-field-background"
-    [attr.id]="fieldId"
-    [readonly]="readonly"
-  />
-  <!-- multiLine -->
-  <textarea
-    *ngIf="multiline"
-    rows="4"
-    [(ngModel)]="value"
-    class="form-control view-field-background"
-    [attr.id]="fieldId"
-    [readonly]="readonly"
-  ></textarea>
+    <div class="row">
+        <label class="field-header">{{ header }}</label>
+    </div>
+    <!-- Input Field -->
+    <div *ngIf="!multiline" class="container row input-group form-control view view-field-background">
+        <!-- If field has suffix -->
+        <input *ngIf="suffix" class="col-8" type="text" [(ngModel)]="value" readonly />
+        <span *ngIf="suffix" class="input-group-addon col-4">{{ suffix }}</span>
+        <!-- If field has no suffix -->
+        <input *ngIf="!suffix" class="col-12" type="text" [(ngModel)]="value" readonly />
+    </div>
+    <!-- multiLine -->
+    <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control view-field-background" [attr.id]="fieldId" [readonly]="readonly"></textarea>
 </div>

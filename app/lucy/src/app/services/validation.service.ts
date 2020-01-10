@@ -55,6 +55,14 @@ export class ValidationService {
     return regexpOneResult;
   }
 
+  public isLessThanMax(value: number, ceiling: number): boolean {
+    return (value <= ceiling);
+  }
+
+  public isGreaterThanMin(value: number, floor: number): boolean {
+    return (value >= floor);
+  }
+
   /**
    * TODO: Refactor
    * From:

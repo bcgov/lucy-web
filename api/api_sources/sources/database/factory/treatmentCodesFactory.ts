@@ -35,7 +35,15 @@ import {
     MechanicalRootRemovalCode,
     MechanicalRootRemovalCodeController,
     MechanicalTreatmentIssueCode,
-    MechanicalTreatmentIssueCodeController
+    MechanicalTreatmentIssueCodeController,
+    PesticideEmployerCode,
+    PesticideEmployerCodeController,
+    ChemicalTreatmentMethodCode,
+    ChemicalTreatmentMethodCodeController,
+    WindDirectionCodes,
+    WindDirectionCodesController,
+    Herbicide,
+    HerbicideController,
 } from '../models';
 
 /**
@@ -70,4 +78,32 @@ export const mechanicalRootRemovalCodeFactory =
  */
 export const mechanicalTreatmentIssuesCodeFactory =
     CodeFactory<MechanicalTreatmentIssueCode, MechanicalTreatmentIssueCodeController>(MechanicalTreatmentIssueCodeController.shared);
+
+/**
+ * @description Pesticide Employer Code Factory
+ * @returns Promise<PesticideEmployerCode>
+ */
+export const pesticideEmployerCodeFactory =
+    CodeFactory<PesticideEmployerCode, PesticideEmployerCodeController>(PesticideEmployerCodeController.shared);
+
+/**
+ * @description Chemical Treatment Method Code Factory
+ * @returns Promise<ChemicalTreatmentMethodCode>
+ */
+export const chemicalTreatmentMethodCodeFactory =
+    CodeFactory<ChemicalTreatmentMethodCode, ChemicalTreatmentMethodCodeController>(ChemicalTreatmentMethodCodeController.shared);
+
+/**
+ * @description Herbicide Code Factory
+ * @returns Promise<Herbicide>
+ */
+export const herbicideCodeFactory =
+    CodeFactory<Herbicide, HerbicideController>(HerbicideController.shared);
+
+/**
+ * @description Wind Direction Code Factory
+ * @returns Promise<WindDirectionCodes>
+ */
+export const windDirectionCodeFactory =
+    CodeFactory<WindDirectionCodes, WindDirectionCodesController>(WindDirectionCodesController.shared);
 // ----------------------------------------------------------------

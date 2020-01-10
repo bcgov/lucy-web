@@ -80,7 +80,7 @@ schemas:
         ## Section: Method and application
         - title: 
             key: 'chemicalTreatment.details.title'
-            default: ''
+            default: 'Chemical Treatment Details'
           groups:
             ## Group Treatment Advance details
             - title:
@@ -92,31 +92,65 @@ schemas:
                 - humidity
                 - windSpeed
                 - windDirection
+              style: {}
             ## -- group {Advance details}
+            ## HerbicideMix subsection is only viewable in Create mode
             - title:
                 key: ''
-                default: Herbicide And Application
-              fields: []
+                default: ''
+              fields:
+                - mixDeliveryRate
+                - tankMixes
               style:
                 custom: {
                   formComponent: HerbicideMix
                 }
+            ## SpeciesTreated subsection is only viewable in Create mode    
             - title:
                 key: ''
-                default: Invasive Species to be treated at this location
+                default: ''
               fields:
-                - beingTreated
-                - notBeingTreated
-                - comments
+                - speciesObservations
               style: 
                 custom: {
                   formComponent: SpeciesTreated
                 }
+            ## TreatmentDetails subsection is only viewable in View mode
+            - title:
+                key: ''
+                default: ''
+              fields: []
+              style:
+                custom: {
+                  formComponent: TreatmentDetails
+                }
             ## -- group
+        ## Comments section
+        - title:
+            key: ''
+            default: 'Comments'
+          groups:
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - additionalComments
+              style: {}
         ## -- end Section
     # --
     ## -- computedFields
-    computedFields: {}
+    computedFields: 
+      calculatedArea:
+        header:
+          key: calculatedArea
+          default: 'Total Calculated Area'
+        suffix: 'm²'
+        computationRules:
+          - name: Calculate Area
+            keys:
+              - plotWidth
+              - plotLength
+            method: calculateArea
     ## --
     ## Relations
     relations: 
@@ -200,10 +234,14 @@ schemas:
         comment: The recorded air temperature at the site of the treatment area at the time of treatment, in degrees Celsius
         definition: SMALLINT NULL
         meta: {}
+        verification:
+          minimumValue: 10
+          maximumValue: 30
         layout:
           header:
             key: 'temperature'
-            default: 'Temperature (C)'
+            default: 'Temperature'
+          suffix: '°C'
           classes:
             - col-3
       humidity:
@@ -211,10 +249,14 @@ schemas:
         comment: The recorded air humidity at the site of the treatment area at the time of treatment, as a percentage
         definition: SMALLINT NULL
         meta: {}
+        verification:
+          minimumValue: 0
+          maximumValue: 100
         layout:
           header:
             key: 'humidity'
-            default: 'Humidity (%)'
+            default: 'Humidity'
+          suffix: '%'
           classes:
             - col-3
       windSpeed:
@@ -222,10 +264,14 @@ schemas:
         comment: The recorded wind speed at the site of the treatment area at the time of treatment, in km/h
         definition: NUMERIC(4,1) NULL
         meta: {}
+        verification:
+          minimumValue: 0
+          maximumValue: 15
         layout:
           header:
             key: 'windSpeed'
-            default: 'Wind Speed (km/h)'
+            default: 'Wind Speed'
+          suffix: 'km/h'
           classes:
             - col-3
       ## Relation Column
@@ -331,6 +377,38 @@ schemas:
               classes:
                 - col-12
         ## -- end Columns
+      - name: addCommentsColumn
+        id: '20191129'
+        info: 'Adding new column to chemical treatment to capture optional free-form comments'
+        columns:
+          additionalComments:
+            name: additional_comments
+            comment: 'Free-form comments added by chemical treatment provider'
+            definition: VARCHAR(500) NULL
+            meta: {}
+            required: false
+            layout:
+              header:
+                key: 'chemicalTreatment.additionalComments'
+                default: 'Additional Comments'
+              classes:
+                - col-12
+      - name: addMixDeliveryRateColumn
+        id: '20191219'
+        info: 'Adding calibrated mix delivery rate to chemical treatment'
+        columns:
+          mixDeliveryRate:
+            name: mix_delivery_rate
+            comment: 'Delivery rate of herbicide tank mix in L/ha'
+            definition: INT NULL
+            meta: {}
+            required: true 
+            layout:
+              header:
+                key: 'chemicalTreatment.mixDeliveryRate'
+                default: 'Mix Delivery Rate (calibrated)'
+              classes:
+                - col-12
     ## -- End: Versions
     ## -- CopyFrom
     # Copy Columns, version from other schema

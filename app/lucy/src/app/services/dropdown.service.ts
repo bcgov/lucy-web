@@ -36,31 +36,14 @@ export class DropdownService {
    * @param objects array of objects
    * @param displayValue field in objects that should be displayed in dropdown
    */
-  public createDropdownObjectsFrom(objects: any[], displayValue: string): DropdownObject[] {
+  public createDropdownObjectsFrom(objects: any[]): DropdownObject[] {
     const dropdownObjects: DropdownObject[] = [];
     if (!objects) {
       return dropdownObjects;
     }
     for (const object of objects) {
-      let name: string = object.displayLabel;
+      const name: string = object.displayLabel;
 
-      // if (!name || name.length < 1) {
-      //   name = object[displayValue];
-      // }
-
-      // // If display value isnt found, pick from possible options
-      // if (!name || name.length < 1) {
-      //   for (const possibleKey of this.possibleDisplayKeys) {
-      //     if (object[possibleKey]) {
-      //       name = object[possibleKey];
-      //       break;
-      //     }
-      //   }
-      // }
-      // // if the object doesnt have those keys either, just pick the first key
-      // if (!name || name.length < 1) {
-      //   name = object[Object.keys(object)[0]];
-      // }
       dropdownObjects.push({
         name: name,
         object: object,
