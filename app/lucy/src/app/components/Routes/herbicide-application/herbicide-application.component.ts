@@ -83,6 +83,10 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
     return (this.tankMixes ||  []).length === 0;
   }
 
+  get isHerbicideEmpty(): boolean {
+    return this.herbicideDropdowns.length === 0;
+  }
+
   // Base form config
   private _config: any = {};
   get config(): any {

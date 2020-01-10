@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CodeTableService } from 'src/app/services/code-table.service';
 import { FormService } from 'src/app/services/form/form.service';
 import { FormMode } from 'src/app/models';
-import { SpeciesHerbicideSummary, HerbicideTankMix, SpeciesObservedTreated, ChemicalTreatment, HerbicideCodes } from 'src/app/models/ChemicalTreatment';
+import { SpeciesHerbicideSummary, ChemicalTreatment, HerbicideCodes } from 'src/app/models/ChemicalTreatment';
 
 @Component({
     selector: 'app-treatment-details',

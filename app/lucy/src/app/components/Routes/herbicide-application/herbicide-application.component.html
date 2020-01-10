@@ -21,7 +21,7 @@
         </div>
 
         <!-- View when zero herbicides selected -->
-        <div class="row" *ngIf="isTankMixEmpty">
+        <div class="row" *ngIf="!isHerbicideEmpty && isTankMixEmpty">
             <div class="col-12">
                 <app-dropdown [mode]="mode" fieldHeader="Select Herbicide..." [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)">
                 </app-dropdown>
