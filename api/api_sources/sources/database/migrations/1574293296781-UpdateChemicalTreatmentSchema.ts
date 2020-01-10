@@ -11,6 +11,8 @@ export class UpdateChemicalTreatmentSchema1574293296781 extends AppDBMigrator im
     setup() {
         this.schema = new ChemicalTreatmentSchema();
         this.addSchemaVersion(this.schema, 'codes');
+        this.addSchemaVersion(this.schema, 'addCommentsColumn');
+        this.addSchemaVersion(this.schema, 'addMixDeliveryRateColumn');
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {

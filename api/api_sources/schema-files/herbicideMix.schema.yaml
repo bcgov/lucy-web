@@ -18,6 +18,24 @@ schemas:
     meta: 
       resource: true
     layout: {}
+    displayLayout:
+      displayLabel: ''
+      header:
+        key: 
+        default: ''
+      fields: 
+        - header:
+            key: 
+            default: 
+          key: observation
+        - header:
+            key:
+            default:
+          key: treatmentAreaCoverage
+        - header:
+            key:
+            default:
+          key: chemicalTreatment
     columns:
       ## data columns
       id: 
@@ -66,7 +84,28 @@ schemas:
     baseSchema: RecordSchema
     meta: 
       resource: true
-    layout: {}
+    displayLayout:
+      displayLabel: ''
+      header:
+        key: 
+        default: ''
+      fields: 
+        - header:
+            key: 
+            default: 
+          key: applicationRate
+        - header:
+            key:
+            default:
+          key: dilutionRate
+        - header:
+            key:
+            default:
+          key: herbicide
+        - header:
+            key:
+            default:
+          key: chemicalTreatment
     columns:
       ## data columns
       id: 
@@ -77,6 +116,10 @@ schemas:
         name: application_rate
         comment: 'Application rate of herbicide to treatment area, in units of L/hectare'
         definition: NUMERIC(6,3)
+        layout:
+          header:
+            key: 'applicationRate'
+            default: 'Application Rate'
       dilutionRate:
         name: dilution_rate
         comment: 'Dilution rate of herbicide, as percentage of concentrate to total volume'

@@ -50,6 +50,12 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() header = '';
   // Field header
   @Input() tabIndex = 0;
+  // Optional mat-suffix
+  @Input() suffix = '';
+  // Optional minimum numeric value
+  @Input() min: Number;
+  // Optional maximum numeric value
+  @Input() max: Number;
 
   ///// Verification
   private _verification: any;
@@ -183,6 +189,14 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     // Positive numbers
     if (this.verification.positiveNumber) {
       validatorOptions.push(this.positiveNumber);
+    }
+    // Minimum numeric value
+    if (this.verification.minimumValue !== undefined) {
+      validatorOptions.push(Validators.min(this.verification.minimumValue));
+    }
+    // Maximum numeric value
+    if (this.verification.maximumValue !== undefined) {
+      validatorOptions.push(Validators.max(this.verification.maximumValue));
     }
     // Required field
     if (this.verification.required !== undefined && this.verification.required) {
