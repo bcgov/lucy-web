@@ -17,7 +17,7 @@
  */
 import { TestBed } from '@angular/core/testing';
 import * as hexTest from './hexTest.json';
-
+import * as insideOutsideTest from './insideOutsideTest.json';
 
 import { ConverterService } from './location.service';
 
@@ -52,7 +52,7 @@ describe('ConverterService', () => {
         let success = 0;
         let fail = 0;
         for (const item of obj) {
-          const x = service.getHexId(item.longitude, item.latitude);
+          const x = service.getHexId(item.latitude, item.longitude);
           let passed = true;
           if (item.hexID != x.cc) {
             passed = false;
@@ -71,6 +71,28 @@ describe('ConverterService', () => {
           }
         }
         console.log(`\n******\nHex conversion:`);
+        console.log(`passed: ${success}`);
+        console.log(`failed: ${fail}`);
+    expect(fail).toBeLessThan(1);
+  });
+
+  it('should correctly indicate if a coordinate is inside or outside BC', () => {
+    const service: ConverterService = TestBed.get(ConverterService);
+    const obj = JSON.parse(JSON.stringify(insideOutsideTest)).default;
+        let success = 0;
+        let fail = 0;
+        for (const item of obj) {
+          const isIn = service.isInsideBC(item.longitude, item.latitude);
+          const passed = (isIn === item.inside) ;
+          if (!passed) {
+            fail++;
+            console.log(`\n***`);
+            console.log(`${item.longitude} , ${item.latitude} should be inside: ${item.inside}, but result is: ${isIn}`);
+          } else {
+            success ++;
+          }
+        }
+        console.log(`\n******\nInside Outside:`);
         console.log(`passed: ${success}`);
         console.log(`failed: ${fail}`);
     expect(fail).toBeLessThan(1);
