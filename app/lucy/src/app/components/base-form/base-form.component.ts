@@ -432,6 +432,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         return;
       }
       this.loadingService.add();
+      if (this.config.api === `/treatment/chemical`) {
+        for (const so of this.responseBody['speciesObservations']) {
+          so.observation = so.observation.observation_id;
+        }
+      }
       console.dir(JSON.stringify(this.responseBody));
       console.dir(JSON.parse(JSON.stringify(this.responseBody)));
       const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
