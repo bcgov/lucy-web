@@ -933,9 +933,9 @@ export class FormService {
               }
             } else {
               // UNCOMMENT for debugging/ when adding new form support. it helps
-              console.log(
-                `**** config key ${field.key} does not exist in object`
-              );
+              // console.log(
+              //   `**** config key ${field.key} does not exist in object`
+              // );
             }
           }
         }
