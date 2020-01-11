@@ -40,7 +40,7 @@ import {MatChipsModule} from '@angular/material/chips';
 
 // Third-party
 // ng-bootstrap
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 // InViewportModule
 import { InViewportModule } from 'ng-in-viewport';
@@ -68,6 +68,7 @@ import { AboutComponent } from './components/Routes/about/about.component';
 import { AdminToolsComponent } from './components/Routes/admin-tools/admin-tools.component';
 import { RouterService } from './services/router.service';
 import { AccessRequestResponseModalComponent} from './components/Routes/admin-tools/access-request-response-modal/access-request-response-modal.component';
+import { AddQuickObservationModalComponent } from './components/Utilities/add-quick-observation-modal/add-quick-observation-modal.component';
 import { UserCellComponent } from './components/Routes/admin-tools/user-cell/user-cell.component';
 import { RequestCellComponent } from './components/Routes/admin-tools/request-cell/request-cell.component';
 import { AppBootService } from './services/bootstrap.service';
@@ -81,6 +82,9 @@ import { MatSelectSearchModule } from './components/Input/mat-select-search/mat-
 import { CheckboxComponent } from './components/Input/checkbox/checkbox.component';
 import { AddEntryComponent } from './components/Routes/add-entry/add-entry.component';
 import { DatePickerComponent } from './components/Input/date-picker/date-picker.component';
+import { SpeciesTreatedComponent } from './components/Routes/species-treated/species-treated.component';
+import { HerbicideApplicationComponent } from './components/Routes/herbicide-application/herbicide-application.component';
+import { TreatmentDetailsComponent } from './components/Routes/treatment-details/treatment-details.component';
 import { InventoryComponent } from './components/Routes/inventory/inventory.component';
 import { ErrorComponent } from './components/Routes/error/error.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
@@ -109,6 +113,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     UserInformationComponent,
     AdminToolsComponent,
     AccessRequestResponseModalComponent,
+    AddQuickObservationModalComponent,
     UserCellComponent,
     RequestCellComponent,
     UserAccessUpdatedModalComponent,
@@ -117,6 +122,9 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     DropdownComponent,
     FieldComponent,
     InventoryComponent,
+    SpeciesTreatedComponent,
+    HerbicideApplicationComponent,
+    TreatmentDetailsComponent,
     DatePickerComponent,
     MomentPipe,
     CheckboxComponent,
@@ -128,6 +136,9 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     ComputedFieldComponent,
     TableComponent,
     ToastComponent,
+  ],
+  entryComponents: [
+    AddQuickObservationModalComponent
   ],
   imports: [
     BrowserModule,
@@ -166,6 +177,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     RouterService,
     Title,
     AppBootService,
+    NgbModal,
     {
       provide: APP_INITIALIZER,
       useFactory: bootstrapFactory,

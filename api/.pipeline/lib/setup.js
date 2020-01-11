@@ -60,5 +60,5 @@ module.exports = (settings) => {
   checkAndClean(`pod/${podName}`, oc);
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
-  wait(`pod/${podName}`, settings);
+  wait(`pod/${podName}`, settings, 30);
 }

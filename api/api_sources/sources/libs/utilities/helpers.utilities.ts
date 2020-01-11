@@ -66,6 +66,16 @@ export const unWrap = (value?: any, defaultValue?: any): any => {
 };
 
 /**
+ * @description Unwrap object or return default
+ * @param any value
+ * @param T defaultValue
+ * @returns T
+ */
+export function unWrapType<T> (value: any, defaultValue: T): T  {
+    return value !== undefined ? (value as T) : defaultValue;
+}
+
+/**
  * @description Load json from yaml file
  * @param string yamlPath Path of yml file
  * @returns any
@@ -192,6 +202,17 @@ export const reverseCapitalize = (s: any) => {
 };
 
 /**
+ * @description Return capitalize string of any given string
+ * @param string s
+ */
+export const capitalize = (s: any) => {
+    if (typeof s !== 'string') {
+        return '';
+    }
+    return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+/**
  * @description Check status of value and return if defined or return default
  * @param any value
  * @param any defaultValue
@@ -268,6 +289,27 @@ export const copyKeyAndSubKeys = (key: string, source: any, destination: any, su
 
     // Now update destinations key
     destination[key] = { ...(destination[key] || {}), ...copy };
+};
+
+/**
+ * @description Create a query string from input object
+ * @param object input
+ */
+export const getHTTPReqQueryString = (input: {[key: string]: any}) => {
+    let result = '';
+    _.each(input, (val: any, k: string) => {
+        result = result + `${encodeURIComponent(k)}=${encodeURIComponent(val)}&`;
+    });
+    result = result.slice(0, -1);
+    return `?${result}`;
+};
+
+export const Key = (input: {[key: string]: any}): string => {
+    if (Object.keys(input).length > 0) {
+        return Object.keys(input)[0];
+    } else {
+        return '';
+    }
 };
 
 // -------------------------------

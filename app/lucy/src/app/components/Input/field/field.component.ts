@@ -50,6 +50,12 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() header = '';
   // Field header
   @Input() tabIndex = 0;
+  // Optional mat-suffix
+  @Input() suffix = '';
+  // Optional minimum numeric value
+  @Input() min: Number;
+  // Optional maximum numeric value
+  @Input() max: Number;
 
   ///// Verification
   private _verification: any;
@@ -184,6 +190,14 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     if (this.verification.positiveNumber) {
       validatorOptions.push(this.positiveNumber);
     }
+    // Minimum numeric value
+    if (this.verification.minimumValue !== undefined) {
+      validatorOptions.push(Validators.min(this.verification.minimumValue));
+    }
+    // Maximum numeric value
+    if (this.verification.maximumValue !== undefined) {
+      validatorOptions.push(Validators.max(this.verification.maximumValue));
+    }
     // Required field
     if (this.verification.required !== undefined && this.verification.required) {
       validatorOptions.push(Validators.required);
@@ -259,7 +273,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number' };
     }
     // Must have at least 5 decimal places
-    const separated = control.value.split('.');
+    const valueString = typeof control.value === typeof 'x' ? control.value : `${control.value}`;
+    const separated = valueString.split('.');
     if (separated.length > 2) {
       // This wont happend because number validation will catch it first
       return { invalidLatitude: true, invalidLatitudeError: 'There have extra dots' };
@@ -285,7 +300,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       return { validLongitude: true, invalidLongitudeError: 'Not a valid number' };
     }
     // Must have at least 5 decimal places
-    const separated = control.value.split('.');
+    const valueString = typeof control.value === typeof 'x' ? control.value : `${control.value}`;
+    const separated = valueString.split('.');
     if (separated.length > 2) {
       // This wont happend because number validation will catch it first
       return { validLongitude: true, invalidLongitudeError: 'There have extra dots' };

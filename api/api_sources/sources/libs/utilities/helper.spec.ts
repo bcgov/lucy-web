@@ -31,7 +31,9 @@ import {
     writeIfNotExists,
     reverseCapitalize,
     valueAtKeyPath,
-    copyKeyAndSubKeys
+    copyKeyAndSubKeys,
+    capitalize,
+    getHTTPReqQueryString
 } from './helpers.utilities';
 
 
@@ -134,5 +136,21 @@ describe('Test Helper/Utilities', () => {
         should().exist(y.y['a']);
         should().exist(y.y['b']);
         should().not.exist(y.y['c']);
+    });
+
+    it('should capitalize string', () => {
+        const string = 'helloWorld';
+        expect(capitalize(string)).to.be.equal('HelloWorld');
+    });
+
+    it('should get url encoded string', () => {
+        const obj = {
+            x: 'x',
+            y: 'y',
+            z: '1.2',
+            p: 'ESPG:4236'
+        };
+        const r = getHTTPReqQueryString(obj);
+        expect(r).to.be.equal(`?x=x&y=y&z=1.2&p=ESPG%3A4236`);
     });
 });

@@ -1,0 +1,159 @@
+version: '1.0'
+description: 'Schema models for HerbicideApplicationSchema and SpeciesHerbicideApplicationSchema'
+externalTables:
+  - name: species
+    schema: SpeciesSchema
+    description: Species table
+includes:
+  - chemical.treatment.schema.yaml
+  - observation.schema.yaml
+  - herbicide.schema.yaml
+schemas:
+  ## -- Herbicide Application Schema
+  ## -- start SpeciesTreatmentSchema
+  ObservationChemicalTreatmentSchema:
+    name: 'observation_chemical_treatment'
+    description: 'A record of one targeted species within the treatment area'
+    baseSchema: RecordSchema
+    meta: 
+      resource: true
+    layout: {}
+    displayLayout:
+      displayLabel: ''
+      header:
+        key: 
+        default: ''
+      fields: 
+        - header:
+            key: 
+            default: 
+          key: observation
+        - header:
+            key:
+            default:
+          key: treatmentAreaCoverage
+        - header:
+            key:
+            default:
+          key: chemicalTreatment
+    columns:
+      ## data columns
+      id: 
+        name: observation_chemical_treatment_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      treatmentAreaCoverage:
+        name: species_treatment_area_coverage
+        comment: 'Percentage of treatment area covered by selected species'
+        definition: NUMERIC(4,1) NULL
+      # relation columns
+      observation:
+        name: observation_id
+        comment: 'Foreign key reference to observation ID that records the species being treated'
+        definition: INT NULL
+        foreignTable: observation
+        refColumn: observation_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header:
+            key: 'observation'
+            default: 'Observation ID'
+          classes:
+            - none
+      chemicalTreatment:
+        name: chemical_treatment_id
+        comment: 'Foreign key reference to parent chemical treatment table'
+        definition: INT NULL
+        foreignTable: chemical_treatment
+        refColumn: chemical_treatment_id
+        deleteCascade: true
+        meta: {}
+        eager: false
+        layout:
+          header:
+            key: 'chemicalTreatment'
+            default: 'Chemical Treatment'
+          classes:
+            - none
+  ## -- end SpeciesTreatmentSchema
+  ## -- start HerbicideTankMixSchema
+  HerbicideTankMixSchema:  
+    name: herbicide_tank_mix
+    description: 'Record of one herbicide included in the tank mix used for chemical treatment application. A tank mix includes one or more herbicides.'
+    baseSchema: RecordSchema
+    meta: 
+      resource: true
+    displayLayout:
+      displayLabel: ''
+      header:
+        key: 
+        default: ''
+      fields: 
+        - header:
+            key: 
+            default: 
+          key: applicationRate
+        - header:
+            key:
+            default:
+          key: dilutionRate
+        - header:
+            key:
+            default:
+          key: herbicide
+        - header:
+            key:
+            default:
+          key: chemicalTreatment
+    columns:
+      ## data columns
+      id: 
+        name: herbicide_tank_mix_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      applicationRate:
+        name: application_rate
+        comment: 'Application rate of herbicide to treatment area, in units of L/hectare'
+        definition: NUMERIC(6,3)
+        layout:
+          header:
+            key: 'applicationRate'
+            default: 'Application Rate'
+      dilutionRate:
+        name: dilution_rate
+        comment: 'Dilution rate of herbicide, as percentage of concentrate to total volume'
+        definition: NUMERIC(6,3)
+      ## relation columns
+      ## code table relations
+      herbicide:
+        name: 'herbicide_id'
+        comment: Foreign key reference to herbicide code table 
+        definition: INT NULL
+        foreignTable: 'herbicide'
+        refColumn: herbicide_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'herbicide'
+            default: 'Herbicide'
+          classes:
+            - none
+      chemicalTreatment:
+        name: 'chemical_treatment_id'
+        comment: Foreign key reference to chemical treatment table 
+        definition: INT NULL
+        foreignTable: 'chemical_treatment'
+        refColumn: chemical_treatment_id
+        deleteCascade: true
+        meta: 
+          skipForEmbedded: true
+        layout:
+          header:
+            key: 'chemicalTreatment'
+            default: 'Chemical Treatment'
+          classes:
+            - none
+    ## -- end columns
+  ## -- end HerbicideTankMixSchema
+## -- end schemas

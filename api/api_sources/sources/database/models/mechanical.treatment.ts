@@ -34,7 +34,8 @@ import {
 	MechanicalSoilDisturbanceCodeSchema,
 	MechanicalRootRemovalCodeSchema,
 	MechanicalTreatmentIssueCodeSchema,
-	TreatmentProviderContractorSchema
+	TreatmentProviderContractorSchema,
+	SpaceGeomSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -47,10 +48,11 @@ import {
 	MechanicalSoilDisturbanceCode,
 	MechanicalRootRemovalCode,
 	MechanicalTreatmentIssueCode,
-	TreatmentProviderContractor
+	TreatmentProviderContractor,
+	SpaceGeom
 } from '../models';
 import { Record } from './generic.data.models';
-import { NumericTransformer, DateTransformer } from '../../libs/transformer';
+import { DateTransformer } from '../../libs/transformer';
 
 
 /** Interface **/
@@ -58,10 +60,6 @@ import { NumericTransformer, DateTransformer } from '../../libs/transformer';
  * @description MechanicalTreatment create interface
  */
 export interface MechanicalTreatmentSpec {
-	latitude: number;
-	longitude: number;
-	width: number;
-	length: number;
 	applicatorFirstName: string;
 	applicatorLastName: string;
 	secondaryApplicatorFirstName: string;
@@ -79,6 +77,7 @@ export interface MechanicalTreatmentSpec {
 	rootRemoval: MechanicalRootRemovalCode;
 	issue: MechanicalTreatmentIssueCode;
 	providerContractor: TreatmentProviderContractor;
+	spaceGeom: SpaceGeom;
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -88,10 +87,6 @@ export interface MechanicalTreatmentSpec {
  * @description MechanicalTreatment update interface
  */
 export interface MechanicalTreatmentUpdateSpec {
-	latitude?: number;
-	longitude?: number;
-	width?: number;
-	length?: number;
 	applicatorFirstName?: string;
 	applicatorLastName?: string;
 	secondaryApplicatorFirstName?: string;
@@ -109,6 +104,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	rootRemoval?: MechanicalRootRemovalCode;
 	issue?: MechanicalTreatmentIssueCode;
 	providerContractor?: TreatmentProviderContractor;
+	spaceGeom?: SpaceGeom;
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -133,34 +129,6 @@ export class MechanicalTreatment extends Record {
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
 	mechanical_treatment_id: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_location_latitude}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.latitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	latitude: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_location_longitude}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.longitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	longitude: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_area_width}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.width, transformer: new NumericTransformer})
-	@ModelProperty({type: PropertyType.number})
-	width: number;
-
-	/**
-	 * @description Getter/Setter property for column {mechanical_treatment_area_length}
-	 */
-	@Column({ name: MechanicalTreatmentSchema.columns.length, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	length: number;
 
 	/**
 	 * @description Getter/Setter property for column {applicator_first_name}
@@ -293,26 +261,13 @@ export class MechanicalTreatment extends Record {
 	@ModelProperty({type: PropertyType.object})
 	providerContractor: TreatmentProviderContractor;
 
+	/**
+	 * @description Getter/Setter property for column {space_geom_id}
+	 */
+	@ManyToOne( type => SpaceGeom, { eager: true})
+	@JoinColumn({ name: MechanicalTreatmentSchema.columns.spaceGeom, referencedColumnName: SpaceGeomSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	spaceGeom: SpaceGeom;
+
 }
-
-// ** DataModel controller of MechanicalTreatment **
-
-/**
- * @description Data Model Controller Class for MechanicalTreatmentSchema and MechanicalTreatment
- */
-// export class MechanicalTreatmentController extends RecordController<MechanicalTreatment> {
-// 	/**
-// 	* @description Getter for shared instance
-// 	*/
-// 	public static get shared(): MechanicalTreatmentController {
-// 		return this.sharedInstance<MechanicalTreatment>(MechanicalTreatment, MechanicalTreatmentSchema) as MechanicalTreatmentController;
-// 	}
-
-// 	async all(query?: object): Promise<MechanicalTreatment[]> {
-// 		// console.log('*** 1a');
-// 		// console.dir(query);
-//         return super.all(query);
-//     }
-// }
-
 // -------------------------------------

@@ -57,14 +57,14 @@ class ExpressApp {
     /**
      * Constructing
      */
-    constructor() {
-        this.logger.info('Creating express app...');
-    }
+    constructor() {}
 
     /**
      * @description Initializing express app
      */
     public async initExpress(): Promise<any> {
+        // Log
+        this.logger.info('Initiating express app');
         // Body parser
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({
@@ -109,11 +109,22 @@ class ExpressApp {
      * @description Initializing server
      */
     public async init() {
-        this.logger.info('Starting API Server');
+        // Create Data base connection
         ApplicationManager.shared.init();
         try {
             await SharedDBManager.connect();
-            ApplicationManager.shared.state.isDBUp = true;
+        } catch (err) {
+            this.logger.error(`*** Unable to start Connect DB ***`);
+            this.logger.error(`*** Error: ${err} **`);
+            process.exit(1);
+        }
+
+        // Init Express stack
+        await this.initExpress();
+
+        // Start Application
+        this.logger.info('Starting API Server');
+        try {
             this.start();
         } catch (err) {
             this.logger.error(`*** Unable to start API ***`);

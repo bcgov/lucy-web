@@ -19,41 +19,11 @@
 /**
  * Imports
  */
-import {createConnection, Connection} from 'typeorm';
+import {createConnection, Connection } from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SeedManager } from './seed.manager';
-import {
-    UserDataController,
-    UserSessionDataController,
-    UserMessageController,
-    SessionActivityCodeController,
-    RequestAccessController,
-    SpeciesController,
-    SpeciesAgencyCodeController,
-    SlopeCodeController,
-    SoilTextureCodeController,
-    ObservationGeometryCodeController,
-    ObservationController,
-    ObservationTypeCodeController,
-    JurisdictionCodeController,
-    SpecificUseCodeController,
-    MechanicalDisposalMethodCodeController,
-    MechanicalMethodCodeController,
-    MechanicalRootRemovalCodeController,
-    MechanicalTreatmentIssueCodeController,
-    MechanicalSoilDisturbanceCodeController,
-    TreatmentProviderContractorController,
-    MechanicalTreatmentController,
-    SpeciesDensityCodeController,
-    SpeciesDistributionCodeController,
-    ChemicalTreatmentEmployeeController,
-    ProjectManagementPlanCodeController,
-    ChemicalTreatmentController,
-    PesticideEmployerCodeController,
-    WatercraftRiskAssessmentController,
-    ObserverWorkflowController
-} from './models';
-import { WaterBodySchema } from './database-schema';
+import * as modelsModule from './models';
+import { ApplicationDataControllers, DBControllerLoader } from '../libs/core-database';
 const dbConfig = require('../../ormconfig');
 
 /**
@@ -65,7 +35,7 @@ export class DBManager extends LoggerBase {
     private static instance: DBManager;
 
     // Controllers
-    dataController: any[] = [];
+    dataControllers: ApplicationDataControllers;
 
     // DB connection object
     connection: Connection;
@@ -126,38 +96,7 @@ export class DBManager extends LoggerBase {
     }
 
     private loadControllers() {
-        this.dataController = [
-            UserDataController.shared,
-            UserSessionDataController.shared,
-            UserMessageController.shared,
-            SessionActivityCodeController.shared,
-            RequestAccessController.shared,
-            SpeciesController.shared,
-            SpeciesDensityCodeController.shared,
-            SpeciesDistributionCodeController.shared,
-            SpeciesAgencyCodeController.shared,
-            SlopeCodeController.shared,
-            SoilTextureCodeController.shared,
-            ObservationGeometryCodeController.shared,
-            ObservationTypeCodeController.shared,
-            JurisdictionCodeController.shared,
-            SpecificUseCodeController.shared,
-            ObservationController.shared,
-            MechanicalDisposalMethodCodeController.shared,
-            MechanicalMethodCodeController.shared,
-            MechanicalRootRemovalCodeController.shared,
-            MechanicalTreatmentIssueCodeController.shared,
-            MechanicalSoilDisturbanceCodeController.shared,
-            TreatmentProviderContractorController.shared,
-            MechanicalTreatmentController.shared,
-            ChemicalTreatmentEmployeeController.shared,
-            ProjectManagementPlanCodeController.shared,
-            ChemicalTreatmentController.shared,
-            PesticideEmployerCodeController.shared,
-            ObserverWorkflowController.shared,
-            WatercraftRiskAssessmentController.shared,
-            WaterBodySchema.shared
-        ];
+        this.dataControllers = DBControllerLoader(modelsModule, DBManager.logger);
     }
 
     /**

@@ -20,6 +20,7 @@ import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCo
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { HerbicideCodes, ChemicalTreatment, ChemicalTreatmentMethodCode } from '../models/ChemicalTreatment';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,15 @@ export class ObjectValidatorService {
   public isInvasivePlantSpeciesObject(species: any): species is InvasivePlantSpecies {
     if (species === undefined || species === null) {return false; }
     return (<InvasivePlantSpecies>species.species) !== undefined;
+  }
+
+  /**
+   * Check if object is a herbicide object
+   * @param herbicide object
+   */
+  public isHerbicideObject(herbicide: any): herbicide is HerbicideCodes {
+    if (herbicide === undefined || herbicide === null) {return false; }
+    return (<HerbicideCodes>herbicide.herbicideCode) !== undefined;
   }
 
   /**
@@ -234,5 +244,23 @@ export class ObjectValidatorService {
   public isMechanicalTreatmentProvidersObject(mechanicalTreatmentProviders: any): mechanicalTreatmentProviders is MechanicalTreatmentProviders {
     if (mechanicalTreatmentProviders === undefined || mechanicalTreatmentProviders === null) {return false; }
     return (<MechanicalTreatmentProviders>mechanicalTreatmentProviders.registrationNumber) !== undefined;
+  }
+
+  /**
+   * Check if object is ChemicalTreatmentMethodCode
+   * @param chemicalTreatmentMethodsCodes object
+   */
+  public isChemicalTreatmentMethodsCodes(chemicalTreatmentMethodsCodes: any): chemicalTreatmentMethodsCodes is ChemicalTreatmentMethodCode {
+    if (chemicalTreatmentMethodsCodes === undefined || chemicalTreatmentMethodsCodes === null) { return false; }
+    return (<ChemicalTreatmentMethodCode>chemicalTreatmentMethodsCodes.description) !== undefined;
+  }
+
+  /**
+   * Check if object is ChemicalTreatment
+   * @param chemicalTreatment object
+   */
+  public isChemicalTreatmentObject(chemicalTreatment: any): chemicalTreatment is ChemicalTreatment {
+    if (chemicalTreatment === undefined || chemicalTreatment === null) { return false; }
+    return (<ChemicalTreatment>chemicalTreatment.tankMixes) !== undefined;
   }
 }

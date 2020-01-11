@@ -25,7 +25,16 @@ import * as path from 'path';
 
 const sqlDirPath = 'schema-migration-sql';
 
+/**
+ * @description Get SQL dir path
+ */
 export const getSQLDirPath = () => path.resolve(__dirname, `../../../${sqlDirPath}`);
+
+/**
+ * @description Get file actual path
+ * @param string fileName: Name of the sql file
+ * @param string subPath: Sub dir or Schema Name (sql files for schema stored under schema folder)
+ */
 export const getSQLFilePath = (fileName: string, subPath?: string) => {
     if (subPath) {
         return path.resolve(__dirname, `../../../${sqlDirPath}/${subPath}/${fileName}`);
@@ -33,6 +42,11 @@ export const getSQLFilePath = (fileName: string, subPath?: string) => {
     return path.resolve(__dirname, `../../../${sqlDirPath}/${fileName}`);
 };
 
+/**
+ * @description Get Raw sql string the sql file
+ * @param string fileName: Name of the sql file
+ * @param string subPath: Sub dir or Schema Name (sql files for schema stored under schema folder)
+ */
 export const getSQLFileData = (fileName: string, subPath?: string) => {
     if (subPath) {
         // Get path

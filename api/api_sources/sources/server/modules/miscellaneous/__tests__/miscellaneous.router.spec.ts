@@ -59,8 +59,8 @@ import { ChemicalTreatmentEmployeeController } from '../../../../database/models
 
 describe('Test miscellaneous routes', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();

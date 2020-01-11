@@ -38,7 +38,10 @@ import {
     MechanicalSoilDisturbanceCodeController,
     MechanicalRootRemovalCodeController,
     TreatmentProviderContractorController,
-    ProjectManagementPlanCodeController
+    ProjectManagementPlanCodeController,
+    ChemicalTreatmentMethodCodeController,
+    WindDirectionCodesController,
+    HerbicideController
 } from '../../../database/models';
 import { DataController } from '../../../database/data.model.controller';
 import { ChemicalTreatmentEmployeeController } from '../../../database/models/controllers/chemicalTreatmentEmployee.controller';
@@ -53,7 +56,6 @@ export class CodeTableRouteController extends SecureRouteController<any> {
 
     constructor() {
         super();
-        this.applyRouteConfig();
     }
 
     codeTableObj: any;
@@ -84,6 +86,9 @@ export class CodeTableRouteController extends SecureRouteController<any> {
         await this.addCodes(ProjectManagementPlanCodeController.shared);
         await this.addCodes(PesticideEmployerCodeController.shared);
         await this.addCodes(ChemicalTreatmentEmployeeController.shared);
+        await this.addCodes(ChemicalTreatmentMethodCodeController.shared);
+        await this.addCodes(WindDirectionCodesController.shared);
+        await this.addCodes(HerbicideController.shared);
         return this.codeTableObj;
     }
 
