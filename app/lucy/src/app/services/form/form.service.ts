@@ -921,7 +921,7 @@ export class FormService {
           } else {
             if (object[field.key] !== undefined) {
               const key = object[field.key];
-              if (typeof key === 'object' && key !== null) {
+              if (!config.relationKeys.includes(field.key) && typeof key === 'object' && key !== null) {
                 field.value = await this.getDropdownObjectWithId(
                   field.codeTable,
                   field.displayKey,
@@ -933,9 +933,9 @@ export class FormService {
               }
             } else {
               // UNCOMMENT for debugging/ when adding new form support. it helps
-              // console.log(
-              //   `**** config key ${field.key} does not exist in object`
-              // );
+              console.log(
+                `**** config key ${field.key} does not exist in object`
+              );
             }
           }
         }
