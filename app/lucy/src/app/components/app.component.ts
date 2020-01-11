@@ -15,7 +15,7 @@
  *
  * 	Created by Amir Shayegh on 2019-10-23.
  */
-import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SsoService } from '../services/sso.service';
 import { AppRoutes } from '../constants';
@@ -30,6 +30,7 @@ import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
 import { StringConstants } from 'src/app/constants/string-constants';
 import { ToastService, ToastModel, ToastIconType } from '../services/toast/toast.service';
+import { BcgwService } from '../services/bcgw/bcgw.service';
 
 @Component({
   selector: 'app-root',
@@ -81,7 +82,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private toastService: ToastService,
     private loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
-    private titleService: Title) {
+    private titleService: Title,
+    private zone: NgZone) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
     this.subscribeToToastService();
@@ -170,11 +172,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   /******** Toasts ********/
   private subscribeToToastService() {
     this.toastSubscription = this.toastService.getObservable().subscribe(message => {
-      if (message) {
-        this.toastMessage = message;
-      } else {
-        this.alertMessage = undefined;
-      }
+
+      this.zone.run(() => {
+        if (message && typeof message === typeof '') {
+          this.toastMessage = message;
+        } else {
+          this.alertMessage = undefined;
+        }
+      });
     });
   }
 

@@ -1,0 +1,36 @@
+<div class="treatmentDetailsContainer">
+    <!-- Title row -->
+    <div class="row">
+        <div class="col-12 sub-section-title">
+            <p>Treatment Details</p>
+        </div>
+    </div>
+    <!-- Delivery rate row -->
+    <div class="row">
+        <app-field editable="false" [value]="responseBody.mixDeliveryRate" header="Mix Delivery Rate (calibrated)" suffix="L/ha"></app-field>
+    </div>
+    <!-- One row for each treatment card (combo of species & herbicide) -->
+    <div *ngFor="let s of speciesHerbicides">
+        <div class="container-fluid treatmentCard">
+            <div class="row">
+                <p class="col-12 treatmentLabel">Treatment</p>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <app-field editable="false" [value]="s.speciesName" header="Invasive Species Treated"></app-field>
+                </div>
+                <div class="col-6">
+                    <app-field editable="false" [value]="s.herbicideName" header="Herbicide"></app-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <app-field editable="false" suffix="L" [value]="s.amountUsed" header="Amount of Mix Used"></app-field>
+                </div>
+                <div class="col-6">
+                    <app-field editable="false" suffix="L/ha" [value]="s.applicationRate" header="Application Rate"></app-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

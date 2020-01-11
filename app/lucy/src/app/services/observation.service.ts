@@ -193,6 +193,18 @@ export class ObservationService {
   }
 
   /**
+   * Fetch and return all observation objects associated with a given lat/long
+   */
+  public async getByLocation(lat: number, long: number): Promise<Observation[]> {
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observationAt(lat, long), null);
+    if (response.success && Array.isArray(response.response) && this.objectValidator.isObservationObject(response.response[0])) {
+      return response.response;
+    } else {
+      return [];
+    }
+  }
+
+  /**
    * Helper function to create an empty abstract object
    * with all property values undefined
    */

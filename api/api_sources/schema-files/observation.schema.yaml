@@ -1,6 +1,7 @@
 version: '1.0'
 includes:
   - observation.codes.schema.yaml
+  - spaceGeom.schema.yaml
 schemas:
   # -- Observation schema ** Observation
   ObservationSchema:
@@ -41,14 +42,13 @@ schemas:
         # Section 
         - title:
             key: 'generic.location'
-            default: 'Location'
+            default: 'Location and Geometry'
           groups:
             - title: 
                 key: 'location' 
-                default: Location
+                default: ''
               fields:
-                - lat
-                - long
+                - spaceGeom
             # End-group(Location)
             - title:
                 key: 'date' 
@@ -56,13 +56,9 @@ schemas:
               fields:
                 - date
             - title: 
-                key: 'geometry' 
-                default: Geometry  
+                key: 'locationDescription' 
+                default: Location Description  
               fields:
-                - observationGeometry
-                - horizontalDimension
-                - verticalDimension
-                - observationArea
                 - accessDescription
             # End-group(Geometry)
             - title: 
@@ -89,7 +85,7 @@ schemas:
         # End-Section
         - title: 
             key: '' 
-            default: Advance Data Element
+            default: Advanced Data Element
           groups:
             - title: 
                 key: 'indicators' 
@@ -118,18 +114,7 @@ schemas:
       # End-Section
     # End-layout
     # Computed fields
-    computedFields:
-      observationArea:
-        header:
-          key: observationArea
-          default: Observed area
-        computationRules:
-          - name: Compute Area
-            keys:
-              - horizontalDimension
-              - verticalDimension
-              - observationGeometry
-            method: calculateArea
+    computedFields: {}
     # End - Computed fields
     # Relationship
     relations:
@@ -159,51 +144,6 @@ schemas:
           header:
             key: 'observation.date'
             default: 'Observation Date'
-          classes:
-            - none
-      lat:
-        name: 'observation_location_lat'
-        comment: 'Latitude of observation location'
-        definition: NUMERIC(8, 6) NOT NULL
-        layout:
-          header:
-            key: 'generic.latitude'
-            default: 'Observation Latitude'
-          classes:
-            - none
-      long:
-        name: 'observation_location_long'
-        comment: 'Longitude of observation location'
-        definition: NUMERIC(9, 6) NOT NULL
-        layout:
-          header:
-            key: 'generic.longitude'
-            default: 'Observation Longitude'
-          classes:
-            - none
-      horizontalDimension:
-        name: 'horizontal_dimension'
-        comment: 'Width or horizontal dimension of the area observed'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
-        layout:
-          header:
-            key: 'generic.width'
-            default: 'Horizontal dimension or Width or Radius'
-          classes:
-            - none
-      verticalDimension:
-        name: 'vertical_dimension'
-        comment: 'Length or vertical dimension of the area observed'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
-        meta: 
-          dependencies:
-            key: observationGeometry.observation_geometry_code_id
-            hideOn:
-              - 1
-        layout:
-          header:
-            key: 'generic.length'
-            default: 'Vertical dimension or Length'
           classes:
             - none
       accessDescription:
@@ -437,7 +377,7 @@ schemas:
         layout:
           header:
             key: 'speciesAgency'
-            default: 'Complete Behalf of'
+            default: 'Completed on Behalf of'
           classes:
             - none
       soilTexture: 
@@ -451,19 +391,6 @@ schemas:
           header:
             key: 'soilTexture'
             default: 'Soil Texture'
-          classes:
-            - none
-      observationGeometry:
-        name: 'observation_geometry_code_id'
-        comment: Foreign key reference to observation geometry code table 
-        definition: INT NULL
-        foreignTable: observation_geometry_code
-        refColumn: observation_geometry_code_id
-        deleteCascade: false
-        layout:
-          header:
-            key: 'observationGeometry'
-            default: 'Geometry'
           classes:
             - none
       specificUseCode:
@@ -518,4 +445,14 @@ schemas:
             default: 'Proposed Action'
           classes:
             - none
+    ## End - Columns
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
   # --

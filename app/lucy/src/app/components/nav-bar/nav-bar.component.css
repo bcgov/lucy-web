@@ -1,6 +1,6 @@
 .gov-nav {
-  background: #FFFFFF;
-  z-index: 99;
+    background: #FFFFFF;
+    z-index: 99;
 }
 
 .title-app {
@@ -8,6 +8,7 @@
     font-size: 24px;
     font-weight: 500;
     line-height: 29px;
+    cursor: pointer;
 }
 
 .spacer-toolbar {

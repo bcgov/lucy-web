@@ -25,9 +25,6 @@ import { SharedExpressApp } from './server/initializers';
  * @description Application bootstrap function
  */
 (async () => {
-    // Init Express
-    await SharedExpressApp.initExpress();
-
     // Init App dependencies and start
     await SharedExpressApp.init();
 })();

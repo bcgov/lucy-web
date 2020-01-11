@@ -40,7 +40,8 @@ import { AppConstants } from 'src/app/constants/app-constants';
 
 export enum FormType {
   Observation,
-  MechanicalTreeatment
+  MechanicalTreeatment,
+  ChemicalTreatment
 }
 @Component({
   selector: 'app-base-form',
@@ -219,7 +220,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
    /**
    * Returns an array of strings containing headers
-   * of missing fields 
+   * of missing fields
    * @returns string array of headers
    */
   get missingFields(): string[] {
@@ -227,6 +228,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
         requiredMissingFieldKeys.push(key);
+      } else {
+        if (key === 'spaceGeom' && this.responseBody[key]) {
+          const test: any = this.responseBody[key];
+          if (!test.latitude || !test.longitude || !test.geometry) {
+            requiredMissingFieldKeys.push(key);
+          }
+        }
       }
     }
     // let requiredMissingFieldHeaders: string[]= [];
@@ -235,7 +243,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of requiredMissingFieldKeys) {
       if (this.config.fieldHeaders[key] !== undefined) {
         // Group Lat long under "location" tag
-        if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
+        if (key === 'spaceGeom') {
           if (!locationIncluded) {
             missingFieldHeaders.push(`Location`);
             locationIncluded = true;
@@ -339,17 +347,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   fieldChanged(field: any, event: any) {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
-    if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+    if (field.isSpaceGeom) {
+      this.responseBody['spaceGeom'] = event.spaceGeom.value;
+    } else if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
       // console.log('setting lat long in body to undefined')
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
     } else if (event === `` && this.responseBody[field.key] !== undefined) {
-      // console.log(`setting ${field.key} to undefined`)
-      // console.dir(event);
       this.responseBody[field.key] = undefined;
-    }
-    // handle valid input cases
-     else if (field.isLocationField) {
+    } else if (field.isLocationField) {
+      // handle valid input cases
       // location field - needs lat long extraction
       this.responseBody[field.latitude.key] = event.latitude.value;
       this.responseBody[field.longitude.key] = event.longitude.value;
@@ -382,6 +389,35 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   /**
+   * handle changes in species treated custom subsection
+   * @param event changed list of speciesObservation records
+   */
+  speciesTreatedChanged(event: any) {
+    this.responseBody['speciesObservations'] = [];
+    event.forEach(element => {
+      this.responseBody['speciesObservations'].push({'observation': element.observation, 'treatmentAreaCoverage': +element.treatmentAreaCoverage});
+    });
+  }
+
+  /**
+   * handle changes in herbicide tank mixes custom subsection
+   * @param event changed list of herbicideTankMix records
+   */
+  tankMixesChanged(event: any) {
+    // if 1 or more tank mixes have changed
+    if (typeof(event) === `object`) {
+      this.responseBody['tankMixes'] = [];
+      event.forEach(element => {
+        this.responseBody['tankMixes'].push({'applicationRate': element.applicationRate, 'dilutionRate': element.amountUsed, 'herbicide': element.herbicide.herbicide_id});
+      });
+    }
+    // if mix delivery rate has changed
+    else if (typeof(event) === `number` || `string`) {
+      this.responseBody['mixDeliveryRate'] = event;
+    }
+  }
+
+  /**
    * Form submission
    */
   async submitAction() {
@@ -396,7 +432,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         return;
       }
       this.loadingService.add();
-      // const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify({key: 'hello'})), this.config);
+      if (this.config.api === `/treatment/chemical`) {
+        for (const so of this.responseBody['speciesObservations']) {
+          so.observation = so.observation.observation_id;
+        }
+      }
+      console.dir(JSON.stringify(this.responseBody));
+      console.dir(JSON.parse(JSON.stringify(this.responseBody)));
       const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
       if (submissionResult.success) {
@@ -594,6 +636,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @param block 'center', 'start', 'end'
    */
   async scrollToElement(elementId: string, block: string): Promise<boolean> {
+    if (elementId === `mixDeliveryRate(Calibrated)`) {
+      elementId = `mixDeliveryRate`;
+    }
     return new Promise<boolean>((res, rej) => {
       const el = this.elementRef.nativeElement.querySelector(`#${elementId}`);
       const element = document.getElementById(elementId);

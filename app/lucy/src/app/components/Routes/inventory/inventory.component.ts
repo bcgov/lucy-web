@@ -162,8 +162,8 @@ export class InventoryComponent implements OnInit {
     this.markers = [];
     for (const object of this.observations) {
       this.markers.push( {
-        latitude: object.lat,
-        longitude: object.long,
+        latitude: object.spaceGeom.latitude,
+        longitude: object.spaceGeom.longitude,
         observation: object,
       });
     }
@@ -437,7 +437,7 @@ export class InventoryComponent implements OnInit {
     if (!random) {
       this.toast.show('Feature is not available', ToastIconType.fail);
       this.loadingService.remove();
-      return 
+      return; 
     }
     console.log(`generated`);
     this.observations = random;

@@ -24,7 +24,6 @@
 /**
  * Imports
  */
-import * as faker from 'faker';
 import { SharedExpressApp } from '../../../initializers';
 import {
     commonTestSetupAction,
@@ -36,14 +35,14 @@ import { ChemicalTreatmentController } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
 
 /**
- * Test Function
+ * Test Functions for Chemical Treatment controller
  */
 const resourceName = 'chemical treatment';
 const controller: DataController = ChemicalTreatmentController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();
@@ -66,30 +65,28 @@ describe(`Test for ${resourceName}`, () => {
         await ExpressResourceTest.testGetSingle(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
     });
 
-    // Test3: Get Single
+    // Test4: Get All
     it(`should get ${resourceName} {all}`, async () => {
         await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
     });
 
-    // Test4: Fail To Create For Viewer
+    // Test5: Fail To Create For Viewer
     it(`should not create ${resourceName} for {viewer}`, async () => {
         await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
     });
 
-    // Test5: Fail to create for Viewer
+    // Test6: Fail to Update for Viewer
     it(`should not update ${resourceName} for {viewer}`, async () => {
         await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
     });
 
-    // Test6: Get Filter elements
+    // Test7: Get Filter elements
     it(`should fetch filtered item ${resourceName}`, async () => {
         await ExpressResourceTest.testGetFilteredItem(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller, {
-            latitude: faker.address.latitude(),
-            longitude: faker.address.longitude()
+            date: '2019-08-21'
         });
     });
 });
-
 // -------------------------------------------------------------------------------
 
 

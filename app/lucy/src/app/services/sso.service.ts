@@ -281,7 +281,7 @@ export class SsoService {
    * Retruns Access token fetched using refresh token
    */
   private async getAccessTokenFromRefreshToken(refreshToken: string): Promise<TokenReponse | undefined> {
-    const data: object = {
+    const data = {
       refresh_token: refreshToken,
       grant_type: 'refresh_token',
       redirect_uri: AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI,
@@ -398,7 +398,7 @@ export class SsoService {
    * @param code
    */
   private async getTokensFromCode(code: string): Promise<TokenReponse> {
-    const data: object = {
+    const data = {
       code: code,
       grant_type: 'authorization_code',
       redirect_uri: AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI,

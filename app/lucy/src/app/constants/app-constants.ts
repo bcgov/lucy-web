@@ -24,8 +24,8 @@ export class AppConstants {
 
     // SSO
     static SSOConstants = {
-        SSO_CLIENT_ID : `lucy`,
-        SSO_BASE_URL : `https://sso.pathfinder.gov.bc.ca`,
+        SSO_CLIENT_ID : `invasives-bc`,
+        SSO_BASE_URL : `https://sso-dev.pathfinder.gov.bc.ca`,
         SSO_REALM_NAME : `dfmlcg7z`,
         SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
     };
@@ -37,7 +37,7 @@ export class AppConstants {
     static CONFIG = {
         apiHost: 'localhost',
         changeVersion: 'NA',
-        env: 'test',
+        env: 'dev',
         version: 'NA'
     };
 
@@ -57,19 +57,28 @@ export class AppConstants {
     // Observation
     static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }
     static get API_observationSpecies(): string { return `${AppConstants.API_baseURL}/observation/species`; }
+    static API_observationWith(id: number): string {
+        return `${AppConstants.API_baseURL}/observation/${id}`; }
+    static API_observationAt(lat: number, long: number): string {
+        return `${AppConstants.API_baseURL}/observation?lat=${lat}&long=${long}`;
+    }
 
     // Code Tables
     static get API_CodeTables(): string { return `${AppConstants.API_baseURL}/codes`; }
-
-    static API_observationWith(id: number): string {
-         return `${AppConstants.API_baseURL}/observation/${id}`;
-    }
 
     // Mechanical Treatment
     static get API_mechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical`; }
     static API_mechanicalTreatmentWith(id: number): string {
         return `${AppConstants.API_baseURL}/treatment/mechanical/${id}`;
    }
+
+   // Chemical Treatment
+   static get API_chemicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/chemical`; }
+   static API_chemicalTreatmentWith(id: number): string {
+       return `${AppConstants.API_baseURL}/treatment/chemical/${id}`;
+   }
+   static API_tankMix(): string { return `${AppConstants.API_baseURL}/tankmix`; }
+   static API_observationChemicallyTreated(): string { return `${AppConstants.API_baseURL}/obschem`; }
 
     // SSO non static endpoints
     static SSO_LoginEndpoint(): string {
@@ -96,6 +105,11 @@ export class AppConstants {
 
     // API Reference data
     static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
+
+    // BC Government Wearhouse
+    static API_BCGW_wellProximity(latitude: number, longitude: number): string {
+        return `${AppConstants.API_baseURL}/location/gwells-data?latitude=${latitude}&longitude=${longitude}`;
+    }
 }
 
 

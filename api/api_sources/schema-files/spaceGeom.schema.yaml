@@ -1,0 +1,153 @@
+version: '1.0'
+description: 'Schema File For Space Geometry Table and Data Model'
+externalTables: 
+  - name: observation_geometry_code
+    schema: ObservationGeometryCodeSchema
+    description: Geometry code
+includes: []
+schemas:
+  SpaceGeomSchema:
+    name: space_geom
+    description: 'Table to store raw spatial data for any spatial record like Observation, Treatments, Monitoring.'
+    meta: 
+      baseModel: Record
+      resource: true
+    displayLayout: {}
+    layout:
+      header:
+        key: ''
+        default: ''
+    computedFields: {}
+    relations: {}
+    ## -- Columns
+    columns:
+      id:
+        name: space_geom_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      latitude:
+        name: 'latitude'
+        comment: 'Latitude of treatment  location'
+        definition: NUMERIC(9, 6) NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'latitude' 
+            default: 'Latitude'
+          description: ''
+          classes:
+            - none
+      longitude:
+        name: 'longitude'
+        comment: 'Longitude of treatment location.'
+        definition: NUMERIC(9, 6) NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'longitude' 
+            default: 'Longitude'
+          classes:
+            - none
+      hexId:
+        name: hex_id
+        comment: 'Spatial methodology to store and stratify spatial data to a 1 hectare standardized provincial hexagonally shaped grid system.'
+        definition: VARCHAR(50) NULL
+        meta: {}
+        required: false
+        layout:
+          header: 
+            key: 'longitude' 
+            default: 'Longitude'
+          classes:
+            - none
+      subHexId:
+        name: 'sub_hex_id'
+        comment: 'Unique spatial sub hex id to identify record location within a hex.'
+        definition: VARCHAR(50) NULL
+        meta: {}
+        required: false
+        layout:
+          header: 
+            key: 'longitude' 
+            default: 'Longitude'
+          classes:
+            - none
+      inputGeometry:
+        name: input_geometry
+        comment: 'Input Geometry geometry of the spatial record as GeoJSON format'
+        definition: JSONB
+        meta: {}
+        layout:
+          header: 
+            key: 'spaceGeom.inputGeometry' 
+            default: 'Geometry'
+          classes:
+            - none
+      metaData:
+        name: meta_data
+        comment: 'Application level meta data to identify associated spatial object'
+        definition: VARCHAR(99) NULL
+        required: false
+        meta: {}
+        layout:
+          header: 
+            key: 'spaceGeom.metaData' 
+            default: 'Info'
+          classes:
+            - none
+      ## Relationship
+      geometry:
+        name: 'observation_geometry_code_id'
+        comment: Foreign key reference to observation geometry code table 
+        definition: INT NULL
+        foreignTable: observation_geometry_code
+        refColumn: observation_geometry_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header:
+            key: 'spaceGeom.geometry'
+            default: 'Geometry Type'
+          classes:
+            - none
+    ## -- END: Columns
+    versions: []
+    fields: {}
+  ## -- END: SpaceGeomSchema
+  ## -- SpaceGeomModelSchema
+  SpaceGeomModelSchema:
+    name: space_geom_model
+    description: 'This is copy only schema for SpaeGeomModelSchema object like ObservationSchema, Treatments Schemas, etc.'
+    meta: {}
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      id:
+        name: space_geom_model_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+    versions: 
+      - name: 'spaceGeom'
+        id: '20191128'
+        columns: 
+          spaceGeom:
+            name: space_geom_id
+            comment: 'Spatial and Geometry reference data associated with record. Foreign key reference to space_geom table'
+            definition: INT NULL
+            foreignTable: space_geom
+            refColumn: space_geom_id
+            required: true
+            layout:
+              header:
+                key: 'generic.spaceGeom'
+                default: ''
+              classes:
+                - none
+            meta:
+              embedded: true
+          ## --
+      ## -- END: spaceGeom
+    fields: {}
+  ## -- END: SpaceGeomModelSchema

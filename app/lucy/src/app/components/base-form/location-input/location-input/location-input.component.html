@@ -1,4 +1,5 @@
 <div class="container min-map-height animated" id="location">
+  <!-- Location And Map-->
   <div class="row">
     <!-- Left content  -->
     <div class="col-12 col-md-4">
@@ -105,6 +106,75 @@
         [markers]="markers"
       >
       </app-map-preview>
+
+      <div
+        *ngIf="wellDistance > -1"
+        class="col-12 nopadding well-distance animated wobble"
+      >
+        There is a well
+        <span class="well-distance-value">{{ wellDistance }} meters</span> from
+        this location.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Geometry -->
+<div class="container">
+  <!-- Title: Row -->
+  <div class="row">
+    <div class="col sub-section-title">
+      {{ titles.geometrySection }}
+    </div>
+  </div>
+  <div class="row">
+    <!-- Geometry: Dropdown --->
+    <div class="col-12 col-md-5 nopadding">
+      <app-dropdown
+        [mode]="mode"
+        [items]="geometry.dropdown"
+        [fieldHeader]="geometry.header"
+        [selectedItem]="geometry.value"
+        (selectionChanged)="geometryChanged($event)"
+      >
+      </app-dropdown>
+    </div>
+    <!-- Geometry: Dimension X-->
+    <div class="col col-md-3 nopadding">
+      <app-field
+        [mode]="mode"
+        [header]="headerXDimension"
+        [value]="x"
+        [verification]="dimensionVerification"
+        [required]="true"
+        (valueChanged)="dimensionXChange($event)"
+      >
+      </app-field>
+    </div>
+    <!-- Geometry: Dimension Y-->
+    <div class="col col-md-3" *ngIf="!showXOnly">
+      <app-field
+        [mode]="mode"
+        [header]="headerYDimension"
+        [value]="y"
+        [verification]="dimensionVerification"
+        [required]="true"
+        (valueChanged)="dimensionYChange($event)"
+      >
+      </app-field>
+    </div>
+  </div>
+</div>
+
+<!-- ////// -->
+
+<!-- Area Calculated-->
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="col-12 area-calculated">
+        Calculated Area: <span class="area-value">{{ areaLabel }}</span>
+      </div>
     </div>
   </div>
 </div>
