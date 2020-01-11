@@ -633,6 +633,7 @@ export class FormService {
             case 'number': {
               // Number is input field
               fieldOfInterest.isInputField = true;
+              fieldOfInterest.suffix = field.layout.suffix || '';
               break;
             }
             case 'string': {
