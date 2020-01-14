@@ -74,6 +74,7 @@ import {
     WindDirectionCodesSchema,
     ChemicalTreatmentMethodCodeSchema
 } from '../database-schema';
+import * as faker from 'faker';
 
 // ** Test Function
 describe('Test Chemical Treatment', () => {
@@ -316,7 +317,7 @@ describe('Test Chemical Treatment', () => {
         should().exist(f);
         const update: any = { ...f};
         delete update.chemical_treatment_id;
-        update.speciesObservations.push(spec);
+        update.speciesObservations = [spec];
         await ChemicalTreatmentController.shared.updateObject(f, update, user);
         const ct = await ChemicalTreatmentController.shared.findById(f.chemical_treatment_id);
         should().exist(ct);
@@ -358,6 +359,45 @@ describe('Test Chemical Treatment', () => {
         await Destroyer(HerbicideTankMixController.shared)(obj);
     });
 
+    it('should allow multiple tank mixes to be associated with the same treatment', async () => {
+        const user = await userFactory();
+        const treatment: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
+        const tm1: HerbicideTankMix = await ModelFactory(HerbicideTankMixController.shared)();
+        const tm2: HerbicideTankMix = await ModelFactory(HerbicideTankMixController.shared)();
+        should().exist(treatment);
+        should().exist(treatment.tankMixes);
+        should().exist(tm1);
+        should().exist(tm2);
+        const copy1: any = {...tm1};
+        delete copy1.chemicalTreatment.chemical_treatment_id;
+        copy1.chemicalTreatment.chemical_treatment_id = treatment.chemical_treatment_id;
+        await HerbicideTankMixController.shared.updateObject(tm1, copy1, user);
+        const copy2: any = {...tm2};
+        delete copy2.chemicalTreatment.chemical_treatment_id;
+        copy2.chemicalTreatment.chemical_treatment_id = tm1.chemicalTreatment.chemical_treatment_id;
+        await HerbicideTankMixController.shared.updateObject(tm2, copy2, user);
+
+        // push 2 tank mixes to treatment, update treatment
+        const dup: any = { ...treatment};
+        delete dup.chemical_treatment_id;
+        dup.tankMixes.push(tm1);
+        dup.tankMixes.push(tm2);
+        await ChemicalTreatmentController.shared.updateObject(treatment, dup, user);
+
+        // confirm tank mixes & treatment have been updated accordingly
+        const ch: ChemicalTreatment = await ChemicalTreatmentController.shared.findById(treatment.chemical_treatment_id);
+        should().exist(ch);
+        should().exist(ch.tankMixes);
+        // should be 3 because one tank mix already created by default when treatment is generated
+        expect(ch.tankMixes.length).to.be.equal(3);
+        expect(tm1.chemicalTreatment.chemical_treatment_id).to.be.equal(treatment.chemical_treatment_id);
+        expect(tm2.chemicalTreatment.chemical_treatment_id).to.be.equal(treatment.chemical_treatment_id);
+        expect(tm1.herbicide_tank_mix_id).to.not.equal(tm2.herbicide_tank_mix_id);
+
+        await destroyChemicalTreatment(treatment);
+        await Destroy<User, UserDataController>(UserDataController.shared)(user);
+    });
+
     it('should fetch chemical treatment observation relation', async () => {
         const obj: ObservationChemicalTreatment = await ModelFactory(ObservationChemicalTreatmentController.shared)();
         should().exist(obj);
@@ -375,6 +415,7 @@ describe('Test Chemical Treatment', () => {
         const ct: any = await ModelSpecFactory(ChemicalTreatmentController.shared)();
         should().exist(ct);
         should().exist(ct.tankMixes);
+        should().exist(ct.speciesObservations);
     });
 
     it('should create chemical treatment spec with space geom', async () => {
@@ -392,6 +433,74 @@ describe('Test Chemical Treatment', () => {
         should().exist(ct);
         should().exist(ct.spaceGeom);
         expect(ct.spaceGeom.space_geom_id).to.be.equal(c.spaceGeom.space_geom_id);
+    });
+
+    it('should not allow creation of tank mix with herbicide_id that doesn\'t exist in Herbicides code table', async() => {
+        const user = await userFactory();
+        const htm: HerbicideTankMix = await ModelFactory(HerbicideTankMixController.shared)();
+        should().exist(htm);
+        should().exist(htm.herbicide);
+        let herbId = htm.herbicide.herbicide_id;
+        const dup: any = {...htm};
+        should().exist(htm.herbicide);
+
+        // we should never have a Herbicide with an id this large
+        const bigNumber = faker.random.number({min: 30000, max: 999999});
+        try {
+            const fakeHerb: Herbicide = await HerbicideController.shared.findById(bigNumber);
+            dup.herbicide = fakeHerb;
+            should().not.exist(fakeHerb);
+        } catch (e) {
+            should().exist(e);
+        }
+
+        try {
+            const update = await HerbicideTankMixController.shared.updateObject(htm, dup, user);
+            expect(update).to.be.eqls(undefined);
+        } catch (excp) {
+            should().exist(excp);
+        }
+
+        expect(htm.herbicide.herbicide_id).to.not.equal(bigNumber);
+        should().exist(htm.herbicide);
+        should().exist(htm.herbicide.herbicide_id);
+        herbId = htm.herbicide.herbicide_id;
+        const h: Herbicide = await HerbicideController.shared.findById(herbId);
+        should().exist(h);
+
+        await Destroyer(HerbicideTankMixController.shared)(htm);
+    });
+
+    it('should not allow creation of chemical treatment without at least one species being treated', async() => {
+        const user = await userFactory();
+        const t: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
+        testModel(t, ChemicalTreatmentSchema.shared);
+        delete t.speciesObservations;
+        testModel(t, ChemicalTreatmentSchema.shared);
+        try {
+            ChemicalTreatmentController.shared.createNewObject(t, user);
+        } catch (ex) {
+            should().exist(ex);
+        }
+
+        await destroyChemicalTreatment(t);
+    });
+
+    it('should not allow update to chemical treatment without at least one species being treated', async() => {
+        const user = await userFactory();
+        const treatment: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
+        should().exist(treatment);
+        const copy: any = {...treatment};
+        copy.speciesObservations = [];
+        expect(copy.speciesObservations.length).to.equal(0);
+        try {
+            const update = await ChemicalTreatmentController.shared.updateObject(treatment, copy, user);
+            expect(update).to.be.eqls(undefined);
+        } catch (excp) {
+            should().exist(excp);
+        }
+
+        await destroyChemicalTreatment(treatment);
     });
 });
 
