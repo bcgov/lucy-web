@@ -1,0 +1,257 @@
+version: '1.0'
+includes:
+    - spaceGeom.schema.yaml
+schemas:
+  ## -- Example
+  MechanicalMonitorSchema:
+    name: 'mechanical_monitor'
+    description: 'A monitoring record created as follow-up to a mechanical treatment' 
+    baseSchema: RecordSchema
+    skipVerification: true
+    meta:
+      resource: true
+      api: 'monitor/mechanical'
+    ## -- DisplayLayout
+    displayLayout: {}
+    ## --
+    # -- layout
+    layout:
+        title:
+            key:
+            default: 'Mechanical Monitoring Information'
+        sections:
+            - title:
+                key: ''
+                default: ''
+              groups:
+                - title:
+                    key: 'treatmentDetails'
+                    default: 'Treatment Details'
+            - title:
+                key: ''
+                default: 'Monitoring Details'
+              groups:
+                - title:
+                    key: ''
+                    default: ''
+                  fields:
+                    - speciesAgency
+                    - paperFileID
+                    - date
+                    - efficacy
+                    - species
+            ## Comments section
+            - title:
+                key: ''
+                default: 'Comments'
+              groups:
+                - title:
+                    key: ''
+                    default: ''
+                  fields:
+                    - comments
+                  style: {}
+    # --
+    ## -- Relationships
+    relations: {}
+    ## --
+    ## Columns
+    columns:
+      ## Data Columns
+      id: 
+        name: mechanical_monitor_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      date:
+        name: mechanical_monitor_date
+        comment: 'Date of the monitoring record'
+        definition: DATE NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'date' 
+            default: 'Monitoring Date and Time'
+          classes:
+            - none
+      paperFileID:
+          name: mechanical_monitor_paper_file_ref
+          comment: 'Paper file reference associated with monitoring record'
+          definition: VARCHAR(100) NULL
+          meta: {}
+          layout:
+            header: 
+              key: 'paperFileID' 
+              default: 'Paper File ID'
+            classes:
+              - none
+      efficacy:
+        name: efficacy_rating
+        comment: 'Efficacy rating for the relevant treatment'
+        definition: INTEGER
+        meta: {}
+        layout:
+            header:
+                key: 'efficacy'
+                default: 'Efficacy %'
+            classes:
+                - none
+      comments:
+          name: comments
+          comment: 'Free-form comments added by mechanical monitoring observer'
+          definition: VARCHAR(500) NULL
+          meta: {}
+          required: false
+          layout:
+            header:
+              key: 'comments'
+              default: 'Comments'
+            classes:
+              - col-12
+      ## Relation Columns
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'speciesAgency'
+            default: 'Completed on Behalf of'
+          classes:
+            - none
+      species:
+          name: 'species_id'
+          comment: Foreign key reference to species table 
+          definition: INT NULL
+          foreignTable: 'species'
+          refColumn: species_id
+          deleteCascade: true
+          layout:
+            header:
+              key: 'species'
+              default: 'Species'
+            classes:
+              - none
+      mechanicalTreatmentID:
+        name: 'mechanical_treatment_id'
+        comment: 'Foreign key reference to Mechanical Treatments table'
+        definition: INT NULL
+        foreignTable: mechanical_treatment
+        refColumn: mechanical_treatment_id
+        deleteCascade: false
+        layout:
+            header:
+                key: 'mechanicalTreatmentID'
+                default: 'Treatment ID'
+            classes:
+                - none
+    ## -- Versions
+    versions: {}
+    ## --
+    ## -- Fields: Non data base fields
+    fields: {}
+    ## --
+    # Copy Columns, version from other schema
+    copyFrom:
+        # Key: SpaceGeomModelSchema
+        SpaceGeomModelSchema:
+          versions:
+            - spaceGeom
+        # -- SpaceGeomModelSchema
+  ## -- End Schema
+  Test2Schema:
+    name: sample2_table
+    description: Sample application table
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key is Schema name
+      CopySchema:
+        versions:
+          - test-copy
+    columns:
+      id:
+        comment: Sample column pk
+        required: true
+        name: sample_id
+        definition: SERIAL PRIMARY KEY
+      name:
+        comment: Name of the sample
+        required: true
+        name: sample_name
+        definition: VARCHAR(20) NULL
+        meta: {}
+        layout:
+          header:
+            key: ''
+            default: ''
+          classes:
+            - none
+    versions:
+      - name: 'test'
+        id: '12.12'
+        info: 'Test version added'
+        columns: 
+          address:
+            name: sample_address
+            definition: VARCHAR(20) NOT NULL
+            comment: Name of the sample
+          tag:
+            name: tag
+            definition: VARCHAR(200) NOT NULL
+            comment: Name of the sample
+        # --
+      # ---
+      - name: 'test2'
+        id: '12.13'
+        info: 'Test version added'
+        columns: 
+          count:
+            name: count
+            definition: VARCHAR(20) NOT NULL
+            comment: Name of the sample
+          top:
+            name: top
+            definition: VARCHAR(200) NOT NULL
+            comment: Name of the sample
+        # --
+      # ---
+    ## -- end version
+    imports:
+      init:
+        fileName: AspectCode.csv
+        entryColumns: 
+          - name
+          - address
+      # --
+    # -- end Imports
+  ## -- end Schema
+  ## --
+  CopySchema:
+    name: 'test_copy'
+    description: 'Copy schema'
+    columns: 
+      id:
+        comment: Sample column pk
+        required: true
+        name: sample_id
+        definition: SERIAL PRIMARY KEY
+      copy1:
+        comment: Sample Copy column
+        required: true
+        name: copy_1
+        definition: INT NOT NULL
+    ## -- end columns
+    ## -- ver
+    versions: 
+      - name: 'test-copy'
+        id: '12.13'
+        info: 'Test version added'
+        columns: 
+          tag1:
+            name: tag_1
+            definition: VARCHAR(200) NOT NULL
+            comment: Tag 1 column
+    ## -- end ver
+  ## --
