@@ -105,6 +105,8 @@ export class RouterService {
         return AppRoutes.AddMechanicalTreatment;
       case 'chemical':
         return AppRoutes.AddChemicalTreatment;
+      case `monitor/mechanical`:
+        return AppRoutes.AddMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -121,6 +123,8 @@ export class RouterService {
         return AppRoutes.EditMechanicalTreatment;
       case 'chemical':
         return AppRoutes.EditChemicalTreatment;
+      case 'monitor/mechanical':
+        return AppRoutes.EditMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -137,6 +141,8 @@ export class RouterService {
         return AppRoutes.ViewMechanicalTreatment;
       case 'chemical':
         return AppRoutes.ViewChemicalTreatment;
+      case 'monitor/mechanical':
+        return AppRoutes.ViewMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }

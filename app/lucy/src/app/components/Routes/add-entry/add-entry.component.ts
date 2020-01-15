@@ -32,6 +32,10 @@ export class AddEntryComponent implements OnInit {
 
   }
 
+  createMechanicalMonitoringRecord() {
+    this.routerService.navigateTo(AppRoutes.AddMechanicalMonitor);
+  }
+
   createMechanicalTreatment() {
     this.routerService.navigateTo(AppRoutes.AddMechanicalTreatment);
   }
