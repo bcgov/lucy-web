@@ -35,7 +35,7 @@ import {
     verifyErrorBody
 } from '../../../test-helpers/testHelpers';
 
-describe('Test for location route', () => {
+describe.skip('Test for location route', () => {
     before(async () => {
         await commonTestSetupAction();
         await SharedExpressApp.initExpress();
@@ -44,26 +44,26 @@ describe('Test for location route', () => {
         await commonTestTearDownAction();
     });
 
-    // it('should return well data', async () => {
-    //     const query: any = {
-    //         latitude: 48.424578999999994,
-    //         longitude: -123.36466990000001
-    //     };
-    //     await testRequest(SharedExpressApp.app, {
-    //         type: HttpMethodType.get,
-    //         url: '/api/location/gwells-data',
-    //         auth: AuthType.viewer,
-    //         expect: 200
-    //     }).query(query).then(resp => {
-    //         verifySuccessBody(resp.body, async (r: any) => {
-    //             should().exist(r);
-    //             should().exist(r.id);
-    //             should().exist(r.geometry);
-    //             should().exist(r.properties);
-    //             should().exist(r.properties.distance);
-    //         });
-    //     });
-    // });
+    it('should return well data', async () => {
+        const query: any = {
+            latitude: 48.424578999999994,
+            longitude: -123.36466990000001
+        };
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/location/gwells-data',
+            auth: AuthType.viewer,
+            expect: 200
+        }).query(query).then(resp => {
+            verifySuccessBody(resp.body, async (r: any) => {
+                should().exist(r);
+                should().exist(r.id);
+                should().exist(r.geometry);
+                should().exist(r.properties);
+                should().exist(r.properties.distance);
+            });
+        });
+    });
 
     it('should not return well data - no lat', async () => {
         const query: any = {
