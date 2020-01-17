@@ -51,7 +51,7 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   // Field header
   @Input() tabIndex = 0;
   // Optional mat-suffix
-  @Input() suffix = '';
+  @Input() suffix;
   // Optional minimum numeric value
   @Input() min: Number;
   // Optional maximum numeric value
@@ -77,6 +77,10 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     if (value) {
       this._required = value;
     }
+  }
+
+  get hasSuffix(): boolean {
+    return (this.suffix && this.suffix.length || '') > 0;
   }
 
   get fieldId(): string {

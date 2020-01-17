@@ -119,7 +119,10 @@ schemas:
             - title:
                 key: ''
                 default: ''
-              fields: []
+              fields:
+                - mixDeliveryRate
+                - tankMixes
+                - speciesObservations
               style:
                 custom: {
                   formComponent: TreatmentDetails
