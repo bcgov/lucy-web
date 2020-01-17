@@ -1,0 +1,27 @@
+version: '1.0'
+description: Schema file for table efficacy_codes
+schemas:
+  EfficacyCodesSchema:
+    name: efficacy_codes
+    description: 'Code table used in monitoring records for efficacy ratings of treatments'
+    meta:
+      resource: true
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      id:
+        name: efficacy_codes_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      efficacyRating:
+        name: efficacy_rating
+        comment: String indicating approximated treatment efficacy rating in 5-percentage point ranges
+        definition: VARCHAR(20)
+    imports:
+      init:
+        fileName: EfficacyRatings.csv
+        allColumns: true
+    versions: []
+    fields: {}
