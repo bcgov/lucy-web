@@ -42,6 +42,12 @@ import { MakeOptionalValidator } from './core.validator';
 export class BaseResourceRouteController extends RouteController {
     constructor() {
         super();
+    }
+
+    /**
+     * @description Setting up Controller
+     */
+    setup() {
         if (this.constructor.prototype._routeResourceInfo) {
             // Getting resource info
             // console.dir(this.constructor.prototype._routeResourceInfo);

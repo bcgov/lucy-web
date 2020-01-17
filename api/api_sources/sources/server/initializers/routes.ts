@@ -25,12 +25,13 @@ import { accountRoute,
     observationRoute,
     mechanicalTreatmentRoute,
     CodeTableRouteController,
-    ChemicalTreatmentRouteController,
     WatercraftRiskAssessmentRouteController,
     WaterBodyRouteController,
     ObserverWorkflowRouteController,
-    MusselsAppCodesRouteController
+    MusselsAppCodesRouteController,
+    chemicalTreatmentRoute,
 } from '../modules';
+import { LocationRouteController } from '../modules/location';
 import { defaultRoute, miscellaneousRouter } from '../modules';
 
 /**
@@ -51,7 +52,7 @@ export const routes = (app: Application) => {
     app.use('/api/treatment/mechanical', mechanicalTreatmentRoute());
 
     // Chemical Treatment
-    app.use('/api/treatment/chemical', ChemicalTreatmentRouteController.shared.router);
+    app.use('/api/treatment/chemical', chemicalTreatmentRoute());
 
     // Codes
     app.use('/api/codes', CodeTableRouteController.shared.router);
@@ -67,6 +68,9 @@ export const routes = (app: Application) => {
 
     // Mussels App Codes
     app.use('/api/mussels/codes', MusselsAppCodesRouteController.shared.router);
+
+    // Location
+    app.use('/api/location', LocationRouteController.shared.router);
 
     // Miscellaneous
     app.use('/api/misc', miscellaneousRouter());

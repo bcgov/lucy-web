@@ -3,14 +3,10 @@
         
 CREATE TABLE chemical_treatment ();
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_id SERIAL PRIMARY KEY;
-ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_location_latitude NUMERIC(8, 6) NOT NULL;
-ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_location_longitude NUMERIC(9, 6) NOT NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_date DATE NOT NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_primary_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN chemical_treatment_secondary_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN pesticide_use_permit VARCHAR(60) NULL;
-ALTER TABLE chemical_treatment ADD COLUMN plot_width NUMERIC(6,2) NULL;
-ALTER TABLE chemical_treatment ADD COLUMN plot_length NUMERIC(6,2) NULL;
 ALTER TABLE chemical_treatment ADD COLUMN temperature SMALLINT NULL;
 ALTER TABLE chemical_treatment ADD COLUMN humidity SMALLINT NULL;
 ALTER TABLE chemical_treatment ADD COLUMN wind_speed NUMERIC(4,1) NULL;
@@ -28,14 +24,10 @@ ALTER TABLE chemical_treatment ADD COLUMN second_applicator_chemical_treatment_e
 COMMENT ON TABLE chemical_treatment IS 'An application of a herbicide. Various herbicides are used for spot treatments of weeds in British Columbia. The herbicide selected should depend on the target weed species and environmental factors. Application rate will be dictated by the size and accessibility of the infestation, its proximity to wells and other water, and the potential impacts of the application on non-target vegetation. Some herbicides have residual effects and persist in the soil in an active state for some time after application. Other herbicides become inactive once they contact soil. The residual activity of a herbicide varies with rate of application, soil properties, and climate, and its impact on non-target vegetation should be carefully considered.
 To types of herbicide formats: granular and liquid. IAPP allows for liquid particulars only. Lucy will need to cover off both.';
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_id IS 'Auto generated primary key. This is auto incremental field';
-COMMENT ON COLUMN chemical_treatment.chemical_treatment_location_latitude IS 'Latitude of treatment  location';
-COMMENT ON COLUMN chemical_treatment.chemical_treatment_location_longitude IS 'Longitude of treatment location';
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_date IS 'Date of the treatment';
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_primary_paper_file_ref IS 'Primary paper file Paper file reference associated with treatment';
 COMMENT ON COLUMN chemical_treatment.chemical_treatment_secondary_paper_file_ref IS 'Secondary paper file Paper file reference associated with treatment';
 COMMENT ON COLUMN chemical_treatment.pesticide_use_permit IS 'Use permit code of pesticide usage. This is free form information';
-COMMENT ON COLUMN chemical_treatment.plot_width IS 'The width of the treatment area, in metres';
-COMMENT ON COLUMN chemical_treatment.plot_length IS 'The length of the treatment area, in metres';
 COMMENT ON COLUMN chemical_treatment.temperature IS 'The recorded air temperature at the site of the treatment area at the time of treatment, in degrees Celsius';
 COMMENT ON COLUMN chemical_treatment.humidity IS 'The recorded air humidity at the site of the treatment area at the time of treatment, as a percentage';
 COMMENT ON COLUMN chemical_treatment.wind_speed IS 'The recorded wind speed at the site of the treatment area at the time of treatment, in km/h';

@@ -9,7 +9,11 @@ schemas:
     description: 'Table to store herbicide information'
     meta: 
       resource: true
-    displayLayout: {}
+    displayLayout:
+      displayLabel: '#(compositeName)'
+      header:
+        key: Herbicide.header
+        default: 'Herbicide'
     layout: {}
     computedFields: {}
     relations: {}

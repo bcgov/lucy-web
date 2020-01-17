@@ -6,6 +6,19 @@
     letter-spacing: 1pt;
 }
 
+.sub-section-title {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 22px;
+    margin-left: 2pt;
+}
+
+.thinOrangeDivider {
+    border: 1px solid #F3B229;
+    margin-top: -4pt;
+}
+
 .speciesContainer {
     border-style: solid;
     border-radius: 4pt;
@@ -24,18 +37,18 @@
     border-width: 2pt;
     height: auto;
     display: flex;
-    overflow: auto;
     align-items: center;
-    text-align: left;
-    padding-top: 16pt;
-    padding-bottom: 16pt;
+    padding: 3pt;
     margin-top: 6pt;
 }
 
-.percentageField {
-    width: auto;
-    min-width: 30pt;
-    max-width: 40pt;
+.animation-config {
+    animation-duration: 2s;
+    animation-delay: 0.5s;
+}
+
+#percentageField {
+    width: 100%;
     padding: 3pt;
     border-top: none;
     border-left: none;
@@ -49,15 +62,16 @@
     border-color: #f1f1f3;
     border-width: 2pt;
     display: flex;
-    overflow: auto;
-    align-items: center;
-    text-align: left;
-    padding-top: 16pt;
-    padding-bottom: 16pt;
+    padding: 3pt;
     margin-top: 6pt;
+    margin-bottom: 3pt;
 }
 
-.addSpeciesCard {
+.speciesNotTreatedCard .card-title {
+    align-items: flex-start;
+}
+
+.add-species-card {
     background-color: #F5F6FA;
     border-radius: 4pt;
     text-align: center;
@@ -66,14 +80,30 @@
     display: flex;
 }
 
+.card-title {
+    overflow-wrap: break-word;
+}
+
+.speciesTreatedCard .card-title {
+    font-weight: bold;
+}
+
+.add-species-card-content {
+    display: inline-flex;
+    margin: auto;
+}
+
 .treatButton {
     height: auto;
     width: auto;
     font-size: smaller;
+    text-align: right;
     display: flex;
     margin-left: auto;
-    margin-top: auto;
-    margin-bottom: auto;
+}
+
+#deleteButton {
+    margin-left: auto;
 }
 
 .addSpeciesButton {
@@ -87,4 +117,15 @@
     margin-right: auto;
     margin-top: auto;
     margin-bottom: auto;
+}
+
+#emptySpeciesTreatedContainer {
+    background-color: #E1E1E6;
+    border-radius: 4pt;
+    text-align: center;
+    padding: 15pt;
+}
+
+app-add-quick-observation-modal {
+    opacity: 1;
 }

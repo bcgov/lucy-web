@@ -23,7 +23,6 @@
 /**
   * Imports
   */
-import * as faker from 'faker';
 import { Destroy, ModelSpecFactory } from './helper';
 import { MechanicalTreatment,
   MechanicalTreatmentController,
@@ -32,9 +31,18 @@ import { MechanicalTreatment,
   User,
   UserDataController,
   Observation,
-  ObservationController} from '../models';
+  ObservationController,
+  ChemicalTreatmentSpec,
+  ChemicalTreatmentController,
+  ChemicalTreatment,
+  HerbicideTankMix,
+  HerbicideTankMixController,
+  ChemicalTreatmentUpdateSpec,
+  ObservationChemicalTreatmentUpdateSpec} from '../models';
 import { userFactory } from './userFactory';
 import { observationFactory } from './observationFactory';
+import { speciesAgencyCodeFactory } from './observationCodesFactory';
+import * as faker from 'faker';
 
 
 /**
@@ -67,11 +75,51 @@ export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, Mechanica
 
 export const mechanicalTreatmentUpdateSpecFactory = async (): Promise<MechanicalTreatmentUpdateSpec> => {
   return {
-    latitude: parseFloat(faker.address.latitude()) || 0.0,
-    width: faker.random.number(),
-    length: faker.random.number(),
     observation: (await observationFactory()),
   };
 };
 
 // ------------------------------------------------------------
+// ------------- Chemical Treatment factories
+/**
+ * @description Factory to create chemical treatment spec.
+ */
+export const chemicalTreatmentCreateSpecFactory = async (): Promise<ChemicalTreatmentSpec> => {
+  return await ModelSpecFactory(ChemicalTreatmentController.shared)();
+};
+
+export const chemicalTreatmentUpdateSpecFactory = async (): Promise<ChemicalTreatmentUpdateSpec> => {
+  return {
+    mixDeliveryRate: faker.random.number(),
+    speciesAgency: (await speciesAgencyCodeFactory()),
+  };
+};
+
+export const observationChemicalTreatmentUpdateSpecFactory = async (): Promise<ObservationChemicalTreatmentUpdateSpec> => {
+  return {
+    treatmentAreaCoverage: faker.random.number({min: 0, max: 100}),
+    observation: (await observationFactory())
+  };
+};
+
+/**
+ * @description ChemicalTreatment factory
+ */
+export const chemicalTreatmentFactory = async () => {
+  const spec = await chemicalTreatmentCreateSpecFactory();
+  return await ChemicalTreatmentController.shared.createNewObject(spec, await userFactory());
+};
+
+/**
+ * @description ChemicalTreatment factory obj destroyer
+ */
+export const destroyChemicalTreatment = Destroy<ChemicalTreatment, ChemicalTreatmentController>(ChemicalTreatmentController.shared, async (obj: ChemicalTreatment) => {
+  if (obj.createdBy) {
+    await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
+  }
+  if (obj.tankMixes) {
+    for (let index = 0; index < obj.tankMixes.length; index++) {
+      await Destroy<HerbicideTankMix, HerbicideTankMixController>(HerbicideTankMixController.shared)(obj.tankMixes[index]);
+    }
+  }
+});

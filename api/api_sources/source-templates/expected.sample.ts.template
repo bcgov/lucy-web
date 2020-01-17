@@ -1,0 +1,18 @@
+// This is a sample template file
+export class Test {
+    
+        /**
+         * The Property: Value to store p1 
+        */
+        
+        p1: number;
+    
+        /**
+         * The Property: Value to store p2 
+        */
+        // Comment on line: Line commented with if Hello
+        p2: string;
+    
+} 
+
+// -------------------

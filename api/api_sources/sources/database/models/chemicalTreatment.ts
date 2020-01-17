@@ -8,7 +8,8 @@ import {
 	ProjectManagementPlanCodeSchema,
     ChemicalTreatmentEmployeeSchema,
 	WindDirectionCodesSchema,
-	ChemicalTreatmentMethodCodeSchema
+	ChemicalTreatmentMethodCodeSchema,
+	SpaceGeomSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
@@ -19,7 +20,8 @@ import {
 	ProjectManagementPlanCode,
 	ChemicalTreatmentEmployee,
 	WindDirectionCodes,
-	ChemicalTreatmentMethodCode
+	ChemicalTreatmentMethodCode,
+	SpaceGeom
 } from '../models';
 
 import { Record } from './generic.data.models';
@@ -31,14 +33,10 @@ import { ObservationChemicalTreatment } from './observationChemicalTreatment';
  * @description ChemicalTreatment create interface
  */
 export interface ChemicalTreatmentSpec {
-	latitude: number;
-	longitude: number;
 	date: string;
 	primaryPaperFileReference: string;
 	secondaryPaperFileReference: string;
 	pup: string;
-	plotWidth: number;
-	plotLength: number;
 	temperature: number;
 	humidity: number;
 	windSpeed: number;
@@ -49,6 +47,9 @@ export interface ChemicalTreatmentSpec {
 	secondApplicator: ChemicalTreatmentEmployee;
 	windDirection: WindDirectionCodes;
 	methodCode: ChemicalTreatmentMethodCode;
+	additionalComments: string;
+	mixDeliveryRate: number;
+	spaceGeom: SpaceGeom;
 }
 // -- End: ChemicalTreatmentSpec --
 
@@ -58,14 +59,10 @@ export interface ChemicalTreatmentSpec {
  * @description ChemicalTreatment update interface
  */
 export interface ChemicalTreatmentUpdateSpec {
-	latitude?: number;
-	longitude?: number;
 	date?: string;
 	primaryPaperFileReference?: string;
 	secondaryPaperFileReference?: string;
 	pup?: string;
-	plotWidth?: number;
-	plotLength?: number;
 	temperature?: number;
 	humidity?: number;
 	windSpeed?: number;
@@ -76,6 +73,9 @@ export interface ChemicalTreatmentUpdateSpec {
 	secondApplicator?: ChemicalTreatmentEmployee;
 	windDirection?: WindDirectionCodes;
 	methodCode?: ChemicalTreatmentMethodCode;
+	additionalComments?: string;
+	mixDeliveryRate?: number;
+	spaceGeom?: SpaceGeom;
 }
 // -- End: ChemicalTreatmentUpdateSpec --
 
@@ -100,20 +100,6 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
 	chemical_treatment_id: number;
-
-	/**
-	 * @description Getter/Setter property for column {chemical_treatment_location_latitude}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.latitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	latitude: number;
-
-	/**
-	 * @description Getter/Setter property for column {chemical_treatment_location_longitude}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.longitude, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	longitude: number;
 
 	/**
 	 * @description Getter/Setter property for column {chemical_treatment_date}
@@ -142,20 +128,6 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@Column({ name: ChemicalTreatmentSchema.columns.pup})
 	@ModelProperty({type: PropertyType.string})
 	pup: string;
-
-	/**
-	 * @description Getter/Setter property for column {plot_width}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.plotWidth, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	plotWidth: number;
-
-	/**
-	 * @description Getter/Setter property for column {plot_length}
-	 */
-	@Column({name: ChemicalTreatmentSchema.columns.plotLength, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	plotLength: number;
 
 	/**
 	 * @description Getter/Setter property for column {temperature}
@@ -234,16 +206,40 @@ export class ChemicalTreatment extends Record implements ChemicalTreatmentSpec {
 	@ModelProperty({type: PropertyType.object})
 	methodCode: ChemicalTreatmentMethodCode;
 
+    /**
+	 * @description Getter/Setter property for column {space_geom_id}
+	 */
+	@ManyToOne( type => SpaceGeom, { eager: true})
+	@JoinColumn({ name: ChemicalTreatmentSchema.columns.spaceGeom, referencedColumnName: SpaceGeomSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	spaceGeom: SpaceGeom;
+
+	/**
+	 * @description Getter/Setter property for column {additional_comments}
+	 */
+	@Column({ name: ChemicalTreatmentSchema.columns.additionalComments})
+	@ModelProperty({type: PropertyType.string})
+	additionalComments: string;
+
+	/**
+	 * @description Getter/Setter property for column {mix_delivery_rate}
+	 */
+	@Column({name: ChemicalTreatmentSchema.columns.mixDeliveryRate, transformer: new NumericTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	mixDeliveryRate: number;
+
 	/**
 	 * @description Getter/Setter property for tankMixes
 	 */
 	@OneToMany( type => HerbicideTankMix, tankMix => tankMix.chemicalTreatment, {eager: true})
+	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/HerbicideTankMix'})
 	tankMixes: HerbicideTankMix[];
 
 	/**
 	 *  @description Getter/Setter property for related observations
 	 */
 	@OneToMany( type => ObservationChemicalTreatment, obj => obj.chemicalTreatment, { eager: true})
+	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/ObservationChemicalTreatment'})
 	speciesObservations: ObservationChemicalTreatment[];
 
 }

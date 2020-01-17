@@ -39,8 +39,8 @@ import { userFactory } from '../../../../database/factory';
  */
 describe('Test account routes', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();

@@ -1,6 +1,7 @@
 version: '1.0'
 includes:
   - treatment.schema.yaml
+  - spaceGeom.schema.yaml
 schemas:
   ## -- MechanicalTreatmentSchema
   MechanicalTreatmentSchema:
@@ -20,14 +21,6 @@ schemas:
             default: 'Species'
           key: species.commonName
         - header:
-            key: 'latitude'
-            default: 'Latitude'
-          key: latitude
-        - header:
-            key: 'longitude'
-            default: 'Longitude'
-          key: longitude
-        - header:
             key: 'date'
             default: 'Date'
           key: date
@@ -42,10 +35,9 @@ schemas:
           groups:
             - title: 
                 key: '' 
-                default: Location
+                default: Location and Geometry
               fields: 
-                - latitude
-                - longitude
+                - spaceGeom
               style: {}
             - title: 
                 key: '' 
@@ -63,13 +55,6 @@ schemas:
               fields: 
                 - date
                 - paperFileReference
-              style: {}
-            - title: 
-                key: '' 
-                default: Geometry
-              fields:
-                - width
-                - length
               style: {}
         # End-Section
         - title: 
@@ -109,17 +94,7 @@ schemas:
       # End-Section
     # End Of Layouts
     # Computed fields
-    computedFields:
-      observationArea:
-        header:
-          key: observationArea
-          default: Observed area
-        computationRules:
-          - name: Compute Area
-            keys:
-              - width
-              - length
-            method: calculateArea
+    computedFields: {}
     # End - Computed fields
     columns: 
       # -- Data Columns
@@ -127,51 +102,6 @@ schemas:
         name: 'mechanical_treatment_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
-      latitude:
-        name: 'mechanical_treatment_location_latitude'
-        comment: 'Latitude of treatment  location'
-        definition: NUMERIC(8, 6) NOT NULL
-        meta: {}
-        layout:
-          header: 
-            key: 'latitude' 
-            default: 'Latitude'
-          description: ''
-          classes:
-            - none
-      longitude:
-        name: 'mechanical_treatment_location_longitude'
-        comment: 'Longitude of treatment location'
-        definition: NUMERIC(9, 6) NOT NULL
-        meta: {}
-        layout:
-          header: 
-            key: 'longitude' 
-            default: 'Longitude'
-          classes:
-            - none
-      width:
-        name: 'mechanical_treatment_area_width'
-        comment: 'Width of the area of treatment'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
-        meta: {}
-        layout:
-          header: 
-            key: 'width' 
-            default: 'Width'
-          classes:
-            - none
-      length:
-        name: 'mechanical_treatment_area_length'
-        comment: 'Length of the area of treatment'
-        definition: NUMERIC(7, 2) NULL DEFAULT 0.0
-        meta: {}
-        layout:
-          header: 
-            key: 'length' 
-            default: 'Length'
-          classes:
-            - none
       applicatorFirstName: 
         name: 'applicator_first_name'
         comment: 'First name of the applicator'
@@ -396,5 +326,14 @@ schemas:
             default: 'Contractor'
           classes:
             - none
-
+    # End - Columns
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
   ## --
