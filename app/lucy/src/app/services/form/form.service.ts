@@ -633,6 +633,7 @@ export class FormService {
             case 'number': {
               // Number is input field
               fieldOfInterest.isInputField = true;
+              fieldOfInterest.suffix = field.layout.suffix || '';
               break;
             }
             case 'string': {
@@ -901,7 +902,9 @@ export class FormService {
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
         if (subSection.isCustom) {
-          continue;
+          for (const field of subSection.fields) {
+            field.value = object[field.key];
+          }
         }
         for (const field of subSection.fields) {
           if (field.isLocationField) {
@@ -918,7 +921,7 @@ export class FormService {
           } else {
             if (object[field.key] !== undefined) {
               const key = object[field.key];
-              if (typeof key === 'object' && key !== null) {
+              if (!config.relationKeys.includes(field.key) && typeof key === 'object' && key !== null) {
                 field.value = await this.getDropdownObjectWithId(
                   field.codeTable,
                   field.displayKey,
