@@ -21,12 +21,23 @@
  * -----
  */ 
 
-import { RecordTableSchema} from './base.record.schema';
+import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
 import { getYAMLFilePath } from '../../libs/core-database';
 
 export class MechanicalMonitorSchema extends RecordTableSchema {
 
     get schemaFilePath(): string {
         return getYAMLFilePath('mechanicalMonitor.schema.yaml');
+    }
+}
+
+export class EfficacyCodeSchema extends CodeTableSchema {
+
+    get schemaFilePath(): string {
+        return getYAMLFilePath('efficacyCodes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
     }
 }

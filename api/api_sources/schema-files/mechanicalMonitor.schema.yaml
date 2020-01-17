@@ -1,6 +1,7 @@
 version: '1.0'
 includes:
     - spaceGeom.schema.yaml
+    - efficacyCodes.schema.yaml
 schemas:
   ## -- Example
   MechanicalMonitorSchema:

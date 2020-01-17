@@ -10,6 +10,7 @@ import { SpeciesAgencyCode,
 } from '../models';
 
 import { BaseModel } from './baseModel';
+import { MechanicalTreatment } from './mechanical.treatment';
 
 /** Interface **/
 /**
@@ -95,7 +96,7 @@ export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpe
 	/**
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
-	@ManyToOne( type => #MODEL, { eager: true})
+	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
 	@JoinColumn({ name: MechanicalMonitorSchema.columns.speciesAgency, referencedColumnName: #SCHEMA-NAME.pk})
 	@ModelProperty({type: PropertyType.object})
 	speciesAgency: SpeciesAgencyCode;
@@ -111,10 +112,10 @@ export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpe
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_id}
 	 */
-	@ManyToOne( type => #MODEL, { eager: true})
-	@JoinColumn({ name: MechanicalMonitorSchema.columns.mechanicalTreatmentID, referencedColumnName: #SCHEMA-NAME.pk})
+	@ManyToOne( type => MechanicalTreatment, { eager: true})
+	@JoinColumn({ name: MechanicalMonitorSchema.columns.mechanicalTreatmentID, referencedColumnName: MechanicalTreatmentSchema.mechanical_treatment_id})
 	@ModelProperty({type: PropertyType.object})
-	mechanicalTreatmentID: object;
+	mechanicalTreatmentID: MechanicalTreatment;
 
 }
 
