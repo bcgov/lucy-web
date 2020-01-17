@@ -51,6 +51,12 @@ export class ChemicalTreatmentRouteController extends ResourceRouteController<Ch
     }
 }
 
-export const chemicalTreatmentRoute = (): Router => ChemicalTreatmentRouteController.shared.router;
-
+/**
+ * @description Function to return Chemical Treatment route handle
+ * @export const chemicalTreatmentRoute
+ */
+export const chemicalTreatmentRoute = (): Router => {
+    const controller = new ChemicalTreatmentRouteController();
+    return controller.router;
+};
 // ---------------------------------------------------------

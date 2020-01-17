@@ -32,6 +32,7 @@ export interface InputConfig {
     description: string;
     required: boolean;
     type: string;
+    suffix: string;
     verification: any;
     meta: any;
     cssClasses: string;
@@ -40,6 +41,8 @@ export interface InputConfig {
     displayKey: string;
     condition: string;
     value?: any;
+    dropdown?: any;
+    embeddedFields?: {[key: string]: InputConfig};
 }
 
 /**
@@ -80,6 +83,7 @@ export interface RemoteFormConfig {
         };
         meta: {};
         type: number;
+        suffix: string;
         verification: {};
         required: boolean;
     }[];

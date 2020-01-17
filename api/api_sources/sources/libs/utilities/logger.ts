@@ -27,4 +27,15 @@ export interface BaseLogger {
     error(start: string, ...other: any[]): any;
 
 }
+
+export const DefaultLogger = {
+    log: (start: string, ...other: any[]) => {},
+    info: (start: string, ...other: any[]) => {},
+    warning: (start: string, ...other: any[]) => {
+        return console.warn.apply(console, [start, ...other]);
+    },
+    error: (start: string, ...other: any[]) => {
+        return console.error.apply(console, [start, ...other]);
+    }
+};
 // ----------------------------

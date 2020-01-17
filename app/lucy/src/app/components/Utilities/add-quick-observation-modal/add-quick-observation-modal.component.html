@@ -1,0 +1,52 @@
+<ng-template #addQuickObservationModal let-modal>
+    <!-- Modal Title -->
+    <div class="modal-header text-center">
+        <div class="col">
+            <h5 class="modal-title">Additional Species details</h5>
+        </div>
+    </div>
+    <!-- Modal Body -->
+    <div class="modal-body text-center">
+        <div class="col">
+            <div class="row">
+                <p>This feature coming soon...</p>
+                <lottie-animation-view [options]="lottieConfig" (animCreated)="handleAnimation($event)">
+                </lottie-animation-view>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row">
+            <div class="col-6">
+                <app-dropdown [mode]="mode" fieldHeader="Species" [items]="speciesDropdownObjects"></app-dropdown>
+            </div>
+            <div class="col-6">
+                <app-dropdown [mode]="mode" fieldHeader="Species Density" [items]="densityDropdownObjects"></app-dropdown>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <app-dropdown [mode]="mode" fieldHeader="Species Distribution" [items]="distributionDropdownObjects"></app-dropdown>
+            </div>
+            <div class="col-6">
+                <app-dropdown [mode]="mode" fieldHeader="Survey Type" [items]="surveyTypeDropdownObjects"></app-dropdown>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <app-dropdown [mode]="mode" fieldHeader="Soil Texture" [items]="soilTextureDropdownObjects"></app-dropdown>
+            </div>
+        </div> -->
+
+    <div class="modal-footer text-center">
+        <div class="col">
+            <button type="button" class="btn button-hollow msg-modal-btn" (click)="removeModal()">
+              Back
+            </button>
+        </div>
+        <!-- <div class="col">
+            <button type="button" class="btn button-fill msg-modal-btn" (click)="submitObservation()">
+              Add
+            </button>
+        </div> -->
+    </div>
+</ng-template>

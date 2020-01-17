@@ -51,11 +51,12 @@ import {
     RequestFactory
 } from '../../../../database/factory';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
+import { ObservationSchema } from '../../../../database/database-schema';
 
 describe('Test for observation routes', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();
@@ -149,7 +150,9 @@ describe('Test for observation routes', () => {
 
     it('should create observation', async () => {
         const spec = await ModelSpecFactory(ObservationController.shared)();
-        const create = RequestFactory<any>(spec);
+        const create = RequestFactory<any>(spec, {
+            schema: ObservationSchema.shared
+        });
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
             url: '/api/observation',
@@ -168,7 +171,6 @@ describe('Test for observation routes', () => {
                 should().exist(body.observationType);
                 should().exist(body.soilTexture);
                 should().exist(body.specificUseCode);
-                should().exist(body.observationGeometry);
                 should().exist(body.slopeCode);
                 should().exist(body.aspectCode);
                 should().exist(body.proposedAction);
@@ -199,7 +201,7 @@ describe('Test for observation routes', () => {
     it('should not update observation with {id} for viewer', async () => {
         const obs = await observationFactory();
         const update = {
-            lat: 35.78
+            accessDescription: 'Long distance'
         };
         await testRequest(SharedExpressApp.app , {
             type: HttpMethodType.put,
@@ -219,8 +221,6 @@ describe('Test for observation routes', () => {
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const update = {
-            horizontalDimension: 6700.78,
-            verticalDimension: 900.00,
             accessDescription: 'Test description',
             researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
@@ -243,7 +243,6 @@ describe('Test for observation routes', () => {
                 should().exist(body.researchIndicator);
                 should().exist(body.rangeUnitNumber);
                 expect(body.researchIndicator).to.be.equal(true);
-                expect(body.verticalDimension).to.be.equal(update.verticalDimension);
                 expect(body.rangeUnitNumber).to.be.equal(update.rangeUnitNumber);
                 expect(body.date).to.be.equal(update.date);
             });

@@ -18,8 +18,8 @@ const resourceName = 'Water-body';
 const controller: DataController = WaterBodyController.shared;
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();

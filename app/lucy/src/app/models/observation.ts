@@ -16,6 +16,7 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { MechanicalTreatment } from './MechanicalTreatment';
+import { ChemicalTreatment } from './ChemicalTreatment';
 
 export interface Observation {
   updatedAt: any;
@@ -24,6 +25,10 @@ export interface Observation {
     observation_id: number;
     lat: number;
     long: number;
+    spaceGeom: {
+        latitude: number;
+        longitude: number;
+    };
     date: string;
     // Observer
     observerFirstName: string;
@@ -58,6 +63,7 @@ export interface Observation {
     slopeCode: SlopeCodes;
     observationGeometry: ObservationGeometryCodes;
     mechanicalTreatments: MechanicalTreatment[];
+    chemicalTreatments: ChemicalTreatment[];
 }
 
 export interface ProposedActionCodes {
