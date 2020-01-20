@@ -16,7 +16,7 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { TestBed } from '@angular/core/testing';
-import * as hexTest from './hexTest.json';
+import * as bcHexTest from './bcHexTest.json';
 import * as insideOutsideTest from './insideOutsideTest.json';
 
 import { ConverterService } from './location.service';
@@ -48,24 +48,20 @@ describe('ConverterService', () => {
 
   it('should produce correct hex ids', () => {
     const service: ConverterService = TestBed.get(ConverterService);
-    const obj = JSON.parse(JSON.stringify(hexTest)).default;
+    const obj = JSON.parse(JSON.stringify(bcHexTest)).default;
         let success = 0;
         let fail = 0;
         for (const item of obj) {
-          const x = service.getHexId(item.latitude, item.longitude);
+          const x = service.getHexId(item.longitude, item.latitude);
           let passed = true;
-          if (item.hexID != x.cc) {
+          if (item.CC !== x.cc || item.UR !== x.ur || item.CR !== x.cr || item.LR !== x.lr || item.LL !== x.ll || item.CL !== x.cl || item.UL !== x.ul) {
             passed = false;
           }
-          // if (item.strataID != x.strataId) {
-          //   passed = false;
-          // }
           if (!passed) {
             fail++;
             console.log(`\n***`);
-            console.log(`expected hexID: ${item.hexID}`);
+            console.log(`expected hexID: ${item.CC}`);
             console.log(`received hexID: ${x.cc}`);
-            // break;
           } else {
             success ++;
           }
