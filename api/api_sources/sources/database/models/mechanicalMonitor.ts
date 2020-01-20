@@ -97,7 +97,7 @@ export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpe
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
 	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
-	@JoinColumn({ name: MechanicalMonitorSchema.columns.speciesAgency, referencedColumnName: #SCHEMA-NAME.pk})
+	@JoinColumn({ name: MechanicalMonitorSchema.columns.speciesAgency, referencedColumnName: SpeciesAgencyCode.species_agency_code_id})
 	@ModelProperty({type: PropertyType.object})
 	speciesAgency: SpeciesAgencyCode;
 
