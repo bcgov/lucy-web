@@ -151,8 +151,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     if (this.map) { return; }
     this.map = L.map(this.mapId).setView([center.latitude, center.latitude], center.zoom);
     this.markerGroup = L.layerGroup().addTo(this.map);
-    // this.initMapWithGoogleSatellite();
-    this.initWithOpenStreet();
+    this.initMapWithGoogleSatellite();
+    // this.initWithOpenStreet();
   }
 
   private initWithOpenStreet() {

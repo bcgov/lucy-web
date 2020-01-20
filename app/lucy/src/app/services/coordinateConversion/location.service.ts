@@ -337,8 +337,6 @@ export class ConverterService {
   ): AlbersCoordinate {
     const a = this.b;
     const e2 = 2 * (1 / 298.257) - Math.pow(1 / 298.257, 2);
-    // const k = this.k0;
-    // const ep2 = e2 / (1 - e2);
     const offsetX = 1000000;
     const offsetY = 0;
 
@@ -467,6 +465,7 @@ export class ConverterService {
     const yheight2 = radiusO + yheight;
     const xWidth2 = radiusO * r3;
     const hexPTS: any[] = this.getHexRules();
+
     // Local variables
     let gridID = 0;
     const hexagons: any[] = [];
@@ -479,14 +478,17 @@ export class ConverterService {
     const albersResult = this.latLongCoordinateToAlbers(startY, startX);
     let albersX0 = albersResult.x;
     let albersY0 = albersResult.y;
+
     // Convert target lat long to albers
     const albersTargetResult = this.latLongCoordinateToAlbers(latitude, longitude);
     const albersX0new = albersTargetResult.x;
     const albersY0new = albersTargetResult.y;
+
     // Find Target relative to center
     const deltaX = albersX0new - albersX0;
     const deltaY = albersY0new - albersY0;
-    const ticX = Math.round(deltaX / xWidth2);
+
+    const ticX = Math.floor(deltaX / xWidth2);
     let ticY = Math.round(deltaY / yheight2);
 
     if ((ticY % 2) !== 0) {
@@ -587,6 +589,7 @@ export class ConverterService {
     for (let i = 1; i <= totalHEX; i++) {
       const hexagon = hexagons.find(item => item.hexID === i);
       const dxy = Math.pow((Math.pow((hexagon.xAlb0 - target.xAlb0), 2) + Math.pow((hexagon.yAlb0 - target.yAlb0), 2)), 0.5);
+      /** TODO: CHECK THIS NUMBER */
       if (dxy < 130) {
         hexagon.keep = 1;
       }
@@ -599,6 +602,7 @@ export class ConverterService {
         index: i
       };
       if (hexagon.keep === 1) {
+        /** TODO: CHECK THIS NUMBER */
         kk = kk + 1;
         newTarget.targetID = kk;
         newTarget.xAlb0 = hexagon.xAlb0;
@@ -797,9 +801,9 @@ export class ConverterService {
     final7.xLon0 = target7[closestIndex].xLon0;
     final7.yLat0 = target7[closestIndex].yLat0;
 
-    let bchexID = (Math.round(final7.yLat0) * 10000 + Math.round((final7.yLat0 - Math.round(final7.yLat0)) * 10000));
+    let bchexID = (Math.floor(final7.yLat0) * 10000 + Math.floor((final7.yLat0 - Math.floor(final7.yLat0)) * 10000));
     bchexID = bchexID * 1000000;
-    bchexID = Math.round(bchexID + ((Math.round(-1 * final7.xLon0)) - 100) * 10000 + (-1 * final7.xLon0 - Math.round(-1 * final7.xLon0)) * 10000);
+    bchexID = Math.floor(bchexID + ((Math.floor(-1 * final7.xLon0)) - 100) * 10000 + (-1 * final7.xLon0 - Math.floor(-1 * final7.xLon0)) * 10000);
 
     neighbors.push((bchexID));
     return this.getNeighbor(offsets, target, target7, neighbors);

@@ -76,7 +76,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private errorService: ErrorService,
-    private coodrinateConvert: ConverterService,
     private routerService: RouterService,
     private ssoService: SsoService,
     private messageService: MessageService,
@@ -93,14 +92,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.temp_testInOut();
-    this.temp_testHex();
-  }
-
-  temp_testHex() {
-    const test_1 = this.coodrinateConvert.getHexId(-125.9970, 54.0000);
-    console.log('1 -> ' + test_1.cc);
-    console.dir(test_1);
   }
 
   ngOnDestroy() {
