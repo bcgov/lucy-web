@@ -24,28 +24,6 @@ import { ConverterService } from './location.service';
 describe('ConverterService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
-  // it('should be created', () => {
-  //   const service: ConverterService = TestBed.get(ConverterService);
-  //   expect(service).toBeTruthy();
-  // });
-
-  // it('should produce correct hex id - 1', () => {
-  //   const service: ConverterService = TestBed.get(ConverterService);
-  //   const latitude = 53.615360;
-  //   const longitude  = -132.306680;
-  //   const hexID = 53615432307;
-  //   const strataID = 967;
-  //   const x = service.getHexId(longitude, latitude);
-  //   let passed = true;
-  //   if (hexID - 1001 != x.target.BCHexID) {
-  //     passed = false;
-  //   }
-  //   if (strataID != x.strataID) {
-  //     passed = false;
-  //   }
-  //   expect(passed).toBeTruthy();
-  // });
-
   it('should produce correct hex ids', () => {
     const service: ConverterService = TestBed.get(ConverterService);
     const obj = JSON.parse(JSON.stringify(bcHexTest)).default;
