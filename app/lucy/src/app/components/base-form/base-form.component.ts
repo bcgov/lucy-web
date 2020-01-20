@@ -609,7 +609,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /////////// END Submission error handling ///////////
 
   shouldShowRelationship(forKey: string): boolean {
-    return (this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects);
+    return ( this.config.api === '/treatment/chemical' ? false : this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects);
   }
 
   // convert section title to a camelcased id
