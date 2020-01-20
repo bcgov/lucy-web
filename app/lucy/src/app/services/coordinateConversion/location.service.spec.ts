@@ -82,7 +82,7 @@ describe('ConverterService', () => {
         let success = 0;
         let fail = 0;
         for (const item of obj) {
-          const isIn = service.isInsideBC(item.longitude, item.latitude);
+          const isIn = service.isInsideBC(item.latitude, item.longitude);
           const passed = (isIn === item.inside) ;
           if (!passed) {
             fail++;
@@ -96,5 +96,68 @@ describe('ConverterService', () => {
         console.log(`passed: ${success}`);
         console.log(`failed: ${fail}`);
     expect(fail).toBeLessThan(1);
+  });
+  it('should Convert from Lat Long to Albers', () => {
+    const service: ConverterService = TestBed.get(ConverterService);
+    const longitude = -119.472548;
+    const latitude = 49.905577;
+    const albersX = 1468294.70085;
+    const albersY = 564887.24757;
+    const roundTo = 3;
+    const latLongToAlbers = service.latLongCoordinateToAlbers(latitude, longitude)
+    const successful = (latLongToAlbers.x.toFixed(roundTo) === albersX.toFixed(roundTo) && latLongToAlbers.y.toFixed(roundTo) === albersY.toFixed(roundTo));
+    if (!successful) {
+      console.log(`**** latLong To Albers`);
+      console.log(latLongToAlbers);
+    }
+    expect(successful).toBeTruthy();
+  });
+  it('should Convert from Albers to Lat Long', () => {
+    const service: ConverterService = TestBed.get(ConverterService);
+    const longitude = -119.472548;
+    const latitude = 49.905577;
+    const albersX = 1468294.70085;
+    const albersY = 564887.24757;
+    const roundTo = 3;
+    const albersToLatLong = service.albersToLatLongCoordinate(albersX, albersY);
+    const successful = (albersToLatLong.latitude.toFixed(roundTo) === latitude.toFixed(roundTo) && albersToLatLong.longitude.toFixed(roundTo) === longitude.toFixed(roundTo));
+    if (!successful) {
+      console.log(`**** albers To LatLong`);
+      console.log(albersToLatLong);
+    }
+    expect(successful).toBeTruthy();
+  });
+  it('should Convert from lat long to UTM', () => {
+    const service: ConverterService = TestBed.get(ConverterService);
+    const longitude = -119.472548;
+    const latitude = 49.905577;
+    const UTMx = 322462.246733;
+    const UTMy = 5531063.683699;
+    const utmZone = 11;
+    const latLongToUTM = service.convertLatLongCoordinateToUTM(latitude, longitude);
+    const successful = (latLongToUTM.eastings.toFixed() === UTMx.toFixed() && latLongToUTM.northings.toFixed() === UTMy.toFixed() && latLongToUTM.zone === utmZone);
+    if (!successful) {
+      console.log(`**** latLong To UTM`);
+      console.log(latLongToUTM);
+      console.log(`Should be:` + UTMx.toFixed() + ` ` + UTMy.toFixed());
+      console.log(`Is:` + latLongToUTM.eastings.toFixed() + ` ` + latLongToUTM.northings.toFixed());
+    }
+    expect(successful).toBeTruthy();
+  });
+  it('should Convert from UTM to Lat Long', () => {
+    const service: ConverterService = TestBed.get(ConverterService);
+    const longitude = -119.472548;
+    const latitude = 49.905577;
+    const UTMx = 322462.246733;
+    const UTMy = 5531063.683699;
+    const utmZone = 11;
+    const roundTo = 3;
+    const UTMtoLatLong = service.convertUTMToLatLongCoordinate(UTMx, UTMy, utmZone)
+    const successful = (UTMtoLatLong.latitude.toFixed(roundTo) === latitude.toFixed(roundTo) && UTMtoLatLong.longitude.toFixed(roundTo) === longitude.toFixed(roundTo));
+    if (!successful) {
+      console.log(`**** UTM to LatLong`);
+      console.log(UTMtoLatLong);
+    }
+    expect(successful).toBeTruthy();
   });
 });

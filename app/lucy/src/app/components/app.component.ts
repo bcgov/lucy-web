@@ -97,30 +97,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.temp_testHex();
   }
 
-  temp_testInOut() {
-    let results = [];
-    results.push(this.temp_testInside(-125.12345, 51.12345, true));
-
-    results.push(this.temp_testInside(-131.21000, 55.49000, false));
-
-    results.push(this.temp_testInside(-138.12000, 59.67600, true));
-
-    results.push( this.temp_testInside(-112.97980, 48.92150, false));
-
-    results.push(this.temp_testInside(-123.01640, 48.79510, true));
-
-    console.log(results);
-  }
-
-  temp_testInside(lat: number, long: number, shouldBeIn: boolean): boolean {
-    const isIn = this.coodrinateConvert.isInsideBC(lat, long);
-    console.log('lat:' + lat + ' long:' + long + '\n-> ' + isIn);
-    console.log('Pass: ' + (isIn === shouldBeIn));
-    return (isIn === shouldBeIn);
-  }
-
   temp_testHex() {
-    const test_1 = this.coodrinateConvert.getHexId(-126.000000, 54.000000);
+    const test_1 = this.coodrinateConvert.getHexId(-125.9970, 54.0000);
     console.log('1 -> ' + test_1.cc);
     console.dir(test_1);
   }
