@@ -11,7 +11,7 @@ import {
     ObserverWorkflowController
 } from '../models';
 import { ModelFactory, Destroyer } from '../factory';
-import { WatercraftRiskAssessmentSchema } from '../database-schema';
+import { WatercraftRiskAssessmentSchema, ObserverWorkflowSchema } from '../database-schema';
 import { WaterBody } from '../models/waterBody';
 import { WaterBodyController } from '../models/controllers/waterBody.controller';
 
@@ -53,9 +53,7 @@ describe('Mussel app db element tests', () => {
         should().exist(fetch);
         should().exist(fetch.observer_workflow_id);
         expect(fetch.observer_workflow_id).to.be.equal(o.observer_workflow_id);
-        should().exist(fetch.info);
-        should().exist(fetch.startOfDayForm);
-        should().exist(fetch.endOfDayForm);
+        testModel(fetch, ObserverWorkflowSchema.shared);
     });
 
     it('should load relation workflow for WatercraftRiskAssessment', async () => {

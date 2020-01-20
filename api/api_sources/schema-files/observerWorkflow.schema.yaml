@@ -18,25 +18,86 @@ schemas:
     layout: {}
     computedFields: {}
     columns: 
+      # Primary column
       id: 
         name: 'observer_workflow_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
+      # Date
       date:
         name: 'date'
         comment: 'Date of the work shift'
         definition: DATE NOT NULL
-      startOfDayForm:
-        name: 'start_of_day_form'
-        comment: 'JSON column to store all start of day variables'
-        definition: JSONB NULL
-      endOfDayForm:
-        name: 'end_of_day_form'
-        comment: 'JSON column to store all end of day variables'
-        definition: JSONB NULL
-      info: 
-        name: 'info'
-        comment: 'Any additional info to store for workflow'
-        definition: JSONB NULL
+      # Shift Times
+      startTime: 
+        name: 'start_time'
+        comment: 'Start time of workflow'
+        definition: TIMESTAMP NULL
+      endTime: 
+        name: 'end_time'
+        comment: 'End time of workflow'
+        definition: TIMESTAMP NULL
+      # Location Info
+      station:
+        name: 'station'
+        comment: 'Station name'
+        definition: VARCHAR(100) NULL
+      location:
+        name: 'location'
+        comment: 'Location name'
+        definition: VARCHAR(100) NULL
+      # Comments
+      shiftStartComment:
+        name: 'shift_start_comment'
+        comment: 'This column will store user comment on start of the day'
+        definition: VARCHAR(300) NULL
+      shiftEndComment:
+        name: 'shift_end_comment'
+        comment: 'This column will store user comment on end of the day'
+        definition: VARCHAR(300) NULL  
+      # Counter
+      motorizedBlowBys:
+        name: 'motorized_blow_bys_counter'
+        comment: 'Counter for number of motorized boats inspected during the shift'
+        definition: INT NOT NULL DEFAULT 0
+      nonMotorizedBlowBys:
+        name: 'non_motorized_blow_bys_counter'
+        comment: 'Counter for number of non motorized boats inspected during the shift'
+        definition: INT NOT NULL DEFAULT 0
+      # End: Counter
+      # Booleans
+      boatsInspected:
+        name: 'boats_inspected_ind'
+        comment: 'Boolean indicator to show any boat was inspected during shift'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      sunny:
+        name: 'weather_sunny_ind'
+        comment: 'Boolean indicator to show day was sunny or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      cloudy:
+        name: 'weather_cloudy_ind'
+        comment: 'Boolean indicator to show day was cloudy or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      raining:
+        name: 'weather_raining_ind'
+        comment: 'Boolean indicator to show day was there any rain?'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      snowing:
+        name: 'weather_snowing_ind'
+        comment: 'Boolean indicator to show day was there any snow?'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      foggy:
+        name: 'weather_foggy_ind'
+        comment: 'Boolean indicator to show foggy condition of the day'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      windy:
+        name: 'weather_windy_ind'
+        comment: 'Boolean indicator to show windy condition of the day'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      k9OnShift:
+        name: 'k9_on_shift_ind'
+        comment: 'Boolean indicator to show K9 on shift'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      # End: Booleans
     ## --
   ## --
