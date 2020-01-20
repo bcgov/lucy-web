@@ -1,13 +1,15 @@
 // ** Model: MechanicalMonitor from schema MechanicalMonitorSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
-import { MechanicalMonitorSchema } from '../database-schema';
+import { MechanicalMonitorSchema,
+		 SpeciesAgencyCodeSchema,
+		 SpeciesSchema,
+		 MechanicalTreatmentSchema
+} from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { NumericTransformer, DateTransformer } from '../../libs/transformer';
-import { SpeciesAgencyCode,
-	Species,
-} from '../models';
+import { SpeciesAgencyCode, Species} from '../models';
 
 import { BaseModel } from './baseModel';
 import { MechanicalTreatment } from './mechanical.treatment';
@@ -97,15 +99,15 @@ export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpe
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
 	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
-	@JoinColumn({ name: MechanicalMonitorSchema.columns.speciesAgency, referencedColumnName: SpeciesAgencyCode.species_agency_code_id})
+	@JoinColumn({ name: MechanicalMonitorSchema.columns.speciesAgency, referencedColumnName: SpeciesAgencyCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	speciesAgency: SpeciesAgencyCode;
 
 	/**
 	 * @description Getter/Setter property for column {species_id}
 	 */
-	@ManyToOne( type => #MODEL, { eager: true})
-	@JoinColumn({ name: MechanicalMonitorSchema.columns.species, referencedColumnName: #SCHEMA-NAME.pk})
+	@ManyToOne( type => Species, { eager: true})
+	@JoinColumn({ name: MechanicalMonitorSchema.columns.species, referencedColumnName: SpeciesSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	species: Species;
 
@@ -113,7 +115,7 @@ export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpe
 	 * @description Getter/Setter property for column {mechanical_treatment_id}
 	 */
 	@ManyToOne( type => MechanicalTreatment, { eager: true})
-	@JoinColumn({ name: MechanicalMonitorSchema.columns.mechanicalTreatmentID, referencedColumnName: MechanicalTreatmentSchema.mechanical_treatment_id})
+	@JoinColumn({ name: MechanicalMonitorSchema.columns.mechanicalTreatmentID, referencedColumnName: MechanicalTreatmentSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	mechanicalTreatmentID: MechanicalTreatment;
 
