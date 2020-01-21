@@ -16,6 +16,8 @@ ALTER TABLE high_risk_assessment ADD COLUMN decontamination_order_number INT NUL
 ALTER TABLE high_risk_assessment ADD COLUMN seal_number INT NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN standing_water_location VARCHAR(100) NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN adult_dreissenidae_mussel_details VARCHAR(100) NULL;
+ALTER TABLE high_risk_assessment ADD COLUMN other_inspection_findings VARCHAR(100) NULL;
+ALTER TABLE high_risk_assessment ADD COLUMN general_comments VARCHAR(300) NULL;
 
 
         
@@ -37,6 +39,8 @@ COMMENT ON COLUMN high_risk_assessment.decontamination_order_number IS 'Decontam
 COMMENT ON COLUMN high_risk_assessment.seal_number IS 'Seal number';
 COMMENT ON COLUMN high_risk_assessment.standing_water_location IS 'Description for standing water location on boat';
 COMMENT ON COLUMN high_risk_assessment.adult_dreissenidae_mussel_details IS 'Details of adult dreissenidae mussel found on the boat';
+COMMENT ON COLUMN high_risk_assessment.other_inspection_findings IS 'Additional details about high risk assessment';
+COMMENT ON COLUMN high_risk_assessment.general_comments IS 'General Comments regarding high risk assessment';
 
 
         

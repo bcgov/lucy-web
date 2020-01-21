@@ -73,5 +73,13 @@ schemas:
         name: adult_dreissenidae_mussel_details
         comment: 'Details of adult dreissenidae mussel found on the boat'
         definition: VARCHAR(100) NULL
+      otherInspectionFindings:
+        name: other_inspection_findings
+        comment: 'Additional details about high risk assessment'
+        definition: VARCHAR(100) NULL
+      generalComments:
+        name: general_comments
+        comment: 'General Comments regarding high risk assessment'
+        definition: VARCHAR(300) NULL 
     versions: []
     fields: {}
