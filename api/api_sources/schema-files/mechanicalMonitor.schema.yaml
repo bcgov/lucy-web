@@ -1,7 +1,13 @@
 version: '1.0'
+externalTables:
+  - name: species_agency_code
+    description: Species agency code table
+    schema: SpeciesAgencyCodeSchema
 includes:
     - spaceGeom.schema.yaml
     - efficacyCodes.schema.yaml
+    - species.schema.yaml
+    - mechanicalTreatment.schema.yaml
 schemas:
   ## -- Example
   MechanicalMonitorSchema:
@@ -85,17 +91,6 @@ schemas:
               default: 'Paper File ID'
             classes:
               - none
-      efficacy:
-        name: efficacy_rating
-        comment: 'Efficacy rating for the relevant treatment'
-        definition: INTEGER
-        meta: {}
-        layout:
-            header:
-                key: 'efficacy'
-                default: 'Efficacy %'
-            classes:
-                - none
       comments:
           name: comments
           comment: 'Free-form comments added by mechanical monitoring observer'
@@ -148,6 +143,20 @@ schemas:
                 default: 'Treatment ID'
             classes:
                 - none
+      efficacy:
+        name: efficacy_rating
+        comment: 'Foreign key reference to Efficacy code table'
+        definition: INT NULL
+        foreignTable: efficacy_code
+        refColumn: efficacy_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+            header:
+                key: 'efficacy'
+                default: 'Efficacy %'
+            classes:
+                - none
     ## -- Versions
     versions: {}
     ## --
@@ -162,97 +171,4 @@ schemas:
             - spaceGeom
         # -- SpaceGeomModelSchema
   ## -- End Schema
-  Test2Schema:
-    name: sample2_table
-    description: Sample application table
-    # Copy Columns, version from other schema
-    copyFrom:
-      # Key is Schema name
-      CopySchema:
-        versions:
-          - test-copy
-    columns:
-      id:
-        comment: Sample column pk
-        required: true
-        name: sample_id
-        definition: SERIAL PRIMARY KEY
-      name:
-        comment: Name of the sample
-        required: true
-        name: sample_name
-        definition: VARCHAR(20) NULL
-        meta: {}
-        layout:
-          header:
-            key: ''
-            default: ''
-          classes:
-            - none
-    versions:
-      - name: 'test'
-        id: '12.12'
-        info: 'Test version added'
-        columns: 
-          address:
-            name: sample_address
-            definition: VARCHAR(20) NOT NULL
-            comment: Name of the sample
-          tag:
-            name: tag
-            definition: VARCHAR(200) NOT NULL
-            comment: Name of the sample
-        # --
-      # ---
-      - name: 'test2'
-        id: '12.13'
-        info: 'Test version added'
-        columns: 
-          count:
-            name: count
-            definition: VARCHAR(20) NOT NULL
-            comment: Name of the sample
-          top:
-            name: top
-            definition: VARCHAR(200) NOT NULL
-            comment: Name of the sample
-        # --
-      # ---
-    ## -- end version
-    imports:
-      init:
-        fileName: AspectCode.csv
-        entryColumns: 
-          - name
-          - address
-      # --
-    # -- end Imports
-  ## -- end Schema
-  ## --
-  CopySchema:
-    name: 'test_copy'
-    description: 'Copy schema'
-    columns: 
-      id:
-        comment: Sample column pk
-        required: true
-        name: sample_id
-        definition: SERIAL PRIMARY KEY
-      copy1:
-        comment: Sample Copy column
-        required: true
-        name: copy_1
-        definition: INT NOT NULL
-    ## -- end columns
-    ## -- ver
-    versions: 
-      - name: 'test-copy'
-        id: '12.13'
-        info: 'Test version added'
-        columns: 
-          tag1:
-            name: tag_1
-            definition: VARCHAR(200) NOT NULL
-            comment: Tag 1 column
-    ## -- end ver
-  ## --
+  

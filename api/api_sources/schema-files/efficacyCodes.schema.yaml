@@ -1,12 +1,16 @@
 version: '1.0'
 description: Schema file for table efficacy_codes
 schemas:
-  EfficacyCodesSchema:
-    name: efficacy_codes
+  EfficacyCodeSchema:
+    name: efficacy_code
     description: 'Code table used in monitoring records for efficacy ratings of treatments'
     meta:
       resource: true
-    displayLayout: {}
+    displayLayout:
+      displayLabel: '#(efficacyRating)'
+      header:
+        key: efficacyRating.header
+        default: 'Efficacy %'
     layout: {}
     computedFields: {}
     relations: {}
@@ -18,7 +22,7 @@ schemas:
       efficacyRating:
         name: efficacy_rating
         comment: String indicating approximated treatment efficacy rating in 5-percentage point ranges
-        definition: VARCHAR(20)
+        definition: VARCHAR(15)
     imports:
       init:
         fileName: EfficacyRatings.csv

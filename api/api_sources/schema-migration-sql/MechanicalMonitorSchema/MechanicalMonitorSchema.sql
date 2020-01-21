@@ -5,11 +5,11 @@ CREATE TABLE mechanical_monitor ();
 ALTER TABLE mechanical_monitor ADD COLUMN mechanical_monitor_id SERIAL PRIMARY KEY;
 ALTER TABLE mechanical_monitor ADD COLUMN mechanical_monitor_date DATE NOT NULL;
 ALTER TABLE mechanical_monitor ADD COLUMN mechanical_monitor_paper_file_ref VARCHAR(100) NULL;
-ALTER TABLE mechanical_monitor ADD COLUMN efficacy_rating INTEGER;
 ALTER TABLE mechanical_monitor ADD COLUMN comments VARCHAR(500) NULL;
 ALTER TABLE mechanical_monitor ADD COLUMN species_agency_code_id INT NULL REFERENCES species_agency_code(species_agency_code_id) ON DELETE SET NULL;
 ALTER TABLE mechanical_monitor ADD COLUMN species_id INT NULL REFERENCES species(species_id) ON DELETE CASCADE;
 ALTER TABLE mechanical_monitor ADD COLUMN mechanical_treatment_id INT NULL REFERENCES mechanical_treatment(mechanical_treatment_id) ON DELETE SET NULL;
+ALTER TABLE mechanical_monitor ADD COLUMN efficacy_rating INT NULL REFERENCES efficacy_code(efficacy_code_id) ON DELETE SET NULL;
 
 
         
@@ -20,11 +20,11 @@ COMMENT ON TABLE mechanical_monitor IS 'A monitoring record created as follow-up
 COMMENT ON COLUMN mechanical_monitor.mechanical_monitor_id IS 'Auto generated primary key. This is auto incremental field';
 COMMENT ON COLUMN mechanical_monitor.mechanical_monitor_date IS 'Date of the monitoring record';
 COMMENT ON COLUMN mechanical_monitor.mechanical_monitor_paper_file_ref IS 'Paper file reference associated with monitoring record';
-COMMENT ON COLUMN mechanical_monitor.efficacy_rating IS 'Efficacy rating for the relevant treatment';
 COMMENT ON COLUMN mechanical_monitor.comments IS 'Free-form comments added by mechanical monitoring observer';
 COMMENT ON COLUMN mechanical_monitor.species_agency_code_id IS 'Foreign key reference to Species Agency code table';
 COMMENT ON COLUMN mechanical_monitor.species_id IS 'Foreign key reference to species table';
 COMMENT ON COLUMN mechanical_monitor.mechanical_treatment_id IS 'Foreign key reference to Mechanical Treatments table';
+COMMENT ON COLUMN mechanical_monitor.efficacy_rating IS 'Foreign key reference to Efficacy code table';
 
 
         
