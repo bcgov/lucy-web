@@ -65,8 +65,8 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[RUN]', 'DOWN');
         await this.runQuerySqlFiles(this.downMigrations(), queryRunner);
-        await queryRunner.query(this.highRiskAssessmentSchema.dropTable());
         await queryRunner.query(this.waterCraftRiskAssessmentSchema.dropTable());
+        await queryRunner.query(this.highRiskAssessmentSchema.dropTable());
         await queryRunner.query(this.observerWorkflowSchema.dropTable());
     }
 
