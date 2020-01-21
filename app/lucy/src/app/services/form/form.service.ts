@@ -130,6 +130,14 @@ export class FormService {
   }
 
   /**
+   * returns UI configuration for Mechanical Monitoring records
+   */
+  public async getMechanicalMonitorUIConfig(): Promise<any> {
+    const serverConfig = await this.getMechanicalMonitorServerConfig();
+    return await this.createUIConfig(serverConfig);
+  }
+
+  /**
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
@@ -178,6 +186,20 @@ export class FormService {
       //// Chemical Treatment Create route ////
       const configFile = await this.getChemicalTreatmentUIConfig();
       return configFile;
+    } else if (this.router.current === AppRoutes.AddMechanicalMonitor) {
+      //// Mechanical Monitor Create route ////
+      const configFile = await this.getMechanicalMonitorUIConfig();
+      return configFile;
+    } else if (
+      this.router.current === AppRoutes.ViewMechanicalMonitor ||
+      this.router.current === AppRoutes.EditMechanicalMonitor
+    ) {
+      //// Mechanical Monitor View and Edit Routes ////
+      const configFile = await this.getMechanicalMonitorUIConfig();
+      const monitor = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
     } else {
       console.log(this.router.current);
       console.log(
@@ -257,6 +279,29 @@ export class FormService {
     const response = await this.api.request(
       APIRequestMethod.GET,
       AppConstants.API_Form_ChemicalTreatment,
+      undefined
+    );
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
+        console.dir(response);
+        return undefined;
+      }
+    } else {
+      console.dir(response);
+      return undefined;
+    }
+  }
+
+  private async getMechanicalMonitorServerConfig(): Promise<FormConfig> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_mechanicalMonitor,
       undefined
     );
     if (response.success) {
