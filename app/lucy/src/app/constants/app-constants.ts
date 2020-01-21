@@ -63,6 +63,12 @@ export class AppConstants {
         return `${AppConstants.API_baseURL}/observation?lat=${lat}&long=${long}`;
     }
 
+    // Form Config Mechanical Monitoring
+    static get API_mechanicalMonitor(): string { return `${AppConstants.API_baseURL}/monitor/mechanical/config`; }
+    static API_mechanicalMonitorWith(id: number): string {
+        return `${AppConstants.API_baseURL}/monitor/mechanical/${id}`;
+    }
+
     // Code Tables
     static get API_CodeTables(): string { return `${AppConstants.API_baseURL}/codes`; }
 
