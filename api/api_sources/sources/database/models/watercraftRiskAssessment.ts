@@ -23,7 +23,7 @@
 
 // ** Model: WatercraftRiskAssessment from schema WatercraftRiskAssessmentSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMany} from 'typeorm';
 import { WatercraftRiskAssessmentSchema } from '../database-schema';
 import {
 	HighRiskAssessmentSchema,
@@ -38,6 +38,7 @@ import {
 } from '../models';
 
 import { Record } from './generic.data.models';
+import { WatercraftJourney } from './watercraftJourney';
 
 /** Interface **/
 /**
@@ -251,6 +252,16 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@ModelProperty({type: PropertyType.object})
 	workflow: ObserverWorkflow;
 
+	/**
+	 * @description OneToMany Relationship
+	 */
+	@OneToMany(
+		type => WatercraftJourney,
+		obj => obj.watercraftAssessment,
+		{ eager: true}
+	)
+	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/WatercraftJourney'})
+	journeys: WatercraftJourney[];
 }
 
 // -------------------------------------

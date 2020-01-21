@@ -27,7 +27,7 @@ import {
     RouteHandler,
     RouteController
 } from './base.route.controller';
-import { ResourceInfo } from './route.const';
+import { ResourceInfo, ValidationBypass } from './route.const';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { SchemaValidator, SchemaValidationOption } from './schema.validation';
 import { MakeOptionalValidator } from './core.validator';
@@ -75,38 +75,57 @@ export class BaseResourceRouteController extends RouteController {
                 this.router.use(middleware);
             }
             // Getting validator
-            const validators: any[] = this._createValidator();
-            // Options
-            const opt: SchemaValidationOption = {
-                updateOnly: true,
-                caller: 'update'
-            };
-            const optional: any[] = MakeOptionalValidator(() => this._createValidator(opt));
-            const filters: any = MakeOptionalValidator(() => this._createValidator({
-                caller: 'filter'
-            }, true));
+            const validationBypass: ValidationBypass = info.validationBypass || {};
 
-            // Getting operation specific middleware
+            // If validation Bypass for post
+            // Getting create operation specific middleware
             const createMiddleware: any[] = info.createMiddleware ? info.createMiddleware() : [];
+            if (validationBypass.skipForCreate) {
+                // Configuring Create Route without validation
+                this.router.post(`/`, createMiddleware, this.create);
+            } else {
+                // // Configuring Create Route with validation
+                const validators: any[] = this._createValidator();
+                this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
+            }
+
+            // Getting Update Middleware
             const updateMiddleware: any[] = info.updateMiddleware ? info.updateMiddleware() : [];
+            if (validationBypass.skipForUpdate) {
+                // Configuring Update Route without validation
+                this.router.put(`/:id`, this.combineValidator(this.idValidation(), updateMiddleware), this.update);
+
+            } else {
+                // Options
+                const opt: SchemaValidationOption = {
+                    updateOnly: true,
+                    caller: 'update'
+                };
+                const optional: any[] = MakeOptionalValidator(() => this._createValidator(opt));
+
+                // Configuring Update Route with validation
+                this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
+            }
+
+            // View Middleware
             const viewMiddleware: any[] = info.viewMiddleware ? info.viewMiddleware() : [];
+            if (validationBypass.skipForRead) {
+                // Configuring View all Route with filter
+                this.router.get(`/`, viewMiddleware, this.index);
+            } else {
+                const filters: any = MakeOptionalValidator(() => this._createValidator({
+                    caller: 'filter'
+                }, true));
 
-            // Getting resource endpoint Endpoint
-
-            // Configuring Create Route
-            this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
-
-            // Configuring View all Route with filter
-            this.router.get(`/`, this.combineValidator(viewMiddleware, filters), this.index);
+                // Configuring View all Route with filter
+                this.router.get(`/`, this.combineValidator(viewMiddleware, filters), this.index);
+            }
 
             // Configuring config route
             this.router.get(`/config`, viewMiddleware, this.config);
 
             // Configuring View {single} Route
             this.router.get(`/:id`, this.combineValidator(this.idValidation(), viewMiddleware) , this.index);
-
-            // Configuring Update Route
-            this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
         }
     }
 
@@ -197,7 +216,7 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
      */
     get create(): RouteHandler {
         return this.routeConfig<CreateSpec>(`${this.className}: create`, async (data: CreateSpec, req: Request) => {
-            return [201, await this.dataController.createNewObject(data, req.user)];
+            return await this.createResource(req, data);
         });
     }
 

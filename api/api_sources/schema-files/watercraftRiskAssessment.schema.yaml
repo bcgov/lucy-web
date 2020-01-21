@@ -16,6 +16,21 @@ schemas:
     displayLayout: {}
     layout: {}
     computedFields: {}
+    # Relations
+    relations: 
+      journeys:
+        header:
+          key: 'watercraftAssessment.journeys'
+          default: Water Craft Journeys
+        description: 
+          key: 'watercraftAssessment.journeys.description'
+          default: 'Associated Water-bodies'
+        type: array
+        relationshipType: one-to-many
+        schema: WatercraftJourneySchema
+        meta: 
+          embedded: true 
+    # End: Relations
     columns: 
       # Primary Column
       id: 
@@ -101,6 +116,8 @@ schemas:
         definition: INT NULL
         foreignTable: high_risk_assessment
         refColumn: high_risk_assessment_id
+        meta: 
+          embedded: true
     ## -- end columns
     versions:
       ## -- version: workflow

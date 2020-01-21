@@ -29,13 +29,13 @@ schemas:
       watercraftAssessment:
         name: watercraft_risk_assessment_id
         comment: 'Foreign key reference to Watercraft risk assessment table'
-        definition: INT NOT NULL
+        definition: INT NULL
         foreignTable: watercraft_risk_assessment
         refColumn: watercraft_risk_assessment_id
       waterBody:
         name: water_body_id
         comment: 'Foreign key reference to Water body detail table'
-        definition: INT NOT NULL
+        definition: INT NULL
         foreignTable: water_body
         refColumn: water_body_id
     versions: []

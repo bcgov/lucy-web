@@ -28,7 +28,6 @@ import {
     ResourceRoute,
     CreateMiddleware,
     ResourceRouteController,
-    writerOnlyRoute,
     UpdateMiddleware
 } from '../../../core';
 import {
@@ -39,10 +38,20 @@ import {
     dataController: ObserverWorkflowController.shared,
     secure: true
 })
-@CreateMiddleware(() => [writerOnlyRoute()])
-@UpdateMiddleware(() => [writerOnlyRoute()])
+@CreateMiddleware(() => [])
+@UpdateMiddleware(() => [])
 export class ObserverWorkflowRouteController extends ResourceRouteController<ObserverWorkflowController, ObserverWorkflowSpec, any> {
     static get shared(): ObserverWorkflowRouteController {
         return this.sharedInstance() as ObserverWorkflowRouteController;
+    }
+
+    /**
+     * @description Create New Object
+     * @param Request req
+     * @param any data
+     */
+    public async createResource(req: any, data: any): Promise<[number, any]> {
+        // Get Proper data mapping
+        return [201, await this.dataController.createNewObject(data, req.user)];
     }
 }
