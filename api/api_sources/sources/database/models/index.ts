@@ -63,6 +63,7 @@ export * from './windDirectionCodes';
 export * from './chemicalTreatmentMethodCode';
 export * from './spaceGeom';
 export * from './mechanicalMonitor';
+export * from './efficacyCode';
 
 /**
  * Controllers
@@ -87,4 +88,5 @@ export * from './controllers/observationChemicalTreatment.controller';
 export * from './controllers/chemicalTreatmentMethodCode.controller';
 export * from './controllers/spaceGeom.controller';
 export * from './controllers/mechanicalMonitor.controller';
+export * from './controllers/efficacyCode.controller';
 // ----------------------------------------------------------------------------------------------------------------

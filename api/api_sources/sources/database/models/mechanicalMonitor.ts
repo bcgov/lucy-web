@@ -1,18 +1,22 @@
 // ** Model: MechanicalMonitor from schema MechanicalMonitorSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
-import { MechanicalMonitorSchema,
-		 SpeciesAgencyCodeSchema,
-		 SpeciesSchema,
-		 MechanicalTreatmentSchema
+import { MechanicalMonitorSchema, EfficacyCodeSchema } from '../database-schema';
+import {
+	SpeciesAgencyCodeSchema,
+	SpeciesSchema,
+	MechanicalTreatmentSchema
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { NumericTransformer, DateTransformer } from '../../libs/transformer';
-import { SpeciesAgencyCode, Species} from '../models';
-
-import { BaseModel } from './baseModel';
-import { MechanicalTreatment } from './mechanical.treatment';
+import { DateTransformer } from '../../libs/transformer';
+import {
+	SpeciesAgencyCode,
+	Species,
+	MechanicalTreatment
+} from '../models';
+import { Record } from './generic.data.models';
+import { EfficacyCode } from './efficacyCode';
 
 /** Interface **/
 /**
@@ -21,11 +25,11 @@ import { MechanicalTreatment } from './mechanical.treatment';
 export interface MechanicalMonitorSpec {
 	date: string;
 	paperFileID: string;
-	efficacy: number;
 	comments: string;
 	speciesAgency: SpeciesAgencyCode;
 	species: Species;
-	mechanicalTreatmentID: object;
+	mechanicalTreatmentID: MechanicalTreatment;
+	efficacy: EfficacyCode;
 }
 // -- End: MechanicalMonitorSpec --
 
@@ -37,11 +41,11 @@ export interface MechanicalMonitorSpec {
 export interface MechanicalMonitorUpdateSpec {
 	date?: string;
 	paperFileID?: string;
-	efficacy?: number;
 	comments?: string;
 	speciesAgency?: SpeciesAgencyCode;
 	species?: Species;
-	mechanicalTreatmentID?: object;
+	mechanicalTreatmentID?: MechanicalTreatment;
+	efficacy?: EfficacyCode;
 }
 // -- End: MechanicalMonitorUpdateSpec --
 
@@ -54,7 +58,7 @@ export interface MechanicalMonitorUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: MechanicalMonitorSchema.dbTable} )
-export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpec {
+export class MechanicalMonitor extends Record implements MechanicalMonitorSpec {
 
 	/**
 	 * Class Properties
@@ -80,13 +84,6 @@ export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpe
 	@Column({ name: MechanicalMonitorSchema.columns.paperFileID})
 	@ModelProperty({type: PropertyType.string})
 	paperFileID: string;
-
-	/**
-	 * @description Getter/Setter property for column {efficacy_rating}
-	 */
-	@Column({name: MechanicalMonitorSchema.columns.efficacy, transformer: new NumericTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	efficacy: number;
 
 	/**
 	 * @description Getter/Setter property for column {comments}
@@ -118,6 +115,14 @@ export class MechanicalMonitor extends BaseModel implements MechanicalMonitorSpe
 	@JoinColumn({ name: MechanicalMonitorSchema.columns.mechanicalTreatmentID, referencedColumnName: MechanicalTreatmentSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	mechanicalTreatmentID: MechanicalTreatment;
+
+	/**
+	 * @description Getter/Setter property for column {efficacy_rating}
+	 */
+	@ManyToOne( type => EfficacyCode, { eager: true})
+	@JoinColumn({ name: MechanicalMonitorSchema.columns.efficacy, referencedColumnName: EfficacyCodeSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	efficacy: EfficacyCode;
 
 }
 
