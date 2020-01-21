@@ -54,14 +54,21 @@ export interface WatercraftRiskAssessmentSpec {
 	previousInspection: boolean;
 	marineMusselFound: boolean;
 	adultDreissenidaeFound: boolean;
+	launchedOutsideBC: boolean;
+	decontaminationPerformed: boolean;
+	commerciallyHauled: boolean;
+	highRiskArea: boolean;
+	highRiskAIS: boolean;
 	nonMotorized: number;
 	simple: number;
 	complex: number;
 	veryComplex: number;
+	previousInspectionDays: number;
 	previousAISKnowledgeSource: string;
 	previousInspectionSource: string;
 	provinceOfResidence: string;
 	generalComment: string;
+	passportNumber: string;
 	highRiskAssessment: HighRiskAssessment;
 	workflow: ObserverWorkflow;
 }
@@ -82,14 +89,21 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	previousInspection?: boolean;
 	marineMusselFound?: boolean;
 	adultDreissenidaeFound?: boolean;
+	launchedOutsideBC?: boolean;
+	decontaminationPerformed?: boolean;
+	commerciallyHauled?: boolean;
+	highRiskArea?: boolean;
+	highRiskAIS?: boolean;
 	nonMotorized?: number;
 	simple?: number;
 	complex?: number;
 	veryComplex?: number;
+	previousInspectionDays?: number;
 	previousAISKnowledgeSource?: string;
 	previousInspectionSource?: string;
 	provinceOfResidence?: string;
 	generalComment?: string;
+	passportNumber?: string;
 	highRiskAssessment?: HighRiskAssessment;
 	workflow?: ObserverWorkflow;
 }
@@ -181,6 +195,41 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	adultDreissenidaeFound: boolean;
 
 	/**
+	 * @description Getter/Setter property for column {launched_outside_bc_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.launchedOutsideBC})
+	@ModelProperty({type: PropertyType.boolean})
+	launchedOutsideBC: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {decontamination_performed_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.decontaminationPerformed})
+	@ModelProperty({type: PropertyType.boolean})
+	decontaminationPerformed: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {commercially_hauled_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commerciallyHauled})
+	@ModelProperty({type: PropertyType.boolean})
+	commerciallyHauled: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {high_risk_area_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.highRiskArea})
+	@ModelProperty({type: PropertyType.boolean})
+	highRiskArea: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {high_risk_ais_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.highRiskAIS})
+	@ModelProperty({type: PropertyType.boolean})
+	highRiskAIS: boolean;
+
+	/**
 	 * @description Getter/Setter property for column {non_motorized_counter}
 	 */
 	@Column({name: WatercraftRiskAssessmentSchema.columns.nonMotorized, transformer: new IntTransformer()})
@@ -209,6 +258,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	veryComplex: number;
 
 	/**
+	 * @description Getter/Setter property for column {previous_inspection_days_count}
+	 */
+	@Column({name: WatercraftRiskAssessmentSchema.columns.previousInspectionDays, transformer: new IntTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	previousInspectionDays: number;
+
+	/**
 	 * @description Getter/Setter property for column {previous_ais_knowledge_source}
 	 */
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource})
@@ -235,6 +291,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.generalComment})
 	@ModelProperty({type: PropertyType.string})
 	generalComment: string;
+
+	/**
+	 * @description Getter/Setter property for column {passport_number}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportNumber})
+	@ModelProperty({type: PropertyType.string})
+	passportNumber: string;
 
 	/**
 	 * @description Getter/Setter property for column {high_risk_assessment_id}

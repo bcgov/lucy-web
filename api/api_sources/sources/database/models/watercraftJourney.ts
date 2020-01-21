@@ -69,6 +69,13 @@ export class WatercraftJourney extends Record implements WatercraftJourneySpec {
 	journeyType: number;
 
 	/**
+	 * @description Getter/Setter property for column {number_of_days_out}
+	 */
+	@Column({name: WatercraftJourneySchema.columns.numberOfDaysOut, transformer: new IntTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	numberOfDaysOut: number;
+
+	/**
 	 * @description Getter/Setter property for column {watercraft_risk_assessment_id}
 	 */
 	@ManyToOne( type => WatercraftRiskAssessment)

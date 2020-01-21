@@ -75,6 +75,26 @@ schemas:
         name: adult_dreissenidae_found_ind
         comment: 'Status flag any adult Dreissenidae found during inspection'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      launchedOutsideBC:
+        name: launched_outside_bc_ind
+        comment: 'Status flag to check the boat was launched outside of bc or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      decontaminationPerformed:
+        name: decontamination_performed_ind
+        comment: 'Status flag to check any decontamination performed during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commerciallyHauled:
+        name: commercially_hauled_ind
+        comment: 'Status flag to check inspected boats are commercially hauled or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      highRiskArea:
+        name: high_risk_area_ind
+        comment: 'Indicator flag to check boats are from High risk area or not.'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      highRiskAIS:
+        name: high_risk_ais_ind
+        comment: 'Indicator flag to check high risk AIS or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:
         name: 'non_motorized_counter'
@@ -90,6 +110,10 @@ schemas:
         definition: INT NULL  
       veryComplex:
         name: 'very_complex_count'
+        comment: 'Counter for number of very complex boats in the inspection'
+        definition: INT NULL
+      previousInspectionDays:
+        name: 'previous_inspection_days_count'
         comment: 'Counter for number of very complex boats in the inspection'
         definition: INT NULL
       # Strings
@@ -109,6 +133,10 @@ schemas:
         name: general_comment
         comment: 'Province of residence of the boat'
         definition: VARCHAR(300) NULL
+      passportNumber: 
+        name: passport_number
+        comment: 'Passport number associated with previous inspection'
+        definition: VARCHAR(100) NULL
       # Relationship
       highRiskAssessment:
         name: high_risk_assessment_id
