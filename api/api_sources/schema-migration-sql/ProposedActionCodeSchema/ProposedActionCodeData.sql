@@ -32,7 +32,7 @@ VALUES
 -- ## Inserting Item: 6  ## --
 INSERT INTO observation_proposed_action_code(observation_proposed_action_code, description)
 VALUES
-('BO','Biological oollection');
+('BO','Biological collection');
 -- ## End of item: 6 ## --
 -- ## Inserting Item: 7  ## --
 INSERT INTO observation_proposed_action_code(observation_proposed_action_code, description)
@@ -44,3 +44,8 @@ INSERT INTO observation_proposed_action_code(observation_proposed_action_code, d
 VALUES
 ('BDS','Biological dispersal survey');
 -- ## End of item: 8 ## --
+-- ## Inserting Item: 9  ## --
+INSERT INTO observation_proposed_action_code(observation_proposed_action_code, description)
+VALUES
+('MN','Monitor');
+-- ## End of item: 9 ## --
