@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ObserverWorkflowSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { NumericTransformer, DateTransformer, DateTimeTransformer } from '../../libs/transformer';
+import { IntTransformer, DateTransformer, DateTimeTransformer } from '../../libs/transformer';
 import { Record } from './generic.data.models';
 
 /** Interface **/
@@ -132,14 +132,14 @@ export class ObserverWorkflow extends Record implements ObserverWorkflowSpec {
 	/**
 	 * @description Getter/Setter property for column {motorized_blow_bys_counter}
 	 */
-	@Column({name: ObserverWorkflowSchema.columns.motorizedBlowBys, transformer: new NumericTransformer()})
+	@Column({name: ObserverWorkflowSchema.columns.motorizedBlowBys, transformer: new IntTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	motorizedBlowBys: number;
 
 	/**
 	 * @description Getter/Setter property for column {non_motorized_blow_bys_counter}
 	 */
-	@Column({name: ObserverWorkflowSchema.columns.nonMotorizedBlowBys, transformer: new NumericTransformer()})
+	@Column({name: ObserverWorkflowSchema.columns.nonMotorizedBlowBys, transformer: new IntTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	nonMotorizedBlowBys: number;
 

@@ -2,6 +2,7 @@
 version: '1.0'
 includes: 
   - observerWorkflow.schema.yaml
+  - highRiskAssessment.schema.yaml
 schemas: 
   ## -- WaterCraftRiskAssessmentSchema
   WatercraftRiskAssessmentSchema:
@@ -16,30 +17,90 @@ schemas:
     layout: {}
     computedFields: {}
     columns: 
+      # Primary Column
       id: 
         name: 'watercraft_risk_assessment_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
+      # Time
       timestamp: 
-        name: timestamp
+        name: 'timestamp'
         comment: 'Date and time of watercraft observation.'
         definition: 'TIMESTAMP NOT NULL'
-      highRiskAssessmentForm:
-        name: high_risk_assessment_form
-        comment: 'Stored JSON structure for whole high risk assessment form data'
-        definition: JSONB NULL
-      lowRiskAssessmentForm:
-        name: low_risk_assessment_form
-        comment: 'Stored JSON structure for whole low risk assessment form data'
-        definition: JSONB NULL
-      fullObservationForm:
-        name: full_observation_form
-        comment: 'Stored JSON structure for full observation questionnaire'
-        definition: JSONB NULL
-      additionalInfo:
-        name: additional_info
-        comment: 'Stored JSON structure for additional information'
-        definition: JSONB NULL
+      # Boolean
+      passportHolder:
+        name: 'pass_port_holder_ind'
+        comment: 'Indicator to show that inspected boat has previously issued passport'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      k9Inspection:
+        name: k9_inspection_ind
+        comment: 'Indicator to show that inspection type is K9'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      marineSpeciesFound:
+        name: marine_species_found_ind
+        comment: 'Indicator to show any marine species found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      aquaticPlantsFound:
+        name: aquatic_plants_found_ind
+        comment: 'Indicator to show any aquatic plants found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousAISKnowledge:
+        name: previous_ais_knowledge_ind
+        comment: 'Indicator to store status of previous AIS knowledge'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousInspection:
+        name: previous_inspection_ind
+        comment: 'Indicator to store status of previous inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      marineMusselFound:
+        name: marine_mussel_found_ind
+        comment: 'Indicator to store status marine mussel found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      adultDreissenidaeFound:
+        name: adult_dreissenidae_found_ind
+        comment: 'Status flag any adult Dreissenidae found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      # Counter
+      nonMotorized:
+        name: 'non_motorized_counter'
+        comment: 'Counter for non motorized boats in inspection'
+        definition: INT NULL
+      simple:
+        name: 'simple_counter'
+        comment: 'Counter for number of simple boats in the inspection'
+        definition: INT NULL
+      complex:
+        name: 'complex_counter'
+        comment: 'Counter for number of complex boats in the inspection'
+        definition: INT NULL  
+      veryComplex:
+        name: 'very_complex_count'
+        comment: 'Counter for number of very complex boats in the inspection'
+        definition: INT NULL
+      # Strings
+      previousAISKnowledgeSource:
+        name: previous_ais_knowledge_source
+        comment: 'Indicator to store status of previous AIS knowledge'
+        definition: VARCHAR(100) NULL
+      previousInspectionSource:
+        name: previous_inspection_source
+        comment: 'Indicator to store status of previous inspection'
+        definition: VARCHAR(100) NULL
+      provinceOfResidence:
+        name: province
+        comment: 'Province of residence of the boat'
+        definition: VARCHAR(100) NULL
+      generalComment:
+        name: general_comment
+        comment: 'Province of residence of the boat'
+        definition: VARCHAR(300) NULL
+      # Relationship
+      highRiskAssessment:
+        name: high_risk_assessment_id
+        comment: 'Foreign key reference to High risk assessment of the inspection'
+        definition: INT NULL
+        foreignTable: high_risk_assessment
+        refColumn: high_risk_assessment_id
     ## -- end columns
     versions:
       ## -- version: workflow
