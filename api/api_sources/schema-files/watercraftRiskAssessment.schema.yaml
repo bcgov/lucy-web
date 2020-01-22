@@ -121,10 +121,12 @@ schemas:
         name: previous_ais_knowledge_source
         comment: 'Indicator to store status of previous AIS knowledge'
         definition: VARCHAR(100) NULL
+        required: false
       previousInspectionSource:
         name: previous_inspection_source
         comment: 'Indicator to store status of previous inspection'
         definition: VARCHAR(100) NULL
+        required: false
       provinceOfResidence:
         name: province
         comment: 'Province of residence of the boat'
@@ -133,6 +135,7 @@ schemas:
         name: general_comment
         comment: 'Province of residence of the boat'
         definition: VARCHAR(300) NULL
+        required: false
       passportNumber: 
         name: passport_number
         comment: 'Passport number associated with previous inspection'
@@ -144,6 +147,7 @@ schemas:
         definition: INT NULL
         foreignTable: high_risk_assessment
         refColumn: high_risk_assessment_id
+        required: false
         meta: 
           embedded: true
     ## -- end columns

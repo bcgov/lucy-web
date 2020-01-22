@@ -51,10 +51,12 @@ schemas:
         name: 'shift_start_comment'
         comment: 'This column will store user comment on start of the day'
         definition: VARCHAR(300) NULL
+        required: false
       shiftEndComment:
         name: 'shift_end_comment'
         comment: 'This column will store user comment on end of the day'
-        definition: VARCHAR(300) NULL  
+        definition: VARCHAR(300) NULL
+        required: false
       # Counter
       motorizedBlowBys:
         name: 'motorized_blow_bys_counter'
