@@ -109,21 +109,32 @@ For example:
 
 `cd lucy-web`
 
+Finally, create initial local environment files:
+
+1. Create an empty `.env` file at the `api` directory root
+1. Within `api/env_config` create a `env.local` file, using `env.example` as a reference
+1. Update the app secret values in `env.local`
+
+Note: these files are git-ignored.
+
 ## Running the Application
 
 *Using Docker:*
 
-The client (frontend) and server (backend) of the application run in separate containers.
-
-To run the server, execute the following commands inside the `api` directory. To run the client, execute the following commands inside the `app` directory. Both client and server may be run independently or in parallel.
-
-The following commands are defined in the respective `Makefile` for each directory.
+The client (frontend) and server (backend) of the application run in separate containers. To run all of the application containers, execute the following commands inside the `api` directory.
 
 1. Build the application  
 `make build-local`
 
-2. Run the app container  
+2. Run the application containers  
 `make run-local`
+
+3. Run the application containers in debug mode
+`make local-debug`
+
+This will print additional logging statements to the console, which may be useful when debugging the backend.
+
+The above commands, along with additional options, are defined in the `Makefile`.
 
 *Running the App Locally:*
 
@@ -135,17 +146,13 @@ This will perform hotloading of any changes made to the frontend code (i.e., you
 
 To quit the local client, type `<Ctrl> + C`.
 
-To run the server (backend) within a Docker container, execute
-`make local-debug`
-This will print additional logging statements to the console, which may be useful when debugging the backend.
-
 *View the App:*
 
-Go to http://localhost:4200/
+Go to http://localhost:3033/
 
 *Quit the App:*
 
-On the command line, run `make close-local`
+On the command line, run `make close-local` or type `<Ctrl> + C`.
 
 ## License
 

@@ -118,7 +118,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /**
      Message displayed after submission
   */
-  get submitedMessage(): string {
+  get submittedMessage(): string {
     if (this.creating) {
       return `Entries Added`;
     } else if (this.editing) {

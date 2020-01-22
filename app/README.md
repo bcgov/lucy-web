@@ -9,19 +9,21 @@ To get help on Angular CLI use `ng help` or go check out the [Angular CLI README
 ## Setting Up
 ### Requirements
 
-If you wish to use the Makefile commands to run the project with Docker, there are no additional requirements required for local development.
+If you wish to use the Makefile commands to run the project with Docker from the `api` directory, there are no additional requirements required for local development.
 
 If you wish to run the application locally without Docker, you will need to install [Angular CLI](https://github.com/angular/angular-cli).
 
 ## Running the Application
 
-Run `make build-local` or `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-Run `make run-local` or `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run  `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+Note you will also need to have the backend server running to connect to. See the [Server Readme](api/README.md) for details.
 
 ## Closing the Application
 
-Run `make close-local` or close the current process on the command line.
+To quit the local client, type `<Ctrl> + C`.
 
 ## Deployment to OpenShift
 
@@ -37,7 +39,7 @@ Run `ng build-storybook` followed by `ng storybook` to build and run tests via [
 
 ## Code Analysis with SonarQube
 
-Run `ng sonar-analysis` to see output from [SonarQube](https://www.sonarqube.org/).
+Run `npm run sonar-analysis` to see output from [SonarQube](https://www.sonarqube.org/).
 
 ## Code scaffolding
 
