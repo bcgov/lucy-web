@@ -44,11 +44,11 @@ export class EfficacyCode extends Record implements EfficacyCodeSpec {
 	 */
 
 	/**
-	 * @description Getter/Setter property for column {efficacy_codes_id}
+	 * @description Getter/Setter property for column {efficacy_code_id}
 	 */
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
-	efficacy_codes_id: number;
+	efficacy_code_id: number;
 
 	/**
 	 * @description Getter/Setter property for column {efficacy_rating}

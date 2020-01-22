@@ -30,6 +30,7 @@ import { accountRoute,
     ObserverWorkflowRouteController,
     MusselsAppCodesRouteController,
     chemicalTreatmentRoute,
+    mechanicalMonitorRoute,
 } from '../modules';
 import { LocationRouteController } from '../modules/location';
 import { defaultRoute, miscellaneousRouter } from '../modules';
@@ -53,6 +54,9 @@ export const routes = (app: Application) => {
 
     // Chemical Treatment
     app.use('/api/treatment/chemical', chemicalTreatmentRoute());
+
+    // Mechanical Monitor
+    app.use('/api/monitor/mechanical', mechanicalMonitorRoute());
 
     // Codes
     app.use('/api/codes', CodeTableRouteController.shared.router);

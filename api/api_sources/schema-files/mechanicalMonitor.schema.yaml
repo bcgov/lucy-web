@@ -29,11 +29,19 @@ schemas:
         sections:
             - title:
                 key: ''
-                default: ''
+                default: 'Monitoring Information'
               groups:
                 - title:
                     key: 'treatmentDetails'
                     default: 'Treatment Details'
+                  fields:
+                    - mechanicalTreatmentID
+                - title:
+                    key: 'location'
+                    default: 'Location'
+                  fields:
+                    - spaceGeom
+                  style: {}
             - title:
                 key: ''
                 default: 'Monitoring Details'
@@ -165,10 +173,10 @@ schemas:
     ## --
     # Copy Columns, version from other schema
     copyFrom:
-        # Key: SpaceGeomModelSchema
-        SpaceGeomModelSchema:
-          versions:
-            - spaceGeom
-        # -- SpaceGeomModelSchema
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
   ## -- End Schema
   

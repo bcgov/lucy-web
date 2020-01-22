@@ -16,7 +16,7 @@ schemas:
     relations: {}
     columns:
       id:
-        name: efficacy_codes_id
+        name: efficacy_code_id
         comment: Auto generated sequential primary key column.
         definition: SERIAL PRIMARY KEY
       efficacyRating:
