@@ -21,6 +21,7 @@ import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
 import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes, ChemicalTreatment, ChemicalTreatmentMethodCode } from '../models/ChemicalTreatment';
+import { EfficacyCodes } from '../models/Monitor';
 
 @Injectable({
   providedIn: 'root'
@@ -117,6 +118,11 @@ export class ObjectValidatorService {
   public isObservationTypeCodesObject(observationType: any): observationType is ObservationTypeCodes {
     if (observationType === undefined || observationType === null) {return false; }
     return (<ObservationTypeCodes>observationType.description) !== undefined;
+  }
+
+  public isEfficacyCodesObject(efficacyCode: any): efficacyCode is EfficacyCodes {
+    if (efficacyCode === undefined || efficacyCode === null) { return false; }
+    return (<EfficacyCodes>efficacyCode.efficacyRating) !== undefined;
   }
 
   /**

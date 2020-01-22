@@ -13,7 +13,6 @@ export class CreateMechanicalMonitor1579567436660 extends AppDBMigrator implemen
         // Adding wind direction init schema to migrator
         this.mechanicalMonitorSchema = new MechanicalMonitorSchema();
         this.addSchemaInitVersion(this.mechanicalMonitorSchema);
-        this.addDataImportMigration(this.mechanicalMonitorSchema, 'init');
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {
