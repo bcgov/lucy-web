@@ -85,7 +85,6 @@ services:
     dockerfile: .build/Dockerfile.local
   ports:
     - ${APP_PORT}:${APP_PORT}
-    - 3030:3030
   volumes: 
    - ../app/lucy/src:/opt/app-root/src/src
   networks:
