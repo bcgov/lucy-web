@@ -5,6 +5,7 @@ CM,Chemical monitoring
 MT,Mechanical treatment
 MM,Mechanical monitoring
 BT,Biological treatment
-BO,Biological oollection
+BO,Biological collection
 BM,Biological monitoring
 BDS,Biological dispersal survey
+MN,Monitor
