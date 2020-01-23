@@ -4,7 +4,7 @@
 CREATE TABLE watercraft_risk_assessment ();
 ALTER TABLE watercraft_risk_assessment ADD COLUMN watercraft_risk_assessment_id SERIAL PRIMARY KEY;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN timestamp TIMESTAMP NOT NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN pass_port_holder_ind BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN passport_holder_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN k9_inspection_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN marine_species_found_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN aquatic_plants_found_ind BOOLEAN NOT NULL DEFAULT FALSE;
@@ -37,7 +37,7 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_assessment_id INT NU
 COMMENT ON TABLE watercraft_risk_assessment IS 'This is schema for data model of water craft observation for invasive aquatic species specially Mussels. This data model will be used to capture all kind of variables related to a water craft observation';
 COMMENT ON COLUMN watercraft_risk_assessment.watercraft_risk_assessment_id IS 'Auto generated primary key';
 COMMENT ON COLUMN watercraft_risk_assessment.timestamp IS 'Date and time of watercraft observation.';
-COMMENT ON COLUMN watercraft_risk_assessment.pass_port_holder_ind IS 'Indicator to show that inspected boat has previously issued passport';
+COMMENT ON COLUMN watercraft_risk_assessment.passport_holder_ind IS 'Indicator to show that inspected boat has previously issued passport';
 COMMENT ON COLUMN watercraft_risk_assessment.k9_inspection_ind IS 'Indicator to show that inspection type is K9';
 COMMENT ON COLUMN watercraft_risk_assessment.marine_species_found_ind IS 'Indicator to show any marine species found during inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.aquatic_plants_found_ind IS 'Indicator to show any aquatic plants found during inspection';

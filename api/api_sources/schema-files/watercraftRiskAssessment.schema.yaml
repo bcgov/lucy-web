@@ -44,7 +44,7 @@ schemas:
         definition: 'TIMESTAMP NOT NULL'
       # Boolean
       passportHolder:
-        name: 'pass_port_holder_ind'
+        name: 'passport_holder_ind'
         comment: 'Indicator to show that inspected boat has previously issued passport'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       k9Inspection:

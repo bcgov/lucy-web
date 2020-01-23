@@ -2,13 +2,9 @@
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { HighRiskAssessmentSchema } from '../database-schema';
-import {
-} from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { IntTransformer } from '../../libs/transformer';
-import {
-} from '../models';
 
 import { Record } from './generic.data.models';
 
