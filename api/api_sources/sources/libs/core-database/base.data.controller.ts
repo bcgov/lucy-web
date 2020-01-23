@@ -409,8 +409,12 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
                     if (!col.required) {
                         r = r && true;
                     } else {
-                        console.log(`${this.className} | Fail For key: ${k} => ${data[k]}`);
-                        r = r && false;
+                        if (typeof data[k] === typeof false && data[k] !== undefined) {
+                            r = r && true;
+                        } else {
+                            console.log(`${this.className} | Fail For key: ${k} => ${data[k]}`);
+                            r = r && false;
+                        }
                     }
                 }
             }

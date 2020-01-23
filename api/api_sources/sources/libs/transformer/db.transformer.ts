@@ -28,6 +28,16 @@ import * as moment from 'moment';
  /**
   * @description Transformer for string to float number
   */
+
+export class IntTransformer {
+    to(data: number) {
+        return data;
+    }
+
+    from(data: string) {
+        return parseInt(data, undefined);
+    }
+}
 export class NumericTransformer {
     to(data: number) {
         return data;

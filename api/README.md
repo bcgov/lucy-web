@@ -58,12 +58,12 @@ You can test your installation by running `node -v` and `npm -v` which should pr
 
 *Run App in Local env*
 
-* Run app: `make local`
+* Run app: `make run-local`
 * Debug app: `make local-debug`
 
 *Clean the Local App*
 
-`make clean-local`
+Note: the database has a persistant volume when run with Docker. If you need to rebuild this, run `make clean-local`
 
 ## Closing the Application
 

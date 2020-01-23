@@ -22,12 +22,19 @@
  */
 import { DataController} from '../../database/data.model.controller';
 
+export interface ValidationBypass {
+    skipForCreate?: boolean;
+    skipForUpdate?: boolean;
+    skipForRead?: boolean;
+}
+
 export interface ResourceInfo {
     dataController: DataController;
     path?: string;
     description?: string;
     secure?: boolean;
     users?: any[];
+    validationBypass?: ValidationBypass;
     validators?: () => any[];
     middleware?: () => any[];
     createMiddleware?: () => any[];
