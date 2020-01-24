@@ -98,6 +98,7 @@ export interface RouteDescription {
     method: HTTPMethod;
     responses?: {[key: number]: APIResponse};
     secure?: boolean;
+    skipValidation?: boolean;
 }
 
 export type RouteBasicDescription = Pick<RouteDescription, 'path' | 'validators' | 'middleware' |  'description' | 'index' | 'secure' | 'responses'>;

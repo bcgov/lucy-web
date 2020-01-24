@@ -107,6 +107,7 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     const propInfo = {};
     _.each(schema.table.columnsDefinition, (column, col) => {
         props = addDoc(props, `Getter/Setter property for column {${column.name}}`, t);
+        const typeDetails: any = column.typeDetails;
         if (col === 'id') {
             props = `${props}${n}${t}@PrimaryGeneratedColumn()${n}${t}@ModelProperty({type: PropertyType.number})${n}${t}${column.name}: number;${n}`;
         } else {
@@ -116,8 +117,10 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
                 props = `${props}${rel}${jc}${n}${t}@ModelProperty({type: PropertyType.${column.type}})${n}${t}${col}: ${column.refModel || column.type};${n}`;
             } else {
                 let cols = `${n}${t}@Column({ name: ${schemaName}.columns.${col}})`;
-                if (column.type === 'number') {
+                if (column.type === 'number' && typeDetails.subType !== 'int') {
                     cols = `${n}${t}@Column({name: ${schemaName}.columns.${col}, transformer: new NumericTransformer()})`;
+                } else if (column.type === 'number' && typeDetails.subType === 'int') {
+                    cols = `${n}${t}@Column({name: ${schemaName}.columns.${col}, transformer: new IntTransformer()})`;
                 } else if (column.typeDetails.isDate) {
                     cols = `${n}${t}@Column({name: ${schemaName}.columns.${col}, transformer: new DateTransformer()})`;
                 }
@@ -132,7 +135,7 @@ export const modelClassCreator = (schema: BaseTableSchema, cls?: string) => {
     defClass = defClass + `${n}import { ${schemaName} } from '../database-schema';`;
     defClass = defClass + exportRelatedSchema(schema);
     defClass = defClass + `${n}import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';`;
-    defClass = defClass + `\nimport { NumericTransformer, DateTransformer, DateTimeTransformer } from '../../libs/transformer';`;
+    defClass = defClass + `\nimport { NumericTransformer, DateTransformer, DateTimeTransformer, IntTransformer } from '../../libs/transformer';`;
     defClass = defClass + exportModel(schema);
     defClass = defClass + exportBaseModel(schema);
     if (!schema.table.meta.resource) {

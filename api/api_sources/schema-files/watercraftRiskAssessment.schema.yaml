@@ -2,6 +2,7 @@
 version: '1.0'
 includes: 
   - observerWorkflow.schema.yaml
+  - highRiskAssessment.schema.yaml
 schemas: 
   ## -- WaterCraftRiskAssessmentSchema
   WatercraftRiskAssessmentSchema:
@@ -15,31 +16,140 @@ schemas:
     displayLayout: {}
     layout: {}
     computedFields: {}
+    # Relations
+    relations: 
+      journeys:
+        header:
+          key: 'watercraftAssessment.journeys'
+          default: Water Craft Journeys
+        description: 
+          key: 'watercraftAssessment.journeys.description'
+          default: 'Associated Water-bodies'
+        type: array
+        relationshipType: one-to-many
+        schema: WatercraftJourneySchema
+        meta: 
+          embedded: true 
+    # End: Relations
     columns: 
+      # Primary Column
       id: 
         name: 'watercraft_risk_assessment_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
+      # Time
       timestamp: 
-        name: timestamp
+        name: 'timestamp'
         comment: 'Date and time of watercraft observation.'
         definition: 'TIMESTAMP NOT NULL'
-      highRiskAssessmentForm:
-        name: high_risk_assessment_form
-        comment: 'Stored JSON structure for whole high risk assessment form data'
-        definition: JSONB NULL
-      lowRiskAssessmentForm:
-        name: low_risk_assessment_form
-        comment: 'Stored JSON structure for whole low risk assessment form data'
-        definition: JSONB NULL
-      fullObservationForm:
-        name: full_observation_form
-        comment: 'Stored JSON structure for full observation questionnaire'
-        definition: JSONB NULL
-      additionalInfo:
-        name: additional_info
-        comment: 'Stored JSON structure for additional information'
-        definition: JSONB NULL
+      # Boolean
+      passportHolder:
+        name: 'passport_holder_ind'
+        comment: 'Indicator to show that inspected boat has previously issued passport'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      k9Inspection:
+        name: k9_inspection_ind
+        comment: 'Indicator to show that inspection type is K9'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      marineSpeciesFound:
+        name: marine_species_found_ind
+        comment: 'Indicator to show any marine species found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      aquaticPlantsFound:
+        name: aquatic_plants_found_ind
+        comment: 'Indicator to show any aquatic plants found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousAISKnowledge:
+        name: previous_ais_knowledge_ind
+        comment: 'Indicator to store status of previous AIS knowledge'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousInspection:
+        name: previous_inspection_ind
+        comment: 'Indicator to store status of previous inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      marineMusselFound:
+        name: marine_mussel_found_ind
+        comment: 'Indicator to store status marine mussel found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      adultDreissenidaeFound:
+        name: adult_dreissenidae_found_ind
+        comment: 'Status flag any adult Dreissenidae found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      launchedOutsideBC:
+        name: launched_outside_bc_ind
+        comment: 'Status flag to check the boat was launched outside of bc or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      decontaminationPerformed:
+        name: decontamination_performed_ind
+        comment: 'Status flag to check any decontamination performed during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commerciallyHauled:
+        name: commercially_hauled_ind
+        comment: 'Status flag to check inspected boats are commercially hauled or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      highRiskArea:
+        name: high_risk_area_ind
+        comment: 'Indicator flag to check boats are from High risk area or not.'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      highRiskAIS:
+        name: high_risk_ais_ind
+        comment: 'Indicator flag to check high risk AIS or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      # Counter
+      nonMotorized:
+        name: 'non_motorized_counter'
+        comment: 'Counter for non motorized boats in inspection'
+        definition: INT NULL
+      simple:
+        name: 'simple_counter'
+        comment: 'Counter for number of simple boats in the inspection'
+        definition: INT NULL
+      complex:
+        name: 'complex_counter'
+        comment: 'Counter for number of complex boats in the inspection'
+        definition: INT NULL  
+      veryComplex:
+        name: 'very_complex_count'
+        comment: 'Counter for number of very complex boats in the inspection'
+        definition: INT NULL
+      previousInspectionDays:
+        name: 'previous_inspection_days_count'
+        comment: 'Counter for number of very complex boats in the inspection'
+        definition: INT NULL
+      # Strings
+      previousAISKnowledgeSource:
+        name: previous_ais_knowledge_source
+        comment: 'Indicator to store status of previous AIS knowledge'
+        definition: VARCHAR(100) NULL
+        required: false
+      previousInspectionSource:
+        name: previous_inspection_source
+        comment: 'Indicator to store status of previous inspection'
+        definition: VARCHAR(100) NULL
+        required: false
+      provinceOfResidence:
+        name: province
+        comment: 'Province of residence of the boat'
+        definition: VARCHAR(100) NULL
+      generalComment:
+        name: general_comment
+        comment: 'Province of residence of the boat'
+        definition: VARCHAR(300) NULL
+        required: false
+      passportNumber: 
+        name: passport_number
+        comment: 'Passport number associated with previous inspection'
+        definition: VARCHAR(100) NULL
+      # Relationship
+      highRiskAssessment:
+        name: high_risk_assessment_id
+        comment: 'Foreign key reference to High risk assessment of the inspection'
+        definition: INT NULL
+        foreignTable: high_risk_assessment
+        refColumn: high_risk_assessment_id
+        required: false
+        meta: 
+          embedded: true
     ## -- end columns
     versions:
       ## -- version: workflow
