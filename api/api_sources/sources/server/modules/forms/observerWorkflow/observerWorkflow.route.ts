@@ -28,7 +28,8 @@ import {
     ResourceRoute,
     CreateMiddleware,
     ResourceRouteController,
-    UpdateMiddleware
+    UpdateMiddleware,
+    Get
 } from '../../../core';
 import {
     ObserverWorkflowController,
@@ -54,4 +55,13 @@ export class ObserverWorkflowRouteController extends ResourceRouteController<Obs
         // Get Proper data mapping
         return [201, await this.dataController.createNewObject(data, req.user)];
     }
+
+    @Get({
+        path: '/export',
+        secure: true
+    })
+    public async export() {
+        return [200, await this.dataController.export()];
+    }
+
 }

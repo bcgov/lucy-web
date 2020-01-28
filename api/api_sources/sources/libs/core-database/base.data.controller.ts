@@ -31,7 +31,7 @@ import { ApplicationTable, TableRelation } from './application.table';
 import { BaseSchema } from './baseSchema';
 import { registerDataModelController, controllerForSchemaName } from './schema.storage';
 import { DataController } from '../../database/data.model.controller';
-import { unWrap } from '../utilities';
+import { unWrap, flatJSON } from '../utilities';
 import { DataFieldDefinition } from './application.column';
 
 export interface ControllerMetaData {
@@ -57,6 +57,7 @@ export interface BaseDataController {
     factory (): Promise<any>;
     getIdValue(obj: any): any;
     validate(data: any): boolean;
+    export(): Promise<any>;
 }
 
 
@@ -391,6 +392,26 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
         const idKey: string = this.schema.id;
         return obj[idKey];
     }
+
+    processExportData(data: T): any {
+        return data;
+    }
+
+    /**
+	 * @description Export to flat json
+	 */
+	public async export(): Promise<any> {
+		// Get all data
+		const all: T[] = await this.all();
+		const r = [];
+		// Get flat json
+		for (const w of all) {
+			// Process it first
+			const processedItem = this.processExportData(w);
+			r.push(flatJSON(processedItem));
+		}
+		return r;
+	}
 
     validate(data: any): boolean {
         let r = true;
