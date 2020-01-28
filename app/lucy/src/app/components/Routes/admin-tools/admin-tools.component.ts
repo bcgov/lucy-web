@@ -22,6 +22,7 @@ import { AdminService } from 'src/app/services/admin.service';
 import { User } from 'src/app/models';
 import { Role } from 'src/app/models/Role';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ExportService } from 'src/app/services/export/export.service';
 
 @Component({
   selector: 'app-admin-tools',
@@ -36,7 +37,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public focusedAccessRequest: AccessRequest;
 
-  constructor(private roles: RolesService, private admin: AdminService, private loadingService: LoadingService) { }
+  constructor(private roles: RolesService, private admin: AdminService, private loadingService: LoadingService, private exportService: ExportService) { }
 
   ngOnInit() {}
 
@@ -80,5 +81,10 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public requestResponseSent() {
     this.fetchNonStaticData();
+  }
+
+  public export() {
+    this.exportService.downloadJSON(this.allUsers, null);
+    this.exportService.downloadCSV(this.allUsers, null);
   }
 }
