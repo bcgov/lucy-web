@@ -15,6 +15,7 @@ export class ExportService {
    * @param name 
    */
   public downloadCSV(objects: any, name: string | null) {
+    if (!objects) { return }
     let fileName = name ? name : `export - ${Date().toString()}`
     const items = this.flattenJsonArray(objects);
     const replacer = (key, value) => value === null ? '' : value // handle null values here
