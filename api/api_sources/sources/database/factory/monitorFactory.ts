@@ -24,50 +24,56 @@
 // /**
 //   * Imports
 //   */
-//  import { Destroy, ModelSpecFactory } from './helper';
-//  import { MechanicalMonitor,
-//    MechanicalMonitorController,
-//    MechanicalMonitorSpec,
-//    MechanicalMonitorUpdateSpec,
-//    User,
-//    UserDataController,
-//    MechanicalTreatment,
-//    MechanicalTreatmentController} from '../models';
-//  import { userFactory } from './userFactory';
-//  import { mechanicalTreatmentFactory } from './treatmentFactory';
-//  import * as faker from 'faker';
+ import { Destroy, ModelSpecFactory } from './helper';
+ import { MechanicalMonitor,
+   MechanicalMonitorController,
+   MechanicalMonitorSpec,
+   MechanicalMonitorUpdateSpec,
+   User,
+   UserDataController,
+   MechanicalTreatment,
+   MechanicalTreatmentController,
+   EfficacyCodeController,
+   EfficacyCodeSpec,
+   SpeciesAgencyCode,
+   SpeciesAgencyCodeController} from '../models';
+ import { userFactory } from './userFactory';
+ import { mechanicalTreatmentFactory } from './treatmentFactory';
+ import * as faker from 'faker';
+import { Model } from 'mongoose';
 
-// /**
-//  * @description Factory to create monitoring spec.
-//  */
-// export const mechanicalMonitorCreateSpecFactory = async (): Promise<MechanicalMonitorSpec> => {
-//     return await ModelSpecFactory(MechanicalMonitorController.shared)();
-//   };
+/**
+ * @description Factory to create mechanical monitoring spec.
+ */
+export const mechanicalMonitorCreateSpecFactory = async (): Promise<MechanicalMonitorSpec> => {
+    return await ModelSpecFactory(MechanicalMonitorController.shared)();
+  };
 
-//   /**
-//    * @description MechanicalMonitor factory
-//    */
-//   export const mechanicalMonitorFactory = async () => {
-//     const spec = await mechanicalMonitorCreateSpecFactory();
-//     return await MechanicalMonitorController.shared.createNewObject(spec, await userFactory());
-//   };
+  /**
+   * @description MechanicalMonitor factory
+   */
+  export const mechanicalMonitorFactory = async () => {
+    const spec = await mechanicalMonitorCreateSpecFactory();
+    return await MechanicalMonitorController.shared.createNewObject(spec, await userFactory());
+  };
 
-//   /**
-//    * @description MechanicalMonitor factory obj destroyer
-//    */
-//   export const destroyMechanicalMonitor = Destroy<MechanicalMonitor, MechanicalMonitorController>(MechanicalMonitorController.shared, async (obj: MechanicalMonitor) => {
-//     if (obj.createdBy) {
-//       await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
-//     }
-//     if (obj.mechanicalTreatmentID) {
-//       await Destroy<MechanicalTreatment, MechanicalTreatmentController>(MechanicalTreatmentController.shared)(obj.mechanicalTreatmentID);
-//     }
-//   });
+  /**
+   * @description MechanicalMonitor factory obj destroyer
+   */
+  export const destroyMechanicalMonitor = Destroy<MechanicalMonitor, MechanicalMonitorController>(MechanicalMonitorController.shared, async (obj: MechanicalMonitor) => {
+    if (obj.createdBy) {
+      await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
+    }
+    if (obj.mechanicalTreatmentID) {
+      await Destroy<MechanicalTreatment, MechanicalTreatmentController>(MechanicalTreatmentController.shared)(obj.mechanicalTreatmentID);
+    }
+  });
 
-//   export const mechanicalMonitorUpdateSpecFactory = async (): Promise<MechanicalMonitorUpdateSpec> => {
-//     return {
-//       mechanicalTreatmentID: (await mechanicalTreatmentFactory().),
-//     };
-//   };
-//   // ------------------------------------------------------------
+  export const mechanicalMonitorUpdateSpecFactory = async (): Promise<MechanicalMonitorUpdateSpec> => {
+    return {
+      speciesAgency: (await ModelSpecFactory(SpeciesAgencyCodeController.shared)()),
+      efficacy: (await ModelSpecFactory(EfficacyCodeController.shared)())
+    };
+  };
+  // ------------------------------------------------------------
 

@@ -1,33 +1,30 @@
 // ** Model: MechanicalMonitor from schema MechanicalMonitorSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
-import { MechanicalMonitorSchema, EfficacyCodeSchema } from '../database-schema';
 import {
 	SpeciesAgencyCodeSchema,
-	SpeciesSchema,
-	MechanicalTreatmentSchema
+	MechanicalTreatmentSchema,
+	EfficacyCodeSchema,
+	MechanicalMonitorSchema
 } from '../database-schema';
-
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { DateTransformer } from '../../libs/transformer';
+import { DateTimeTransformer } from '../../libs/transformer';
 import {
 	SpeciesAgencyCode,
-	Species,
-	MechanicalTreatment
+	MechanicalTreatment,
+	EfficacyCode
 } from '../models';
 import { Record } from './generic.data.models';
-import { EfficacyCode } from './efficacyCode';
 
 /** Interface **/
 /**
  * @description MechanicalMonitor create interface
  */
 export interface MechanicalMonitorSpec {
-	date: string;
+	timestamp: string;
 	paperFileID: string;
 	comments: string;
 	speciesAgency: SpeciesAgencyCode;
-	species: Species;
 	mechanicalTreatmentID: MechanicalTreatment;
 	efficacy: EfficacyCode;
 }
@@ -39,11 +36,10 @@ export interface MechanicalMonitorSpec {
  * @description MechanicalMonitor update interface
  */
 export interface MechanicalMonitorUpdateSpec {
-	date?: string;
+	timestamp?: string;
 	paperFileID?: string;
 	comments?: string;
 	speciesAgency?: SpeciesAgencyCode;
-	species?: Species;
 	mechanicalTreatmentID?: MechanicalTreatment;
 	efficacy?: EfficacyCode;
 }
@@ -72,11 +68,11 @@ export class MechanicalMonitor extends Record implements MechanicalMonitorSpec {
 	mechanical_monitor_id: number;
 
 	/**
-	 * @description Getter/Setter property for column {mechanical_monitor_date}
+	 * @description Getter/Setter property for column {mechanical_monitor_timestamp}
 	 */
-	@Column({name: MechanicalMonitorSchema.columns.date, transformer: new DateTransformer()})
+	@Column({ name: MechanicalMonitorSchema.columns.timestamp, transformer: new DateTimeTransformer()})
 	@ModelProperty({type: PropertyType.string})
-	date: string;
+	timestamp: string;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_monitor_paper_file_ref}
@@ -99,14 +95,6 @@ export class MechanicalMonitor extends Record implements MechanicalMonitorSpec {
 	@JoinColumn({ name: MechanicalMonitorSchema.columns.speciesAgency, referencedColumnName: SpeciesAgencyCodeSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	speciesAgency: SpeciesAgencyCode;
-
-	/**
-	 * @description Getter/Setter property for column {species_id}
-	 */
-	@ManyToOne( type => Species, { eager: true})
-	@JoinColumn({ name: MechanicalMonitorSchema.columns.species, referencedColumnName: SpeciesSchema.pk})
-	@ModelProperty({type: PropertyType.object})
-	species: Species;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_treatment_id}

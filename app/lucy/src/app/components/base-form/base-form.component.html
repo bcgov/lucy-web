@@ -144,8 +144,12 @@
                                         <!-- Text Area field -->
                                         <app-field *ngIf="field.isTextAreaField" [mode]="mode" [multiline]="true" [header]="field.header" [value]="field.value" [verification]="field.verification" [required]="field.required" (valueChanged)="fieldChanged(field, $event)">
                                         </app-field>
-                                        <!-- Date Field -->
+                                        <!-- Date only Field -->
                                         <app-date-picker *ngIf="field.isDateField" [mode]="mode" [date]="field.value" [header]="field.header" (selected)="fieldChanged(field, $event)"></app-date-picker>
+                                        <!-- Date & Time Fields -->
+                                        <div *ngIf="field.isDateAndTimeField" class="col-12">
+                                            <app-date-time-picker [mode]="mode" [header]="field.header" [dateTime]="field.value" (selected)="fieldChanged(field, $event)"></app-date-time-picker>
+                                        </div>
                                         <!-- Dropdown --->
                                         <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [fieldHeader]="field.header" [selectedItem]="field.value" (selectionChanged)="fieldChanged(field, $event)">
                                         </app-dropdown>
@@ -153,8 +157,8 @@
                                         <div class="col">
                                             <app-checkbox *ngIf="field.isCheckbox" [mode]="mode" [header]="field.header" [value]="field.value" (selectionChanged)="fieldChanged(field, $event)">
                                             </app-checkbox>
-                                            <!-- Computed field -->
                                         </div>
+                                        <!-- Computed field -->
                                         <app-computed-field *ngIf="field.isComputedField" [mode]="mode" [header]="field.header" [suffix]="field.suffix" [formBody]="responseBody" [config]="config" [computationRules]="field.computationRules">
                                         </app-computed-field>
                                     </div>

@@ -4,12 +4,9 @@ externalTables:
     description: Species agency code table
     schema: SpeciesAgencyCodeSchema
 includes:
-    - spaceGeom.schema.yaml
     - efficacyCodes.schema.yaml
-    - species.schema.yaml
     - mechanicalTreatment.schema.yaml
 schemas:
-  ## -- Example
   MechanicalMonitorSchema:
     name: 'mechanical_monitor'
     description: 'A monitoring record created as follow-up to a mechanical treatment' 
@@ -23,49 +20,42 @@ schemas:
     ## --
     # -- layout
     layout:
-        title:
-            key:
-            default: 'Mechanical Monitoring Information'
-        sections:
+      title:
+        key:
+        default: 'Mechanical Monitoring Information'
+      sections:
+        - title:
+            key: ''
+            default: 'Monitoring Information'
+          groups:
+            - title:
+                key: 'treatmentDetails'
+                default: 'Treatment Details'
+              fields:
+                - mechanicalTreatmentID
+        - title:
+            key: ''
+            default: 'Monitoring Details'
+          groups:
             - title:
                 key: ''
-                default: 'Monitoring Information'
-              groups:
-                - title:
-                    key: 'treatmentDetails'
-                    default: 'Treatment Details'
-                  fields:
-                    - mechanicalTreatmentID
-                - title:
-                    key: 'location'
-                    default: 'Location'
-                  fields:
-                    - spaceGeom
-                  style: {}
+                default: ''
+              fields:
+                - speciesAgency
+                - paperFileID
+                - efficacy
+                - timestamp
+        ## Comments section
+        - title:
+            key: ''
+            default: 'Comments'
+          groups:
             - title:
                 key: ''
-                default: 'Monitoring Details'
-              groups:
-                - title:
-                    key: ''
-                    default: ''
-                  fields:
-                    - speciesAgency
-                    - paperFileID
-                    - date
-                    - efficacy
-                    - species
-            ## Comments section
-            - title:
-                key: ''
-                default: 'Comments'
-              groups:
-                - title:
-                    key: ''
-                    default: ''
-                  fields:
-                    - comments
-                  style: {}
+                default: ''
+              fields:
+                - comments
+              style: {}
     # --
     ## -- Relationships
     relations: {}
@@ -77,10 +67,10 @@ schemas:
         name: mechanical_monitor_id
         comment: 'Auto generated primary key. This is auto incremental field'
         definition: SERIAL PRIMARY KEY
-      date:
-        name: mechanical_monitor_date
-        comment: 'Date of the monitoring record'
-        definition: DATE NOT NULL
+      timestamp:
+        name: mechanical_monitor_timestamp
+        comment: 'Date and time of the monitoring record'
+        definition: TIMESTAMP NOT NULL
         meta: {}
         layout:
           header: 
@@ -89,28 +79,28 @@ schemas:
           classes:
             - none
       paperFileID:
-          name: mechanical_monitor_paper_file_ref
-          comment: 'Paper file reference associated with monitoring record'
-          definition: VARCHAR(100) NULL
-          meta: {}
-          layout:
-            header: 
-              key: 'paperFileID' 
-              default: 'Paper File ID'
-            classes:
-              - none
+        name: mechanical_monitor_paper_file_ref
+        comment: 'Paper file reference associated with monitoring record'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'paperFileID' 
+            default: 'Paper File ID'
+          classes:
+            - none
       comments:
-          name: comments
-          comment: 'Free-form comments added by mechanical monitoring observer'
-          definition: VARCHAR(500) NULL
-          meta: {}
-          required: false
-          layout:
-            header:
-              key: 'comments'
-              default: 'Comments'
-            classes:
-              - col-12
+        name: comments
+        comment: 'Free-form comments added by mechanical monitoring observer'
+        definition: VARCHAR(500) NULL
+        meta: {}
+        required: false
+        layout:
+          header:
+            key: 'comments'
+            default: 'Comments'
+          classes:
+            - col-12
       ## Relation Columns
       speciesAgency:
         name: 'species_agency_code_id'
@@ -125,19 +115,6 @@ schemas:
             default: 'Completed on Behalf of'
           classes:
             - none
-      species:
-          name: 'species_id'
-          comment: Foreign key reference to species table 
-          definition: INT NULL
-          foreignTable: 'species'
-          refColumn: species_id
-          deleteCascade: true
-          layout:
-            header:
-              key: 'species'
-              default: 'Species'
-            classes:
-              - none
       mechanicalTreatmentID:
         name: 'mechanical_treatment_id'
         comment: 'Foreign key reference to Mechanical Treatments table'
@@ -146,11 +123,11 @@ schemas:
         refColumn: mechanical_treatment_id
         deleteCascade: false
         layout:
-            header:
-                key: 'mechanicalTreatmentID'
-                default: 'Treatment ID'
-            classes:
-                - none
+          header:
+            key: 'mechanicalTreatmentID'
+            default: 'Treatment ID'
+          classes:
+            - none
       efficacy:
         name: efficacy_rating
         comment: 'Foreign key reference to Efficacy code table'
@@ -160,11 +137,11 @@ schemas:
         deleteCascade: false
         meta: {}
         layout:
-            header:
-                key: 'efficacy'
-                default: 'Efficacy %'
-            classes:
-                - none
+          header:
+            key: 'efficacy'
+            default: 'Efficacy %'
+          classes:
+            - none
     ## -- Versions
     versions: {}
     ## --
@@ -172,11 +149,6 @@ schemas:
     fields: {}
     ## --
     # Copy Columns, version from other schema
-    copyFrom:
-      # Key: SpaceGeomModelSchema
-      SpaceGeomModelSchema:
-        versions:
-          - spaceGeom
-      # -- SpaceGeomModelSchema
+    copyFrom: {}
   ## -- End Schema
   
