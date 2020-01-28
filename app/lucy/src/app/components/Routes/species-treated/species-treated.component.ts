@@ -93,8 +93,13 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
 
   async ngOnInit() {
+    if (this.mode === FormMode.View) {
+      this.speciesBeingTreated = this.responseBody.speciesObservations;
+      return;
+    }
+    
     if (this.mode === FormMode.Create) {
-      this.speciesBeingTreated = [];
+      this.speciesBeingTreated = this.responseBody.speciesObservations || [];
       this.speciesNotBeingTreated = [];
     } else if (this.mode === FormMode.Edit) {
       this.loadingService.add();
@@ -103,16 +108,13 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
       this.speciesBeingTreated = this.responseBody.speciesObservations;
       this.speciesNotBeingTreated = [];
 
-      // hacky way of passing responseBody contents to base-form
-      // otherwise fields have to be touched by user before base-form recognizes
-      // that values exist
-      this.notifyChangeEvent();
-
       await this.fetchObservationsForLocation();
       this.loadingService.remove();
-    } else { // form is in view mode
-      this.speciesBeingTreated = this.responseBody.speciesObservations;
     }
+    // hacky way of passing responseBody contents to base-form
+    // otherwise fields have to be touched by user before base-form recognizes
+    // that values exist
+    this.notifyChangeEvent();
   }
 
   async ngOnChanges(change: SimpleChanges) {
