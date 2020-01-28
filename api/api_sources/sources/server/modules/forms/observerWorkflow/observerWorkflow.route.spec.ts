@@ -47,13 +47,13 @@ describe(`Test for ${resourceName}`, () => {
         await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
     });
 
-    // Test4: Fail To Create For Viewer
-    it(`should not create ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
+    // Test4: Success To Create For Viewer
+    it(`should create ${resourceName} for {viewer}`, async () => {
+        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 201}, controller);
     });
 
-    // Test5: Fail to create for Viewer
-    it(`should not update ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
+    // Test5: Success to create for Viewer
+    it(`should update ${resourceName} for {viewer}`, async () => {
+        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller);
     });
 });

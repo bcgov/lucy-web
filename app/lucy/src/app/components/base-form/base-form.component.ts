@@ -118,7 +118,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /**
      Message displayed after submission
   */
-  get submitedMessage(): string {
+  get submittedMessage(): string {
     if (this.creating) {
       return `Entries Added`;
     } else if (this.editing) {
@@ -622,7 +622,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /////////// END Submission error handling ///////////
 
   shouldShowRelationship(forKey: string): boolean {
-    return (this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects);
+    const isEmbedded =  this.config.relationsConfigs[forKey]['meta'] !== undefined &&
+                        this.config.relationsConfigs[forKey]['meta']['embedded'] !== undefined &&
+                        this.config.relationsConfigs[forKey]['meta']['embedded'] === true;
+    return ( this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects && !isEmbedded);
   }
 
   // convert section title to a camelcased id

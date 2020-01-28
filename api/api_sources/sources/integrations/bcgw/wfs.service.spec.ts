@@ -6,7 +6,7 @@ import { WFSService, WFSResponse, WFSFeature } from './wfs.service';
 import { GeoLocation } from '../../libs/utilities';
 import { BCGWFeatures } from './bcgov.const';
 
-describe('Test for WFSService', () => {
+describe.skip('Test for WFSService', () => {
     it('should pull feature data from bcgw wfs', async () => {
         const loc: GeoLocation = {
             latitude: 48.424578999999994,
