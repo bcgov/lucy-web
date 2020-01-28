@@ -40,7 +40,7 @@ export const errorHandler = (error: any, req: any, res: any, next?: any ) => {
     const message = error.message ? error.message : 'Internal Server Error';
 
     // Sending error status.
-    res.status(code).json({ message: message, errors: [error]});
+    res.status(code).json({ message: message, time: Date(), errors: [error]});
 };
 /**
  * @description Create Common Error message json
@@ -50,6 +50,7 @@ export const errorHandler = (error: any, req: any, res: any, next?: any ) => {
 export const errorBody = (message: string, errors: object[]) => {
     return {
         message,
+        time: Date(),
         errors
     };
 };
