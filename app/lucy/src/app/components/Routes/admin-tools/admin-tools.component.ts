@@ -82,9 +82,4 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
   public requestResponseSent() {
     this.fetchNonStaticData();
   }
-
-  public export() {
-    this.exportService.downloadJSON(this.allUsers, null);
-    this.exportService.downloadCSV(this.allUsers, null);
-  }
 }
