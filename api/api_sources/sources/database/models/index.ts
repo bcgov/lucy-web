@@ -64,6 +64,8 @@ export * from './chemicalTreatmentMethodCode';
 export * from './spaceGeom';
 export * from './mechanicalMonitor';
 export * from './efficacyCode';
+export * from './highRiskAssessment';
+export * from './watercraftJourney';
 
 /**
  * Controllers
@@ -89,4 +91,6 @@ export * from './controllers/chemicalTreatmentMethodCode.controller';
 export * from './controllers/spaceGeom.controller';
 export * from './controllers/mechanicalMonitor.controller';
 export * from './controllers/efficacyCode.controller';
+export * from './controllers/highRiskAssessment.controller';
+export * from './controllers/watercraftJourney.controller';
 // ----------------------------------------------------------------------------------------------------------------
