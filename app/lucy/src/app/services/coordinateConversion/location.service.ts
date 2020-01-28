@@ -589,7 +589,6 @@ export class ConverterService {
     for (let i = 1; i <= totalHEX; i++) {
       const hexagon = hexagons.find(item => item.hexID === i);
       const dxy = Math.pow((Math.pow((hexagon.xAlb0 - target.xAlb0), 2) + Math.pow((hexagon.yAlb0 - target.yAlb0), 2)), 0.5);
-      /** TODO: CHECK THIS NUMBER */
       if (dxy < 130) {
         hexagon.keep = 1;
       }
@@ -602,7 +601,6 @@ export class ConverterService {
         index: i
       };
       if (hexagon.keep === 1) {
-        /** TODO: CHECK THIS NUMBER */
         kk = kk + 1;
         newTarget.targetID = kk;
         newTarget.xAlb0 = hexagon.xAlb0;

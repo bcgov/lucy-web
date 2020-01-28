@@ -328,7 +328,6 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    */
   get bcBorderCoordinates(): MapMarker[] {
     const coordinates = this.bcGeoJSON.features[0].geometry.coordinates[0][0];
-    console.dir(coordinates);
     const bcCoordinates: MapMarker[] = [];
     for (const point of coordinates) {
       // Note: geoJSON is long,lat
