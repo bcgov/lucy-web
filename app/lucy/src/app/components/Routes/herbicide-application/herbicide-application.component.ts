@@ -106,23 +106,28 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
     if (this.mode === FormMode.Edit) {
       this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
       this.responseBody = this.treatment;
-      this.mixDeliveryRate = this.responseBody.mixDeliveryRate;
-
-      // hacky way of passing responseBody contents to base-form
-      // otherwise fields have to be touched by user before base-form recognizes
-      // that values exist
-      this.notifyDeliveryRateChangeEvent();
-      this.notifyTankMixChangeEvent();
-
       this.compileTankMixes();
-    }
+    } 
+
+    this.mixDeliveryRate = this.responseBody.mixDeliveryRate;
+    console.log(this.tankMixes);
+    // this.compileTankMixes();
+    console.log('init');
+
+    // hacky way of passing responseBody contents to base-form
+    // otherwise fields have to be touched by user before base-form recognizes
+    // that values exist
+    this.notifyDeliveryRateChangeEvent();
+    this.notifyTankMixChangeEvent();
   }
 
   ngAfterViewInit() {
+    console.log(this.responseBody);
     this.prepareDropdownMenus();
   }
 
   set tankMixes(h: HerbicideTankMix[]) {
+    console.log('setting tank mixes');
     for (const elem of h) {
         this._tankMixes.push(elem);
     }
@@ -156,6 +161,7 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
   async prepareDropdownMenus() {
     await this.codeTables.getHerbicideCodes().then((codes) => {
       this.unusedHerbicides = Object.assign([], codes);
+      console.log(this.tankMixes);
       for (const tm of this.tankMixes) {
         const index = this.unusedHerbicides.findIndex((element) => element.herbicide_id === tm.herbicide.herbicide_id);
         if (index > -1) {
