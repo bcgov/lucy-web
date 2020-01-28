@@ -4,6 +4,7 @@ schemas:
   EfficacyCodeSchema:
     name: efficacy_code
     description: 'Code table used in monitoring records for efficacy ratings of treatments'
+    baseSchema: CodeTableSchema
     meta:
       resource: true
     displayLayout:

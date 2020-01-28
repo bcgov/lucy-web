@@ -686,6 +686,8 @@ export class FormService {
               if (fieldOfInterest.verification.isDate) {
                 // Date is Date FIeld
                 fieldOfInterest.isDateField = true;
+              } else if (fieldOfInterest.verification.subType === `timestamp`) {
+                fieldOfInterest.isDateAndTimeField = true;
               } else if (
                 fieldOfInterest.verification.size &&
                 fieldOfInterest.verification.size > 100

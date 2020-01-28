@@ -375,6 +375,19 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         const formatted = moment(event).format('YYYY-MM-DD');
         this.responseBody[field.key] = formatted;
       }
+    } else if (field.isDateAndTimeField) {
+      if (event.date) {
+        const formatted = moment(event.date).format('YYYY-MM-DD');
+        this.responseBody[field.key] = {
+          date: formatted
+        };
+      }
+      if (event.time) {
+        const formatted = moment(event.time, 'HH:mm');
+        this.responseBody[field.key] = {
+          time: formatted
+        };
+      }
     } else {
       // regular field - store key / value
       this.responseBody[field.key] = event;
