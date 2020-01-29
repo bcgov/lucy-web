@@ -15,5 +15,24 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 	public static get shared(): WatercraftRiskAssessmentController {
 		return this.sharedInstance<WatercraftRiskAssessment>(WatercraftRiskAssessment, WatercraftRiskAssessmentSchema) as WatercraftRiskAssessmentController;
 	}
+
+	processExportData(data: WatercraftRiskAssessment): any {
+		const r: any = {...data};
+		delete r.displayLabel;
+		delete r.workflow;
+		// Next handle journey details
+		const newItems: any[] = [];
+		for (const item of data.journeys) {
+			newItems.push({
+				type: item.journeyType,
+				lakeName: item.waterBody.name,
+				country: item.waterBody.country,
+				province: item.waterBody.province,
+				city: item.waterBody.closest
+			});
+		}
+		r.journeys = newItems;
+		return r;
+	}
 }
 // ----------------
