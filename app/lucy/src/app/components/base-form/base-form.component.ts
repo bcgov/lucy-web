@@ -171,7 +171,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  ///// States Baed on Routes
+  ///// States Based on Routes
   private get viewing() {
     return this.router.isViewRoute;
   }
@@ -406,10 +406,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   tankMixesChanged(event: any) {
     // if 1 or more tank mixes have changed
     if (typeof(event) === `object`) {
-      this.responseBody['tankMixes'] = [];
-      event.forEach(element => {
-        this.responseBody['tankMixes'].push({'applicationRate': element.applicationRate, 'dilutionRate': element.amountUsed, 'herbicide': element.herbicide.herbicide_id});
-      });
+      this.responseBody['tankMixes'] = event;
     }
     // if mix delivery rate has changed
     else if (typeof(event) === `number` || `string`) {
@@ -436,9 +433,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         for (const so of this.responseBody['speciesObservations']) {
           so.observation = so.observation.observation_id;
         }
+
+        for (const tm of this.responseBody['tankMixes']) {
+          tm.herbicide = tm.herbicide.herbicide_id;
+        }
       }
-      console.dir(JSON.stringify(this.responseBody));
-      console.dir(JSON.parse(JSON.stringify(this.responseBody)));
+
       const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
       if (submissionResult.success) {
