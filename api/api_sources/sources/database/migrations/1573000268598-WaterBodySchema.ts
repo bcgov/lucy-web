@@ -1,18 +1,20 @@
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
-import { WaterBodySchema } from '../database-schema';
+import { WaterBodySchema, WatercraftJourneySchema } from '../database-schema';
 
 export class WaterBodySchema1573000268598 extends AppDBMigrator implements MigrationInterface {
     waterBodySchema: WaterBodySchema;
-
+    watercraftJourneySchema: WatercraftJourneySchema;
     /**
      * Setup
      */
     setup() {
         // Adding Water craft risk assessment init schema to migrator
         this.waterBodySchema = new WaterBodySchema();
+        this.watercraftJourneySchema = new WatercraftJourneySchema();
         this.addSchemaInitVersion(this.waterBodySchema);
         this.addDataImportMigration(this.waterBodySchema, 'init');
+        this.addSchemaInitVersion(this.watercraftJourneySchema);
     }
 
     /**
@@ -32,6 +34,7 @@ export class WaterBodySchema1573000268598 extends AppDBMigrator implements Migra
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[STAR]', 'DOWN');
+        await queryRunner.query(this.watercraftJourneySchema.dropTable());
         await queryRunner.query(this.waterBodySchema.dropTable());
         this.log('[END]', 'DOWN');
     }

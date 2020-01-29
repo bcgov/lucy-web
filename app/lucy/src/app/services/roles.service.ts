@@ -68,11 +68,24 @@ export class RolesService {
 
   public canCreate(accessType: UserAccessType) {
     return (accessType === UserAccessType.Admin ||
+      accessType === UserAccessType.SuperUser ||
       accessType === UserAccessType.DataEditor);
   }
 
   public canEdit(accessType: UserAccessType) {
     return this.canCreate(accessType);
+  }
+
+  /**
+   * Determines whether or not the current user can edit the target user.
+   * - Only admin users can edit other users at this time.
+   * - Admin users can edit all other user types at this time.
+   * 
+   * @param accessType Access type of the current user
+   * @param targetUserAccessType Access type of the user to edit
+   */
+  public canEditUser(accessType: UserAccessType, targetUserAccessType: UserAccessType) {
+    return accessType === UserAccessType.Admin;
   }
 
   private getDummyRoles(): Role[] {

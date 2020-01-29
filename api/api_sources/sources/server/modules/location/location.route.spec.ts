@@ -35,7 +35,7 @@ import {
     verifyErrorBody
 } from '../../../test-helpers/testHelpers';
 
-describe('Test for location route', () => {
+describe.skip('Test for location route', () => {
     before(async () => {
         await commonTestSetupAction();
         await SharedExpressApp.initExpress();

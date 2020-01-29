@@ -57,3 +57,15 @@ export class ObserverWorkflowSchema extends RecordTableSchema {
         return getYAMLFilePath('observerWorkflow.schema.yaml');
     }
 }
+
+export class HighRiskAssessmentSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('highRiskAssessment.schema.yaml');
+    }
+}
+
+export class WatercraftJourneySchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('watercraftJourney.schema.yaml');
+    }
+}

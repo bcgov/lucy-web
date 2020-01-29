@@ -19,6 +19,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSelectSearchModule } from 'src/app/components/Input/mat-select-search/mat-select-search.module';
 import { DropdownComponent } from './dropdown.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DropdownComponent', () => {
   let component: DropdownComponent;
@@ -26,9 +27,10 @@ describe('DropdownComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatSelectSearchModule],
+      imports: [ MatSelectSearchModule, RouterTestingModule],
       declarations: [ DropdownComponent ],
-      schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
+      // providers: [ Router ],
     })
     .compileComponents();
   }));

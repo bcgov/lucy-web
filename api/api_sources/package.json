@@ -15,7 +15,7 @@
         "migration": "ts-node scripts/run.migrations.ts",
         "migration-refresh": "ts-node scripts/refresh-migration.ts",
         "typeorm": "ts-node -r ./tsconfig.json/register ./node_modules/typeorm/cli.js",
-        "test": "ts-mocha --timeout 8000",
+        "test": "ts-mocha --timeout 10000",
         "ts-run": "ts-node",
         "tslint": "tslint",
         "test:lint": "tslint --project .",
