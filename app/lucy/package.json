@@ -49,6 +49,7 @@
     "ng-in-viewport": "^6.0.3",
     "ng-lottie": "^0.3.2",
     "ngx-cookie-service": "^2.2.0",
+    "papaparse": "^5.1.1",
     "popper.js": "^1.15.0",
     "request": "^2.88.0",
     "rxjs": "~6.3.3",

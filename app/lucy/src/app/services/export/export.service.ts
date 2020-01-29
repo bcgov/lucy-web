@@ -1,70 +1,94 @@
 import { Injectable } from '@angular/core';
 import { saveAs } from 'file-saver';
+import * as Papa from 'papaparse/papaparse.min.js';
+import { ApiService, APIRequestMethod } from '../api.service';
+import { AppConstants } from 'src/app/constants';
+
+export enum ExportType {
+  WatercraftRiskAssessment,
+  Shift
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExportService {
 
-  constructor() { }
+  constructor(private api: ApiService) { }
 
   /**
-   * Save array of objects as a CSV file
-   * Default name is export - current date and time
-   * @param objects 
-   * @param name 
+   * Download CSV export of data type specified.
    */
-  public downloadCSV(objects: any, name: string | null) {
-    if (!objects) { return; }
-    const fileName = name ? name : `export - ${Date().toString()}`;
-    const items = this.flattenJsonArray(objects);
-    const replacer = (key, value) => value === null ? '' : value; // handle null values here
-    const header = Object.keys(items[0]);
-    let csv = items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
-    csv.unshift(header.join(','));
-    csv = csv.join('\r\n');
-    const blob = new Blob([csv.toString()], { type: 'text/json' });
-    saveAs(blob, `${fileName}.csv`);
+  public exportCSV(type: ExportType) {
+    this.exportCSVfrom(this.urlForExportType(type), this.fileNameForExportType(type));
   }
 
   /**
-   * Save array of objects as a json file
-   * Default name is export - current date and time
+   * Returns the endpoint for the given ExportType.
+   * @param type ExportType
+   */
+  private urlForExportType(type: ExportType): string {
+    switch (type) {
+      case ExportType.WatercraftRiskAssessment:
+        return AppConstants.API_WatercraftAssessment_Export;
+      case ExportType.Shift:
+        return AppConstants.API_Shift_Export;
+    }
+  }
+
+  /**
+   * Returns the endpoint for the given ExportType.
+   * @param type ExportType
+   */
+  private fileNameForExportType(type: ExportType): string {
+    switch (type) {
+      case ExportType.WatercraftRiskAssessment:
+        return `Watercaft Risk Assessment Report - ${Date().toString()}`;
+      case ExportType.Shift:
+        return `Shift Report - ${Date().toString()}`;
+    }
+  }
+
+  /**
+   * Download data from endpoint and export as csv file.
+   * @param url endpoint
+   */
+  private async exportCSVfrom(url: string, fileName: string) {
+    const data = await this.api.request(APIRequestMethod.GET, url, null);
+    if (!data.success) {
+      console.log('Error: Couldnt fetch data');
+      return;
+    }
+    this.downloadCSV(data.response, fileName);
+  }
+
+  /**
+   * Save array of objects as a CSV file.
+   * Default name is export - current date and time.
+   * @param objects to export
+   * @param fileName file name
+   */
+  public downloadCSV(objects: any, fileName: string | null) {
+    if (!objects) { return; }
+    const _fileName = fileName ? fileName : `export - ${Date().toString()}`;
+    const csv =  Papa.unparse(objects);
+    // const csv = this.toCSV(objects);
+    if (!csv) { return; }
+    const blob = new Blob([csv.toString()], { type: 'text/json' });
+    saveAs(blob, `${_fileName}.csv`);
+  }
+
+  /**
+   * Save array of objects as a json file.
+   * Default name is export - current date and time.
    * @param objects array of objects
    * @param name file name
    */
   public downloadJSON(objects: any, name: string | null) {
     if (!objects) { return; }
     const fileName = name ? name : `export - ${Date().toString()}`;
-    const json = JSON.stringify(this.flattenJsonArray(objects));
+    const json = JSON.stringify(objects);
     const blob = new Blob([json.toString()], { type: 'text/json' });
     saveAs(blob, `${fileName}.json`);
-  }
-
-  /*
-  Convert array of objects with nested objects into a flat structure
-  */
-  public flattenJsonArray(data: any[]): any {
-    const flatArray = [];
-    const flatObject = {};
-
-    for (let index = 0; index < data.length; index++) {
-      for (let prop in data[index]) {
-
-        let value = data[index][prop];
-
-        if (Array.isArray(data[index][prop])) {
-          for (let i = 0; i < value.length; i++) {
-            for (let inProp in value[i]) {
-              flatObject[`${prop}-${inProp}`] = value[i][inProp]; // Key name for nested objext
-            }
-          }
-        } else {
-          flatObject[prop] = value;
-        }
-      }
-      flatArray.push(flatObject);
-    }
-    return flatArray;
   }
 }
