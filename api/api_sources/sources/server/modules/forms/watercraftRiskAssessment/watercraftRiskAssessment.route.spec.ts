@@ -5,11 +5,15 @@ import { SharedExpressApp } from '../../../initializers';
 import {
     commonTestSetupAction,
     commonTestTearDownAction,
-    AuthType
+    AuthType,
+    testRequest,
+    HttpMethodType,
+    verifySuccessBody
 } from '../../../../test-helpers/testHelpers';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
 import { WatercraftRiskAssessmentController } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
+import { ModelFactory, Destroyer } from '../../../../database/factory';
 
 /**
  * Test Function
@@ -55,5 +59,20 @@ describe(`Test for ${resourceName}`, () => {
     // Test5: Success to create for Viewer
     it(`should update ${resourceName} for {viewer}`, async () => {
         await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller);
+    });
+
+    // Test6: Export
+    it(`should export ${resourceName} for {viewer}`, async () => {
+        // Create Model
+        const model = await ModelFactory(WatercraftRiskAssessmentController.shared)();
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/mussels/wra/export',
+            expect: 200,
+            auth: AuthType.viewer
+        }).then(async resp => {
+            await verifySuccessBody(resp.body);
+            await Destroyer(WatercraftRiskAssessmentController.shared)(model);
+        });
     });
 });
