@@ -223,6 +223,12 @@ export class  BaseSchema {
             }
         }
 
+        // View Column
+        table.viewColumn = def.viewColumn || 'id';
+        if (table.columnsDefinition.description) {
+            table.viewColumn = 'description';
+        }
+
         // CSV Import Options
         if (def.imports) {
             table.importOptions = def.imports;
@@ -414,6 +420,10 @@ export class  BaseSchema {
         const createColCmt = `COMMENT ON COLUMN ${tableName}.${createAtColumnName} IS 'Timestamp column to check creation time of record';`;
         const updateColCmt = `COMMENT ON COLUMN ${tableName}.${updateAtColumnName} IS 'Timestamp column to check modify time of record';`;
         return `${createCol}\n${updateCol}\n${createColCmt}\n${updateColCmt}`;
+    }
+
+    get viewColumn(): string {
+        return '';
     }
 
     /**

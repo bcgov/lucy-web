@@ -15,5 +15,10 @@ export class ObserverWorkflowController extends RecordController<ObserverWorkflo
 	public static get shared(): ObserverWorkflowController {
 		return this.sharedInstance<ObserverWorkflow>(ObserverWorkflow, ObserverWorkflowSchema) as ObserverWorkflowController;
 	}
+
+	processExportData(data: ObserverWorkflow) {
+		delete data.displayLabel;
+		return data;
+	}
 }
 // ----------------
