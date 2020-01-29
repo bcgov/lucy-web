@@ -110,11 +110,12 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
 
       await this.fetchObservationsForLocation();
       this.loadingService.remove();
+
+      // hacky way of passing responseBody contents to base-form
+      // otherwise fields have to be touched by user before base-form recognizes
+      // that values exist
+      this.notifyChangeEvent();
     }
-    // hacky way of passing responseBody contents to base-form
-    // otherwise fields have to be touched by user before base-form recognizes
-    // that values exist
-    this.notifyChangeEvent();
   }
 
   async ngOnChanges(change: SimpleChanges) {
