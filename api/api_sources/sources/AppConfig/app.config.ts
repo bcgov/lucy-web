@@ -61,7 +61,7 @@ class AppConfiguration {
      * @description Check env is production or not
      */
     public get isProduction(): boolean {
-        return process.env.ENVIRONMENT === 'production' || process.env.ENVIRONMENT === 'prod';
+        return process.env.ENVIRONMENT === 'prod';
     }
 
     /**
