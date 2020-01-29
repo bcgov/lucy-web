@@ -430,12 +430,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       }
       this.loadingService.add();
       if (this.config.api === `/treatment/chemical`) {
-        for (const so of this.responseBody['speciesObservations']) {
-          so.observation = so.observation.observation_id;
+        for (const speciesObservation of this.responseBody['speciesObservations']) {
+          speciesObservation.observation = speciesObservation.observation.observation_id;
         }
 
-        for (const tm of this.responseBody['tankMixes']) {
-          tm.herbicide = tm.herbicide.herbicide_id;
+        for (const tankMix of this.responseBody['tankMixes']) {
+          tankMix.herbicide = tankMix.herbicide.herbicide_id;
         }
       }
 
