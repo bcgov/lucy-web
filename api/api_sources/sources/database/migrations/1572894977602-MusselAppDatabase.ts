@@ -24,12 +24,13 @@
 
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
-import { WatercraftRiskAssessmentSchema, ObserverWorkflowSchema } from '../database-schema';
+import { WatercraftRiskAssessmentSchema, ObserverWorkflowSchema, HighRiskAssessmentSchema } from '../database-schema';
 
 export class MusselAppDatabase1572894977602 extends AppDBMigrator implements MigrationInterface {
 
     waterCraftRiskAssessmentSchema: WatercraftRiskAssessmentSchema;
     observerWorkflowSchema: ObserverWorkflowSchema;
+    highRiskAssessmentSchema: HighRiskAssessmentSchema;
     /**
      * Setup
      */
@@ -37,9 +38,11 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         // Adding Water craft risk assessment init schema to migrator
         this.waterCraftRiskAssessmentSchema = new WatercraftRiskAssessmentSchema();
         this.observerWorkflowSchema = new ObserverWorkflowSchema();
+        this.highRiskAssessmentSchema = new HighRiskAssessmentSchema();
 
         // Creating table
         this.addSchemaInitVersion(this.observerWorkflowSchema);
+        this.addSchemaInitVersion(this.highRiskAssessmentSchema);
         this.addSchemaInitVersion(this.waterCraftRiskAssessmentSchema);
         // Alter table with version
         this.addSchemaVersion(this.waterCraftRiskAssessmentSchema, 'workflow');
@@ -63,6 +66,7 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         this.log('[RUN]', 'DOWN');
         await this.runQuerySqlFiles(this.downMigrations(), queryRunner);
         await queryRunner.query(this.waterCraftRiskAssessmentSchema.dropTable());
+        await queryRunner.query(this.highRiskAssessmentSchema.dropTable());
         await queryRunner.query(this.observerWorkflowSchema.dropTable());
     }
 
