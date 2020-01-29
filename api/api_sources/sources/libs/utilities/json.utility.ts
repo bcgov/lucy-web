@@ -7,26 +7,26 @@ export const prettyJSON = (obj: any) => {
 
 export const flatJSON = (obj: any, rootKey?: string): any => {
     let result = {};
-    for (const k in obj) {
-        if (obj.hasOwnProperty(k) && typeof obj[k] !== 'function') {
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key) && typeof obj[key] !== 'function') {
             // Check type is array or not
-            const v: any = obj[k];
-            const nextKey = rootKey ? `${rootKey}.${k}` : k;
-            if (v === undefined) {
+            const value: any = obj[key];
+            const nextKey = rootKey ? `${rootKey}.${key}` : key;
+            if (value === undefined) {
                 continue;
             }
-            if (v === null) {
+            if (value === null) {
                 result[nextKey] = null;
                 continue;
             }
-            if (v.constructor === Array) {
-                result[nextKey] = flatString(v, true);
+            if (value.constructor === Array) {
+                result[nextKey] = flatString(value, true);
                 continue;
             }
-            if (typeof v === 'object') {
-                result = { ...result, ...flatJSON(v, nextKey)};
+            if (typeof value === 'object') {
+                result = { ...result, ...flatJSON(value, nextKey)};
             } else {
-                result[nextKey] = v;
+                result[nextKey] = value;
             }
         }
     }
@@ -34,7 +34,7 @@ export const flatJSON = (obj: any, rootKey?: string): any => {
 };
 
 export const flatString = (obj: any, group?: boolean): string => {
-    let r = ``;
+    let result = ``;
     if (obj === undefined || obj === null) {
         return '';
     }
@@ -45,31 +45,31 @@ export const flatString = (obj: any, group?: boolean): string => {
         return `${obj}`;
     }
     if (obj.constructor === Array) {
-        const a: any[] = obj as any[];
-        for (const item of a) {
-            const fs = flatString(item, group);
-            if (fs) {
-                r = r + (group ? `(${fs}),` : `${fs},`);
+        const array: any[] = obj as any[];
+        for (const item of array) {
+            const flatStringData = flatString(item, group);
+            if (flatStringData) {
+                result = result + (group ? `(${flatStringData}),` : `${flatStringData},`);
             }
         }
-        r = r.replace(/.$/, '');
-        return r;
+        result = result.replace(/.$/, '');
+        return result;
     }
-    for (const k in obj) {
-        if (obj.hasOwnProperty(k) && typeof obj[k] !== 'function') {
-            const v: any = obj[k];
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key) && typeof obj[key] !== 'function') {
+            const v: any = obj[key];
             if (typeof v === 'object') {
                 // Get flat string
                 const fs = flatString(v, group);
                 if (fs) {
-                    r = r + (group ? `[${fs}],`  : `${fs},`);
+                    result = result + (group ? `[${fs}],`  : `${fs},`);
                 }
             } else  if (v !== undefined) {
-                r = r + `${v},`;
+                result = result + `${v},`;
             }
         }
     }
-    r = r.replace(/.$/, '');
-    return r;
+    result = result.replace(/.$/, '');
+    return result;
 };
 // ------------------------------
