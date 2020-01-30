@@ -25,25 +25,25 @@ import { expect, should } from 'chai';
 import {
     commonTestSetupAction,
     commonTestTearDownAction,
-    testModel,
+    // testModel,
 } from '../../test-helpers/testHelpers';
 import {    ModelFactory,
-    Destroyer,
-    ModelSpecFactory,
+    // Destroyer,
+    // ModelSpecFactory,
     userFactory,
-    mechanicalMonitorUpdateSpecFactory,
-    mechanicalMonitorFactory,
+    // mechanicalMonitorUpdateSpecFactory,
+    // mechanicalMonitorFactory,
     mechanicalMonitorCreateSpecFactory,
     destroyMechanicalMonitor,
-    Destroy,
+    // Destroy,
 } from '../factory';
-import {
-    MechanicalMonitorSchema,
-    MechanicalTreatmentSchema,
-    EfficacyCodeSchema,
-    SpeciesAgencyCodeSchema,
-} from '../database-schema';
-import * as faker from 'faker';
+// import {
+//     MechanicalMonitorSchema,
+//     MechanicalTreatmentSchema,
+//     EfficacyCodeSchema,
+//     SpeciesAgencyCodeSchema,
+// } from '../database-schema';
+// import * as faker from 'faker';
 import { MechanicalMonitorController } from '../models';
 
 describe('Test Mechanical Monitoring', () => {

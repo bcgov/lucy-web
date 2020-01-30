@@ -42,6 +42,9 @@ import {MatChipsModule} from '@angular/material/chips';
 // ng-bootstrap
 import {NgbModule, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
+// ngx-material-timepicker
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+
 // InViewportModule
 import { InViewportModule } from 'ng-in-viewport';
 
@@ -150,6 +153,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
+    NgxMaterialTimepickerModule,
     RouterModule,
     InViewportModule,
     LottieAnimationViewModule.forRoot(),

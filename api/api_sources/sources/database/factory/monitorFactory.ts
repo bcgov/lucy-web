@@ -34,13 +34,13 @@
    MechanicalTreatment,
    MechanicalTreatmentController,
    EfficacyCodeController,
-   EfficacyCodeSpec,
-   SpeciesAgencyCode,
+//    EfficacyCodeSpec,
+//    SpeciesAgencyCode,
    SpeciesAgencyCodeController} from '../models';
  import { userFactory } from './userFactory';
- import { mechanicalTreatmentFactory } from './treatmentFactory';
- import * as faker from 'faker';
-import { Model } from 'mongoose';
+//  import { mechanicalTreatmentFactory } from './treatmentFactory';
+//  import * as faker from 'faker';
+// import { Model } from 'mongoose';
 
 /**
  * @description Factory to create mechanical monitoring spec.

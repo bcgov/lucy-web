@@ -24,7 +24,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbTimepicker, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { FormMode } from 'src/app/models';
-// import { MatDatepickerInputEvent } from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material';
 import * as moment from 'moment';
 import { Time } from '@angular/common';
 
@@ -60,85 +60,76 @@ export class DateTimePickerComponent implements OnInit {
   }
   ////////////////////
 
-  private _dateTime: {
-    date: Date,
-    time: Time
-  };
+  private _dateTime: Date;
+  private _time: Time;
+  dateTimeAsString: string;
 
-  get date(): string {
-    if (this._dateTime.date) {
-      return moment(this._dateTime.date).format('YYYY-MM-DD');
+  get dateTime(): any {
+    return this._dateTime;
+  }
+
+  @Input() set dateTime(dateTime: any) {
+    if (dateTime === undefined) { return; }
+    if (typeof dateTime === typeof Date) {
+      this._dateTime.setDate(dateTime);
     } else {
-      return ``;
+      this._dateTime.setTime(dateTime);
     }
+    this.emitSelection();
   }
 
-  @Input() set date(date: string) {
-    if (date) {
-      this._dateTime.date = moment(date, 'YYYY-MM-DD').toDate();
-      this.emitSelection();
-    }
+  get time(): Time {
+    return this._time;
   }
 
+  @Input() set time(time: Time) {
+    if (time === undefined) { return; }
+    this._time = time;
+  }
 
-  get time(): string {
-    if (this._dateTime.time) {
-      return moment(this._dateTime.time).format('HH:mm');
-    } else {
-      return ``;
-    }
-  }
-  // Set
-  @Input() set time(time: string) {
-    const reg = time.split(':');
-    if (reg.length === 2) {
-      this._dateTime.time = {
-          hours: +reg[0],
-          minutes: +reg[1]
-      };
-      this.emitSelection();
-    }
-  }
   ////////////////////
 
   get fieldId(): string {
     return this.camelize(this.header);
   }
 
-  @Output() selected = new EventEmitter<{date: Date, time: Time}>();
+  @Output() selected = new EventEmitter<Date>();
 
   constructor() { }
 
   ngOnInit() {
     // set current date and time as default
-    this._dateTime = {
-      date: new Date(),
-      time: {
-        hours: new Date().getHours(),
-        minutes: new Date().getMinutes()
-      }
-    };
+    this._dateTime = new Date();
+  }
+
+  /**
+   * update the year/month/day of the dateTime object
+   * (the time portion of dateTime is controlled by a different picker)
+   * @param event change event from material datepicker
+   */
+  dateChanged(event) {
+    this._dateTime.setFullYear(event.value.getFullYear());
+    this._dateTime.setMonth(event.value.getMonth());
+    this._dateTime.setDate(event.value.getDate());
+    this.emitSelection();
   }
 
   timeChanged(event) {
-    if (this._dateTime.time !== event.value) {
-        this._dateTime.time = event.value;
-        this.emitSelection();
-    }
+    this._time = event;
+    this.emitTimeSelection();
   }
 
-  dateChanged(event) {
-    if (this._dateTime.date !== event.value) {
-      this._dateTime.date = event.value;
-      this.emitSelection();
-    }
+  emitTimeSelection() {
+    const h = this._time.toString().split(':')[0];
+    const m = this._time.toString().split(':')[1];
+    this._dateTime.setHours(+h, +m);
+    console.log(this._dateTime);
+    this.emitSelection();
   }
 
   emitSelection() {
-    this.selected.emit({
-      date: this._dateTime.date,
-      time: this._dateTime.time
-    });
+    this.selected.emit(this._dateTime);
+    this.dateTimeInReadonlyFormat();
   }
 
   camelize(str: string): string {
@@ -151,5 +142,11 @@ export class DateTimePickerComponent implements OnInit {
     const currentDate = new Date();
     // prevent dates in future from being selected
     return currentDate >= d;
+  }
+
+  dateTimeInReadonlyFormat() {
+    const date = this._dateTime.toDateString();
+    const time = this._dateTime.getHours().toString() + ':' + this._dateTime.getMinutes().toString();
+    this.dateTimeAsString = date + ' ' + time;
   }
 }
