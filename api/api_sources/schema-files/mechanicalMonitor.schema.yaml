@@ -14,7 +14,7 @@ schemas:
     skipVerification: true
     meta:
       resource: true
-      api: 'monitor/mechanical'
+      api: '/monitor/mechanical'
     ## -- DisplayLayout
     displayLayout: {}
     ## --
@@ -22,7 +22,7 @@ schemas:
     layout:
       title:
         key:
-        default: 'Mechanical Monitoring Information'
+        default: 'Mechanical Monitoring'
       sections:
         - title:
             key: ''
@@ -77,7 +77,7 @@ schemas:
             key: 'date' 
             default: 'Monitoring Date and Time'
           classes:
-            - none
+            - col-8
       paperFileID:
         name: mechanical_monitor_paper_file_ref
         comment: 'Paper file reference associated with monitoring record'
