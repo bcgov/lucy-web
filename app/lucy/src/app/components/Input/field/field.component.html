@@ -89,15 +89,21 @@
 <!-- Read only -->
 <div *ngIf="readonly" class="col-12 field">
     <div class="row">
-        <label class="field-header">{{ header }}</label>
+        <div class="col-12">
+            <label class="field-header">{{ header }}</label>
+        </div>
     </div>
     <!-- Input Field -->
-    <div *ngIf="!multiline" class="container row input-group form-control view view-field-background">
-        <!-- If field has suffix -->
-        <input *ngIf="hasSuffix" class="col-8" type="text" [(ngModel)]="value" readonly />
-        <span *ngIf="hasSuffix" class="input-group-addon col-4">{{ suffix }}</span>
-        <!-- If field has no suffix -->
-        <input *ngIf="!hasSuffix" class="col-12" type="text" [(ngModel)]="value" readonly />
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="!multiline" class="container input-group form-control view view-field-background">
+                <!-- If field has suffix -->
+                <input *ngIf="hasSuffix" class="col-8" type="text" [(ngModel)]="value" readonly />
+                <span *ngIf="hasSuffix" class="input-group-addon col-4">{{ suffix }}</span>
+                <!-- If field has no suffix -->
+                <input *ngIf="!hasSuffix" class="col-12" type="text" [(ngModel)]="value" readonly />
+            </div>
+        </div>
     </div>
     <!-- multiLine -->
     <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control view-field-background" [attr.id]="fieldId" [readonly]="readonly"></textarea>
