@@ -107,6 +107,7 @@ export class ApplicationTable {
     modelName?: string;
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
+    viewColumn = 'id';
 
     get relationalColumnKeys(): string[] {
         const r: string[] = [];
@@ -251,5 +252,12 @@ export class ApplicationTable {
             }
         });
         return r;
+    }
+
+    get viewColumnInfo(): any {
+        return {
+            columnName: this.columnsDefinition['id'].name,
+            key: 'id'
+        };
     }
 }
