@@ -3,16 +3,12 @@
         
 CREATE TABLE water_body ();
 ALTER TABLE water_body ADD COLUMN water_body_id SERIAL PRIMARY KEY;
-ALTER TABLE water_body ADD COLUMN type_enum SMALLINT NOT NULL;
-ALTER TABLE water_body ADD COLUMN name VARCHAR(100) NOT NULL;
-ALTER TABLE water_body ADD COLUMN type_name VARCHAR(50) NOT NULL;
-ALTER TABLE water_body ADD COLUMN type_code INT NOT NULL;
-ALTER TABLE water_body ADD COLUMN water_body_location_latitude NUMERIC(10, 7) NOT NULL;
-ALTER TABLE water_body ADD COLUMN water_body_location_longitude NUMERIC(10, 7) NOT NULL;
-ALTER TABLE water_body ADD COLUMN country VARCHAR(100) NOT NULL;
-ALTER TABLE water_body ADD COLUMN province VARCHAR(100) NOT NULL;
-ALTER TABLE water_body ADD COLUMN abbrev VARCHAR(50) NOT NULL;
-ALTER TABLE water_body ADD COLUMN closest VARCHAR(100) NOT NULL;
+ALTER TABLE water_body ADD COLUMN water_body_name VARCHAR(100) NOT NULL;
+ALTER TABLE water_body ADD COLUMN water_body_latitude NUMERIC(10, 7) NOT NULL;
+ALTER TABLE water_body ADD COLUMN water_body_longitude NUMERIC(10, 7) NOT NULL;
+ALTER TABLE water_body ADD COLUMN country_code VARCHAR(3) NULL;
+ALTER TABLE water_body ADD COLUMN province_code VARCHAR(2) NULL;
+ALTER TABLE water_body ADD COLUMN closest_city VARCHAR(100) NOT NULL;
 ALTER TABLE water_body ADD COLUMN distance NUMERIC(10, 5);
 
 
@@ -22,17 +18,13 @@ ALTER TABLE water_body ADD COLUMN distance NUMERIC(10, 5);
         
 COMMENT ON TABLE water_body IS 'The table to store all lake/water body information. Watercraft observation require  information regarding its source and destination.';
 COMMENT ON COLUMN water_body.water_body_id IS 'Auto generated primary key';
-COMMENT ON COLUMN water_body.type_enum IS 'Type of the water-body. This type is application specific enum values';
-COMMENT ON COLUMN water_body.name IS 'Common or popular name of the water-body';
-COMMENT ON COLUMN water_body.type_name IS 'Type of the water-body. This type is application specific string enum values. Like lake/river';
-COMMENT ON COLUMN water_body.type_code IS 'Type of the water-body. This type is application specific enum values.';
-COMMENT ON COLUMN water_body.water_body_location_latitude IS 'Latitude of treatment  location';
-COMMENT ON COLUMN water_body.water_body_location_longitude IS 'Longitude of treatment location';
-COMMENT ON COLUMN water_body.country IS 'Country of the water-body';
-COMMENT ON COLUMN water_body.province IS 'Province of the water-body location';
-COMMENT ON COLUMN water_body.abbrev IS 'Abbreviation of the water state/province';
-COMMENT ON COLUMN water_body.closest IS 'Closest landmark';
-COMMENT ON COLUMN water_body.distance IS 'Distance from closest landmark';
+COMMENT ON COLUMN water_body.water_body_name IS 'Common or popular name of the water-body';
+COMMENT ON COLUMN water_body.water_body_latitude IS 'Latitude of water body location';
+COMMENT ON COLUMN water_body.water_body_longitude IS 'Longitude of water body location';
+COMMENT ON COLUMN water_body.country_code IS 'Country of the water-body location. Joint foreign key reference to country_province table country_code column along with province_code.';
+COMMENT ON COLUMN water_body.province_code IS 'Province of the water-body location. Joint foreign key reference to country_province table province_code column along with country code.';
+COMMENT ON COLUMN water_body.closest_city IS 'Nearest city/landmark from the water body';
+COMMENT ON COLUMN water_body.distance IS 'Distance from closest city/landmark';
 
 
         

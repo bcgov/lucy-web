@@ -1,0 +1,51 @@
+version: '1.0'
+description: Schema file for table country_province
+externalTables: []
+includes: []
+schemas:
+  CountrySchema:
+    name: country
+    description: 'Standard ISO-3166 code table for listed countries'
+    meta: {}
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      countryCode:
+        name: country_code
+        comment: 'ISO-3166 standard three character identifier for country name. Primary key of the table.'
+        definition: VARCHAR(3) PRIMARY KEY
+      description:
+        name: description
+        comment: 'Detail name of the country'
+        definition: VARCHAR(100) NULL
+    versions: []
+    fields: {}
+  CountryProvinceSchema:
+    name: country_province
+    description: 'Standard ISO-3166 code table for listed countries and provinces'
+    meta: {}
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      provinceCode:
+        name: province_code
+        comment: 'ISO-3166 standard two character identifier for province name. With country code generate primary key of the table'
+        definition: VARCHAR(2) NOT NULL
+      countryCode:
+        name: country_code
+        comment: 'ISO-3166 standard three character identifier for country name. With province code generate primary key of the table'
+        definition: VARCHAR(3) NOT NULL
+      description:
+        name: description
+        comment: 'Detail name of the province'
+        definition: VARCHAR(100) NULL
+    versions: []
+    imports:
+      init:
+        fileName: CountryProvince.csv
+        allColumns: true
+    fields: {}
