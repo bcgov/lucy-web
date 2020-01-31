@@ -1,6 +1,13 @@
 # Code Tables yaml
 version: '1.0'
 includes: []
+externalTables:
+  - name: country
+    schema: CountrySchema
+    description: Country code table
+  - name: country_province
+    schema: CountryProvinceSchema
+    description: Country province table
 schemas: 
   ## -- WaterBodySchema
   WaterBodySchema:
