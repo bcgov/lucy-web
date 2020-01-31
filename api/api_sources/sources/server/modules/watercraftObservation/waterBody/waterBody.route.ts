@@ -11,8 +11,7 @@ import {
 } from '../../../core';
 import {
     WaterBodyController,
-    WaterBodySpec,
-    WaterBody
+    WaterBodySpec
 } from '../../../../database/models';
 @ResourceRoute({
     dataController: WaterBodyController.shared,
@@ -25,7 +24,7 @@ export class WaterBodyRouteController extends ResourceRouteController<WaterBodyC
         return this.sharedInstance() as WaterBodyRouteController;
     }
 
-    async all(req: any, data?: any): Promise<[number, any]> {
+    /* async all(req: any, data?: any): Promise<[number, any]> {
         // Get all entries
         const d: [number, any] = await super.all(req, data);
         if (d[0] === 200) {
@@ -49,5 +48,5 @@ export class WaterBodyRouteController extends ResourceRouteController<WaterBodyC
         } else {
             return d;
         }
-    }
+    }*/
 }
