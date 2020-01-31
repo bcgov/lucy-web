@@ -13,3 +13,18 @@
 .timepicker-button {
     color: #002C71 !important;
 }
+
+.picker {
+    display: inline-flex;
+    align-items: center;
+    width: 50%;
+}
+
+.picker__input {
+    border: none !important;
+    width: 100%;
+}
+
+.picker__input:focus {
+    outline: none !important;
+}
