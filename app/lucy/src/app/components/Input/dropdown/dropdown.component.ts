@@ -96,11 +96,7 @@ export class DropdownComponent implements OnInit {
   }
 
   get selectedItemName(): string {
-    if (this.selectedItem) {
-      return this.selectedItem.name;
-    } else {
-      return ``;
-    }
+    return this.selectedItem ? this._selectedItem.name : '';
   }
 
   ///// Items list
@@ -160,6 +156,7 @@ export class DropdownComponent implements OnInit {
 
   selected(item: DropdownObject) {
     this.selectedItem = item;
+    this.selectedItemName = item.name;
     this.selectionChanged.emit(this.selectedItem);
   }
 
@@ -177,7 +174,7 @@ export class DropdownComponent implements OnInit {
       search = search.toLowerCase();
     }
     this.filteredItems = [];
-    console.log(`searching`);
+
     for (const item of this.items) {
       if (item.name !== undefined && String(item.name).toLowerCase().includes(search.toLowerCase())) {
         this.filteredItems.push(item);
@@ -186,12 +183,10 @@ export class DropdownComponent implements OnInit {
   }
 
   filer(string: string) {
-    console.log(string);
     if (string === ``) {
       this.filteredItems = this.items;
     } else {
       this.filteredItems = [];
-      console.log(`searching`);
       for (const item of this.items) {
         if (item.name.toLowerCase().includes(string.toLowerCase())) {
           this.filteredItems.push(item);
