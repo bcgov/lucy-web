@@ -200,6 +200,7 @@ export class FormService {
         configFile.api,
         this.router.routeId
       );
+      return await this.getUIConfigFrom(configFile, monitor);
     } else {
       console.log(this.router.current);
       console.log(

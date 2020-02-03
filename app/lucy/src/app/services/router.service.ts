@@ -115,7 +115,7 @@ export class RouterService {
   private resolveEditRoute(route: string): AppRoutes {
     const editTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
     // const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
-    const editType = editTypeAndId.slice(0, editTypeAndId.indexOf(`/`));
+    const editType = editTypeAndId.slice(0, editTypeAndId.lastIndexOf(`/`));
     switch (editType.toLowerCase()) {
       case `observation`:
         return AppRoutes.EditObservation;
@@ -133,7 +133,7 @@ export class RouterService {
   private resolveViewRoute(route: string): AppRoutes {
     const viewTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
     // const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
-    const viewType = viewTypeAndId.slice(0, viewTypeAndId.indexOf(`/`));
+    const viewType = viewTypeAndId.slice(0, viewTypeAndId.lastIndexOf(`/`));
     switch (viewType.toLowerCase()) {
       case `observation`:
         return AppRoutes.ViewObservation;

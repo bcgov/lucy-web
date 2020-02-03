@@ -50,8 +50,8 @@ const routes: Routes = [
   { path: AppRoutes.EditMechanicalTreatment , component: BaseFormComponent},
   //
   { path: AppRoutes.AddMechanicalMonitor , component: BaseFormComponent },
-  { path: AppRoutes.ViewMechanicalMonitor, component: BaseFormComponent },
-  { path: AppRoutes.EditMechanicalMonitor, component: BaseFormComponent },
+  { path: AppRoutes.ViewMechanicalMonitor , component: BaseFormComponent },
+  { path: AppRoutes.EditMechanicalMonitor , component: BaseFormComponent },
   //
   { path: AppRoutes.AddObservation , component: BaseFormComponent},
   { path: AppRoutes.ViewObservation , component: BaseFormComponent},

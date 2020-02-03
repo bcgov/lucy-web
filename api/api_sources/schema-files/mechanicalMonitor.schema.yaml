@@ -41,6 +41,8 @@ schemas:
                 key: ''
                 default: ''
               fields:
+                - observerFirstName
+                - observerLastName
                 - speciesAgency
                 - paperFileID
                 - efficacy
@@ -67,6 +69,28 @@ schemas:
         name: mechanical_monitor_id
         comment: 'Auto generated primary key. This is auto incremental field'
         definition: SERIAL PRIMARY KEY
+      observerFirstName:
+        name: observer_first_name
+        comment: First name of the observer of the mechanical monitoring record
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header:
+            key: 'mechanicalMonitor.observerFirstName'
+            default: 'Observer First Name'
+          classes:
+            - none
+      observerLastName:
+        name: observer_last_name
+        comment: Last name of the observer of the mechanical monitoring record
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header:
+            key: 'mechanicalMonitor.observerLastName'
+            default: 'Observer Last Name'
+          classes:
+            - none
       timestamp:
         name: mechanical_monitor_timestamp
         comment: 'Date and time of the monitoring record'
@@ -127,7 +151,7 @@ schemas:
             key: 'mechanicalTreatmentID'
             default: 'Treatment ID'
           classes:
-            - none
+            - readonly
       efficacy:
         name: efficacy_rating
         comment: 'Foreign key reference to Efficacy code table'
