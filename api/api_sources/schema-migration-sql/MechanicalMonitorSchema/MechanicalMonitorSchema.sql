@@ -3,6 +3,8 @@
         
 CREATE TABLE mechanical_monitor ();
 ALTER TABLE mechanical_monitor ADD COLUMN mechanical_monitor_id SERIAL PRIMARY KEY;
+ALTER TABLE mechanical_monitor ADD COLUMN observer_first_name VARCHAR(100) NULL;
+ALTER TABLE mechanical_monitor ADD COLUMN observer_last_name VARCHAR(100) NULL;
 ALTER TABLE mechanical_monitor ADD COLUMN mechanical_monitor_timestamp TIMESTAMP NOT NULL;
 ALTER TABLE mechanical_monitor ADD COLUMN mechanical_monitor_paper_file_ref VARCHAR(100) NULL;
 ALTER TABLE mechanical_monitor ADD COLUMN comments VARCHAR(500) NULL;
@@ -17,6 +19,8 @@ ALTER TABLE mechanical_monitor ADD COLUMN efficacy_rating INT NULL REFERENCES ef
         
 COMMENT ON TABLE mechanical_monitor IS 'A monitoring record created as follow-up to a mechanical treatment';
 COMMENT ON COLUMN mechanical_monitor.mechanical_monitor_id IS 'Auto generated primary key. This is auto incremental field';
+COMMENT ON COLUMN mechanical_monitor.observer_first_name IS 'First name of the observer of the mechanical monitoring record';
+COMMENT ON COLUMN mechanical_monitor.observer_last_name IS 'Last name of the observer of the mechanical monitoring record';
 COMMENT ON COLUMN mechanical_monitor.mechanical_monitor_timestamp IS 'Date and time of the monitoring record';
 COMMENT ON COLUMN mechanical_monitor.mechanical_monitor_paper_file_ref IS 'Paper file reference associated with monitoring record';
 COMMENT ON COLUMN mechanical_monitor.comments IS 'Free-form comments added by mechanical monitoring observer';

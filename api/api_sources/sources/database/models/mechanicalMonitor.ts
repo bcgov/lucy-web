@@ -13,7 +13,7 @@ import {
 	SpeciesAgencyCode,
 	MechanicalTreatment,
 	EfficacyCode
-} from '../models';
+} from '.';
 import { Record } from './generic.data.models';
 
 /** Interface **/
@@ -21,6 +21,8 @@ import { Record } from './generic.data.models';
  * @description MechanicalMonitor create interface
  */
 export interface MechanicalMonitorSpec {
+	observerFirstName: string;
+	observerLastName: string;
 	timestamp: string;
 	paperFileID: string;
 	comments: string;
@@ -36,6 +38,8 @@ export interface MechanicalMonitorSpec {
  * @description MechanicalMonitor update interface
  */
 export interface MechanicalMonitorUpdateSpec {
+	observerFirstName?: string;
+	observerLastName?: string;
 	timestamp?: string;
 	paperFileID?: string;
 	comments?: string;
@@ -66,6 +70,20 @@ export class MechanicalMonitor extends Record implements MechanicalMonitorSpec {
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
 	mechanical_monitor_id: number;
+
+	/**
+	 * @description Getter/Setter property for column {observer_first_name}
+	 */
+	@Column({ name: MechanicalMonitorSchema.columns.observerFirstName})
+	@ModelProperty({type: PropertyType.string})
+	observerFirstName: string;
+
+	/**
+	 * @description Getter/Setter property for column {observer_last_name}
+	 */
+	@Column({ name: MechanicalMonitorSchema.columns.observerLastName})
+	@ModelProperty({type: PropertyType.string})
+	observerLastName: string;
 
 	/**
 	 * @description Getter/Setter property for column {mechanical_monitor_timestamp}
