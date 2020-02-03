@@ -27,6 +27,7 @@ import { FormMode } from 'src/app/models';
 import { MatDatepickerInputEvent } from '@angular/material';
 import * as moment from 'moment';
 import { Time } from '@angular/common';
+import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 
 @Component({
   selector: 'app-date-time-picker',
@@ -61,8 +62,24 @@ export class DateTimePickerComponent implements OnInit {
   ////////////////////
 
   private _dateTime: Date;
-  private _time: Time;
+  private _time: string;
   dateTimeAsString: string;
+
+  // custom theme for the time picker
+  timePickerTheme: NgxMaterialTimepickerTheme = {
+    container: {
+        bodyBackgroundColor: '#000',
+        buttonColor: '#fff'
+    },
+    dial: {
+        dialBackgroundColor: '#000',
+    },
+    clockFace: {
+        clockFaceBackgroundColor: '#000',
+        clockHandColor: '#9fbd90',
+        clockFaceTimeInactiveColor: '#fff'
+    }
+  };
 
   get dateTime(): any {
     return this._dateTime;
@@ -70,19 +87,14 @@ export class DateTimePickerComponent implements OnInit {
 
   @Input() set dateTime(dateTime: any) {
     if (dateTime === undefined) { return; }
-    if (typeof dateTime === typeof Date) {
-      this._dateTime.setDate(dateTime);
-    } else {
-      this._dateTime.setTime(dateTime);
-    }
-    this.emitSelection();
+    this._dateTime = dateTime;
   }
 
-  get time(): Time {
+  get time(): string {
     return this._time;
   }
 
-  @Input() set time(time: Time) {
+  @Input() set time(time: string) {
     if (time === undefined) { return; }
     this._time = time;
   }
@@ -99,7 +111,9 @@ export class DateTimePickerComponent implements OnInit {
 
   ngOnInit() {
     // set current date and time as default
-    this._dateTime = new Date();
+    const now = new Date();
+    this.dateTime = now;
+    this.time = now.getHours() + ':' + now.getMinutes();
   }
 
   /**
@@ -108,27 +122,26 @@ export class DateTimePickerComponent implements OnInit {
    * @param event change event from material datepicker
    */
   dateChanged(event) {
-    this._dateTime.setFullYear(event.value.getFullYear());
-    this._dateTime.setMonth(event.value.getMonth());
-    this._dateTime.setDate(event.value.getDate());
+    this.dateTime.setFullYear(event.value.getFullYear());
+    this.dateTime.setMonth(event.value.getMonth());
+    this.dateTime.setDate(event.value.getDate());
     this.emitSelection();
   }
 
   timeChanged(event) {
-    this._time = event;
+    this.time = event;
     this.emitTimeSelection();
   }
 
   emitTimeSelection() {
-    const h = this._time.toString().split(':')[0];
-    const m = this._time.toString().split(':')[1];
-    this._dateTime.setHours(+h, +m);
-    console.log(this._dateTime);
+    const h = this.time.toString().split(':')[0];
+    const m = this.time.toString().split(':')[1];
+    this.dateTime.setHours(+h, +m);
     this.emitSelection();
   }
 
   emitSelection() {
-    this.selected.emit(this._dateTime);
+    this.selected.emit(this.dateTime);
     this.dateTimeInReadonlyFormat();
   }
 
@@ -145,8 +158,8 @@ export class DateTimePickerComponent implements OnInit {
   }
 
   dateTimeInReadonlyFormat() {
-    const date = this._dateTime.toDateString();
-    const time = this._dateTime.getHours().toString() + ':' + this._dateTime.getMinutes().toString();
+    const date = this.dateTime.toDateString();
+    const time = this.dateTime.getHours().toString() + ':' + this.dateTime.getMinutes().toString();
     this.dateTimeAsString = date + ' ' + time;
   }
 }
