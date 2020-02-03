@@ -100,7 +100,23 @@ export class TableComponent implements OnInit {
       return;
     }
     for (const row of this.model.rows) {
-      this.tableRows.push(row.fields);
+      const fields = row.fields;
+      const rowData = {};
+
+      /* Populate the row data based on following constraints
+       *
+       * If it's an object, store the `displayLabel`
+       * For all other types, store the value directly
+       */
+      for (const field of Object.keys(fields)) {
+        if (typeof fields[field] === 'object') {
+          rowData[field] = fields[field].displayLabel;
+        } else {
+          rowData[field] = fields[field];
+        }
+      }
+
+      this.tableRows.push(rowData);
     }
   }
 

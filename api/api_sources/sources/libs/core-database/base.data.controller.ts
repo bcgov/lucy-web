@@ -31,7 +31,7 @@ import { ApplicationTable, TableRelation } from './application.table';
 import { BaseSchema } from './baseSchema';
 import { registerDataModelController, controllerForSchemaName } from './schema.storage';
 import { DataController } from '../../database/data.model.controller';
-import { unWrap } from '../utilities';
+import { unWrap, flatJSON } from '../utilities';
 import { DataFieldDefinition } from './application.column';
 
 export interface ControllerMetaData {
@@ -57,6 +57,7 @@ export interface BaseDataController {
     factory (): Promise<any>;
     getIdValue(obj: any): any;
     validate(data: any): boolean;
+    export(): Promise<any>;
 }
 
 
@@ -392,34 +393,54 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
         return obj[idKey];
     }
 
+    processExportData(data: T): any {
+        return data;
+    }
+
+    /**
+	 * @description Export to flat json
+	 */
+	public async export(): Promise<any> {
+		// Get all data
+		const all: T[] = await this.all();
+		const result = [];
+		// Get flat json
+		for (const w of all) {
+			// Process it first
+			const processedItem = this.processExportData(w);
+			result.push(flatJSON(processedItem));
+		}
+		return result;
+	}
+
     validate(data: any): boolean {
-        let r = true;
-        _.each(this.schema.columnsDefinition, (col: DataFieldDefinition, k: string) => {
-            if (k === 'id') {
-                r = r && true;
+        let result = true;
+        _.each(this.schema.columnsDefinition, (col: DataFieldDefinition, key: string) => {
+            if (key === 'id') {
+                result = result && true;
                 return;
             }
-            const isRelationShip = col.refSchema && typeof data[k] === typeof 1;
-            if (col.required && data[k] && (col.type === typeof data[k] || isRelationShip)) {
-                r = r && true;
+            const isRelationShip = col.refSchema && typeof data[key] === typeof 1;
+            if (col.required && data[key] && (col.type === typeof data[key] || isRelationShip)) {
+                result = result && true;
             } else {
-                if (data[k] && (col.type === typeof data[k] || isRelationShip)) {
-                    r = r && true;
+                if (data[key] && (col.type === typeof data[key] || isRelationShip)) {
+                    result = result && true;
                 } else {
                     if (!col.required) {
-                        r = r && true;
+                        result = result && true;
                     } else {
-                        if (typeof data[k] === typeof false && data[k] !== undefined) {
-                            r = r && true;
+                        if (typeof data[key] === typeof false && data[key] !== undefined) {
+                            result = result && true;
                         } else {
-                            console.log(`${this.className} | Fail For key: ${k} => ${data[k]}`);
-                            r = r && false;
+                            console.log(`${this.className} | Fail For key: ${key} => ${data[key]}`);
+                            result = result && false;
                         }
                     }
                 }
             }
         });
-        return r;
+        return result;
     }
 }
 
