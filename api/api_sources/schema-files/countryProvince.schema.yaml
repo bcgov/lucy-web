@@ -42,7 +42,7 @@ schemas:
       description:
         name: description
         comment: 'Descriptive name of the province, state, or territory'
-        definition: VARCHAR(100) NULL
+        definition: VARCHAR(100) NOT NULL
     versions: []
     imports:
       init:
