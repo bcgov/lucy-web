@@ -4,7 +4,7 @@
 CREATE TABLE country_province ();
 ALTER TABLE country_province ADD COLUMN country_code VARCHAR(3) NOT NULL;
 ALTER TABLE country_province ADD COLUMN province_code VARCHAR(2) NOT NULL;
-ALTER TABLE country_province ADD COLUMN description VARCHAR(100) NULL;
+ALTER TABLE country_province ADD COLUMN description VARCHAR(100) NOT NULL;
 
 
         
