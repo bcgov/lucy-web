@@ -1507,6 +1507,11 @@ export class FormService {
       current === AppRoutes.AddChemicalTreatment
     ) {
       this.router.navigateTo(AppRoutes.ViewChemicalTreatment, id);
+    } else if (
+      current === AppRoutes.EditMechanicalMonitor ||
+      current === AppRoutes.AddMechanicalMonitor
+    ) {
+      this.router.navigateTo(AppRoutes.ViewMechanicalMonitor, id);
     }
   }
   /**
@@ -1530,6 +1535,12 @@ export class FormService {
       case AppRoutes.ViewChemicalTreatment: {
         return this.router.navigateTo(
           AppRoutes.EditChemicalTreatment,
+          this.router.routeId
+        );
+      }
+      case AppRoutes.ViewMechanicalMonitor: {
+        return this.router.navigateTo(
+          AppRoutes.EditMechanicalMonitor,
           this.router.routeId
         );
       }

@@ -110,10 +110,14 @@ export class DateTimePickerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // set current date and time as default
-    const now = new Date();
-    this.dateTime = now;
-    this.time = now.getHours() + ':' + now.getMinutes();
+    // set current date and time as default if in Create mode
+    if (this.mode === FormMode.Create) {
+      const now = new Date();
+      this.dateTime = now;
+      this.time = now.getHours() + ':' + now.getMinutes();
+    } else if (this.readonly) {
+      this.dateTimeInReadonlyFormat();
+    }
   }
 
   /**
@@ -158,8 +162,12 @@ export class DateTimePickerComponent implements OnInit {
   }
 
   dateTimeInReadonlyFormat() {
-    const date = this.dateTime.toDateString();
-    const time = this.dateTime.getHours().toString() + ':' + this.dateTime.getMinutes().toString();
-    this.dateTimeAsString = date + ' ' + time;
+    if (this.readonly) {
+      this.dateTimeAsString = this.dateTime;
+    } else {
+      const date = this.dateTime.toDateString();
+      const time = this.dateTime.getHours().toString() + ':' + this.dateTime.getMinutes().toString();
+      this.dateTimeAsString = date + ' ' + time;
+    }
   }
 }
