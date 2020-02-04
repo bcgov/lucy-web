@@ -30,6 +30,9 @@ COPY ./ .
 # BUILD APP
 RUN npm run build-prod
 
+# RUN Sonar Analysis
+RUN npm run sonar-analysis
+
 EXPOSE 3030
 
 # RUN APP
