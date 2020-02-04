@@ -114,6 +114,12 @@ export class WaterBody extends Record implements WaterBodySpec {
 	@ModelProperty({type: PropertyType.number})
 	distance: number;
 
+	/**
+	 * @description Getter/Setter property for column {active_ind}
+	 */
+	@Column({ name: WaterBodySchema.columns.active})
+	@ModelProperty({type: PropertyType.boolean})
+	active: boolean;
 }
 
 // -------------------------------------
