@@ -34,13 +34,10 @@
    MechanicalTreatment,
    MechanicalTreatmentController,
    EfficacyCodeController,
-//    EfficacyCodeSpec,
-//    SpeciesAgencyCode,
-   SpeciesAgencyCodeController} from '../models';
+} from '../models';
  import { userFactory } from './userFactory';
-//  import { mechanicalTreatmentFactory } from './treatmentFactory';
-//  import * as faker from 'faker';
-// import { Model } from 'mongoose';
+ import { speciesAgencyCodeFactory } from './observationCodesFactory';
+ import * as faker from 'faker';
 
 /**
  * @description Factory to create mechanical monitoring spec.
@@ -71,8 +68,8 @@ export const mechanicalMonitorCreateSpecFactory = async (): Promise<MechanicalMo
 
   export const mechanicalMonitorUpdateSpecFactory = async (): Promise<MechanicalMonitorUpdateSpec> => {
     return {
-      speciesAgency: (await ModelSpecFactory(SpeciesAgencyCodeController.shared)()),
-      efficacy: (await ModelSpecFactory(EfficacyCodeController.shared)())
+      speciesAgency: (await speciesAgencyCodeFactory()),
+      efficacy: (await EfficacyCodeController.shared.findById(faker.random.number({min: 0, max: 19})))
     };
   };
   // ------------------------------------------------------------
