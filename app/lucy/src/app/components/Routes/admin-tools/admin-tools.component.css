@@ -18,3 +18,33 @@
     width: 100%;
     background: transparent;
 }
+
+.box {
+  padding-top: 15px;
+  padding-bottom: 15px;
+	border-radius: 5px;
+	background-color: #FFFFFF;
+	box-shadow: 0 0 5px 0 #E5E9F2;
+}
+
+.section-title-text {
+	color: #000000;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 24px;
+}
+
+.section-body-text {
+	color: #333333;
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.action-button {
+  width: 100%;
+}
+
+.admin-container {
+  background-color: #F2F2F2;
+  min-height: 100%;
+}
