@@ -57,13 +57,18 @@ schemas:
         definition: VARCHAR(100) NOT NULL
       distance:
         name: distance
-        comment: Distance from closest city/landmark
+        comment: Distance from closest city/landmark in kilometer
         definition: NUMERIC(10, 5)
+      active:
+        name: active_ind
+        comment: Boolean flag to check, the record is active or not.
+        definition: BOOLEAN NOT NULL DEFAULT TRUE
     ## -- columns
     imports:
       init:
         fileName: WaterBody.csv
-        allColumns: true
+        allColumnsExcept: 
+          - active
   ## --    
 
 

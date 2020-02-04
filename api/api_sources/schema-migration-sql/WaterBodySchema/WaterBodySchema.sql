@@ -10,6 +10,7 @@ ALTER TABLE water_body ADD COLUMN country_code VARCHAR(3) NULL;
 ALTER TABLE water_body ADD COLUMN province_code VARCHAR(2) NULL;
 ALTER TABLE water_body ADD COLUMN closest_city VARCHAR(100) NOT NULL;
 ALTER TABLE water_body ADD COLUMN distance NUMERIC(10, 5);
+ALTER TABLE water_body ADD COLUMN active_ind BOOLEAN NOT NULL DEFAULT TRUE;
 
 
         
@@ -24,7 +25,8 @@ COMMENT ON COLUMN water_body.water_body_longitude IS 'Longitude of water body lo
 COMMENT ON COLUMN water_body.country_code IS 'Country of the water-body location. Joint foreign key reference to country_province table country_code column along with province_code.';
 COMMENT ON COLUMN water_body.province_code IS 'Province of the water-body location. Joint foreign key reference to country_province table province_code column along with country code.';
 COMMENT ON COLUMN water_body.closest_city IS 'Nearest city/landmark from the water body';
-COMMENT ON COLUMN water_body.distance IS 'Distance from closest city/landmark';
+COMMENT ON COLUMN water_body.distance IS 'Distance from closest city/landmark in kilometer';
+COMMENT ON COLUMN water_body.active_ind IS 'Boolean flag to check, the record is active or not.';
 
 
         

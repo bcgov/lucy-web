@@ -3,7 +3,7 @@
         
 CREATE TABLE country ();
 ALTER TABLE country ADD COLUMN country_code VARCHAR(3) PRIMARY KEY;
-ALTER TABLE country ADD COLUMN description VARCHAR(100) NULL;
+ALTER TABLE country ADD COLUMN description VARCHAR(100) NOT NULL;
 
 
         

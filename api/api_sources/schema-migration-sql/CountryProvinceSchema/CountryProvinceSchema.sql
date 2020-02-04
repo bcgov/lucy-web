@@ -2,8 +2,8 @@
 
         
 CREATE TABLE country_province ();
-ALTER TABLE country_province ADD COLUMN province_code VARCHAR(2) NOT NULL;
 ALTER TABLE country_province ADD COLUMN country_code VARCHAR(3) NOT NULL;
+ALTER TABLE country_province ADD COLUMN province_code VARCHAR(2) NOT NULL;
 ALTER TABLE country_province ADD COLUMN description VARCHAR(100) NULL;
 
 
@@ -11,10 +11,10 @@ ALTER TABLE country_province ADD COLUMN description VARCHAR(100) NULL;
 -- ### Creating Comments on table ### --
 
         
-COMMENT ON TABLE country_province IS 'Standard ISO-3166 code table for listed countries and provinces';
-COMMENT ON COLUMN country_province.province_code IS 'ISO-3166 standard two character identifier for province name. With country code generate primary key of the table';
-COMMENT ON COLUMN country_province.country_code IS 'ISO-3166 standard three character identifier for country name. With province code generate primary key of the table';
-COMMENT ON COLUMN country_province.description IS 'Detail name of the province';
+COMMENT ON TABLE country_province IS 'Standard ISO-3166 code table for listed countries and sub-divisions such as provinces, states, territories, etc.';
+COMMENT ON COLUMN country_province.province_code IS 'ISO-3166 standard two character sub-division identifier for provinces, states, and territories. Combines with country code to generate primary key of the table';
+COMMENT ON COLUMN country_province.country_code IS 'ISO-3166 standard three character identifier for country name. Combines with province code generate primary key of the table';
+COMMENT ON COLUMN country_province.description IS 'Descriptive name of the province, state, or territory';
 
 
         

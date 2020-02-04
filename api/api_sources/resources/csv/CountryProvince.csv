@@ -1,4 +1,4 @@
-﻿province_code,country_code,description
+﻿prov_state_code,country_code,description
 AB,CAN,Alberta
 BC,CAN,British Columbia
 MB,CAN,Manitoba
@@ -45,8 +45,10 @@ AR,USA,Arkansas
 CA,USA,California
 CO,USA,Colorado
 CT,USA,Connecticut
+DE,USA,Delaware
 FL,USA,Florida
 GA,USA,Georgia
+HI,USA,Hawaii
 ID,USA,Idaho
 IL,USA,Illinois
 IN,USA,Indiana
@@ -62,17 +64,16 @@ MN,USA,Minnesota
 MS,USA,Mississippi
 MO,USA,Missouri
 MT,USA,Montana
-NB,USA,Nebraska
 NE,USA,Nebraska
 NV,USA,Nevada
 NH,USA,New Hampshire
+NJ,USA,New Jersey
 NM,USA,New Mexico
 NY,USA,New York
 NC,USA,North Carolina
 ND,USA,North Dakota
 OH,USA,Ohio
 OK,USA,Oklahoma
-ON,USA,Ontario
 OR,USA,Oregon
 PA,USA,Pennsylvania
 RI,USA,Rhode Island

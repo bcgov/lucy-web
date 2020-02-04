@@ -73,6 +73,7 @@ export interface CSVImportOptions {
     info?: string;
     transformer?: string;
     allColumns?: boolean;
+    allColumnsExcept?: string[];
 }
 
 export interface TableRelation {
