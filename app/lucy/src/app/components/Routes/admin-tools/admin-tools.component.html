@@ -1,3 +1,6 @@
+<div class=" admin-container">
+
+
 <!-- Header Section -->
 <div class="container-fluid header-container">
   <div class="container">
@@ -10,57 +13,78 @@
 </div>
 <br />
 <div class="container">
+  <!-- Data managment-->
+  <div class="row box">
+    <div class="col-12 section-title-text">
+      Manage Data
+    </div>
+    <div class="col-12">
+      <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+    </div>
+    <div class="col-12 col-sm-6 col-lg-10 section-body-text">
+      There are currently {{numberOfDataInInspectAppToExport}} records in the Inspect App Database.
+    </div>
+    <div class="col-12 col-sm-6 col-lg-2">
+      <button mat-raised-button class="action-button" color="primary" (click)="export()"> Export All Data </button>
+    </div>
+  </div>
+  <!-- End Data managment -->
+  <br />
   <!-- Requests -->
-  <div class="row">
-    <h4>Pending Access Requests</h4>
-    <button mat-button class="primary" (click)="export()"> export </button>
-  </div>
-  <div class="row">
-    <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-  </div>
-  <div class="row">
-    <table class="table table-borderless table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Username</th>
-          <th scope="col">Name</th>
-          <th scope="col">Current Role</th>
-          <th scope="col">Requested Role</th>
-          <th scope="col">Reasons</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr app-request-cell *ngFor="let request of requests; let i = index" [request]="request" (shouldRefresh)="requestResponseSent()">
-      </tbody>
-    </table>
+  <div class="row box">
+    <div class="col-12 section-title-text">
+      New Users
+    </div>
+    <div class="col-12">
+      <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+    </div>
+    <div class="col-12">
+      <table class="table table-borderless table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Name</th>
+            <th scope="col">Current Role</th>
+            <th scope="col">Requested Role</th>
+            <th scope="col">Reasons</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr app-request-cell *ngFor="let request of requests; let i = index" [request]="request" (shouldRefresh)="requestResponseSent()">
+        </tbody>
+      </table>
+    </div>
   </div>
   <!-- End Requests -->
   <br />
   <!-- All Users -->
-  <div class="row">
-    <h4>All Users</h4>
-  </div>
-  <div class="row">
-    <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-  </div>
-  <div class="row">
-    <table class="table table-borderless table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Username</th>
-          <th scope="col">First Name</th>
-          <th scope="col">Last name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Role</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr app-user-cell *ngFor="let user of allUsers; let i = index" [user]="user">
-        </tr> 
-      </tbody>
-    </table>
+  <div class="row box">
+    <div class="col-12 section-title-text">
+      All Users
+    </div>
+    <div class="col-12">
+      <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+    </div>
+    <div class="col-12">
+      <table class="table table-borderless table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr app-user-cell *ngFor="let user of allUsers; let i = index" [user]="user">
+          </tr> 
+        </tbody>
+      </table>
+    </div>
   </div>
   <!-- END All Users -->
+</div>
 </div>

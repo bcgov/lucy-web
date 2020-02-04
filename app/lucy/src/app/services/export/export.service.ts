@@ -23,6 +23,15 @@ export class ExportService {
     this.exportCSVfrom(this.urlForExportType(type), this.fileNameForExportType(type));
   }
 
+  public async getInspectAppExportData(type: ExportType): Promise<any> {
+    const data = await this.api.request(APIRequestMethod.GET, this.urlForExportType(type), null);
+    if (!data.success) {
+      console.log('Error: Couldnt fetch data');
+      return;
+    }
+    return data.response
+  }
+
   /**
    * Returns the endpoint for the given ExportType.
    * @param type ExportType
