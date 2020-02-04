@@ -22,7 +22,7 @@ export class ApplicationDataControllers {
  * @description Load all controller and module
  */
 export const DBControllerLoader = (modelModule: any, logger: BaseLogger) => {
-    const result: {[key: string]: DataController} = {}
+    const result: {[key: string]: DataController} = {};
     _.each(modelModule, (moduleObj: any, name: string) => {
         if (name.toLowerCase().includes('controller')) {
             if (moduleObj.shared) {
