@@ -110,13 +110,14 @@ export class DateTimePickerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // set current date and time as default if in Create mode
+    const dateSelected = this.dateTime ? new Date(this.dateTime) : new Date();
+    this.dateTime = dateSelected;
+    this.time = dateSelected.getHours() + ':' + dateSelected.getMinutes();
+    this.dateTimeInReadonlyFormat();
+
+    // Emitting the default date and time selected in create mode
     if (this.mode === FormMode.Create) {
-      const now = new Date();
-      this.dateTime = now;
-      this.time = now.getHours() + ':' + now.getMinutes();
-    } else if (this.readonly) {
-      this.dateTimeInReadonlyFormat();
+      this.emitSelection();
     }
   }
 
