@@ -29,3 +29,9 @@ export interface AccessRequest {
     requester: User;
     approver: User | null;
 }
+
+export interface AccessRequestUser {
+    name: string;
+    username: string;
+    roleRequested: string;
+}
