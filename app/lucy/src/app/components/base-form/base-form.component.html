@@ -147,9 +147,7 @@
                                         <!-- Date only Field -->
                                         <app-date-picker *ngIf="field.isDateField" [mode]="mode" [date]="field.value" [header]="field.header" (selected)="fieldChanged(field, $event)"></app-date-picker>
                                         <!-- Date & Time Fields -->
-                                        <div *ngIf="field.isDateAndTimeField" class="col-12">
-                                            <app-date-time-picker [mode]="mode" [header]="field.header" [dateTime]="field.value" (selected)="fieldChanged(field, $event)"></app-date-time-picker>
-                                        </div>
+                                        <app-date-time-picker *ngIf="field.isDateAndTimeField" [mode]="mode" [header]="field.header" [dateTime]="field.value" (selected)="fieldChanged(field, $event)"></app-date-time-picker>
                                         <!-- Dropdown --->
                                         <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [fieldHeader]="field.header" [selectedItem]="field.value" (selectionChanged)="fieldChanged(field, $event)">
                                         </app-dropdown>

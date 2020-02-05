@@ -53,7 +53,7 @@ import { MechanicalMonitorController,
          SpeciesAgencyCode,
          SpeciesAgencyCodeController,
          MechanicalTreatmentController } from '../models';
-import { EfficacyCodeSchema, SpeciesAgencyCodeSchema, MechanicalTreatmentSchema } from '../database-schema';
+import { SpeciesAgencyCodeSchema, MechanicalTreatmentSchema } from '../database-schema';
 
 describe('Test Mechanical Monitoring', () => {
     before(async () => {
