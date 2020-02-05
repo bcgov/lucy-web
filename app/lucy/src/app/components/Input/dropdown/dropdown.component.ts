@@ -21,7 +21,7 @@ import { DropdownObject } from 'src/app/services/dropdown.service';
 import { FormControl } from '@angular/forms';
 import { Subject, ReplaySubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { MatSelect } from '@angular/material';
+import { MatSelect, MatSelectChange } from '@angular/material';
 import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
 import { RouterService } from 'src/app/services/router.service';
 import { AppRoutes} from 'src/app/constants/app-routes.enum';
@@ -153,10 +153,11 @@ export class DropdownComponent implements OnInit {
         this.filterOptions();
       });
   }
-
-  selected(item: DropdownObject) {
-    this.selectedItem = item;
-    this.selectedItemName = item.name;
+    
+  selected(event: MatSelectChange) {
+    const selectedOption = this.filteredItems.find(item => item.name === event.value);
+    this.selectedItem = selectedOption;
+    this.selectedItemName = selectedOption.name;
     this.selectionChanged.emit(this.selectedItem);
   }
 
