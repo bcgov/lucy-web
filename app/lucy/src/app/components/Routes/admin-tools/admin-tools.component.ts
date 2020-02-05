@@ -16,14 +16,15 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { AccessRequest } from 'src/app/models/AccessRequest';
+import { AccessRequest, AccessRequestUser } from 'src/app/models/AccessRequest';
 import { RolesService } from 'src/app/services/roles.service';
 import { AdminService } from 'src/app/services/admin.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models';
 import { Role } from 'src/app/models/Role';
-import { LoadingService } from 'src/app/services/loading.service';
 import { ExportService, ExportType } from 'src/app/services/export/export.service';
-import { AppConstants } from 'src/app/constants';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-admin-tools',
@@ -40,9 +41,18 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public numberOfDataInInspectAppToExport: Number = 0;
 
-  constructor(private roles: RolesService, private admin: AdminService, private loadingService: LoadingService, private exportService: ExportService) { }
+  requestUsersColumns = ['username', 'name', 'roleRequested', 'actions'];
+  requestUsersDataSource: MatTableDataSource<AccessRequestUser>;
 
-  ngOnInit() {}
+  constructor(
+    private roles: RolesService,
+    private admin: AdminService,
+    private loadingService: LoadingService,
+    private exportService: ExportService,
+    private userService: UserService
+  ) { }
+
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.fetchStaticData();
@@ -61,10 +71,34 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   private async getAllRequests() {
     this.loadingService.add();
-    this.admin.getRequests().then((value) => {
+    this.admin.getRequests().then(async (value) => {
       this.requests = value;
+      await this.updateRequestUsers(value);
       this.loadingService.remove();
     });
+  }
+
+  private async updateRequestUsers (requests: AccessRequest[]) {
+    const users: AccessRequestUser[] = [];
+    if (requests.length === 0) return;
+
+    requests.forEach(request => {
+      const { requester } = request;
+      if (!requester) return;
+
+      const username = requester.preferredUsername;
+      const name = requester.firstName + ' ' + requester.lastName; 
+      const roleRequested = this.userService.getUserAccessCode(requester).role;
+
+      users.push({
+        username,
+        name,
+        roleRequested
+      })
+    });
+
+    this.requestUsersDataSource = new MatTableDataSource<AccessRequestUser>(users);
+    
   }
 
   private async getNumberOfDataInInspectAppToExport() {
