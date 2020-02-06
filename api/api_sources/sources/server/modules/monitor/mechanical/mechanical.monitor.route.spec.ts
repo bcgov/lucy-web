@@ -46,8 +46,6 @@ import {
     mechanicalMonitorFactory,
     destroyMechanicalMonitor,
     Destroyer,
-    mechanicalMonitorUpdateSpecFactory,
-    destroyMechanicalTreatment,
     mechanicalTreatmentFactory
 } from '../../../../database/factory';
 import {
