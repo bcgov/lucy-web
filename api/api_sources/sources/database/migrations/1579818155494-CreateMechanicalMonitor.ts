@@ -23,7 +23,7 @@ export class CreateMechanicalMonitor1579818155494 extends AppDBMigrator implemen
 
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[START]', 'DOWN');
-        await this.runQuerySqlFiles(this.downMigrations(), queryRunner);
+        await queryRunner.query(this.mechanicalMonitorSchema.dropTable());
         this.log('[END]', 'DOWN');
     }
 
