@@ -25,5 +25,6 @@ export * from './treatment.schema';
 export * from './musselApp.schema';
 export * from './spaceGeom.schema';
 export * from './monitor.schema';
+export * from './countryProvinceSchema';
 export * from '../../libs/core-database/sql.loader';
 // ---------------------------------------------------------------------------------------------------

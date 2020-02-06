@@ -66,6 +66,8 @@ export * from './mechanicalMonitor';
 export * from './efficacyCode';
 export * from './highRiskAssessment';
 export * from './watercraftJourney';
+export * from './country';
+export * from './countryProvince';
 
 /**
  * Controllers

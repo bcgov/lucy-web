@@ -137,6 +137,9 @@ export class SchemaCSVLoader {
         // Checking entry for all columns or not
         if (options.allColumns) {
             keys = Object.keys(schema.table.columnsDefinition).filter( k => k !== 'id');
+        } else if (options.allColumnsExcept) {
+            const exceptionColumn: string[] = options.allColumnsExcept || [];
+            keys = Object.keys(schema.table.columnsDefinition).filter( k => k !== 'id' && !exceptionColumn.includes(k));
         }
 
         // Check keys are included or not
