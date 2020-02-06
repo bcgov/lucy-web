@@ -130,7 +130,7 @@ export class UserCellComponent implements OnInit {
       return false;
     }
     return this.currentUser.user_id != this.user.user_id &&
-      this.roles.canEditUser(this.currentAccessType, this.roles.roleToAccessType(this.userService.getUserAccessCode(this.user)))
+      this.roles.canEditUser(this.currentAccessType, this.roles.roleToAccessType(this.userService.getUserAccessCode(this.user)));
   }
 
   public removeUser(user: User) {
