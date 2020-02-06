@@ -65,22 +65,6 @@ export class DateTimePickerComponent implements OnInit {
   private _time: string;
   dateTimeAsString: string;
 
-  // custom theme for the time picker
-  timePickerTheme: NgxMaterialTimepickerTheme = {
-    container: {
-        bodyBackgroundColor: '#000',
-        buttonColor: '#fff'
-    },
-    dial: {
-        dialBackgroundColor: '#000',
-    },
-    clockFace: {
-        clockFaceBackgroundColor: '#000',
-        clockHandColor: '#9fbd90',
-        clockFaceTimeInactiveColor: '#fff'
-    }
-  };
-
   get dateTime(): any {
     return this._dateTime;
   }
