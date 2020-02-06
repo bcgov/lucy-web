@@ -145,13 +145,13 @@ schemas:
         definition: INT NULL
         foreignTable: mechanical_treatment
         refColumn: mechanical_treatment_id
-        deleteCascade: false
+        deleteCascade: true
         layout:
           header:
             key: 'mechanicalTreatmentID'
             default: 'Treatment ID'
           classes:
-            - readonly
+            - none
       efficacy:
         name: efficacy_rating
         comment: 'Foreign key reference to Efficacy code table'
