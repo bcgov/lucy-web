@@ -16,15 +16,15 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { AccessRequest, AccessRequestUser } from 'src/app/models/AccessRequest';
+import { MatTableDataSource } from '@angular/material';
 import { RolesService } from 'src/app/services/roles.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { UserService } from 'src/app/services/user.service';
-import { User } from 'src/app/models';
-import { Role } from 'src/app/models/Role';
 import { ExportService, ExportType } from 'src/app/services/export/export.service';
-import { MatTableDataSource } from '@angular/material';
+import { AccessRequest, AccessRequestTableData } from 'src/app/models/AccessRequest';
+import { User, UserTableData } from 'src/app/models';
+import { Role } from 'src/app/models/Role';
 
 @Component({
   selector: 'app-admin-tools',
@@ -41,8 +41,19 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public numberOfDataInInspectAppToExport: Number = 0;
 
-  requestUsersColumns = ['username', 'name', 'roleRequested', 'actions'];
-  requestUsersDataSource: MatTableDataSource<AccessRequestUser>;
+  requestUsersColumns = ['username', 'name', 'roleRequested', 'reason', 'actions'];
+  requestUsersDataSource: MatTableDataSource<AccessRequestTableData>;
+
+  usersColumns = ['username', 'name', 'email', 'role', 'actions'];
+  usersDataSource: MatTableDataSource<UserTableData>;
+
+  get hasRequests(): boolean {
+    return this.requests.length !== 0;
+  }
+
+  get hasUsers(): boolean {
+    return this.allUsers.length !== 0;
+  }
 
   constructor(
     private roles: RolesService,
@@ -73,32 +84,32 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     this.loadingService.add();
     this.admin.getRequests().then(async (value) => {
       this.requests = value;
-      await this.updateRequestUsers(value);
+      await this.updateRequestUsersTable(value);
       this.loadingService.remove();
     });
   }
 
-  private async updateRequestUsers (requests: AccessRequest[]) {
-    const users: AccessRequestUser[] = [];
+  private async updateRequestUsersTable(requests: AccessRequest[]) {
+    const reqUsers: AccessRequestTableData[] = [];
     if (requests.length === 0) return;
 
     requests.forEach(request => {
-      const { requester } = request;
+      const { requester, requestNote } = request;
       if (!requester) return;
 
       const username = requester.preferredUsername;
       const name = requester.firstName + ' ' + requester.lastName; 
       const roleRequested = this.userService.getUserAccessCode(requester).role;
 
-      users.push({
+      reqUsers.push({
         username,
         name,
-        roleRequested
-      })
+        roleRequested,
+        reason: requestNote
+      });
     });
 
-    this.requestUsersDataSource = new MatTableDataSource<AccessRequestUser>(users);
-    
+    this.requestUsersDataSource = new MatTableDataSource<AccessRequestTableData>(reqUsers);
   }
 
   private async getNumberOfDataInInspectAppToExport() {
@@ -111,10 +122,33 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   private async getAllUsers() {
     this.loadingService.add();
-    this.admin.getAllUsers().then((value) => {
+    this.admin.getAllUsers().then(async (value) => {
       this.allUsers = value;
+      await this.updateUsersTable(value);
       this.loadingService.remove();
     });
+  }
+
+  private updateUsersTable(allUsers: User[]) {
+    const users: UserTableData[] = [];
+    if (allUsers.length === 0) return;
+
+    allUsers.forEach(user => {
+      const { firstName, lastName, email, preferredUsername } = user;
+
+      const username = preferredUsername;
+      const name = firstName + ' ' + lastName; 
+      const role = this.userService.getUserAccessCode(user).role;
+
+      users.push({
+        username,
+        name,
+        email,
+        role
+      });
+    });
+
+    this.usersDataSource = new MatTableDataSource<UserTableData>(users);
   }
 
   private async getAllRoles() {

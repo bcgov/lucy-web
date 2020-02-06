@@ -30,8 +30,9 @@ export interface AccessRequest {
     approver: User | null;
 }
 
-export interface AccessRequestUser {
+export interface AccessRequestTableData {
     name: string;
     username: string;
     roleRequested: string;
+    reason: string;
 }
