@@ -173,6 +173,9 @@ export const deleteObjects = async (list: any[]) => {
 
 export function ModelSpecFactory(controller: DataController, dependency?: any[]) {
     return async (options: FactoryOptions = { schemaChain: []}, inputData?: any): Promise<any> => {
+        if (controller.schemaObject.hasDefaultValues) {
+            return CodeTableFactory(controller)((inputData && typeof inputData === 'number') ? inputData : undefined);
+        }
         const obj: any = {};
         const fetchList: any[] = [];
         if (options.schemaChain.includes(controller.schemaObject.className)) {
@@ -326,6 +329,11 @@ export function Destroyer(controller: DataController) {
 
 export function ModelFactory(controller: DataController) {
     return async (options: FactoryOptions = { schemaChain: []}, inputData?: any): Promise<any> => {
+        const schema: BaseSchema = controller.schemaObject;
+        if (schema.hasDefaultValues) {
+            const obj = inputData !== undefined && typeof inputData === 'number' ? await controller.findById(inputData || 1) : await controller.random();
+            return obj;
+        }
         const opts: FactoryOptions = Object.assign(options, {
             isSpecification: false,
         });

@@ -64,6 +64,8 @@ export * from './chemicalTreatmentMethodCode';
 export * from './spaceGeom';
 export * from './highRiskAssessment';
 export * from './watercraftJourney';
+export * from './country';
+export * from './countryProvince';
 
 /**
  * Controllers

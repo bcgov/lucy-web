@@ -89,7 +89,7 @@ export type TableColumnDataOption = Pick<
     | 'comment'
     | 'definition' >;
 
-export interface ColumnChangeOptions {
+export interface SchemaChangeOptions {
     existingKey: string;
     newKey?: string;
     column?: TableColumnDefinition;
@@ -97,6 +97,7 @@ export interface ColumnChangeOptions {
     type?: string;
     sqlStatement?: string;
     downSqlStatement?: string;
+    deleteColumn?: boolean;
 }
 
 
