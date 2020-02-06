@@ -19,7 +19,7 @@
  * Last Modified: Wednesday, 15th January 2020 3:00:52 pm
  * Modified By: Williams, Andrea IIT (you@you.you>)
  * -----
- */ 
+ */
 
 import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
 import { getYAMLFilePath } from '../../libs/core-database';
