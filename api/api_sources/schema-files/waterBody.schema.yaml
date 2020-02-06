@@ -1,6 +1,13 @@
 # Code Tables yaml
 version: '1.0'
 includes: []
+externalTables:
+  - name: country
+    schema: CountrySchema
+    description: Country code table
+  - name: country_province
+    schema: CountryProvinceSchema
+    description: Country province table
 schemas: 
   ## -- WaterBodySchema
   WaterBodySchema:
@@ -23,56 +30,45 @@ schemas:
         name: 'water_body_id'
         comment: 'Auto generated primary key'
         definition: SERIAL PRIMARY KEY
-      typeEnum:
-        name: 'type_enum'
-        comment: Type of the water-body. This type is application specific enum values
-        definition: SMALLINT NOT NULL
       name:
-        name: name
+        name: water_body_name
         comment: Common or popular name of the water-body
         definition: VARCHAR(100) NOT NULL
-      typeName:
-        name: 'type_name'
-        comment: 'Type of the water-body. This type is application specific string enum values. Like lake/river'
-        definition: VARCHAR(50) NOT NULL
-      typeCode:
-        name: type_code
-        comment: Type of the water-body. This type is application specific enum values.
-        definition: INT NOT NULL
       latitude: 
-        name: 'water_body_location_latitude'
-        comment: 'Latitude of treatment  location'
+        name: 'water_body_latitude'
+        comment: 'Latitude of water body location'
         definition: NUMERIC(10, 7) NOT NULL
       longitude:
-        name: 'water_body_location_longitude'
-        comment: 'Longitude of treatment location'
+        name: 'water_body_longitude'
+        comment: 'Longitude of water body location'
         definition: NUMERIC(10, 7) NOT NULL
         meta: {}
       country:
-        name: country
-        comment: Country of the water-body
-        definition: VARCHAR(100) NOT NULL
+        name: country_code
+        comment: Country of the water-body location. Joint foreign key reference to country_province table country_code column along with province_code.
+        definition: VARCHAR(3) NULL
       province:
-        name: province
-        comment: Province of the water-body location
-        definition: VARCHAR(100) NOT NULL
-      abbrev:
-        name: abbrev
-        comment: Abbreviation of the water state/province 
-        definition: VARCHAR(50) NOT NULL
+        name: province_code
+        comment: Province of the water-body location. Joint foreign key reference to country_province table province_code column along with country code.
+        definition: VARCHAR(2) NULL
       closest:
-        name: closest
-        comment: Closest landmark
+        name: closest_city
+        comment: Nearest city/landmark from the water body
         definition: VARCHAR(100) NOT NULL
       distance:
         name: distance
-        comment: Distance from closest landmark
+        comment: Distance from closest city/landmark in kilometer
         definition: NUMERIC(10, 5)
+      active:
+        name: active_ind
+        comment: Boolean flag to check, the record is active or not.
+        definition: BOOLEAN NOT NULL DEFAULT TRUE
     ## -- columns
     imports:
       init:
         fileName: WaterBody.csv
-        allColumns: true
+        allColumnsExcept: 
+          - active
   ## --    
 
 

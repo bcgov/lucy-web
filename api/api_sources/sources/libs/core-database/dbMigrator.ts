@@ -74,6 +74,14 @@ export class DBMigrator {
         this.upMigrationFiles.add([`${schema.className}.sql`, schema.className]);
     }
 
+    addUpMigration(dir: string, file: string) {
+        this.upMigrationFiles.add([file, dir]);
+    }
+
+    addDownMigration(dir: string, file: string) {
+        this.downMigrationFiles.add([file, dir]);
+    }
+
     /**
      * @description Adding version info for migrator
      * @param BaseSchema schema

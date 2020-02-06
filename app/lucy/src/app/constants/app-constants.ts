@@ -41,6 +41,10 @@ export class AppConstants {
         version: 'NA'
     };
 
+    // Mussles App
+    static API_WatercraftAssessment_Export = `${AppConstants.API_baseURL}/mussels/wra/export`;
+    static API_Shift_Export = `${AppConstants.API_baseURL}/mussels/workflow/export`;
+
     // API authenticated user endpoints
     static get API_me(): string { return `${AppConstants.API_baseURL}/account/me`; }
     static get API_DataEntryAccessRequest(): string { return `${AppConstants.API_baseURL}/request-access`; }
@@ -116,6 +120,7 @@ export class AppConstants {
     static API_BCGW_wellProximity(latitude: number, longitude: number): string {
         return `${AppConstants.API_baseURL}/location/gwells-data?latitude=${latitude}&longitude=${longitude}`;
     }
+
 }
 
 
