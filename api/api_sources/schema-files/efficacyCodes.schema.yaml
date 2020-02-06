@@ -23,7 +23,7 @@ schemas:
       efficacyRating:
         name: efficacy_rating
         comment: String indicating approximated treatment efficacy rating in 5-percentage point ranges
-        definition: VARCHAR(15)
+        definition: VARCHAR(15) NOT NULL
     imports:
       init:
         fileName: EfficacyRatings.csv
