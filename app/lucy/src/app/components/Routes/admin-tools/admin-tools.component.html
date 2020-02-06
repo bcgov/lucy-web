@@ -13,6 +13,7 @@
 </div>
 <br />
 <div class="container">
+
   <!-- Data managment-->
   <div class="row box">
     <div class="col-12 section-title-text">
@@ -29,61 +30,136 @@
     </div>
   </div>
   <!-- End Data managment -->
+
   <br />
-  <!-- Requests -->
-  <div class="row box">
-    <div class="col-12 section-title-text">
-      New Users
-    </div>
+
+  <span class="row box">
+
+    <!-- Requests -->
     <div class="col-12">
+      <div class="section-title-text">
+        Pending Access Requests
+      </div>
       <hr class="section-divider" />
+      <div *ngIf="hasRequests">
+        <table mat-table [dataSource]="requestUsersDataSource">
+
+          <!--Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef class="table-first-column">
+                Username
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.username}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>
+                Name
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+          </ng-container>
+
+          <!-- Requested role Column -->
+          <ng-container matColumnDef="roleRequested">
+            <th mat-header-cell *matHeaderCellDef>
+                Requested Role
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.roleRequested}} </td>
+          </ng-container>
+
+          <!-- Reason Column -->
+          <ng-container matColumnDef="reason">
+            <th mat-header-cell *matHeaderCellDef>
+                Reason
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.reason}} </td>
+          </ng-container>
+
+          <!-- Action column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef>
+              <button mat-raised-button color="primary">
+                Respond
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="requestUsersColumns" class="table-header"></tr>
+          <tr mat-row *matRowDef="let row; columns: requestUsersColumns"></tr>
+        </table>
+      </div>
+      <div class="col-12" *ngIf="!hasRequests">
+        There are currently no new requests
+      </div>
     </div>
+    <!-- End Requests -->
+    <span class="section-space"></span>
+    <!-- All Users -->
     <div class="col-12">
-      <table mat-table [dataSource]="requestUsersDataSource">
+      <div class="section-title-text">
+        All Users
+      </div>
+      <hr class="section-divider" />
+      <div *ngIf="hasUsers">
+        <table mat-table [dataSource]="usersDataSource">
 
-        <!--Username Column -->
-        <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef class="table-first-column">
-              Username
-          </th>
-          <td mat-cell *matCellDef="let item"> {{item.username}} </td>
-        </ng-container>
+          <!--Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef class="table-first-column">
+                Username
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.username}} </td>
+          </ng-container>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>
-              Name
-          </th>
-          <td mat-cell *matCellDef="let item"> {{item.name}} </td>
-        </ng-container>
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>
+                Name
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+          </ng-container>
 
-        <!-- Requested role Column -->
-        <ng-container matColumnDef="roleRequested">
-          <th mat-header-cell *matHeaderCellDef>
-              Requested Role
-          </th>
-          <td mat-cell *matCellDef="let item"> {{item.roleRequested}} </td>
-        </ng-container>
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>
+                Email
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.email}} </td>
+          </ng-container>
 
-        <!-- Action column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef class="sticky-container">
-            <button mat-raised-button color="primary" class="sticky-content">
-              Respond
-            </button>
-          </td>
-        </ng-container>
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>
+                Role
+            </th>
+            <td mat-cell *matCellDef="let item"> {{item.role}} </td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="requestUsersColumns" class="table-header"></tr>
-        <tr mat-row *matRowDef="let row; columns: requestUsersColumns"></tr>
-      </table>
+          <!-- Action column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef>
+              <button mat-raised-button color="primary">
+                Respond
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="usersColumns" class="table-header"></tr>
+          <tr mat-row *matRowDef="let row; columns: usersColumns"></tr>
+        </table>
+      </div>
+      <div class="col-12" *ngIf="!hasUsers">
+        There are currently no users
+      </div>
     </div>
-  </div>
-  <!-- End Requests -->
-  <br />
+    <!-- End Users -->
+
+  </span>
   <!-- All Users -->
-  <div class="row box">
+  <!-- <div class="row box">
     <div class="col-12 section-title-text">
       All Users
     </div>
@@ -109,7 +185,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </div> -->
   <!-- END All Users -->
 </div>
 </div>

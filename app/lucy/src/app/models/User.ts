@@ -29,3 +29,10 @@ export interface User {
     updateAt: string;
     user_id: number;
 }
+
+export interface UserTableData {
+    username: string;
+    name: string;
+    email: string;
+    role: string;
+}
