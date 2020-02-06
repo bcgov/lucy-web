@@ -36,7 +36,7 @@ import {
 import {
     ApplicationTableColumn,
     TableColumnDataOption,
-    ColumnChangeOptions,
+    SchemaChangeOptions,
     TableColumnDefinition
 } from './application.column';
 import { ApplicationTable, TableVersion } from './application.table';
@@ -199,7 +199,7 @@ export class  BaseSchema {
                     name: vname,
                     columns: {},
                     info: v.info,
-                    columnChanges: [],
+                    schemaChanges: [],
                     fileName: fileName,
                     id: v.id
                 };
@@ -212,7 +212,7 @@ export class  BaseSchema {
                 });
 
                 // Now check all changes in the columns
-                _.each(v.columnChanges, (change: ColumnChangeOptions) => version.columnChanges.push(table.handleColumnChanges(change)
+                _.each(v.columnChanges || v.schemaChanges, (change: SchemaChangeOptions) => version.schemaChanges.push(table.handleColumnChanges(change)
                 ));
 
                 // Now Add version to table

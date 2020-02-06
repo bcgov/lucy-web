@@ -24,7 +24,7 @@
 import * as assert from 'assert';
 import * as _ from 'underscore';
 import { yaml, verifyObject, unWrap, copyKeyAndSubKeys } from './helpers.utilities';
-import { TableColumnDefinition, getYAMLFilePath, TableVersionDefinition, ColumnChangeOptions } from '../core-database';
+import { TableColumnDefinition, getYAMLFilePath, TableVersionDefinition, SchemaChangeOptions } from '../core-database';
 
 export class SchemaCache {
     static _cached: {[key: string]: SchemaLoader} = {};
@@ -208,8 +208,8 @@ export class SchemaLoader {
             // Checking all columns
             _.each(schemaVersion.columns, (col, key: string) => this.verifyColumn(col, key, table));
         }
-        if (schemaVersion.columnChanges) {
-            _.each(schemaVersion.columnChanges, (col: ColumnChangeOptions) => {
+        if (schemaVersion.schemaChanges) {
+            _.each(schemaVersion.schemaChanges, (col: SchemaChangeOptions) => {
                 if (col.column) {
                     this.verifyColumn(col.column, col.existingKey, table);
                 }
@@ -253,7 +253,7 @@ export class SchemaLoader {
             _.each(schema.versions, (ver: TableVersionDefinition) => {
                 _.each(unWrap(ver.columns, [] as TableColumnDefinition[]), (col: TableColumnDefinition, key: string) => this.verifyColumnForeignTable(col, key));
 
-                _.each(unWrap(ver.columnChanges, [] as ColumnChangeOptions[]), (change: ColumnChangeOptions) => {
+                _.each(unWrap(ver.schemaChanges, [] as SchemaChangeOptions[]), (change: SchemaChangeOptions) => {
                     if (change.column) {
                         this.verifyColumnForeignTable(change.column, change.existingKey);
                     }
