@@ -35,4 +35,5 @@ export interface UserTableData {
     name: string;
     email: string;
     role: string;
+    user_id: number;
 }
