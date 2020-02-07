@@ -9,6 +9,6 @@ export * from './treatments';
 export * from './forms';
 export * from './watercraftObservation';
 export * from './location';
-export * from './monitor/mechanical/';
+export * from './monitor/mechanical';
 // --------------------------------------
 
