@@ -75,8 +75,6 @@ export class AdminService {
   }
 
   async changeUser(user: User, changes: any): Promise<UserChangeResult> {
-    console.log(`Changing user info:`);
-    console.log(changes)
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_user(user.user_id), changes);
     if (response.success && this.objectValidator.isUserObject(response.response)) {
       return {
