@@ -26,20 +26,15 @@ import {
     commonTestSetupAction,
     commonTestTearDownAction,
     testModel,
-    // testModel,
 } from '../../test-helpers/testHelpers';
 import {    ModelFactory,
-    // Destroyer,
-    // ModelSpecFactory,
     userFactory,
-    // mechanicalMonitorUpdateSpecFactory,
     mechanicalMonitorFactory,
     mechanicalMonitorCreateSpecFactory,
     destroyMechanicalMonitor,
     mechanicalMonitorUpdateSpecFactory,
     Destroy,
     Destroyer,
-    // Destroy,
 } from '../factory';
 import * as faker from 'faker';
 import { MechanicalMonitorController,
@@ -112,7 +107,7 @@ describe('Test Mechanical Monitoring', () => {
         const mm = await MechanicalMonitorController.shared.findById(f.mechanical_monitor_id);
         should().exist(mm);
         should().exist(mm.mechanicalTreatmentID);
-        should().exist(mm.efficacy);
+        should().exist(mm.efficacy.efficacy_code_id);
         should().exist(mm.timestamp);
         should().exist(mm.speciesAgency);
 

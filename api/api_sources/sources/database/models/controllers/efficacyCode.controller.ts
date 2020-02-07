@@ -1,7 +1,7 @@
 // ** EfficacyCodeController ** //
 
 import { RecordController } from '../generic.data.models';
-import { EfficacyCode} from '../../models';
+import { EfficacyCode } from '../efficacyCode';
 import { EfficacyCodeSchema } from '../../database-schema';
 
 
