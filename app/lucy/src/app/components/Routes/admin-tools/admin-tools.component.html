@@ -25,7 +25,9 @@
         There are currently {{numberOfDataInInspectAppToExport}} records in the Inspect App Database.
       </div>
       <div class="col-12 col-sm-6 col-lg-2">
-        <button mat-raised-button class="action-button" color="primary" (click)="export()"> Export All Data </button>
+        <button mat-raised-button class="action-button" color="primary" (click)="export()" [disabled]="!hasExportData">
+          Export All Data
+        </button>
       </div>
     </div>
     <!-- End Data managment -->
@@ -157,7 +159,7 @@
                     </mat-form-field>
                     <div class="popper-status-container">
                       <p>Account Active</p>
-                      <mat-slide-toggle color="primary"></mat-slide-toggle>
+                      <mat-slide-toggle color="primary" [checked]="getUserStatus" (change)="changeUserStatus($event)"></mat-slide-toggle>
                     </div>
                     <hr class="popper-footer-divider" />
                     <button mat-raised-button color="primary" class="popper-footer-button">
