@@ -20,9 +20,13 @@ schemas:
         name: efficacy_code_id
         comment: Auto generated sequential primary key column.
         definition: SERIAL PRIMARY KEY
+      displayOrder:
+        name: display_order
+        comment: Zero-indexed integer value indicating desired order of items in dropdown menu
+        definition: INT NULL
       efficacyRating:
-        name: efficacy_rating
-        comment: String indicating approximated treatment efficacy rating in 5-percentage point ranges
+        name: description
+        comment: String indicating approximated treatment efficacy rating in percentage point ranges
         definition: VARCHAR(15) NOT NULL
     imports:
       init:

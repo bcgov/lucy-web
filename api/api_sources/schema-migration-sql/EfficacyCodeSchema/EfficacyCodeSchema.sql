@@ -3,8 +3,8 @@
         
 CREATE TABLE efficacy_code ();
 ALTER TABLE efficacy_code ADD COLUMN efficacy_code_id SERIAL PRIMARY KEY;
-ALTER TABLE efficacy_code ADD COLUMN efficacy_rating VARCHAR(15);
-ALTER TABLE efficacy_code ADD COLUMN active_ind BOOLEAN NOT NULL DEFAULT TRUE;
+ALTER TABLE efficacy_code ADD COLUMN display_order INT NULL;
+ALTER TABLE efficacy_code ADD COLUMN description VARCHAR(15) NOT NULL;
 
 
         
@@ -13,8 +13,9 @@ ALTER TABLE efficacy_code ADD COLUMN active_ind BOOLEAN NOT NULL DEFAULT TRUE;
         
 COMMENT ON TABLE efficacy_code IS 'Code table used in monitoring records for efficacy ratings of treatments';
 COMMENT ON COLUMN efficacy_code.efficacy_code_id IS 'Auto generated sequential primary key column.';
-COMMENT ON COLUMN efficacy_code.efficacy_rating IS 'String indicating approximated treatment efficacy rating in 5-percentage point ranges';
-COMMENT ON COLUMN efficacy_code.active_ind IS 'Indicator to check active status of code';
+COMMENT ON COLUMN efficacy_code.display_order IS 'Zero-indexed integer value indicating desired order of items in dropdown menu';
+COMMENT ON COLUMN efficacy_code.description IS 'String indicating approximated treatment efficacy rating in percentage point ranges';
+
 
         
 -- ### Creating Timestamp column ### --

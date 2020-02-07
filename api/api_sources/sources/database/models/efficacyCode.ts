@@ -3,6 +3,7 @@
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { EfficacyCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
+import { IntTransformer } from '../../libs/transformer';
 import { Record } from './generic.data.models';
 
 /** Interface **/
@@ -10,7 +11,8 @@ import { Record } from './generic.data.models';
  * @description EfficacyCode create interface
  */
 export interface EfficacyCodeSpec {
-	efficacyRating: string;
+	displayOrder: number;
+	description: string;
 	activeIndicator: boolean;
 }
 // -- End: EfficacyCodeSpec --
@@ -21,7 +23,8 @@ export interface EfficacyCodeSpec {
  * @description EfficacyCode update interface
  */
 export interface EfficacyCodeUpdateSpec {
-	efficacyRating?: string;
+	displayOrder?: number;
+	description?: string;
 	activeIndicator?: boolean;
 }
 // -- End: EfficacyCodeUpdateSpec --
@@ -49,12 +52,18 @@ export class EfficacyCode extends Record implements EfficacyCodeSpec {
 	efficacy_code_id: number;
 
 	/**
-	 * @description Getter/Setter property for column {efficacy_rating}
+	 * @description Getter/Setter property for column {display_order}
 	 */
-	@Column({ name: EfficacyCodeSchema.columns.efficacyRating})
-	@ModelProperty({type: PropertyType.string})
-	efficacyRating: string;
+	@Column({name: EfficacyCodeSchema.columns.displayOrder, transformer: new IntTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	displayOrder: number;
 
+	/**
+	 * @description Getter/Setter property for column {description}
+	 */
+	@Column({ name: EfficacyCodeSchema.columns.description})
+	@ModelProperty({type: PropertyType.string})
+	description: string;
 
 	/**
 	 * @description Getter/Setter property for column {active_ind}
