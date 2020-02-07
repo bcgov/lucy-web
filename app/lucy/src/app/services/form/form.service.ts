@@ -130,6 +130,14 @@ export class FormService {
   }
 
   /**
+   * returns UI configuration for Mechanical Monitoring records
+   */
+  public async getMechanicalMonitorUIConfig(): Promise<any> {
+    const serverConfig = await this.getMechanicalMonitorServerConfig();
+    return await this.createUIConfig(serverConfig);
+  }
+
+  /**
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
@@ -178,6 +186,21 @@ export class FormService {
       //// Chemical Treatment Create route ////
       const configFile = await this.getChemicalTreatmentUIConfig();
       return configFile;
+    } else if (this.router.current === AppRoutes.AddMechanicalMonitor) {
+      //// Mechanical Monitor Create route ////
+      const configFile = await this.getMechanicalMonitorUIConfig();
+      return configFile;
+    } else if (
+      this.router.current === AppRoutes.ViewMechanicalMonitor ||
+      this.router.current === AppRoutes.EditMechanicalMonitor
+    ) {
+      //// Mechanical Monitor View and Edit Routes ////
+      const configFile = await this.getMechanicalMonitorUIConfig();
+      const monitor = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
+      return await this.getUIConfigFrom(configFile, monitor);
     } else {
       console.log(this.router.current);
       console.log(
@@ -257,6 +280,29 @@ export class FormService {
     const response = await this.api.request(
       APIRequestMethod.GET,
       AppConstants.API_Form_ChemicalTreatment,
+      undefined
+    );
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
+        console.dir(response);
+        return undefined;
+      }
+    } else {
+      console.dir(response);
+      return undefined;
+    }
+  }
+
+  private async getMechanicalMonitorServerConfig(): Promise<FormConfig> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_mechanicalMonitor,
       undefined
     );
     if (response.success) {
@@ -641,6 +687,8 @@ export class FormService {
               if (fieldOfInterest.verification.isDate) {
                 // Date is Date FIeld
                 fieldOfInterest.isDateField = true;
+              } else if (fieldOfInterest.verification.subType === `timestamp`) {
+                fieldOfInterest.isDateAndTimeField = true;
               } else if (
                 fieldOfInterest.verification.size &&
                 fieldOfInterest.verification.size > 100
@@ -1459,6 +1507,11 @@ export class FormService {
       current === AppRoutes.AddChemicalTreatment
     ) {
       this.router.navigateTo(AppRoutes.ViewChemicalTreatment, id);
+    } else if (
+      current === AppRoutes.EditMechanicalMonitor ||
+      current === AppRoutes.AddMechanicalMonitor
+    ) {
+      this.router.navigateTo(AppRoutes.ViewMechanicalMonitor, id);
     }
   }
   /**
@@ -1482,6 +1535,12 @@ export class FormService {
       case AppRoutes.ViewChemicalTreatment: {
         return this.router.navigateTo(
           AppRoutes.EditChemicalTreatment,
+          this.router.routeId
+        );
+      }
+      case AppRoutes.ViewMechanicalMonitor: {
+        return this.router.navigateTo(
+          AppRoutes.EditMechanicalMonitor,
           this.router.routeId
         );
       }
