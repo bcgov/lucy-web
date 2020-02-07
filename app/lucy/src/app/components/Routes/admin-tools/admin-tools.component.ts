@@ -58,14 +58,18 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     return this.allUsers.length !== 0;
   }
 
+  get getUserRole(): string {
+    if (!this.selectedUser) return '';
+    return this.userService.getUserAccessCode(this.selectedUser).role;
+  }
+
   showUserPopper(user: User): boolean {
     if (!user || !this.selectedUser) return false;
     return this.selectedUser.user_id === user.user_id;
   }
 
-  get getUserRole(): string {
-    if (!this.selectedUser) return '';
-    return this.userService.getUserAccessCode(this.selectedUser).role;
+  onClickAway(): void {
+    if (this.selectedUser) this.selectedUser = undefined;
   }
 
   constructor(
