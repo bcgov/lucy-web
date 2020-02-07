@@ -123,7 +123,7 @@ export class MechanicalMonitor extends Record implements MechanicalMonitorSpec {
 	mechanicalTreatmentID: MechanicalTreatment;
 
 	/**
-	 * @description Getter/Setter property for column {efficacy_rating}
+	 * @description Getter/Setter property for column {efficacy_code_id}
 	 */
 	@ManyToOne( type => EfficacyCode, { eager: true})
 	@JoinColumn({ name: MechanicalMonitorSchema.columns.efficacy, referencedColumnName: EfficacyCodeSchema.pk})

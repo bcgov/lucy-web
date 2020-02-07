@@ -69,7 +69,7 @@ export const mechanicalMonitorCreateSpecFactory = async (): Promise<MechanicalMo
   export const mechanicalMonitorUpdateSpecFactory = async (): Promise<MechanicalMonitorUpdateSpec> => {
     return {
       speciesAgency: (await speciesAgencyCodeFactory()),
-      efficacy: (await EfficacyCodeController.shared.findById(faker.random.number({min: 0, max: 19})))
+      efficacy: (await EfficacyCodeController.shared.findById(faker.random.number({min: 1, max: 12})))
     };
   };
   // ------------------------------------------------------------
