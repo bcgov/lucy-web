@@ -31,3 +31,6 @@ export * from './sql.loader';
 export * from './schema.helper';
 export * from './dbMigrator';
 export * from './db.bootstrap';
+export * from './core.query.creator';
+// ---------------------------------------
+

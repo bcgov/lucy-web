@@ -106,16 +106,16 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
     if (this.mode === FormMode.Edit) {
       this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
       this.responseBody = this.treatment;
-      this.mixDeliveryRate = this.responseBody.mixDeliveryRate;
 
       // hacky way of passing responseBody contents to base-form
       // otherwise fields have to be touched by user before base-form recognizes
       // that values exist
       this.notifyDeliveryRateChangeEvent();
       this.notifyTankMixChangeEvent();
-
-      this.compileTankMixes();
     }
+
+    this.mixDeliveryRate = this.responseBody.mixDeliveryRate;
+    this.compileTankMixes();
   }
 
   ngAfterViewInit() {
@@ -169,9 +169,11 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
   }
 
   compileTankMixes() {
-    for (const tm of this.responseBody.tankMixes) {
-      tm.amountUsed = tm.dilutionRate;
-      this.tankMixes.push(tm);
+    if (this.responseBody.tankMixes) {
+      for (const tm of this.responseBody.tankMixes) {
+        tm.amountUsed = tm.dilutionRate;
+        this.tankMixes.push(tm);
+      }
     }
   }
 

@@ -22,6 +22,8 @@ import { AdminService } from 'src/app/services/admin.service';
 import { User } from 'src/app/models';
 import { Role } from 'src/app/models/Role';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ExportService, ExportType } from 'src/app/services/export/export.service';
+import { AppConstants } from 'src/app/constants';
 
 @Component({
   selector: 'app-admin-tools',
@@ -36,7 +38,9 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public focusedAccessRequest: AccessRequest;
 
-  constructor(private roles: RolesService, private admin: AdminService, private loadingService: LoadingService) { }
+  public numberOfDataInInspectAppToExport: Number = 0;
+
+  constructor(private roles: RolesService, private admin: AdminService, private loadingService: LoadingService, private exportService: ExportService) { }
 
   ngOnInit() {}
 
@@ -47,6 +51,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   private fetchStaticData() {
     this.getAllRoles();
+    this.getNumberOfDataInInspectAppToExport()
   }
 
   private fetchNonStaticData() {
@@ -59,6 +64,14 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     this.admin.getRequests().then((value) => {
       this.requests = value;
       this.loadingService.remove();
+    });
+  }
+
+  private async getNumberOfDataInInspectAppToExport() {
+    this.exportService.getInspectAppExportData(ExportType.WatercraftRiskAssessment).then((data) => {
+      if (data){
+        this.numberOfDataInInspectAppToExport = data.length
+      }
     });
   }
 
@@ -80,5 +93,9 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public requestResponseSent() {
     this.fetchNonStaticData();
+  }
+
+  public async export() {
+    this.exportService.exportCSV(ExportType.WatercraftRiskAssessment);
   }
 }

@@ -28,8 +28,8 @@ import {
     ResourceRoute,
     CreateMiddleware,
     ResourceRouteController,
-    writerOnlyRoute,
-    UpdateMiddleware
+    UpdateMiddleware,
+    Get
 } from '../../../core';
 import {
     WatercraftRiskAssessmentController,
@@ -42,10 +42,28 @@ import {
     // validators: CreateTreatmentValidator,
     secure: true
 })
-@CreateMiddleware(() => [writerOnlyRoute()])
-@UpdateMiddleware(() => [writerOnlyRoute()])
+@CreateMiddleware(() => [])
+@UpdateMiddleware(() => [])
 export class WatercraftRiskAssessmentRouteController extends ResourceRouteController<WatercraftRiskAssessmentController, WatercraftRiskAssessmentSpec, any> {
     static get shared(): WatercraftRiskAssessmentRouteController {
         return this.sharedInstance() as WatercraftRiskAssessmentRouteController;
+    }
+
+    /**
+     * @description Create New Object
+     * @param Request req
+     * @param any data
+     */
+    public async createResource(req: any, data: any): Promise<[number, any]> {
+        // Get Proper data mapping
+        return [201, await this.dataController.createNewObject(data, req.user)];
+    }
+
+    @Get({
+        path: '/export',
+        secure: true
+    })
+    public async export() {
+        return [200, await this.dataController.export()];
     }
 }

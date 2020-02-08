@@ -39,6 +39,9 @@ RUN rm -rf ./dist-server
 # Building App
 RUN npm run build
 
+# Run test lint
+RUN npm run test:lint
+
 # Setting NODE_PATH
 ENV NODE_PATH ${HOME}/node_modules
 

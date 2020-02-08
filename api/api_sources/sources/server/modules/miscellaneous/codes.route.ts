@@ -49,6 +49,7 @@ import { PesticideEmployerCodeController } from '../../../database/models/contro
 import { MechanicalDisposalMethodCodeController } from '../../../database/models/controllers/mechanicalDisposalMethodCode.controller';
 import { MechanicalTreatmentIssueCodeController } from '../../../database/models/controllers/mechanicalTreatmentIssueCode.controller';
 import { MechanicalMethodCodeController } from '../../../database/models/controllers/mechanicalMethodCode.controller';
+import { EfficacyCodeController } from '../../../database/models/controllers/efficacyCode.controller';
 export class CodeTableRouteController extends SecureRouteController<any> {
     static get shared(): CodeTableRouteController {
         return this.sharedInstance<CodeTableRouteController>() as CodeTableRouteController;
@@ -89,6 +90,7 @@ export class CodeTableRouteController extends SecureRouteController<any> {
         await this.addCodes(ChemicalTreatmentMethodCodeController.shared);
         await this.addCodes(WindDirectionCodesController.shared);
         await this.addCodes(HerbicideController.shared);
+        await this.addCodes(EfficacyCodeController.shared);
         return this.codeTableObj;
     }
 

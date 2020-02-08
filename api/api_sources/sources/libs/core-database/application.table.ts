@@ -21,7 +21,7 @@
  * -----
  */
 import * as _ from 'underscore';
-import { ApplicationTableColumn, ColumnChangeOptions, DataFieldDefinition} from './application.column';
+import { ApplicationTableColumn, SchemaChangeOptions, DataFieldDefinition} from './application.column';
 import { unWrap } from '../utilities';
 
 /**
@@ -37,12 +37,8 @@ export const ColumnChangeType = {
 /**
  * @description Interface to check column changes
  */
-export interface ColumnChangeDefinition extends ColumnChangeOptions {
-    existingKey: string;
-    newKey?: string;
-    column?: ApplicationTableColumn;
+export interface SchemaChangeDefinition extends SchemaChangeOptions {
     existingColumn: ApplicationTableColumn;
-    newColumnName?: string;
     type: string;
 }
 
@@ -53,7 +49,7 @@ export interface TableVersionDefinition {
     name: string;
     id?: string;
     columns?: {[key: string]: any};
-    columnChanges?: any[];
+    schemaChanges?: any[];
     info?: string;
 }
 
@@ -64,7 +60,7 @@ export interface TableVersion extends TableVersionDefinition {
     name: string;
     fileName: string;
     columns: {[key: string]: ApplicationTableColumn};
-    columnChanges: ColumnChangeDefinition[];
+    schemaChanges: SchemaChangeDefinition[];
     info?: string;
 }
 
@@ -77,6 +73,7 @@ export interface CSVImportOptions {
     info?: string;
     transformer?: string;
     allColumns?: boolean;
+    allColumnsExcept?: string[];
 }
 
 export interface TableRelation {
@@ -107,6 +104,7 @@ export class ApplicationTable {
     modelName?: string;
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
+    viewColumn = 'id';
 
     get relationalColumnKeys(): string[] {
         const r: string[] = [];
@@ -205,7 +203,7 @@ export class ApplicationTable {
         return null;
     }
 
-    handleColumnChanges(columnChange: ColumnChangeOptions): ColumnChangeDefinition {
+    handleColumnChanges(columnChange: SchemaChangeOptions): SchemaChangeDefinition {
         const key = columnChange.newKey || columnChange.existingKey;
         const existingColumnDef = this.columnsDefinition[columnChange.existingKey];
         const type = columnChange.type || ColumnChangeType.KEY_CHANGE;
@@ -213,7 +211,7 @@ export class ApplicationTable {
             delete (this.columnsDefinition[columnChange.existingKey]);
         }
 
-        if ( type !== ColumnChangeType.DROP) {
+        if ( type !== ColumnChangeType.DROP && !columnChange.deleteColumn) {
             if (columnChange.column) {
                 this.columnsDefinition[key] = ApplicationTableColumn.createColumn(columnChange.column);
             } else {
@@ -251,5 +249,12 @@ export class ApplicationTable {
             }
         });
         return r;
+    }
+
+    get viewColumnInfo(): any {
+        return {
+            columnName: this.columnsDefinition['id'].name,
+            key: 'id'
+        };
     }
 }

@@ -118,7 +118,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /**
      Message displayed after submission
   */
-  get submitedMessage(): string {
+  get submittedMessage(): string {
     if (this.creating) {
       return `Entries Added`;
     } else if (this.editing) {
@@ -171,7 +171,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  ///// States Baed on Routes
+  ///// States Based on Routes
   private get viewing() {
     return this.router.isViewRoute;
   }
@@ -375,6 +375,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         const formatted = moment(event).format('YYYY-MM-DD');
         this.responseBody[field.key] = formatted;
       }
+    } else if (field.isDateAndTimeField) {
+      const formatted = moment(event).format('YYYY-MM-DD HH:mm');
+      this.responseBody[field.key] = formatted;
     } else {
       // regular field - store key / value
       this.responseBody[field.key] = event;
@@ -406,10 +409,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   tankMixesChanged(event: any) {
     // if 1 or more tank mixes have changed
     if (typeof(event) === `object`) {
-      this.responseBody['tankMixes'] = [];
-      event.forEach(element => {
-        this.responseBody['tankMixes'].push({'applicationRate': element.applicationRate, 'dilutionRate': element.amountUsed, 'herbicide': element.herbicide.herbicide_id});
-      });
+      this.responseBody['tankMixes'] = event;
     }
     // if mix delivery rate has changed
     else if (typeof(event) === `number` || `string`) {
@@ -433,12 +433,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       }
       this.loadingService.add();
       if (this.config.api === `/treatment/chemical`) {
-        for (const so of this.responseBody['speciesObservations']) {
-          so.observation = so.observation.observation_id;
+        for (const speciesObservation of this.responseBody['speciesObservations']) {
+          speciesObservation.observation = speciesObservation.observation.observation_id;
+        }
+
+        for (const tankMix of this.responseBody['tankMixes']) {
+          tankMix.herbicide = tankMix.herbicide.herbicide_id;
         }
       }
-      console.dir(JSON.stringify(this.responseBody));
-      console.dir(JSON.parse(JSON.stringify(this.responseBody)));
+
       const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
       if (submissionResult.success) {

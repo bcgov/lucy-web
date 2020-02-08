@@ -20,8 +20,8 @@ import { User } from 'src/app/models';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserService } from 'src/app/services/user.service';
 import { AdminService } from 'src/app/services/admin.service';
-import { FormsModule } from '@angular/forms';
-import { Role } from 'src/app/models/Role';
+import { Role, UserAccessType } from 'src/app/models/Role';
+import { LoadingService } from 'src/app/services/loading.service';
 import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
@@ -31,7 +31,16 @@ import { AlertService } from 'src/app/services/alert.service';
 })
 export class UserCellComponent implements OnInit {
 
+  /**
+   * All currently active roles in the system
+   */
   public activeRoles: Role[] = [];
+
+  /**
+   * Current user info
+   */
+  public currentUser: User = null;
+  public currentAccessType: UserAccessType = UserAccessType.DataViewer;
 
   get username(): string {
     return this.user.preferredUsername;
@@ -65,6 +74,10 @@ export class UserCellComponent implements OnInit {
     this.setUserStatus(isActive);
   }
 
+  get canEdit(): boolean {
+    return this.canEditUser();
+  }
+
   @Input() user: User = {
     accountStatus: 0,
     createdAt: ``,
@@ -78,16 +91,46 @@ export class UserCellComponent implements OnInit {
     user_id: -1,
   }
 
-  constructor(private roles: RolesService, private userService: UserService, private admin: AdminService, private formsModule: FormsModule, private alertService: AlertService) { }
+  constructor(
+    private roles: RolesService,
+    private userService: UserService,
+    private admin: AdminService,
+    private loadingService: LoadingService,
+    private alertService: AlertService) { }
 
   ngOnInit() {
     this.getAllRoles();
+    this.getUserInfo();
   }
 
+  /**
+   * Get list of current active roles
+   */
   private getAllRoles()  {
     this.roles.getRoles().then((value) => {
       this.activeRoles = value;
     });
+  }
+
+  /**
+   * Get current user and their access type
+   */
+  private async getUserInfo() {
+    this.loadingService.add();
+    this.currentUser = await this.userService.getUser();
+    this.currentAccessType = await this.userService.getAccess();
+    this.loadingService.remove();
+  }
+
+  /**
+   * Determine if the current user can edit the target user
+   */
+  public canEditUser() {
+    if (!this.currentUser || !this.user) {
+      return false;
+    }
+    return this.currentUser.user_id != this.user.user_id &&
+      this.roles.canEditUser(this.currentAccessType, this.roles.roleToAccessType(this.userService.getUserAccessCode(this.user)));
   }
 
   public removeUser(user: User) {

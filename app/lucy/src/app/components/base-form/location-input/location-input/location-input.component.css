@@ -60,6 +60,10 @@
     margin: 0 !important;
 }
 
+.area-container {
+    margin-top: 8px;
+}
+
 .area-calculated {
 	color: #000000;
 	font-size: 17px;
