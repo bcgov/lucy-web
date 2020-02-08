@@ -36,7 +36,7 @@ import {
 import {
     ApplicationTableColumn,
     TableColumnDataOption,
-    ColumnChangeOptions,
+    SchemaChangeOptions,
     TableColumnDefinition
 } from './application.column';
 import { ApplicationTable, TableVersion } from './application.table';
@@ -199,7 +199,7 @@ export class  BaseSchema {
                     name: vname,
                     columns: {},
                     info: v.info,
-                    columnChanges: [],
+                    schemaChanges: [],
                     fileName: fileName,
                     id: v.id
                 };
@@ -212,7 +212,7 @@ export class  BaseSchema {
                 });
 
                 // Now check all changes in the columns
-                _.each(v.columnChanges, (change: ColumnChangeOptions) => version.columnChanges.push(table.handleColumnChanges(change)
+                _.each(v.columnChanges || v.schemaChanges, (change: SchemaChangeOptions) => version.schemaChanges.push(table.handleColumnChanges(change)
                 ));
 
                 // Now Add version to table
@@ -221,6 +221,12 @@ export class  BaseSchema {
                 // Increment index
                 index = index + 1;
             }
+        }
+
+        // View Column
+        table.viewColumn = def.viewColumn || 'id';
+        if (table.columnsDefinition.description) {
+            table.viewColumn = 'description';
         }
 
         // CSV Import Options
@@ -414,6 +420,10 @@ export class  BaseSchema {
         const createColCmt = `COMMENT ON COLUMN ${tableName}.${createAtColumnName} IS 'Timestamp column to check creation time of record';`;
         const updateColCmt = `COMMENT ON COLUMN ${tableName}.${updateAtColumnName} IS 'Timestamp column to check modify time of record';`;
         return `${createCol}\n${updateCol}\n${createColCmt}\n${updateColCmt}`;
+    }
+
+    get viewColumn(): string {
+        return '';
     }
 
     /**

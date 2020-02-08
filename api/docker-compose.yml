@@ -52,11 +52,12 @@ services:
     context: ./.docker/db
     dockerfile: Dockerfile.local
   ports:
-    - 5432:5432
+    - ${DB_PORT}:${DB_PORT}
   environment:
     - POSTGRES_USER=${DB_USER}
     - POSTGRES_PASSWORD=${DB_PASS}
     - POSTGRES_DB=${DB_DATABASE}
+    - PORT=${DB_PORT}
   networks:
     - local-network
   volumes:
@@ -85,7 +86,6 @@ services:
     dockerfile: .build/Dockerfile.local
   ports:
     - ${APP_PORT}:${APP_PORT}
-    - 3030:3030
   volumes: 
    - ../app/lucy/src:/opt/app-root/src/src
   networks:

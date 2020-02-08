@@ -43,7 +43,7 @@ export class MechanicalTreatmentIssueCodeController extends RecordController<Mec
 	 * with the exception that "None" should be the first option in the list
 	 * @param object query
 	 * ** Sorting Code
-	 * ** (a, b) => (( a.description === `None` ? 1 : b.description === `None` ? -1 : 
+	 * ** (a, b) => (( a.description === `None` ? 1 : b.description === `None` ? -1 :
 	 *                 a.description > b.description ? 1 : b.description > a.description ? -1 : 0))
 	 */
 	async all(query?: object) {

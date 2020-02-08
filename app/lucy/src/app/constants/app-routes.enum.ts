@@ -38,6 +38,10 @@ export enum AppRoutes {
     AddMechanicalTreatment = 'create/mechnical',
     ViewMechanicalTreatment = 'view/mechnical/:id',
     EditMechanicalTreatment = 'edit/mechnical/:id',
+    
+    AddMechanicalMonitor = 'create/monitor/mechanical',
+    ViewMechanicalMonitor = 'view/monitor/mechanical/:id',
+    EditMechanicalMonitor = 'edit/monitor/mechanical/:id',
 
     AddObservation = 'create/observation',
     ViewObservation = 'view/observation/:id',

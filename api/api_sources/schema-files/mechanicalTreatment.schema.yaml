@@ -14,7 +14,7 @@ schemas:
       api: /treatment/mechanical
     # End-meta
     displayLayout:
-      displayLabel: '#(species.commonName)# - #(mechanicalMethod.description)#'
+      displayLabel: '#(species.commonName) - #(mechanicalMethod.description)'
       fields:
         - header:
             key: 'species'

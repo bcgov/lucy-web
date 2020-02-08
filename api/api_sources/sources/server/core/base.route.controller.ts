@@ -98,6 +98,7 @@ export interface RouteDescription {
     method: HTTPMethod;
     responses?: {[key: number]: APIResponse};
     secure?: boolean;
+    skipValidation?: boolean;
 }
 
 export type RouteBasicDescription = Pick<RouteDescription, 'path' | 'validators' | 'middleware' |  'description' | 'index' | 'secure' | 'responses'>;
@@ -152,8 +153,8 @@ export class RouteController {
         if (this.isSecure) {
             this.router.use(this.authHandle);
         }
-        this.setup();
         this.applyRouteConfig();
+        this.setup();
     }
 
     /**
@@ -207,7 +208,10 @@ export class RouteController {
         _.each(this.configs, (config: RouteConfig) => {
             try {
                 // Getting endpoint
-                const endPoint: string = config.description.path.split('#')[1];
+                let endPoint: string = config.description.path.split('#')[1];
+                if (!endPoint) {
+                    endPoint = config.description.path;
+                }
                 // Getting validator middleware
                 const validators = config.description.validators ? config.description.validators() : [];
                 // Getting other middleware
@@ -244,6 +248,7 @@ export class RouteController {
             this.logReq(req, tag);
             return res.status(422).json({
                 message: 'Input validation error',
+                time: Date(),
                 errors: errors.array()
             });
         }
@@ -283,6 +288,7 @@ export class RouteController {
     public successResp(data?: any, message?: string) {
         return {
             message: message || CommonSuccessMessage,
+            time: Date(),
             data: data || {}
         };
     }

@@ -8,10 +8,12 @@ import {
     WatercraftRiskAssessment,
     WatercraftRiskAssessmentController,
     ObserverWorkflow,
-    ObserverWorkflowController
+    ObserverWorkflowController,
+    WatercraftJourney,
+    WatercraftJourneyController
 } from '../models';
 import { ModelFactory, Destroyer } from '../factory';
-import { WatercraftRiskAssessmentSchema } from '../database-schema';
+import { WatercraftRiskAssessmentSchema, ObserverWorkflowSchema } from '../database-schema';
 import { WaterBody } from '../models/waterBody';
 import { WaterBodyController } from '../models/controllers/waterBody.controller';
 
@@ -32,11 +34,7 @@ describe('Mussel app db element tests', () => {
         const ft = await WatercraftRiskAssessmentController.shared.findById(w.watercraft_risk_assessment_id);
         should().exist(ft);
         expect(ft.watercraft_risk_assessment_id).to.be.equal(w.watercraft_risk_assessment_id);
-        should().exist(ft.highRiskAssessmentForm);
-        should().exist(ft.highRiskAssessmentForm['test']);
-        should().exist(ft.lowRiskAssessmentForm);
-        should().exist(ft.fullObservationForm);
-        should().exist(ft.additionalInfo);
+        testModel(ft, WatercraftRiskAssessmentSchema.shared);
         await Destroyer(WatercraftRiskAssessmentController.shared)(w);
     });
 
@@ -53,9 +51,16 @@ describe('Mussel app db element tests', () => {
         should().exist(fetch);
         should().exist(fetch.observer_workflow_id);
         expect(fetch.observer_workflow_id).to.be.equal(o.observer_workflow_id);
-        should().exist(fetch.info);
-        should().exist(fetch.startOfDayForm);
-        should().exist(fetch.endOfDayForm);
+        testModel(fetch, ObserverWorkflowSchema.shared);
+        await Destroyer(ObserverWorkflowController.shared)(o);
+    });
+
+    it('should create / fetch WatercraftJourney', async () => {
+        const wj: WatercraftJourney = await ModelFactory(WatercraftJourneyController.shared)();
+        should().exist(wj);
+        const f: WatercraftJourney = await WatercraftJourneyController.shared.findById(wj.watercraft_journey_id);
+        should().exist(f);
+        should().exist(f.waterBody);
     });
 
     it('should load relation workflow for WatercraftRiskAssessment', async () => {
