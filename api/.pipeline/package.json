@@ -8,11 +8,13 @@
   "scripts": {
     "build": "node build.js",
     "build-tools": "node buildtools.js",
+    "build-db-backup": "node build.db.backup.js",
     "clean": "node clean.js",
     "pre-deploy": "node pre.deploy.js",
     "setup": "node setup.js",
     "deploy": "node deploy.js",
     "deploy-tools": "node deploytools.js",
+    "deploy-db-backup": "node deploy.db.backup.js",
     "test": "node test.js",
     "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
   },
