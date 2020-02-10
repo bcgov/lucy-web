@@ -97,10 +97,12 @@ export class ApplicationAuthMiddleware extends LoggerBase {
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
-             if (expiry && expiry > Date.now()) {
+             if (expiry && expiry < Date.now()) {
                  const message = `Token is expired for user ${email}`;
                  ApplicationAuthMiddleware.logger.info(message);
                  if (!AppConfig.bypassTokenExpiry) {
+                    ApplicationAuthMiddleware.logger.error(`Token Expire for user: ${email}`);
+                    ApplicationAuthMiddleware.logger.error(`Expiry: ${expiry}: current: ${Date.now()}, Diff: ${expiry - Date.now()}`);
                     done(errorWithCode(401, message), false);
                     return;
                  } else {
