@@ -45,13 +45,6 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public numberOfDataInInspectAppToExport: Number = 0;
 
-  requestUsersColumns = ['username', 'name', 'roleRequested', 'reason', 'actions'];
-  requestUsersDataSource: MatTableDataSource<AccessRequestTableData>;
-
-  get hasRequests(): boolean {
-    return this.requests.length !== 0;
-  }
-
   get hasExportData(): boolean {
     return this.numberOfDataInInspectAppToExport > 0;
   }
@@ -89,32 +82,8 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     this.loadingService.add();
     this.admin.getRequests().then(async (value) => {
       this.requests = value;
-      await this.updateRequestUsersTable(value);
       this.loadingService.remove();
     });
-  }
-
-  private async updateRequestUsersTable(requests: AccessRequest[]) {
-    const reqUsers: AccessRequestTableData[] = [];
-    if (requests.length === 0) return;
-
-    requests.forEach(request => {
-      const { requester, requestNote } = request;
-      if (!requester) return;
-
-      const username = requester.preferredUsername;
-      const name = requester.firstName + ' ' + requester.lastName; 
-      const roleRequested = this.userService.getUserAccessCode(requester).role;
-
-      reqUsers.push({
-        username,
-        name,
-        roleRequested,
-        reason: requestNote
-      });
-    });
-
-    this.requestUsersDataSource = new MatTableDataSource<AccessRequestTableData>(reqUsers);
   }
 
   private async getAllUsers() {
