@@ -29,7 +29,7 @@ const getPOD = (oc) => {
     const pods = allPods.filter((pod) => {
         const meta = pod.metadata || {};
         const name = meta.name || '';
-        return name.includes('invasivesbc-api-backup-dev-deploy');
+        return name.includes('invasivesbc-api-backup');
     });
     if (pods.length > 0) {
         return {
