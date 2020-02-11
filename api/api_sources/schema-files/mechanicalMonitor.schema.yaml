@@ -1,0 +1,178 @@
+version: '1.0'
+externalTables:
+  - name: species_agency_code
+    description: Species agency code table
+    schema: SpeciesAgencyCodeSchema
+includes:
+    - efficacyCodes.schema.yaml
+    - mechanicalTreatment.schema.yaml
+schemas:
+  MechanicalMonitorSchema:
+    name: 'mechanical_monitor'
+    description: 'A monitoring record created as follow-up to a mechanical treatment' 
+    baseSchema: RecordSchema
+    skipVerification: true
+    meta:
+      resource: true
+      api: '/monitor/mechanical'
+    ## -- DisplayLayout
+    displayLayout: {}
+    ## --
+    # -- layout
+    layout:
+      title:
+        key:
+        default: 'Mechanical Monitoring'
+      sections:
+        - title:
+            key: ''
+            default: 'Monitoring Information'
+          groups:
+            - title:
+                key: 'treatmentDetails'
+                default: 'Treatment Details'
+              fields:
+                - mechanicalTreatmentID
+        - title:
+            key: ''
+            default: 'Monitoring Details'
+          groups:
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - observerFirstName
+                - observerLastName
+                - speciesAgency
+                - paperFileID
+                - efficacy
+                - timestamp
+        ## Comments section
+        - title:
+            key: ''
+            default: 'Comments'
+          groups:
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - comments
+              style: {}
+    # --
+    ## -- Relationships
+    relations: {}
+    ## --
+    ## Columns
+    columns:
+      ## Data Columns
+      id: 
+        name: mechanical_monitor_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      observerFirstName:
+        name: observer_first_name
+        comment: First name of the observer of the mechanical monitoring record
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header:
+            key: 'mechanicalMonitor.observerFirstName'
+            default: 'Observer First Name'
+          classes:
+            - none
+      observerLastName:
+        name: observer_last_name
+        comment: Last name of the observer of the mechanical monitoring record
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header:
+            key: 'mechanicalMonitor.observerLastName'
+            default: 'Observer Last Name'
+          classes:
+            - none
+      timestamp:
+        name: mechanical_monitor_timestamp
+        comment: 'Date and time of the monitoring record'
+        definition: TIMESTAMP NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'date' 
+            default: 'Monitoring Date and Time'
+          classes:
+            - col-8
+      paperFileID:
+        name: mechanical_monitor_paper_file_ref
+        comment: 'Paper file reference associated with monitoring record'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'paperFileID' 
+            default: 'Paper File ID'
+          classes:
+            - none
+      comments:
+        name: comments
+        comment: 'Free-form comments added by mechanical monitoring observer'
+        definition: VARCHAR(500) NULL
+        meta: {}
+        required: false
+        layout:
+          header:
+            key: 'comments'
+            default: 'Comments'
+          classes:
+            - col-12
+      ## Relation Columns
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+        layout:
+          header:
+            key: 'speciesAgency'
+            default: 'Completed on Behalf of'
+          classes:
+            - none
+      mechanicalTreatmentID:
+        name: 'mechanical_treatment_id'
+        comment: 'Foreign key reference to Mechanical Treatments table'
+        definition: INT NULL
+        foreignTable: mechanical_treatment
+        refColumn: mechanical_treatment_id
+        deleteCascade: true
+        layout:
+          header:
+            key: 'mechanicalTreatmentID'
+            default: 'Treatment ID'
+          classes:
+            - none
+      efficacy:
+        name: efficacy_code_id
+        comment: 'Foreign key reference to Efficacy code table'
+        definition: INT NULL
+        foreignTable: efficacy_code
+        refColumn: efficacy_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header:
+            key: 'efficacy'
+            default: 'Efficacy %'
+          classes:
+            - none
+    ## -- Versions
+    versions: {}
+    ## --
+    ## -- Fields: Non data base fields
+    fields: {}
+    ## --
+    # Copy Columns, version from other schema
+    copyFrom: {}
+  ## -- End Schema
+  
