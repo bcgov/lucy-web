@@ -10,7 +10,6 @@ const getConfig = (settings)  => {
     const options= settings.options
     const phase = options.env
     const changeId = phases[phase].changeId
-    console.dir(options);
     return {
         env: options.env,
         options: options,
