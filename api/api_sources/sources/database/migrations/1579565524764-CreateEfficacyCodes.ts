@@ -10,7 +10,6 @@ export class CreateEfficacyCodes1579565524764 extends AppDBMigrator implements M
      * Setup
      */
     setup() {
-        // Adding wind direction init schema to migrator
         this.efficacyCodeSchema = new EfficacyCodeSchema();
         this.addSchemaInitVersion(this.efficacyCodeSchema);
         this.addDataImportMigration(this.efficacyCodeSchema, 'init');
