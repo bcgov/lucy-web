@@ -16,6 +16,7 @@
     "deploy-tools": "node deploytools.js",
     "deploy-db-backup": "node deploy.db.backup.js",
     "test": "node test.js",
+    "backup":"node backup.db.js",
     "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
   },
   "repository": {
