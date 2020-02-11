@@ -190,6 +190,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
                 await con.undoLastMigration({ transaction: true});
             } catch (excp) {
                 AppDatabaseMigrationManager.logger.error(`_revert | Exception received while running revert migration => ${count}: ${excp}`);
+                throw excp;
             }
             return this._revert(con, (count - 1));
         }
@@ -236,6 +237,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             // await SharedDBManager.connect();
             // Run Migration Again
             // await SharedDBManager.connection.runMigrations();
+            throw excp;
         }
     }
 
