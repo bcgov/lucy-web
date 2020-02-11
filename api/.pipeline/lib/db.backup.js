@@ -10,11 +10,13 @@ const getConfig = (settings)  => {
     const options= settings.options
     const phase = options.env
     const changeId = phases[phase].changeId
+    console.dir(options);
     return {
         env: options.env,
         options: options,
         changeId: changeId,
-        namespace: phases[phase].namespace
+        namespace: phases[phase].namespace,
+        dbHost: `${phases[phase].name}-postgresql${phases[phase].suffix}`
     };
 }
 
@@ -47,7 +49,9 @@ const execCmd = async (cmd, settings, tag = 'none') => {
     if (podDetails.podName) {
         const backUpPod = podDetails.podName;
         try {
-            const r = await pExec(`oc -n ${config.namespace} exec ${backUpPod} -c backup -- sh backup.sh ${cmd}`);
+            const finalCMD = `oc -n ${config.namespace} exec ${backUpPod} -c backup -- sh backup.sh ${cmd}`;
+            console.log(`Backup: ${tag}: Executing ${finalCMD}`);
+            const r = await pExec(finalCMD);
             console.log(`**** CMD [${tag} | ${cmd}] SUCCESSFUL *** \n\n`);
             console.log(r.stdout);
         } catch (error) {
@@ -67,7 +71,7 @@ module.exports = {
     listing: async (settings) => {
         await execCmd('-l', settings, 'listing');
     },
-    restore: (settings) => {
-
+    restore: async (settings) => {
+        console.log(`Restore function is not available. Please check `)
     }
 };
