@@ -38,7 +38,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
   public requests: AccessRequest[] = [];
   public allUsers: User[] = [];
   public activeRoles: Role[] = [];
-  public selectedUser: User;
+  
   public selectedRequestUser: AccessRequest;
 
   public focusedAccessRequest: AccessRequest;
@@ -48,39 +48,15 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
   requestUsersColumns = ['username', 'name', 'roleRequested', 'reason', 'actions'];
   requestUsersDataSource: MatTableDataSource<AccessRequestTableData>;
 
-  usersColumns = ['username', 'name', 'email', 'role', 'actions'];
-  usersDataSource: MatTableDataSource<UserTableData>;
-
   get hasRequests(): boolean {
     return this.requests.length !== 0;
-  }
-
-  get hasUsers(): boolean {
-    return this.allUsers.length !== 0;
   }
 
   get hasExportData(): boolean {
     return this.numberOfDataInInspectAppToExport > 0;
   }
 
-  get getUserRole(): string {
-    if (!this.selectedUser) return '';
-    return this.userService.getUserAccessCode(this.selectedUser).role;
-  }
-
-  get getUserStatus(): boolean {
-    if (!this.selectedUser) return false;
-    return this.selectedUser.accountStatus === 1;
-  }
-
-  showUserPopper(user: User): boolean {
-    if (!user || !this.selectedUser) return false;
-    return this.selectedUser.user_id === user.user_id;
-  }
-
-  onClickAway(): void {
-    if (this.selectedUser) this.selectedUser = undefined;
-  }
+  
 
   constructor(
     private roles: RolesService,
@@ -145,57 +121,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     this.loadingService.add();
     this.admin.getAllUsers().then(async (value) => {
       this.allUsers = value;
-      await this.updateUsersTable(value);
       this.loadingService.remove();
-    });
-  }
-
-  private updateUsersTable(allUsers: User[]) {
-    const users: UserTableData[] = [];
-    if (allUsers.length === 0) return;
-
-    allUsers.forEach(user => {
-      const { firstName, lastName, email, preferredUsername, user_id } = user;
-
-      const username = preferredUsername;
-      const name = firstName + ' ' + lastName; 
-      const role = this.userService.getUserAccessCode(user).role;
-
-      users.push({
-        username,
-        name,
-        email,
-        role,
-        user_id
-      });
-    });
-
-    this.usersDataSource = new MatTableDataSource<UserTableData>(users);
-  }
-
-  public changeUserRole(data: MatSelectChange) {
-    const selectedRole = this.activeRoles.find(activeRole => activeRole.role === data.value);
-    this.admin.changeUserRole(this.selectedUser, selectedRole).then(async (response) => {
-      if (response.success) {
-        this.selectedUser = response.response;
-        await this.getAllUsers();
-        this.toastService.show(`${this.selectedUser.firstName}'s role change to ${selectedRole.role}.`, ToastIconType.success);
-      } else {
-        this.toastService.show('Failed, Could not change user role', ToastIconType.fail);
-      }
-    })
-  }
-
-  public changeUserStatus(toggle: MatSlideToggleChange) {
-    const accountStatus = toggle.checked ? 1 : 0;
-    this.admin.changeUserAccountStatus(this.selectedUser, accountStatus).then(async (response) => {
-      if(response.success) {
-        this.selectedUser = response.response;
-        await this.getAllUsers();
-        this.toastService.show(`${this.selectedUser.firstName}'s account status had been changed.`, ToastIconType.success);
-      } else {
-        this.toastService.show(`Failed, Could not change the status of ${this.selectedUser.firstName}'s account.`, ToastIconType.fail);
-      }
     });
   }
 
@@ -222,12 +148,5 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
   public async export() {
     this.exportService.exportCSV(ExportType.WatercraftRiskAssessment);
   }
-
-  public onUserAction(item: UserTableData) {
-    const { user_id } = item;
-    if (!user_id) return;
-
-    const selectedUser = this.allUsers.find(user => user.user_id === user_id);
-    this.selectedUser=selectedUser;
-  }
+  
 }
