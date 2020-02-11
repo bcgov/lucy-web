@@ -12,7 +12,7 @@ import { Record } from './generic.data.models';
  */
 export interface EfficacyCodeSpec {
 	displayOrder: number;
-	description: string;
+	efficacyRating: string;
 	activeIndicator: boolean;
 }
 // -- End: EfficacyCodeSpec --
@@ -24,7 +24,7 @@ export interface EfficacyCodeSpec {
  */
 export interface EfficacyCodeUpdateSpec {
 	displayOrder?: number;
-	description?: string;
+	efficacyRating?: string;
 	activeIndicator?: boolean;
 }
 // -- End: EfficacyCodeUpdateSpec --
@@ -63,7 +63,7 @@ export class EfficacyCode extends Record implements EfficacyCodeSpec {
 	 */
 	@Column({ name: EfficacyCodeSchema.columns.description})
 	@ModelProperty({type: PropertyType.string})
-	description: string;
+	efficacyRating: string;
 
 	/**
 	 * @description Getter/Setter property for column {active_ind}
