@@ -28,16 +28,18 @@ module.exports = (settings) => {
   const phases = settings.phases
   const options= settings.options
   const phase = options.env
-  const changeId = phases[phase].changeId || 'dev-tools'
+  const changeId = phases[phase].changeId || 'dev-tools';
   const oc= new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift/tools'))
   var objects = [];
   const instance = phases[phase].instance;
   const name = `${phases[phase].name}-backup`;
-  const host = `invasivebc-schemaspy-${changeId}-${phases[phase].namespace}.pathfinder.gov.bc.ca`;
-
-  const dbIdentifierProd = 'bk-8ecbmv-prod-rt7kpgp8p2a2';
-  const dbIdentifierDev = 'bk-8ecbmv-dev-s8nuyo61qmct';
+  delete options.git;
+  const dbIdentifiers = {
+    'dev': 'bk-8ecbmv-dev-s8nuyo61qmct',
+    'prod': 'bk-8ecbmv-prod-rt7kpgp8p2a2',
+    'test': 'bk-8ecbmv-test-1d2ol2h3lcy5'
+  };
   // The deployment of your cool app goes here ▼▼▼
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/db.backup.dc.yaml`, {
     'param':{
@@ -45,7 +47,7 @@ module.exports = (settings) => {
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'DATABASE_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
-      'NFS_VOLUME_IDENTIFIER': phase === 'dev' ? dbIdentifierDev : dbIdentifierProd
+      'NFS_VOLUME_IDENTIFIER': dbIdentifiers[phase]
     }
   }))
   
