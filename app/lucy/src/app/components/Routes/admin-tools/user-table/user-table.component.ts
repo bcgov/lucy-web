@@ -79,7 +79,7 @@ export class UserTableComponent implements OnInit, OnChanges {
 
   private initTable() {
     const userTable: UserTableData[] = [];
-    // if (this.users.length === 0) return;
+    if (this.users.length === 0) return;
 
     this.users.forEach(user => {
       const { firstName, lastName, email, preferredUsername, user_id } = user;

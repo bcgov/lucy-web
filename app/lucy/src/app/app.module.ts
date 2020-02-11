@@ -95,6 +95,8 @@ import { ComputedFieldComponent } from './components/base-form/computed-field/co
 import { TableComponent } from './components/base-form/table/table.component';
 import { ToastComponent } from './components/Utilities/toast/toast.component';
 import { ClickAwayDirective } from './directives/click-away.directive';
+import { UserTableComponent } from './components/Routes/admin-tools/user-table/user-table.component';
+import { RequestTableComponent } from './components/Routes/admin-tools/request-table/request-table.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -138,6 +140,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     TableComponent,
     ToastComponent,
     ClickAwayDirective,
+    UserTableComponent,
+    RequestTableComponent,
   ],
   entryComponents: [
     AddQuickObservationModalComponent
