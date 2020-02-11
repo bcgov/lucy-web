@@ -46,6 +46,10 @@ export class RequestTableComponent implements OnInit, OnChanges {
     return this.requests.length !== 0;
   }
 
+  get showModal(): boolean {
+    return this.selectedRequest !== undefined;
+  }
+
   constructor(
     private userService: UserService,
   ) { }
@@ -62,7 +66,7 @@ export class RequestTableComponent implements OnInit, OnChanges {
     if (this.requests.length === 0) return;
 
     this.requests.forEach(request => {
-      const { requester, requestNote } = request;
+      const { requester, requestNote, request_id } = request;
       if (!requester) return;
 
       const username = requester.preferredUsername;
@@ -73,12 +77,24 @@ export class RequestTableComponent implements OnInit, OnChanges {
         username,
         name,
         roleRequested,
-        reason: requestNote
+        reason: requestNote,
+        request_id,
       });
     });
 
     this.requestDataSource = new MatTableDataSource<AccessRequestTableData>(reqUsers);
     this.requestDataSource.paginator = this.paginator;
+  }
+
+  public onRespondAction(item: AccessRequestTableData) {
+    const { request_id } = item;
+    if (!request_id) return;
+
+    this.selectedRequest = this.requests.find(user => user.request_id === request_id);
+  }
+
+  public onBackdropClick(): void {
+    this.selectedRequest = undefined;
   }
 
 }

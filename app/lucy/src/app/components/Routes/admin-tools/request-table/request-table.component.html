@@ -41,8 +41,8 @@
     <!-- Action column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef>
-        <button mat-raised-button color="primary">
+      <td mat-cell *matCellDef="let item">
+        <button mat-raised-button color="primary" id="clickAwayParent" (click)="onRespondAction(item)">
           Respond
         </button>
       </td>
@@ -56,3 +56,7 @@
 <div class="col-12" *ngIf="!hasRequests">
   There are currently no new requests
 </div>
+
+<app-modal *ngIf="showModal" (onBackdropClick)="onBackdropClick()">
+  <p>hello</p>
+</app-modal>

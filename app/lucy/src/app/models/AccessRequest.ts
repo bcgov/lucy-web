@@ -35,4 +35,5 @@ export interface AccessRequestTableData {
     username: string;
     roleRequested: string;
     reason: string;
+    request_id: number;
 }
