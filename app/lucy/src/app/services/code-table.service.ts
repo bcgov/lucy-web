@@ -23,8 +23,9 @@ import {
   Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes,
   SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes,
   SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
-  ProposedActionCodes, AspectCodes, SlopeCodes
+  ProposedActionCodes, AspectCodes, SlopeCodes,
 } from '../models';
+import { EfficacyCodes } from '../models/Monitor';
 import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
 import { Key } from 'protractor';
@@ -57,6 +58,8 @@ export class CodeTableService {
   private mechanicalTreatmentProviders: MechanicalTreatmentProviders[];
 
   private herbicideCodes: HerbicideCodes[];
+
+  private efficacyCodes: EfficacyCodes[];
 
   private codeTables: any | null = null;
 
@@ -213,6 +216,24 @@ export class CodeTableService {
       return agencies;
     }
     return this.agencies;
+  }
+
+  public async getEfficacyCodes(): Promise<EfficacyCodes[]> {
+    if (this.efficacyCodes && this.efficacyCodes.length > 0) {
+      return this.efficacyCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const efficacyCodes = codes.EfficacyCodes;
+    if (efficacyCodes && (Array.isArray(efficacyCodes) && this.objectValidator.isEfficacyCodesObject(efficacyCodes[0]))) {
+      this.efficacyCodes = efficacyCodes;
+      return efficacyCodes;
+    }
+    return this.efficacyCodes;
   }
 
   public async getObservationTypeCodes(): Promise<ObservationTypeCodes[]> {

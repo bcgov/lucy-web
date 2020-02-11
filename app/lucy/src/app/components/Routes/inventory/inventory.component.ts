@@ -35,6 +35,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
 import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
+import { ExportService } from 'src/app/services/export/export.service';
 
 
 declare const process: any;
@@ -125,7 +126,9 @@ export class InventoryComponent implements OnInit {
     private router: RouterService,
     private loadingService: LoadingService,
     private toast: ToastService,
-    private dummy: DummyService) { }
+    private dummy: DummyService,
+    private exportService: ExportService
+    ) { }
 
   ngOnInit() {
     this.isProd = AppConstants.CONFIG.env === `prod` ? true : false;
@@ -425,6 +428,10 @@ export class InventoryComponent implements OnInit {
 
   edit(observation: Observation) {
     this.router.navigateTo(AppRoutes.EditObservation, observation.observation_id);
+  }
+
+  export() {
+    this.exportService.downloadCSV(this.observations, `observations - ${Date().toString()}`);
   }
 
   /************ Dummy Data ************/
