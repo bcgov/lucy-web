@@ -94,6 +94,11 @@ pipeline {
             steps {
                 echo "Deploying Postgress [STATIC] ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                echo "Deploying backup app [STATIC]"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=dev --type=static"
+                echo "Running DB Backup Job [STATIC]"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=dev --backup=true"
+                echo "Running DB Migration [STATIC]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev --type=static"
             }
         }
@@ -123,6 +128,11 @@ pipeline {
             steps {
                 echo "Deploying Postgress [TEST] ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=test --type=static"
+                echo "Deploying backup of app [TEST]"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=test --type=static"
+                echo "Running DB Backup Job [TEST]"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=test --backup=true"
+                echo "Running DB Migration [TEST]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=test --type=static"
             }
         }
@@ -154,6 +164,11 @@ pipeline {
                     }
                     echo "Deploying Postgress [PROD] ..."
                     sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
+                    echo "Deploying backup of app [PROD]"
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=test --type=static"
+                    echo "Running DB Backup Job [PROD]"
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=test --backup=true"
+                    echo "Running DB Migration [PROD]"
                     sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=prod --type=static"
                     echo "Deploying in [PROD] [API]..."
                     sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
