@@ -37,6 +37,11 @@ const getPOD = (oc) => {
             podName: pods[0].metadata.name
         }
     } else {
+        console.log(`backup: Unable to find backup pod`);
+        console.log(`All existing pods: ${allPods.map((pod) => {
+            const meta = pod.metadata || {};
+            return meta.name || 'None';
+        })}`)
         return {}
     }
 };
