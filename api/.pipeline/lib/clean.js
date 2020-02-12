@@ -30,11 +30,8 @@ module.exports = (settings)=>{
             }
           })
         })
-        
-        oc.raw('delete', ['all'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
-        oc.raw('delete', ['pvc,Secret,configmap,endpoints,RoleBinding,role,ServiceAccount,Endpoints'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
-        // Cleaning other pods
 
+        // Cleaning other pods
         if (k !== 'build') {
           const newOC = new OpenShiftClientX(Object.assign({'namespace':phases[k].namespace}, options));
           const podName1 = `${phases[k].name}${phases[k].suffix}-setup`;
@@ -42,6 +39,9 @@ module.exports = (settings)=>{
           checkAndClean(`pod/${podName1}`, newOC);
           checkAndClean(`pod/${podName2}`, newOC);
         }
+        
+        oc.raw('delete', ['all'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
+        oc.raw('delete', ['pvc,secrets,secret,configmap,endpoints,RoleBinding,role,ServiceAccount,Endpoints'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
       }
     }
   }

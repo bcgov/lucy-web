@@ -150,7 +150,15 @@ sonarqube:
 test-remote-api:
 	@echo "+\n Make: Test Remote API"
 	@cd ./.pipeline && DEBUG=* npm run test -- --pr=$$PR --env=$$ENV
-
+deploy-remote-backup:
+	@echo "+\n Deploy backup application in OpenShift"
+	@cd ./.pipeline && DEBUG=* npm run deploy-db-backup -- --env=$$ENV --type=static --pr=$$PR
+remote-backup:
+	@echo "+\n Make: Run backup of remote database"
+	@cd ./.pipeline && DEBUG=* npm run backup -- --env=$$ENV --backup=true
+remote-backup-ls:
+	@echo "+\n Make: Display listing of remote backups"
+	@cd ./.pipeline && DEBUG=* npm run backup -- --env=$$ENV --listing=true
 # ------------------------------------------------------------------------------
 # Helper Commands
 # ------------------------------------------------------------------------------
