@@ -20,6 +20,14 @@
 
 table {
   width: 100%;
+  table-layout: fixed;
+}
+
+th, td {
+  overflow: hidden;
+  width:auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 th {
@@ -38,7 +46,7 @@ td:first-of-type,.table-first-column {
 td:last-of-type {
   display: flex;
   justify-content: flex-end;
-  padding: 8px 0;
+  padding: 8px 0 !important;
   position: relative;
 }
 

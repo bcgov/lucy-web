@@ -37,13 +37,15 @@
             <div class="col-12">
               <hr class="section-divider" />
             </div>
-            <div class="col-12 col-sm-6 col-lg-10 section-body-text">
-              There are currently {{numberOfDataInInspectAppToExport}} records in the Inspect App Database.
-            </div>
-            <div class="col-12 col-sm-6 col-lg-2">
-              <button mat-raised-button class="action-button" color="primary" (click)="export()" [disabled]="!hasExportData">
-                Export All Data
-              </button>
+            <div class="data-container">
+              <div>
+                There are currently {{numberOfDataInInspectAppToExport}} records in the Inspect App Database.
+              </div>
+              <div>
+                <button mat-raised-button class="action-button" color="primary" (click)="export()" [disabled]="!hasExportData">
+                  Export All Data
+                </button>
+              </div>
             </div>
           </div>
         </div>
