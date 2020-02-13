@@ -51,7 +51,6 @@ export class AdminService {
       status: approved ? 1 : 2,
       approverNote: request.approverNote
     };
-    console.log(body);
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_AcessRequestResponse(request.request_id), body);
     if (response.success) {
       return true;
