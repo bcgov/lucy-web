@@ -26,8 +26,6 @@
 import { BaseSchema } from './baseSchema';
 
 export class SchemaTemplateController {
-    static processSchema(schema: BaseSchema) {
-        
-    }
+    static processSchema(schema: BaseSchema) {}
 }
 // ------------------

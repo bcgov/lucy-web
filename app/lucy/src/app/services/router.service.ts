@@ -105,6 +105,8 @@ export class RouterService {
         return AppRoutes.AddMechanicalTreatment;
       case 'chemical':
         return AppRoutes.AddChemicalTreatment;
+      case `monitor/mechanical`:
+        return AppRoutes.AddMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -113,7 +115,7 @@ export class RouterService {
   private resolveEditRoute(route: string): AppRoutes {
     const editTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
     // const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
-    const editType = editTypeAndId.slice(0, editTypeAndId.indexOf(`/`));
+    const editType = editTypeAndId.slice(0, editTypeAndId.lastIndexOf(`/`));
     switch (editType.toLowerCase()) {
       case `observation`:
         return AppRoutes.EditObservation;
@@ -121,6 +123,8 @@ export class RouterService {
         return AppRoutes.EditMechanicalTreatment;
       case 'chemical':
         return AppRoutes.EditChemicalTreatment;
+      case 'monitor/mechanical':
+        return AppRoutes.EditMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -129,7 +133,7 @@ export class RouterService {
   private resolveViewRoute(route: string): AppRoutes {
     const viewTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
     // const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
-    const viewType = viewTypeAndId.slice(0, viewTypeAndId.indexOf(`/`));
+    const viewType = viewTypeAndId.slice(0, viewTypeAndId.lastIndexOf(`/`));
     switch (viewType.toLowerCase()) {
       case `observation`:
         return AppRoutes.ViewObservation;
@@ -137,6 +141,8 @@ export class RouterService {
         return AppRoutes.ViewMechanicalTreatment;
       case 'chemical':
         return AppRoutes.ViewChemicalTreatment;
+      case 'monitor/mechanical':
+        return AppRoutes.ViewMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -195,6 +201,8 @@ export class RouterService {
         return AppRoutes.ViewObservation;
       case AppConstants.API_chemicalTreatment:
         return AppRoutes.ViewChemicalTreatment;
+      case AppConstants.API_mechanicalMonitor:
+        return AppRoutes.ViewMechanicalMonitor;
       default:
         console.log(`${api} does not have a route`);
     }

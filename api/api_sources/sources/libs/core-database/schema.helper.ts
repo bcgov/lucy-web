@@ -23,7 +23,7 @@
 import * as fs from 'fs';
 import * as _ from 'underscore';
 import { ApplicationTableColumn } from './application.column';
-import { TableVersion, ColumnChangeDefinition, ColumnChangeType } from './application.table';
+import { TableVersion, SchemaChangeDefinition, ColumnChangeType } from './application.table';
 import { unWrap } from '../utilities';
 import { BaseSchema } from './baseSchema';
 import { getSQLDirPath, getSQLFileData } from './sql.loader';
@@ -78,16 +78,25 @@ export class SchemaHelper {
      * @param ColumnChangeDefinition change
      * @param string tableName
      */
-    _genChangeColumn(change: ColumnChangeDefinition, tableName: string): string {
+    _genChangeColumn(change: SchemaChangeDefinition, tableName: string): string {
         let result = '';
         let comment = '';
-        const existingColumn = change.existingColumn;
+        const existingColumn: ApplicationTableColumn = change.existingColumn;
+        if (change.deleteColumn) {
+            change.type = ColumnChangeType.DROP;
+        }
         switch (change.type || ColumnChangeType.KEY_CHANGE) {
             case ColumnChangeType.DROP: {
                 // Dropping Column
                 comment = `## -- Dropping Column ${existingColumn} on table ${tableName} --`;
                 const dropCol = existingColumn.dropColumnSql(tableName);
                 result = result + `\n${comment}\n${dropCol}\n-- ## --`;
+
+                // Add Down sql
+                const newColumn = this._genColumnDef(existingColumn, tableName);
+                if (!change.downSqlStatement) {
+                    change.downSqlStatement = `## -- Down Migration: Adding column back --\n${newColumn}`;
+                }
                 break;
             }
             case ColumnChangeType.RENAME: {
@@ -110,7 +119,7 @@ export class SchemaHelper {
      * @param ColumnChangeDefinition change
      * @param string tableName
      */
-    _downChangeColumn(change: ColumnChangeDefinition, tableName: string) {
+    _downChangeColumn(change: SchemaChangeDefinition, tableName: string) {
         if (change.downSqlStatement) {
             return `-- ## Reverting changes --\n${change.downSqlStatement};\n--  ## --`;
         } else {
@@ -131,7 +140,7 @@ export class SchemaHelper {
         });
         newColumns = newColumns + '\n';
         let changes = `\n-- ## Updating ${tableName} ## --`;
-        _.each(version.columnChanges, (change: ColumnChangeDefinition) => {
+        _.each(version.schemaChanges, (change: SchemaChangeDefinition) => {
             changes = changes + `\n${this._genChangeColumn(change, tableName)}`;
         });
         changes = changes + '\n';
@@ -152,7 +161,7 @@ export class SchemaHelper {
         });
         newColumns = newColumns + '\n';
         let changes = `\n-- ## Updating ${tableName} ## --`;
-        _.each(version.columnChanges, (change: ColumnChangeDefinition) => {
+        _.each(version.schemaChanges, (change: SchemaChangeDefinition) => {
             changes = changes + `\n${this._downChangeColumn(change, tableName)}`;
         });
         changes = changes + '\n';

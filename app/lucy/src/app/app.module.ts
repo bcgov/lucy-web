@@ -42,6 +42,9 @@ import {MatChipsModule} from '@angular/material/chips';
 // ng-bootstrap
 import {NgbModule, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
+// ngx-material-timepicker
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+
 // InViewportModule
 import { InViewportModule } from 'ng-in-viewport';
 
@@ -82,6 +85,7 @@ import { MatSelectSearchModule } from './components/Input/mat-select-search/mat-
 import { CheckboxComponent } from './components/Input/checkbox/checkbox.component';
 import { AddEntryComponent } from './components/Routes/add-entry/add-entry.component';
 import { DatePickerComponent } from './components/Input/date-picker/date-picker.component';
+import { DateTimePickerComponent } from './components/Input/date-time-picker/date-time-picker.component';
 import { SpeciesTreatedComponent } from './components/Routes/species-treated/species-treated.component';
 import { HerbicideApplicationComponent } from './components/Routes/herbicide-application/herbicide-application.component';
 import { TreatmentDetailsComponent } from './components/Routes/treatment-details/treatment-details.component';
@@ -131,6 +135,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     HerbicideApplicationComponent,
     TreatmentDetailsComponent,
     DatePickerComponent,
+    DateTimePickerComponent,
     MomentPipe,
     CheckboxComponent,
     ErrorComponent,
@@ -158,6 +163,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
+    NgxMaterialTimepickerModule,
     RouterModule,
     InViewportModule,
     LottieAnimationViewModule.forRoot(),

@@ -15,6 +15,7 @@ This is the application source code for the Restful API of the invasive species 
 * [Running Tests and SonarQube Analysis](#Running-Tests-and-SonarQube-Analysis)
 * [SchemaSpy](#SchemaSpy)
 * [Modifying the Database Model & Schema](#Modifying-the-Database-Model--Schema)
+* [Database Backup and Restoration](#Database-Backup-and-Restoration)
 
 -----
 
@@ -181,3 +182,20 @@ To create a new database schema (or to update an existing schema), follow these 
     * make sure you have re-built the backend code (`make local-debug`),
     * then shell into the Docker container for the backend,
     * then run `npm run test:all` to run all unit test files, or `npm test sources/database/__tests__/<filename>.spec.ts` to only run the unit tests located in one specific file.
+
+## Database Backup and Restoration
+
+ Database backup and restoration is very important aspect of application maintenance and consistency. InvasivesBC application supports automated continuous backup of existing database.
+ The backup action is performed by systematic schedular (Cron Job Container) deployed in OpenShift. We used an existing [Schedular Application](https://github.com/BCDevOps/backup-container). Automated backup command is integrated with our Jenkins pipeline. But DevOps can use following tools/techniques to manage backup and restoration of DB.
+
+### Run Backup Manually
+
+  1. Login into OpenShift in terminal app. Change to /api dir.
+
+  2. Run __make remote-backup ENV=#ENV_NAME__
+
+  3. Check number of backup listing __make remote-backup-ls ENV=#ENV_NAME__
+
+### Restore Database
+
+  Please check **Restore** section of README.md of [Schedular Application](https://github.com/BCDevOps/backup-container)

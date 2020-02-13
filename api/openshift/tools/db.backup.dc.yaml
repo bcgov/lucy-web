@@ -1,0 +1,185 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name:  invasivesbc-dbbackup-dc
+objects:
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: invasivesbc-db-backup-verification${SUFFIX}
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: "${VERIFICATION_VOLUME_SIZE}"
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: invasivesbc-db-backup-config${SUFFIX}
+  data:
+    backup.conf: |
+      ${DATABASE_SERVICE_NAME}/${DATABASE_NAME}
+      0 2 * * * default ./backup.sh -s
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "${NAME}"
+    creationTimestamp: 
+    labels:
+      shared: 'true'
+    annotations: {}
+  spec:
+    lookupPolicy:
+      local: false
+- apiVersion: v1
+  kind: Secret
+  stringData:
+    database-name: ''
+    database-password: ''
+    database-user: ''
+  metadata:
+    name: "${NAME}${SUFFIX}"
+    annotations:
+      as-copy-of: "${DATABASE_SERVICE_NAME}"
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${NAME}${SUFFIX}"
+    annotations:
+      description: Defines how to deploy the ${NAME} server
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - backup
+        from:
+          kind: ImageStreamTag
+          name: "${NAME}:${VERSION}"
+    replicas: 1
+    selector:
+      name: "${NAME}${SUFFIX}"
+    template:
+      metadata:
+        name: "${NAME}${SUFFIX}"
+        labels:
+          name: "${NAME}${SUFFIX}"
+      spec:
+        volumes:
+        - name: invasivesbc-db-backup-data
+          persistentVolumeClaim:
+            claimName: "${NFS_VOLUME_IDENTIFIER}"
+        - name: invasivesbc-db-backup-verification
+          persistentVolumeClaim:
+            claimName: invasivesbc-db-backup-verification${SUFFIX}
+        - name: invasivesbc-db-backup-config-volume
+          configMap:
+            name: invasivesbc-db-backup-config${SUFFIX}
+            items:
+            - key: backup.conf
+              path: backup.conf
+        containers:
+        - name: backup
+          image: " "
+          env:
+          - name: BACKUP_STRATEGY
+            value: rolling
+          - name: BACKUP_DIR
+            value: "/backups/"
+          - name: DAILY_BACKUPS
+            value: '5'
+          - name: WEEKLY_BACKUPS
+            value: '1'
+          - name: MONTHLY_BACKUPS
+            value: '1'
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}${SUFFIX}"
+                key: database-user
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}${SUFFIX}"
+                key: database-password
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: "${NAME}${SUFFIX}"
+                key: database-name
+          - name: DATABASE_SERVER_TIMEOUT
+            value: '600'
+          - name: ENVIRONMENT_NAME
+            value: "${ENVIRONMENT_NAME}"
+          - name: ENVIRONMENT_FRIENDLY_NAME
+            value: "${ENVIRONMENT_FRIENDLY_NAME}"
+          resources:
+            requests:
+              cpu: "${CPU_REQUEST}"
+              memory: "${MEMORY_REQUEST}"
+            limits:
+              cpu: "${CPU_LIMIT}"
+              memory: "${MEMORY_LIMIT}"
+          volumeMounts:
+          - name: invasivesbc-db-backup-data
+            mountPath: "/backups/"
+          - name: invasivesbc-db-backup-verification
+            mountPath: "/var/lib/pgsql/data"
+          - name: invasivesbc-db-backup-config-volume
+            mountPath: "/backup.conf"
+            subPath: backup.conf
+parameters:
+- name: NAME
+  displayName: Name
+  description: The name assigned to all of the resources defined in this template.
+  required: true
+  value: backup
+- name: SUFFIX
+  displayName: Name Suffix
+  description: A suffix appended to all objects
+  required: true
+  value: gen
+- name: VERSION
+  required: true
+  value: latest
+- name: DATABASE_SERVICE_NAME
+  displayName: Database Service Name
+  description: The name of the database service.
+  required: true
+  value: postgresql
+- name: WEBHOOK_SECRET_NAME
+  value: template.invasivesbc-rocket-chat-integrations
+- name: NFS_VOLUME_IDENTIFIER
+  description: Generated identifier of the NFS volume
+  required: true
+  value: bk-8ecbmv-prod-rt7kpgp8p2a2
+- name: ENVIRONMENT_NAME
+  displayName: Environment Name (Environment Id)
+  description: The name or Id of the environment.  This variable is used by the webhook
+    integration to identify the environment in which the backup notifications originate.
+  required: false
+  value: invasivesbc-dev
+- name: ENVIRONMENT_FRIENDLY_NAME
+  value: InvasivesBC (Dev)
+- name: VERIFICATION_VOLUME_SIZE
+  displayName: Persistent Volume Size
+  description: The size of the persistent volume , e.g. 512Mi, 1Gi, 2Gi.
+  required: true
+  value: 1Gi
+- name: CPU_REQUEST
+  value: 200m
+- name: CPU_LIMIT
+  value: 500m
+- name: MEMORY_REQUEST
+  value: 1Gi
+- name: MEMORY_LIMIT
+  value: 1.5Gi
+- name: DATABASE_NAME
+  description: Name of the database
+  required: true
+  value: InvasivesBC
