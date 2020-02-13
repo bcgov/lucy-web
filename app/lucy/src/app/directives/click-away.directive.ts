@@ -32,18 +32,30 @@ export class ClickAwayDirective {
     const targetElement = event.target as HTMLElement;
     const clickedInside = this.ref.nativeElement.contains(targetElement);
 
-    const blackList = [
-      'mat-option-text'
+    const blackListIds = [
+      'custom-popper-action',
+      'custom-modal-action'
+    ];
+
+    const blackListClasses = [
+      'mat-option-text',
     ];
 
     const targetId = targetElement.id;
     const targetClass = targetElement.className;
-    if (targetId === 'clickAwayParent' || blackList.includes(targetClass)) {
-      return;
+    const targetParentId = targetElement.parentElement.id;
+
+    // Close any existing popper when opening a modal
+    if (targetParentId === 'custom-modal-action') {
+      document.getElementById('custom-popper').style.display='none';
     }
 
-    const targetParent = targetElement.parentElement.id;
-    if (targetParent === 'clickAwayParent') return;
+    if (blackListIds.includes(targetId)
+        || blackListIds.includes(targetParentId)
+        || blackListClasses.includes(targetClass)
+    ) {
+      return;
+    }
     
     // Emit an event only if the click was outside the element
     if (targetElement && !clickedInside) {

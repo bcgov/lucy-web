@@ -16,16 +16,12 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { Component, OnInit, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
-import { MatTableDataSource, MatSelectChange, MatSlideToggleChange } from '@angular/material';
 import { RolesService } from 'src/app/services/roles.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { UserService } from 'src/app/services/user.service';
 import { ExportService, ExportType } from 'src/app/services/export/export.service';
-import { AlertService } from 'src/app/services/alert.service';
-import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
-import { AccessRequest, AccessRequestTableData } from 'src/app/models/AccessRequest';
-import { User, UserTableData } from 'src/app/models';
+import { AccessRequest } from 'src/app/models/AccessRequest';
+import { User } from 'src/app/models';
 import { Role } from 'src/app/models/Role';
 
 @Component({
@@ -63,11 +59,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     private admin: AdminService,
     private loadingService: LoadingService,
     private exportService: ExportService,
-    private userService: UserService,
-    private alertService: AlertService,
-    private toastService: ToastService,
     private elementRef: ElementRef,
-    private renderer: Renderer2,
   ) { }
 
   ngOnInit() { }
@@ -82,7 +74,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     this.getNumberOfDataInInspectAppToExport()
   }
 
-  private fetchNonStaticData() {
+  fetchNonStaticData() {
     this.getAllUsers();
     this.getAllRequests();
   }
@@ -95,7 +87,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private async getAllUsers() {
+  async getAllUsers() {
     this.loadingService.add();
     this.admin.getAllUsers().then(async (value) => {
       this.allUsers = value;

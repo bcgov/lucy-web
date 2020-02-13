@@ -70,10 +70,7 @@ import { UserInformationComponent } from './components/Routes/user-information/u
 import { AboutComponent } from './components/Routes/about/about.component';
 import { AdminToolsComponent } from './components/Routes/admin-tools/admin-tools.component';
 import { RouterService } from './services/router.service';
-import { AccessRequestResponseModalComponent} from './components/Routes/admin-tools/access-request-response-modal/access-request-response-modal.component';
 import { AddQuickObservationModalComponent } from './components/Utilities/add-quick-observation-modal/add-quick-observation-modal.component';
-import { UserCellComponent } from './components/Routes/admin-tools/user-cell/user-cell.component';
-import { RequestCellComponent } from './components/Routes/admin-tools/request-cell/request-cell.component';
 import { AppBootService } from './services/bootstrap.service';
 import { UserAccessUpdatedModalComponent } from './components/Utilities/user-access-updated-modal/user-access-updated-modal.component';
 import { AlertComponent } from './components/Utilities/alert/alert.component';
@@ -94,7 +91,6 @@ import { ErrorComponent } from './components/Routes/error/error.component';
 import { BaseFormComponent } from './components/base-form/base-form.component';
 import { DiffViewerComponent } from './components/Utilities/diff-viewer/diff-viewer.component';
 import { LocationInputComponent } from './components/base-form/location-input/location-input/location-input.component';
-import { StringConstants } from './constants/string-constants';
 import { ComputedFieldComponent } from './components/base-form/computed-field/computed-field.component';
 import { TableComponent } from './components/base-form/table/table.component';
 import { ToastComponent } from './components/Utilities/toast/toast.component';
@@ -121,10 +117,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     AboutComponent,
     UserInformationComponent,
     AdminToolsComponent,
-    AccessRequestResponseModalComponent,
     AddQuickObservationModalComponent,
-    UserCellComponent,
-    RequestCellComponent,
     UserAccessUpdatedModalComponent,
     AlertComponent,
     MapPreviewComponent,
