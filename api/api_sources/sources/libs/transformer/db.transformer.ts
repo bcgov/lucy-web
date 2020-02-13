@@ -76,7 +76,7 @@ export class DateTimeTransformer {
             return date;
         }
         try {
-            const ds = `${moment(date).format('YYYY-MM-DD hh:mm:ss')}`;
+            const ds = `${moment(date).format('YYYY-MM-DD HH:mm:ss')}`;
             return ds;
         } catch (excp) {
             return `${date}`;
