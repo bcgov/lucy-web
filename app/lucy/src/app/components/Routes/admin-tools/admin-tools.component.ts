@@ -15,7 +15,7 @@
  *
  * 	Created by Amir Shayegh on 2019-10-23.
  */
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { MatTableDataSource, MatSelectChange, MatSlideToggleChange } from '@angular/material';
 import { RolesService } from 'src/app/services/roles.service';
 import { AdminService } from 'src/app/services/admin.service';
@@ -49,7 +49,14 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     return this.numberOfDataInInspectAppToExport > 0;
   }
 
-  
+  // check if the request table is empty or not
+  get hasRequests(): boolean {
+    return this.requests.length !== 0;
+  }
+
+  requestLength(): number {
+    return this.requests.length;
+  }  
 
   constructor(
     private roles: RolesService,
@@ -58,7 +65,9 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     private exportService: ExportService,
     private userService: UserService,
     private alertService: AlertService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
   ) { }
 
   ngOnInit() { }
@@ -116,6 +125,17 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   public async export() {
     this.exportService.exportCSV(ExportType.WatercraftRiskAssessment);
+  }
+
+  async menuItemClicked(id: string) {
+    const el = this.elementRef.nativeElement.querySelector(`#${id}`);
+
+    if (el) {
+      el.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth'
+      });
+    }
   }
   
 }

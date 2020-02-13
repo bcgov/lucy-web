@@ -1,7 +1,6 @@
-<div class=" admin-container">
-
-<!-- Header Section -->
-  <div class="container-fluid header-container">
+<div class="admin-container">
+  <!-- Header Section -->
+  <div class="container-fluid header-container sticky animated">
     <div class="container">
       <mat-toolbar class="toolbar">
         <mat-toolbar-row>
@@ -11,44 +10,65 @@
     </div>
   </div>
   <br />
-  <div class="container">
 
-    <!-- Data managment-->
-    <div class="row box">
-      <div class="col-12 section-title-text">
-        Manage Data
+  <div class="container">
+    <div class="row">
+      <div class="col-3 side-menu animated">
+        <div>
+          <p class="text text-header">INVASIVES BC</p>
+          <div class="user-header">
+            <p class="text text-content" (click)="menuItemClicked('userManagement')">User Management</p>
+            <span *ngIf="hasRequests" class="user-count">
+              {{ requestLength() }}
+            </span>
+          </div>
+          <div>
+            <p class="text text-content" (click)="menuItemClicked('contentManagement')">Content Management</p>
+          </div>
+        </div>
       </div>
-      <div class="col-12">
-        <hr class="section-divider" />
-      </div>
-      <div class="col-12 col-sm-6 col-lg-10 section-body-text">
-        There are currently {{numberOfDataInInspectAppToExport}} records in the Inspect App Database.
-      </div>
-      <div class="col-12 col-sm-6 col-lg-2">
-        <button mat-raised-button class="action-button" color="primary" (click)="export()" [disabled]="!hasExportData">
-          Export All Data
-        </button>
+      <div class="col">
+        <div class="container-fluid">
+          <!-- Data managment-->
+          <div class="row box">
+            <div class="col-12 section-title-text">
+              Manage Data
+            </div>
+            <div class="col-12">
+              <hr class="section-divider" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-10 section-body-text">
+              There are currently {{numberOfDataInInspectAppToExport}} records in the Inspect App Database.
+            </div>
+            <div class="col-12 col-sm-6 col-lg-2">
+              <button mat-raised-button class="action-button" color="primary" (click)="export()" [disabled]="!hasExportData">
+                Export All Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <br />
+
+        <div class="container-fluid">
+          <div class="row box" id="userManagement">
+      
+            <!-- Requests -->
+            <div class="col-12">
+              <app-request-table [requests]="requests" [roles]="activeRoles" (refreshList)="fetchNonStaticData()">
+              </app-request-table>
+            </div>
+            <!-- End Requests -->
+            <span class="section-space"></span>
+            <!-- All Users -->
+            <div class="col-12">
+              <app-user-table [users]="allUsers" [roles]="activeRoles" (fetchUsers)="getAllUsers()">
+              </app-user-table>
+            </div>
+            <!-- End Users -->
+          </div>
+        </div>
       </div>
     </div>
-    <!-- End Data managment -->
-
-    <br />
-
-    <span class="row box">
-
-      <!-- Requests -->
-      <div class="col-12">
-        <app-request-table [requests]="requests" [roles]="activeRoles" (fetchRequests)="getAllRequests()">
-        </app-request-table>
-      </div>
-      <!-- End Requests -->
-      <span class="section-space"></span>
-      <!-- All Users -->
-      <div class="col-12">
-        <app-user-table [users]="allUsers" [roles]="activeRoles" (fetchUsers)="getAllUsers()">
-        </app-user-table>
-      </div>
-      <!-- End Users -->
-    </span>
   </div>
 </div>

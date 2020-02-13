@@ -15,7 +15,7 @@ export class RequestTableComponent implements OnInit, OnChanges {
   private _roles: Role[] = [];
 
   public selectedRequest: AccessRequest;
-  @Output() fetchUsers = new EventEmitter<any>();
+  @Output() refreshList = new EventEmitter<any>();
 
   private requestDataSource: MatTableDataSource<AccessRequestTableData>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -50,6 +50,10 @@ export class RequestTableComponent implements OnInit, OnChanges {
     return this.selectedRequest !== undefined;
   }
 
+  requestLength(): number {
+    return this.requests.length;
+  }
+
   constructor(
     private userService: UserService,
   ) { }
@@ -66,12 +70,12 @@ export class RequestTableComponent implements OnInit, OnChanges {
     if (this.requests.length === 0) return;
 
     this.requests.forEach(request => {
-      const { requester, requestNote, request_id } = request;
+      const { requester, requestNote, request_id, requestedAccessCode } = request;
       if (!requester) return;
 
       const username = requester.preferredUsername;
       const name = requester.firstName + ' ' + requester.lastName; 
-      const roleRequested = this.userService.getUserAccessCode(requester).role;
+      const roleRequested = requestedAccessCode.role;
 
       reqUsers.push({
         username,
@@ -93,8 +97,9 @@ export class RequestTableComponent implements OnInit, OnChanges {
     this.selectedRequest = this.requests.find(user => user.request_id === request_id);
   }
 
-  public onBackdropClick(): void {
+  public async onModalClose(refresh: boolean) {
     this.selectedRequest = undefined;
+    if (refresh) await this.refreshList.emit();
   }
 
 }

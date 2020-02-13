@@ -31,16 +31,22 @@ export class ClickAwayDirective {
   public onClick(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
     const clickedInside = this.ref.nativeElement.contains(targetElement);
-    let targetId;
 
-    targetId = targetElement.id;
-    if (!targetId) {
-      targetId = targetElement.parentElement.id;
+    const blackList = [
+      'mat-option-text'
+    ];
+
+    const targetId = targetElement.id;
+    const targetClass = targetElement.className;
+    if (targetId === 'clickAwayParent' || blackList.includes(targetClass)) {
+      return;
     }
+
+    const targetParent = targetElement.parentElement.id;
+    if (targetParent === 'clickAwayParent') return;
     
-    // Check if the click was outside the element
-    // The variable `targetId` is used to avoid onClick events on the parent element
-    if (targetElement && !clickedInside && !(targetId === 'clickAwayParent')) {
+    // Emit an event only if the click was outside the element
+    if (targetElement && !clickedInside) {
       this.clickAway.emit(event);
     }
   }
