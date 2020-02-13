@@ -18,8 +18,26 @@
   margin-top: 8px;
 }
 
+.user-count {
+  padding: 3px 8px;
+  margin-left: 15px;
+  border-radius: 50%;
+  background: #FF534A;
+  color: white;
+  font-weight: normal;
+  font-size: 14px;
+}
+
 table {
   width: 100%;
+  table-layout: fixed;
+}
+
+th, td {
+  overflow: hidden;
+  width:auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 th {

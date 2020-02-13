@@ -98,6 +98,7 @@ import { ClickAwayDirective } from './directives/click-away.directive';
 import { UserTableComponent } from './components/Routes/admin-tools/user-table/user-table.component';
 import { RequestTableComponent } from './components/Routes/admin-tools/request-table/request-table.component';
 import { ModalComponent } from './components/Utilities/modal/modal.component';
+import { RequestModalComponent } from './components/Routes/admin-tools/request-modal/request-modal.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -144,6 +145,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     UserTableComponent,
     RequestTableComponent,
     ModalComponent,
+    RequestModalComponent,
   ],
   entryComponents: [
     AddQuickObservationModalComponent
