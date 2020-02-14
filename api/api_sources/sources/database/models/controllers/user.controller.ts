@@ -4,6 +4,7 @@ import { UserSession, UserSessionDataController } from '../user.session';
 import { DataModelController } from '../../data.model.controller';
 import { UserSchema } from '../../database-schema';
 import { setNull } from '../../../libs/utilities';
+import { RequestAccess } from '../requestAccess';
 /**
  * @description Data Model Controller for User
  * @export class UserDataController
@@ -50,6 +51,18 @@ export class UserDataController extends DataModelController<User> {
     public async removeSession(user: User): Promise<void> {
         setNull<User>(user, 'activeSessionId');
         await this.saveInDB(user);
+    }
+
+    public async latestAccessRequest(user: User): Promise<RequestAccess | undefined> {
+        const allRequest: RequestAccess[] = await user.requestAccess;
+        if (allRequest && allRequest.length > 0) {
+            const sorted = allRequest.sort( (item1, item2) => {
+                return item2.request_id < item1.request_id ? -1 :
+                (item2.request_id > item1.request_id) ? 1 : 0;
+            });
+            return sorted[0];
+        }
+        return;
     }
 }
 

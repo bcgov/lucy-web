@@ -35,7 +35,7 @@ export const InitialUsers = [
         first_name: 'Test',
         last_name: 'Idr2',
         additionalInitDataInfo: {
-            roles: [1]
+            roles: [6]
         }
     },
     {
@@ -45,6 +45,24 @@ export const InitialUsers = [
         last_name: 'Idr3',
         additionalInitDataInfo: {
             roles: [3]
+        }
+    },
+    {
+        email: 'istest4@gov.bc.ca',
+        preferred_username: 'istest4@idir',
+        first_name: 'Test',
+        last_name: 'Idr3',
+        additionalInitDataInfo: {
+            roles: [5]
+        }
+    },
+    {
+        email: 'istest5@gov.bc.ca',
+        preferred_username: 'istest5@idir',
+        first_name: 'Test',
+        last_name: 'Idr5',
+        additionalInitDataInfo: {
+            roles: [2]
         }
     }
 ];

@@ -26,7 +26,7 @@
     jest.mock('../data.model.controller');
 }*/
 import { expect } from 'chai';
-import {  UserDataController, RequestAccessController, UserMessageController, UserMessage } from '../models';
+import {  UserDataController, RequestAccessController, UserMessageController, UserMessage, RequestAccess } from '../models';
 import {  requestAccessFactory, userMessageFactory } from '../factory';
 import { runMockSetup, commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
 // import { SharedDBManager } from '../dataBaseManager';
@@ -58,14 +58,9 @@ describe('Test Admin ops data models', () => {
         expect(dbObj.requestedAccessCode).to.eql(obj.requestedAccessCode);
 
         // Check relationship of user
-        const request = await obj.requester.requestAccess;
+        const request: RequestAccess[]  = await obj.requester.requestAccess;
         expect(request).not.equal(undefined);
-        expect(request.request_id).to.equal(dbObj.request_id);
-
-        // Load user and check
-        const requester = await UserDataController.shared.findById(obj.requester.user_id);
-        const existing: any = requester.existingRequestAccess || {};
-        expect(existing.request_id).to.equal(obj.request_id);
+        expect(request.length).to.be.greaterThan(0);
 
         // Clean
         RequestAccessController.shared.remove(obj);
