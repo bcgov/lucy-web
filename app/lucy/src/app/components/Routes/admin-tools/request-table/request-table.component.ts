@@ -114,9 +114,9 @@ export class RequestTableComponent implements OnInit, OnChanges {
     this.selectedRequest = this.requests.find(user => user.request_id === request_id);
   }
 
-  public async onModalClose(refresh: boolean) {
+  public onModalClose(refresh: boolean) {
     this.selectedRequest = undefined;
-    if (refresh) await this.refreshList.emit();
+    if (refresh) this.refreshList.emit();
   }
 
 }
