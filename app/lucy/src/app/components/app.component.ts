@@ -172,11 +172,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /******** Toasts ********/
   private subscribeToToastService() {
-    this.toastSubscription = this.toastService.getObservable().subscribe(message => {
+    this.toastSubscription = this.toastService.getObservable().subscribe(model => {
 
       this.zone.run(() => {
-        if (message && typeof message === typeof '') {
-          this.toastMessage = message;
+        if (model && typeof model.message === typeof '') {
+          this.toastMessage = model;
         } else {
           this.alertMessage = undefined;
         }
