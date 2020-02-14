@@ -13,31 +13,25 @@
  * 	See the License for the specific language governing permissions and
  * 	limitations under the License.
  *
- * 	Created by Amir Shayegh on 2019-10-23.
+ * 	Created by Rajasekaran Manivannan on 2019-02-12.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RequestCellComponent } from './request-cell.component';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie-service';
-import { RouterTestingModule } from '@angular/router/testing';
 
-describe('RequestCellComponent', () => {
-  let component: RequestCellComponent;
-  let fixture: ComponentFixture<RequestCellComponent>;
+import { ModalComponent } from './modal.component';
+
+describe('ModalComponent', () => {
+  let component: ModalComponent;
+  let fixture: ComponentFixture<ModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientModule, RouterTestingModule ],
-      declarations: [ RequestCellComponent ],
-      providers: [ CookieService ],
-      schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
+      declarations: [ ModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RequestCellComponent);
+    fixture = TestBed.createComponent(ModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
