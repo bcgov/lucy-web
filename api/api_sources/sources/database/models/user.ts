@@ -26,9 +26,7 @@ import {
     OneToMany,
     JoinTable,
     PrimaryGeneratedColumn,
-    ManyToMany,
-    OneToOne,
-    AfterLoad,
+    ManyToMany
 } from 'typeorm';
 
 // Local Import
@@ -171,8 +169,8 @@ export class User extends BaseModel  {
     @OneToMany(type => UserMessage, message => message.receiver)
     messages: Promise<UserMessage[]>;
 
-    @OneToOne(type => RequestAccess, requestAccess => requestAccess.requester)
-    requestAccess: Promise<RequestAccess>;
+    @OneToMany(type => RequestAccess, requestAccess => requestAccess.requester)
+    requestAccess: Promise<RequestAccess[]>;
 
 
     /**
@@ -183,13 +181,8 @@ export class User extends BaseModel  {
         return this.roles.filter(item => item.code === RolesCodeValue.admin).length > 0;
     }
 
-
-    /**
-     * DB Hook/listener
-     */
-    @AfterLoad()
-    async entityDidLoad() {
-        this.existingRequestAccess = await this.requestAccess;
+    get isInspectAppAdmin(): boolean {
+        return this.roles.filter( item => item.roleCode === RolesCodeValue.inspectAppAdmin).length > 0;
     }
 }
 

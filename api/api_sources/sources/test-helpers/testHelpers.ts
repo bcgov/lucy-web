@@ -25,7 +25,13 @@ import { should, expect } from 'chai';
 import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
 import { action } from '../libs/utilities';
 import { SharedDBManager } from '../database/dataBaseManager';
-import { adminToken, editorToken, viewerToken } from './token';
+import {
+    adminToken,
+    editorToken,
+    viewerToken,
+    inspectAppAdminToken,
+    inspectAppOfficerToken
+} from './token';
 import { BaseSchema } from '../libs/core-database';
 
 /**
@@ -145,6 +151,8 @@ export const enum AuthType {
     admin = 1,
     viewer = 2,
     sme = 3,
+    inspectOfficer = 5,
+    inspectAdmin = 6,
     noAuth = 4,
     token = 0
 }
@@ -189,6 +197,12 @@ export const testRequest = (app: any, setup: TestSetup) => {
             break;
         case 4:
             token = '';
+            break;
+        case 5:
+            token = inspectAppOfficerToken();
+            break;
+        case 6:
+            token = inspectAppAdminToken();
             break;
         default:
             token = setup.token || '';

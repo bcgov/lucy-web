@@ -27,6 +27,10 @@ export class UserRoleSchema extends BaseTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('user.schema.yaml');
     }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
 }
 
 /**

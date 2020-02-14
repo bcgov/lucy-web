@@ -153,6 +153,9 @@ export class RouteController {
         if (this.isSecure) {
             this.router.use(this.authHandle);
         }
+        if (this.controllerRouteInfo.dataController) {
+            this.dataController = this.controllerRouteInfo.dataController;
+        }
         this.applyRouteConfig();
         this.setup();
     }
