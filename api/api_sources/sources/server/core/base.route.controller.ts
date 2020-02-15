@@ -206,12 +206,13 @@ export class RouteController {
             return compare(c1.description.index || 0, c2.description.index || 1);
         });
         this.configs = sorted;
-
+        // console.log(`${this.className}`);
         // Apply config to route
-        _.each(this.configs, (config: RouteConfig) => {
+        for (const config of this.configs) {
             try {
                 // Getting endpoint
-                let endPoint: string = config.description.path.split('#')[1];
+                const paths: string[] = config.description.path.split('#');
+                let endPoint: string = paths.length > 0 ? paths[1] : paths[0];
                 if (!endPoint) {
                     endPoint = config.description.path;
                 }
@@ -221,7 +222,6 @@ export class RouteController {
                 const middleware = config.description.middleware ? config.description.middleware() : [];
                 // Combining them
                 let allMiddleware = this.combineValidator(middleware, validators);
-
                 // Checking security level of the api
                 // 1. Skip if controller is secure
                 if (config.description.secure && !this.isSecure) {
@@ -238,8 +238,12 @@ export class RouteController {
                 }
             } catch (excp) {
                 this.logger.error(`Exception  while applying route config: ${excp}`);
+                this.logger.error(`Config: ${JSON.stringify(config, null, 2)}`);
             }
-        });
+        }
+        /*_.each(this.configs, (config: RouteConfig) => {
+
+        });*/
     }
 
     async handleRoute(req: express.Request, res: express.Response, handler: any, tag: string, applyDataHandle?: boolean) {

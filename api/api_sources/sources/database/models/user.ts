@@ -184,6 +184,10 @@ export class User extends BaseModel  {
     get isInspectAppAdmin(): boolean {
         return this.roles.filter( item => item.roleCode === RolesCodeValue.inspectAppAdmin).length > 0;
     }
+
+    get isInspectAppEditor(): boolean {
+        return this.roles.filter( item => item.roleCode === RolesCodeValue.inspectAppOfficer).length > 0;
+    }
 }
 
 // ----------------------------------------------------------------------------------------------------------------

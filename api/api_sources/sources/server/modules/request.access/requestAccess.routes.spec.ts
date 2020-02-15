@@ -24,9 +24,9 @@ import * as request from 'supertest';
 import { expect, should} from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction, verifySuccessBody, verifyErrorBody } from '../../../test-helpers/testHelpers';
 import { SharedExpressApp } from '../../initializers';
-import { viewerToken, adminToken } from '../../../test-helpers/token';
+import { viewerToken, adminToken, inspectAppAdminToken, inspectAppOfficerToken } from '../../../test-helpers/token';
 import { ModelFactory, Destroyer, requestAccessFactory } from '../../../database/factory';
-import { RequestAccessController, RequestAccess, UserDataController } from '../../../database/models';
+import { RequestAccessController, RequestAccess, UserDataController, RoleCodeController, RolesCodeValue } from '../../../database/models';
 
 describe('Test Request Access Route', () => {
     // Setup
@@ -113,6 +113,130 @@ describe('Test Request Access Route', () => {
             expect(data.request_id).to.be.equal(reqAccess.request_id);
             await RequestAccessController.shared.remove(reqAccess);
         });
+    });
+
+    // Test5: Update request by admin only
+    it('should update request by {admin}', async () => {
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        should().exist(user);
+        const reqAccess: RequestAccess = await requestAccessFactory(user);
+        should().exist(reqAccess);
+        const body: any = {
+            requestedAccessCode: 2,
+            status: 1,
+            approverNote: 'Your access level upgraded'
+        };
+
+        await request(SharedExpressApp.app)
+        .put(`/api/request-access/${reqAccess.request_id}`)
+        .set('Authorization', `Bearer ${adminToken()}`)
+        .send(body)
+        .expect(200)
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body);
+            await RequestAccessController.shared.remove(reqAccess);
+        });
+
+    });
+
+    // Test6: Should not Update request by viewer
+    it('should not update request by {viewer}', async () => {
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        should().exist(user);
+        const reqAccess: RequestAccess = await requestAccessFactory(user);
+        should().exist(reqAccess);
+        const body: any = {
+            requestedAccessCode: 2,
+            status: 1,
+            approverNote: 'Your access level upgraded'
+        };
+
+        await request(SharedExpressApp.app)
+        .put(`/api/request-access/${reqAccess.request_id}`)
+        .set('Authorization', `Bearer ${viewerToken()}`)
+        .send(body)
+        .expect(401)
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+            await RequestAccessController.shared.remove(reqAccess);
+        });
+
+    });
+
+    // Test7: Should not Update request by Inspect App Admin
+    it('should not update request by {Inspect App Admin}', async () => {
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        should().exist(user);
+        const reqAccess: RequestAccess = await requestAccessFactory(user);
+        should().exist(reqAccess);
+        const body: any = {
+            requestedAccessCode: 2,
+            status: 1,
+            approverNote: 'Your access level upgraded'
+        };
+
+        await request(SharedExpressApp.app)
+        .put(`/api/request-access/${reqAccess.request_id}`)
+        .set('Authorization', `Bearer ${inspectAppAdminToken()}`)
+        .send(body)
+        .expect(401)
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+            await RequestAccessController.shared.remove(reqAccess);
+        });
+
+    });
+
+    // Test8: Should not Update request by Inspect App Admin
+    it('should not update request by {Inspect App Admin}', async () => {
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        should().exist(user);
+        const reqAccess: RequestAccess = await requestAccessFactory(user);
+        should().exist(reqAccess);
+        const body: any = {
+            requestedAccessCode: 2,
+            status: 1,
+            approverNote: 'Your access level upgraded'
+        };
+
+        await request(SharedExpressApp.app)
+        .put(`/api/request-access/${reqAccess.request_id}`)
+        .set('Authorization', `Bearer ${inspectAppOfficerToken()}`)
+        .send(body)
+        .expect(401)
+        .then(async (resp) => {
+            await verifyErrorBody(resp.body);
+            await RequestAccessController.shared.remove(reqAccess);
+        });
+
+    });
+
+    // Test9: Should Update request {Inspect app editor} by Inspect App Admin
+    it('should update request {Inspect App User} by {Inspect App Admin}', async () => {
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        should().exist(user);
+        const reqAccess: RequestAccess = await requestAccessFactory(user);
+        reqAccess.requestedAccessCode = await RoleCodeController.shared.getCode(RolesCodeValue.inspectAppOfficer);
+        await RequestAccessController.shared.saveInDB(reqAccess);
+        should().exist(reqAccess);
+        const body: any = {
+            requestedAccessCode: reqAccess.requestedAccessCode.role_code_id,
+            status: 1,
+            approverNote: 'Your access level upgraded'
+        };
+
+        await request(SharedExpressApp.app)
+        .put(`/api/request-access/${reqAccess.request_id}`)
+        .set('Authorization', `Bearer ${inspectAppAdminToken()}`)
+        .send(body)
+        .expect(200)
+        .then(async (resp) => {
+            await verifySuccessBody(resp.body);
+            const received = resp.body.data;
+            expect(received.status).to.be.equal(body.status);
+            await RequestAccessController.shared.remove(reqAccess);
+        });
+
     });
 
 });
