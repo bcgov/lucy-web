@@ -29,7 +29,9 @@ import {
     CreateMiddleware,
     ResourceRouteController,
     UpdateMiddleware,
-    Get
+    Get,
+    inspectAppEditorRoute,
+    inspectAppAdminRoute
 } from '../../../core';
 import {
     WatercraftRiskAssessmentController,
@@ -42,8 +44,8 @@ import {
     // validators: CreateTreatmentValidator,
     secure: true
 })
-@CreateMiddleware(() => [])
-@UpdateMiddleware(() => [])
+@CreateMiddleware(() => [ inspectAppEditorRoute() ])
+@UpdateMiddleware(() => [ inspectAppEditorRoute() ])
 export class WatercraftRiskAssessmentRouteController extends ResourceRouteController<WatercraftRiskAssessmentController, WatercraftRiskAssessmentSpec, any> {
     static get shared(): WatercraftRiskAssessmentRouteController {
         return this.sharedInstance() as WatercraftRiskAssessmentRouteController;
@@ -61,7 +63,8 @@ export class WatercraftRiskAssessmentRouteController extends ResourceRouteContro
 
     @Get({
         path: '/export',
-        secure: true
+        secure: true,
+        middleware: () => [ inspectAppAdminRoute() ]
     })
     public async export() {
         return [200, await this.dataController.export()];
