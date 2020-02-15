@@ -13,33 +13,25 @@
  * 	See the License for the specific language governing permissions and
  * 	limitations under the License.
  *
- * 	Created by Amir Shayegh on 2019-10-23.
+ * 	Created by Rajasekaran Manivannan on 2019-02-11.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserCellComponent } from './user-cell.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie-service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { RolesService } from 'src/app/services/roles.service';
 
-describe('UserCellComponent', () => {
-  let component: UserCellComponent;
-  let fixture: ComponentFixture<UserCellComponent>;
+import { UserTableComponent } from './user-table.component';
+
+describe('UserTableComponent', () => {
+  let component: UserTableComponent;
+  let fixture: ComponentFixture<UserTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ NgbModule, HttpClientModule, RouterTestingModule ],
-      declarations: [ UserCellComponent ],
-      providers: [ CookieService, RolesService ],
-      schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
+      declarations: [ UserTableComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserCellComponent);
+    fixture = TestBed.createComponent(UserTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
