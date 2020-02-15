@@ -20,7 +20,7 @@
  * Imports
  */
 import * as assert from 'assert';
-import { Request, Router} from 'express';
+import { Request, Router, Response} from 'express';
 import {
     Get,
     ResourceRoute,
@@ -38,7 +38,8 @@ import {
     RolesCode,
     RoleCodeController
 } from '../../../database/models';
-import { check, sanitize } from 'express-validator';
+import { check, sanitize, sanitizeBody } from 'express-validator';
+import { BaseLogger, LogProvider } from '../../../libs/utilities';
 
 /**
  * @description Create request body structure
@@ -49,6 +50,32 @@ interface CreateRequestAccess {
 }
 
 /**
+ * @description Checking Valid approver or not
+ * @param Express.request req
+ * @param Express.resp resp
+ * @param Express.next next
+ */
+const checkApprover = (provider: LogProvider) => (req: any, resp: Response, next: any) => {
+    assert(req.id, 'No Access request object in api req. It must be handled by validator');
+    assert(req.user, 'No user for request');
+    const user = req.user as User;
+    const accessRequest: RequestAccess = req.id as RequestAccess;
+    // Check request access is for proper admin or not
+    if (user.isInspectAppAdmin && accessRequest.requestedAccessCode.roleCode !== RolesCodeValue.inspectAppOfficer) {
+        const logger: BaseLogger = provider();
+        logger.error(`checkApprover: Un-authorize update request from ${user.email} {inspect app admin}`);
+        resp.status(401).json({
+            message: `Un-authorize update request from ${user.email} {inspect app admin}`,
+            time: `${Date()}`,
+            errors: []
+        });
+        return;
+    }
+    next();
+    return;
+};
+
+/**
  * @description Request access route controller
  */
 @ResourceRoute({
@@ -57,6 +84,11 @@ interface CreateRequestAccess {
 })
 class RequestAccessRouteController extends RouteController {
     userController: UserDataController = UserDataController.shared;
+
+    static get shared(): RequestAccessRouteController {
+        return this.sharedInstance() as RequestAccessRouteController;
+    }
+
     constructor() {
         super();
     }
@@ -96,26 +128,29 @@ class RequestAccessRouteController extends RouteController {
         path: '/:id',
         middleware: () => [
             idValidator('id', RequestAccessController.shared, async () => {}),
-            inspectAppAdminRoute()
+            ValidatorExists({
+                requestedAccessCode: RoleCodeController.shared,
+            }),
+            check('status').isInt().custom(async (val: number) => {
+                assert(val >= 0 && val < 3, 'requestAccess: update: invalid status');
+            }),
+            check('approverNote').isString(),
+            sanitizeBody('approverNote'),
+            inspectAppAdminRoute(),
+            checkApprover(() => RequestAccessRouteController.shared.logger)
         ]
     })
     public async update(req: any) {
         assert(req.id, 'No Access request object in api req. It must be handled by validator');
         assert(req.user, 'No user for request');
-        const user = req.user as User;
         let accessRequest: RequestAccess = req.id as RequestAccess;
-        // Check request access is for proper admin or not
-        if (user.isInspectAppAdmin && accessRequest.requestedAccessCode.roleCode !== RolesCodeValue.inspectAppOfficer) {
-            this.logger.error(`update: Un-authorize update request from ${user.email}`);
-            return [401, this.getErrorJSON('Un-authorize update request', [])];
-        }
         // Get approver
         accessRequest.approverNote = req.body.approverNote || accessRequest.approverNote;
         accessRequest.requestNote = req.body.requestNote || accessRequest.requestNote;
         // Check change in access request requested role
-        if (req.body.requestedAccessCode !== accessRequest.requestedAccessCode.role_code_id) {
+        if (req.body.requestedAccessCode.role_code_id !== accessRequest.requestedAccessCode.role_code_id) {
             this.logger.info(`Update change in requested access code for req id ${accessRequest.request_id} new access code: ${req.body.requestedAccessCode}`);
-            accessRequest.requestedAccessCode = await RoleCodeController.shared.findById(req.body.requestedAccessCode);
+            accessRequest.requestedAccessCode = req.body.requestedAccessCode;
         }
         // Check status
         let requireDel = false;
@@ -210,7 +245,7 @@ class RequestAccessRouteController extends RouteController {
  * @export const requestAccessRoutes
  */
 export const requestAccessRoutes = (): Router => {
-    const controller = new RequestAccessRouteController();
+    const controller = RequestAccessRouteController.shared;
     return controller.router;
 };
 

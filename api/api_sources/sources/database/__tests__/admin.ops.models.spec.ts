@@ -45,7 +45,7 @@ describe('Test Admin ops data models', () => {
         await UserDataController.shared.saveInDB(obj.approver);
         await RequestAccessController.shared.saveInDB(obj);
         runMockSetup(() => {
-            obj.requester.requestAccess = new Promise(res => res(obj));
+            obj.requester.requestAccess = new Promise(res => res([obj]));
         });
 
         // Fetch
