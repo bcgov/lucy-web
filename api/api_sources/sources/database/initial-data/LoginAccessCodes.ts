@@ -42,7 +42,7 @@ export const DefaultLoginAccessCodes = [
     },
     {
         role_code : 'I_OFFICER',
-        role : 'Office Mussel Inspect App',
+        role : 'Officer Mussel Inspect App',
         description: 'The conservation officer making inspection and shift records'
     },
     {
