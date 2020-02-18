@@ -15,15 +15,14 @@
  *
  * 	Created by Amir Shayegh on 2019-10-23.
  */
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { AccessRequest } from 'src/app/models/AccessRequest';
+import { Component, OnInit, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { RolesService } from 'src/app/services/roles.service';
 import { AdminService } from 'src/app/services/admin.service';
-import { User } from 'src/app/models';
-import { Role } from 'src/app/models/Role';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ExportService, ExportType } from 'src/app/services/export/export.service';
-import { AppConstants } from 'src/app/constants';
+import { AccessRequest } from 'src/app/models/AccessRequest';
+import { User } from 'src/app/models';
+import { Role } from 'src/app/models/Role';
 
 @Component({
   selector: 'app-admin-tools',
@@ -35,14 +34,35 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
   public requests: AccessRequest[] = [];
   public allUsers: User[] = [];
   public activeRoles: Role[] = [];
+  
+  public selectedRequestUser: AccessRequest;
 
   public focusedAccessRequest: AccessRequest;
 
   public numberOfDataInInspectAppToExport: Number = 0;
 
-  constructor(private roles: RolesService, private admin: AdminService, private loadingService: LoadingService, private exportService: ExportService) { }
+  get hasExportData(): boolean {
+    return this.numberOfDataInInspectAppToExport > 0;
+  }
 
-  ngOnInit() {}
+  // check if the request table is empty or not
+  get hasRequests(): boolean {
+    return this.requests.length !== 0;
+  }
+
+  requestLength(): number {
+    return this.requests.length;
+  }  
+
+  constructor(
+    private roles: RolesService,
+    private admin: AdminService,
+    private loadingService: LoadingService,
+    private exportService: ExportService,
+    private elementRef: ElementRef,
+  ) { }
+
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.fetchStaticData();
@@ -54,15 +74,23 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     this.getNumberOfDataInInspectAppToExport()
   }
 
-  private fetchNonStaticData() {
+  fetchNonStaticData() {
     this.getAllUsers();
     this.getAllRequests();
   }
 
   private async getAllRequests() {
     this.loadingService.add();
-    this.admin.getRequests().then((value) => {
+    this.admin.getRequests().then(async (value) => {
       this.requests = value;
+      this.loadingService.remove();
+    });
+  }
+
+  async getAllUsers() {
+    this.loadingService.add();
+    this.admin.getAllUsers().then(async (value) => {
+      this.allUsers = value;
       this.loadingService.remove();
     });
   }
@@ -72,14 +100,6 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
       if (data){
         this.numberOfDataInInspectAppToExport = data.length
       }
-    });
-  }
-
-  private async getAllUsers() {
-    this.loadingService.add();
-    this.admin.getAllUsers().then((value) => {
-      this.allUsers = value;
-      this.loadingService.remove();
     });
   }
 
@@ -98,4 +118,16 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
   public async export() {
     this.exportService.exportCSV(ExportType.WatercraftRiskAssessment);
   }
+
+  async menuItemClicked(id: string) {
+    const el = this.elementRef.nativeElement.querySelector(`#${id}`);
+
+    if (el) {
+      el.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth'
+      });
+    }
+  }
+  
 }
