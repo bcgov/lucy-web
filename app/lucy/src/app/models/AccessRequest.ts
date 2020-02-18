@@ -29,3 +29,11 @@ export interface AccessRequest {
     requester: User;
     approver: User | null;
 }
+
+export interface AccessRequestTableData {
+    name: string;
+    username: string;
+    roleRequested: string;
+    reason: string;
+    request_id: number;
+}
