@@ -4,7 +4,7 @@
     border-width: 1pt;
     border-color: #E5E9F2;
     font-size: smaller;
-    padding: 16px;
+    padding: 16px 0;
     box-shadow: 0 0 5pt #E5E9F2;
     margin-top: 16pt;
     width: 100%;
@@ -32,6 +32,7 @@
 .labelsRow {
     color: #AFAFAF;
     font-size: small;
+    padding: 0 15px;
 }
 
 input {
@@ -43,4 +44,8 @@ input {
 .thinOrangeDivider {
     border: 1px solid #F3B229;
     margin-top: -4pt;
+}
+
+.zeroPadding {
+    padding: 0;
 }

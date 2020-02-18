@@ -20,6 +20,7 @@ export interface HerbicideTankMix {
     herbicide: HerbicideCodes;
     chemicalTreatmentId: number;
     herbicide_tank_mix_id: number;
+    showAnimation: boolean;
 }
 
 export interface SpeciesObservedTreated {
