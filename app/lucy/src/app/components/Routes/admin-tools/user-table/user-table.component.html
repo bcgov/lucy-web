@@ -42,7 +42,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let item">
-        <button mat-stroked-button color="primary" id="custom-popper-action" (click)="onUserAction(item)">
+        <button mat-stroked-button id="custom-popper-action" (click)="onUserAction(item)" [disabled]="disableEdit(item)" [ngClass]="{'action-button': !disableEdit(item)}">
           Actions
         </button>
         <mat-card *ngIf="showUserPopper(item)" class="popper" id="custom-popper" (clickAway)="onClickAway()">
@@ -76,6 +76,6 @@
   <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
 </div>
 
-<div class="col-12" *ngIf="!hasUsers">
+<div *ngIf="!hasUsers">
   There are currently no users
 </div>
