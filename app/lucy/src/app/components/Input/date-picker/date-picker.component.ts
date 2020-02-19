@@ -82,6 +82,11 @@ export class DatePickerComponent implements OnInit {
   ngOnInit() {
   }
 
+  checkKey(event: any) {
+    // To make the date picker input tab-friendly
+    return event.key === 'Tab';
+  }
+
   pastAndPresentDatesOnlyFilter = (d: Date): boolean => {
     const currentDate = new Date();
     // prevent dates in future from being selected
