@@ -1,3 +1,8 @@
+.model-content-container {
+  padding: 16px;
+  background-color: #FFFFFF;
+}
+
 .content {
   display: flex;
   align-items: center;
