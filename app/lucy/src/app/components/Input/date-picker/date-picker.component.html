@@ -8,7 +8,7 @@
           [value]="_date"
           (dateChange)="dateChanged($event)"
           (click)="datePicker.open()"
-          (keydown)="false">
+          (keydown)="checkKey($event)">
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>
     </mat-form-field>
