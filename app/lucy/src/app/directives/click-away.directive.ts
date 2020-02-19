@@ -47,7 +47,8 @@ export class ClickAwayDirective {
 
     // Close any existing popper when opening a modal
     if (targetParentId === 'custom-modal-action') {
-      document.getElementById('custom-popper').style.display='none';
+      const popperEl = document.getElementById('custom-popper');
+      if (popperEl) popperEl.style.display='none';
     }
 
     if (blackListIds.includes(targetId)
