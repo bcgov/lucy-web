@@ -33,7 +33,8 @@ export class UserTableComponent implements OnInit, OnChanges {
   private _users: User[] = [];
   private _roles: Role[] = [];
 
-  public selectedUser: User;
+  currentUser: User;
+  selectedUser: User;
   @Output() fetchUsers = new EventEmitter<any>();
 
   private userDataSource: MatTableDataSource<UserTableData>;
@@ -77,6 +78,12 @@ export class UserTableComponent implements OnInit, OnChanges {
     return this.selectedUser.accountStatus === 1;
   }
 
+  disableEdit(user: User): boolean {
+    if (!user || !this.currentUser) return false;
+
+    return (this.currentUser.user_id === user.user_id);
+  }
+
   showUserPopper(user: User): boolean {
     if (!user || !this.selectedUser) return false;
     return this.selectedUser.user_id === user.user_id;
@@ -88,7 +95,9 @@ export class UserTableComponent implements OnInit, OnChanges {
     private toastService: ToastService
   ) { }
 
-  ngOnInit() { }
+  async ngOnInit() { 
+    this.currentUser = await this.userService.getUser();
+  }
 
   ngOnChanges() {
     this.initTable();
