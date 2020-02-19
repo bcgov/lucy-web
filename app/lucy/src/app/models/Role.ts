@@ -29,4 +29,6 @@ export enum UserAccessType {
     DataViewer,
     DataEditor,
     SuperUser,
+    Officer,
+    InspectAdmin
 }

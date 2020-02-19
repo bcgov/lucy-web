@@ -152,7 +152,8 @@ export class RequestModalComponent implements OnInit {
         await this.adminService.changeUserAccountStatus(requester, requester.accountStatus);
       }
       this.request.requester.roles = [selected];
-      await this.adminService.respondToRequest(this.request, true);
+      const status = await this.adminService.respondToRequest(this.request, true);
+      if (!status) throw new Error();
       this.onModalClose.emit(true);
       this.toastService.show(`${this.request.requester.preferredUsername}'s request has been updated.`, ToastIconType.success);
     } catch (error) {

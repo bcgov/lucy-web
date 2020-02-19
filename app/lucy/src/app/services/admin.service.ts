@@ -49,7 +49,7 @@ export class AdminService {
     const body = {
       requestedAccessCode: request.requester.roles[0].role_code_id,
       status: approved ? 1 : 2,
-      approverNote: request.approverNote
+      approverNote: request.approverNote || ''
     };
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_AcessRequestResponse(request.request_id), body);
     if (response.success) {
