@@ -57,7 +57,8 @@ The starting point for a new form is the schema's .yaml file, which specifies th
   6. Fill out the `layout:` section of the config file with the corresponding fields specified in steps 4 and 5 above. The layout section of the config is only used on the front-end side of the Form Framework, to determine which fields should appear in which subsection, and which subsections should appear in each section of the form. All sections, subsections, and fields will be laid in the form in the same order as they appear in `layout:`. See "Basic Form Structure" (in "Front-End Architecture Overview") for a more detailed explanation of how the sections, subsections, and fields fit together in the form.
 
   7. (**Optional**). Specify the `displayLabel:` (within the `displayLayout:` configuration) for the schema as a whole. If the schema is for a code table, the `displayLabel:` describes how the code table entries will be displayed in the dropdown. If the schema is for a record, the `displayLabel:` describes how the record can be succinctly described as a "preview" (of sorts).
-    - Example: in "efficacyCodes.schema.yaml" (the schema for a code table), we use the following code snippet to indicate that the value for the 'efficacyRating' field in the schema should be listed as a dropdown menu item for each entry of the code table.
+
+  - Example: in "efficacyCodes.schema.yaml" (the schema for a code table), we use the following code snippet to indicate that the value for the 'efficacyRating' field in the schema should be listed as a dropdown menu item for each entry of the code table.
 
   ```yaml
     displayLayout:
@@ -67,7 +68,7 @@ The starting point for a new form is the schema's .yaml file, which specifies th
         default: 'Efficacy %'
   ```    
 
-    - Example: in "observation.schema.yaml" (the schema for a record), we use the following code snippet to indicate that the date and commonName of the species should be used to describe the observation record when it is displayed in the Inventory page of all recorded observations (as an example). The commonName is a field attached to the species, which is a foreign key reference in the observation schema.
+  - Example: in "observation.schema.yaml" (the schema for a record), we use the following code snippet to indicate that the date and commonName of the species should be used to describe the observation record when it is displayed in the Inventory page of all recorded observations (as an example). The commonName is a field attached to the species, which is a foreign key reference in the observation schema.
 
   ```yaml
     displayLayout:
@@ -94,8 +95,9 @@ The starting point for a new form is the schema's .yaml file, which specifies th
   ```
 
   9. (**Optional**). If the current schema references any other schemas (e.g., as foreign key references), there are two ways to indicate this in the .yaml file for the current schema:
-    - `includes:` specifies the dependent schema's .yaml filename
-    - `externalTables:` specifies the name of the dependent schema's table in the database  
+
+  - `includes:` specifies the dependent schema's .yaml filename
+  - `externalTables:` specifies the name of the dependent schema's table in the database  
 
   Either of these can be used. It is recommended that if a dependent schema is one of multiple schemas within the same .yaml file, `externalTables` makes the dependency to the specific schema more explicit. However, if the .yaml file contains only the dependent schema and no others, using `includes` is a quicker way to refer to the schema.
 
