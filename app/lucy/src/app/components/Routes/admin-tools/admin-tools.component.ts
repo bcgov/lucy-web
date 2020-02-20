@@ -22,7 +22,8 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { ExportService, ExportType } from 'src/app/services/export/export.service';
 import { AccessRequest } from 'src/app/models/AccessRequest';
 import { User } from 'src/app/models';
-import { Role } from 'src/app/models/Role';
+import { Role, UserAccessType } from 'src/app/models/Role';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-tools',
@@ -34,6 +35,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
   public requests: AccessRequest[] = [];
   public allUsers: User[] = [];
   public activeRoles: Role[] = [];
+  public _currentUser: User;
   
   public selectedRequestUser: AccessRequest;
 
@@ -50,19 +52,43 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
     return this.requests.length !== 0;
   }
 
+  // get method for _currentUser
+  get currentUser(): User {
+    return this._currentUser;
+  }
+
+  // set method for _currentUser
+  set currentUser(user: User) {
+    this._currentUser = user;
+  }
+
+  get isAdmin(): boolean {
+    if (!this.currentUser) return false;
+    const currentUserRole = this.roleService.roleToAccessType(this.userService.getUserAccessCode(this.currentUser));
+
+    return (currentUserRole === UserAccessType.Admin);
+  }
+
   requestLength(): number {
     return this.requests.length;
   }  
 
   constructor(
-    private roles: RolesService,
-    private admin: AdminService,
+    private roleService: RolesService,
+    private adminService: AdminService,
     private loadingService: LoadingService,
     private exportService: ExportService,
+    private userService: UserService,
     private elementRef: ElementRef,
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.fetchCurrentUser();
+  }
+
+  private async fetchCurrentUser() {
+    this.currentUser = await this.userService.getUser();
+  }
 
   ngAfterViewInit() {
     this.fetchStaticData();
@@ -81,7 +107,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   private async getAllRequests() {
     this.loadingService.add();
-    this.admin.getRequests().then(async (value) => {
+    this.adminService.getRequests().then(async (value) => {
       this.requests = value;
       this.loadingService.remove();
     });
@@ -89,7 +115,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   async getAllUsers() {
     this.loadingService.add();
-    this.admin.getAllUsers().then(async (value) => {
+    this.adminService.getAllUsers().then(async (value) => {
       this.allUsers = value;
       this.loadingService.remove();
     });
@@ -105,7 +131,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   private async getAllRoles() {
     this.loadingService.add();
-    this.roles.getRoles().then((value) => {
+    this.roleService.getRoles().then((value) => {
       this.activeRoles = value;
       this.loadingService.remove();
     });
