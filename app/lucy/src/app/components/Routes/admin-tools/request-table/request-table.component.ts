@@ -19,7 +19,7 @@ import { Component, OnInit, Input, ViewChild, Output, EventEmitter, OnChanges } 
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { AccessRequest, AccessRequestTableData } from 'src/app/models/AccessRequest';
 import { Role } from 'src/app/models/Role';
-import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/models';
 
 @Component({
   selector: 'app-request-table',
@@ -28,8 +28,12 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class RequestTableComponent implements OnInit, OnChanges {
 
+  _currentUser: User;
   public _requests: AccessRequest[] = [];
   private _roles: Role[] = [];
+
+  @Input() currentUser: User;
+  @Input() isAdmin: boolean;
 
   public selectedRequest: AccessRequest;
   @Output() refreshList = new EventEmitter<any>();
@@ -71,12 +75,9 @@ export class RequestTableComponent implements OnInit, OnChanges {
     return this.requests.length;
   }
 
-  constructor(
-    private userService: UserService,
-  ) { }
+  constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   ngOnChanges() {
     this.initTable();

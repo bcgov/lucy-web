@@ -1,6 +1,7 @@
 .model-content-container {
   padding: 16px;
   background-color: #FFFFFF;
+  border-radius: 10px;
 }
 
 .content {
@@ -89,6 +90,10 @@
   box-shadow: none;
 }
 
+.new-role-container {
+  padding: 8px 0;
+}
+
 .status-container {
   justify-content: space-between;
   padding: 15px 0;
@@ -110,25 +115,4 @@
 
 .action-button {
   width: 100%;
-}
-
-.input-readonly {
-  display: flex;
-  flex-direction: column;
-}
-
-.input-readonly label {
-  margin: 0;
-  font-weight: 500;
-}
-
-.input-group {
-  background-color: rgba(51, 51, 51, 0.08);
-  padding: 4px;
-}
-
-.input-group input {
-  border: none;
-  background-color: rgba(51, 51, 51, 0.0);
-  color: #333333 !important;
 }

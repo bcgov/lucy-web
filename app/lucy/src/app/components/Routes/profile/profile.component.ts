@@ -80,39 +80,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.initialize();
-    // this.loadingService.add();
-    // this.userService.getFullName().then((value) => {
-    //   this.userFullName = value;
-    //   this.loadingService.remove();
-    // });
-
-    // this.loadingService.add();
-    // this.userService.getInitials().then((value) => {
-    //   this.userInitials = value;
-    //   this.loadingService.remove();
-    // });
-
-    // this.loadingService.add();
-    // this.userService.getOrganizationAndRole().then((value) => {
-    //   this.userRoleAndOrganization = value;
-    //   this.loadingService.remove();
-    // });
-
-    // // Redirect to user info page if basic information isnt filled
-    // this.loadingService.add();
-    // this.userService.basicInformationExists().then((exists) => {
-    //   this.loadingService.remove();
-    //   if (!exists) {
-    //     this.navigateToUserInfo();
-    //   }
-    // });
-
-    // // Check Access type
-    // this.loadingService.add();
-    // this.userService.getAccess().then((value) => {
-    //   this.userAccessType = value;
-    //   this.loadingService.remove();
-    // });
   }
 
   async initialize() {
@@ -173,10 +140,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     const success = this.userService.submitDataEntryRequest(`Let me in please.`);
     if (success) {
       this.alertService.show(`Success`, `Your Data Entry Access request has been sent.`, null);
-      console.log(`Request sent`);
     } else {
       this.alertService.show(`Failed`, `Could not create request.`, null);
-      console.log(`Request failed`);
     }
   }
 
