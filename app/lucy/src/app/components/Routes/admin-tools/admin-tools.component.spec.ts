@@ -18,9 +18,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatToolbarModule } from '@angular/material';
 import { AdminToolsComponent } from './admin-tools.component';
-import { RequestCellComponent } from 'src/app/components/Routes/admin-tools/request-cell/request-cell.component';
-import { UserCellComponent } from 'src/app/components/Routes/admin-tools/user-cell/user-cell.component';
-import { AccessRequestResponseModalComponent } from 'src/app/components/Routes/admin-tools/access-request-response-modal/access-request-response-modal.component';
+import { RequestTableComponent } from 'src/app/components/Routes/admin-tools/request-table/request-table.component';
+import { UserTableComponent } from 'src/app/components/Routes/admin-tools/user-table/user-table.component';
+import { RequestModalComponent } from 'src/app/components/Routes/admin-tools/request-modal/request-modal.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -36,7 +36,7 @@ describe('AdminToolsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ RouterTestingModule, FormsModule, MatToolbarModule, NgbModule, HttpClientModule ],
-      declarations: [ AdminToolsComponent, RequestCellComponent, UserCellComponent, AccessRequestResponseModalComponent ],
+      declarations: [ AdminToolsComponent, UserTableComponent, RequestTableComponent, RequestModalComponent ],
       providers: [ UserService, CookieService ],
       schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
     })

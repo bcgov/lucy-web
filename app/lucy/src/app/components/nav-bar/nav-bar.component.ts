@@ -151,7 +151,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * call this.setAccessType().
    */
   public get isAdmin(): boolean {
-    return (this.accessType === UserAccessType.Admin);
+    return (this.accessType === UserAccessType.Admin || this.accessType === UserAccessType.InspectAdmin);
   }
 
   /**
@@ -263,9 +263,13 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
         case UserAccessType.DataEditor:
           this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
           break;
+        case UserAccessType.Officer:
+          // Fall though to give Officers the same permission as a Data viewer
         case UserAccessType.DataViewer:
           this.accessTypeMessage = StringConstants.databaseAccess_View_Badge;
           break;
+        case UserAccessType.InspectAdmin:
+          // Fall though to give Inspect Admin the same permission as an Admin
         case UserAccessType.Admin:
           this.accessTypeMessage = StringConstants.databaseAccess_Admin_Badge;
           break;

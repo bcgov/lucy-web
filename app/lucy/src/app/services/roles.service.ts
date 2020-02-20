@@ -63,13 +63,21 @@ export class RolesService {
         return UserAccessType.DataEditor;
       case `SUP`:
         return UserAccessType.SuperUser;
+      case `I_OFFICER`:
+        return UserAccessType.Officer;
+      case `I_ADM`:
+        return UserAccessType.InspectAdmin;
     }
   }
 
   public canCreate(accessType: UserAccessType) {
-    return (accessType === UserAccessType.Admin ||
-      accessType === UserAccessType.SuperUser ||
-      accessType === UserAccessType.DataEditor);
+    const validUsers = [
+      UserAccessType.Admin,
+      UserAccessType.SuperUser,
+      UserAccessType.DataEditor,
+      UserAccessType.InspectAdmin
+    ];
+    return validUsers.includes(accessType);
   }
 
   public canEdit(accessType: UserAccessType) {
