@@ -47,15 +47,16 @@ The starting point for a new form is the schema's .yaml file, which specifies th
       - `deleteCascade:` boolean value indicating whether deletion of the foreign key should cause deletion of the entry for the current schema
 
   5. (**Optional**) If the form should include any computed fields, these fields are configured in the `computedFields:` section of the .yaml file. Computed fields are read-only values that may or may not be stored as a column in the DB. A computed field is configured similarly to the standard fields from the previous step, but with the addition of defined `computationRules:`, which consists of a list of one or more rules defined as follows:
+  
     - `name:` included for convenient reference within the schema config file, but is not used anywhere in the form or DB
     - `keys:` a list of the fields (as they are named in the schema's .yaml file -- i.e., NOT the name of the DB column) that will be used as input parameters for the calculation
     - `method:` the name of the calculation method. The definitions of calculation methods appear in `app/components/base-form/computed-field/computed-field.component.ts`  
 
   In most cases, the computed field will have units associated with the calculation. The units can be specified with the `suffix:` property as done for all other fields.
 
-  1. Fill out the `layout:` section of the config file with the corresponding fields specified in steps 4 and 5 above. The layout section of the config is only used on the front-end side of the Form Framework, to determine which fields should appear in which subsection, and which subsections should appear in each section of the form. All sections, subsections, and fields will be laid in the form in the same order as they appear in `layout:`. See "Basic Form Structure" (in "Front-End Architecture Overview") for a more detailed explanation of how the sections, subsections, and fields fit together in the form.
+  6. Fill out the `layout:` section of the config file with the corresponding fields specified in steps 4 and 5 above. The layout section of the config is only used on the front-end side of the Form Framework, to determine which fields should appear in which subsection, and which subsections should appear in each section of the form. All sections, subsections, and fields will be laid in the form in the same order as they appear in `layout:`. See "Basic Form Structure" (in "Front-End Architecture Overview") for a more detailed explanation of how the sections, subsections, and fields fit together in the form.
 
-  1. (**Optional**). Specify the `displayLabel:` (within the `displayLayout:` configuration) for the schema as a whole. If the schema is for a code table, the `displayLabel:` describes how the code table entries will be displayed in the dropdown. If the schema is for a record, the `displayLabel:` describes how the record can be succinctly described as a "preview" (of sorts).
+  7. (**Optional**). Specify the `displayLabel:` (within the `displayLayout:` configuration) for the schema as a whole. If the schema is for a code table, the `displayLabel:` describes how the code table entries will be displayed in the dropdown. If the schema is for a record, the `displayLabel:` describes how the record can be succinctly described as a "preview" (of sorts).
     - Example: in "efficacyCodes.schema.yaml" (the schema for a code table), we use the following code snippet to indicate that the value for the 'efficacyRating' field in the schema should be listed as a dropdown menu item for each entry of the code table.
 
   ```yaml
