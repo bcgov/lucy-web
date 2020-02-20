@@ -233,7 +233,7 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
                 if (value) {
                     LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Accepted ${rc}`);
                 } else {
-                    LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
+                    LoggerBase.logger.error(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
                 }
                 LoggerBase.logger.disableInfoLog = false;
                 return value;
@@ -264,5 +264,19 @@ export const adminOnlyRoute = () => {
  */
 export const writerOnlyRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]);
+};
+
+/**
+ * @description Route for inspect app editor
+ */
+export const inspectAppEditorRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin, RolesCodeValue.inspectAppOfficer]);
+};
+
+/**
+ * @description Route for inspect app admin
+ */
+export const inspectAppAdminRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin]);
 };
 // -----------------------------------------------------------------------------------------------------------

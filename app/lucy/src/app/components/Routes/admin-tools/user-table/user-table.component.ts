@@ -22,6 +22,7 @@ import { Role } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
+import { RolesService } from 'src/app/services/roles.service';
 
 @Component({
   selector: 'app-user-table',
@@ -33,7 +34,9 @@ export class UserTableComponent implements OnInit, OnChanges {
   private _users: User[] = [];
   private _roles: Role[] = [];
 
-  currentUser: User;
+  @Input() currentUser: User;
+  @Input() isAdmin: boolean;
+
   selectedUser: User;
   @Output() fetchUsers = new EventEmitter<any>();
 
@@ -92,12 +95,11 @@ export class UserTableComponent implements OnInit, OnChanges {
   constructor(
     private userService: UserService,
     private adminService: AdminService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private roleService: RolesService
   ) { }
 
-  async ngOnInit() { 
-    this.currentUser = await this.userService.getUser();
-  }
+  ngOnInit() { }
 
   ngOnChanges() {
     this.initTable();
@@ -131,22 +133,24 @@ export class UserTableComponent implements OnInit, OnChanges {
     const selectedRole = this.roles.find(activeRole => activeRole.role === data.value);
     this.adminService.changeUserRole(this.selectedUser, selectedRole).then(response => {
       if (response.success) {
-        this.selectedUser = response.response;
+        this.selectedUser = undefined;
+        const updatedUser = response.response;
         this.fetchUsers.emit();
-        this.toastService.show(`${this.selectedUser.firstName}'s role change to ${selectedRole.role}.`, ToastIconType.success);
+        this.toastService.show(`${updatedUser.preferredUsername}'s role change to ${selectedRole.role}.`, ToastIconType.success);
       } else {
         this.toastService.show('Failed, Could not change user role', ToastIconType.fail);
       }
     })
   }
 
-  public changeUserStatus(toggle: MatSlideToggleChange) {
+  async changeUserStatus(toggle: MatSlideToggleChange) {
     const accountStatus = toggle.checked ? 1 : 0;
-    this.adminService.changeUserAccountStatus(this.selectedUser, accountStatus).then(response => {
+    this.adminService.changeUserAccountStatus(this.selectedUser, accountStatus, this.isAdmin).then(response => {
       if(response.success) {
-        this.selectedUser = response.response;
+        this.selectedUser = undefined;
+        const updatedUser = response.response;
         this.fetchUsers.emit();
-        this.toastService.show(`${this.selectedUser.firstName}'s account status had been changed.`, ToastIconType.success);
+        this.toastService.show(`${updatedUser.preferredUsername}'s account status has been changed.`, ToastIconType.success);
       } else {
         this.toastService.show(`Failed, Could not change the status of ${this.selectedUser.firstName}'s account.`, ToastIconType.fail);
       }

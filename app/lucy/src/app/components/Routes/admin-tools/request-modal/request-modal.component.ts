@@ -16,13 +16,14 @@
  * 	Created by Rajasekaran Manivannan on 2019-02-12.
  */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material';
 import { AccessRequest } from 'src/app/models/AccessRequest';
 import { UserService } from 'src/app/services/user.service';
 import { FormMode } from 'src/app/models';
 import { Role } from 'src/app/models/Role';
 import { AdminService } from 'src/app/services/admin.service';
-import { MatSlideToggleChange } from '@angular/material';
 import { ToastIconType, ToastService } from 'src/app/services/toast/toast.service';
+import { RolesService } from 'src/app/services/roles.service';
 
 @Component({
   selector: 'app-request-modal',
@@ -35,6 +36,8 @@ export class RequestModalComponent implements OnInit {
   private _request: AccessRequest;
   private _mode: FormMode = FormMode.Edit;
   private _selectedRole: Role;
+  
+  @Input() isAdmin: boolean;
 
   @Output() onModalClose = new EventEmitter<any>();
 
@@ -46,7 +49,6 @@ export class RequestModalComponent implements OnInit {
     this._mode = mode;
   }
 
-
   // get method for _roles
   get roles(): Role[] {
     return this._roles;
@@ -56,7 +58,6 @@ export class RequestModalComponent implements OnInit {
   @Input() set roles(activeRoles: Role[]) {
     this._roles = activeRoles;
   }
-
 
   get request(): AccessRequest {
     return this._request;
@@ -95,6 +96,16 @@ export class RequestModalComponent implements OnInit {
     return this.request.requester.accountStatus === 1;
   }
 
+  get roleToDisplay(): string {
+    if (!this.request) return '';
+
+    if (this.request.requester.accountStatus === 0 && this.isAdmin) {
+      return this.getRole(2).role;
+    }
+
+    return this.selectedRole
+  }
+
   getCurrentRole(): string {
     return this.userService.getUserAccessCode(this.request.requester).role;
   }
@@ -115,19 +126,21 @@ export class RequestModalComponent implements OnInit {
     }[info];
   }
 
-  get readonly(): boolean {
-    return this.request.requester.accountStatus === 0;
+  get canEdit(): boolean {
+    return (this.request.requester.accountStatus === 0 || !this.isAdmin);
   }
 
   constructor(
     private userService: UserService,
     private adminService: AdminService,
+    private roleService: RolesService,
     private toastService: ToastService
   ) { }
 
   ngOnInit() {
     this.selectedRole = this.request.requestedAccessCode.role;
   }
+  
 
   onCancel() {
     this.onModalClose.emit(false);
@@ -149,10 +162,11 @@ export class RequestModalComponent implements OnInit {
     const selected = this.roles.find(item => item.role === this.selectedRole);
     try {
       if (requester.accountStatus === 0) {
-        await this.adminService.changeUserAccountStatus(requester, requester.accountStatus);
+        await this.adminService.changeUserAccountStatus(requester, requester.accountStatus, this.isAdmin);
       }
       this.request.requester.roles = [selected];
-      await this.adminService.respondToRequest(this.request, true);
+      const status = await this.adminService.respondToRequest(this.request, true);
+      if (!status) throw new Error();
       this.onModalClose.emit(true);
       this.toastService.show(`${this.request.requester.preferredUsername}'s request has been updated.`, ToastIconType.success);
     } catch (error) {

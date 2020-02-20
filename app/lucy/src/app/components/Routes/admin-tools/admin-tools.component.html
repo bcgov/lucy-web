@@ -57,14 +57,14 @@
       
             <!-- Requests -->
             <div class="col-12">
-              <app-request-table [requests]="requests" [roles]="activeRoles" (refreshList)="fetchNonStaticData()">
+              <app-request-table [currentUser]="currentUser" [isAdmin]="isAdmin" [requests]="requests" [roles]="activeRoles" (refreshList)="fetchNonStaticData()">
               </app-request-table>
             </div>
             <!-- End Requests -->
             <span class="section-space"></span>
             <!-- All Users -->
             <div class="col-12">
-              <app-user-table [users]="allUsers" [roles]="activeRoles" (fetchUsers)="getAllUsers()">
+              <app-user-table [currentUser]="currentUser" [isAdmin]="isAdmin" [users]="allUsers" [roles]="activeRoles" (fetchUsers)="getAllUsers()">
               </app-user-table>
             </div>
             <!-- End Users -->

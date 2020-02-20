@@ -56,6 +56,7 @@ export class LoginAccessCodeCreate1557785001021 extends AppLogger implements Mig
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
+        await queryRunner.query(`DROP TABLE IF EXISTS app_roles_code`);
         await queryRunner.query(this.roleCodeSchema.dropTable());
     }
 }

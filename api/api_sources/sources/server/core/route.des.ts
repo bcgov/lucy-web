@@ -109,7 +109,7 @@ export function Patch (des: RouteBasicDescription) {
 export function ResourceRoute(info: ResourceInfo) {
     return function(target: Function) {
         // 1. Check existing
-        const existing: any = target.prototype._routeResourceInfo;
+        const existing: any = target.prototype._routeResourceInfo || {};
         info.createMiddleware = existing.createMiddleware || info.createMiddleware;
         info.updateMiddleware = existing.updateMiddleware || info.updateMiddleware;
         info.viewMiddleware = existing.viewMiddleware || info.viewMiddleware;

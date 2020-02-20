@@ -52,13 +52,13 @@ describe(`Test for ${resourceName}`, () => {
     });
 
     // Test4: Success To Create For Viewer
-    it(`should create ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 201}, controller);
+    it(`should not create ${resourceName} for {viewer}`, async () => {
+        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
     });
 
     // Test5: Success to create for Viewer
     it(`should update ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller);
+        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.inspectOfficer, expect: 200}, controller);
     });
 
     // Test6: Export
@@ -69,10 +69,15 @@ describe(`Test for ${resourceName}`, () => {
             type: HttpMethodType.get,
             url: '/api/mussels/wra/export',
             expect: 200,
-            auth: AuthType.viewer
+            auth: AuthType.inspectAdmin
         }).then(async resp => {
             await verifySuccessBody(resp.body);
             await Destroyer(WatercraftRiskAssessmentController.shared)(model);
         });
+    });
+
+    // Test7: Success To Create For Officer
+    it(`should create ${resourceName} for {officer}`, async () => {
+        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.inspectOfficer, expect: 201}, controller);
     });
 });
