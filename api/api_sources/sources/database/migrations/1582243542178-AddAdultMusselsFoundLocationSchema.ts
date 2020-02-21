@@ -1,17 +1,17 @@
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
-import { AdultMusselsFoundLocationSchema } from '../database-schema';
+import { AdultMusselsLocationSchema } from '../database-schema';
 
-export class AddAdultMusselsFoundLocationSchema1582243542178 extends AppDBMigrator implements MigrationInterface {
+export class AddAdultMusselsLocationSchema1582243542178 extends AppDBMigrator implements MigrationInterface {
 
-    adultMusselsFoundLocationSchema: AdultMusselsFoundLocationSchema;
+    adultMusselsLocationSchema: AdultMusselsLocationSchema;
 
     /**
      * Setup
      */
     setup() {
-        this.adultMusselsFoundLocationSchema = new AdultMusselsFoundLocationSchema();
-        this.addSchemaInitVersion(this.adultMusselsFoundLocationSchema);
+        this.adultMusselsLocationSchema = new AdultMusselsLocationSchema();
+        this.addSchemaInitVersion(this.adultMusselsLocationSchema);
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {
@@ -23,7 +23,7 @@ export class AddAdultMusselsFoundLocationSchema1582243542178 extends AppDBMigrat
 
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[START]', 'DOWN');
-        await queryRunner.query(this.adultMusselsFoundLocationSchema.dropTable());
+        await queryRunner.query(this.adultMusselsLocationSchema.dropTable());
         this.log('[END]', 'DOWN');
     }
 

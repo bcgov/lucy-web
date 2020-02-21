@@ -22,7 +22,7 @@ import { Role } from '../models/Role';
 import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes, ChemicalTreatment, ChemicalTreatmentMethodCode } from '../models/ChemicalTreatment';
 import { EfficacyCodes } from '../models/Monitor';
-import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocationFound } from '../models/musselInspect';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';
 
 @Injectable({
   providedIn: 'root'
@@ -290,11 +290,11 @@ export class ObjectValidatorService {
   }
 
   /**
-   * Check if object is AdultMusselsLocationFound
+   * Check if object is AdultMusselsLocation
    * @param locationFound object
    */
-  public isAdultMusselsFoundLocationObject(locationFound: any): locationFound is AdultMusselsLocationFound {
+  public isAdultMusselsLocationObject(locationFound: any): locationFound is AdultMusselsLocation {
     if (locationFound === undefined || locationFound === null) { return false; }
-    return (<AdultMusselsLocationFound>locationFound.description) !== undefined;
+    return (<AdultMusselsLocation>locationFound.description) !== undefined;
   }
 }

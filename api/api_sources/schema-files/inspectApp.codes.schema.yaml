@@ -55,7 +55,7 @@ schemas:
         allColumns: true
     fields: {}
   ## -- end PreviousInspectionSourceSchema
-  AdultMusselsFoundLocationSchema:
+  AdultMusselsLocationSchema:
     name: adult_mussels_found_location
     description: 'Code table with options for locations on watercraft where adult mussels were found during inspection'
     baseSchema: CodeTableSchema
@@ -77,7 +77,7 @@ schemas:
     versions: []
     imports:
       init:
-        fileName: AdultMusselsLocationFoundCode.csv
+        fileName: AdultMusselsLocationCode.csv
         allColumns: true
-  ## -- end AdultMusselsFoundLocationSchema
+  ## -- end AdultMusselsLocationSchema
     

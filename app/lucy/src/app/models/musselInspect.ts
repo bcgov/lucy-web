@@ -32,7 +32,7 @@ export interface PreviousInspectionSource {
   description: string;
 }
 
-export interface AdultMusselsLocationFound {
+export interface AdultMusselsLocation {
   adult_mussels_found_location_id: number;
   description: string;
 }

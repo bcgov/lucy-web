@@ -28,7 +28,7 @@ import {
 import { EfficacyCodes } from '../models/Monitor';
 import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
-import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocationFound } from '../models/musselInspect';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';
 import { Key } from 'protractor';
 
 @Injectable({
@@ -64,7 +64,7 @@ export class CodeTableService {
 
   private previousAISKnowledgeSources: PreviousAISKnowledgeSource[];
   private previousInspectionSources: PreviousInspectionSource[];
-  private musselFoundLocations: AdultMusselsLocationFound[];
+  private musselFoundLocations: AdultMusselsLocation[];
 
   private codeTables: any | null = null;
 
@@ -508,7 +508,7 @@ export class CodeTableService {
     }
   }
 
-  public async getAdultMusselsLocationFoundCodes(): Promise<AdultMusselsLocationFound[]> {
+  public async getAdultMusselsLocationCodes(): Promise<AdultMusselsLocation[]> {
     if (this.musselFoundLocations && this.musselFoundLocations.length > 0) {
       return this.musselFoundLocations;
     }
@@ -519,7 +519,7 @@ export class CodeTableService {
     }
 
     const musselFoundLocations = codes.musselFoundLocations;
-    if (musselFoundLocations && (Array.isArray(musselFoundLocations) && this.objectValidator.isAdultMusselsFoundLocationObject(musselFoundLocations[0]))) {
+    if (musselFoundLocations && (Array.isArray(musselFoundLocations) && this.objectValidator.isAdultMusselsLocationObject(musselFoundLocations[0]))) {
       return musselFoundLocations;
     }
   }

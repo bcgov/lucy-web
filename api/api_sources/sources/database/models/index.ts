@@ -68,7 +68,7 @@ export * from './highRiskAssessment';
 export * from './watercraftJourney';
 export * from './country';
 export * from './countryProvince';
-export * from './adultMusselsFoundLocation';
+export * from './adultMusselsLocation';
 export * from './previousAISKnowledgeSource';
 export * from './previousInspectionSource';
 
