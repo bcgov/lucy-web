@@ -29,7 +29,9 @@ import {
     CreateMiddleware,
     ResourceRouteController,
     UpdateMiddleware,
-    Get
+    Get,
+    inspectAppEditorRoute,
+    inspectAppAdminRoute
 } from '../../../core';
 import {
     ObserverWorkflowController,
@@ -39,8 +41,8 @@ import {
     dataController: ObserverWorkflowController.shared,
     secure: true
 })
-@CreateMiddleware(() => [])
-@UpdateMiddleware(() => [])
+@CreateMiddleware(() => [ inspectAppEditorRoute()])
+@UpdateMiddleware(() => [ inspectAppEditorRoute()])
 export class ObserverWorkflowRouteController extends ResourceRouteController<ObserverWorkflowController, ObserverWorkflowSpec, any> {
     static get shared(): ObserverWorkflowRouteController {
         return this.sharedInstance() as ObserverWorkflowRouteController;
@@ -58,7 +60,8 @@ export class ObserverWorkflowRouteController extends ResourceRouteController<Obs
 
     @Get({
         path: '/export',
-        secure: true
+        secure: true,
+        middleware: () => [ inspectAppAdminRoute()]
     })
     public async export() {
         return [200, await this.dataController.export()];

@@ -61,7 +61,7 @@ describe('Test account routes', () => {
     it('should fetch me', async () => {
         await request(SharedExpressApp.app)
         .get('/api/account/me')
-        .set('Authorization', `Bearer ${testIdr1Token()}`)
+        .set('Authorization', `Bearer ${adminToken()}`)
         .expect(200)
         .then(async (resp) => {
             const body = resp.body;
@@ -286,7 +286,7 @@ describe('Test account routes', () => {
             token: testIdr2Token()
         }).then(async resp => {
             await verifySuccessBody(resp.body, async (data: any) => {
-                expect(data.roles[0].code).to.be.equal('ADM');
+                expect(data.roles[0].code).to.be.equal('I_ADM');
             });
         });
     });

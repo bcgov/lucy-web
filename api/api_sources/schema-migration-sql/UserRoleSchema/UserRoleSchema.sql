@@ -4,7 +4,7 @@
 CREATE TABLE user_role ();
 ALTER TABLE user_role ADD COLUMN user_role_id SERIAL PRIMARY KEY;
 ALTER TABLE user_role ADD COLUMN user_id INT NOT NULL REFERENCES application_user(user_id) ON DELETE CASCADE;
-ALTER TABLE user_role ADD COLUMN role_code_id INT NOT NULL REFERENCES app_roles_code(role_code_id) ON DELETE CASCADE;
+ALTER TABLE user_role ADD COLUMN role_code_id INT NOT NULL REFERENCES app_role_code(role_code_id) ON DELETE CASCADE;
 
 
         

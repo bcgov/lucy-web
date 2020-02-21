@@ -3,7 +3,7 @@ externalTables:
   - name: application_user
     schema: UserSchema
     description: Application user table
-  - name: app_roles_code
+  - name: app_role_code
     schema: RolesCodeTableSchema
     description: Application roles code table 
 schemas:
@@ -32,7 +32,7 @@ schemas:
         name: 'requested_role_code_id'
         comment: 'FOREIGN KEY reference to Role Code Table. This value specify requested access type'
         definition: INT NOT NULL
-        foreignTable: app_roles_code
+        foreignTable: app_role_code
         refColumn: role_code_id
       requester:
         name: 'requester_user_id'
