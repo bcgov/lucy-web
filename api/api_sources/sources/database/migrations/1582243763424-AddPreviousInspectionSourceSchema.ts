@@ -12,6 +12,7 @@ export class AddPreviousInspectionSourceSchema1582243763424 extends AppDBMigrato
     setup() {
         this.previousInspectionSourceSchema = new PreviousInspectionSourceSchema();
         this.addSchemaInitVersion(this.previousInspectionSourceSchema);
+        this.addDataImportMigration(this.previousInspectionSourceSchema, 'init');
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {

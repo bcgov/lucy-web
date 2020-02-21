@@ -33,6 +33,6 @@ export interface PreviousInspectionSource {
 }
 
 export interface AdultMusselsLocation {
-  adult_mussels_found_location_id: number;
+  adult_mussels_location_id: number;
   description: string;
 }

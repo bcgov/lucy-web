@@ -12,6 +12,7 @@ export class AddAdultMusselsLocationSchema1582243542178 extends AppDBMigrator im
     setup() {
         this.adultMusselsLocationSchema = new AdultMusselsLocationSchema();
         this.addSchemaInitVersion(this.adultMusselsLocationSchema);
+        this.addDataImportMigration(this.adultMusselsLocationSchema, 'init');
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {

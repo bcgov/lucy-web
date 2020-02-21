@@ -12,6 +12,7 @@ export class AddPreviousAISKnowledgeSourceSchema1582243782933 extends AppDBMigra
     setup() {
         this.previousAISKnowledgeSourceSchema = new PreviousAISKnowledgeSourceSchema();
         this.addSchemaInitVersion(this.previousAISKnowledgeSourceSchema);
+        this.addDataImportMigration(this.previousAISKnowledgeSourceSchema, 'init');
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {
