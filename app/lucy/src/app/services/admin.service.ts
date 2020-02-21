@@ -49,7 +49,7 @@ export class AdminService {
     const body = {
       requestedAccessCode: request.requester.roles[0].role_code_id,
       status: approved ? 1 : 2,
-      approverNote: request.approverNote
+      approverNote: request.approverNote || ''
     };
     const response = await this.api.request(APIRequestMethod.PUT, AppConstants.API_AcessRequestResponse(request.request_id), body);
     if (response.success) {
@@ -94,11 +94,11 @@ export class AdminService {
     return this.changeUser(user, body);
   }
 
-  async changeUserAccountStatus(user: User, status: number): Promise<UserChangeResult> {
+  async changeUserAccountStatus(user: User, status: number, isAdmin: boolean): Promise<UserChangeResult> {
     // If the account status is inactive, set the role to `Data viewer`
     const body = {
       accountStatus: status,
-      ...(!status && ({ roles: [2] }))
+      ...((!status && isAdmin) && { roles: [2] })
     };
     return this.changeUser(user, body);
   }
