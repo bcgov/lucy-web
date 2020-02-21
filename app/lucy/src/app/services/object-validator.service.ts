@@ -22,6 +22,7 @@ import { Role } from '../models/Role';
 import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes, ChemicalTreatment, ChemicalTreatmentMethodCode } from '../models/ChemicalTreatment';
 import { EfficacyCodes } from '../models/Monitor';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocationFound } from '../models/musselInspect';
 
 @Injectable({
   providedIn: 'root'
@@ -268,5 +269,32 @@ export class ObjectValidatorService {
   public isChemicalTreatmentObject(chemicalTreatment: any): chemicalTreatment is ChemicalTreatment {
     if (chemicalTreatment === undefined || chemicalTreatment === null) { return false; }
     return (<ChemicalTreatment>chemicalTreatment.tankMixes) !== undefined;
+  }
+
+  /**
+   * Check if object is PreviousAISKnowledgeSource
+   * @param knowledgeSource object
+   */
+  public isPreviousAISKnowledgeSourceObject(knowledgeSource: any): knowledgeSource is PreviousAISKnowledgeSource {
+    if (knowledgeSource === undefined || knowledgeSource === null) { return false; }
+    return (<PreviousAISKnowledgeSource>knowledgeSource.description) !== undefined;
+  }
+
+  /**
+   * Check if object is PreviousInspectionSource
+   * @param inspectionSource object
+   */
+  public isPreviousInspectionSourceObject(inspectionSource: any): inspectionSource is PreviousInspectionSource {
+    if (inspectionSource === undefined || inspectionSource === null) { return false; }
+    return (<PreviousInspectionSource>inspectionSource.description) !== undefined;
+  }
+
+  /**
+   * Check if object is AdultMusselsLocationFound
+   * @param locationFound object
+   */
+  public isAdultMusselsFoundLocationObject(locationFound: any): locationFound is AdultMusselsLocationFound {
+    if (locationFound === undefined || locationFound === null) { return false; }
+    return (<AdultMusselsLocationFound>locationFound.description) !== undefined;
   }
 }
