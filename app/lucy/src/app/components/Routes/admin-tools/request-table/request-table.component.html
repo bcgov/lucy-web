@@ -1,5 +1,5 @@
 <div class="section-title-text">
-  Pending Access Requests
+  {{ isAdmin ? 'Pending Access Requests' : 'New Users' }}
   <span *ngIf="hasRequests" class="user-count">
     {{ requestLength() }}
   </span>
@@ -61,5 +61,5 @@
 </div>
 
 <app-modal *ngIf="showModal" (onBackdropClick)="onModalClose()">
-  <app-request-modal [roles]="roles" [request]="selectedRequest" (onModalClose)="onModalClose($event)"></app-request-modal>
+  <app-request-modal [roles]="roles" [request]="selectedRequest" [isAdmin]="isAdmin" (onModalClose)="onModalClose($event)"></app-request-modal>
 </app-modal>

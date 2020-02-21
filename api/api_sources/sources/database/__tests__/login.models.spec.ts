@@ -22,9 +22,20 @@
     jest.mock('../data.model.controller');
 }*/
 
-import { expect } from 'chai';
+import { expect, should } from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
-import { User, UserDataController, RolesCodeValue, UserSession, UserSessionDataController, SessionActivity, SessionActivityCodeValues, SessionActivityController } from '../models';
+import {
+    User,
+    UserDataController,
+    RolesCodeValue,
+    UserSession,
+    UserSessionDataController,
+    SessionActivity,
+    SessionActivityCodeValues,
+    SessionActivityController,
+    RolesCode,
+    RoleCodeController
+} from '../models';
 // import { SharedDBManager } from '../dataBaseManager';
 import { userFactory, sessionFactory, sessionActivityFactory } from '../factory';
 
@@ -36,6 +47,22 @@ describe('Test Login Data Model', () => {
         await commonTestTearDownAction();
         return;
     });
+
+    it('should fetch different roles', async () => {
+
+        const test = async (code: RolesCodeValue) => {
+            const item: RolesCode = await  RoleCodeController.shared.getCode(code);
+            should().exist(item);
+            expect(item.roleCode).to.be.equal(code);
+        };
+        await test(RolesCodeValue.admin);
+        await test(RolesCodeValue.editor);
+        await test(RolesCodeValue.viewer);
+        await test(RolesCodeValue.superUser);
+        await test(RolesCodeValue.inspectAppAdmin);
+        await test(RolesCodeValue.inspectAppOfficer);
+    });
+
     it('should create/fetch model (admin)', async () => {
         const user = await userFactory(RolesCodeValue.admin);
         expect(user).not.equal(undefined);
@@ -130,6 +157,18 @@ describe('Test Login Data Model', () => {
         await UserDataController.shared.remove(user);
 
         // done();
+    });
+
+    it('should create and fetch user with Inspect App Admin/ officer', async () => {
+        const test = async (code: RolesCodeValue) => {
+            const user: User = await userFactory(code);
+            should().exist(user);
+            expect(user.roles[0].roleCode).to.be.equal(code);
+            await UserDataController.shared.remove(user);
+        };
+
+        await test(RolesCodeValue.inspectAppAdmin);
+        await test(RolesCodeValue.inspectAppOfficer);
     });
 });
 

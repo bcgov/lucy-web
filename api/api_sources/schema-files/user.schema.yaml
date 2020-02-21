@@ -1,13 +1,13 @@
 # User Table Schema 
 version: '1.0'
 externalTables: 
-  - name: app_roles_code
+  - name: app_role_code
     schema: RolesCodeTableSchema
     description: Application roles code table
 schemas: 
   ## RolesCodeTableSchema
   RolesCodeTableSchema:
-    name: app_roles_code
+    name: app_role_code
     modelName: RolesCode
     description: This table holds definition of different user roles of the system along with cross domain code.
     columns:
@@ -26,7 +26,11 @@ schemas:
       description:
         name: description
         comment: Detail description of of different roles and access level and functional capability
-        definition: VARCHAR(100) NULL
+        definition: VARCHAR(300) NULL
+      activeIndicator:
+          name: active_ind
+          comment: Indicator to check active status of code
+          definition: BOOLEAN NOT NULL DEFAULT TRUE
   ## --
   # -- UserSchema --
   UserSchema:
@@ -90,7 +94,7 @@ schemas:
         name: role_code_id
         comment: 'Foreign key reference to role code table'
         definition: INT NOT NULL
-        foreignTable: app_roles_code
+        foreignTable: app_role_code
         refColumn: role_code_id
         deleteCascade: true
   ## -- 

@@ -28,6 +28,11 @@ export interface BaseLogger {
 
 }
 
+/**
+ * @description Dynamic log provider
+ */
+export type LogProvider = () => BaseLogger;
+
 export const DefaultLogger = {
     log: (start: string, ...other: any[]) => {},
     info: (start: string, ...other: any[]) => {},
