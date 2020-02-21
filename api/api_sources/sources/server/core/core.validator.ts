@@ -17,6 +17,7 @@ export function idValidator<Controller extends DataController>(fieldName: string
     return check(fieldName).isInt().custom(async (value: number, {req}) => {
         const data = await controller.findById(value);
         assert(data, `${fieldName}: No such item exists with id: ${value}`);
+        req[fieldName] = data;
         await handle(data, req);
     });
 }

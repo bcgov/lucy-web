@@ -52,24 +52,24 @@ describe(`Test for ${resourceName}`, () => {
     });
 
     // Test4: Success To Create For Viewer
-    it(`should create ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 201}, controller);
+    it(`should create ${resourceName} for { Inspect app officer}`, async () => {
+        await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.inspectAdmin, expect: 201}, controller);
     });
 
     // Test5: Success to create for Viewer
     it(`should update ${resourceName} for {viewer}`, async () => {
-        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, controller);
+        await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.inspectOfficer, expect: 200}, controller);
     });
 
     // Test6: Export
-    it(`should export ${resourceName} for {viewer}`, async () => {
+    it(`should export ${resourceName} for {inspect app admin}`, async () => {
         // Create Model
         const model = await ModelFactory(ObserverWorkflowController.shared)();
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.get,
             url: '/api/mussels/wra/export',
             expect: 200,
-            auth: AuthType.viewer
+            auth: AuthType.inspectAdmin
         }).then(async resp => {
             await verifySuccessBody(resp.body);
             await Destroyer(ObserverWorkflowController.shared)(model);

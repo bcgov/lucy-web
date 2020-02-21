@@ -28,7 +28,7 @@ import {
 import { DataController } from '../database/data.model.controller';
 import { BaseSchema } from '../libs/core-database';
 import { AuthType, verifySuccessBody, verifyErrorBody, testModel } from './testHelpers';
-import { adminToken, editorToken, viewerToken } from './token';
+import { adminToken, editorToken, viewerToken, inspectAppAdminToken, inspectAppOfficerToken } from './token';
 import { ModelSpecFactory, RequestFactory, Destroyer, ModelFactory } from '../database/factory';
 
 export interface ExpressSetup {
@@ -63,6 +63,12 @@ export class ExpressResourceTest {
             case 2:
                 token = viewerToken();
                 break;
+            case 6:
+                token = inspectAppAdminToken();
+                break;
+            case 5:
+                token = inspectAppOfficerToken();
+                break;
             case 4:
                 token = '';
                 break;
@@ -94,7 +100,6 @@ export class ExpressResourceTest {
 
             // Expect
             const expectedStatus = setup.expect || 201;
-
             if (token && token !== '') {
                 request(app).post(url)
                 .set('Authorization', `Bearer ${token}`)

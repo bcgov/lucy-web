@@ -83,12 +83,13 @@ td:last-of-type {
 
 .popper-dropdown {
   width: 100%;
-  padding: 16px 0;
+  padding-top: 16px;
 }
 
 .popper-status-container {
   display: flex;
   justify-content: space-between;
+  padding: 16px 0;
 }
 
 .popper-footer-divider {
@@ -100,6 +101,10 @@ td:last-of-type {
 
 .popper-footer-button {
   width: 100%;
+}
+
+.account-status {
+  margin: 0;
 }
 
 .mat-row:nth-child(even) {
