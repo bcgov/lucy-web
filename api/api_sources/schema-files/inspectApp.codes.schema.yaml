@@ -8,7 +8,7 @@ schemas:
     description: 'Code table with options for sources of previous Aquatic Invasive Species (AIS) knowledge'
     baseSchema: CodeTableSchema
     meta:
-      baseModel: ApplicationCode
+      baseModel: Record
     displayLayout: {}
     layout: {}
     computedFields: {}
@@ -34,7 +34,7 @@ schemas:
     description: 'Code table with options for sources of previous invasive mussel inspections'
     baseSchema: CodeTableSchema
     meta:
-      baseModel: ApplicationCode
+      baseModel: Record
     displayLayout: {}
     layout: {}
     computedFields: {}
@@ -60,7 +60,7 @@ schemas:
     description: 'Code table with options for locations on watercraft where adult mussels were found during inspection'
     baseSchema: CodeTableSchema
     meta: 
-      baseModel: ApplicationCode
+      baseModel: Record
     displayLayout: {}
     layout: {}
     computedFields: {}
