@@ -16,10 +16,29 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, SlopeCodes, AspectCodes, ProposedActionCodes} from '../models';
+import { User,
+         Jurisdiction,
+         InvasivePlantSpecies,
+         Observation,
+         SpeciesDensityCodes,
+         SpeciesDistributionCodes,
+         SpeciesAgencyCodes,
+         ObservationTypeCodes,
+         SoilTextureCodes,
+         ObservationGeometryCodes,
+         SpecificUseCodes,
+         SlopeCodes,
+         AspectCodes,
+         ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
-import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { MechanicalTreatmentMethodsCodes,
+         MechanicalTreatment,
+         MechanicalDisposalMethodsCodes,
+         MechanicalSoilDisturbanceCodes,
+         MechanicalRootRemovalCodes,
+         MechanicalIssueCodes,
+         MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes, ChemicalTreatment, ChemicalTreatmentMethodCode } from '../models/ChemicalTreatment';
 import { EfficacyCodes } from '../models/Monitor';
 import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';

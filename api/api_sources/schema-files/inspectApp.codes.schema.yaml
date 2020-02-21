@@ -56,7 +56,7 @@ schemas:
     fields: {}
   ## -- end PreviousInspectionSourceSchema
   AdultMusselsLocationSchema:
-    name: adult_mussels_found_location
+    name: adult_mussels_location
     description: 'Code table with options for locations on watercraft where adult mussels were found during inspection'
     baseSchema: CodeTableSchema
     meta: 
@@ -67,7 +67,7 @@ schemas:
     relations: {}
     columns:
       id:
-        name: adult_mussels_found_location_id
+        name: adult_mussels_location_id
         comment: Auto generated sequential primary key column.
         definition: SERIAL PRIMARY KEY 
       description:
