@@ -90,7 +90,7 @@ export class PreviousInspectionSourceSchema extends RecordTableSchema {
     }
 }
 
-export class AdultMusselsFoundLocationSchema extends RecordTableSchema {
+export class AdultMusselsLocationSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('inspectApp.codes.schema.yaml');
     }
