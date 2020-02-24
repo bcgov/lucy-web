@@ -118,16 +118,6 @@ schemas:
         comment: 'Counter for number of very complex boats in the inspection'
         definition: INT NULL
       # Strings
-      previousAISKnowledgeSource:
-        name: previous_ais_knowledge_source
-        comment: 'Indicator to store status of previous AIS knowledge'
-        definition: VARCHAR(100) NULL
-        required: false
-      previousInspectionSource:
-        name: previous_inspection_source
-        comment: 'Indicator to store status of previous inspection'
-        definition: VARCHAR(100) NULL
-        required: false
       provinceOfResidence:
         name: province
         comment: 'Province of residence of the boat'
@@ -151,6 +141,30 @@ schemas:
         required: false
         meta: 
           embedded: true
+      adultMusselsLocation:
+        name: adult_mussels_location_id
+        comment: Foreign key reference to adult_mussels_location table 
+        definition: INT NULL
+        foreignTable: adult_mussels_location
+        refColumn: adult_mussels_location_id
+        deleteCascade: false
+        meta: {}
+      previousAISKnowledgeSource:
+        name: previous_ais_knowledge_source_id
+        comment: Foreign key reference to previous_ais_knowledge_source table
+        definition: INT NULL
+        foreignTable: previous_ais_knowledge_source
+        refColumn: previous_ais_knowledge_source_id
+        deleteCascade: false
+        meta: {}
+      previousInspectionSource:
+        name: previous_inspection_source_id
+        comment: Foreign key reference to previous_inspection_source table
+        definition: INT NULL
+        foreignTable: previous_inspection_source
+        refColumn: previous_inspection_source_id
+        deleteCascade: false
+        meta: {}
     ## -- end columns
     versions:
       ## -- version: workflow
@@ -166,34 +180,6 @@ schemas:
             refColumn: observer_workflow_id
             meta: {}
       ## -- end: workflow
-      ## -- version: refactorTextFieldsToDropdowns
-      - name: 'refactorTextFieldsToDropdowns'
-        id: '20200221'
-        info: 'Adding 3 new code tables; refactoring freeform text fields to dropdown references to new code tables'
-        columns:
-          adultMusselsLocation:
-            name: adult_mussels_location_id
-            comment: Foreign key reference to adult_mussels_location table 
-            definition: INT NULL
-            foreignTable: adult_mussels_location
-            refColumn: adult_mussels_location_id
-            meta: {}
-        modifyColumns:
-          previousAISKnowledgeSource:
-            name: previous_ais_knowledge_source_id
-            comment: Foreign key reference to previous_ais_knowledge_source table
-            definition: INT NULL
-            foreignTable: previous_ais_knowledge_source
-            refColumn: previous_ais_knowledge_source_id
-            meta: {}
-          previousInspectionSource:
-            name: previous_inspection_source_id
-            comment: Foreign key reference to previous_inspection_source table
-            definition: INT NULL
-            foreignTable: previous_inspection_source
-            refColumn: previous_inspection_source_id
-            meta: {}
-      ## -- end: refactorTextFieldsToDropdowns
     ## -- end version
   ## --
 
