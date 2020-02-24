@@ -31,6 +31,12 @@ schemas:
         comment: 'Number of days out of water'
         definition: INT NULL
         required: false
+      # Other Details
+      otherWaterBody:
+        name: other_water_body_detail
+        comment: 'Details of not listed water body. This is an optional field. User can provide a brief description of water-body which is not listed in application water body list.'
+        definition: VARCHAR(300) NULL 
+        required: false
       # Relation
       watercraftAssessment:
         name: watercraft_risk_assessment_id
