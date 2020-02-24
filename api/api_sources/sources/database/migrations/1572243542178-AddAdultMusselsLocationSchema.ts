@@ -2,7 +2,7 @@ import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
 import { AdultMusselsLocationSchema } from '../database-schema';
 
-export class AddAdultMusselsLocationSchema1582243542178 extends AppDBMigrator implements MigrationInterface {
+export class AddAdultMusselsLocationSchema1572243542178 extends AppDBMigrator implements MigrationInterface {
 
     adultMusselsLocationSchema: AdultMusselsLocationSchema;
 

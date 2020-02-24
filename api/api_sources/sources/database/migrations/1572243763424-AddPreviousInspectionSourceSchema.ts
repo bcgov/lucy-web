@@ -2,7 +2,7 @@ import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
 import { PreviousInspectionSourceSchema } from '../database-schema';
 
-export class AddPreviousInspectionSourceSchema1582243763424 extends AppDBMigrator implements MigrationInterface {
+export class AddPreviousInspectionSourceSchema1572243763424 extends AppDBMigrator implements MigrationInterface {
 
     previousInspectionSourceSchema: PreviousInspectionSourceSchema;
 
