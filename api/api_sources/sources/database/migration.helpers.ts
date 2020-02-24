@@ -204,7 +204,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
     public async revert(connection: Connection) {
         try {
             const result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.schema}.${dbConfig.migrationsTableName}`);
-            AppDatabaseMigrationManager.logger.info(`revert | Migration count: ${JSON.stringify(result)}`);
+            AppDatabaseMigrationManager.logger.info(`revert | Migration count: ${JSON.stringify(result, null, 2)}`);
             if (result[0].count > 0) {
                 await this._revert(connection, parseInt(result[0].count, 10));
             } else {
@@ -256,6 +256,10 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             await SharedDBManager.close();
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`refresh | Exception received while refresh database: ${excp}`);
+            // Close DB Connection
+            await SharedDBManager.close();
+            // Rethrow exception
+            throw excp;
         }
     }
 
@@ -272,6 +276,11 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             await SharedDBManager.close();
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`revertLatestAndRun | Exception received while refresh database: ${excp}`);
+
+            // Close DB Connection
+            await SharedDBManager.close();
+            // Rethrow exception
+            throw excp;
         }
     }
 
@@ -287,7 +296,11 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             await this.runMigration(connection);
             await SharedDBManager.close();
         } catch (excp) {
-            AppDatabaseMigrationManager.logger.error(`migrate | Exception received while refresh database: ${excp}`);
+            AppDatabaseMigrationManager.logger.error(`migrate | Exception received while migrate database: ${excp}`);
+            // Close DB Connection
+            await SharedDBManager.close();
+            // Rethrow exception
+            throw excp;
         }
     }
 }
