@@ -2,7 +2,7 @@ import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
 import { PreviousAISKnowledgeSourceSchema } from '../database-schema';
 
-export class AddPreviousAISKnowledgeSourceSchema1582243782933 extends AppDBMigrator implements MigrationInterface {
+export class AddPreviousAISKnowledgeSourceSchema1572243782933 extends AppDBMigrator implements MigrationInterface {
 
     previousAISKnowledgeSourceSchema: PreviousAISKnowledgeSourceSchema;
 

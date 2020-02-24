@@ -3,7 +3,7 @@ import { WatercraftRiskAssessmentSchema, ObserverWorkflowSchema, HighRiskAssessm
 import { AppDBMigrator } from '../applicationSchemaInterface';
 
 
-export class CreateMusselAppDatabase1582582003161 extends AppDBMigrator implements MigrationInterface {
+export class CreateMusselAppDatabase1572582003161 extends AppDBMigrator implements MigrationInterface {
 
     waterCraftRiskAssessmentSchema: WatercraftRiskAssessmentSchema;
     observerWorkflowSchema: ObserverWorkflowSchema;
