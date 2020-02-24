@@ -9,7 +9,8 @@ schemas:
     baseSchema: CodeTableSchema
     meta:
       baseModel: Record
-    displayLayout: {}
+    displayLayout:
+      displayLabel: '#(description)'
     layout: {}
     computedFields: {}
     relations: {}
@@ -35,7 +36,8 @@ schemas:
     baseSchema: CodeTableSchema
     meta:
       baseModel: Record
-    displayLayout: {}
+    displayLayout:
+      displayLabel: '#(description)'
     layout: {}
     computedFields: {}
     relations: {}
@@ -61,7 +63,8 @@ schemas:
     baseSchema: CodeTableSchema
     meta: 
       baseModel: Record
-    displayLayout: {}
+    displayLayout:
+      displayLabel: '#(description)'
     layout: {}
     computedFields: {}
     relations: {}
