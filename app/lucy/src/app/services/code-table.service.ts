@@ -28,6 +28,7 @@ import {
 import { EfficacyCodes } from '../models/Monitor';
 import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';
 import { Key } from 'protractor';
 
 @Injectable({
@@ -60,6 +61,10 @@ export class CodeTableService {
   private herbicideCodes: HerbicideCodes[];
 
   private efficacyCodes: EfficacyCodes[];
+
+  private previousAISKnowledgeSources: PreviousAISKnowledgeSource[];
+  private previousInspectionSources: PreviousInspectionSource[];
+  private musselFoundLocations: AdultMusselsLocation[];
 
   private codeTables: any | null = null;
 
@@ -471,4 +476,51 @@ export class CodeTableService {
     return this.mechanicalTreatmentProviders;
   }
 
+  public async getPreviousAISKnowledgeSourceCodes(): Promise<PreviousAISKnowledgeSource[]> {
+    if (this.previousAISKnowledgeSources && this.previousAISKnowledgeSources.length > 0) {
+      return this.previousAISKnowledgeSources;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const previousAISKnowledgeSources = codes.previousAISKnowledgeSources;
+    if (previousAISKnowledgeSources && (Array.isArray(previousAISKnowledgeSources) && this.objectValidator.isPreviousAISKnowledgeSourceObject(previousAISKnowledgeSources[0]))) {
+      return previousAISKnowledgeSources;
+    }
+  }
+
+  public async getPreviousInspectionSourceCodes(): Promise<PreviousInspectionSource[]> {
+    if (this.previousInspectionSources && this.previousInspectionSources.length > 0) {
+      return this.previousInspectionSources;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const previousInspectionSources = codes.previousInspectionSources;
+    if (previousInspectionSources && (Array.isArray(previousInspectionSources) && this.objectValidator.isPreviousInspectionSourceObject(previousInspectionSources[0]))) {
+      return previousInspectionSources;
+    }
+  }
+
+  public async getAdultMusselsLocationCodes(): Promise<AdultMusselsLocation[]> {
+    if (this.musselFoundLocations && this.musselFoundLocations.length > 0) {
+      return this.musselFoundLocations;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const musselFoundLocations = codes.musselFoundLocations;
+    if (musselFoundLocations && (Array.isArray(musselFoundLocations) && this.objectValidator.isAdultMusselsLocationObject(musselFoundLocations[0]))) {
+      return musselFoundLocations;
+    }
+  }
 }

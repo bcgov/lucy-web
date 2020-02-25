@@ -16,12 +16,32 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, SlopeCodes, AspectCodes, ProposedActionCodes} from '../models';
+import { User,
+         Jurisdiction,
+         InvasivePlantSpecies,
+         Observation,
+         SpeciesDensityCodes,
+         SpeciesDistributionCodes,
+         SpeciesAgencyCodes,
+         ObservationTypeCodes,
+         SoilTextureCodes,
+         ObservationGeometryCodes,
+         SpecificUseCodes,
+         SlopeCodes,
+         AspectCodes,
+         ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
-import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { MechanicalTreatmentMethodsCodes,
+         MechanicalTreatment,
+         MechanicalDisposalMethodsCodes,
+         MechanicalSoilDisturbanceCodes,
+         MechanicalRootRemovalCodes,
+         MechanicalIssueCodes,
+         MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
 import { HerbicideCodes, ChemicalTreatment, ChemicalTreatmentMethodCode } from '../models/ChemicalTreatment';
 import { EfficacyCodes } from '../models/Monitor';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';
 
 @Injectable({
   providedIn: 'root'
@@ -268,5 +288,32 @@ export class ObjectValidatorService {
   public isChemicalTreatmentObject(chemicalTreatment: any): chemicalTreatment is ChemicalTreatment {
     if (chemicalTreatment === undefined || chemicalTreatment === null) { return false; }
     return (<ChemicalTreatment>chemicalTreatment.tankMixes) !== undefined;
+  }
+
+  /**
+   * Check if object is PreviousAISKnowledgeSource
+   * @param knowledgeSource object
+   */
+  public isPreviousAISKnowledgeSourceObject(knowledgeSource: any): knowledgeSource is PreviousAISKnowledgeSource {
+    if (knowledgeSource === undefined || knowledgeSource === null) { return false; }
+    return (<PreviousAISKnowledgeSource>knowledgeSource.description) !== undefined;
+  }
+
+  /**
+   * Check if object is PreviousInspectionSource
+   * @param inspectionSource object
+   */
+  public isPreviousInspectionSourceObject(inspectionSource: any): inspectionSource is PreviousInspectionSource {
+    if (inspectionSource === undefined || inspectionSource === null) { return false; }
+    return (<PreviousInspectionSource>inspectionSource.description) !== undefined;
+  }
+
+  /**
+   * Check if object is AdultMusselsLocation
+   * @param locationFound object
+   */
+  public isAdultMusselsLocationObject(locationFound: any): locationFound is AdultMusselsLocation {
+    if (locationFound === undefined || locationFound === null) { return false; }
+    return (<AdultMusselsLocation>locationFound.description) !== undefined;
   }
 }
