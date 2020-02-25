@@ -47,6 +47,7 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         this.log('[START]', 'UP');
         // Running all up migration files
         await this.runQuerySqlFiles(this.upMigrations(), queryRunner);
+        await this.runQuerySqlFiles(this.importMigrations(), queryRunner);
         this.log('[END]', 'UP');
     }
 
