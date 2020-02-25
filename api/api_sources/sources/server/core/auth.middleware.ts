@@ -169,9 +169,9 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              const session = await UserDataController.shared.getCurrentSession(user);
              if (session) {
                  // Check session validity
-                 if (session.tokenExpiry > new Date() && !AppConfig.bypassTokenExpiry) {
-                     const message = `${api} |  Session Expire for user ${user.email} at ${session.tokenExpiry}`;
-                     ApplicationAuthMiddleware.logger.info(message);
+                 if (session.tokenExpiry < new Date() && !AppConfig.bypassTokenExpiry) {
+                     const message = `${api} |  Session Expire (app internal) for user ${user.email} at ${session.tokenExpiry}`;
+                     ApplicationAuthMiddleware.logger.error(message);
                      // Remove current
                      await UserDataController.shared.removeSession(user);
                       // Fail Session
