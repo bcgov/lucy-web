@@ -230,7 +230,7 @@ export class RouteController {
                 if (config.isMethod) {
                     const routeMethod: Function = this[config.handler].bind(this);
                     this.router[config.description.method](endPoint, allMiddleware, async (req: express.Request, res: express.Response) => {
-                       await this.handleRoute(req, res, routeMethod, config.handler);
+                        await this.handleRoute(req, res, routeMethod, config.handler);
                     });
 
                 } else {
@@ -250,8 +250,9 @@ export class RouteController {
         // Check error
         // Check for error
         const errors = validationResult(req);
+        const infoTag = `${tag}(${this.apiName(req)})`;
         if (!errors.isEmpty()) {
-            this.logger.error(`${tag}: Validation error:\n ${JSON.stringify(errors.array(), null, 2)}`);
+            this.logger.error(`${infoTag}: Validation error:\n ${JSON.stringify(errors.array(), null, 2)}`);
             this.logReq(req, tag);
             return res.status(422).json({
                 message: 'Input validation error',
@@ -267,11 +268,11 @@ export class RouteController {
             if (status > 0) {
                 return res.status(status).json(this.successResp(body));
             } else {
-                this.logger.error(`handleRouteMethod: ${tag}: [FAIL]`);
-                return this.commonError(500, `handleRouteMethod:${tag}`, new Error(`${tag} : Unable to process req`), res);
+                this.logger.error(`handleRouteMethod: ${infoTag}: [FAIL]`);
+                return this.commonError(500, `handleRouteMethod:${infoTag}`, new Error(`${infoTag} : Unable to process req`), res);
             }
         } catch (excp) {
-            return this.commonError(500, `handleRouteMethod:${tag}`, excp, res);
+            return this.commonError(500, `handleRouteMethod:${infoTag}`, excp, res);
         }
     }
 
@@ -309,7 +310,7 @@ export class RouteController {
      * @param string message
      */
     public commonError(status: number, tag: string, error: any, resp: express.Response, message?: string) {
-        this.logger.error(`[API-${tag}] | Call Error => ${error}`);
+        this.logger.error(`[API-${tag}] | Call Error => ${error} | message => ${message}`);
         const errMsg = message || `${error}`;
         resp.status(status).json(errorBody(errMsg, [error]));
     }
@@ -357,20 +358,22 @@ export class RouteController {
      */
     get authHandle(): RouteMiddlewareHandler {
         return async (req: express.Request, resp: express.Response, next: any) => {
+            const tag = `authHandler-(${this.apiName(req)})`;
             try {
                 passport.authenticate('jwt', {session: false}, (err, user) => {
                     if (err) {
                         const msg = `Authorization fail with error ${err}`;
-                        this.commonError(401, 'authHandle', err, resp, msg);
+                        this.commonError(401, tag, err, resp, msg);
                     } else if (!user) {
-                        this.commonError(401, 'authHandle', 'Un-authorize access', resp, 'Un-authorize access');
+                        this.commonError(401, tag, 'Un-authorize access', resp, 'Un-authorize access (No User)');
                     } else {
                         req.user = user;
                         next();
                     }
                 })(req, resp, next);
             } catch (excp) {
-                this.commonError(500, 'authHandler', excp, resp);
+                this.logger.error(`${tag}: Exception ${JSON.stringify(excp, null, 2)}`);
+                this.commonError(500, tag, excp, resp);
             }
         };
     }
