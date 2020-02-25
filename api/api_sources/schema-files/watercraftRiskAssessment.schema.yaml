@@ -3,6 +3,7 @@ version: '1.0'
 includes: 
   - observerWorkflow.schema.yaml
   - highRiskAssessment.schema.yaml
+  - inspectApp.codes.schema.yaml
 schemas: 
   ## -- WaterCraftRiskAssessmentSchema
   WatercraftRiskAssessmentSchema:
@@ -117,16 +118,6 @@ schemas:
         comment: 'Counter for number of very complex boats in the inspection'
         definition: INT NULL
       # Strings
-      previousAISKnowledgeSource:
-        name: previous_ais_knowledge_source
-        comment: 'Indicator to store status of previous AIS knowledge'
-        definition: VARCHAR(100) NULL
-        required: false
-      previousInspectionSource:
-        name: previous_inspection_source
-        comment: 'Indicator to store status of previous inspection'
-        definition: VARCHAR(100) NULL
-        required: false
       provinceOfResidence:
         name: province
         comment: 'Province of residence of the boat'
@@ -150,6 +141,30 @@ schemas:
         required: false
         meta: 
           embedded: true
+      adultMusselsLocation:
+        name: adult_mussels_location_id
+        comment: Foreign key reference to adult_mussels_location table 
+        definition: INT NULL
+        foreignTable: adult_mussels_location
+        refColumn: adult_mussels_location_id
+        deleteCascade: false
+        meta: {}
+      previousAISKnowledgeSource:
+        name: previous_ais_knowledge_source_id
+        comment: Foreign key reference to previous_ais_knowledge_source table
+        definition: INT NULL
+        foreignTable: previous_ais_knowledge_source
+        refColumn: previous_ais_knowledge_source_id
+        deleteCascade: false
+        meta: {}
+      previousInspectionSource:
+        name: previous_inspection_source_id
+        comment: Foreign key reference to previous_inspection_source table
+        definition: INT NULL
+        foreignTable: previous_inspection_source
+        refColumn: previous_inspection_source_id
+        deleteCascade: false
+        meta: {}
     ## -- end columns
     versions:
       ## -- version: workflow
