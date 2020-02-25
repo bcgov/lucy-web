@@ -42,8 +42,8 @@ export class AppConstants {
     };
 
     // Mussles App
-    static API_WatercraftAssessment_Export = `${AppConstants.API_baseURL}/mussels/wra/export`;
-    static API_Shift_Export = `${AppConstants.API_baseURL}/mussels/workflow/export`;
+    static get API_WatercraftAssessment_Export(): string { return `${AppConstants.API_baseURL}/mussels/wra/export`;}
+    static get API_Shift_Export(): string { return `${AppConstants.API_baseURL}/mussels/workflow/export`;}
 
     // API authenticated user endpoints
     static get API_me(): string { return `${AppConstants.API_baseURL}/account/me`; }
