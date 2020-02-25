@@ -35,7 +35,6 @@ describe('Mussel app db element tests', () => {
     it('should create water craft risk assessment model', async () => {
         const w: WatercraftRiskAssessment = await ModelFactory(WatercraftRiskAssessmentController.shared)();
         should().exist(w);
-        // console.dir(WatercraftRiskAssessmentController.shared.schemaObject);
         testModel(w, WatercraftRiskAssessmentSchema.shared);
         // Fetch data
         const ft = await WatercraftRiskAssessmentController.shared.findById(w.watercraft_risk_assessment_id);
