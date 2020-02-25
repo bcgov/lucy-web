@@ -22,6 +22,8 @@ import { Record } from './generic.data.models';
  */
 export interface WatercraftJourneySpec {
 	journeyType: number;
+	numberOfDaysOut: number;
+	otherWaterBody: string;
 	watercraftAssessment: WatercraftRiskAssessment;
 	waterBody: WaterBody;
 }
@@ -34,6 +36,8 @@ export interface WatercraftJourneySpec {
  */
 export interface WatercraftJourneyUpdateSpec {
 	journeyType?: number;
+	numberOfDaysOut?: number;
+	otherWaterBody?: string;
 	watercraftAssessment?: WatercraftRiskAssessment;
 	waterBody?: WaterBody;
 }
@@ -76,9 +80,16 @@ export class WatercraftJourney extends Record implements WatercraftJourneySpec {
 	numberOfDaysOut: number;
 
 	/**
+	 * @description Getter/Setter property for column {other_water_body_detail}
+	 */
+	@Column({ name: WatercraftJourneySchema.columns.otherWaterBody})
+	@ModelProperty({type: PropertyType.string})
+	otherWaterBody: string;
+
+	/**
 	 * @description Getter/Setter property for column {watercraft_risk_assessment_id}
 	 */
-	@ManyToOne( type => WatercraftRiskAssessment)
+	@ManyToOne( type => WatercraftRiskAssessment, { eager: false})
 	@JoinColumn({ name: WatercraftJourneySchema.columns.watercraftAssessment, referencedColumnName: WatercraftRiskAssessmentSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	watercraftAssessment: WatercraftRiskAssessment;
