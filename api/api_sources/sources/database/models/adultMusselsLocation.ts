@@ -3,8 +3,7 @@
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { AdultMusselsLocationSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { Record } from './generic.data.models';
-import { DataModelController } from '../data.model.controller';
+import { Record, RecordController } from './generic.data.models';
 
 /** Interface **/
 /**
@@ -63,7 +62,7 @@ export class AdultMusselsLocation extends Record implements AdultMusselsLocation
 /**
  * @description Data Model Controller Class for AdultMusselsLocationSchema and AdultMusselsLocation
  */
-export class AdultMusselsLocationController extends DataModelController<AdultMusselsLocation> {
+export class AdultMusselsLocationController extends RecordController<AdultMusselsLocation> {
 	/**
 	* @description Getter for shared instance
 	*/
