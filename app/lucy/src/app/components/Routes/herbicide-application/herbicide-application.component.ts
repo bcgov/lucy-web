@@ -6,9 +6,8 @@ import { CodeTableService } from 'src/app/services/code-table.service';
 import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
 import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
-import { FormConfigField, FormService } from 'src/app/services/form/form.service';
+import { FormService } from 'src/app/services/form/form.service';
 import { ErrorStateMatcher } from '@angular/material';
-import { DropdownComponent } from '../../Input/dropdown/dropdown.component';
 import { LoadingService } from 'src/app/services/loading.service';
 
 export class HerbicideApplicationErrorStateMatcher implements ErrorStateMatcher {

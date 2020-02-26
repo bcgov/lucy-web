@@ -66,19 +66,24 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     maximumValue: 100,
   };
 
-    ///// Form Mode
-    private _mode: FormMode = FormMode.View;
-    get mode(): FormMode {
-      return this._mode;
-    }
-    @Input() set mode(mode: FormMode) {
-      this._mode = mode;
-      if (this.mode === FormMode.View) {
-        this.inViewMode = true;
-      } else { this.inViewMode = false; }
-    }
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  get mode(): FormMode {
+    return this._mode;
+  }
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+    if (this.mode === FormMode.View) {
+      this.inViewMode = true;
+    } else { this.inViewMode = false; }
+  }
 
   @Output() speciesTreatedChanged = new EventEmitter<SpeciesObservedTreated[]>();
+
+  showFocus(index: number) {
+    const totalSpecies = this.speciesBeingTreated.length - 1;
+    return (totalSpecies === index);
+  }
 
   constructor(
     private loadingService: LoadingService,
