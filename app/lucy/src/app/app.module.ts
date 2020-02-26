@@ -77,7 +77,6 @@ import { AlertComponent } from './components/Utilities/alert/alert.component';
 import { MapPreviewComponent } from './components/Utilities/map-preview/map-preview.component';
 import { DropdownComponent } from './components/Input/dropdown/dropdown.component';
 import { FieldComponent } from './components/Input/field/field.component';
-import { MatSelectSearchComponent } from './components/Input/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from './components/Input/mat-select-search/mat-select-search.module';
 import { CheckboxComponent } from './components/Input/checkbox/checkbox.component';
 import { AddEntryComponent } from './components/Routes/add-entry/add-entry.component';
@@ -94,11 +93,12 @@ import { LocationInputComponent } from './components/base-form/location-input/lo
 import { ComputedFieldComponent } from './components/base-form/computed-field/computed-field.component';
 import { TableComponent } from './components/base-form/table/table.component';
 import { ToastComponent } from './components/Utilities/toast/toast.component';
-import { ClickAwayDirective } from './directives/click-away.directive';
 import { UserTableComponent } from './components/Routes/admin-tools/user-table/user-table.component';
 import { RequestTableComponent } from './components/Routes/admin-tools/request-table/request-table.component';
 import { ModalComponent } from './components/Utilities/modal/modal.component';
 import { RequestModalComponent } from './components/Routes/admin-tools/request-modal/request-modal.component';
+import { ClickAwayDirective } from './directives/click-away/click-away.directive';
+import { ElementFocusDirective } from './directives/element-focus/element-focus.directive';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -139,11 +139,12 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     ComputedFieldComponent,
     TableComponent,
     ToastComponent,
-    ClickAwayDirective,
     UserTableComponent,
     RequestTableComponent,
     ModalComponent,
     RequestModalComponent,
+    ClickAwayDirective,
+    ElementFocusDirective,
   ],
   entryComponents: [
     AddQuickObservationModalComponent

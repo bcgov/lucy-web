@@ -48,7 +48,7 @@
                         </app-dropdown>
                     </div>
                     <div class="col-3 zeroPadding">
-                        <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)"></app-field>
+                        <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)" [showFocus]="showFocus(i)"></app-field>
                     </div>
                     <div class="col-3 zeroPadding">
                         <app-field [mode]="mode" [verification]="amountUsedVerification" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
