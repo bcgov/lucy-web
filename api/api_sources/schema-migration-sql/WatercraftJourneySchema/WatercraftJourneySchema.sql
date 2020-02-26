@@ -6,6 +6,7 @@ ALTER TABLE watercraft_journey ADD COLUMN watercraft_journey_id SERIAL PRIMARY K
 ALTER TABLE watercraft_journey ADD COLUMN journey_type INT NOT NULL DEFAULT 0;
 ALTER TABLE watercraft_journey ADD COLUMN number_of_days_out INT NULL;
 ALTER TABLE watercraft_journey ADD COLUMN other_water_body_detail VARCHAR(300) NULL;
+ALTER TABLE watercraft_journey ADD COLUMN dry_storage_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_journey ADD COLUMN watercraft_risk_assessment_id INT NULL REFERENCES watercraft_risk_assessment(watercraft_risk_assessment_id) ON DELETE SET NULL;
 ALTER TABLE watercraft_journey ADD COLUMN water_body_id INT NULL REFERENCES water_body(water_body_id) ON DELETE SET NULL;
 
@@ -19,6 +20,7 @@ COMMENT ON COLUMN watercraft_journey.watercraft_journey_id IS 'Auto generated se
 COMMENT ON COLUMN watercraft_journey.journey_type IS 'Journey type of the associated regarding water body. i.e Previous (0) and next (1)';
 COMMENT ON COLUMN watercraft_journey.number_of_days_out IS 'Number of days out of water';
 COMMENT ON COLUMN watercraft_journey.other_water_body_detail IS 'Details of not listed water body. This is an optional field. User can provide a brief description of water-body which is not listed in application water body list.';
+COMMENT ON COLUMN watercraft_journey.dry_storage_ind IS 'Boolean indicator that watercraft''s previous and/or destination waterbody is Dry Storage';
 COMMENT ON COLUMN watercraft_journey.watercraft_risk_assessment_id IS 'Foreign key reference to Watercraft risk assessment table';
 COMMENT ON COLUMN watercraft_journey.water_body_id IS 'Foreign key reference to Water body detail table';
 
