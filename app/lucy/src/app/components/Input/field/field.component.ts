@@ -56,6 +56,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() min: Number;
   // Optional maximum numeric value
   @Input() max: Number;
+  // Boolean to set focus onInit
+  @Input() showFocus: boolean;
 
   ///// Verification
   private _verification: any;

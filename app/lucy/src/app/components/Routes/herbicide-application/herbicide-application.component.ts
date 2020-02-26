@@ -40,6 +40,7 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   // Herbicide Selection section variables
   _tankMixes: HerbicideTankMix[] = [];
+  selectedHerbicideIndex: Number;
   unusedHerbicides: HerbicideCodes[] = []; // dynamic list of unused herbicides (used to create dropdown menu)
   herbicideDropdowns: DropdownObject[] = []; // dynamic list of dropdown objects built from this.unusedHerbicides
   showEmptyRow = false;
@@ -211,6 +212,7 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
       const htm = this.createTankMixForHerbicide(herbicideCodeSelected);
       tankMixesCopy.push(htm);
       this.tankMixes = tankMixesCopy;
+      this.selectedHerbicideIndex = tankMixesCopy.length - 1;
     }
 
     // remove the selected herbicide from the list of unusedHerbicides so it can't be selected again in dropdowns
@@ -239,6 +241,11 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
     }
 
     this.tankMixes = tankMixesCopy;
+    this.selectedHerbicideIndex = index;
+  }
+
+  showFocus(index: number): boolean {
+    return this.selectedHerbicideIndex === index;
   }
 
   copyTankMixes() {
