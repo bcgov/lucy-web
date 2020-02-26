@@ -27,8 +27,8 @@
                                 <div class="card-title col-7">{{ s.observation.species.commonName }} ({{ s.observation.species.species }} {{ s.observation.species.genus }})</div>
                                 <app-field class="card-text col-4" id="percentageField" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.treatmentAreaCoverage" (valueChanged)="updatedAreaCoverage($event, s)"></app-field>
                                 <button class="card-link btn button-empty col-1" id="deleteButton" (click)="moveBeingTreatedToNotTreated(s)">
-                                        <mat-icon style="color: #CDCED2;">delete</mat-icon>
-                                    </button>
+                                    <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                                </button>
                             </div>
                         </div>
                     </div>

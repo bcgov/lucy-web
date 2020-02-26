@@ -6,9 +6,9 @@
     </div>
 
     <!-- Summary Line Section -->
-    <div class="row">
+    <div class="row animated" id="mixDeliveryRate">
         <div class="col-12 zeroPadding">
-            <app-field id="mixDeliveryRate" [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" (valueChanged)="deliveryRateChanged($event)">
+            <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" (valueChanged)="deliveryRateChanged($event)">
             </app-field>
         </div>
     </div>
@@ -72,8 +72,8 @@
                         </div>
                         <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
                             <button class="btn button-empty" (click)="removeEmptyRow()">
-                                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
-                                        </button>
+                                <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                            </button>
                         </div>
                     </div>
                 </div>
