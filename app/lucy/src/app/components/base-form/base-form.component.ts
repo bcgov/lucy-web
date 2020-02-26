@@ -37,6 +37,7 @@ import { ElementRef } from '@angular/core';
 import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 import { DummyService } from 'src/app/services/dummy.service';
 import { AppConstants } from 'src/app/constants/app-constants';
+import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
 
 export enum FormType {
   Observation,
@@ -228,13 +229,15 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of this.config.requiredFieldKeys) {
       if (!this.responseBody[key]) {
         requiredMissingFieldKeys.push(key);
-      } else {
-        if (key === 'spaceGeom' && this.responseBody[key]) {
-          const test: any = this.responseBody[key];
-          if (!test.latitude || !test.longitude || !test.geometry) {
-            requiredMissingFieldKeys.push(key);
-          }
+      } else if (key === 'spaceGeom') {
+        const test: any = this.responseBody[key];
+        if (!test.latitude || !test.longitude || !test.geometry) {
+          requiredMissingFieldKeys.push(key);
         }
+      } else if (key === 'tankMixes') {
+        const tankMixes: HerbicideTankMix[] = this.responseBody[key];
+        const hasError = tankMixes.filter(tankMix => !tankMix.amountUsed || !tankMix.applicationRate || !tankMix.herbicide);
+        if (hasError.length) requiredMissingFieldKeys.push(key);
       }
     }
     // let requiredMissingFieldHeaders: string[]= [];
@@ -243,11 +246,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     for (const key of requiredMissingFieldKeys) {
       if (this.config.fieldHeaders[key] !== undefined) {
         // Group Lat long under "location" tag
-        if (key === 'spaceGeom') {
-          if (!locationIncluded) {
-            missingFieldHeaders.push(`Location`);
-            locationIncluded = true;
-          }
+        if (key === 'spaceGeom' && !locationIncluded) {
+          missingFieldHeaders.push(`Location`);
+          locationIncluded = true;
         } else {
           // All other fields
           missingFieldHeaders.push(this.config.fieldHeaders[key]);
@@ -313,7 +314,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       this.config = config;
     } else {
       this.alert.show('Configuration error', 'This feature is currently unavailable');
-      console.log(`Bad config`);
       this.router.navigateTo(AppRoutes.AddEntry);
       return;
     }
@@ -422,6 +422,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    */
   async submitAction() {
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
+    console.log(this.config, this.responseBody);
     if (!this.canSubmit) {
       this.triedToSubmit = true;
       this.toast.show('Some required fields are missing', ToastIconType.fail);
