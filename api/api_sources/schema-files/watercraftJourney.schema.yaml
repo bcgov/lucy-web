@@ -37,6 +37,11 @@ schemas:
         comment: 'Details of not listed water body. This is an optional field. User can provide a brief description of water-body which is not listed in application water body list.'
         definition: VARCHAR(300) NULL 
         required: false
+      # Boolean
+      dryStorage:
+        name: dry_storage_ind
+        comment: Boolean indicator that watercraft\'s previous and/or destination waterbody is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Relation
       watercraftAssessment:
         name: watercraft_risk_assessment_id

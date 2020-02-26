@@ -27,14 +27,20 @@ import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMan
 import { WatercraftRiskAssessmentSchema } from '../database-schema';
 import {
 	HighRiskAssessmentSchema,
-	ObserverWorkflowSchema
+	ObserverWorkflowSchema,
+	AdultMusselsLocationSchema,
+	PreviousAISKnowledgeSourceSchema,
+	PreviousInspectionSourceSchema,
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { IntTransformer, DateTimeTransformer } from '../../libs/transformer';
 import {
 	HighRiskAssessment,
-	ObserverWorkflow
+	ObserverWorkflow,
+	AdultMusselsLocation,
+	PreviousAISKnowledgeSource,
+	PreviousInspectionSource,
 } from '../models';
 
 import { Record } from './generic.data.models';
@@ -64,13 +70,14 @@ export interface WatercraftRiskAssessmentSpec {
 	complex: number;
 	veryComplex: number;
 	previousInspectionDays: number;
-	previousAISKnowledgeSource: string;
-	previousInspectionSource: string;
 	provinceOfResidence: string;
 	generalComment: string;
 	passportNumber: string;
 	highRiskAssessment: HighRiskAssessment;
 	workflow: ObserverWorkflow;
+	adultMusselsLocation: AdultMusselsLocation;
+	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
+	previousInspectionSource: PreviousInspectionSource;
 }
 // -- End: WatercraftRiskAssessmentSpec --
 
@@ -99,13 +106,14 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	complex?: number;
 	veryComplex?: number;
 	previousInspectionDays?: number;
-	previousAISKnowledgeSource?: string;
-	previousInspectionSource?: string;
 	provinceOfResidence?: string;
 	generalComment?: string;
 	passportNumber?: string;
 	highRiskAssessment?: HighRiskAssessment;
 	workflow?: ObserverWorkflow;
+	adultMusselsLocation?: AdultMusselsLocation;
+	previousAISKnowledgeSource?: PreviousAISKnowledgeSource;
+	previousInspectionSource?: PreviousInspectionSource;
 }
 // -- End: WatercraftRiskAssessmentUpdateSpec --
 
@@ -265,20 +273,6 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	previousInspectionDays: number;
 
 	/**
-	 * @description Getter/Setter property for column {previous_ais_knowledge_source}
-	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource})
-	@ModelProperty({type: PropertyType.string})
-	previousAISKnowledgeSource: string;
-
-	/**
-	 * @description Getter/Setter property for column {previous_inspection_source}
-	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource})
-	@ModelProperty({type: PropertyType.string})
-	previousInspectionSource: string;
-
-	/**
 	 * @description Getter/Setter property for column {province}
 	 */
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.provinceOfResidence})
@@ -306,6 +300,30 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.highRiskAssessment, referencedColumnName: HighRiskAssessmentSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	highRiskAssessment: HighRiskAssessment;
+
+	/**
+	 * @description Getter/Setter property for column {adult_mussels_location_id}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.adultMusselsLocation, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	adultMusselsLocation: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {previous_ais_knowledge_source_id}
+	 */
+	@ManyToOne( type => PreviousAISKnowledgeSource, { eager: true})
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource, referencedColumnName: PreviousAISKnowledgeSourceSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
+
+	/**
+	 * @description Getter/Setter property for column {previous_inspection_source_id}
+	 */
+	@ManyToOne( type => PreviousInspectionSource, { eager: true})
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource, referencedColumnName: PreviousInspectionSourceSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	previousInspectionSource: PreviousInspectionSource;
 
 	/**
 	 * @description Getter/Setter property for column {observer_workflow_id}

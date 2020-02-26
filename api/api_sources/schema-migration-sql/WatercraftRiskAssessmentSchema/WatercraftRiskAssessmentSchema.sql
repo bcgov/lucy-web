@@ -22,12 +22,13 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN simple_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN complex_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN very_complex_count INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_days_count INT NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_ais_knowledge_source VARCHAR(100) NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_source VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN province VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN general_comment VARCHAR(300) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN passport_number VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_assessment_id INT NULL REFERENCES high_risk_assessment(high_risk_assessment_id) ON DELETE SET NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN adult_mussels_location_id INT NULL REFERENCES adult_mussels_location(adult_mussels_location_id) ON DELETE SET NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_ais_knowledge_source_id INT NULL REFERENCES previous_ais_knowledge_source(previous_ais_knowledge_source_id) ON DELETE SET NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_source_id INT NULL REFERENCES previous_inspection_source(previous_inspection_source_id) ON DELETE SET NULL;
 
 
         
@@ -55,12 +56,13 @@ COMMENT ON COLUMN watercraft_risk_assessment.simple_counter IS 'Counter for numb
 COMMENT ON COLUMN watercraft_risk_assessment.complex_counter IS 'Counter for number of complex boats in the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.very_complex_count IS 'Counter for number of very complex boats in the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_days_count IS 'Counter for number of very complex boats in the inspection';
-COMMENT ON COLUMN watercraft_risk_assessment.previous_ais_knowledge_source IS 'Indicator to store status of previous AIS knowledge';
-COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_source IS 'Indicator to store status of previous inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.province IS 'Province of residence of the boat';
 COMMENT ON COLUMN watercraft_risk_assessment.general_comment IS 'Province of residence of the boat';
 COMMENT ON COLUMN watercraft_risk_assessment.passport_number IS 'Passport number associated with previous inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.high_risk_assessment_id IS 'Foreign key reference to High risk assessment of the inspection';
+COMMENT ON COLUMN watercraft_risk_assessment.adult_mussels_location_id IS 'Foreign key reference to adult_mussels_location table';
+COMMENT ON COLUMN watercraft_risk_assessment.previous_ais_knowledge_source_id IS 'Foreign key reference to previous_ais_knowledge_source table';
+COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_source_id IS 'Foreign key reference to previous_inspection_source table';
 
 
         
