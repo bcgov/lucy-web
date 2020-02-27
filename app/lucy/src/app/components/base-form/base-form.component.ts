@@ -252,7 +252,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       if (!value) return false
       else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) return false;
       else if (key === 'tankMixes' && !this.isTankMixesValid(value)) return false;
-      else if (key === 'speciesObservations' && this.isSpeciesObservationsValid(value)) return false;
+      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) return false;
     }
 
     return true;
