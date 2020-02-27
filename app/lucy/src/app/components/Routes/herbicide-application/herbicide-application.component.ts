@@ -8,7 +8,6 @@ import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
 import { FormService } from 'src/app/services/form/form.service';
 import { ErrorStateMatcher } from '@angular/material';
-import { LoadingService } from 'src/app/services/loading.service';
 
 export class HerbicideApplicationErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -79,6 +78,24 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
     this._responseBody = responseBody;
   }
 
+  // get method for _tankMixes
+  get tankMixes(): HerbicideTankMix[] {
+    return this._tankMixes;
+  }
+
+  // set method for _tankMixes
+  set tankMixes(herbicideTankMixes: HerbicideTankMix[]) {
+    this._tankMixes = herbicideTankMixes;
+  }
+
+  // Returns a copy of the tankMixes array
+  get copyTankMixes(): HerbicideTankMix[] {
+    const tankMixesCopy: HerbicideTankMix[] = [];
+    for (const mix of this.tankMixes) tankMixesCopy.push(mix);
+
+    return tankMixesCopy;
+  }
+
   get isTankMixEmpty(): boolean {
     return (this.tankMixes ||  []).length === 0;
   }
@@ -98,8 +115,7 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   constructor(private codeTables: CodeTableService,
               private formService: FormService,
-              private dropdownService: DropdownService,
-              private loadingService: LoadingService) { }
+              private dropdownService: DropdownService) { }
 
 
   async ngOnInit() {
@@ -120,21 +136,6 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.prepareDropdownMenus();
-  }
-
-  set tankMixes(herbicideTankMixes: HerbicideTankMix[]) {
-    this._tankMixes = herbicideTankMixes;
-  }
-
-  get tankMixes(): HerbicideTankMix[] {
-      return this._tankMixes;
-  }
-
-  get copyTankMixes(): HerbicideTankMix[] {
-    const tankMixesCopy: HerbicideTankMix[] = [];
-    for (const mix of this.tankMixes) tankMixesCopy.push(mix);
-
-    return tankMixesCopy;
   }
 
   private notifyTankMixChangeEvent() {
