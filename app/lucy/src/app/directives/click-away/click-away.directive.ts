@@ -13,7 +13,7 @@
  * 	See the License for the specific language governing permissions and
  * 	limitations under the License.
  *
- * 	Created by Raj Manivannan on 2019-02-07.
+ * 	Created by Raj Manivannan on 2020-02-07.
  */
 import { Directive, ElementRef, Output, EventEmitter, HostListener } from '@angular/core';
 
@@ -22,6 +22,11 @@ import { Directive, ElementRef, Output, EventEmitter, HostListener } from '@angu
 })
 export class ClickAwayDirective {
 
+  /**
+   * Detects the click that happens outside of the `ref` element and emit an event
+   * @param ref the ref to the element on which this directive is used
+   * 
+   */
   constructor(private ref: ElementRef) { }
 
   @Output()

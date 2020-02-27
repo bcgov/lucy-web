@@ -6,15 +6,15 @@
     </div>
 
     <!-- Summary Line Section -->
-    <div class="row">
+    <div class="row animated" id="mixDeliveryRate">
         <div class="col-12 zeroPadding">
-            <app-field id="mixDeliveryRate" [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" (valueChanged)="deliveryRateChanged($event)">
+            <app-field [mode]="mode" header="Mix Delivery Rate (calibrated)" suffix="L/ha" [value]="mixDeliveryRate" [verification]="deliveryRateVerification" (valueChanged)="deliveryRateChanged($event)">
             </app-field>
         </div>
     </div>
 
 
-    <div class="container-fluid herbicideContainer" id="herbicideMix">
+    <div class="container-fluid herbicideContainer animated" id="herbicideMix">
         <!-- Herbicide Selection Section -->
         <div class="row col-12" style="margin: 0;">
             <label>Select Herbicides</label>
@@ -48,7 +48,7 @@
                         </app-dropdown>
                     </div>
                     <div class="col-3 zeroPadding">
-                        <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)"></app-field>
+                        <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)" [showFocus]="showFocus(i)"></app-field>
                     </div>
                     <div class="col-3 zeroPadding">
                         <app-field [mode]="mode" [verification]="amountUsedVerification" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
@@ -59,30 +59,34 @@
                         </button>
                     </div>
                 </div>
-                <div *ngIf="showEmptyRow" style="display: inline-flex;">
-                    <div class="row full-width animated fadeIn animationDuration">
-                        <div class="col-5">
-                            <app-dropdown [mode]="mode" [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)"></app-dropdown>
-                        </div>
-                        <div class="col-3">
-                            <app-field type="number" [mode]="mode" suffix="L/ha"></app-field>
-                        </div>
-                        <div class="col-3">
-                            <app-field type="number" [mode]="mode" suffix="L"></app-field>
-                        </div>
-                        <div class="col-1" style="margin-bottom: 0pt; text-align: right;">
-                            <button class="btn button-empty" (click)="removeEmptyRow()">
-                                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
-                                        </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <div *ngIf="tankMixes.length > 0 && !showEmptyRow" class="container col-6">
             <div class="row">
                 <button class="btn addHerbicideButton" (click)="addEmptyTableRow()"><strong>Add Additional Herbicide</strong></button>
+            </div>
+        </div>
+
+        <!-- Empty dropdown row when clicked on Add Additional Herbicide button -->
+        <div class="container" *ngIf="showEmptyRow">
+            <div style="display: inline-flex;">
+                <div class="row full-width animated fadeIn animationDuration">
+                    <div class="col-5 zeroPadding">
+                        <app-dropdown [mode]="mode" [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)"></app-dropdown>
+                    </div>
+                    <div class="col-3 zeroPadding">
+                        <app-field type="number" [mode]="mode" suffix="L/ha"></app-field>
+                    </div>
+                    <div class="col-3 zeroPadding">
+                        <app-field type="number" [mode]="mode" suffix="L"></app-field>
+                    </div>
+                    <div class="col-1 zeroPadding" style="margin-bottom: 0pt; text-align: right;">
+                        <button class="btn button-empty" (click)="removeEmptyRow()">
+                            <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

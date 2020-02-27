@@ -6,10 +6,8 @@ import { CodeTableService } from 'src/app/services/code-table.service';
 import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
 import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
 import { DropdownService, DropdownObject } from 'src/app/services/dropdown.service';
-import { FormConfigField, FormService } from 'src/app/services/form/form.service';
+import { FormService } from 'src/app/services/form/form.service';
 import { ErrorStateMatcher } from '@angular/material';
-import { DropdownComponent } from '../../Input/dropdown/dropdown.component';
-import { LoadingService } from 'src/app/services/loading.service';
 
 export class HerbicideApplicationErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -40,6 +38,7 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   // Herbicide Selection section variables
   _tankMixes: HerbicideTankMix[] = [];
+  selectedHerbicideIndex: Number;
   unusedHerbicides: HerbicideCodes[] = []; // dynamic list of unused herbicides (used to create dropdown menu)
   herbicideDropdowns: DropdownObject[] = []; // dynamic list of dropdown objects built from this.unusedHerbicides
   showEmptyRow = false;
@@ -79,6 +78,24 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
     this._responseBody = responseBody;
   }
 
+  // get method for _tankMixes
+  get tankMixes(): HerbicideTankMix[] {
+    return this._tankMixes;
+  }
+
+  // set method for _tankMixes
+  set tankMixes(herbicideTankMixes: HerbicideTankMix[]) {
+    this._tankMixes = herbicideTankMixes;
+  }
+
+  // Returns a copy of the tankMixes array
+  get copyTankMixes(): HerbicideTankMix[] {
+    const tankMixesCopy: HerbicideTankMix[] = [];
+    for (const mix of this.tankMixes) tankMixesCopy.push(mix);
+
+    return tankMixesCopy;
+  }
+
   get isTankMixEmpty(): boolean {
     return (this.tankMixes ||  []).length === 0;
   }
@@ -98,8 +115,7 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   constructor(private codeTables: CodeTableService,
               private formService: FormService,
-              private dropdownService: DropdownService,
-              private loadingService: LoadingService) { }
+              private dropdownService: DropdownService) { }
 
 
   async ngOnInit() {
@@ -120,14 +136,6 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.prepareDropdownMenus();
-  }
-
-  set tankMixes(herbicideTankMixes: HerbicideTankMix[]) {
-    this._tankMixes = herbicideTankMixes;
-  }
-
-  get tankMixes(): HerbicideTankMix[] {
-      return this._tankMixes;
   }
 
   private notifyTankMixChangeEvent() {
@@ -177,7 +185,7 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
 
   removeHerbicide(h: HerbicideTankMix) {
     // Making a copy of the existing tank mixes array
-    const tankMixesCopy = this.copyTankMixes();
+    const tankMixesCopy = this.copyTankMixes;
 
     if (tankMixesCopy.includes(h)) {
       // remove the deleted tank mix from the array of tankMixes
@@ -186,9 +194,58 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
       this.tankMixes = tankMixesCopy;
     }
 
-    // return the deleted herbicide to the list of unusedHerbicides
-    if (!this.unusedHerbicides.includes(h.herbicide)) {
-      this.unusedHerbicides.push(h.herbicide);
+    // add the deleted herbicide to the list of unusedHerbicides
+    this.addHerbicideOption(h);
+  }
+
+  herbicideChanged(event: any) {
+    // Making a copy of the existing tank mixes array
+    const tankMixesCopy = this.copyTankMixes;
+
+    // create new HerbicideTankMix for the selected herbicide, add it to array of tankMixes
+    const herbicideCodeSelected = event.object;
+    if (!this.tankMixesContainsHerbicide(herbicideCodeSelected)) {
+      const htm = this.createTankMixForHerbicide(herbicideCodeSelected);
+      tankMixesCopy.push(htm);
+      this.tankMixes = tankMixesCopy;
+      this.selectedHerbicideIndex = tankMixesCopy.length - 1;
+    }
+
+    // remove the selected herbicide from the list of unusedHerbicides so it can't be selected again in dropdowns
+    this.removeHerbicideOption(herbicideCodeSelected);
+    
+    // reset this flag - something has been entered in empty row
+    this.showEmptyRow = false;
+
+    this.notifyTankMixChangeEvent();
+  }
+
+  async updateHerbicide(event: any, index: number) {
+    // Making a copy of the existing tank mixes array
+    const tankMixesCopy = await this.copyTankMixes;
+
+    const herbicideSelected = event.object;
+    const prevSelected = tankMixesCopy[index];
+
+    if (!this.tankMixesContainsHerbicide(herbicideSelected)) {
+      const updatedHerbicide = this.createTankMixForHerbicide(herbicideSelected);
+      updatedHerbicide.showAnimation = false;
+      tankMixesCopy[index] = updatedHerbicide;
+      this.tankMixes = tankMixesCopy;
+    }
+
+    this.selectedHerbicideIndex = index;
+
+    // remove the updated herbicide from the list of unusedHerbicides so it can't be selected again in dropdowns
+    this.removeHerbicideOption(herbicideSelected);
+
+    // add the previously selected herbicide to the list of unusedHerbicides
+    this.addHerbicideOption(prevSelected);
+  }
+
+  addHerbicideOption(herbicide: HerbicideTankMix) {
+    if (!this.unusedHerbicides.includes(herbicide.herbicide)) {
+      this.unusedHerbicides.push(herbicide.herbicide);
 
       // sort unusedHerbicides list alphabetically by compositeName
       const sortAlpha = (h1: HerbicideCodes, h2: HerbicideCodes) => {
@@ -201,51 +258,16 @@ export class HerbicideApplicationComponent implements OnInit, AfterViewInit {
     }
   }
 
-  herbicideChanged(event: any) {
-    // Making a copy of the existing tank mixes array
-    const tankMixesCopy = this.copyTankMixes();
-
-    // create new HerbicideTankMix for the selected herbicide, add it to array of tankMixes
-    const herbicideCodeSelected = event.object;
-    if (!this.tankMixesContainsHerbicide(herbicideCodeSelected)) {
-      const htm = this.createTankMixForHerbicide(herbicideCodeSelected);
-      tankMixesCopy.push(htm);
-      this.tankMixes = tankMixesCopy;
-    }
-
-    // remove the selected herbicide from the list of unusedHerbicides so it can't be selected again in dropdowns
-    if (this.unusedHerbicides.includes(herbicideCodeSelected)) {
-      const index = this.unusedHerbicides.findIndex((element) => element === herbicideCodeSelected);
+  removeHerbicideOption(herbicide: HerbicideCodes) {
+    if (this.unusedHerbicides.includes(herbicide)) {
+      const index = this.unusedHerbicides.findIndex((element) => element === herbicide);
       this.unusedHerbicides.splice(index, 1);
       this.herbicideDropdowns = this.dropdownService.createDropdownObjectsFrom(this.unusedHerbicides);
     }
-
-    // reset this flag - something has been entered in empty row
-    this.showEmptyRow = false;
-
-    this.notifyTankMixChangeEvent();
   }
 
-  updateHerbicide(event: any, index: number) {
-    const herbicideSelected = event.object;
-
-    // Making a copy of the existing tank mixes array
-    const tankMixesCopy = this.copyTankMixes();
-
-    if (!this.tankMixesContainsHerbicide(herbicideSelected)) {
-      const updatedHerbicide = this.createTankMixForHerbicide(herbicideSelected);
-      updatedHerbicide.showAnimation = false;
-      tankMixesCopy[index] = updatedHerbicide;
-    }
-
-    this.tankMixes = tankMixesCopy;
-  }
-
-  copyTankMixes() {
-    const tankMixesCopy: HerbicideTankMix[] = [];
-    for (const mix of this.tankMixes) tankMixesCopy.push(mix);
-
-    return tankMixesCopy;
+  showFocus(index: number): boolean {
+    return this.selectedHerbicideIndex === index;
   }
 
   applicationRateChanged(event: any, htm: HerbicideTankMix) {
