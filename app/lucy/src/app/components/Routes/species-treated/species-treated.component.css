@@ -104,6 +104,7 @@
 
 #deleteButton {
     margin-left: auto;
+    padding: 0;
 }
 
 .addSpeciesButton {

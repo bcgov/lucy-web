@@ -37,6 +37,9 @@ describe(`Test for ${resourceName}`, () => {
                 should().exist(data.otherObservations);
                 should().exist(data.stations);
                 should().exist(data.watercraftList);
+                should().exist(data.adultMusselsLocation);
+                should().exist(data.previousAISKnowledgeSource);
+                should().exist(data.previousInspectionSource);
             });
         });
     });
