@@ -204,19 +204,58 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   /**
+   * Check if the spaceGeom is valid or not
+   */
+  isSpaceGeomValid(spaceGeomData: any): boolean {
+    if (!spaceGeomData || !spaceGeomData.latitude || !spaceGeomData.longitude || !spaceGeomData.geometry || !spaceGeomData.inputGeometry)
+      return false;
+
+    const geometryData = spaceGeomData.inputGeometry.attributes;
+    if (!geometryData) return false;
+
+    const area = geometryData.area;
+    const { radius, width, length } = area;
+    
+    if (radius) return true;
+    if (width && length) return true;
+
+    return false;
+  }
+
+  /**
+   * Check if tankmixes is valid or not
+   */
+  isTankMixesValid(tankMixes: HerbicideTankMix[]): boolean {
+    if (!tankMixes || tankMixes.length === 0) return false;
+    const invalidTankMixes = tankMixes.filter(tankMix => !tankMix.amountUsed || !tankMix.applicationRate);
+    return (invalidTankMixes.length === 0);
+  }
+
+  /**
+   * Check if species observations is valid or not
+   */
+  isSpeciesObservationsValid(speciesObservations: any): boolean {
+    if (!speciesObservations || speciesObservations.length === 0) return false;
+
+    const invalidSpeciesObservations = speciesObservations.filter(species => !species.treatmentAreaCoverage);
+    return (invalidSpeciesObservations.length === 0);
+  }
+
+  /**
    * Check if the required fields exist
    */
   get canSubmit(): boolean {
-    if (!this.config || !this.responseBody) {
-      return false;
-    }
-    let requiredFieldsExist = true;
+    if (!this.config || !this.responseBody) return false;
+
     for (const key of this.config.requiredFieldKeys) {
-      if (!this.responseBody[key]) {
-        requiredFieldsExist = false;
-      }
+      const value = this.responseBody[key];
+      if (!value) return false
+      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) return false;
+      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) return false;
+      else if (key === 'speciesObservations' && this.isSpeciesObservationsValid(value)) return false;
     }
-    return requiredFieldsExist;
+
+    return true;
   }
 
    /**
@@ -227,20 +266,13 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   get missingFields(): string[] {
     const requiredMissingFieldKeys: string[] = [];
     for (const key of this.config.requiredFieldKeys) {
-      if (!this.responseBody[key]) {
-        requiredMissingFieldKeys.push(key);
-      } else if (key === 'spaceGeom') {
-        const test: any = this.responseBody[key];
-        if (!test.latitude || !test.longitude || !test.geometry) {
-          requiredMissingFieldKeys.push(key);
-        }
-      } else if (key === 'tankMixes') {
-        const tankMixes: HerbicideTankMix[] = this.responseBody[key];
-        const hasError = tankMixes.filter(tankMix => !tankMix.amountUsed || !tankMix.applicationRate || !tankMix.herbicide);
-        if (hasError.length) requiredMissingFieldKeys.push(key);
-      }
+      const value = this.responseBody[key];
+      if (!value) requiredMissingFieldKeys.push(key);
+      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) requiredMissingFieldKeys.push(key);
+      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) requiredMissingFieldKeys.push(key);
+      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) requiredMissingFieldKeys.push(key);
     }
-    // let requiredMissingFieldHeaders: string[]= [];
+
     const missingFieldHeaders: string[] = [];
     let locationIncluded = false;
     for (const key of requiredMissingFieldKeys) {
@@ -422,7 +454,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    */
   async submitAction() {
     // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
-    console.log(this.config, this.responseBody);
     if (!this.canSubmit) {
       this.triedToSubmit = true;
       this.toast.show('Some required fields are missing', ToastIconType.fail);
