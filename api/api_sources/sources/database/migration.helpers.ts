@@ -204,7 +204,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
     public async revert(connection: Connection) {
 
         // Get current migrations count
-        let result = [];
+        let result: any[] = [ { count: 0 }];
         try {
             result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.schema}.${dbConfig.migrationsTableName}`);
         } catch (exp) {
