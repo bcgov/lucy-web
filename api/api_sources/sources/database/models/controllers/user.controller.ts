@@ -53,6 +53,11 @@ export class UserDataController extends DataModelController<User> {
         await this.saveInDB(user);
     }
 
+    /**
+     * @description The latest request made by the user or undefined 
+     * @param user user
+     * @returns Promise<RequestAccess | undefined>
+     */
     public async latestAccessRequest(user: User): Promise<RequestAccess | undefined> {
         const allRequest: RequestAccess[] = await user.requestAccess;
         if (allRequest && allRequest.length > 0) {
@@ -63,6 +68,36 @@ export class UserDataController extends DataModelController<User> {
             return sorted[0];
         }
         return;
+    }
+
+    /**
+     * @description Returns true if there are pending requests matching the given roleId
+     * @param allRequest all pending requests
+     * @param roleCodeId role id
+     * @returns boolean
+     */
+    public getPendingRequestForRole(allRequest: RequestAccess[], roleCodeId: number): boolean {
+        if (!allRequest || allRequest.length === 0) return false;
+
+        return (allRequest.filter(request => request.requestedAccessCode.role_code_id === roleCodeId).length > 0);
+    }
+
+    /**
+     * @description Process all the pending requests and return the status associated with each role
+     * @param allRequest all pending requests
+     * @returns pending status for different roles
+     */
+    public async getPendingStatus(allRequest: RequestAccess[]): Promise<any> {
+        if (!allRequest || allRequest.length === 0) return {};
+
+        return {
+            pendingAdminRequests: this.getPendingRequestForRole(allRequest, 1),
+            pendingViewerRequests: this.getPendingRequestForRole(allRequest, 2),
+            pendingEditorRequests: this.getPendingRequestForRole(allRequest, 3),
+            pendingSuperUserRequests: this.getPendingRequestForRole(allRequest, 4),
+            pendingOfficerRequests: this.getPendingRequestForRole(allRequest, 5),
+            pendingAdminInspectRequests: this.getPendingRequestForRole(allRequest, 6),
+        }
     }
 }
 
