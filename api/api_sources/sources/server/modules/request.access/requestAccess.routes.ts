@@ -119,8 +119,14 @@ class RequestAccessRouteController extends RouteController {
             }
             return [200, data];
         } else {
+            const allPendingRequests: RequestAccess[] = await this.dataController.all({
+                status: 0,
+            });
+            const latestRequest = await UserDataController.shared.latestAccessRequest(user);
+            const pendingStatus = await UserDataController.shared.getPendingStatus(allPendingRequests);
+
             this.logger.info(`index | send own request access to user ${req.user.email} (user)`);
-            return [200, (await UserDataController.shared.latestAccessRequest(user))];
+            return [200, { ...pendingStatus, latestRequest }];
         }
     }
 
@@ -153,16 +159,11 @@ class RequestAccessRouteController extends RouteController {
             accessRequest.requestedAccessCode = req.body.requestedAccessCode;
         }
         // Check status
-        let requireDel = false;
         if (req.body.status && req.body.status !== accessRequest.status) {
-            [accessRequest, requireDel] = await this.handleStatusUpdate(req.body.status, accessRequest, req.user);
+            accessRequest = await this.handleStatusUpdate(req.body.status, accessRequest, req.user);
         }
-        // Save or delete
-        if (requireDel) {
-            await this.dataController.remove(accessRequest);
-        } else {
-            await this.dataController.saveInDB(accessRequest);
-        }
+        
+        await this.dataController.saveInDB(accessRequest);
 
         return [200, accessRequest];
     }
@@ -171,7 +172,7 @@ class RequestAccessRouteController extends RouteController {
         path: '/',
         middleware: () => [
             ValidatorExists({
-                requestedAccessCode: RoleCodeController.shared
+                requestedAccessCode: RoleCodeController.shared,
             }),
             check('requestNote').isString(),
             sanitize('requestNote')
@@ -179,6 +180,15 @@ class RequestAccessRouteController extends RouteController {
     })
     public async create(req: any) {
         const input = req.body as CreateRequestAccess;
+        
+        const hasPendingAccessRequest = await this.dataController.fetchOne({
+            requester_user_id: req.user,
+            requested_role_code_id: input.requestedAccessCode,
+            status: 0
+        });
+
+        if (hasPendingAccessRequest) return [400, 'A valid pending request exists already', true];
+
         const requestAccess: RequestAccess = this.dataController.create();
         requestAccess.requestNote = input.requestNote;
         requestAccess.requestedAccessCode = input.requestedAccessCode;
@@ -203,7 +213,7 @@ class RequestAccessRouteController extends RouteController {
      * @param User approver
      * @return Promise<RequestAccess>
      */
-    async handleStatusUpdate(status: number, requestAccess: RequestAccess, approver: User): Promise<[RequestAccess, boolean]> {
+    async handleStatusUpdate(status: number, requestAccess: RequestAccess, approver: User): Promise<RequestAccess> {
         requestAccess.status = status;
         requestAccess.approver = approver;
 
@@ -211,18 +221,15 @@ class RequestAccessRouteController extends RouteController {
         const requester: User = requestAccess.requester;
         // Create Message
         const message: UserMessage = UserMessageController.shared.create();
-        let delObj = false;
         if (status === RequestStatus.approved) {
             this.logger.info(`Access request ${requestAccess.request_id} is approved by ${requestAccess.approver.email}`);
             message.title = 'Request Access approved';
             // Update requester
             requester.roles = [requestAccess.requestedAccessCode];
             await this.userController.saveInDB(requester);
-            delObj = true;
         } else if (status === RequestStatus.rejected) {
             this.logger.info(`Access request ${requestAccess.request_id} is rejected by ${requestAccess.approver.email}`);
             message.title = 'Request Access rejected';
-            delObj = true;
         } else {
             this.logger.info(`Unhandled status update: ${JSON.stringify(requestAccess)}`);
         }
@@ -234,7 +241,7 @@ class RequestAccessRouteController extends RouteController {
 
         // Save Message
         await UserMessageController.shared.saveInDB(message);
-        return [requestAccess, delObj];
+        return requestAccess;
     }
 
 

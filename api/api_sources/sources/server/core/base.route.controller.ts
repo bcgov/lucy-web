@@ -264,9 +264,9 @@ export class RouteController {
         // Get Data From handler
         try {
             const data: any = req.body;
-            const [status, body]  = applyDataHandle ? await handler(data, req, res) : await handler(req, data, res);
+            const [status, body, error]  = applyDataHandle ? await handler(data, req, res) : await handler(req, data, res);
             if (status > 0) {
-                return res.status(status).json(this.successResp(body));
+                return res.status(status).json(error ? this.getErrorJSON(body, []) : this.successResp(body));
             } else {
                 this.logger.error(`handleRouteMethod: ${infoTag}: [FAIL]`);
                 return this.commonError(500, `handleRouteMethod:${infoTag}`, new Error(`${infoTag} : Unable to process req`), res);
