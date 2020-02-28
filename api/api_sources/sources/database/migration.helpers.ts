@@ -213,6 +213,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             return;
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`revert | Exception received while running revert migrations: ${excp}`);
+            throw excp;
         }
     }
 
