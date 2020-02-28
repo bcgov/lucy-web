@@ -24,7 +24,6 @@ export interface WatercraftJourneySpec {
 	journeyType: number;
 	numberOfDaysOut: number;
 	otherWaterBody: string;
-	dryStorage: boolean;
 	watercraftAssessment: WatercraftRiskAssessment;
 	waterBody: WaterBody;
 }
@@ -39,7 +38,6 @@ export interface WatercraftJourneyUpdateSpec {
 	journeyType?: number;
 	numberOfDaysOut?: number;
 	otherWaterBody?: string;
-	dryStorage?: boolean;
 	watercraftAssessment?: WatercraftRiskAssessment;
 	waterBody?: WaterBody;
 }
@@ -87,13 +85,6 @@ export class WatercraftJourney extends Record implements WatercraftJourneySpec {
 	@Column({ name: WatercraftJourneySchema.columns.otherWaterBody})
 	@ModelProperty({type: PropertyType.string})
 	otherWaterBody: string;
-
-	/**
-	 * @description Getter/Setter property for column {dry_storage_ind}
-	 */
-	@Column({ name: WatercraftJourneySchema.columns.dryStorage})
-	@ModelProperty({type: PropertyType.boolean})
-	dryStorage: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {watercraft_risk_assessment_id}
