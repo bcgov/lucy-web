@@ -213,3 +213,12 @@
     align-items: center;
     justify-content: center;
 }
+
+mat-chip-list {
+    padding-right: 4px;
+    padding-bottom: 4px;
+}
+
+mat-chip {
+    cursor: pointer;
+}
