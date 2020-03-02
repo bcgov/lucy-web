@@ -54,7 +54,7 @@ export class UserDataController extends DataModelController<User> {
     }
 
     /**
-     * @description The latest request made by the user or undefined 
+     * @description The latest request made by the user or undefined
      * @param user user
      * @returns Promise<RequestAccess | undefined>
      */
@@ -77,7 +77,9 @@ export class UserDataController extends DataModelController<User> {
      * @returns boolean
      */
     public getPendingRequestForRole(allRequest: RequestAccess[], roleCodeId: number): boolean {
-        if (!allRequest || allRequest.length === 0) return false;
+        if (!allRequest || allRequest.length === 0) {
+            return false;
+        }
 
         return (allRequest.filter(request => request.requestedAccessCode.role_code_id === roleCodeId).length > 0);
     }
@@ -88,7 +90,9 @@ export class UserDataController extends DataModelController<User> {
      * @returns pending status for different roles
      */
     public async getPendingStatus(allRequest: RequestAccess[]): Promise<any> {
-        if (!allRequest || allRequest.length === 0) return {};
+        if (!allRequest || allRequest.length === 0) {
+            return {};
+        }
 
         return {
             pendingAdminRequests: this.getPendingRequestForRole(allRequest, 1),
@@ -97,7 +101,7 @@ export class UserDataController extends DataModelController<User> {
             pendingSuperUserRequests: this.getPendingRequestForRole(allRequest, 4),
             pendingOfficerRequests: this.getPendingRequestForRole(allRequest, 5),
             pendingAdminInspectRequests: this.getPendingRequestForRole(allRequest, 6),
-        }
+        };
     }
 }
 

@@ -121,6 +121,7 @@ class RequestAccessRouteController extends RouteController {
         } else {
             const allPendingRequests: RequestAccess[] = await this.dataController.all({
                 status: 0,
+                requester_user_id: req.user,
             });
             const latestRequest = await UserDataController.shared.latestAccessRequest(user);
             const pendingStatus = await UserDataController.shared.getPendingStatus(allPendingRequests);
@@ -162,7 +163,7 @@ class RequestAccessRouteController extends RouteController {
         if (req.body.status && req.body.status !== accessRequest.status) {
             accessRequest = await this.handleStatusUpdate(req.body.status, accessRequest, req.user);
         }
-        
+
         await this.dataController.saveInDB(accessRequest);
 
         return [200, accessRequest];
@@ -180,14 +181,24 @@ class RequestAccessRouteController extends RouteController {
     })
     public async create(req: any) {
         const input = req.body as CreateRequestAccess;
-        
+        const requestedRole = input.requestedAccessCode;
+        const currentRoles: RolesCode[] = req.user.roles;
+
+        const isExistingRole = currentRoles.find(role => role.role_code_id === requestedRole.role_code_id);
+
+        if (isExistingRole) {
+            return [400, `You already have ${requestedRole.role} access`, true];
+        }
+
         const hasPendingAccessRequest = await this.dataController.fetchOne({
-            requester_user_id: req.user,
-            requested_role_code_id: input.requestedAccessCode,
+            requester: req.user,
+            requestedAccessCode: requestedRole,
             status: 0
         });
 
-        if (hasPendingAccessRequest) return [400, 'A valid pending request exists already', true];
+        if (hasPendingAccessRequest) {
+            return [400, 'A valid pending request exists already', true];
+        }
 
         const requestAccess: RequestAccess = this.dataController.create();
         requestAccess.requestNote = input.requestNote;
