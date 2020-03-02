@@ -96,6 +96,14 @@ schemas:
         name: high_risk_ais_ind
         comment: 'Indicator flag to check high risk AIS or not'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousDryStorage:
+        name: previous_dry_storage_ind
+        comment: Boolean indicator that watercraft''s previous waterbody is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      destinationDryStorage:
+        name: destination_dry_storage_ind
+        comment: Boolean indicator that watercraft''s destination waterbody is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:
         name: 'non_motorized_counter'
