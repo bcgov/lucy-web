@@ -63,6 +63,8 @@ export interface WatercraftRiskAssessmentSpec {
 	commerciallyHauled: boolean;
 	highRiskArea: boolean;
 	highRiskAIS: boolean;
+	previousDryStorage: boolean;
+	destinationDryStorage: boolean;
 	nonMotorized: number;
 	simple: number;
 	complex: number;
@@ -98,6 +100,8 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	commerciallyHauled?: boolean;
 	highRiskArea?: boolean;
 	highRiskAIS?: boolean;
+	previousDryStorage?: boolean;
+	destinationDryStorage?: boolean;
 	nonMotorized?: number;
 	simple?: number;
 	complex?: number;
@@ -232,6 +236,20 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.highRiskAIS})
 	@ModelProperty({type: PropertyType.boolean})
 	highRiskAIS: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {previous_dry_storage_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousDryStorage})
+	@ModelProperty({type: PropertyType.boolean})
+	previousDryStorage: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {destination_dry_storage_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationDryStorage})
+	@ModelProperty({type: PropertyType.boolean})
+	destinationDryStorage: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {non_motorized_counter}
