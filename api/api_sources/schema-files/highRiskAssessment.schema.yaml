@@ -65,14 +65,6 @@ schemas:
         comment: 'Seal number'
         definition: INT NULL
       # Strings
-      standingWaterLocation:
-        name: standing_water_location
-        comment: 'Description for standing water location on boat'
-        definition: VARCHAR(100) NULL
-      adultDreissenidaeMusselDetail:
-        name: adult_dreissenidae_mussel_details
-        comment: 'Details of adult dreissenidae mussel found on the boat'
-        definition: VARCHAR(100) NULL
       otherInspectionFindings:
         name: other_inspection_findings
         comment: 'Additional details about high risk assessment'
@@ -81,5 +73,22 @@ schemas:
         name: general_comments
         comment: 'General Comments regarding high risk assessment'
         definition: VARCHAR(300) NULL 
+      # Relationships
+      standingWaterLocation:
+        name: standing_water_location_code_id
+        comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations of standing water
+        definition: INT NULL
+        foreignTable: adult_mussels_location_code
+        refColumn: adult_mussels_location_code_id
+        deleteCascade: false
+        meta: {}
+      adultDreissenidaeMusselDetail:
+        name: adult_mussels_location_code_id
+        comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations where adult mussels were found on the watercraft 
+        definition: INT NULL
+        foreignTable: adult_mussels_location_code
+        refColumn: adult_mussels_location_code_id
+        deleteCascade: false
+        meta: {}
     versions: []
     fields: {}
