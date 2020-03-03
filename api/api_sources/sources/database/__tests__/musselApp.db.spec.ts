@@ -53,19 +53,19 @@ describe('Mussel app db element tests', () => {
     it('should fetch adult mussel location', async () => {
         const adultMusselLocation: AdultMusselsLocation = await AdultMusselsLocationController.shared.random();
         should().exist(adultMusselLocation);
-        should().exist(adultMusselLocation.adult_mussels_location_id);
+        should().exist(adultMusselLocation.adult_mussels_location_code_id);
     });
 
     it('should fetch previous AIS knowledge source', async () => {
         const prevAISKnowledgeSource: PreviousAISKnowledgeSource = await PreviousAISKnowledgeSourceController.shared.random();
         should().exist(prevAISKnowledgeSource);
-        should().exist(prevAISKnowledgeSource.previous_ais_knowledge_source_id);
+        should().exist(prevAISKnowledgeSource.previous_ais_knowledge_source_code_id);
     });
 
     it('should fetch previous inspection source', async () => {
         const prevInspectionSource: PreviousInspectionSource = await PreviousInspectionSourceController.shared.random();
         should().exist(prevInspectionSource);
-        should().exist(prevInspectionSource.previous_inspection_source_id);
+        should().exist(prevInspectionSource.previous_inspection_source_code_id);
     });
 
     it('should create and fetch workflow', async() => {
