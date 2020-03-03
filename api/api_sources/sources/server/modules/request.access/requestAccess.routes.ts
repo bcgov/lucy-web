@@ -121,7 +121,7 @@ class RequestAccessRouteController extends RouteController {
         } else {
             const allPendingRequests: RequestAccess[] = await this.dataController.all({
                 status: 0,
-                requester_user_id: req.user,
+                requester: req.user,
             });
             const latestRequest = await UserDataController.shared.latestAccessRequest(user);
             const pendingStatus = await UserDataController.shared.getPendingStatus(allPendingRequests);
@@ -173,7 +173,7 @@ class RequestAccessRouteController extends RouteController {
         path: '/',
         middleware: () => [
             ValidatorExists({
-                requestedAccessCode: RoleCodeController.shared,
+                requestedAccessCode: RoleCodeController.shared
             }),
             check('requestNote').isString(),
             sanitize('requestNote')
@@ -187,7 +187,7 @@ class RequestAccessRouteController extends RouteController {
         const isExistingRole = currentRoles.find(role => role.role_code_id === requestedRole.role_code_id);
 
         if (isExistingRole) {
-            return [400, `You already have ${requestedRole.role} access`, true];
+            return [200, `You already have ${requestedRole.role} access`];
         }
 
         const hasPendingAccessRequest = await this.dataController.fetchOne({
@@ -197,7 +197,7 @@ class RequestAccessRouteController extends RouteController {
         });
 
         if (hasPendingAccessRequest) {
-            return [400, 'A valid pending request exists already', true];
+            return [200, 'A valid pending request exists already'];
         }
 
         const requestAccess: RequestAccess = this.dataController.create();

@@ -89,7 +89,7 @@ export class UserDataController extends DataModelController<User> {
      * @param allRequest all pending requests
      * @returns pending status for different roles
      */
-    public async getPendingStatus(allRequest: RequestAccess[]): Promise<any> {
+    public getPendingStatus(allRequest: RequestAccess[]) {
         if (!allRequest || allRequest.length === 0) {
             return {};
         }
