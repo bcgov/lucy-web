@@ -102,7 +102,7 @@ describe('Test Request Access Route', () => {
         .post('/api/request-access')
         .set('Authorization', `Bearer ${viewerToken()}`)
         .send(reqBody)
-        .expect(200)
+        .expect(208)
         .then(async (resp) => {
             const allRequests = await RequestAccessController.shared.all();
             await verifySuccessBody(resp.body);
@@ -231,7 +231,7 @@ describe('Test Request Access Route', () => {
         .post('/api/request-access')
         .set('Authorization', `Bearer ${viewerToken()}`)
         .send(reqBody)
-        .expect(200)
+        .expect(208)
         .then(async (resp) => {
             const allRequests = await RequestAccessController.shared.all();
             await verifySuccessBody(resp.body);

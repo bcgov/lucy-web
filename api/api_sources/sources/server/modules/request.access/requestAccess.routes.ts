@@ -187,7 +187,7 @@ class RequestAccessRouteController extends RouteController {
         const isExistingRole = currentRoles.find(role => role.role_code_id === requestedRole.role_code_id);
 
         if (isExistingRole) {
-            return [200, `You already have ${requestedRole.role} access`];
+            return [208, { ...input, message: `You already have ${requestedRole.role} access` }];
         }
 
         const hasPendingAccessRequest = await this.dataController.fetchOne({
@@ -197,7 +197,7 @@ class RequestAccessRouteController extends RouteController {
         });
 
         if (hasPendingAccessRequest) {
-            return [200, 'A valid pending request exists already'];
+            return [208, { ...input, message: 'A valid pending request exists already' }];
         }
 
         const requestAccess: RequestAccess = this.dataController.create();
