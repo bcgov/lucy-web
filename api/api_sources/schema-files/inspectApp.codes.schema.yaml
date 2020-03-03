@@ -4,7 +4,7 @@ externalTables: []
 includes: []
 schemas:
   PreviousAISKnowledgeSourceSchema:
-    name: previous_ais_knowledge_source
+    name: previous_ais_knowledge_source_code
     description: 'Code table with options for sources of previous Aquatic Invasive Species (AIS) knowledge'
     baseSchema: CodeTableSchema
     meta:
@@ -16,7 +16,7 @@ schemas:
     relations: {}
     columns:
       id:
-        name: previous_ais_knowledge_source_id
+        name: previous_ais_knowledge_source_code_id
         comment: Auto generated sequential primary key column.
         definition: SERIAL PRIMARY KEY
       description:
@@ -31,7 +31,7 @@ schemas:
     fields: {}
   ## -- end PreviousAISKnowledgeSourceSchema
   PreviousInspectionSourceSchema:
-    name: previous_inspection_source
+    name: previous_inspection_source_code
     description: 'Code table with options for sources of previous invasive mussel inspections'
     baseSchema: CodeTableSchema
     meta:
@@ -43,7 +43,7 @@ schemas:
     relations: {}
     columns:
       id:
-        name: previous_inspection_source_id
+        name: previous_inspection_source_code_id
         comment: Auto generated sequential primary key column.
         definition: SERIAL PRIMARY KEY 
       description:
@@ -58,7 +58,7 @@ schemas:
     fields: {}
   ## -- end PreviousInspectionSourceSchema
   AdultMusselsLocationSchema:
-    name: adult_mussels_location
+    name: adult_mussels_location_code
     description: 'Code table with options for locations on watercraft where adult mussels were found during inspection'
     baseSchema: CodeTableSchema
     meta: 
@@ -70,7 +70,7 @@ schemas:
     relations: {}
     columns:
       id:
-        name: adult_mussels_location_id
+        name: adult_mussels_location_code_id
         comment: Auto generated sequential primary key column.
         definition: SERIAL PRIMARY KEY 
       description:

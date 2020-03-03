@@ -30,13 +30,13 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
 
         // Creating table
         this.addSchemaInitVersion(this.observerWorkflowSchema);
-        this.addSchemaInitVersion(this.highRiskAssessmentSchema);
         this.addSchemaInitVersion(this.adultMusselsLocationSchema);
         this.addDataImportMigration(this.adultMusselsLocationSchema, 'init');
         this.addSchemaInitVersion(this.previousAISKnowledgeSourceSchema);
         this.addDataImportMigration(this.previousAISKnowledgeSourceSchema, 'init');
         this.addSchemaInitVersion(this.previousInspectionSourceSchema);
         this.addDataImportMigration(this.previousInspectionSourceSchema, 'init');
+        this.addSchemaInitVersion(this.highRiskAssessmentSchema);
         this.addSchemaInitVersion(this.waterCraftRiskAssessmentSchema);
         // Alter table with version
         this.addSchemaVersion(this.waterCraftRiskAssessmentSchema, 'workflow');
