@@ -102,9 +102,11 @@ describe('Test Request Access Route', () => {
         .post('/api/request-access')
         .set('Authorization', `Bearer ${viewerToken()}`)
         .send(reqBody)
-        .expect(400)
+        .expect(200)
         .then(async (resp) => {
-            await verifyErrorBody(resp.body);
+            const allRequests = await RequestAccessController.shared.all();
+            await verifySuccessBody(resp.body);
+            expect(allRequests.length).to.be.equal(1);
         });
     });
 
@@ -229,9 +231,11 @@ describe('Test Request Access Route', () => {
         .post('/api/request-access')
         .set('Authorization', `Bearer ${viewerToken()}`)
         .send(reqBody)
-        .expect(400)
+        .expect(200)
         .then(async (resp) => {
-            await verifyErrorBody(resp.body);
+            const allRequests = await RequestAccessController.shared.all();
+            await verifySuccessBody(resp.body);
+            expect(allRequests.length).to.be.equal(0);
         });
     });
 
@@ -287,31 +291,31 @@ describe('Test Request Access Route', () => {
         });
     });
 
-    // Test10: Update request by admin only
-    it('should update request by {admin}', async () => {
+    // Test10: Should Update Officer request {Inspect app editor} by Inspect App Admin
+    it('should update request {Inspect App User} by {Inspect App Admin}', async () => {
         const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
         should().exist(user);
         const reqAccess: RequestAccess = await requestAccessFactory(user);
+        reqAccess.requestedAccessCode = await RoleCodeController.shared.getCode(RolesCodeValue.inspectAppOfficer);
+        await RequestAccessController.shared.saveInDB(reqAccess);
         should().exist(reqAccess);
         const body: any = {
-            requestedAccessCode: 2,
+            requestedAccessCode: reqAccess.requestedAccessCode.role_code_id,
             status: 1,
             approverNote: 'Your access level upgraded'
         };
 
         await request(SharedExpressApp.app)
         .put(`/api/request-access/${reqAccess.request_id}`)
-        .set('Authorization', `Bearer ${adminToken()}`)
+        .set('Authorization', `Bearer ${inspectAppAdminToken()}`)
         .send(body)
         .expect(200)
         .then(async (resp) => {
             await verifySuccessBody(resp.body);
-            const requestAccessInDB = await RequestAccessController.shared.fetchOne({ request_id: reqAccess.request_id });
-            should().exist(requestAccessInDB);
-            expect(requestAccessInDB.status).to.be.equal(1);
+            const received = resp.body.data;
+            expect(received.status).to.be.equal(body.status);
             await RequestAccessController.shared.remove(reqAccess);
         });
-
     });
 
     // Test11: Should not Update request by viewer
@@ -392,32 +396,30 @@ describe('Test Request Access Route', () => {
 
     });
 
-    // Test14: Should Update Officer request {Inspect app editor} by Inspect App Admin
-    it('should update request {Inspect App User} by {Inspect App Admin}', async () => {
+    // Test14: Update request by admin only
+    it('should update request by {admin}', async () => {
         const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
         should().exist(user);
         const reqAccess: RequestAccess = await requestAccessFactory(user);
-        reqAccess.requestedAccessCode = await RoleCodeController.shared.getCode(RolesCodeValue.inspectAppOfficer);
-        await RequestAccessController.shared.saveInDB(reqAccess);
         should().exist(reqAccess);
         const body: any = {
-            requestedAccessCode: reqAccess.requestedAccessCode.role_code_id,
+            requestedAccessCode: 2,
             status: 1,
             approverNote: 'Your access level upgraded'
         };
 
         await request(SharedExpressApp.app)
         .put(`/api/request-access/${reqAccess.request_id}`)
-        .set('Authorization', `Bearer ${inspectAppAdminToken()}`)
+        .set('Authorization', `Bearer ${adminToken()}`)
         .send(body)
         .expect(200)
         .then(async (resp) => {
             await verifySuccessBody(resp.body);
-            const received = resp.body.data;
-            expect(received.status).to.be.equal(body.status);
+            const requestAccessInDB = await RequestAccessController.shared.fetchOne({ request_id: reqAccess.request_id });
+            should().exist(requestAccessInDB);
+            expect(requestAccessInDB.status).to.be.equal(1);
             await RequestAccessController.shared.remove(reqAccess);
         });
-
     });
 
 });
