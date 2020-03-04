@@ -1,7 +1,8 @@
 version: '1.0'
 description: Schema file for table high_risk_assessment
 externalTables: []
-includes: []
+includes: 
+  - inspectApp.codes.schema.yaml
 schemas:
   HighRiskAssessmentSchema:
     name: high_risk_assessment
