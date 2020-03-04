@@ -56,10 +56,10 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         await this.runQuerySqlFiles(this.downMigrations(), queryRunner);
         await queryRunner.query(this.waterCraftRiskAssessmentSchema.dropTable());
         await queryRunner.query(this.highRiskAssessmentSchema.dropTable());
-        await queryRunner.query(this.observerWorkflowSchema.dropTable());
         await queryRunner.query(this.adultMusselsLocationSchema.dropTable());
         await queryRunner.query(this.previousInspectionSourceSchema.dropTable());
         await queryRunner.query(this.previousAISKnowledgeSourceSchema.dropTable());
+        await queryRunner.query(this.observerWorkflowSchema.dropTable());
     }
 
 }
