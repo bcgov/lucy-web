@@ -45,6 +45,7 @@ export interface BaseDataController {
     meta: ControllerMetaData;
     idKey: string;
     findById(id: number): Promise<any>;
+    fetchOne(query: object): Promise<any>;
     remove(object: any): Promise<void>;
     removeById( id: number): Promise<void>;
     all(filter?: any): Promise<any>;
