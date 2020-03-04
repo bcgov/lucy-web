@@ -85,7 +85,7 @@ schemas:
         # End-Section
         - title: 
             key: '' 
-            default: Advanced Data Element
+            default: Advanced Data Elements
           groups:
             - title: 
                 key: 'indicators' 
