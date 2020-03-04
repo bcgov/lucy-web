@@ -149,29 +149,23 @@ schemas:
         required: false
         meta: 
           embedded: true
-      adultMusselsLocation:
-        name: adult_mussels_location_id
-        comment: Foreign key reference to adult_mussels_location table 
-        definition: INT NULL
-        foreignTable: adult_mussels_location
-        refColumn: adult_mussels_location_id
-        deleteCascade: false
-        meta: {}
       previousAISKnowledgeSource:
-        name: previous_ais_knowledge_source_id
-        comment: Foreign key reference to previous_ais_knowledge_source table
+        name: previous_ais_knowledge_source_code_id
+        comment: Foreign key reference to previous_ais_knowledge_source_code table
         definition: INT NULL
-        foreignTable: previous_ais_knowledge_source
-        refColumn: previous_ais_knowledge_source_id
+        foreignTable: previous_ais_knowledge_source_code
+        refColumn: previous_ais_knowledge_source_code_id
         deleteCascade: false
+        required: false
         meta: {}
       previousInspectionSource:
-        name: previous_inspection_source_id
-        comment: Foreign key reference to previous_inspection_source table
+        name: previous_inspection_source_code_id
+        comment: Foreign key reference to previous_inspection_source_code table
         definition: INT NULL
-        foreignTable: previous_inspection_source
-        refColumn: previous_inspection_source_id
+        foreignTable: previous_inspection_source_code
+        refColumn: previous_inspection_source_code_id
         deleteCascade: false
+        required: false
         meta: {}
     ## -- end columns
     versions:

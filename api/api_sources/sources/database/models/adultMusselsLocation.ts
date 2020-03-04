@@ -44,7 +44,7 @@ export class AdultMusselsLocation extends Record implements AdultMusselsLocation
 	 */
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
-	adult_mussels_location_id: number;
+	adult_mussels_location_code_id: number;
 
 	/**
 	 * @description Getter/Setter property for column {description}

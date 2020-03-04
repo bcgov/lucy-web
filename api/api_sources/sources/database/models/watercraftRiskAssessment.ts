@@ -28,7 +28,6 @@ import { WatercraftRiskAssessmentSchema } from '../database-schema';
 import {
 	HighRiskAssessmentSchema,
 	ObserverWorkflowSchema,
-	AdultMusselsLocationSchema,
 	PreviousAISKnowledgeSourceSchema,
 	PreviousInspectionSourceSchema,
 } from '../database-schema';
@@ -38,7 +37,6 @@ import { IntTransformer, DateTimeTransformer } from '../../libs/transformer';
 import {
 	HighRiskAssessment,
 	ObserverWorkflow,
-	AdultMusselsLocation,
 	PreviousAISKnowledgeSource,
 	PreviousInspectionSource,
 } from '../models';
@@ -77,7 +75,6 @@ export interface WatercraftRiskAssessmentSpec {
 	passportNumber: string;
 	highRiskAssessment: HighRiskAssessment;
 	workflow: ObserverWorkflow;
-	adultMusselsLocation: AdultMusselsLocation;
 	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
 	previousInspectionSource: PreviousInspectionSource;
 }
@@ -115,7 +112,6 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	passportNumber?: string;
 	highRiskAssessment?: HighRiskAssessment;
 	workflow?: ObserverWorkflow;
-	adultMusselsLocation?: AdultMusselsLocation;
 	previousAISKnowledgeSource?: PreviousAISKnowledgeSource;
 	previousInspectionSource?: PreviousInspectionSource;
 }
@@ -151,7 +147,7 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	timestamp: string;
 
 	/**
-	 * @description Getter/Setter property for column {pass_port_holder_ind}
+	 * @description Getter/Setter property for column {passport_holder_ind}
 	 */
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportHolder})
 	@ModelProperty({type: PropertyType.boolean})
@@ -320,15 +316,7 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	highRiskAssessment: HighRiskAssessment;
 
 	/**
-	 * @description Getter/Setter property for column {adult_mussels_location_id}
-	 */
-	@ManyToOne( type => AdultMusselsLocation, { eager: true})
-	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.adultMusselsLocation, referencedColumnName: AdultMusselsLocationSchema.pk})
-	@ModelProperty({type: PropertyType.object})
-	adultMusselsLocation: AdultMusselsLocation;
-
-	/**
-	 * @description Getter/Setter property for column {previous_ais_knowledge_source_id}
+	 * @description Getter/Setter property for column {previous_ais_knowledge_source_code_id}
 	 */
 	@ManyToOne( type => PreviousAISKnowledgeSource, { eager: true})
 	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource, referencedColumnName: PreviousAISKnowledgeSourceSchema.pk})
@@ -336,7 +324,7 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
 
 	/**
-	 * @description Getter/Setter property for column {previous_inspection_source_id}
+	 * @description Getter/Setter property for column {previous_inspection_source_code_id}
 	 */
 	@ManyToOne( type => PreviousInspectionSource, { eager: true})
 	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource, referencedColumnName: PreviousInspectionSourceSchema.pk})
