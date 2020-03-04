@@ -113,8 +113,9 @@ export class UserTableComponent implements OnInit, OnChanges {
       const { firstName, lastName, email, preferredUsername, user_id } = user;
 
       const username = preferredUsername;
-      const name = firstName + ' ' + lastName; 
-      const role = this.userService.getUserAccessCode(user).role;
+      const name = firstName + ' ' + lastName;
+      const roleData = this.userService.getUserAccessCode(user);
+      const role = roleData ? roleData.role : '';
 
       userTable.push({
         username,

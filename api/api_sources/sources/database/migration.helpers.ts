@@ -202,8 +202,17 @@ export class AppDatabaseMigrationManager extends LoggerBase {
      * @return Promise<void>
      */
     public async revert(connection: Connection) {
+
+        // Get current migrations count
+        let result: any[] = [ { count: 0 }];
         try {
-            const result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.schema}.${dbConfig.migrationsTableName}`);
+            result = await connection.query(`SELECT COUNT(*) FROM ${dbConfig.schema}.${dbConfig.migrationsTableName}`);
+        } catch (exp) {
+            AppDatabaseMigrationManager.logger.info (`Exception: ${exp}`);
+            AppDatabaseMigrationManager.logger.info('Possible No table exception');
+        }
+
+        try {
             AppDatabaseMigrationManager.logger.info(`revert | Migration count: ${JSON.stringify(result, null, 2)}`);
             if (result[0].count > 0) {
                 await this._revert(connection, parseInt(result[0].count, 10));
@@ -213,6 +222,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
             return;
         } catch (excp) {
             AppDatabaseMigrationManager.logger.error(`revert | Exception received while running revert migrations: ${excp}`);
+            throw excp;
         }
     }
 
