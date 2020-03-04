@@ -28,9 +28,8 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN province VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN general_comment VARCHAR(300) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN passport_number VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_assessment_id INT NULL REFERENCES high_risk_assessment(high_risk_assessment_id) ON DELETE SET NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN adult_mussels_location_id INT NULL REFERENCES adult_mussels_location(adult_mussels_location_id) ON DELETE SET NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_ais_knowledge_source_id INT NULL REFERENCES previous_ais_knowledge_source(previous_ais_knowledge_source_id) ON DELETE SET NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_source_id INT NULL REFERENCES previous_inspection_source(previous_inspection_source_id) ON DELETE SET NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_ais_knowledge_source_code_id INT NULL REFERENCES previous_ais_knowledge_source_code(previous_ais_knowledge_source_code_id) ON DELETE SET NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_source_code_id INT NULL REFERENCES previous_inspection_source_code(previous_inspection_source_code_id) ON DELETE SET NULL;
 
 
         
@@ -64,9 +63,8 @@ COMMENT ON COLUMN watercraft_risk_assessment.province IS 'Province of residence 
 COMMENT ON COLUMN watercraft_risk_assessment.general_comment IS 'Province of residence of the boat';
 COMMENT ON COLUMN watercraft_risk_assessment.passport_number IS 'Passport number associated with previous inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.high_risk_assessment_id IS 'Foreign key reference to High risk assessment of the inspection';
-COMMENT ON COLUMN watercraft_risk_assessment.adult_mussels_location_id IS 'Foreign key reference to adult_mussels_location table';
-COMMENT ON COLUMN watercraft_risk_assessment.previous_ais_knowledge_source_id IS 'Foreign key reference to previous_ais_knowledge_source table';
-COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_source_id IS 'Foreign key reference to previous_inspection_source table';
+COMMENT ON COLUMN watercraft_risk_assessment.previous_ais_knowledge_source_code_id IS 'Foreign key reference to previous_ais_knowledge_source_code table';
+COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_source_code_id IS 'Foreign key reference to previous_inspection_source_code table';
 
 
         
