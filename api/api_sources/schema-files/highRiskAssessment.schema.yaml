@@ -1,10 +1,8 @@
 version: '1.0'
 description: Schema file for table high_risk_assessment
-externalTables:
-  - name: adult_mussels_location_code
-    schema: AdultMusselsLocationSchema
-    description: Code table of possible locations on watercraft where adult mussels or standing water may be found
-includes: []
+externalTables: []
+includes: 
+  - inspectApp.codes.schema.yaml
 schemas:
   HighRiskAssessmentSchema:
     name: high_risk_assessment
