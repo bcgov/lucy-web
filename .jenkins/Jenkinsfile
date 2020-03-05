@@ -33,6 +33,19 @@ pipeline {
                 sh "cd .jenkins/.pipeline && ./npmw ci && DEBUG=info* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
             }
         }
+        stage('ZAP Security Scan') {
+            node('owasp-zap') {
+                //the checkout is mandatory
+                echo "checking out source"
+                echo "Build: ${BUILD_ID}"
+                checkout scm
+                dir('zap') {
+                    def retVal = sh returnStatus: true, script: '/zap/zap-baseline.py -r index.html -t <your url>'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '/zap/wrk', reportFiles: 'index.html', reportName: 'ZAP Full Scan', reportTitles: 'ZAP Full Scan'])
+                    echo "Return value is: ${retVal}"
+                    }
+            }
+        }
         stage('Deploy (PROD)') {
             agent { label 'deploy' }
             input {
