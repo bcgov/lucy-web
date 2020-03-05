@@ -10,7 +10,7 @@ ALTER TABLE high_risk_assessment ADD COLUMN adult_dreissenidae_mussel_found_ind 
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_performed_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_order_issued_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE high_risk_assessment ADD COLUMN seal_issued_ind BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE high_risk_assessment ADD COLUMN watercraft_registration INT NULL;
+ALTER TABLE high_risk_assessment ADD COLUMN watercraft_registration VARCHAR(30) NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_reference INT NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_order_number INT NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN seal_number INT NULL;

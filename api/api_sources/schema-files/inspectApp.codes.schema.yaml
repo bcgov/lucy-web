@@ -59,7 +59,7 @@ schemas:
   ## -- end PreviousInspectionSourceSchema
   AdultMusselsLocationSchema:
     name: adult_mussels_location_code
-    description: 'Code table with options for locations on watercraft where adult mussels were found during inspection'
+    description: 'Code table with options for locations on a watercraft where, upon inspection, mussels were found and/or standing water is present'
     baseSchema: CodeTableSchema
     meta: 
       baseModel: Record
