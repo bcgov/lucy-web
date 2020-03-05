@@ -52,7 +52,7 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-        this.log('[RUN]', 'DOWN');
+        this.log('[START]', 'DOWN');
         await this.runQuerySqlFiles(this.downMigrations(), queryRunner);
         await queryRunner.query(this.waterCraftRiskAssessmentSchema.dropTable());
         await queryRunner.query(this.highRiskAssessmentSchema.dropTable());
@@ -60,6 +60,10 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         await queryRunner.query(this.previousInspectionSourceSchema.dropTable());
         await queryRunner.query(this.previousAISKnowledgeSourceSchema.dropTable());
         await queryRunner.query(this.observerWorkflowSchema.dropTable());
+        await queryRunner.query('DROP TABLE IF EXISTS adult_mussels_location');
+        await queryRunner.query('DROP TABLE IF EXISTS previous_ais_knowledge_source');
+        await queryRunner.query('DROP TABLE IF EXISTS previous_inspection_source');
+        this.log('[END]', 'DOWN');
     }
 
 }
