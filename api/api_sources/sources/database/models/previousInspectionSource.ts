@@ -41,11 +41,11 @@ export class PreviousInspectionSource extends Record implements PreviousInspecti
 	 */
 
 	/**
-	 * @description Getter/Setter property for column {previous_inspection_source_id}
+	 * @description Getter/Setter property for column {previous_inspection_source_code_id}
 	 */
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
-	previous_inspection_source_id: number;
+	previous_inspection_source_code_id: number;
 
 	/**
 	 * @description Getter/Setter property for column {description}

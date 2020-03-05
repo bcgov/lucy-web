@@ -41,11 +41,11 @@ export class PreviousAISKnowledgeSource extends Record implements PreviousAISKno
 	 */
 
 	/**
-	 * @description Getter/Setter property for column {previous_ais_knowledge_source_id}
+	 * @description Getter/Setter property for column {previous_ais_knowledge_source_code_id}
 	 */
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
-	previous_ais_knowledge_source_id: number;
+	previous_ais_knowledge_source_code_id: number;
 
 	/**
 	 * @description Getter/Setter property for column {description}
