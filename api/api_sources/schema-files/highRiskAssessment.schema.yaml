@@ -52,7 +52,7 @@ schemas:
       watercraftRegistration:
         name: watercraft_registration
         comment: 'Watercraft Registration number'
-        definition: INT NULL
+        definition: VARCHAR(30) NULL
       decontaminationReference:
         name: decontamination_reference
         comment: 'Decontamination reference number'

@@ -10,7 +10,7 @@ ALTER TABLE adult_mussels_location_code ADD COLUMN description VARCHAR(50) NOT N
 -- ### Creating Comments on table ### --
 
         
-COMMENT ON TABLE adult_mussels_location_code IS 'Code table with options for locations on watercraft where adult mussels were found during inspection';
+COMMENT ON TABLE adult_mussels_location_code IS 'Code table with options for locations on a watercraft where, upon inspection, mussels were found and/or standing water is present';
 COMMENT ON COLUMN adult_mussels_location_code.adult_mussels_location_code_id IS 'Auto generated sequential primary key column.';
 COMMENT ON COLUMN adult_mussels_location_code.description IS 'Brief description of the location on the watercraft where adult mussels were found';
 
