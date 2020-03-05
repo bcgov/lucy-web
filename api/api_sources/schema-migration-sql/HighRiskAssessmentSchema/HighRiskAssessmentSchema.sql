@@ -10,14 +10,14 @@ ALTER TABLE high_risk_assessment ADD COLUMN adult_dreissenidae_mussel_found_ind 
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_performed_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_order_issued_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE high_risk_assessment ADD COLUMN seal_issued_ind BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE high_risk_assessment ADD COLUMN watercraft_registration INT NULL;
+ALTER TABLE high_risk_assessment ADD COLUMN watercraft_registration VARCHAR(30) NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_reference INT NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN decontamination_order_number INT NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN seal_number INT NULL;
-ALTER TABLE high_risk_assessment ADD COLUMN standing_water_location VARCHAR(100) NULL;
-ALTER TABLE high_risk_assessment ADD COLUMN adult_dreissenidae_mussel_details VARCHAR(100) NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN other_inspection_findings VARCHAR(100) NULL;
 ALTER TABLE high_risk_assessment ADD COLUMN general_comments VARCHAR(300) NULL;
+ALTER TABLE high_risk_assessment ADD COLUMN standing_water_location_code_id INT NULL REFERENCES adult_mussels_location_code(adult_mussels_location_code_id) ON DELETE SET NULL;
+ALTER TABLE high_risk_assessment ADD COLUMN adult_mussels_location_code_id INT NULL REFERENCES adult_mussels_location_code(adult_mussels_location_code_id) ON DELETE SET NULL;
 
 
         
@@ -37,10 +37,10 @@ COMMENT ON COLUMN high_risk_assessment.watercraft_registration IS 'Watercraft Re
 COMMENT ON COLUMN high_risk_assessment.decontamination_reference IS 'Decontamination reference number';
 COMMENT ON COLUMN high_risk_assessment.decontamination_order_number IS 'Decontamination order number';
 COMMENT ON COLUMN high_risk_assessment.seal_number IS 'Seal number';
-COMMENT ON COLUMN high_risk_assessment.standing_water_location IS 'Description for standing water location on boat';
-COMMENT ON COLUMN high_risk_assessment.adult_dreissenidae_mussel_details IS 'Details of adult dreissenidae mussel found on the boat';
 COMMENT ON COLUMN high_risk_assessment.other_inspection_findings IS 'Additional details about high risk assessment';
 COMMENT ON COLUMN high_risk_assessment.general_comments IS 'General Comments regarding high risk assessment';
+COMMENT ON COLUMN high_risk_assessment.standing_water_location_code_id IS 'Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations of standing water';
+COMMENT ON COLUMN high_risk_assessment.adult_mussels_location_code_id IS 'Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations where adult mussels were found on the watercraft';
 
 
         

@@ -1,8 +1,8 @@
 // ** Model: HighRiskAssessment from schema HighRiskAssessmentSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import { HighRiskAssessmentSchema } from '../database-schema';
-
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { HighRiskAssessmentSchema, AdultMusselsLocationSchema } from '../database-schema';
+import { AdultMusselsLocation } from '../models';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { IntTransformer } from '../../libs/transformer';
 
@@ -20,12 +20,12 @@ export interface HighRiskAssessmentSpec {
 	decontaminationPerformed: boolean;
 	decontaminationOrderIssued: boolean;
 	sealIssued: boolean;
-	watercraftRegistration: number;
+	watercraftRegistration: string;
 	decontaminationReference: number;
 	decontaminationOrderNumber: number;
 	sealNumber: number;
-	standingWaterLocation: string;
-	adultDreissenidaeMusselDetail: string;
+	standingWaterLocation: object;
+	adultDreissenidaeMusselDetail: object;
 	otherInspectionFindings: string;
 	generalComments: string;
 }
@@ -44,12 +44,12 @@ export interface HighRiskAssessmentUpdateSpec {
 	decontaminationPerformed?: boolean;
 	decontaminationOrderIssued?: boolean;
 	sealIssued?: boolean;
-	watercraftRegistration?: number;
+	watercraftRegistration?: string;
 	decontaminationReference?: number;
 	decontaminationOrderNumber?: number;
 	sealNumber?: number;
-	standingWaterLocation?: string;
-	adultDreissenidaeMusselDetail?: string;
+	standingWaterLocation?: object;
+	adultDreissenidaeMusselDetail?: object;
 	otherInspectionFindings?: string;
 	generalComments?: string;
 }
@@ -129,9 +129,9 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	/**
 	 * @description Getter/Setter property for column {watercraft_registration}
 	 */
-	@Column({name: HighRiskAssessmentSchema.columns.watercraftRegistration, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	watercraftRegistration: number;
+	@Column({ name: HighRiskAssessmentSchema.columns.watercraftRegistration})
+	@ModelProperty({type: PropertyType.string})
+	watercraftRegistration: string;
 
 	/**
 	 * @description Getter/Setter property for column {decontamination_reference}
@@ -155,20 +155,6 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	sealNumber: number;
 
 	/**
-	 * @description Getter/Setter property for column {standing_water_location}
-	 */
-	@Column({ name: HighRiskAssessmentSchema.columns.standingWaterLocation})
-	@ModelProperty({type: PropertyType.string})
-	standingWaterLocation: string;
-
-	/**
-	 * @description Getter/Setter property for column {adult_dreissenidae_mussel_details}
-	 */
-	@Column({ name: HighRiskAssessmentSchema.columns.adultDreissenidaeMusselDetail})
-	@ModelProperty({type: PropertyType.string})
-	adultDreissenidaeMusselDetail: string;
-
-	/**
 	 * @description Getter/Setter property for column {other_inspection_findings}
 	 */
 	@Column({ name: HighRiskAssessmentSchema.columns.otherInspectionFindings})
@@ -181,6 +167,22 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	@Column({ name: HighRiskAssessmentSchema.columns.generalComments})
 	@ModelProperty({type: PropertyType.string})
 	generalComments: string;
+
+	/**
+	 * @description Getter/Setter property for column {standing_water_location_code_id}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.standingWaterLocation, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	standingWaterLocation: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {adult_mussels_location_code_id}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.adultDreissenidaeMusselDetail, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	adultDreissenidaeMusselDetail: AdultMusselsLocation;
 
 }
 
