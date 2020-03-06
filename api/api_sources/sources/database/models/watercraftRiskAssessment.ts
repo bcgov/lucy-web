@@ -27,14 +27,18 @@ import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMan
 import { WatercraftRiskAssessmentSchema } from '../database-schema';
 import {
 	HighRiskAssessmentSchema,
-	ObserverWorkflowSchema
+	ObserverWorkflowSchema,
+	PreviousAISKnowledgeSourceSchema,
+	PreviousInspectionSourceSchema,
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { IntTransformer, DateTimeTransformer } from '../../libs/transformer';
 import {
 	HighRiskAssessment,
-	ObserverWorkflow
+	ObserverWorkflow,
+	PreviousAISKnowledgeSource,
+	PreviousInspectionSource,
 } from '../models';
 
 import { Record } from './generic.data.models';
@@ -59,18 +63,20 @@ export interface WatercraftRiskAssessmentSpec {
 	commerciallyHauled: boolean;
 	highRiskArea: boolean;
 	highRiskAIS: boolean;
+	previousDryStorage: boolean;
+	destinationDryStorage: boolean;
 	nonMotorized: number;
 	simple: number;
 	complex: number;
 	veryComplex: number;
 	previousInspectionDays: number;
-	previousAISKnowledgeSource: string;
-	previousInspectionSource: string;
 	provinceOfResidence: string;
 	generalComment: string;
 	passportNumber: string;
 	highRiskAssessment: HighRiskAssessment;
 	workflow: ObserverWorkflow;
+	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
+	previousInspectionSource: PreviousInspectionSource;
 }
 // -- End: WatercraftRiskAssessmentSpec --
 
@@ -94,18 +100,20 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	commerciallyHauled?: boolean;
 	highRiskArea?: boolean;
 	highRiskAIS?: boolean;
+	previousDryStorage?: boolean;
+	destinationDryStorage?: boolean;
 	nonMotorized?: number;
 	simple?: number;
 	complex?: number;
 	veryComplex?: number;
 	previousInspectionDays?: number;
-	previousAISKnowledgeSource?: string;
-	previousInspectionSource?: string;
 	provinceOfResidence?: string;
 	generalComment?: string;
 	passportNumber?: string;
 	highRiskAssessment?: HighRiskAssessment;
 	workflow?: ObserverWorkflow;
+	previousAISKnowledgeSource?: PreviousAISKnowledgeSource;
+	previousInspectionSource?: PreviousInspectionSource;
 }
 // -- End: WatercraftRiskAssessmentUpdateSpec --
 
@@ -139,7 +147,7 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	timestamp: string;
 
 	/**
-	 * @description Getter/Setter property for column {pass_port_holder_ind}
+	 * @description Getter/Setter property for column {passport_holder_ind}
 	 */
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportHolder})
 	@ModelProperty({type: PropertyType.boolean})
@@ -230,6 +238,20 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	highRiskAIS: boolean;
 
 	/**
+	 * @description Getter/Setter property for column {previous_dry_storage_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousDryStorage})
+	@ModelProperty({type: PropertyType.boolean})
+	previousDryStorage: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {destination_dry_storage_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationDryStorage})
+	@ModelProperty({type: PropertyType.boolean})
+	destinationDryStorage: boolean;
+
+	/**
 	 * @description Getter/Setter property for column {non_motorized_counter}
 	 */
 	@Column({name: WatercraftRiskAssessmentSchema.columns.nonMotorized, transformer: new IntTransformer()})
@@ -265,20 +287,6 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	previousInspectionDays: number;
 
 	/**
-	 * @description Getter/Setter property for column {previous_ais_knowledge_source}
-	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource})
-	@ModelProperty({type: PropertyType.string})
-	previousAISKnowledgeSource: string;
-
-	/**
-	 * @description Getter/Setter property for column {previous_inspection_source}
-	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource})
-	@ModelProperty({type: PropertyType.string})
-	previousInspectionSource: string;
-
-	/**
 	 * @description Getter/Setter property for column {province}
 	 */
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.provinceOfResidence})
@@ -306,6 +314,22 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.highRiskAssessment, referencedColumnName: HighRiskAssessmentSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	highRiskAssessment: HighRiskAssessment;
+
+	/**
+	 * @description Getter/Setter property for column {previous_ais_knowledge_source_code_id}
+	 */
+	@ManyToOne( type => PreviousAISKnowledgeSource, { eager: true})
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource, referencedColumnName: PreviousAISKnowledgeSourceSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
+
+	/**
+	 * @description Getter/Setter property for column {previous_inspection_source_code_id}
+	 */
+	@ManyToOne( type => PreviousInspectionSource, { eager: true})
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource, referencedColumnName: PreviousInspectionSourceSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	previousInspectionSource: PreviousInspectionSource;
 
 	/**
 	 * @description Getter/Setter property for column {observer_workflow_id}

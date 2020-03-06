@@ -1,17 +1,11 @@
 
-import { Component, OnInit, SimpleChanges, OnChanges, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, SimpleChanges, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ObservationService } from 'src/app/services/observation.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { CodeTableService } from 'src/app/services/code-table.service';
-import { DropdownService } from 'src/app/services/dropdown.service';
 import { InvasivePlantSpecies, Observation } from 'src/app/models/observation';
 import { SpeciesObservedTreated } from 'src/app/models/ChemicalTreatment';
-import { FormControl, Validators } from '@angular/forms';
-import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { FormMode } from 'src/app/models';
-import { AddQuickObservationModalComponent } from '../../Utilities/add-quick-observation-modal/add-quick-observation-modal.component';
-import { trigger, transition, style, animate } from '@angular/animations';
-import { delay } from 'q';
+import { trigger, transition, animate } from '@angular/animations';
 import { FormService } from 'src/app/services/form/form.service';
 
 @Component({
@@ -72,24 +66,30 @@ export class SpeciesTreatedComponent implements OnInit, OnChanges {
     maximumValue: 100,
   };
 
-    ///// Form Mode
-    private _mode: FormMode = FormMode.View;
-    get mode(): FormMode {
-      return this._mode;
-    }
-    @Input() set mode(mode: FormMode) {
-      this._mode = mode;
-      if (this.mode === FormMode.View) {
-        this.inViewMode = true;
-      } else { this.inViewMode = false; }
-    }
+  ///// Form Mode
+  private _mode: FormMode = FormMode.View;
+  get mode(): FormMode {
+    return this._mode;
+  }
+  @Input() set mode(mode: FormMode) {
+    this._mode = mode;
+    if (this.mode === FormMode.View) {
+      this.inViewMode = true;
+    } else { this.inViewMode = false; }
+  }
 
   @Output() speciesTreatedChanged = new EventEmitter<SpeciesObservedTreated[]>();
 
-  constructor(private loadingService: LoadingService,
-              private observationService: ObservationService,
-              private formService: FormService,
-              private modalService: NgbModal) { }
+  showFocus(index: number) {
+    const totalSpecies = this.speciesBeingTreated.length - 1;
+    return (totalSpecies === index);
+  }
+
+  constructor(
+    private loadingService: LoadingService,
+    private observationService: ObservationService,
+    private formService: FormService,
+  ) { }
 
 
   async ngOnInit() {

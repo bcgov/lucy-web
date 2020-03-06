@@ -1,0 +1,86 @@
+version: '1.0'
+description: Schema file for various code tables associated with Inspect App dropdown fields
+externalTables: []
+includes: []
+schemas:
+  PreviousAISKnowledgeSourceSchema:
+    name: previous_ais_knowledge_source_code
+    description: 'Code table with options for sources of previous Aquatic Invasive Species (AIS) knowledge'
+    baseSchema: CodeTableSchema
+    meta:
+      baseModel: Record
+    displayLayout:
+      displayLabel: '#(description)'
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      id:
+        name: previous_ais_knowledge_source_code_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      description:
+        name: description
+        comment: 'Brief description of the knowledge source'
+        definition: VARCHAR(50) NOT NULL
+    versions: []
+    imports:
+      init:
+        fileName: PreviousAISKnowledgeSourceCode.csv
+        allColumns: true
+    fields: {}
+  ## -- end PreviousAISKnowledgeSourceSchema
+  PreviousInspectionSourceSchema:
+    name: previous_inspection_source_code
+    description: 'Code table with options for sources of previous invasive mussel inspections'
+    baseSchema: CodeTableSchema
+    meta:
+      baseModel: Record
+    displayLayout:
+      displayLabel: '#(description)'
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      id:
+        name: previous_inspection_source_code_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY 
+      description:
+        name: description
+        comment: 'Brief description of the source of the previous inspection(s)'
+        definition: VARCHAR(50) NOT NULL
+    versions: []
+    imports:
+      init:
+        fileName: PreviousInspectionSourceCode.csv
+        allColumns: true
+    fields: {}
+  ## -- end PreviousInspectionSourceSchema
+  AdultMusselsLocationSchema:
+    name: adult_mussels_location_code
+    description: 'Code table with options for locations on a watercraft where, upon inspection, mussels were found and/or standing water is present'
+    baseSchema: CodeTableSchema
+    meta: 
+      baseModel: Record
+    displayLayout:
+      displayLabel: '#(description)'
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      id:
+        name: adult_mussels_location_code_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY 
+      description:
+        name: description
+        comment: 'Brief description of the location on the watercraft where adult mussels were found'
+        definition: VARCHAR(50) NOT NULL 
+    versions: []
+    imports:
+      init:
+        fileName: AdultMusselsLocationCode.csv
+        allColumns: true
+  ## -- end AdultMusselsLocationSchema
+    

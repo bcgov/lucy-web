@@ -10,7 +10,13 @@ import {
     ObserverWorkflow,
     ObserverWorkflowController,
     WatercraftJourney,
-    WatercraftJourneyController
+    WatercraftJourneyController,
+    AdultMusselsLocation,
+    AdultMusselsLocationController,
+    PreviousAISKnowledgeSource,
+    PreviousAISKnowledgeSourceController,
+    PreviousInspectionSource,
+    PreviousInspectionSourceController
 } from '../models';
 import { ModelFactory, Destroyer } from '../factory';
 import { WatercraftRiskAssessmentSchema, ObserverWorkflowSchema } from '../database-schema';
@@ -42,6 +48,24 @@ describe('Mussel app db element tests', () => {
         const waterBody: WaterBody = await WaterBodyController.shared.random();
         should().exist(waterBody);
         should().exist(waterBody.water_body_id);
+    });
+
+    it('should fetch adult mussel location', async () => {
+        const adultMusselLocation: AdultMusselsLocation = await AdultMusselsLocationController.shared.random();
+        should().exist(adultMusselLocation);
+        should().exist(adultMusselLocation.adult_mussels_location_code_id);
+    });
+
+    it('should fetch previous AIS knowledge source', async () => {
+        const prevAISKnowledgeSource: PreviousAISKnowledgeSource = await PreviousAISKnowledgeSourceController.shared.random();
+        should().exist(prevAISKnowledgeSource);
+        should().exist(prevAISKnowledgeSource.previous_ais_knowledge_source_code_id);
+    });
+
+    it('should fetch previous inspection source', async () => {
+        const prevInspectionSource: PreviousInspectionSource = await PreviousInspectionSourceController.shared.random();
+        should().exist(prevInspectionSource);
+        should().exist(prevInspectionSource.previous_inspection_source_code_id);
     });
 
     it('should create and fetch workflow', async() => {

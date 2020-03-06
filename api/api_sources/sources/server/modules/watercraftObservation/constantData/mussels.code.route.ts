@@ -3,6 +3,9 @@
  * Imports
  */
 import { RouteHandler, Route, SecureRouteController, HTTPMethod } from '../../../core';
+import { AdultMusselsLocationController } from '../../../../database/models/adultMusselsLocation';
+import { PreviousAISKnowledgeSourceController } from '../../../../database/models/previousAISKnowledgeSource';
+import { PreviousInspectionSourceController } from '../../../../database/models/previousInspectionSource';
 /**
  * Require
  * @description Importing json constant
@@ -27,16 +30,25 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
         return list.map(item => item[key]);
     }
 
-    get data(): {[key: string]: any} {
+    async data() {
+        // Standard code
         const inspectorList: any[] = this.processList(InspectorList as any[], 'Inspectors');
         const otherInspection: any[] = this.processList(OtherInspections as any[], 'Other_Inspections');
         const stations: any[] = this.processList(Stations as any[], 'Station_Name');
         const watercraftList: any[] = this.processList(WatercraftList as any[], 'Watercraft');
+
+        // Code tables
+        const adultMusselsLocation: any[] = await AdultMusselsLocationController.shared.all();
+        const previousAISKnowledgeSource: any[] = await PreviousAISKnowledgeSourceController.shared.all();
+        const previousInspectionSource: any[] = await PreviousInspectionSourceController.shared.all();
         return {
             observers: inspectorList,
             otherObservations: otherInspection,
             stations: stations,
-            watercraftList: watercraftList
+            watercraftList: watercraftList,
+            adultMusselsLocation,
+            previousAISKnowledgeSource,
+            previousInspectionSource
         };
     }
 
@@ -54,7 +66,7 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
         }
     })
     get code(): RouteHandler {
-        return this.routeConfig<any>(`${this.className}: codes`, async () => [200, this.data]);
+        return this.routeConfig<any>(`${this.className}: codes`, async () => [200, await this.data()]);
     }
 }
 
