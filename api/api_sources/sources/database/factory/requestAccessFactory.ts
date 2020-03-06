@@ -40,6 +40,7 @@ export const requestAccessFactory = async (requesterIP?: User, approverIP?: User
     request.approver = approver;
     request.requester = requester;
     request.requestedAccessCode = await RoleCodeController.shared.getCode(RolesCodeValue.editor);
+    request.status = 0;
     if (!noSave) {
         await RequestAccessController.shared.saveInDB(request);
     }

@@ -3,6 +3,7 @@ version: '1.0'
 includes: 
   - observerWorkflow.schema.yaml
   - highRiskAssessment.schema.yaml
+  - inspectApp.codes.schema.yaml
 schemas: 
   ## -- WaterCraftRiskAssessmentSchema
   WatercraftRiskAssessmentSchema:
@@ -95,6 +96,14 @@ schemas:
         name: high_risk_ais_ind
         comment: 'Indicator flag to check high risk AIS or not'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousDryStorage:
+        name: previous_dry_storage_ind
+        comment: Boolean indicator that watercraft''s previous waterbody is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      destinationDryStorage:
+        name: destination_dry_storage_ind
+        comment: Boolean indicator that watercraft''s destination waterbody is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:
         name: 'non_motorized_counter'
@@ -117,16 +126,6 @@ schemas:
         comment: 'Counter for number of very complex boats in the inspection'
         definition: INT NULL
       # Strings
-      previousAISKnowledgeSource:
-        name: previous_ais_knowledge_source
-        comment: 'Indicator to store status of previous AIS knowledge'
-        definition: VARCHAR(100) NULL
-        required: false
-      previousInspectionSource:
-        name: previous_inspection_source
-        comment: 'Indicator to store status of previous inspection'
-        definition: VARCHAR(100) NULL
-        required: false
       provinceOfResidence:
         name: province
         comment: 'Province of residence of the boat'
@@ -150,6 +149,24 @@ schemas:
         required: false
         meta: 
           embedded: true
+      previousAISKnowledgeSource:
+        name: previous_ais_knowledge_source_code_id
+        comment: Foreign key reference to previous_ais_knowledge_source_code table
+        definition: INT NULL
+        foreignTable: previous_ais_knowledge_source_code
+        refColumn: previous_ais_knowledge_source_code_id
+        deleteCascade: false
+        required: false
+        meta: {}
+      previousInspectionSource:
+        name: previous_inspection_source_code_id
+        comment: Foreign key reference to previous_inspection_source_code table
+        definition: INT NULL
+        foreignTable: previous_inspection_source_code
+        refColumn: previous_inspection_source_code_id
+        deleteCascade: false
+        required: false
+        meta: {}
     ## -- end columns
     versions:
       ## -- version: workflow

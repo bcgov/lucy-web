@@ -474,7 +474,7 @@ export class FormService {
         }
       }
       // Store required fields in a separate array
-      if (newField.required) {
+      if (newField.required && !requiredFieldKeys.includes(newField.key)) {
         requiredFieldKeys.push(newField.key);
       }
       // Store dropdown fields in a separate array

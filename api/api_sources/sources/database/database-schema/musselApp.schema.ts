@@ -69,3 +69,33 @@ export class WatercraftJourneySchema extends RecordTableSchema {
         return getYAMLFilePath('watercraftJourney.schema.yaml');
     }
 }
+
+export class PreviousAISKnowledgeSourceSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('inspectApp.codes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
+export class PreviousInspectionSourceSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('inspectApp.codes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
+export class AdultMusselsLocationSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('inspectApp.codes.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
