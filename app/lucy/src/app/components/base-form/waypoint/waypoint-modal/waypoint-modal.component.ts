@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WaypointModalComponent implements OnInit {
 
+  showInfo = false;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  toggleView() {
+    this.showInfo = !this.showInfo;
   }
 
 }

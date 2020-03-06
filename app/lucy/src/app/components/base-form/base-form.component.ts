@@ -47,7 +47,6 @@ export enum FormType {
 
 export enum ModalType {
   WayPoint = 1,
-  WayPointInfo
 }
 @Component({
   selector: 'app-base-form',
@@ -215,7 +214,14 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   /*********** Modal Methods ************/
   get showModal(): boolean {
-    return this.modalType ? true : false;
+    return !!this.modalType;
+  }
+
+  selectedModalType(modal: number): ModalType {
+    switch (modal) {
+      case 1: return ModalType.WayPoint;
+      default: return undefined;
+    }
   }
 
   showModalContent(modal: number): boolean {
@@ -225,16 +231,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
   openModal(modal: number) {
     if (!modal) return;
-
-    if (modal === ModalType.WayPoint) {
-      this.modalType = ModalType.WayPoint;
-    } else if (modal === ModalType.WayPointInfo) {
-      this.modalType = ModalType.WayPointInfo;
-    }
+    this.modalType = this.selectedModalType(modal);
   }
 
   onModalClose() {
-    console.log('here');
     this.modalType = undefined;
   }
   /********* End Modal Methods **********/

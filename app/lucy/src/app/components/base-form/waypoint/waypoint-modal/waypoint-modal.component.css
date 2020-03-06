@@ -1,0 +1,23 @@
+.header-text {
+  color: #000000;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+}
+
+.info-button {
+  float: right;
+  display: flex;
+  align-items: center;
+  background-color: #0053A4;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+p {
+  margin: 0;
+}
