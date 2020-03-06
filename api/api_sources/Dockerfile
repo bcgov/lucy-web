@@ -9,6 +9,9 @@ USER 0
 RUN mkdir -p ${HOME}
 RUN chmod -R 777 ${HOME}
 RUN chown -R 1001 ${HOME}
+# Make Directory for uploading issue logs
+RUN mkdir -p ${HOME}/../temp/uploads/issues
+RUN chmod -R 777 ${HOME}/../temp/uploads/issues
 USER 1001
 
 # Setting Path

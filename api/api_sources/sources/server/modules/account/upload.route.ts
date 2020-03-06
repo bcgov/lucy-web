@@ -20,14 +20,19 @@
  * Modified By: Pushan  (you@you.you>)
  * -----
  */
-// import { Request, Response} from 'express';
+import * as fs from 'fs';
+import * as assert from 'assert';
 import * as multer from 'multer';
 import {
     RouteController,
     ResourceRoute,
-    Post
+    Post,
+    inspectAppEditorRoute
 } from '../../core';
 import { UserDataController, User } from '../../../database/models';
+import { Mail, Mailer } from '../../../libs/utilities';
+import AppConfig from '../../../AppConfig';
+
 
 /**
  * @description File Upload route handler
@@ -47,13 +52,38 @@ export class UploadRouteController extends RouteController {
 
 
     @Post({
-        path: '/',
+        path: '/report-issue',
         description: 'Upload file path for user',
-        middleware: () => [ UploadRouteController.uploadMiddleware]
+        middleware: () => [ inspectAppEditorRoute(), UploadRouteController.uploadMiddleware]
     })
     public async report(req: any) {
-        console.dir(req.files);
-        return new Promise((res) => res([200, req.file]));
+        // Get user
+        const user: User = req.user as User;
+        // Read file object and file path
+        const file: any = req.files[0];
+        const filePath = file.path;
+        // Assert if no file path
+        assert(filePath, `No log file path created`);
+        assert(AppConfig.reportReceivers, 'No receivers for report');
+        // Create Mail
+        const mail: Mail = {
+            to: AppConfig.reportReceivers,
+            from: Mailer.sender,
+            subject: `InvasivesBC iOS Application Issue`,
+            text: `An issue is reported by user ${user.email}. Please check attached log`,
+            attachments: [
+                {
+                    filename: 'log.txt',
+                    path: filePath
+                }
+            ]
+        };
+        // Sending mail
+        const info = await Mailer.shared.send(mail);
+        // Remove file
+        fs.unlinkSync(filePath);
+        // Responding
+        return [200, info];
     }
 
     /**
@@ -67,8 +97,6 @@ export class UploadRouteController extends RouteController {
             filename: function (req: any, file: any, cb: Function) {
                 const user: User = req.user;
                 const uniqueSuffix = `${user.user_id}_${Date.now()}`;
-                // console.dir(file);
-                // console.log(`${JSON.stringify(req.body, null, 2)}`);
                 cb(null, uniqueSuffix + '_' + req.body.name);
             }
         });

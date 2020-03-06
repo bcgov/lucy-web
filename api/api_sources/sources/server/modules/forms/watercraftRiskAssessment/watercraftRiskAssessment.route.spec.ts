@@ -11,7 +11,7 @@ import {
     verifySuccessBody
 } from '../../../../test-helpers/testHelpers';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
-import { WatercraftRiskAssessmentController } from '../../../../database/models';
+import { WatercraftRiskAssessmentController, UserDataController, RoleCodeController, RolesCodeValue } from '../../../../database/models';
 import { DataController } from '../../../../database/data.model.controller';
 import { ModelFactory, Destroyer } from '../../../../database/factory';
 
@@ -53,6 +53,10 @@ describe(`Test for ${resourceName}`, () => {
 
     // Test4: Success To Create For Viewer
     it(`should not create ${resourceName} for {viewer}`, async () => {
+        // Setup force viewer mode
+        const user = await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        user.roles = [ await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
+        await UserDataController.shared.saveInDB(user);
         await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.viewer, expect: 401}, controller);
     });
 
