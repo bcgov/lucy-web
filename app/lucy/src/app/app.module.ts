@@ -99,6 +99,7 @@ import { ModalComponent } from './components/Utilities/modal/modal.component';
 import { RequestModalComponent } from './components/Routes/admin-tools/request-modal/request-modal.component';
 import { ClickAwayDirective } from './directives/click-away/click-away.directive';
 import { ElementFocusDirective } from './directives/element-focus/element-focus.directive';
+import { WaypointModalComponent } from './components/base-form/waypoint-modal/waypoint-modal.component';
 
 /**
  * @description Bootstrapping initial service call of the application
@@ -145,6 +146,7 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     RequestModalComponent,
     ClickAwayDirective,
     ElementFocusDirective,
+    WaypointModalComponent,
   ],
   entryComponents: [
     AddQuickObservationModalComponent
