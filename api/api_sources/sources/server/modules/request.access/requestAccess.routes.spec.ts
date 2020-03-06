@@ -26,7 +26,7 @@ import { commonTestSetupAction, commonTestTearDownAction, verifySuccessBody, ver
 import { SharedExpressApp } from '../../initializers';
 import { viewerToken, adminToken, inspectAppAdminToken, inspectAppOfficerToken } from '../../../test-helpers/token';
 import { ModelFactory, Destroyer, requestAccessFactory } from '../../../database/factory';
-import { RequestAccessController, RequestAccess, UserDataController, RoleCodeController, RolesCodeValue } from '../../../database/models';
+import { RequestAccessController, RequestAccess, UserDataController, RoleCodeController, RolesCodeValue, User } from '../../../database/models';
 
 describe('Test Request Access Route', () => {
     // Setup
@@ -315,6 +315,8 @@ describe('Test Request Access Route', () => {
             const received = resp.body.data;
             expect(received.status).to.be.equal(body.status);
             await RequestAccessController.shared.remove(reqAccess);
+            user.roles = [ await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
+            await UserDataController.shared.saveInDB(user);
         });
     });
 
@@ -347,7 +349,7 @@ describe('Test Request Access Route', () => {
 
     // Test12: Should not Update request by Inspect App Admin
     it('should not update request by {Inspect App Admin}', async () => {
-        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        const user: User =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
         should().exist(user);
         const reqAccess: RequestAccess = await requestAccessFactory(user);
         should().exist(reqAccess);
@@ -419,6 +421,8 @@ describe('Test Request Access Route', () => {
             should().exist(requestAccessInDB);
             expect(requestAccessInDB.status).to.be.equal(1);
             await RequestAccessController.shared.remove(reqAccess);
+            user.roles = [ await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
+            await UserDataController.shared.saveInDB(user);
         });
     });
 
