@@ -125,6 +125,10 @@ class AppConfiguration {
         // Bypassing token expiry for local or dev env
         return (env === 'dev' || env === 'local');
     }
+
+    public get reportReceivers(): string {
+        return process.env.APP_REPORT_RECEIVER || '';
+    }
 }
 
 /**
