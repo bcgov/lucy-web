@@ -25,6 +25,7 @@
  * Imports
  */
 import * as request from 'supertest';
+import * as path from 'path';
 import { expect} from 'chai';
 import { SharedExpressApp } from '../../../initializers';
 import { UserDataController, RolesCodeValue, UserMessageController, User, UserMessage } from '../../../../database/models';
@@ -145,6 +146,19 @@ describe('Test User Messages', () => {
             await UserDataController.shared.remove(receiver);
             // done();
         });
+    });
+
+    it('should upload file', async () => {
+        // Create form
+        const filePath = path.resolve(__dirname, '../../../../../resources/jsons/musselsApp/MusselInspectors.json');
+
+        await request(SharedExpressApp.app)
+        .post('/api/uploads/report-issue')
+        .set('Authorization', `Bearer ${adminToken()}`)
+        .set('Content-type', 'multipart/form-data')
+        .field('name', 'test.json')
+        .attach('file', filePath, { contentType: 'application/json'})
+        .expect(200);
     });
 });
 

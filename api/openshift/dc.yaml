@@ -83,6 +83,26 @@ objects:
             value: ${DB_CLEAN_UP}
           - name: DB_SEED
             value: ${DB_SEED}
+          - name: APP_EMAIL_SENDER
+            valueFrom:
+              secretKeyRef:
+                key: sender
+                name: ${MAILER_INFO}
+          - name: APP_EMAIL_SENDER_PWD
+            valueFrom:
+              secretKeyRef:
+                key: sender-password
+                name: ${MAILER_INFO}
+          - name: APP_EMAIL_TEST_RECEIVER
+            valueFrom:
+              secretKeyRef:
+                key: test-receiver
+                name: ${MAILER_INFO}
+          - name: APP_REPORT_RECEIVER
+            valueFrom:
+              secretKeyRef:
+                key: receiver-list
+                name: ${MAILER_INFO}
           image: " "
           imagePullPolicy: Always
           name: api
@@ -257,3 +277,5 @@ parameters:
   value: 'none'
 - name: DB_SEED
   value: 'yes'
+- name: MAILER_INFO
+  value: 'invasivesbc-mailer'
