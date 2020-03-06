@@ -26,6 +26,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   @Input() align: string;
   @Output() onBackdropClick = new EventEmitter<any>();
+  @Output() onClose = new EventEmitter<any>();
 
   get classNames(): Object {
     if (!this.align) return { 'top-align': true };
@@ -49,8 +50,12 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.body.style.overflow = 'unset';
   }
 
-  public onClickAway(): void {
-    this.onBackdropClick.emit();
+  onClickAway(): void {
+    if (this.onBackdropClick) this.onBackdropClick.emit();
+  }
+
+  onCloseAction(): void {
+    if (this.onClose) this.onClose.emit();
   }
 
 }

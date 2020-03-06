@@ -1,0 +1,17 @@
+<div class="modal-content-container">
+  
+  <p *ngIf="!showInfo" class="header-text">Way-point Details</p>
+  <hr class="section-divider" />
+  
+  <!-- waypoint geometry -->
+  <div *ngIf="!showInfo">
+    <div class="info-button" (click)="toggleView()">
+      <i class="material-icons-outlined info-icon">info</i>
+      <p>More Info</p>
+    </div>
+  </div>
+
+  <!-- waypoint info -->
+  <app-waypoint-info *ngIf="showInfo" (onBackAction)="toggleView()">
+  </app-waypoint-info>
+</div>

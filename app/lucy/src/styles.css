@@ -125,6 +125,36 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 	border: 1px solid grey;
 }
 
+/* Modal styles */
 .modal-wrapper {
   height: 100%;
+}
+
+.modal-content-container {
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+}
+
+.modal-close-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.modal-action-container {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-action {
+  padding: 8px;
+}
+
+.modal-action-button {
+  width: 100%;
 }

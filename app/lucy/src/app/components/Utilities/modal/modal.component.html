@@ -1,5 +1,8 @@
 <div class="modal-container" [ngClass]="classNames">
   <div class="modal-content" (clickAway)="onClickAway()">
+    <div class="modal-close-icon" (click)="onCloseAction()">
+      <i class="material-icons">close</i>
+    </div>
     <ng-content></ng-content>
   </div>
 </div>
