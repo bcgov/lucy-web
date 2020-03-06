@@ -22,8 +22,8 @@
             </div>
         </div>
     </div>
-</div>
-<div *ngIf="!isLoading" class="form-bg">
+  </div>
+  <div *ngIf="!isLoading" class="form-bg">
     <!-- Header Section  -->
     <div class="container-fluid header-container sticky animated" [ngClass]="
       inReviewMode
@@ -41,7 +41,7 @@
                             ID: {{ config["objectId"] }} | {{ config["objectDate"] }}
                         </div>
                     </div>
-
+  
                     <span class="spacer-toolbar"></span>
                     <!-- Submit button -->
                     <button mat-flat-button *ngIf="!readonly || inReviewMode" type="button" class="btn btn-secondary submit-button" (click)="submitAction()">
@@ -70,7 +70,7 @@
     </div>
     <!-- -------------------- -->
     <br />
-
+  
     <!-- Diff Viewer -->
     <div *ngIf="showdiffViewer" class="container container-fluid diff-container animated fadeInDown">
         <!-- <div class="container container-fluid diff-container animated fadeInDown"> -->
@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-
+  
     <!-- Missing fields  -->
     <div *ngIf="showMissingFieldsDialog" class="container form-body diff-container animated fadeInDown">
         <mat-accordion>
@@ -101,7 +101,7 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-
+  
     <!-- Body Container  -->
     <div class="container">
         <div class="row">
@@ -165,8 +165,8 @@
                                             <div class="row">
                                                 <div class="col no-content">
                                                     <i class="material-icons">
-                            build
-                          </i>This section does not have any content yet.
+                                                        build
+                                                    </i>This section does not have any content yet.
                                                 </div>
                                             </div>
                                         </div>
@@ -186,7 +186,7 @@
                             </div>
                         </div>
                     </div>
-
+  
                     <!-- Relation fields -->
                     <div class="container-fluid" *ngFor="let relationKey of config.relationKeys; let relationIndex = index">
                         <br />
@@ -206,9 +206,12 @@
                     <!-- End of form body -->
                 </div>
             </div>
-
+  
         </div>
     </div>
+    <app-modal *ngIf="showModal" (onBackdropClick)="onModalClose()" [align]="'center'">
+        <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper"></app-waypoint-modal>
+    </app-modal>
     <!-- test btn -->
     <div *ngIf="creating && !isProd && !isTest" class="row test-btn">
         <div class="col-12">
@@ -217,6 +220,14 @@
       </button>
         </div>
     </div>
+  
+    <div *ngIf="creating && !isProd && !isTest" class="row modal-btn">
+        <div class="col-12">
+            <button class="btn" (click)="openModal(1)" id="custom-modal-action">
+                M
+            </button>
+        </div>
+    </div>
     <br />
     <!-- -------------------- -->
-</div>
+  </div>

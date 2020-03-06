@@ -44,6 +44,11 @@ export enum FormType {
   MechanicalTreeatment,
   ChemicalTreatment
 }
+
+export enum ModalType {
+  WayPoint = 1,
+  WayPointInfo
+}
 @Component({
   selector: 'app-base-form',
   templateUrl: './base-form.component.html',
@@ -73,6 +78,11 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * test environment
    */
   public isTest: boolean = false;
+
+  /**
+   * Boolean to show/hide waypoint modal
+   */
+  public modalType: ModalType;
 
   private _responseBody = {};
   get responseBody(): any {
@@ -202,6 +212,32 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   set diffObject(object: DiffResult) {
     this._diffObject = object;
   }
+
+  /*********** Modal Methods ************/
+  get showModal(): boolean {
+    return this.modalType ? true : false;
+  }
+
+  showModalContent(modal: number): boolean {
+    if (!modal) return false;
+    return this.modalType === modal;
+  }
+
+  openModal(modal: number) {
+    if (!modal) return;
+
+    if (modal === ModalType.WayPoint) {
+      this.modalType = ModalType.WayPoint;
+    } else if (modal === ModalType.WayPointInfo) {
+      this.modalType = ModalType.WayPointInfo;
+    }
+  }
+
+  onModalClose() {
+    console.log('here');
+    this.modalType = undefined;
+  }
+  /********* End Modal Methods **********/
 
   /**
    * Check if the spaceGeom is valid or not
