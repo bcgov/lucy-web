@@ -1,7 +1,7 @@
 /**
  * Test for Application Configuration
  */
-import { expect} from 'chai';
+import { expect, should} from 'chai';
 import AppConfig from './app.config';
 
 // Test
@@ -16,6 +16,7 @@ describe('application configuration', () => {
         expect(AppConfig.dbPassword).not.equal(undefined);
         expect(AppConfig.dbName).not.equal(undefined);
         expect(AppConfig.dbHost).not.equal(undefined);
+        should().exist(AppConfig.reportReceivers);
     });
 });
 // -----------------------------------------------------------------------------

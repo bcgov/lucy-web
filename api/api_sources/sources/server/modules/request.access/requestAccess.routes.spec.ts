@@ -26,7 +26,7 @@ import { commonTestSetupAction, commonTestTearDownAction, verifySuccessBody, ver
 import { SharedExpressApp } from '../../initializers';
 import { viewerToken, adminToken, inspectAppAdminToken, inspectAppOfficerToken } from '../../../test-helpers/token';
 import { ModelFactory, Destroyer, requestAccessFactory } from '../../../database/factory';
-import { RequestAccessController, RequestAccess, UserDataController, RoleCodeController, RolesCodeValue } from '../../../database/models';
+import { RequestAccessController, RequestAccess, UserDataController, RoleCodeController, RolesCodeValue, User } from '../../../database/models';
 
 describe('Test Request Access Route', () => {
     // Setup
@@ -127,8 +127,11 @@ describe('Test Request Access Route', () => {
             await verifySuccessBody(resp.body);
             expect(resp.body.data.status).to.be.equal(0);
         });
-
-        const reqAccess = (await RequestAccessController.shared.all())[0];
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        const userLatest = await UserDataController.shared.latestAccessRequest(user);
+        should().exist(userLatest);
+        const reqAccess = userLatest || new RequestAccess();
+        should().exist(reqAccess.request_id);
         const body: any = {
             requestedAccessCode: 2,
             status: 2,
@@ -222,6 +225,8 @@ describe('Test Request Access Route', () => {
 
     // Test7: Should not allow access creation for a role that already exists
     it('should not allow access request creation for a role that the current user already has', async () => {
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
         const reqBody: any = {
             requestedAccessCode: 2,
             requestNote: 'Please grant access'
@@ -233,9 +238,7 @@ describe('Test Request Access Route', () => {
         .send(reqBody)
         .expect(208)
         .then(async (resp) => {
-            const allRequests = await RequestAccessController.shared.all();
             await verifySuccessBody(resp.body);
-            expect(allRequests.length).to.be.equal(0);
         });
     });
 
@@ -315,6 +318,8 @@ describe('Test Request Access Route', () => {
             const received = resp.body.data;
             expect(received.status).to.be.equal(body.status);
             await RequestAccessController.shared.remove(reqAccess);
+            user.roles = [ await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
+            await UserDataController.shared.saveInDB(user);
         });
     });
 
@@ -347,7 +352,7 @@ describe('Test Request Access Route', () => {
 
     // Test12: Should not Update request by Inspect App Admin
     it('should not update request by {Inspect App Admin}', async () => {
-        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        const user: User =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
         should().exist(user);
         const reqAccess: RequestAccess = await requestAccessFactory(user);
         should().exist(reqAccess);
@@ -419,6 +424,8 @@ describe('Test Request Access Route', () => {
             should().exist(requestAccessInDB);
             expect(requestAccessInDB.status).to.be.equal(1);
             await RequestAccessController.shared.remove(reqAccess);
+            user.roles = [ await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
+            await UserDataController.shared.saveInDB(user);
         });
     });
 

@@ -46,25 +46,25 @@ import {
     mechanicalMonitorFactory,
     destroyMechanicalMonitor,
     Destroyer,
-    mechanicalTreatmentFactory
+    // mechanicalTreatmentFactory
 } from '../../../../database/factory';
 import {
-    MechanicalTreatmentController,
+    // MechanicalTreatmentController,
     MechanicalMonitorController,
     MechanicalMonitorSpec,
     MechanicalMonitorUpdateSpec,
-    MechanicalTreatment
+    // MechanicalTreatment
 } from '../../../../database/models';
 import { viewerToken } from '../../../../test-helpers/token';
 import { MechanicalMonitorSchema } from '../../../../database/database-schema';
 
 describe('Test for mechanical monitoring', () => {
-    let mechTreatment: MechanicalTreatment;
+    // let mechTreatment: MechanicalTreatment;
 
     before(async () => {
         await commonTestSetupAction();
         await SharedExpressApp.initExpress();
-        mechTreatment = await mechanicalTreatmentFactory();
+        // mechTreatment = await mechanicalTreatmentFactory();
     });
     after(async () => {
         await commonTestTearDownAction();
@@ -104,7 +104,7 @@ describe('Test for mechanical monitoring', () => {
                 expect(data.mechanicalTreatmentID.mechanical_treatment_id).to.be.equal(create.mechanicalTreatmentID.mechanical_treatment_id);
 
                 await MechanicalMonitorController.shared.removeById(data.mechanical_monitor_id);
-                await MechanicalTreatmentController.shared.remove(mechTreatment);
+                // await MechanicalTreatmentController.shared.remove(mechTreatment);
             });
         });
     });
