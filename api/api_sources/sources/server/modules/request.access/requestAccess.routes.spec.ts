@@ -222,6 +222,8 @@ describe('Test Request Access Route', () => {
 
     // Test7: Should not allow access creation for a role that already exists
     it('should not allow access request creation for a role that the current user already has', async () => {
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
         const reqBody: any = {
             requestedAccessCode: 2,
             requestNote: 'Please grant access'
@@ -233,9 +235,7 @@ describe('Test Request Access Route', () => {
         .send(reqBody)
         .expect(208)
         .then(async (resp) => {
-            const allRequests = await RequestAccessController.shared.all();
             await verifySuccessBody(resp.body);
-            expect(allRequests.length).to.be.equal(0);
         });
     });
 
