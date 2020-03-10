@@ -32,6 +32,10 @@ services:
     - DB_MIGRATION_TYPE=refresh
     - DB_SEED=yes
     - DB_CLEAN_UP=none
+    - APP_EMAIL_SENDER=${APP_EMAIL_SENDER}
+    - APP_EMAIL_SENDER_PWD=${APP_EMAIL_SENDER_PWD}
+    - APP_EMAIL_TEST_RECEIVER=${APP_EMAIL_TEST_RECEIVER}
+    - APP_REPORT_RECEIVER=${APP_REPORT_RECEIVER}
   volumes:
     - ./api_sources:/opt/app-root/src
     - npmcache:/opt/app-root/src/node_modules
