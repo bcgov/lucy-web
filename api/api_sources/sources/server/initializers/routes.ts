@@ -31,6 +31,7 @@ import { accountRoute,
     MusselsAppCodesRouteController,
     chemicalTreatmentRoute,
     mechanicalMonitorRoute,
+    UploadRouteController,
 } from '../modules';
 import { LocationRouteController } from '../modules/location';
 import { defaultRoute, miscellaneousRouter } from '../modules';
@@ -75,6 +76,9 @@ export const routes = (app: Application) => {
 
     // Location
     app.use('/api/location', LocationRouteController.shared.router);
+
+    // Uploads
+    app.use('/api/uploads', UploadRouteController.shared.router);
 
     // Miscellaneous
     app.use('/api/misc', miscellaneousRouter());

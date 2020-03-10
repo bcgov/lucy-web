@@ -51,6 +51,8 @@ parameters:
   value: 'none'
 - name: DB_SEED
   value: 'yes'
+- name: MAILER_INFO
+  value: 'invasivesbc-mailer'
 objects:
 - kind: Pod
   apiVersion: v1
@@ -108,6 +110,28 @@ objects:
         value: ${DB_CLEAN_UP}
       - name: DB_SEED
         value: ${DB_SEED}
+      - name: TEST_RUN
+        value: 'yes'
+      - name: APP_EMAIL_SENDER
+        valueFrom:
+          secretKeyRef:
+            key: sender
+            name: ${MAILER_INFO}
+      - name: APP_EMAIL_SENDER_PWD
+        valueFrom:
+          secretKeyRef:
+            key: sender-password
+            name: ${MAILER_INFO}
+      - name: APP_EMAIL_TEST_RECEIVER
+        valueFrom:
+          secretKeyRef:
+            key: test-receiver
+            name: ${MAILER_INFO}
+      - name: APP_REPORT_RECEIVER
+        valueFrom:
+          secretKeyRef:
+            key: test-receiver-list
+            name: ${MAILER_INFO}
       imagePullPolicy: Always
     restartPolicy: Never
     activeDeadlineSeconds: 900

@@ -4,3 +4,5 @@ server-dist
 dist
 _app_data
 **/node_modules
+tmp/
+**/tmp/
