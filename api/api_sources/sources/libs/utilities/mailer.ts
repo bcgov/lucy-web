@@ -68,7 +68,7 @@ export class Mailer {
      */
     public async send(options: PlainMail | Mail, logger: BaseLogger = DefaultLogger) {
         if (process.env.TEST_RUN === 'yes') {
-            logger.info('Skipping email send');
+            logger.error('Skipping email send');
             return new Promise( res => res({}));
         }
         return new Promise( (res, rej) => {
@@ -79,10 +79,9 @@ export class Mailer {
                     pass: Mailer.password
                 }
             });
+            let done = false;
             this.transporter.sendMail(options, (err, info) => {
-                // Clean transporter
-                this.transporter.close();
-                delete this.transporter;
+                done = true;
                 if (err) {
                     logger.error(`send | fail with error: ${err}`);
                     rej(err);
@@ -90,7 +89,21 @@ export class Mailer {
                     logger.info(`send | [SUCCESS]`);
                     res(info);
                 }
+
+                if (this.transporter) {
+                    // Clean transporter
+                    this.transporter.close();
+                    delete this.transporter;
+                }
             });
+
+            // Setting up timeout
+            setTimeout(() => {
+                if (!done) {
+                    logger.error(`Email Send fail [TIMEOUT]`);
+                    rej(new Error(`report-issue: Unable to send email [TIMEOUT]`));
+                }
+            }, 25000);
         });
     }
 
