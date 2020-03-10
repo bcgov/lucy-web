@@ -83,7 +83,8 @@ export class UploadRouteController extends RouteController {
         // Remove file
         fs.unlinkSync(filePath);
         // Responding
-        return [200, info];
+        // TODO: Fix email send issue for OpenShift
+        return [200, {}];
     }
 
     /**
