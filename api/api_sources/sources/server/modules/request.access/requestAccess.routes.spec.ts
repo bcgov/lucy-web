@@ -127,8 +127,11 @@ describe('Test Request Access Route', () => {
             await verifySuccessBody(resp.body);
             expect(resp.body.data.status).to.be.equal(0);
         });
-
-        const reqAccess = (await RequestAccessController.shared.all())[0];
+        const user =  await UserDataController.shared.fetchOne({ email: 'istest5@gov.bc.ca'});
+        const userLatest = await UserDataController.shared.latestAccessRequest(user);
+        should().exist(userLatest);
+        const reqAccess = userLatest || new RequestAccess();
+        should().exist(reqAccess.request_id);
         const body: any = {
             requestedAccessCode: 2,
             status: 2,
