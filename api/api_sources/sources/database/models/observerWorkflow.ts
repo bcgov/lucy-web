@@ -22,12 +22,6 @@ export interface ObserverWorkflowSpec {
 	motorizedBlowBys: number;
 	nonMotorizedBlowBys: number;
 	boatsInspected: boolean;
-	sunny: boolean;
-	cloudy: boolean;
-	raining: boolean;
-	snowing: boolean;
-	foggy: boolean;
-	windy: boolean;
 	k9OnShift: boolean;
 }
 // -- End: ObserverWorkflowSpec --
@@ -48,12 +42,6 @@ export interface ObserverWorkflowUpdateSpec {
 	motorizedBlowBys?: number;
 	nonMotorizedBlowBys?: number;
 	boatsInspected?: boolean;
-	sunny?: boolean;
-	cloudy?: boolean;
-	raining?: boolean;
-	snowing?: boolean;
-	foggy?: boolean;
-	windy?: boolean;
 	k9OnShift?: boolean;
 }
 // -- End: ObserverWorkflowUpdateSpec --
@@ -149,48 +137,6 @@ export class ObserverWorkflow extends Record implements ObserverWorkflowSpec {
 	@Column({ name: ObserverWorkflowSchema.columns.boatsInspected})
 	@ModelProperty({type: PropertyType.boolean})
 	boatsInspected: boolean;
-
-	/**
-	 * @description Getter/Setter property for column {weather_sunny_ind}
-	 */
-	@Column({ name: ObserverWorkflowSchema.columns.sunny})
-	@ModelProperty({type: PropertyType.boolean})
-	sunny: boolean;
-
-	/**
-	 * @description Getter/Setter property for column {weather_cloudy_ind}
-	 */
-	@Column({ name: ObserverWorkflowSchema.columns.cloudy})
-	@ModelProperty({type: PropertyType.boolean})
-	cloudy: boolean;
-
-	/**
-	 * @description Getter/Setter property for column {weather_raining_ind}
-	 */
-	@Column({ name: ObserverWorkflowSchema.columns.raining})
-	@ModelProperty({type: PropertyType.boolean})
-	raining: boolean;
-
-	/**
-	 * @description Getter/Setter property for column {weather_snowing_ind}
-	 */
-	@Column({ name: ObserverWorkflowSchema.columns.snowing})
-	@ModelProperty({type: PropertyType.boolean})
-	snowing: boolean;
-
-	/**
-	 * @description Getter/Setter property for column {weather_foggy_ind}
-	 */
-	@Column({ name: ObserverWorkflowSchema.columns.foggy})
-	@ModelProperty({type: PropertyType.boolean})
-	foggy: boolean;
-
-	/**
-	 * @description Getter/Setter property for column {weather_windy_ind}
-	 */
-	@Column({ name: ObserverWorkflowSchema.columns.windy})
-	@ModelProperty({type: PropertyType.boolean})
-	windy: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {k9_on_shift_ind}

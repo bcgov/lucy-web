@@ -50,5 +50,6 @@ schemas:
         definition: INT NULL
         foreignTable: water_body
         refColumn: water_body_id
+        required: false
     versions: []
     fields: {}
