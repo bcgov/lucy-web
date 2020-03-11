@@ -1,23 +1,61 @@
 .header-text {
-  color: #000000;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 24px;
-  text-align: center;
+    color: #000000;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
 }
 
 .info-button {
-  float: right;
-  display: flex;
-  align-items: center;
-  background-color: #0053A4;
-  padding: 4px 8px;
-  border-radius: 20px;
-  font-size: 12px;
-  color: #FFFFFF;
-  cursor: pointer;
+    float: right;
+    display: flex;
+    align-items: center;
+    background-color: #0053A4;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #FFFFFF;
+    cursor: pointer;
 }
 
 p {
-  margin: 0;
+    margin: 0;
+}
+
+.add-button {
+    float: right;
+    display: flex;
+    align-items: center;
+    background-color: #0053A4;
+    border-radius: 20px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin: 8px;
+}
+
+.remove-point-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.generate-path-button {
+    display: flex;
+    float: right;
+    cursor: pointer;
+    background-color: #0053A4;
+    color: #FFFFFF;
+}
+
+.waypoint-index {
+    display: flex;
+    align-items: center;
+}
+
+.waypoints-container {
+    display: inline;
+    align-items: center;
+    vertical-align: middle;
 }
