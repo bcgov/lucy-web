@@ -156,6 +156,7 @@ schemas:
         foreignTable: previous_ais_knowledge_source_code
         refColumn: previous_ais_knowledge_source_code_id
         deleteCascade: false
+        required: false
         meta: {}
       previousInspectionSource:
         name: previous_inspection_source_code_id
@@ -164,6 +165,7 @@ schemas:
         foreignTable: previous_inspection_source_code
         refColumn: previous_inspection_source_code_id
         deleteCascade: false
+        required: false
         meta: {}
     ## -- end columns
     versions:
