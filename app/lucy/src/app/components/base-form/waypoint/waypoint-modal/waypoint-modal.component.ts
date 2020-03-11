@@ -31,4 +31,8 @@ export class WaypointModalComponent implements OnInit {
     this.pointsEntered.splice(index, 1);
   }
 
+  generatePath() {
+    console.log(this.pointsEntered);
+  }
+
 }
