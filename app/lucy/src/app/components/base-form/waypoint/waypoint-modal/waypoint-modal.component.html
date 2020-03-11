@@ -1,17 +1,63 @@
 <div class="modal-content-container">
-  
-  <p *ngIf="!showInfo" class="header-text">Way-point Details</p>
-  <hr class="section-divider" />
-  
-  <!-- waypoint geometry -->
-  <div *ngIf="!showInfo">
-    <div class="info-button" (click)="toggleView()">
-      <i class="material-icons-outlined info-icon">info</i>
-      <p>More Info</p>
-    </div>
-  </div>
 
-  <!-- waypoint info -->
-  <app-waypoint-info *ngIf="showInfo" (onBackAction)="toggleView()">
-  </app-waypoint-info>
+    <p *ngIf="!showInfo" class="header-text">Waypoint Details</p>
+    <hr class="section-divider" />
+
+    <!-- waypoint geometry -->
+    <div *ngIf="!showInfo">
+        <div class="info-button" (click)="toggleView()">
+            <i class="material-icons-outlined info-icon">info</i>
+            <p>More Info</p>
+        </div>
+    </div>
+
+    <!-- waypoint info -->
+    <app-waypoint-info *ngIf="showInfo" (onBackAction)="toggleView()">
+    </app-waypoint-info>
+
+    <!-- offset width -->
+    <div class="row">
+        <div class="col-6">
+            <app-field [mode]="mode" min=0 max=20 suffix='m' required header='Offset width'></app-field>
+        </div>
+    </div>
+
+    <!-- text fields for pin entries -->
+    <div *ngFor="let pt of pointsEntered; let j = index" class="waypoints-container">
+        <div class="row">
+            <div class="col-1 waypoint-index">
+                <p>{{ j+1 }}</p>
+            </div>
+            <div class="col-10">
+                <app-waypoint-text-entry [value]=pt></app-waypoint-text-entry>
+            </div>
+            <div class="col-1 remove-point-button" (click)="removeWaypoint(j)">
+                <i class="material-icons-outlined clear-icon">clear</i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add button to inject another waypoint-text-entry component -->
+    <div class="row add-button" (click)="addNewWaypointTextEntry()">
+        <i class="material-icons-outlined add-icon">add</i>
+        <p>Add</p>
+    </div>
+
+    <!-- Text disclaimer -->
+    <div class="row">
+        <h5>Please note:</h5>
+        <p>Waypoints must be listed in sequence as observed on ground. If listed otherwise, generated path will differ.</p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="row modal-action-container">
+        <div class="modal-action row">
+            <button mat-stroked-button color="secondary" class="modal-action-button back-button">
+          Back
+        </button>
+            <button mat-stroked-button color="primary" class="modal-action-button generate-path-button">
+          Generate path
+        </button>
+        </div>
+    </div>
 </div>
