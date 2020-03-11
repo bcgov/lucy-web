@@ -7,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WaypointTextEntryComponent implements OnInit {
 
+   lat;
+   long; 
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  latitudeChanged() {
+
+  }
+
+  longitudeChanged() {
+
   }
 
 }

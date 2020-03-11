@@ -14,6 +14,8 @@ export class WaypointModalComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // minimum 2 points are required for waypoint, so adding 2 empty text entry fields by default
+    this.pointsEntered.push(new WaypointTextEntryComponent());
     this.pointsEntered.push(new WaypointTextEntryComponent());
   }
 
