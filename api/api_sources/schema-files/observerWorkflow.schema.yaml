@@ -72,30 +72,6 @@ schemas:
         name: 'boats_inspected_ind'
         comment: 'Boolean indicator to show any boat was inspected during shift'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
-      sunny:
-        name: 'weather_sunny_ind'
-        comment: 'Boolean indicator to show day was sunny or not'
-        definition: BOOLEAN NOT NULL DEFAULT FALSE
-      cloudy:
-        name: 'weather_cloudy_ind'
-        comment: 'Boolean indicator to show day was cloudy or not'
-        definition: BOOLEAN NOT NULL DEFAULT FALSE
-      raining:
-        name: 'weather_raining_ind'
-        comment: 'Boolean indicator to show day was there any rain?'
-        definition: BOOLEAN NOT NULL DEFAULT FALSE
-      snowing:
-        name: 'weather_snowing_ind'
-        comment: 'Boolean indicator to show day was there any snow?'
-        definition: BOOLEAN NOT NULL DEFAULT FALSE
-      foggy:
-        name: 'weather_foggy_ind'
-        comment: 'Boolean indicator to show foggy condition of the day'
-        definition: BOOLEAN NOT NULL DEFAULT FALSE
-      windy:
-        name: 'weather_windy_ind'
-        comment: 'Boolean indicator to show windy condition of the day'
-        definition: BOOLEAN NOT NULL DEFAULT FALSE
       k9OnShift:
         name: 'k9_on_shift_ind'
         comment: 'Boolean indicator to show K9 on shift'
