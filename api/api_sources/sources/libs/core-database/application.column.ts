@@ -98,6 +98,7 @@ export interface SchemaChangeOptions {
     sqlStatement?: string;
     downSqlStatement?: string;
     deleteColumn?: boolean;
+    comment?: string;
 }
 
 
@@ -197,6 +198,18 @@ export class ApplicationTableColumn implements TableColumnDefinition {
 
     public dropColumnSql(tableName: string) {
         return `ALTER TABLE ${tableName} DROP COLUMN IF EXISTS ${this.name};`;
+    }
+
+    public updateColumnSql(tableName: string, data: TableColumnDataOption) {
+        const def = `ALTER TABLE ${tableName} ALTER COLUMN ${this.name} ${data.definition}`;
+        const ref = this.ref(data.foreignTable, data.refColumn, data.deleteCascade);
+        const final = ref ? `${def} ${ref};` : `${def};`;
+        const comment = `COMMENT ON ${tableName}.${this.name} IS '${data.comment}';`;
+        return `${final}\n${comment}\n`;
+    }
+
+    public get option(): TableColumnDataOption {
+        return this as TableColumnDataOption;
     }
 
     get type(): string {
