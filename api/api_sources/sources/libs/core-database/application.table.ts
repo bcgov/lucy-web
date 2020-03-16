@@ -31,7 +31,8 @@ export const ColumnChangeType = {
     RENAME: 'rename',
     DROP: 'drop',
     KEY_CHANGE: 'key-change',
-    CUSTOM: 'custom'
+    CUSTOM: 'custom',
+    UPDATE: 'update'
 };
 
 /**
@@ -105,6 +106,7 @@ export class ApplicationTable {
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
     viewColumn = 'id';
+    columVersions: {[key: string]: ApplicationTableColumn[]} = {};
 
     get relationalColumnKeys(): string[] {
         const r: string[] = [];
@@ -207,11 +209,53 @@ export class ApplicationTable {
         const key = columnChange.newKey || columnChange.existingKey;
         const existingColumnDef = this.columnsDefinition[columnChange.existingKey];
         const type = columnChange.type || ColumnChangeType.KEY_CHANGE;
-        if (this.columnsDefinition[columnChange.existingKey]) {
-            delete (this.columnsDefinition[columnChange.existingKey]);
+
+        // Verify change type are having consistent data
+        // Type
+        if (!columnChange.type) {
+            throw new Error(`Table: handleColumnChanges: No type`);
+        }
+        // RENAME type must have different column name
+        if (type === ColumnChangeType.RENAME) {
+            if (!columnChange.newColumnName) {
+                throw new Error(`Table: handleColumnChanges: RENAME => No new column name`);
+            }
+            if (columnChange.newColumnName === existingColumnDef.name) {
+                throw new Error(`Table: handleColumnChanges: RENAME => same name ${existingColumnDef.name}`);
+            }
         }
 
-        if ( type !== ColumnChangeType.DROP && !columnChange.deleteColumn) {
+        if (type === ColumnChangeType.UPDATE) {
+            if (!columnChange.column) {
+                throw new Error(`Table: handleColumnChanges: UPDATE: No new column def`);
+            }
+            if (columnChange.column.name !== existingColumnDef.name) {
+            throw new Error(`Table: handleColumnChanges: UPDATE: New definition name mismatch existing ${existingColumnDef.name} new name ${columnChange.column.name}`);
+            }
+
+        }
+
+        // Deleting existing column for any other kind of changes
+        if (this.columnsDefinition[columnChange.existingKey] && type !== ColumnChangeType.RENAME) {
+            // Store it in version
+            if (existingColumnDef) {
+                if (this.columVersions[columnChange.existingKey]) {
+                    this.columVersions[columnChange.existingKey].push(existingColumnDef);
+                } else {
+                    this.columVersions[columnChange.existingKey] = [existingColumnDef];
+                }
+            }
+            delete (this.columnsDefinition[columnChange.existingKey]);
+        }
+        // Handling column rename
+        if (this.columnsDefinition[columnChange.existingKey] && type === ColumnChangeType.RENAME) {
+            const newColum: ApplicationTableColumn = { ...existingColumnDef } as ApplicationTableColumn;
+            newColum.name = columnChange.newColumnName || existingColumnDef.name;
+            this.columnsDefinition[columnChange.existingKey] = newColum;
+        }
+
+
+        if (type !== ColumnChangeType.DROP  && type !== ColumnChangeType.RENAME) {
             if (columnChange.column) {
                 this.columnsDefinition[key] = ApplicationTableColumn.createColumn(columnChange.column);
             } else {
@@ -224,7 +268,8 @@ export class ApplicationTable {
             existingColumn: existingColumnDef,
             column: this.columnsDefinition[key],
             newColumnName: columnChange.newColumnName,
-            type: type
+            type: type,
+            deleteColumn: columnChange.deleteColumn
         };
     }
 
