@@ -47,6 +47,24 @@ p {
     cursor: pointer;
     background-color: #0053A4;
     color: #FFFFFF;
+    border-style: solid;
+    border-color: #474747;
+    border-radius: 8px;
+    border-width: 1px;
+    padding: 8px;
+    margin: 10px;
+}
+
+.back-button {
+    display: flex;
+    float: left;
+    cursor: pointer;
+    border-style: solid;
+    border-color: #474747;
+    border-width: 1px;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 10px;
 }
 
 .waypoint-index {
@@ -58,6 +76,12 @@ p {
     display: inline;
     align-items: center;
     vertical-align: middle;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    float: center;
 }
 
 .disclaimer {

@@ -18,18 +18,18 @@
     <!-- offset width -->
     <div class="row">
         <div class="col-6">
-            <app-field [mode]="mode" min=0 max=20 suffix='m' required header='Offset width'></app-field>
+            <app-field [mode]="mode" [verification]=offsetVerification suffix='m' header='Offset width' [value]=offset (valueChanged)="offsetChanged($event)"></app-field>
         </div>
     </div>
 
     <!-- text fields for pin entries -->
     <div *ngFor="let pt of pointsEntered; let j = index" class="waypoints-container">
-        <div class="row">
+        <div class="row animated fadeIn animationDuration">
             <div class="col-1 waypoint-index">
                 <p>{{ j+1 }}</p>
             </div>
             <div class="col-10">
-                <app-waypoint-text-entry [value]=pt></app-waypoint-text-entry>
+                <app-waypoint-text-entry [value]=pt [mode]=mode></app-waypoint-text-entry>
             </div>
             <div class="col-1 remove-point-button" (click)="removeWaypoint(j)">
                 <i class="material-icons-outlined clear-icon">clear</i>
@@ -38,9 +38,11 @@
     </div>
 
     <!-- Add button to inject another waypoint-text-entry component -->
-    <div class="row add-button" (click)="addNewWaypointTextEntry()">
-        <i class="material-icons-outlined add-icon">add</i>
-        <p>Add</p>
+    <div *ngIf="!maxPointsLengthReached">
+        <div class="row add-button" (click)="addNewWaypointTextEntry()">
+            <i class="material-icons-outlined add-icon">add</i>
+            <p>Add</p>
+        </div>
     </div>
 
     <!-- Text disclaimer -->
@@ -55,12 +57,12 @@
     </div>
 
     <!-- Buttons -->
-    <div class="row modal-action-container">
-        <div class="modal-action row">
-            <button mat-stroked-button color="secondary" class="modal-action-button back-button">
-          Back
-        </button>
-            <div class="generate-path-button" (click)="generatePath()">
+    <div class="row">
+        <div class="buttons-container col-6">
+            <div class="back-button col-6">
+                Back
+            </div>
+            <div class="generate-path-button col-6" (click)="generatePath()">
                 Generate path
             </div>
         </div>
