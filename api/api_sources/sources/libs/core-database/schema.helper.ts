@@ -24,7 +24,6 @@ import * as fs from 'fs';
 import * as _ from 'underscore';
 import { ApplicationTableColumn } from './application.column';
 import { TableVersion, SchemaChangeDefinition, ColumnChangeType } from './application.table';
-import { unWrap } from '../utilities';
 import { BaseSchema } from './baseSchema';
 import { getSQLDirPath, getSQLFileData } from './sql.loader';
 
