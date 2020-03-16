@@ -79,10 +79,16 @@ export class UploadRouteController extends RouteController {
             ]
         };
         // Sending mail
-        const info = await Mailer.shared.send(mail);
+        let info: any = {};
+        try {
+            info = await Mailer.shared.send(mail, this.logger);
+        } catch (excp) {
+            this.logger.error(`report-issue: Caught error while sending email: ${excp}`);
+        }
         // Remove file
         fs.unlinkSync(filePath);
         // Responding
+        // TODO: Fix email send issue for OpenShift
         return [200, info];
     }
 
