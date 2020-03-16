@@ -82,6 +82,7 @@ schemas:
         foreignTable: adult_mussels_location_code
         refColumn: adult_mussels_location_code_id
         deleteCascade: false
+        required: false
         meta: {}
       adultDreissenidaeMusselDetail:
         name: adult_mussels_location_code_id
@@ -90,6 +91,7 @@ schemas:
         foreignTable: adult_mussels_location_code
         refColumn: adult_mussels_location_code_id
         deleteCascade: false
+        required: false
         meta: {}
     versions: []
     fields: {}
