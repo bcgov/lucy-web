@@ -1,64 +1,80 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormMode } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
-
-interface WaypointCoordinate {
-  lat: string;
-  long: string;
-}
+import { ConverterService, LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
 
 @Component({
   selector: 'app-waypoint-text-entry',
   templateUrl: './waypoint-text-entry.component.html',
   styleUrls: ['./waypoint-text-entry.component.css']
 })
-export class WaypointTextEntryComponent implements OnInit, WaypointCoordinate {
+export class WaypointTextEntryComponent implements OnInit {
 
-   lat: string;
-   long: string;
-   point: WaypointCoordinate;
-   validation: ValidationService;
+  lat: string;
+  long: string;
 
-  ///// Form Mode
-  private _mode: FormMode = FormMode.View;
-  get mode(): FormMode {
-    return this._mode;
+  latVerification = {
+    required: true,
+  };
+
+  longVerification = {
+    required: true,
+  };
+
+  private _point: LatLongCoordinate;
+  get point(): LatLongCoordinate {
+    return this._point;
   }
 
-  @Input() set mode(mode: FormMode) {
-    this._mode = mode;
+  @Input() set point(point: LatLongCoordinate) {
+    this._point = {...point};
+    let latExists = false;
+    let longExists = false;
+
+    if (this.point && this.point.latitude) {
+      this.lat = `${this.point.latitude}`;
+      latExists = true;
+    }
+    if (this.point && this.point.longitude) {
+      this.long = `${this.point.longitude}`;
+      longExists = true;
+    }
   }
 
-  @Output() locationChanged = new EventEmitter<any>();
+  @Output() pointChanged = new EventEmitter<any>();
 
   constructor(
+    private validation: ValidationService,
+    private converter: ConverterService,
   ) { }
 
   ngOnInit() {
-    this.validation = new ValidationService();
   }
 
   latChanged(value: string) {
     if ((this.validation.isValidLatitude(value)) || (value === ``)) {
       this.lat = value;
-      this.notifyChangeEvent();
     }
+    this.notifyChangeEvent();
   }
 
   longChanged(value: string) {
     if ((this.validation.isValidLongitude(value)) || (value === ``)) {
       this.long = value;
-      this.notifyChangeEvent();
     }
+    this.notifyChangeEvent();
   }
 
   private notifyChangeEvent() {
-    if (this.mode !== FormMode.View) {
-      const point: WaypointCoordinate = {
-        lat: this.lat,
-        long: this.long
+    const lat = Number(this.lat);
+    const long = Number(this.long);
+    if (this.converter.isInsideBC(lat, long)) {
+      this.point = {
+        latitude: Number(this.lat),
+        longitude: Number(this.long)
       };
-      this.locationChanged.emit(point);
+      this.pointChanged.emit(this.point);
+    } else {
+      console.log(this.lat + `, ` + this.long + ` is not within BC`);
     }
   }
 }

@@ -1,10 +1,10 @@
 <div>
     <div class="row point-container">
         <div class="col-6">
-            <app-field [mode]="mode" header='Latitude' [value]="lat" (valueChanged)="latChanged($event)"></app-field>
+            <app-field [mode]="mode" header='Latitude' [value]="lat" [verification]=latVerification (valueChanged)="latChanged($event)"></app-field>
         </div>
         <div class="col-6">
-            <app-field [mode]="mode" header='Longitude' [value]="long" (valueChanged)="longChanged($event)"></app-field>
+            <app-field [mode]="mode" header='Longitude' [value]="long" [verification]=longVerification (valueChanged)="longChanged($event)"></app-field>
         </div>
     </div>
 </div>

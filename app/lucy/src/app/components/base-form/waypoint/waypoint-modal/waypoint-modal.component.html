@@ -18,18 +18,18 @@
     <!-- offset width -->
     <div class="row">
         <div class="col-6">
-            <app-field [mode]="mode" [verification]=offsetVerification suffix='m' header='Offset width' [value]=offset (valueChanged)="offsetChanged($event)"></app-field>
+            <app-field [mode]="mode" [verification]="offsetVerification" suffix='m' header='Offset width' [value]=offset (valueChanged)="offsetChanged($event)"></app-field>
         </div>
     </div>
 
     <!-- text fields for pin entries -->
-    <div *ngFor="let pt of pointsEntered; let j = index" class="waypoints-container">
+    <div *ngFor="let pt of waypointEntryComponents; let j = index" class="waypoints-container">
         <div class="row animated fadeIn animationDuration">
             <div class="col-1 waypoint-index">
                 <p>{{ j+1 }}</p>
             </div>
-            <div class="col-10">
-                <app-waypoint-text-entry [value]=pt [mode]=mode></app-waypoint-text-entry>
+            <div class="col-10" (valueChanged)="pointChanged($event)">
+                <app-waypoint-text-entry [value]=pt [mode]=mode [responseBody]=responseBody></app-waypoint-text-entry>
             </div>
             <div class="col-1 remove-point-button" (click)="removeWaypoint(j)">
                 <i class="material-icons-outlined clear-icon">clear</i>
