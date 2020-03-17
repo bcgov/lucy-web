@@ -155,6 +155,11 @@ schemas:
         name: passport_number
         comment: 'Passport number associated with previous inspection'
         definition: VARCHAR(100) NULL
+      decontaminationReference:
+        name: decontamination_reference
+        comment: 'Decontamination reference number. Optional and dependent on decontaminationPerformed indicator'
+        definition: VARCHAR(100) NULL
+        required: false
       # Relationship
       highRiskAssessment:
         name: high_risk_assessment_id
