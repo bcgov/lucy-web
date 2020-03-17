@@ -28,8 +28,8 @@
             <div class="col-1 waypoint-index">
                 <p>{{ j+1 }}</p>
             </div>
-            <div class="col-10" (valueChanged)="pointChanged($event)">
-                <app-waypoint-text-entry [value]=pt [mode]=mode [responseBody]=responseBody></app-waypoint-text-entry>
+            <div class="col-10">
+                <app-waypoint-text-entry [value]=pt [mode]=mode [responseBody]=responseBody (pointChanged)="pointChanged($event,j)"></app-waypoint-text-entry>
             </div>
             <div class="col-1 remove-point-button" (click)="removeWaypoint(j)">
                 <i class="material-icons-outlined clear-icon">clear</i>
