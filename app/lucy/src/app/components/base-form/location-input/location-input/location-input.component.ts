@@ -18,7 +18,7 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { MapPreviewPoint, MapMarker } from 'src/app/components/Utilities/map-preview/map-preview.component';
-import { ConverterService } from 'src/app/services/coordinateConversion/location.service';
+import { ConverterService, LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
@@ -76,6 +76,8 @@ export class LocationInputComponent implements OnInit {
   northings: string;
   zone: string;
   minUTMDecimals = 2;
+
+  showModal = false;
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -570,6 +572,23 @@ export class LocationInputComponent implements OnInit {
       latitude: latitude,
       longitude: longitude
     });
+  }
+
+  /**
+   * Draw waypoint on map, center map view on waypoint
+   * @param points an array of LatLongCoordinates, arranged in the order they should be drawn on the map
+   */
+  drawWaypointOnMap(points: [LatLongCoordinate]) {
+    this.markers = [];
+    for (const pt of points) {
+      this.markers.push(pt);
+    }
+    const centerPoint = points[Math.floor(points.length / 2)];
+    this.mapCenter = {
+      latitude: centerPoint.latitude,
+      longitude: centerPoint.longitude,
+      zoom: 18
+    };
   }
 
   mapCenterChanged(event: any) {
