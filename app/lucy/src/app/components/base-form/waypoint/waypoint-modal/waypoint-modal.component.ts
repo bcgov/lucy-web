@@ -66,8 +66,8 @@ export class WaypointModalComponent implements OnInit {
     this.responseBody.offset = this.offset;
   }
 
-  pointChanged(coordinate: LatLongCoordinate) {
-    this.waypoints.push(coordinate);
+  pointChanged(coordinate: LatLongCoordinate, index: number) {
+    this.waypoints.splice(index, 1, coordinate);
     this.responseBody.pointsEntered = this.waypoints;
   }
 
@@ -93,18 +93,18 @@ export class WaypointModalComponent implements OnInit {
       console.log(`Invalid distance between points`);
     } else {
       console.log(`Offset width: ` + this.offset);
-      console.log(this.waypoints);
+      for (const wp of this.waypoints) {
+        console.log(wp);
+      }
     }
   }
 
   get validDistanceBetweenPoints() {
-    for (const i in this.waypoints) {
-      if (this.waypoints[i] !== undefined && this.waypoints[i + 1] !== undefined) {
-        const distance = haversine(this.waypoints[i], this.waypoints[i + 1]);
-        if ( distance < this.MIN_DISTANCE_BTWN_POINTS || distance > this.MAX_DISTANCE_BTWN_POINTS ) {
-          console.log(`Invalid distance between points ` + i + ` and ` + i + 1);
-          return false;
-        }
+    for (let i = 0; i < this.waypoints.length - 1; i++) {
+      const distance = haversine(this.waypoints[i], this.waypoints[i + 1]);
+      if ( distance < this.MIN_DISTANCE_BTWN_POINTS || distance > this.MAX_DISTANCE_BTWN_POINTS ) {
+        console.log(`Invalid distance between points ` + i + ` and ` + i + 1);
+        return false;
       }
     }
     return true;
