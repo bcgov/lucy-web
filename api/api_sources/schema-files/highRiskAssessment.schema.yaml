@@ -56,11 +56,13 @@ schemas:
       decontaminationReference:
         name: decontamination_reference
         comment: 'Decontamination reference number'
-        definition: INT NULL
+        definition: VARCHAR(100) NULL
+        required: false
       decontaminationOrderNumber:
         name: decontamination_order_number
         comment: 'Decontamination order number'
         definition: INT NULL
+        required: false
       sealNumber:
         name: seal_number
         comment: 'Seal number'
@@ -82,6 +84,7 @@ schemas:
         foreignTable: adult_mussels_location_code
         refColumn: adult_mussels_location_code_id
         deleteCascade: false
+        required: false
         meta: {}
       adultDreissenidaeMusselDetail:
         name: adult_mussels_location_code_id
@@ -90,6 +93,7 @@ schemas:
         foreignTable: adult_mussels_location_code
         refColumn: adult_mussels_location_code_id
         deleteCascade: false
+        required: false
         meta: {}
     versions: []
     fields: {}

@@ -98,11 +98,27 @@ schemas:
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       previousDryStorage:
         name: previous_dry_storage_ind
-        comment: Boolean indicator that watercraft''s previous waterbody is Dry Storage
+        comment: Boolean indicator that watercraft''s previous water body is Dry Storage
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       destinationDryStorage:
         name: destination_dry_storage_ind
-        comment: Boolean indicator that watercraft''s destination waterbody is Dry Storage
+        comment: Boolean indicator that watercraft''s destination water body is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      unknownPreviousWaterBody:
+        name: unknown_previous_water_body_ind
+        comment: Boolean indicate that watercraft''s previous water body is unknown
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      unknownDestinationWaterBody:
+        name: unknown_destination_water_body_ind
+        comment: Boolean indicate that watercraft''s destination water body is unknown
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commercialManufacturerAsPreviousWaterBody:
+        name: commercial_manufacturer_as_previous_water_body_ind
+        comment: Boolean indicate that watercraft''s previous water body is commercial manufacturer
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commercialManufacturerAsDestinationWaterBody:
+        name: commercial_manufacturer_as_destination_water_body_ind
+        comment: Boolean indicate that watercraft''s destination water body is commercial manufacturer
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:
@@ -139,6 +155,11 @@ schemas:
         name: passport_number
         comment: 'Passport number associated with previous inspection'
         definition: VARCHAR(100) NULL
+      decontaminationReference:
+        name: decontamination_reference
+        comment: 'Decontamination reference number. Optional and dependent on decontaminationPerformed indicator'
+        definition: VARCHAR(100) NULL
+        required: false
       # Relationship
       highRiskAssessment:
         name: high_risk_assessment_id
