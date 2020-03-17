@@ -19,6 +19,10 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_area_ind BOOLEAN NOT
 ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_ais_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_dry_storage_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN destination_dry_storage_ind BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN unknown_previous_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN unknown_destination_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN commercial_manufacturer_as_previous_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN commercial_manufacturer_as_destination_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN non_motorized_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN simple_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN complex_counter INT NULL;
@@ -27,6 +31,7 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_days_count
 ALTER TABLE watercraft_risk_assessment ADD COLUMN province VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN general_comment VARCHAR(300) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN passport_number VARCHAR(100) NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN decontamination_reference VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_assessment_id INT NULL REFERENCES high_risk_assessment(high_risk_assessment_id) ON DELETE SET NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_ais_knowledge_source_code_id INT NULL REFERENCES previous_ais_knowledge_source_code(previous_ais_knowledge_source_code_id) ON DELETE SET NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_source_code_id INT NULL REFERENCES previous_inspection_source_code(previous_inspection_source_code_id) ON DELETE SET NULL;
@@ -52,8 +57,12 @@ COMMENT ON COLUMN watercraft_risk_assessment.decontamination_performed_ind IS 'S
 COMMENT ON COLUMN watercraft_risk_assessment.commercially_hauled_ind IS 'Status flag to check inspected boats are commercially hauled or not';
 COMMENT ON COLUMN watercraft_risk_assessment.high_risk_area_ind IS 'Indicator flag to check boats are from High risk area or not.';
 COMMENT ON COLUMN watercraft_risk_assessment.high_risk_ais_ind IS 'Indicator flag to check high risk AIS or not';
-COMMENT ON COLUMN watercraft_risk_assessment.previous_dry_storage_ind IS 'Boolean indicator that watercraft''s previous waterbody is Dry Storage';
-COMMENT ON COLUMN watercraft_risk_assessment.destination_dry_storage_ind IS 'Boolean indicator that watercraft''s destination waterbody is Dry Storage';
+COMMENT ON COLUMN watercraft_risk_assessment.previous_dry_storage_ind IS 'Boolean indicator that watercraft''s previous water body is Dry Storage';
+COMMENT ON COLUMN watercraft_risk_assessment.destination_dry_storage_ind IS 'Boolean indicator that watercraft''s destination water body is Dry Storage';
+COMMENT ON COLUMN watercraft_risk_assessment.unknown_previous_water_body_ind IS 'Boolean indicate that watercraft''s previous water body is unknown';
+COMMENT ON COLUMN watercraft_risk_assessment.unknown_destination_water_body_ind IS 'Boolean indicate that watercraft''s destination water body is unknown';
+COMMENT ON COLUMN watercraft_risk_assessment.commercial_manufacturer_as_previous_water_body_ind IS 'Boolean indicate that watercraft''s previous water body is commercial manufacturer';
+COMMENT ON COLUMN watercraft_risk_assessment.commercial_manufacturer_as_destination_water_body_ind IS 'Boolean indicate that watercraft''s destination water body is commercial manufacturer';
 COMMENT ON COLUMN watercraft_risk_assessment.non_motorized_counter IS 'Counter for non motorized boats in inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.simple_counter IS 'Counter for number of simple boats in the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.complex_counter IS 'Counter for number of complex boats in the inspection';
@@ -62,6 +71,7 @@ COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_days_count IS '
 COMMENT ON COLUMN watercraft_risk_assessment.province IS 'Province of residence of the boat';
 COMMENT ON COLUMN watercraft_risk_assessment.general_comment IS 'Province of residence of the boat';
 COMMENT ON COLUMN watercraft_risk_assessment.passport_number IS 'Passport number associated with previous inspection';
+COMMENT ON COLUMN watercraft_risk_assessment.decontamination_reference IS 'Decontamination reference number. Optional and dependent on decontaminationPerformed indicator';
 COMMENT ON COLUMN watercraft_risk_assessment.high_risk_assessment_id IS 'Foreign key reference to High risk assessment of the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.previous_ais_knowledge_source_code_id IS 'Foreign key reference to previous_ais_knowledge_source_code table';
 COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_source_code_id IS 'Foreign key reference to previous_inspection_source_code table';
