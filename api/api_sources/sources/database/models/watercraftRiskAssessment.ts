@@ -67,6 +67,8 @@ export interface WatercraftRiskAssessmentSpec {
 	destinationDryStorage: boolean;
 	unknownPreviousWaterBody: boolean;
 	unknownDestinationWaterBody: boolean;
+	commercialManufacturerAsPreviousWaterBody: boolean;
+	commercialManufacturerAsDestinationWaterBody: boolean;
 	nonMotorized: number;
 	simple: number;
 	complex: number;
@@ -106,6 +108,8 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	destinationDryStorage?: boolean;
 	unknownPreviousWaterBody?: boolean;
 	unknownDestinationWaterBody?: boolean;
+	commercialManufacturerAsPreviousWaterBody?: boolean;
+	commercialManufacturerAsDestinationWaterBody?: boolean;
 	nonMotorized?: number;
 	simple?: number;
 	complex?: number;
@@ -268,6 +272,20 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.unknownDestinationWaterBody})
 	@ModelProperty({type: PropertyType.boolean})
 	unknownDestinationWaterBody: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {commercial_manufacturer_as_previous_water_body_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsPreviousWaterBody})
+	@ModelProperty({type: PropertyType.boolean})
+	commercialManufacturerAsPreviousWaterBody: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {commercial_manufacturer_as_destination_water_body_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsDestinationWaterBody})
+	@ModelProperty({type: PropertyType.boolean})
+	commercialManufacturerAsDestinationWaterBody: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {non_motorized_counter}

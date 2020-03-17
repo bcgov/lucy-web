@@ -112,6 +112,14 @@ schemas:
         name: unknown_destination_water_body_ind
         comment: Boolean indicate that watercraft''s destination water body is unknown
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commercialManufacturerAsPreviousWaterBody:
+        name: commercial_manufacturer_as_previous_water_body_ind
+        comment: Boolean indicate that watercraft''s previous water body is commercial manufacturer
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commercialManufacturerAsDestinationWaterBody:
+        name: commercial_manufacturer_as_destination_water_body_ind
+        comment: Boolean indicate that watercraft''s destination water body is commercial manufacturer
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:
         name: 'non_motorized_counter'

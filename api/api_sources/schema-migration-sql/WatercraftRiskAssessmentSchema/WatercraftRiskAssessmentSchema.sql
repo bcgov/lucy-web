@@ -21,6 +21,8 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_dry_storage_ind BOOLE
 ALTER TABLE watercraft_risk_assessment ADD COLUMN destination_dry_storage_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN unknown_previous_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN unknown_destination_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN commercial_manufacturer_as_previous_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN commercial_manufacturer_as_destination_water_body_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN non_motorized_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN simple_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN complex_counter INT NULL;
@@ -58,6 +60,8 @@ COMMENT ON COLUMN watercraft_risk_assessment.previous_dry_storage_ind IS 'Boolea
 COMMENT ON COLUMN watercraft_risk_assessment.destination_dry_storage_ind IS 'Boolean indicator that watercraft''s destination water body is Dry Storage';
 COMMENT ON COLUMN watercraft_risk_assessment.unknown_previous_water_body_ind IS 'Boolean indicate that watercraft''s previous water body is unknown';
 COMMENT ON COLUMN watercraft_risk_assessment.unknown_destination_water_body_ind IS 'Boolean indicate that watercraft''s destination water body is unknown';
+COMMENT ON COLUMN watercraft_risk_assessment.commercial_manufacturer_as_previous_water_body_ind IS 'Boolean indicate that watercraft''s previous water body is commercial manufacturer';
+COMMENT ON COLUMN watercraft_risk_assessment.commercial_manufacturer_as_destination_water_body_ind IS 'Boolean indicate that watercraft''s destination water body is commercial manufacturer';
 COMMENT ON COLUMN watercraft_risk_assessment.non_motorized_counter IS 'Counter for non motorized boats in inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.simple_counter IS 'Counter for number of simple boats in the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.complex_counter IS 'Counter for number of complex boats in the inspection';
