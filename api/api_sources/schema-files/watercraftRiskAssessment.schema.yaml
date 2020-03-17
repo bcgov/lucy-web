@@ -98,11 +98,19 @@ schemas:
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       previousDryStorage:
         name: previous_dry_storage_ind
-        comment: Boolean indicator that watercraft''s previous waterbody is Dry Storage
+        comment: Boolean indicator that watercraft''s previous water body is Dry Storage
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       destinationDryStorage:
         name: destination_dry_storage_ind
-        comment: Boolean indicator that watercraft''s destination waterbody is Dry Storage
+        comment: Boolean indicator that watercraft''s destination water body is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      unknownPreviousWaterBody:
+        name: unknown_previous_water_body_ind
+        comment: Boolean indicate that watercraft''s previous water body is unknown
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      unknownDestinationWaterBody:
+        name: unknown_destination_water_body_ind
+        comment: Boolean indicate that watercraft''s destination water body is unknown
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:

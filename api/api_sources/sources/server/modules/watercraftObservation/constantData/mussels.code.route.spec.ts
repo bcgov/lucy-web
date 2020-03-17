@@ -15,7 +15,7 @@ import {
 /**
  * Test Function
  */
-const resourceName = 'Water-body';
+const resourceName = 'Mussel App Codes';
 describe(`Test for ${resourceName}`, () => {
     before(async () => {
         await commonTestSetupAction();

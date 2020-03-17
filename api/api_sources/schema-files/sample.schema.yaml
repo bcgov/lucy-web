@@ -57,6 +57,30 @@ schemas:
             default: ''
           classes:
             - none
+      size:
+        comment: Size of the sample
+        required: true
+        name: sample_size
+        definition: INT NULL
+        meta: {}
+        layout:
+          header:
+            key: ''
+            default: ''
+          classes:
+            - none
+      drop:
+        comment: Size of the sample
+        required: true
+        name: drop
+        definition: INT NULL
+        meta: {}
+        layout:
+          header:
+            key: ''
+            default: ''
+          classes:
+            - none
     versions:
       - name: 'test'
         id: '12.12'
@@ -75,6 +99,7 @@ schemas:
       - name: 'test2'
         id: '12.13'
         info: 'Test version added'
+        ## -- New Columns --
         columns: 
           count:
             name: count
@@ -84,6 +109,30 @@ schemas:
             name: top
             definition: VARCHAR(200) NOT NULL
             comment: Name of the sample
+        ## -- Change in schema or table
+        schemaChanges:
+          - comment: Renaming size column
+            existingKey: size
+            newColumnName: sample_size_value
+            type: rename
+          - comment: Updating tag colum
+            existingKey: tag
+            column:
+              name: tag
+              definition: VARCHAR(500) NOT NULL
+              comment: Tag of the sample
+            type: update
+          - comment: Dropping column
+            existingKey: drop
+            type: drop
+          - comment: Updating tag colum
+            existingKey: top
+            deleteColumn: true
+            column:
+              name: top
+              definition: VARCHAR(500) NOT NULL
+              comment: Tag of the sample
+            type: update
         # --
       # ---
     ## -- end version
