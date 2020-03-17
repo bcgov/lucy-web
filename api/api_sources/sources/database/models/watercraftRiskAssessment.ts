@@ -77,6 +77,7 @@ export interface WatercraftRiskAssessmentSpec {
 	provinceOfResidence: string;
 	generalComment: string;
 	passportNumber: string;
+	decontaminationReference: string;
 	highRiskAssessment: HighRiskAssessment;
 	workflow: ObserverWorkflow;
 	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
@@ -118,6 +119,7 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	provinceOfResidence?: string;
 	generalComment?: string;
 	passportNumber?: string;
+	decontaminationReference?: string;
 	highRiskAssessment?: HighRiskAssessment;
 	workflow?: ObserverWorkflow;
 	previousAISKnowledgeSource?: PreviousAISKnowledgeSource;
@@ -342,6 +344,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportNumber})
 	@ModelProperty({type: PropertyType.string})
 	passportNumber: string;
+
+	/**
+	 * @description Getter/Setter property for column {decontamination_reference}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.decontaminationReference})
+	@ModelProperty({type: PropertyType.string})
+	decontaminationReference: string;
 
 	/**
 	 * @description Getter/Setter property for column {high_risk_assessment_id}
