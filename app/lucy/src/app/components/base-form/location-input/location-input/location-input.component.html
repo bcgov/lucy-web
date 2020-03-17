@@ -62,7 +62,7 @@
             <div class="col-12 col-md-8 leaf">
                 <app-map-preview (centerPointChanged)="mapCenterChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers">
                 </app-map-preview>
-    
+
                 <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance animated wobble">
                     There is a well
                     <span class="well-distance-value">{{ wellDistance }} meters</span> from this location.
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Geometry -->
     <div class="container">
         <!-- Title: Row -->
@@ -95,9 +95,20 @@
                 <app-field [mode]="mode" [header]="headerYDimension" [value]="y" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionYChange($event)">
                 </app-field>
             </div>
+            <div class="col col-md-1 nopadding" (click)="showModal = true">
+                <i class="material-icons-outlined launch-icon">launch</i>
+            </div>
         </div>
+        <!-- Waypoint Entry Modal -->
+        <app-modal *ngIf="showModal" (onClose)="onModalClose()" [align]="'center'">
+
+            <!-- Add waypoint modal -->
+            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" [config]="config" [responseBody]="responseBody" (waypointsEventHandler)="waypointsEventHandler($event)">
+            </app-waypoint-modal>
+
+        </app-modal>
     </div>
-    
+
     <!-- ////// -->
 </div>
 

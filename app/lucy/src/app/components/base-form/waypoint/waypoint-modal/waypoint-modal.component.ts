@@ -42,7 +42,7 @@ export class WaypointModalComponent implements OnInit {
 
   @Output() offsetChangedEmitter = new EventEmitter<any>();
 
-  private _waypointsEventHandler: EventEmitter<LatLongCoordinate>;
+  @Output() waypointsEventHandler = new EventEmitter<any>();
 
   constructor(
     private validation: ValidationService,
@@ -63,25 +63,25 @@ export class WaypointModalComponent implements OnInit {
   offsetChanged(value: number) {
     this.offset = value;
     this.offsetChangedEmitter.emit(value);
-    this.responseBody.offset = this.offset;
+    this.responseBody.waypoints.offset = this.offset;
   }
 
   pointChanged(coordinate: LatLongCoordinate, index: number) {
     this.waypoints.splice(index, 1, coordinate);
-    this.responseBody.pointsEntered = this.waypoints;
+    this.responseBody.waypoint.pointsEntered = this.waypoints;
   }
 
   addNewWaypointTextEntry() {
     this.waypointEntryComponents.push(new WaypointTextEntryComponent(this.validation, this.converter));
     this.maxPointsLengthReached = this.waypointEntryComponents.length === this.MAX_NUM_POINTS ? true : false;
-    this.responseBody.pointsEntered = this.waypoints;
+    this.responseBody.waypoint.pointsEntered = this.waypoints;
   }
 
   removeWaypoint(index: number) {
     this.waypointEntryComponents.splice(index, 1);
     this.waypoints.splice(index, 1);
     this.maxPointsLengthReached = this.waypoints.length === this.MAX_NUM_POINTS ? true : false;
-    this.responseBody.pointsEntered = this.waypoints;
+    this.responseBody.waypoint.pointsEntered = this.waypoints;
   }
 
   generatePath() {
@@ -92,10 +92,7 @@ export class WaypointModalComponent implements OnInit {
     } else if (!this.validDistanceBetweenPoints) {
       console.log(`Invalid distance between points`);
     } else {
-      console.log(`Offset width: ` + this.offset);
-      for (const wp of this.waypoints) {
-        console.log(wp);
-      }
+      this.waypointsEventHandler.emit(this.responseBody.waypoint);
     }
   }
 
@@ -103,7 +100,7 @@ export class WaypointModalComponent implements OnInit {
     for (let i = 0; i < this.waypoints.length - 1; i++) {
       const distance = haversine(this.waypoints[i], this.waypoints[i + 1]);
       if ( distance < this.MIN_DISTANCE_BTWN_POINTS || distance > this.MAX_DISTANCE_BTWN_POINTS ) {
-        console.log(`Invalid distance between points ` + i + ` and ` + i + 1);
+        console.log(`Invalid distance between points ` + i + ` and ` + (i + 1));
         return false;
       }
     }

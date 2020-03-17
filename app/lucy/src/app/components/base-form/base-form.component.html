@@ -229,12 +229,3 @@
     <br />
     <!-- -------------------- -->
 </div>
-
-<!-- Modals -->
-<app-modal *ngIf="showModal" (onClose)="onModalClose()" [align]="'center'">
-
-    <!-- Add waypoint modal -->
-    <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" [config]="config" [responseBody]="responseBody">
-    </app-waypoint-modal>
-
-</app-modal>
