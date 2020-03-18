@@ -25,7 +25,7 @@ objects:
     labels: null
     name: ${NAME}${SUFFIX}
   spec:
-    replicas: 1
+    replicas: "${{REPLICAS}}"
     revisionHistoryLimit: 10
     selector:
       deploymentConfig: ${NAME}${SUFFIX}
@@ -40,7 +40,7 @@ objects:
         requests:
           cpu: ${CPU_REQUEST}
           memory: ${MEMORY_REQUEST}
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         annotations: null
@@ -224,3 +224,5 @@ parameters:
 - name: SSO_REALM
   description: Realm identifier or name
   value: dfmlcg7z
+- name: REPLICAS
+  value: '1'
