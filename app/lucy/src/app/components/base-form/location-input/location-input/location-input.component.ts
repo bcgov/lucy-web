@@ -36,6 +36,10 @@ interface SpaceGeomData {
   space_geom_id?: number;
 }
 
+enum ModalType {
+  WayPoint = 1,
+}
+
 const AreaFieldTitle = {
   WIDTH: 'Width',
   LENGTH: 'Length',
@@ -77,7 +81,7 @@ export class LocationInputComponent implements OnInit {
   zone: string;
   minUTMDecimals = 2;
 
-  showModal = false;
+  modalType: number;
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -575,10 +579,20 @@ export class LocationInputComponent implements OnInit {
   }
 
   /**
+   * @description Handling waypoints text entry event
+   * @param value any
+   */
+  waypointsEventHandler(value: any) {
+    this.onModalClose();
+    this.drawWaypointOnMap(value.points, value.offset);
+  }
+
+  /**
    * Draw waypoint on map, center map view on waypoint
    * @param points an array of LatLongCoordinates, arranged in the order they should be drawn on the map
+   * @param offset the width of the waypoint (in metres)
    */
-  drawWaypointOnMap(points: [LatLongCoordinate]) {
+  private drawWaypointOnMap(points: [LatLongCoordinate], offset: number) {
     this.markers = [];
     for (const pt of points) {
       this.markers.push(pt);
@@ -593,5 +607,31 @@ export class LocationInputComponent implements OnInit {
 
   mapCenterChanged(event: any) {
   }
+
+  /*********** Modal Methods ************/
+  get showModal(): boolean {
+    return !!this.modalType;
+  }
+
+  selectedModalType(modal: number): ModalType {
+    switch (modal) {
+      case 1: return ModalType.WayPoint;
+      default: return undefined;
+    }
+  }
+  showModalContent(modal: number): boolean {
+    if (!modal) return false;
+    return this.modalType === modal;
+  }
+
+  openModal(modal: number) {
+    if (!modal) return;
+    this.modalType = this.selectedModalType(modal);
+  }
+
+  onModalClose() {
+    this.modalType = undefined;
+  }
+  /********* End Modal Methods **********/
 
 }

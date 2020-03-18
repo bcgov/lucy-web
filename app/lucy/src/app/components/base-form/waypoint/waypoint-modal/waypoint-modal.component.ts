@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { WaypointTextEntryComponent } from '../waypoint-text-entry/waypoint-text-entry.component';
 import { ValidationService } from 'src/app/services/validation.service';
 import { ConverterService, LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
-
 const haversine = require('haversine-distance');
 
 @Component({
@@ -63,25 +62,23 @@ export class WaypointModalComponent implements OnInit {
   offsetChanged(value: number) {
     this.offset = value;
     this.offsetChangedEmitter.emit(value);
-    this.responseBody.waypoints.offset = this.offset;
   }
 
   pointChanged(coordinate: LatLongCoordinate, index: number) {
     this.waypoints.splice(index, 1, coordinate);
-    this.responseBody.waypoint.pointsEntered = this.waypoints;
   }
 
   addNewWaypointTextEntry() {
-    this.waypointEntryComponents.push(new WaypointTextEntryComponent(this.validation, this.converter));
+    const newWaypointEntry = new WaypointTextEntryComponent(this.validation, this.converter);
+    this.waypointEntryComponents.push(newWaypointEntry);
     this.maxPointsLengthReached = this.waypointEntryComponents.length === this.MAX_NUM_POINTS ? true : false;
-    this.responseBody.waypoint.pointsEntered = this.waypoints;
+    this.waypoints.push(newWaypointEntry.point);
   }
 
   removeWaypoint(index: number) {
     this.waypointEntryComponents.splice(index, 1);
     this.waypoints.splice(index, 1);
     this.maxPointsLengthReached = this.waypoints.length === this.MAX_NUM_POINTS ? true : false;
-    this.responseBody.waypoint.pointsEntered = this.waypoints;
   }
 
   generatePath() {
@@ -92,7 +89,7 @@ export class WaypointModalComponent implements OnInit {
     } else if (!this.validDistanceBetweenPoints) {
       console.log(`Invalid distance between points`);
     } else {
-      this.waypointsEventHandler.emit(this.responseBody.waypoint);
+      this.waypointsEventHandler.emit({points: this.waypoints, offset: this.offset});
     }
   }
 

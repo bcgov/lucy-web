@@ -45,9 +45,6 @@ export enum FormType {
   ChemicalTreatment
 }
 
-export enum ModalType {
-  WayPoint = 1,
-}
 @Component({
   selector: 'app-base-form',
   templateUrl: './base-form.component.html',
@@ -77,11 +74,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * test environment
    */
   public isTest: boolean = false;
-
-  /**
-   * Boolean to show/hide waypoint modal
-   */
-  public modalType: ModalType;
 
   private _responseBody = {};
   get responseBody(): any {
@@ -212,33 +204,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._diffObject = object;
   }
 
-  /*********** Modal Methods ************/
-  get showModal(): boolean {
-    return !!this.modalType;
-  }
-
-  selectedModalType(modal: number): ModalType {
-    switch (modal) {
-      case 1: return ModalType.WayPoint;
-      default: return undefined;
-    }
-  }
-
-  showModalContent(modal: number): boolean {
-    if (!modal) return false;
-    return this.modalType === modal;
-  }
-
-  openModal(modal: number) {
-    if (!modal) return;
-    this.modalType = this.selectedModalType(modal);
-  }
-
-  onModalClose() {
-    this.modalType = undefined;
-  }
-  /********* End Modal Methods **********/
-
   /**
    * Check if the spaceGeom is valid or not
    */
@@ -271,7 +236,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * Check if species observations is valid or not
    */
   isSpeciesObservationsValid(speciesObservations: any): boolean {
-    if (!speciesObservations || speciesObservations.length === 0) return false;
+    if (!speciesObservations || speciesObservations.length === 0) { 
+      return false; 
+    }
 
     const invalidSpeciesObservations = speciesObservations.filter(species => !species.treatmentAreaCoverage);
     return (invalidSpeciesObservations.length === 0);
