@@ -95,7 +95,8 @@
                 <app-field [mode]="mode" [header]="headerYDimension" [value]="y" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionYChange($event)">
                 </app-field>
             </div>
-            <div class="col col-md-1 nopadding" (click)="showModal = true">
+            <!-- Button to launch Waypoint Modal -->
+            <div class="col col-md-1 nopadding open-modal-button" (click)="openModal(1)">
                 <i class="material-icons-outlined launch-icon">launch</i>
             </div>
         </div>
