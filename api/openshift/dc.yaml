@@ -40,7 +40,7 @@ objects:
         requests:
           cpu: 500m
           memory: 1Gi
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         annotations: null
