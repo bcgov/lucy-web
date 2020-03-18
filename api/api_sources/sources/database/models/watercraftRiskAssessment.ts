@@ -67,6 +67,8 @@ export interface WatercraftRiskAssessmentSpec {
 	destinationDryStorage: boolean;
 	unknownPreviousWaterBody: boolean;
 	unknownDestinationWaterBody: boolean;
+	commercialManufacturerAsPreviousWaterBody: boolean;
+	commercialManufacturerAsDestinationWaterBody: boolean;
 	nonMotorized: number;
 	simple: number;
 	complex: number;
@@ -75,6 +77,7 @@ export interface WatercraftRiskAssessmentSpec {
 	provinceOfResidence: string;
 	generalComment: string;
 	passportNumber: string;
+	decontaminationReference: string;
 	highRiskAssessment: HighRiskAssessment;
 	workflow: ObserverWorkflow;
 	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
@@ -106,6 +109,8 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	destinationDryStorage?: boolean;
 	unknownPreviousWaterBody?: boolean;
 	unknownDestinationWaterBody?: boolean;
+	commercialManufacturerAsPreviousWaterBody?: boolean;
+	commercialManufacturerAsDestinationWaterBody?: boolean;
 	nonMotorized?: number;
 	simple?: number;
 	complex?: number;
@@ -114,6 +119,7 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	provinceOfResidence?: string;
 	generalComment?: string;
 	passportNumber?: string;
+	decontaminationReference?: string;
 	highRiskAssessment?: HighRiskAssessment;
 	workflow?: ObserverWorkflow;
 	previousAISKnowledgeSource?: PreviousAISKnowledgeSource;
@@ -270,6 +276,20 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	unknownDestinationWaterBody: boolean;
 
 	/**
+	 * @description Getter/Setter property for column {commercial_manufacturer_as_previous_water_body_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsPreviousWaterBody})
+	@ModelProperty({type: PropertyType.boolean})
+	commercialManufacturerAsPreviousWaterBody: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {commercial_manufacturer_as_destination_water_body_ind}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsDestinationWaterBody})
+	@ModelProperty({type: PropertyType.boolean})
+	commercialManufacturerAsDestinationWaterBody: boolean;
+
+	/**
 	 * @description Getter/Setter property for column {non_motorized_counter}
 	 */
 	@Column({name: WatercraftRiskAssessmentSchema.columns.nonMotorized, transformer: new IntTransformer()})
@@ -324,6 +344,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportNumber})
 	@ModelProperty({type: PropertyType.string})
 	passportNumber: string;
+
+	/**
+	 * @description Getter/Setter property for column {decontamination_reference}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.decontaminationReference})
+	@ModelProperty({type: PropertyType.string})
+	decontaminationReference: string;
 
 	/**
 	 * @description Getter/Setter property for column {high_risk_assessment_id}

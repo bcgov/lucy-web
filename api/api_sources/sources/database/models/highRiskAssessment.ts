@@ -21,7 +21,7 @@ export interface HighRiskAssessmentSpec {
 	decontaminationOrderIssued: boolean;
 	sealIssued: boolean;
 	watercraftRegistration: string;
-	decontaminationReference: number;
+	decontaminationReference: string;
 	decontaminationOrderNumber: number;
 	sealNumber: number;
 	standingWaterLocation: object;
@@ -45,7 +45,7 @@ export interface HighRiskAssessmentUpdateSpec {
 	decontaminationOrderIssued?: boolean;
 	sealIssued?: boolean;
 	watercraftRegistration?: string;
-	decontaminationReference?: number;
+	decontaminationReference?: string;
 	decontaminationOrderNumber?: number;
 	sealNumber?: number;
 	standingWaterLocation?: object;
@@ -136,9 +136,9 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	/**
 	 * @description Getter/Setter property for column {decontamination_reference}
 	 */
-	@Column({name: HighRiskAssessmentSchema.columns.decontaminationReference, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	decontaminationReference: number;
+	@Column({ name: HighRiskAssessmentSchema.columns.decontaminationReference})
+	@ModelProperty({type: PropertyType.string})
+	decontaminationReference: string;
 
 	/**
 	 * @description Getter/Setter property for column {decontamination_order_number}
