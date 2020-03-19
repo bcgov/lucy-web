@@ -20,6 +20,7 @@ import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
 import { Observation } from 'src/app/models';
 import * as bcgeojson from './bcgeojson.json';
+import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
 declare let L;
 
 export interface MapPreviewPoint {

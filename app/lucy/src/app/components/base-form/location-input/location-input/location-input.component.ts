@@ -20,7 +20,6 @@ import { FormMode } from 'src/app/models';
 import { MapPreviewPoint, MapMarker } from 'src/app/components/Utilities/map-preview/map-preview.component';
 import { ConverterService, LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { DropdownService } from 'src/app/services/dropdown.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 import { GeometryJSON, InputGeometryJSON } from 'src/lib';
 import { BcgwService } from 'src/app/services/bcgw/bcgw.service';
@@ -67,6 +66,8 @@ export class LocationInputComponent implements OnInit {
 
   // Markers shown on map
   markers: MapMarker[] = [];
+  // lat/long coordinates to be used as boundary if drawing waypoint
+  polygonBoundaryPoints: MapMarker[] = [];
 
   // Empty existing value
   private _existingValue: SpaceGeomData = { geometry: 1, latitude: 0, longitude: 0};
@@ -584,25 +585,15 @@ export class LocationInputComponent implements OnInit {
    */
   waypointsEventHandler(value: any) {
     this.onModalClose();
-    this.drawWaypointOnMap(value.points, value.offset);
+    this.calculateWaypointBoundaryPoints(value.points, value.offset);
   }
 
   /**
    * Draw waypoint on map, center map view on waypoint
-   * @param points an array of LatLongCoordinates, arranged in the order they should be drawn on the map
-   * @param offset the width of the waypoint (in metres)
    */
-  private drawWaypointOnMap(points: [LatLongCoordinate], offset: number) {
-    this.markers = [];
-    for (const pt of points) {
-      this.markers.push(pt);
-    }
-    const centerPoint = points[Math.floor(points.length / 2)];
-    this.mapCenter = {
-      latitude: centerPoint.latitude,
-      longitude: centerPoint.longitude,
-      zoom: 18
-    };
+  private drawWaypointOnMap() {
+    // addInvertedPolygon();
+    this.markers = this.polygonBoundaryPoints;
   }
 
   mapCenterChanged(event: any) {
@@ -633,5 +624,137 @@ export class LocationInputComponent implements OnInit {
     this.modalType = undefined;
   }
   /********* End Modal Methods **********/
+
+  /********* Waypoint Math/Helper Methods **********/
+
+  /**
+   * Given an offset distance in metres and a list of lat/long coordinates representing the centre line
+   * of the waypoint, calculates the lat/long coordinates to be used as the boundary of the waypoint
+   * (drawn on the map as a polygon)
+   * @param offset width in metres of the waypoint line
+   * @param coords ordered list of lat/long coords centred along waypoint line (distance of half of offset to either
+   * side of each coordinate)
+   */
+  private calculateWaypointBoundaryPoints(offset: number, coords: [LatLongCoordinate]) {
+    this.polygonBoundaryPoints = [] as LatLongCoordinate[];
+
+    // traverse list of coords, calculating left side of offset/buffer
+    for (let i = 0; i < coords.length - 1; i++) {
+      const vx = coords[i + 1].latitude - coords[i].latitude;
+      const vy = coords[i + 1].longitude - coords[i].longitude;
+      const dist = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+      const ux = (-1 * vy) / dist;
+      const uy = vx / dist;
+
+      let nextPoint = {
+        latitude: coords[i].latitude + (offset * ux),
+        longitude: coords[i].longitude + (offset * uy)
+      };
+      this.polygonBoundaryPoints.push(nextPoint);
+
+      nextPoint = {
+        latitude: coords[i + 1].latitude + (offset * ux),
+        longitude: coords[i + 1].longitude + (offset * uy)
+      };
+      this.polygonBoundaryPoints.push(nextPoint);
+    }
+
+    // traverse list of coords in reverse, calculating other side of offset/buffer
+    for (let i = coords.length - 1; i > 0; i--) {
+      const vx = coords[i].latitude - coords[i - 1].latitude;
+      const vy = coords[i].longitude - coords[i - 1].longitude;
+      const dist = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+      const ux = (-1 * vy) / dist;
+      const uy = vx / dist;
+
+      let nextPoint = {
+        latitude: coords[i].latitude - (offset * ux),
+        longitude: coords[i].longitude - (offset * uy)
+      };
+      this.polygonBoundaryPoints.push(nextPoint);
+
+      nextPoint = {
+        latitude: coords[i - 1].latitude - (offset * ux),
+        longitude: coords[i - 1].longitude - (offset * uy)
+      };
+      this.polygonBoundaryPoints.push(nextPoint);
+    }
+
+    // iterate through lower portion of polygonBoundaryPoints to calculate intersection point
+    for (let i = 0; i < ((this.polygonBoundaryPoints.length / 2) - 2); i = i + 2) {
+      this.oneIterationOfIntersectionCalculations(i);
+    }
+
+    // iterate through second portion of polygonBoundaryPoints to calculate intersection points
+    for (let i = ((this.polygonBoundaryPoints.length / 2) + 1); i < this.polygonBoundaryPoints.length - 2; i = i + 2) {
+      this.oneIterationOfIntersectionCalculations(i);
+    }
+
+    // check for duplicated coordinates in polygonBoundaryPoints
+    // if any duplicates found, remove them
+    for (let i = 0; i < this.polygonBoundaryPoints.length; i++) {
+      const pt = this.polygonBoundaryPoints[i];
+      while (this.polygonBoundaryPoints.indexOf(pt, i + 1) !== -1) {
+        this.polygonBoundaryPoints.splice(this.polygonBoundaryPoints.indexOf(pt, i + 1), 1);
+      }
+    }
+
+    // duplicate the first point and append it to the list in order to close the polygon
+    const first = this.polygonBoundaryPoints[0];
+    this.polygonBoundaryPoints.push(first);
+
+    // draw the polygon on the map
+    this.drawWaypointOnMap();
+  }
+
+  private oneIterationOfIntersectionCalculations(i: number) {
+    const x11 = this.polygonBoundaryPoints[i].latitude;
+    const x12 = this.polygonBoundaryPoints[i + 1].latitude;
+    const y11 = this.polygonBoundaryPoints[i].longitude;
+    const y12 = this.polygonBoundaryPoints[i + 1].longitude;
+    const x21 = this.polygonBoundaryPoints[i + 2].latitude;
+    const x22 = this.polygonBoundaryPoints[i + 3].latitude;
+    const y21 = this.polygonBoundaryPoints[i + 2].longitude;
+    const y22 = this.polygonBoundaryPoints[i + 3].longitude;
+
+    const points = {
+      x11: x11,
+      x12: x12,
+      y11: y11,
+      y12: y12,
+      x21: x21,
+      x22: x22,
+      y21: y21,
+      y22: y22
+    };
+    const intersection = this.findIntersection(points);
+
+    // replace end point of first arc & start point of second arc with intersection
+    this.polygonBoundaryPoints[i + 1].latitude = intersection.interX;
+    this.polygonBoundaryPoints[i + 1].longitude = intersection.interY;
+    this.polygonBoundaryPoints[i + 2].latitude = intersection.interX;
+    this.polygonBoundaryPoints[i + 2].longitude = intersection.interY;
+  }
+
+  /**
+   * Returns the x & y coordinates of the point of intersection amongst input values
+   * @param values dictionary object of 4 x and 4 y values
+   */
+  private findIntersection(values: any) {
+    const dx1 = values.x12 - values.x11;
+    const dy1 = values.y12 - values.y11;
+    const dx2 = values.x22 - values.x21;
+    const dy2 = values.y22 - values.y21;
+    const denom = dy1 * dx2 - dx1 * dy2;
+    const tt1 = ((values.x11 - values.x21) * dy2 + (values.y21 - values.y11) * dx2) / denom; // cannot be zero
+
+    // Find the point of intersection
+    const interX = values.x11 + dx1 * tt1;
+    const interY = values.y11 + dy1 * tt1;
+
+    return ({interX: interX, interY: interY});
+  }
+
+  /******** End Waypoint Math/Helper Methods *******/
 
 }
