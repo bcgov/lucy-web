@@ -143,10 +143,10 @@ export class TableExporter {
 
         const result: any = {};
         for (const key of sortedKeys) {
-            result[keyMapper[key] || key] = data[key] || 'NA';
+            result[keyMapper[key] || key] = (data[key] !== undefined) ? data[key] : '';
             delete data[key];
         }
-        return {...result, ...data};
+        return result;
     }
 }
  // ------------------------------------------------------
