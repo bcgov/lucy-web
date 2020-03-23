@@ -339,8 +339,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    */
   drawPolygon() {
     const polygon = L.polygon([this.polygon], {
-      color: 'grey',
-      fillColor: 'grey',
+      color: '#F5A623',
+      fillColor: '#F5A623',
       fillOpacity: 0.7,
       weight: 2,
     });
