@@ -88,6 +88,26 @@ p {
     margin-top: 20px;
 }
 
+.error-card {
+    padding: 5pt;
+    margin: 5pt 10pt;
+    background-color: #FF534A;
+    align-content: center;
+    border-radius: 8pt;
+    display: inline;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.error-card span {
+    color: #FFFFFF;
+    vertical-align: middle;
+}
+
+.error-card i {
+    color: #FFFFFF;
+}
+
 .test-btn {
     align-content: center;
     text-align: center;
