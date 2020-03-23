@@ -45,6 +45,16 @@
         </div>
     </div>
 
+    <!-- Error messages -->
+    <div class="errors-container">
+        <div *ngFor="let e of errors" class="row">
+            <div class="error-card col-10 col-align-self-center">
+                <i class="material-icons-outlined error-icon">error</i>
+                <span>{{ e }}</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Text disclaimer -->
     <div class="disclaimer-container">
         <div class="row">

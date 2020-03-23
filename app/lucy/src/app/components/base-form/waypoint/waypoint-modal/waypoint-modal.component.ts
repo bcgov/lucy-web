@@ -23,6 +23,7 @@ export class WaypointModalComponent implements OnInit {
   maxPointsLengthReached = false;
   waypointValid: boolean;
   offsetValid: boolean;
+  errors: string[] = [];
 
   offsetVerification = {
     positive: true,
@@ -83,39 +84,59 @@ export class WaypointModalComponent implements OnInit {
 
   generatePath() {
     if (this.waypointEntryComponents.length > this.MAX_NUM_POINTS) {
-      console.log('Error: cannot enter more than 10 coordinates');
+      this.errors.push('Error: cannot enter more than 10 coordinates');
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
-      console.log('Error: cannot enter less than 2 coordinates');
-    } else if (!this.validDistanceBetweenPoints) {
-      console.log(`Invalid distance between points`);
-    } else {
+      this.errors.push('Error: cannot enter less than 2 coordinates');
+    } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
       this.waypointsEventHandler.emit({offset: this.offset, points: this.waypoints});
     }
   }
 
   get validDistanceBetweenPoints() {
+    let counter = 0;
     for (let i = 0; i < this.waypoints.length - 1; i++) {
       const distance = haversine(this.waypoints[i], this.waypoints[i + 1]);
       if ( distance < this.MIN_DISTANCE_BTWN_POINTS || distance > this.MAX_DISTANCE_BTWN_POINTS ) {
-        console.log(`Invalid distance between points ` + i + ` and ` + (i + 1));
-        return false;
+        this.errors.push(`Error: invalid distance (` + distance.toFixed(2) + `m) between points ` + (i + 1) + ` and ` + (i + 2));
+        counter += 1;
       }
     }
-    return true;
+    return true ? counter === 0 : false;
+  }
+
+  get pointsAreWithinBC() {
+    let counter = 0;
+    for (let i = 0; i < this.waypoints.length - 1; i++) {
+      if (!this.converter.isInsideBC(this.waypoints[i].latitude, this.waypoints[i].longitude)) {
+        this.errors.push(`Error: point ` + (i + 1) + ` is not within BC`);
+        counter += 1;
+      }
+    }
+    return true ? counter === 0 : false;
   }
 
   submitTestData() {
-    this.offset = 3;
+    // // valid data
+    // this.offset = 3;
+    // this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
+    // this.waypoints.push({latitude: 48.430997, longitude: -123.354144});
+    // this.waypoints.push({latitude: 48.431013, longitude: -123.354051});
+    // this.waypoints.push({latitude: 48.431088, longitude: -123.354008});
+    // this.waypoints.push({latitude: 48.431072, longitude: -123.353949});
+    // this.waypoints.push({latitude: 48.431154, longitude: -123.353922});
+    // this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
+    // this.waypoints.push({latitude: 48.431227, longitude: -123.354094});
+    // this.waypoints.push({latitude: 48.431248, longitude: -123.354148});
+    // this.waypoints.push({latitude: 48.431329, longitude: -123.354118});
+    // this.generatePath();
+
+    // invalid data
+    this.offset = 33;  // too large
     this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
-    this.waypoints.push({latitude: 48.430997, longitude: -123.354144});
-    this.waypoints.push({latitude: 48.431013, longitude: -123.354051});
-    this.waypoints.push({latitude: 48.431088, longitude: -123.354008});
-    this.waypoints.push({latitude: 48.431072, longitude: -123.353949});
-    this.waypoints.push({latitude: 48.431154, longitude: -123.353922});
     this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
-    this.waypoints.push({latitude: 48.431227, longitude: -123.354094});
-    this.waypoints.push({latitude: 48.431248, longitude: -123.354148});
-    this.waypoints.push({latitude: 48.431329, longitude: -123.354118});
+    this.waypoints.push({latitude: 48.431197, longitude: -123.353980}); // too close to previous
+    this.waypoints.push({latitude: 50.530961, longitude: -124.354008}); // too far away
+    this.waypoints.push({latitude: 48.541516, longitude: -123.121760}); // in Washington state
     this.generatePath();
   }
 }

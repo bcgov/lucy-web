@@ -65,16 +65,10 @@ export class WaypointTextEntryComponent implements OnInit {
   }
 
   private notifyChangeEvent() {
-    const lat = Number(this.lat);
-    const long = Number(this.long);
-    if (this.converter.isInsideBC(lat, long)) {
-      this._point = {
-        latitude: Number(this.lat),
-        longitude: Number(this.long)
-      };
-      this.pointChanged.emit(this._point);
-    } else {
-      console.log(this.lat + `, ` + this.long + ` is not within BC`);
-    }
+    this._point = {
+      latitude: Number(this.lat),
+      longitude: Number(this.long)
+    };
+    this.pointChanged.emit(this._point);
   }
 }
