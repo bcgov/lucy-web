@@ -20,7 +20,6 @@ import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
 import { Observation } from 'src/app/models';
 import * as bcgeojson from './bcgeojson.json';
-import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
 declare let L;
 
 export interface MapPreviewPoint {
@@ -111,6 +110,19 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       this.addMarkers();
     }
   }
+
+  /////////////// Polygon ////////////////
+  private _polygon: number[][] = [[]];
+  get polygon(): number[][] {
+    return this._polygon;
+  }
+  @Input() set polygon(coordinates: number[][]) {
+    this._polygon = coordinates;
+    if (this.ready) {
+      this.drawPolygon();
+    }
+  }
+
   //////////////////////////////////////////////
 
   @Output() centerPointChanged = new EventEmitter<MapPreviewPoint>();
@@ -319,6 +331,35 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       }
     );
     polygon.addTo(this.map);
+  }
+
+  /**
+   * Draws a polygon on the map based on the list of lat/long coordinates
+   * assigned to this.polygon
+   */
+  drawPolygon() {
+    const polygon = L.polygon([this.polygon], {
+      color: 'pink',
+      fillColor: 'pink',
+      fillOpacity: 0.7,
+      weight: 2,
+    });
+    polygon.addTo(this.map);
+    this.showMapAt({latitude: this.polygon[0][0], longitude: this.polygon[0][1], zoom: 18});
+    this.drawLine();
+  }
+
+  drawLine() {
+    const linePoints = [];
+    for (const c of this.markers) {
+      linePoints.push([c.latitude, c.longitude]);
+    }
+    const line = L.polyline([linePoints], {
+      color: 'black',
+      weight: 1,
+      fillOpacity: 0.4,
+    });
+    line.addTo(this.map);
   }
 
   //////////////////////////////////////////////

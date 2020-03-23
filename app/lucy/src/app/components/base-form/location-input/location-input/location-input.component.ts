@@ -17,12 +17,13 @@
  */
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormMode } from 'src/app/models';
-import { MapPreviewPoint, MapMarker } from 'src/app/components/Utilities/map-preview/map-preview.component';
-import { ConverterService, LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
+import { MapPreviewPoint, MapMarker, MapPreviewComponent } from 'src/app/components/Utilities/map-preview/map-preview.component';
+import { ConverterService, LatLongCoordinate, AlbersCoordinate } from 'src/app/services/coordinateConversion/location.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 import { GeometryJSON, InputGeometryJSON } from 'src/lib';
 import { BcgwService } from 'src/app/services/bcgw/bcgw.service';
+
 
 interface SpaceGeomData {
   geometry: any;
@@ -66,8 +67,11 @@ export class LocationInputComponent implements OnInit {
 
   // Markers shown on map
   markers: MapMarker[] = [];
+
   // lat/long coordinates to be used as boundary if drawing waypoint
-  polygonBoundaryPoints: MapMarker[] = [];
+  waypointBoundaryPointsLatLong: number[][];
+  // waypoint boundary coordinates in BC Albers (needed for certain calculations)
+  waypointBoundaryPointsAlbers: AlbersCoordinate[] = [];
 
   // Empty existing value
   private _existingValue: SpaceGeomData = { geometry: 1, latitude: 0, longitude: 0};
@@ -91,6 +95,7 @@ export class LocationInputComponent implements OnInit {
   }
 
   @Output() locationChanged = new EventEmitter<any>();
+  @Output() polygonChanged = new EventEmitter<number[][]>();
 
   @Input() set mode(mode: FormMode) {
     this._mode = mode;
@@ -261,7 +266,7 @@ export class LocationInputComponent implements OnInit {
     private converterService: ConverterService,
     private validation: ValidationService,
     private formService: FormService,
-    private BCGWService: BcgwService
+    private BCGWService: BcgwService,
     ) { }
 
   private processInputValues(input: SpaceGeomData) {
@@ -585,15 +590,14 @@ export class LocationInputComponent implements OnInit {
    */
   waypointsEventHandler(value: any) {
     this.onModalClose();
-    this.calculateWaypointBoundaryPoints(value.points, value.offset);
+    this.calculateWaypointBoundaryPoints(value.offset, value.points);
   }
 
   /**
-   * Draw waypoint on map, center map view on waypoint
+   * Draw waypoint on map
    */
   private drawWaypointOnMap() {
-    // addInvertedPolygon();
-    this.markers = this.polygonBoundaryPoints;
+    this.polygonChanged.emit(this.waypointBoundaryPointsLatLong);
   }
 
   mapCenterChanged(event: any) {
@@ -611,12 +615,12 @@ export class LocationInputComponent implements OnInit {
     }
   }
   showModalContent(modal: number): boolean {
-    if (!modal) return false;
+    if (!modal) { return false; }
     return this.modalType === modal;
   }
 
   openModal(modal: number) {
-    if (!modal) return;
+    if (!modal) { return; }
     this.modalType = this.selectedModalType(modal);
   }
 
@@ -630,92 +634,107 @@ export class LocationInputComponent implements OnInit {
   /**
    * Given an offset distance in metres and a list of lat/long coordinates representing the centre line
    * of the waypoint, calculates the lat/long coordinates to be used as the boundary of the waypoint
-   * (drawn on the map as a polygon)
+   * (drawn on the map as a polygon). Calculations are performed in BC Albers, so input lat/long coords
+   * are first converted into Albers, calculated upon, and then converted back into lat/long for drawing
+   * on map.
    * @param offset width in metres of the waypoint line
    * @param coords ordered list of lat/long coords centred along waypoint line (distance of half of offset to either
    * side of each coordinate)
    */
   private calculateWaypointBoundaryPoints(offset: number, coords: [LatLongCoordinate]) {
-    this.polygonBoundaryPoints = [] as LatLongCoordinate[];
+    this.waypointBoundaryPointsLatLong = [];
+    const coordsInAlbers: AlbersCoordinate[] = [];
 
-    // traverse list of coords, calculating left side of offset/buffer
-    for (let i = 0; i < coords.length - 1; i++) {
-      const vx = coords[i + 1].latitude - coords[i].latitude;
-      const vy = coords[i + 1].longitude - coords[i].longitude;
+    // convert lat/long coords to Albers
+    for (const c of coords) {
+      this.markers.push(c);
+      const point: AlbersCoordinate = this.converterService.latLongCoordinateToAlbers(c.latitude, c.longitude);
+      coordsInAlbers.push(point);
+    }
+
+    // traverse list of Albers coords, calculating left side of offset/buffer
+    for (let i = 0; i < coordsInAlbers.length - 1; i++) {
+      const vx = coordsInAlbers[i + 1].x - coordsInAlbers[i].x;
+      const vy = coordsInAlbers[i + 1].y - coordsInAlbers[i].y;
       const dist = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
       const ux = (-1 * vy) / dist;
       const uy = vx / dist;
 
       let nextPoint = {
-        latitude: coords[i].latitude + (offset * ux),
-        longitude: coords[i].longitude + (offset * uy)
+        x: coordsInAlbers[i].x + (offset * ux),
+        y: coordsInAlbers[i].y + (offset * uy)
       };
-      this.polygonBoundaryPoints.push(nextPoint);
+      this.waypointBoundaryPointsAlbers.push(nextPoint);
 
       nextPoint = {
-        latitude: coords[i + 1].latitude + (offset * ux),
-        longitude: coords[i + 1].longitude + (offset * uy)
+        x: coordsInAlbers[i + 1].x + (offset * ux),
+        y: coordsInAlbers[i + 1].y + (offset * uy)
       };
-      this.polygonBoundaryPoints.push(nextPoint);
+      this.waypointBoundaryPointsAlbers.push(nextPoint);
     }
 
     // traverse list of coords in reverse, calculating other side of offset/buffer
-    for (let i = coords.length - 1; i > 0; i--) {
-      const vx = coords[i].latitude - coords[i - 1].latitude;
-      const vy = coords[i].longitude - coords[i - 1].longitude;
+    for (let i = coordsInAlbers.length - 1; i > 0; i--) {
+      const vx = coordsInAlbers[i].x - coordsInAlbers[i - 1].x;
+      const vy = coordsInAlbers[i].y - coordsInAlbers[i - 1].y;
       const dist = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
       const ux = (-1 * vy) / dist;
       const uy = vx / dist;
 
       let nextPoint = {
-        latitude: coords[i].latitude - (offset * ux),
-        longitude: coords[i].longitude - (offset * uy)
+        x: coordsInAlbers[i].x - (offset * ux),
+        y: coordsInAlbers[i].y - (offset * uy)
       };
-      this.polygonBoundaryPoints.push(nextPoint);
+      this.waypointBoundaryPointsAlbers.push(nextPoint);
 
       nextPoint = {
-        latitude: coords[i - 1].latitude - (offset * ux),
-        longitude: coords[i - 1].longitude - (offset * uy)
+        x: coordsInAlbers[i - 1].x - (offset * ux),
+        y: coordsInAlbers[i - 1].y - (offset * uy)
       };
-      this.polygonBoundaryPoints.push(nextPoint);
+      this.waypointBoundaryPointsAlbers.push(nextPoint);
     }
 
-    // iterate through lower portion of polygonBoundaryPoints to calculate intersection point
-    for (let i = 0; i < ((this.polygonBoundaryPoints.length / 2) - 2); i = i + 2) {
+    // iterate through lower portion of waypointBoundaryPointsAlbers to calculate intersection point
+    for (let i = 0; i < ((this.waypointBoundaryPointsAlbers.length / 2) - 2); i = i + 2) {
       this.oneIterationOfIntersectionCalculations(i);
     }
 
-    // iterate through second portion of polygonBoundaryPoints to calculate intersection points
-    for (let i = ((this.polygonBoundaryPoints.length / 2) + 1); i < this.polygonBoundaryPoints.length - 2; i = i + 2) {
+    // iterate through second portion of waypointBoundaryPointsAlbers to calculate intersection points
+    for (let i = (this.waypointBoundaryPointsAlbers.length / 2); i < this.waypointBoundaryPointsAlbers.length - 3; i = i + 2) {
       this.oneIterationOfIntersectionCalculations(i);
     }
 
-    // check for duplicated coordinates in polygonBoundaryPoints
+    // check for duplicated coordinates in waypointBoundaryPointsAlbers
     // if any duplicates found, remove them
-    for (let i = 0; i < this.polygonBoundaryPoints.length; i++) {
-      const pt = this.polygonBoundaryPoints[i];
-      while (this.polygonBoundaryPoints.indexOf(pt, i + 1) !== -1) {
-        this.polygonBoundaryPoints.splice(this.polygonBoundaryPoints.indexOf(pt, i + 1), 1);
+    for (let i = 0; i < this.waypointBoundaryPointsAlbers.length; i++) {
+      const pt = this.waypointBoundaryPointsAlbers[i];
+      const indices = this.waypointBoundaryPointsAlbers.map(p => (p.x === pt.x && p.y === pt.y));
+      const index = indices.indexOf(true, i + 1);
+      if (index > -1) {
+        this.waypointBoundaryPointsAlbers.splice(index, 1);
       }
     }
 
-    // duplicate the first point and append it to the list in order to close the polygon
-    const first = this.polygonBoundaryPoints[0];
-    this.polygonBoundaryPoints.push(first);
+    // convert each coordinate in waypointBoundaryPointsAlbers from BC Albers to
+    // lat/long, add to waypointBoundaryPointsLatLong
+    for (const a of this.waypointBoundaryPointsAlbers) {
+      const l = this.converterService.albersToLatLongCoordinate(a.x, a.y);
+      this.waypointBoundaryPointsLatLong.push([l.latitude, l.longitude]);
+    }
 
     // draw the polygon on the map
     this.drawWaypointOnMap();
   }
 
   private oneIterationOfIntersectionCalculations(i: number) {
-    const x11 = this.polygonBoundaryPoints[i].latitude;
-    const x12 = this.polygonBoundaryPoints[i + 1].latitude;
-    const y11 = this.polygonBoundaryPoints[i].longitude;
-    const y12 = this.polygonBoundaryPoints[i + 1].longitude;
-    const x21 = this.polygonBoundaryPoints[i + 2].latitude;
-    const x22 = this.polygonBoundaryPoints[i + 3].latitude;
-    const y21 = this.polygonBoundaryPoints[i + 2].longitude;
-    const y22 = this.polygonBoundaryPoints[i + 3].longitude;
+    const x11 = this.waypointBoundaryPointsAlbers[i].x;
+    const x12 = this.waypointBoundaryPointsAlbers[i + 1].x;
+    const y11 = this.waypointBoundaryPointsAlbers[i].y;
+    const y12 = this.waypointBoundaryPointsAlbers[i + 1].y;
+    const x21 = this.waypointBoundaryPointsAlbers[i + 2].x;
+    const x22 = this.waypointBoundaryPointsAlbers[i + 3].x;
+    const y21 = this.waypointBoundaryPointsAlbers[i + 2].y;
+    const y22 = this.waypointBoundaryPointsAlbers[i + 3].y;
 
     const points = {
       x11: x11,
@@ -730,10 +749,10 @@ export class LocationInputComponent implements OnInit {
     const intersection = this.findIntersection(points);
 
     // replace end point of first arc & start point of second arc with intersection
-    this.polygonBoundaryPoints[i + 1].latitude = intersection.interX;
-    this.polygonBoundaryPoints[i + 1].longitude = intersection.interY;
-    this.polygonBoundaryPoints[i + 2].latitude = intersection.interX;
-    this.polygonBoundaryPoints[i + 2].longitude = intersection.interY;
+    this.waypointBoundaryPointsAlbers[i + 1].x = intersection.interX;
+    this.waypointBoundaryPointsAlbers[i + 1].y = intersection.interY;
+    this.waypointBoundaryPointsAlbers[i + 2].x = intersection.interX;
+    this.waypointBoundaryPointsAlbers[i + 2].y = intersection.interY;
   }
 
   /**

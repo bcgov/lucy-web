@@ -89,7 +89,7 @@ export class WaypointModalComponent implements OnInit {
     } else if (!this.validDistanceBetweenPoints) {
       console.log(`Invalid distance between points`);
     } else {
-      this.waypointsEventHandler.emit({points: this.waypoints, offset: this.offset});
+      this.waypointsEventHandler.emit({offset: this.offset, points: this.waypoints});
     }
   }
 
@@ -102,5 +102,20 @@ export class WaypointModalComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  submitTestData() {
+    this.offset = 3;
+    this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
+    this.waypoints.push({latitude: 48.430997, longitude: -123.354144});
+    this.waypoints.push({latitude: 48.431013, longitude: -123.354051});
+    this.waypoints.push({latitude: 48.431088, longitude: -123.354008});
+    this.waypoints.push({latitude: 48.431072, longitude: -123.353949});
+    this.waypoints.push({latitude: 48.431154, longitude: -123.353922});
+    this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
+    this.waypoints.push({latitude: 48.431227, longitude: -123.354094});
+    this.waypoints.push({latitude: 48.431248, longitude: -123.354148});
+    this.waypoints.push({latitude: 48.431329, longitude: -123.354118});
+    this.generatePath();
   }
 }
