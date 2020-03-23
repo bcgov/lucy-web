@@ -4,6 +4,7 @@ includes:
   - observerWorkflow.schema.yaml
   - highRiskAssessment.schema.yaml
   - inspectApp.codes.schema.yaml
+  - countryProvince.schema.yaml
 schemas: 
   ## -- WaterCraftRiskAssessmentSchema
   WatercraftRiskAssessmentSchema:
@@ -142,13 +143,9 @@ schemas:
         comment: 'Counter for number of very complex boats in the inspection'
         definition: INT NULL
       # Strings
-      provinceOfResidence:
-        name: province
-        comment: 'Province of residence of the boat'
-        definition: VARCHAR(100) NULL
       generalComment:
         name: general_comment
-        comment: 'Province of residence of the boat'
+        comment: 'General comment associated with assessment'
         definition: VARCHAR(300) NULL
         required: false
       passportNumber: 
@@ -188,7 +185,36 @@ schemas:
         deleteCascade: false
         required: false
         meta: {}
+      # Joint Relationship 
+      provinceOfResidence:
+        name: province_code
+        comment: 'Province of residence of the boat. Joint foreign key reference to country_province table province_code column along with country code'
+        definition: VARCHAR(3) NULL
+        required: false
+        meta:
+          # Joint Column info and key mapping 
+          jointColumnInfo:
+            jointColumnKeys: 
+              - countryOfResidence
+            referenceSchema: CountryProvinceSchema
+            referenceColumMapping:
+              provinceCode: provinceOfResidence
+              countryCode: countryOfResidence
+        examples:
+          - BC
+      countryOfResidence:
+        name: country_code
+        comment: Country of the water-body location. Joint foreign key reference to country_province table country_code column along with province_code.
+        definition: VARCHAR(3) NULL
+        required: false
+        examples: 
+          - CAN
     ## -- end columns
+    ## Additional Sql Commands
+    initialSqlCommands:
+      - comment: 'Adding Joint Foreign key reference'
+        sql: 'ALTER TABLE watercraft_risk_assessment ADD CONSTRAINT FK_watercraft_risk_assessment_country_province FOREIGN KEY (country_code, province_code) REFERENCES country_province (country_code, province_code) ON DELETE SET NULL;'
+    ## Versions
     versions:
       ## -- version: workflow
       - name: 'workflow'

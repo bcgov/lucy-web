@@ -58,6 +58,7 @@ export interface DataFieldDefinition {
     layout?: any;
     type: string;
     typeDetails: any;
+    examples: any[];
     fieldVerification(): DataFieldVerification | undefined;
 }
 
@@ -87,6 +88,7 @@ export type TableColumnDataOption = Pick<
     | 'deleteCascade'
     | 'refColumn'
     | 'comment'
+    | 'examples'
     | 'definition' >;
 
 export interface SchemaChangeOptions {
@@ -99,6 +101,13 @@ export interface SchemaChangeOptions {
     downSqlStatement?: string;
     deleteColumn?: boolean;
     comment?: string;
+}
+
+export interface JointColumnDescription {
+    jointColumnKeys: string[];
+    referenceSchema: string;
+    referenceColumMapping: {[key: string]: string};
+    info?: string;
 }
 
 
@@ -123,6 +132,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     meta?: any;
     layout?: any;
     eager = true;
+    examples: any[] = [];
     constructor(
         name: string,
         comment: string,
@@ -167,6 +177,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         column.layout = value.layout;
         column.eager = unWrap(value.eager, true);
         column.required = (value.required !== undefined) ? value.required : true;
+        column.examples = value.examples;
         return column;
     }
 
@@ -327,6 +338,24 @@ export class ApplicationTableColumn implements TableColumnDefinition {
 
         typeInfo.required = this.required;
         return typeInfo;
+    }
+
+    get jointColumnInfo(): JointColumnDescription {
+        let info: JointColumnDescription = {
+            jointColumnKeys: [],
+            referenceSchema: '',
+            referenceColumMapping: {}
+        };
+        if (this.meta && this.meta.jointColumnInfo) {
+            const input: any = this.meta.jointColumnInfo;
+            info = {
+                jointColumnKeys: input.jointColumnKeys || [],
+                referenceSchema: input.referenceSchema || '',
+                info: input.info,
+                referenceColumMapping: input.referenceColumMapping || {}
+            };
+        }
+        return info;
     }
 
 }

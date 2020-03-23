@@ -178,19 +178,67 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
         }
         const obj: any = {};
         const fetchList: any[] = [];
-        if (options.schemaChain.includes(controller.schemaObject.className)) {
+        const schemaName: string = controller.schemaObject.className;
+        if (options.schemaChain.includes(schemaName)) {
             return obj;
         }
         _.each(controller.schema.columnsDefinition, async (column: ApplicationTableColumn, key: string) => {
             if (key === 'id') {
                 return;
             }
+
+            if (obj[key] !== undefined) {
+                return;
+            }
             const typeInfo: any = column.typeDetails;
             const keyname = key.toLocaleLowerCase();
+
+            // Check any input
             if (inputData && inputData[key]) {
                 obj[key] = inputData[key];
                 return;
             }
+
+            // Check joint column
+            if (column.jointColumnInfo.jointColumnKeys.length > 0 && column.jointColumnInfo.referenceSchema !== '') {
+                // Get schema
+                const otherRefController: DataController = controllerForSchemaName(column.jointColumnInfo.referenceSchema);
+                if (otherRefController) {
+                    const refObj = await ModelFactory(otherRefController)({
+                        schemaChain: [schemaName]
+                    });
+                    if (refObj) {
+                        const refColumnMapping = column.jointColumnInfo.referenceColumMapping;
+                        for (const refKey of Object.keys(refColumnMapping)) {
+                            if (refObj[refKey]) {
+                                obj[refColumnMapping[refKey]] = refObj[refKey];
+                            }
+                        }
+
+                        // Check
+                        if (!obj[key]) {
+                            // Now Value resolved from joint column info, sending error
+                            throw new Error(`ModelSpecFactory: ${schemaName} : joint column info: ${key}: no data`);
+                        }
+                        return;
+                    } else {
+                        // Wrong refSchema to create obj
+                        throw new Error(`ModelSpecFactory: ${schemaName} : joint column info: ${key}: wrong schema ${column.jointColumnInfo.referenceSchema}: no test obj`);
+                    }
+                } else {
+                     // Wrong refSchema
+                     throw new Error(`ModelSpecFactory: ${schemaName} : joint column info: ${key}: wrong schema ${column.jointColumnInfo.referenceSchema}`);
+                }
+            }
+
+            // Check example values from
+            let example: any;
+            if (example = controller.schemaObject.example(key)) {
+                obj[key] = example;
+                return;
+            }
+
+            // Generate data
             switch  (typeInfo.type) {
                 case 'string':
                     if (typeInfo.isDate) {
@@ -239,12 +287,12 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                         break;
                     }
                     // Get schema name
-                    const schemaName = typeInfo.schema;
-                    if (schemaName === controller.schemaObject.className || schemaName === options.rootSchema) {
+                    const typeSchemaName = typeInfo.schema;
+                    if (typeSchemaName === controller.schemaObject.className || typeSchemaName === options.rootSchema) {
                         break;
                     }
                     // console.log(`${key}: 1: ${schemaName}`);
-                    const dbCon: DataController = controllerForSchemaName(schemaName) as DataController;
+                    const dbCon: DataController = controllerForSchemaName(typeSchemaName) as DataController;
 
 
                     // Get schema
