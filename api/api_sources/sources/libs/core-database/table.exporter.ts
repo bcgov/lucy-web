@@ -83,7 +83,7 @@ export class TableExporter {
                 }
             } else {
                 // Check created by or updated by object
-                if (typeof data[key] === 'object' && data[key].displayLabel) {
+                if (typeof data[key] === 'object' && data[key] !== null && data[key].displayLabel) {
                     result[key] = data[key].displayLabel;
                 }
             }

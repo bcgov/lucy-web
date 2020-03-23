@@ -81,6 +81,11 @@ schemas:
             default: ''
           classes:
             - none
+    # -- initialSqlCommands
+    # Additional Sql command white creating table
+    initialSqlCommands: 
+      - comment: Changing table
+        sql: 'ALTER TABLE sample2_table ADD COLUMN never VARCHAR(10) NULL'
     versions:
       - name: 'test'
         id: '12.12'

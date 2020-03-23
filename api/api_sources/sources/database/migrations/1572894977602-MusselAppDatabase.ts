@@ -1,10 +1,14 @@
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { WatercraftRiskAssessmentSchema,
-         ObserverWorkflowSchema,
-         HighRiskAssessmentSchema,
-         AdultMusselsLocationSchema,
-         PreviousAISKnowledgeSourceSchema,
-         PreviousInspectionSourceSchema } from '../database-schema';
+import {
+    WatercraftRiskAssessmentSchema,
+    ObserverWorkflowSchema,
+    HighRiskAssessmentSchema,
+    AdultMusselsLocationSchema,
+    PreviousAISKnowledgeSourceSchema,
+    PreviousInspectionSourceSchema,
+    CountrySchema,
+    CountryProvinceSchema
+} from '../database-schema';
 import { AppDBMigrator } from '../applicationSchemaInterface';
 
 
@@ -16,6 +20,8 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
     adultMusselsLocationSchema: AdultMusselsLocationSchema;
     previousAISKnowledgeSourceSchema: PreviousAISKnowledgeSourceSchema;
     previousInspectionSourceSchema: PreviousInspectionSourceSchema;
+    countrySchema: CountrySchema;
+    countryProvinceSchema: CountryProvinceSchema;
     /**
      * Setup
      */
@@ -24,9 +30,23 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         this.adultMusselsLocationSchema = new AdultMusselsLocationSchema();
         this.previousAISKnowledgeSourceSchema = new PreviousAISKnowledgeSourceSchema();
         this.previousInspectionSourceSchema = new PreviousInspectionSourceSchema();
+        this.countrySchema = new CountrySchema();
+        this.countryProvinceSchema = new CountryProvinceSchema();
         this.waterCraftRiskAssessmentSchema = new WatercraftRiskAssessmentSchema();
         this.observerWorkflowSchema = new ObserverWorkflowSchema();
         this.highRiskAssessmentSchema = new HighRiskAssessmentSchema();
+
+        // Create Country table
+        this.addSchemaInitVersion(this.countrySchema);
+        // Add populate country table sql file
+        this.addUpMigration(this.countrySchema.className, 'CountrySchema-init.sql');
+
+        // Create Country province table
+        this.addSchemaInitVersion(this.countryProvinceSchema);
+        // Run Constraint sql script
+        this.addUpMigration(this.countryProvinceSchema.className, 'CountryProvinceConstraints.sql');
+        // Populate with schema import
+        this.addDataImportMigration(this.countryProvinceSchema, 'init');
 
         // Creating table
         this.addSchemaInitVersion(this.observerWorkflowSchema);
@@ -60,6 +80,8 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         await queryRunner.query(this.previousInspectionSourceSchema.dropTable());
         await queryRunner.query(this.previousAISKnowledgeSourceSchema.dropTable());
         await queryRunner.query(this.observerWorkflowSchema.dropTable());
+        await queryRunner.query(this.countryProvinceSchema.dropTable());
+        await queryRunner.query(this.countrySchema.dropTable());
         await queryRunner.query('DROP TABLE IF EXISTS adult_mussels_location');
         await queryRunner.query('DROP TABLE IF EXISTS previous_ais_knowledge_source');
         await queryRunner.query('DROP TABLE IF EXISTS previous_inspection_source');
