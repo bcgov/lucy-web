@@ -87,3 +87,16 @@ p {
 .disclaimer {
     margin-top: 20px;
 }
+
+.test-btn {
+    align-content: center;
+    text-align: center;
+    background: greenyellow;
+    border-radius: .25rem;
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    height: 50px;
+    width: 50px;
+    font-weight: bold;
+}
