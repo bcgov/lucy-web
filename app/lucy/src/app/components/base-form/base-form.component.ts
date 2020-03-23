@@ -207,7 +207,12 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * Check if the spaceGeom is valid or not
    */
   isSpaceGeomValid(spaceGeomData: any): boolean {
-    if (!spaceGeomData || !spaceGeomData.latitude || !spaceGeomData.longitude || !spaceGeomData.geometry || !spaceGeomData.inputGeometry)
+    if (!spaceGeomData
+      || !spaceGeomData.latitude
+      || !spaceGeomData.longitude
+      || (spaceGeomData.geometry !== 0 && !spaceGeomData.geometry)
+      || !spaceGeomData.inputGeometry
+    )
       return false;
 
     const geometryData = spaceGeomData.inputGeometry.attributes;
