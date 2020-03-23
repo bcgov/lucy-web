@@ -94,6 +94,21 @@ describe('Mussel app db element tests', () => {
         should().exist(f.workflow);
         expect(f.workflow.observer_workflow_id).to.be.equal(w.workflow.observer_workflow_id);
     });
+
+    it('should export data for WatercraftRiskAssessment', async () => {
+        const w: WatercraftRiskAssessment = await ModelFactory(WatercraftRiskAssessmentController.shared)();
+        should().exist(w);
+        const exportedData: any[] = await WatercraftRiskAssessmentController.shared.export() as any[];
+        should().exist(exportedData);
+        for (const item of exportedData) {
+            for (const prop in item) {
+                if (item.hasOwnProperty(prop)) {
+                    const type = typeof item[prop];
+                    expect ( type !== 'object' && type !== 'function' ).to.be.equal(true);
+                }
+            }
+        }
+    });
 });
 
 // -------------------------------
