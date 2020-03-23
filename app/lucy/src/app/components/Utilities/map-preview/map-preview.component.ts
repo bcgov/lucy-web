@@ -339,8 +339,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    */
   drawPolygon() {
     const polygon = L.polygon([this.polygon], {
-      color: 'pink',
-      fillColor: 'pink',
+      color: 'grey',
+      fillColor: 'grey',
       fillOpacity: 0.7,
       weight: 2,
     });
@@ -360,6 +360,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       fillOpacity: 0.4,
     });
     line.addTo(this.map);
+
+    for (const l of linePoints) {
+      L.circleMarker([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true}).addTo(this.map);
+    }
   }
 
   //////////////////////////////////////////////
