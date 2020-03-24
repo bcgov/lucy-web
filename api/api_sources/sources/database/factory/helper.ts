@@ -208,7 +208,7 @@ export function ModelSpecFactory(controller: DataController, dependency?: any[])
                         schemaChain: [schemaName]
                     });
                     if (refObj) {
-                        const refColumnMapping = column.jointColumnInfo.referenceColumMapping;
+                        const refColumnMapping = column.jointColumnInfo.referenceColumnMapping;
                         for (const refKey of Object.keys(refColumnMapping)) {
                             if (refObj[refKey]) {
                                 obj[refColumnMapping[refKey]] = refObj[refKey];
