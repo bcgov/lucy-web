@@ -2,13 +2,27 @@
 <div class="container-fluid header-container">
     <div class="container">
         <mat-toolbar class="toolbar">
-            <mat-toolbar-row>
+            <mat-toolbar-row class="toolbar-row">
                 <span class="animated fadeIn">{{ databaseTitle }}</span>
                 <span class="spacer-toolbar"></span>
-                <mat-icon [ngClass]="showMap ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="map view" (click)="switchShowMap()">map
+                <mat-icon [ngClass]="showMap ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="map view" (click)="switchShowMap()">
+                    map
                 </mat-icon>
                 <mat-icon [ngClass]="showList ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="list view" (click)="switchShowList()">
-                    view_list</mat-icon>
+                    view_list
+                </mat-icon>
+                <mat-form-field appearance="outline" class="inventory-search">
+                    <input
+                        matInput
+                        placeholder="Search by: Observer Name, Observation ID, Species, Jurisdiction or Agency"
+                        [(ngModel)]="searchKeyword"
+                        [attr.id]="search"
+                        class="inventory-search-input"
+                        (keydown.enter)="applyFilter()"
+                    />
+                    <mat-icon matSuffix class="inventory-input-icon" *ngIf="!searchKeyword">search</mat-icon>
+                    <mat-icon matSuffix class="inventory-input-icon" *ngIf="searchKeyword" (click)="clearInput()">close</mat-icon>
+                </mat-form-field>
             </mat-toolbar-row>
         </mat-toolbar>
     </div>
@@ -72,7 +86,7 @@
 
                 <!-- Observation ID Column -->
                 <ng-container matColumnDef="Observation_id">
-                    <th mat-header-cell *matHeaderCellDef (click)="sortByObservationId()">
+                    <th mat-header-cell *matHeaderCellDef (click)="sortByObservationId()" class="table-first-column">
                         Observation ID
                         <i *ngIf="sortingByObservationId" class="material-icons opaque">{{ getIconName() }}</i>
                         <i *ngIf="!sortingByObservationId" class="material-icons hidden">{{ getIconName() }}</i>
@@ -142,7 +156,7 @@
                     </td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 

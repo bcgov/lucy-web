@@ -80,6 +80,8 @@ export class InventoryComponent implements OnInit {
     return this.roles.canCreate(this.accessType);
   }
 
+  searchKeyword = '';
+
   /************ Sorting Variables ************/
   sortAscending = false;
   sortingByObservationId = false;
@@ -195,6 +197,14 @@ export class InventoryComponent implements OnInit {
         this.showMap = true;
       });
     }
+  }
+
+  clearInput() {
+    this.searchKeyword = '';
+  }
+
+  applyFilter() {
+    console.log(this.searchKeyword);
   }
 
   /**
