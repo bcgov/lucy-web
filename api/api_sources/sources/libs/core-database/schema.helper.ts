@@ -23,7 +23,7 @@
 import * as fs from 'fs';
 import * as _ from 'underscore';
 import { ApplicationTableColumn } from './application.column';
-import { TableVersion, SchemaChangeDefinition, ColumnChangeType } from './application.table';
+import { TableVersion, SchemaChangeDefinition, ColumnChangeType, SqlInfo } from './application.table';
 import { BaseSchema } from './baseSchema';
 import { getSQLDirPath, getSQLFileData } from './sql.loader';
 
@@ -293,6 +293,28 @@ export class SchemaHelper {
         }
     }
 
+
+    private _genInitialSql(schema: BaseSchema, columnDef: string) {
+        if (schema.table.initialSqlCommands.length > 0) {
+            let after = '';
+            let before = '';
+            const update = (target: string, sqlInfo: SqlInfo) => {
+                target = target + `\n-- ${sqlInfo.comment || 'SQL'} --`;
+                target = target + `\n${sqlInfo.sql};\n`;
+                return target;
+            };
+            for (const sqlInfo of schema.table.initialSqlCommands) {
+                if (sqlInfo.before) {
+                    before = update(before, sqlInfo);
+                } else {
+                    after = update(after, sqlInfo);
+                }
+            }
+            return `${before}${columnDef}\n${after}`;
+        }
+        return columnDef;
+    }
+
     /**
      * @description Generate set of migration file for schema
      * @param BaseSchema schema
@@ -310,7 +332,9 @@ export class SchemaHelper {
         const migrationFilePath: string = schema.migrationFilePath();
 
         // Current root version
-        const current = schema.createMigrationFile(undefined, true);
+        const columDef = schema.createMigrationFile(undefined, true);
+        // Now add additional sql
+        const current = this._genInitialSql(schema, columDef);
         // Check item exists on migration file path or not
         if (fs.existsSync(migrationFilePath)) {
             // Match both content

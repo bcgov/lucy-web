@@ -36,6 +36,8 @@ describe('Mussel app db element tests', () => {
         const w: WatercraftRiskAssessment = await ModelFactory(WatercraftRiskAssessmentController.shared)();
         should().exist(w);
         testModel(w, WatercraftRiskAssessmentSchema.shared);
+        should().exist(w.countryOfResidence);
+        should().exist(w.provinceOfResidence);
         // Fetch data
         const ft = await WatercraftRiskAssessmentController.shared.findById(w.watercraft_risk_assessment_id);
         should().exist(ft);
@@ -93,6 +95,23 @@ describe('Mussel app db element tests', () => {
         const f: WatercraftRiskAssessment = await WatercraftRiskAssessmentController.shared.findById(w.watercraft_risk_assessment_id);
         should().exist(f.workflow);
         expect(f.workflow.observer_workflow_id).to.be.equal(w.workflow.observer_workflow_id);
+    });
+
+    it('should export data for WatercraftRiskAssessment', async () => {
+        const w: WatercraftRiskAssessment = await ModelFactory(WatercraftRiskAssessmentController.shared)();
+        should().exist(w);
+        const exportedData: any[] = await WatercraftRiskAssessmentController.shared.export() as any[];
+        should().exist(exportedData);
+        for (const item of exportedData) {
+            for (const prop in item) {
+                if (item.hasOwnProperty(prop)) {
+                    const type = typeof item[prop];
+                    if (item[prop] !== null) {
+                        expect ( type !== 'object' && type !== 'function' ).to.be.equal(true);
+                    }
+                }
+            }
+        }
     });
 });
 

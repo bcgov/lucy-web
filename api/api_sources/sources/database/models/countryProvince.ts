@@ -8,6 +8,7 @@ import {
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 
 import { Record, RecordController } from './generic.data.models';
+import { RandomizeSelection } from '../../libs/utilities';
 
 /** Interface **/
 /**
@@ -83,6 +84,12 @@ export class CountryProvinceController extends RecordController<CountryProvince>
 	*/
 	public static get shared(): CountryProvinceController {
 		return this.sharedInstance<CountryProvince>(CountryProvince, CountryProvinceSchema) as CountryProvinceController;
+	}
+
+	async random(): Promise<CountryProvince> {
+		// Get all
+		const all: CountryProvince[] = await this.all();
+		return RandomizeSelection(all);
 	}
 }
 
