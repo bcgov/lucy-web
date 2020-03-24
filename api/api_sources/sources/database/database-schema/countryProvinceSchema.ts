@@ -44,5 +44,9 @@ export class CountryProvinceSchema extends RecordTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('countryProvince.schema.yaml');
     }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
 }
 
