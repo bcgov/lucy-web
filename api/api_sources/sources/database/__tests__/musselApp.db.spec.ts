@@ -106,7 +106,9 @@ describe('Mussel app db element tests', () => {
             for (const prop in item) {
                 if (item.hasOwnProperty(prop)) {
                     const type = typeof item[prop];
-                    expect ( type !== 'object' && type !== 'function' ).to.be.equal(true);
+                    if (item[prop] !== null) {
+                        expect ( type !== 'object' && type !== 'function' ).to.be.equal(true);
+                    }
                 }
             }
         }

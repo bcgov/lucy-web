@@ -197,7 +197,7 @@ schemas:
             jointColumnKeys: 
               - countryOfResidence
             referenceSchema: CountryProvinceSchema
-            referenceColumMapping:
+            referenceColumnMapping:
               provinceCode: provinceOfResidence
               countryCode: countryOfResidence
         examples:

@@ -106,7 +106,7 @@ export interface SchemaChangeOptions {
 export interface JointColumnDescription {
     jointColumnKeys: string[];
     referenceSchema: string;
-    referenceColumMapping: {[key: string]: string};
+    referenceColumnMapping: {[key: string]: string};
     info?: string;
 }
 
@@ -344,7 +344,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         let info: JointColumnDescription = {
             jointColumnKeys: [],
             referenceSchema: '',
-            referenceColumMapping: {}
+            referenceColumnMapping: {}
         };
         if (this.meta && this.meta.jointColumnInfo) {
             const input: any = this.meta.jointColumnInfo;
@@ -352,7 +352,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
                 jointColumnKeys: input.jointColumnKeys || [],
                 referenceSchema: input.referenceSchema || '',
                 info: input.info,
-                referenceColumMapping: input.referenceColumMapping || {}
+                referenceColumnMapping: input.referenceColumnMapping || {}
             };
         }
         return info;
