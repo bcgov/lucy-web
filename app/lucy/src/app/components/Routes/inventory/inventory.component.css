@@ -87,10 +87,12 @@
 
 .active-btn {
     color: #FFFFFF;
+    cursor: pointer;
 }
 
 .inactive-btn {
     color: #5C668C;
+    cursor: pointer;
 }
 
 .action-icon {
@@ -108,10 +110,85 @@ table {
     background: transparent;
 }
 
+.toolbar-row {
+    padding: 0;
+}
+
 .material-icons.opaque {
     opacity: 1;
 }
 
 .material-icons.hidden {
     opacity: 0;
+}
+
+::ng-deep .inventory-search .mat-form-field-wrapper {
+    padding: 0;
+    margin-left: 16px !important;
+}
+
+::ng-deep .inventory-search .mat-form-field-infix {
+    padding: 0;
+    bottom: 8px;
+    width: 530px;
+}
+
+::ng-deep .inventory-search .mat-form-field-outline {
+    background-color: white;
+    border-radius: 4px;
+}
+
+::ng-deep .inventory-search .mat-form-field-flex:hover {
+    border: none;
+}
+
+::ng-deep .mat-form-field-outline-thick {
+    color: transparent !important;
+}
+
+.inventory-search-input {
+    font-size: 16px;
+    color: black;
+}
+
+.inventory-input-icon {
+    font-size: 24px;
+    color: black;
+    position: relative;
+    left: 5px;
+    bottom: 5px;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    border-bottom-width: 2px !important;
+    border-color: #F3B229;
+}
+
+td {
+    border: none !important;
+}
+
+td:first-of-type,.table-first-column {
+    padding-left: 8px !important;
+}
+
+td:last-of-type {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0 !important;
+    position: relative;
+}
+
+.table-header {
+    height: 40px !important;
+    background-color: white !important;
+}
+
+.mat-row:nth-child(even) {
+    background-color:#FAFAFA;
 }
