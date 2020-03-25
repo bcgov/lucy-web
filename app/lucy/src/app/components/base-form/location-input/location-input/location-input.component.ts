@@ -101,8 +101,8 @@ export class LocationInputComponent implements OnInit {
     let longExists = false;
     if (object.spaceGeom && object.spaceGeom.value) {
       this.fieldObject.geometry.value = {
-        name: object.spaceGeom.value.geometry.object.description,
-        value: object.spaceGeom.value.geometry.object
+        name: object.spaceGeom.value.geometry.description,
+        value: object.spaceGeom.value.geometry
       };
       this._existingValue = this.processInputValues(object.spaceGeom.value);
       this.object.spaceGeom.value = this._existingValue;

@@ -18,7 +18,7 @@
                             [(ngModel)]="searchKeyword"
                             [attr.id]="search"
                             class="inventory-search-input"
-                            (keydown.enter)="applyFilter()"
+                            (keydown.enter)="fetchObservations()"
                         />
                         <mat-icon matSuffix class="inventory-input-icon" *ngIf="!searchKeyword">search</mat-icon>
                         <mat-icon matSuffix class="inventory-input-icon" *ngIf="searchKeyword" (click)="clearInput()">close</mat-icon>
