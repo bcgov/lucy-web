@@ -112,6 +112,35 @@ table {
 
 .toolbar-row {
     padding: 0;
+    justify-content: space-between;
+}
+
+.toolbar-action {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 992px) {
+    .toolbar-title, .toolbar-action {
+        width: 100%;
+    }
+
+    .toolbar-row {
+        justify-content: start;
+        flex-direction: column;
+        min-height: 64px;
+        height: unset;
+    }
+
+    ::ng-deep .inventory-search .mat-form-field-infix {
+        width: 300px !important;
+    }
+}
+
+@media (max-width: 465px) {
+    ::ng-deep .inventory-search .mat-form-field-infix {
+        width: 150px !important;
+    }
 }
 
 .material-icons.opaque {
