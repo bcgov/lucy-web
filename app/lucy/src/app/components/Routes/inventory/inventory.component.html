@@ -5,12 +5,15 @@
             <mat-toolbar-row class="toolbar-row">
                 <div class="animated fadeIn toolbar-title">{{ databaseTitle }}</div>
                 <div class="toolbar-action">
-                    <mat-icon [ngClass]="showMap ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="map view" (click)="switchShowMap()">
-                        map
-                    </mat-icon>
-                    <mat-icon [ngClass]="showList ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="list view" (click)="switchShowList()">
-                        view_list
-                    </mat-icon>
+                    <div class="toggle-container">
+                        <span class="toggle-divider"></span>
+                        <mat-icon class="toggle-button" [ngClass]="showMap ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="map view" (click)="switchShowMap()">
+                            map
+                        </mat-icon>
+                        <mat-icon class="toggle-button"  [ngClass]="showList ? 'active-btn' : 'inactive-btn'" aria-hidden="false" aria-label="list view" (click)="switchShowList()">
+                            view_list
+                        </mat-icon>
+                    </div>
                     <mat-form-field appearance="outline" class="inventory-search">
                         <input
                             matInput
@@ -30,48 +33,6 @@
 </div>
 <!-- -------------------- -->
 <div class="container">
-    <div class="row" *ngIf="!isProd && !isTest">
-        <div class="col-12">
-            <mat-accordion>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Test
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <mat-list>
-
-                        <mat-list-item>
-                            <button mat-raised-button color="primary" (click)="export()">Export</button>
-                        </mat-list-item>
-                        <mat-list-item>
-                            Material Table
-                            <mat-slide-toggle [(ngModel)]="materialTable">
-                            </mat-slide-toggle>
-                        </mat-list-item>
-                        <mat-list-item>
-                            <mat-form-field>
-                                <input matInput placeholder="Number of observations" [(ngModel)]="numberOfObservationForTesting">
-                            </mat-form-field>
-                        </mat-list-item>
-
-                        <mat-list-item>
-                            <button mat-raised-button color="primary" (click)="generateObservationForTesting()">
-                Generate {{numberOfObservationForTesting}} for testing</button>
-                        </mat-list-item>
-
-                        <mat-list-item>
-                            <button mat-raised-button color="accent" (click)="removeGeneratedObservations()">
-                Remove Generated Observations
-              </button>
-                        </mat-list-item>
-
-                    </mat-list>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </div>
-    <br />
     <div *ngIf="showMap" class="row map-box" [ngClass]="showList ? 'map-box-partial' : 'map-box-full'">
         <div class="col-12">
             <app-map-preview [markers]="markers">
@@ -79,11 +40,10 @@
         </div>
     </div>
     <br />
-    <div *ngIf="showList" class="row">
+    <div *ngIf="showList" class="row table-container">
         <div class="col-12">
-            <!-- MATERIAL TABLE -->
             <p class="table-header-text">{{ tableHeaderText }}</p>
-            <div *ngIf="materialTable" class="table-container">
+            <div class="table-content">
                 <table mat-table [dataSource]="dataSource">
                     <!-- Observation ID Column -->
                     <ng-container matColumnDef="observation_id">
@@ -139,21 +99,9 @@
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let item">
-                            <i class="material-icons" [matMenuTriggerFor]="menu">more_vert</i>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="view(item)" class="menu-button">
-                                    View
-                                    <i class="material-icons action-icon">
-                                    visibility
-                                    </i>
-                                </button>
-                                <button *ngIf="isDataEditor" mat-menu-item (click)="edit(item)" class="menu-button">
-                                    Edit
-                                    <i class="material-icons action-icon">
-                                    edit
-                                    </i>
-                                </button>
-                            </mat-menu>
+                            <button mat-raised-button color="primary" (click)="view(item)">
+                                View
+                            </button>
                         </td>
                     </ng-container>
 
@@ -163,72 +111,6 @@
 
                 <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
             </div>
-            <!-- END OF MATERIAL TABLE -->
-            <!-- BOOTSTRAP TABLE -->
-            <div *ngIf="!materialTable">
-                <!-- ----- -->
-                <table class="table table-hover">
-                    <thead class="thead, table-header">
-                        <tr>
-                            <th scope="col" (click)="sortByObservationId()">
-                                Observation ID
-                                <i *ngIf="sortingByObservationId" class="material-icons opaque">{{ getIconName() }}</i>
-                                <i *ngIf="!sortingByObservationId" class="material-icons hidden">{{ getIconName() }}</i>
-                            </th>
-                            <th scope="col" (click)="sortByDateObserved()">
-                                Date Observed
-                                <i *ngIf="sortingByDateObserved" class="material-icons opaque">{{ getIconName() }}</i>
-                                <i *ngIf="!sortingByDateObserved" class="material-icons hidden">{{ getIconName() }}</i>
-                            </th>
-                            <th scope="col" (click)="sortByDateUpdated()">
-                                Last Updated
-                                <i *ngIf="sortingByDateUpdated" class="material-icons opaque">{{ getIconName() }}</i>
-                                <i *ngIf="!sortingByDateUpdated" class="material-icons hidden">{{ getIconName() }}</i>
-                            </th>
-                            <th scope="col" (click)="sortBySpecies()">
-                                Species
-                                <i *ngIf="sortingBySpecies" class="material-icons opaque">{{ getIconName() }}</i>
-                                <i *ngIf="!sortingBySpecies" class="material-icons hidden">{{ getIconName() }}</i>
-                            </th>
-                            <th scope="col" (click)="sortByObserver()">
-                                Surveyor
-                                <i *ngIf="sortingByObserver" class="material-icons opaque">{{ getIconName() }}</i>
-                                <i *ngIf="!sortingByObserver" class="material-icons hidden">{{ getIconName() }}</i>
-                            </th>
-                            <th scope="col">
-
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-row" *ngFor="let item of observations">
-                            <td scope="row" (click)="view(item)">{{item.observation_id}}</td>
-                            <td scope="row" (click)="view(item)">{{item.date | momentPipe:'DD MMM YYYY'}}</td>
-                            <td scope="row" (click)="view(item)">{{item.updatedAt | momentPipe:'DD MMM YYYY'}}</td>
-                            <td scope="row" (click)="view(item)">{{item.species ? item.species.displayLabel : ''}}</td>
-                            <td scope="row" (click)="view(item)">{{item.observerFirstName + " " + item.observerLastName}}</td>
-                            <td>
-                                <i class="material-icons" [matMenuTriggerFor]="menu">more_vert</i>
-                                <mat-menu #menu="matMenu">
-                                    <button mat-menu-item (click)="view(item)" class="menu-button">
-                                        View
-                                        <i class="material-icons action-icon">
-                                            visibility
-                                        </i>
-                                    </button>
-                                    <button *ngIf="isDataEditor" mat-menu-item (click)="edit(item)" class="menu-button">
-                                        Edit
-                                        <i class="material-icons action-icon">
-                                            edit
-                                        </i>
-                                    </button>
-                                </mat-menu>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- END OF BOOTSTRAP TABLE -->
         </div>
     </div>
 </div>
