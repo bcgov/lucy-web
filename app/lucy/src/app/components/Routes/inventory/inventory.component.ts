@@ -81,6 +81,7 @@ export class InventoryComponent implements OnInit {
   }
 
   searchKeyword = '';
+  tableHeaderText = '';
 
   /************ Sorting Variables ************/
   sortAscending = false;
@@ -114,7 +115,7 @@ export class InventoryComponent implements OnInit {
 
 
   /************ Material Table ************/
-  displayedColumns: string[] = ['Observation_id', 'species', 'date_observed', 'last_updated', 'observer', 'actions'];
+  displayedColumns: string[] = ['observation_id', 'date_observed', 'last_updated', 'species', 'observer', 'actions'];
   dataSource = new MatTableDataSource<Observation>(this.observations);
   @ViewChild(MatPaginator) paginator: MatPaginator;
    /************ END OF Material Table ************/
@@ -135,7 +136,7 @@ export class InventoryComponent implements OnInit {
   ngOnInit() {
     this.isProd = AppConstants.CONFIG.env === `prod` ? true : false;
     this.isTest = AppConstants.CONFIG.env === `test` ? true : false;
-    this.fetchObservations();
+    this.fetchObservations(true);
     this.setAccessType();
     this.setDatabaseTitle();
   }
@@ -154,17 +155,21 @@ export class InventoryComponent implements OnInit {
     this.loadingService.remove();
   }
 
-  private async fetchObservations() {
+  private async fetchObservations(initialRender?: boolean) {
     this.loadingService.add();
     let observations: Observation[] = [];
 
     if (this.searchKeyword) {
       observations = await this.observationService.getFilteredObservations(this.searchKeyword);
+      this.tableHeaderText = `${observations.length} Records found for "${this.searchKeyword}"`;
     } else {
       observations = await this.observationService.getAll();
+      this.tableHeaderText = `Showing ${observations.length} Records`;
     }
 
     this.observations = observations;
+    if (initialRender) this.sortByDateUpdated()
+
     this.initMaterialTable();
     this.setMapMarkers();
     this.loadingService.remove();
