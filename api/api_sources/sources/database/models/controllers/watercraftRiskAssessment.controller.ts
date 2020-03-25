@@ -58,7 +58,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		const destinationJourney: any[] = [];
 		for (const item of data.journeys) {
 			let details: any = {};
-			if (item.waterBody) {
+			if (item.waterBody && item.waterBody !== null) {
 				details = {
 					lakeName: item.waterBody.name,
 					country: item.waterBody.country,
@@ -68,8 +68,10 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			} else if (item.otherWaterBody) {
 				details.other = item.otherWaterBody;
 			}
-			details.numberOfDaysOut = `${item.numberOfDaysOut} days out`;
-			if (item.journeyType === 0) {
+			if (item.journeyType === 1) {
+				if (item.numberOfDaysOut && item.numberOfDaysOut !== NaN) {
+					details.numberOfDaysOut = `${item.numberOfDaysOut} days out`;
+				}
 				// Previous journey
 				previousJourney.push(details);
 			} else {
