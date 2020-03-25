@@ -17,13 +17,10 @@
  */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observation } from 'src/app/models';
-import { CodeTableService } from 'src/app/services/code-table.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { DummyService } from 'src/app/services/dummy.service';
-import * as moment from 'moment';
 import { ValidationService } from 'src/app/services/validation.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserAccessType } from 'src/app/models/Role';
@@ -34,7 +31,6 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
-import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 import { ExportService } from 'src/app/services/export/export.service';
 
 
@@ -110,9 +106,6 @@ export class InventoryComponent implements OnInit {
   get numberOfObservationForTesting(): number {
     return this._numberOfTests;
   }
-  panelOpenState = false;
-  materialTable = true;
-
 
   /************ Material Table ************/
   displayedColumns: string[] = ['observation_id', 'date_observed', 'last_updated', 'species', 'observer', 'actions'];
@@ -124,12 +117,9 @@ export class InventoryComponent implements OnInit {
     private userService: UserService,
     private roles: RolesService,
     private validationService: ValidationService,
-    private codeTables: CodeTableService,
     private observationService: ObservationService,
     private router: RouterService,
     private loadingService: LoadingService,
-    private toast: ToastService,
-    private dummy: DummyService,
     private exportService: ExportService
     ) { }
 
@@ -191,11 +181,15 @@ export class InventoryComponent implements OnInit {
   }
 
   switchShowMap() {
-    this.showMap = !this.showMap;
+    if (this.showList) {
+      this.showMap = !this.showMap;
+    }
   }
 
   switchShowList() {
-    this.showList = !this.showList;
+    if (this.showMap) {
+      this.showList = !this.showList;
+    }
 
     /**
      * When adding and removing
@@ -445,62 +439,9 @@ export class InventoryComponent implements OnInit {
     this.router.navigateTo(AppRoutes.ViewObservation, observation.observation_id);
   }
 
-  edit(observation: Observation) {
-    this.router.navigateTo(AppRoutes.EditObservation, observation.observation_id);
-  }
-
+  // TODO: use this for implementing the export functionality
   export() {
     this.exportService.downloadCSV(this.observations, `observations - ${Date().toString()}`);
   }
-
-  /************ Dummy Data ************/
-  async createDummys() {
-    this.loadingService.add();
-    await this.delayAsync(100);
-    this.observations = [];
-    console.log(`generating`);
-    const random = await this.dummy.createDummyObservations(this.numberOfObservationForTesting);
-    if (!random) {
-      this.toast.show('Feature is not available', ToastIconType.fail);
-      this.loadingService.remove();
-      return; 
-    }
-    console.log(`generated`);
-    this.observations = random;
-    this.initMaterialTable();
-    console.log(`Adding Pins`);
-    this.setMapMarkers();
-    this.loadingService.remove();
-  }
-
-  private getUniqueId(): number {
-    if (this.observations.length < 1) {
-      return 0;
-    }
-    const usedIds: number[] = [];
-    for (const object of this.observations) {
-      usedIds.push(object.observation_id);
-    }
-
-    const sortedUsedIds = usedIds.sort((n1, n2) => n1 - n2);
-    return sortedUsedIds.pop() + 1;
-  }
-
-  generateObservationForTesting() {
-    this.createDummys();
-  }
-
-  removeGeneratedObservations() {
-    this.fetchObservations();
-  }
-
-   /**
-   * Create a delay
-   * @param ms milliseconds
-   */
-  async delayAsync(ms: number): Promise<any> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  /************ End of Dummy Data ************/
 
 }
