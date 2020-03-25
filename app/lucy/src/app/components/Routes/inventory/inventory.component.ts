@@ -156,7 +156,14 @@ export class InventoryComponent implements OnInit {
 
   private async fetchObservations() {
     this.loadingService.add();
-    const observations = await this.observationService.getAll();
+    let observations: Observation[] = [];
+
+    if (this.searchKeyword) {
+      observations = await this.observationService.getFilteredObservations(this.searchKeyword);
+    } else {
+      observations = await this.observationService.getAll();
+    }
+
     this.observations = observations;
     this.initMaterialTable();
     this.setMapMarkers();
@@ -201,10 +208,7 @@ export class InventoryComponent implements OnInit {
 
   clearInput() {
     this.searchKeyword = '';
-  }
-
-  applyFilter() {
-    console.log(this.searchKeyword);
+    this.fetchObservations();
   }
 
   /**
