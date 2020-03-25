@@ -306,6 +306,47 @@ describe('Test for observation routes', () => {
             observerLastName: 'Ballabh'
         });
     });
+
+    it.only('should filter by keyword that matches observer name/id/species/jurisdiction/agency', async () => {
+        const spec = await ModelSpecFactory(ObservationController.shared)();
+        const create = RequestFactory<any>(spec, {
+            schema: ObservationSchema.shared
+        });
+        const firstName: string = create.observerFirstName;
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.post,
+            url: '/api/observation',
+            expect: 201,
+            auth: AuthType.admin,
+            send: create
+        });
+
+        const keyword = firstName.substring(1, firstName.length);
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: `/api/observation/search?keyword=${keyword}`,
+            expect: 200,
+            auth: AuthType.admin
+        }).then(async (resp) => {
+            await verifySuccessBody(resp.body, async (data) => {
+                expect(data.length).to.be.equal(1);
+                const observation = data[0];
+                should().exist(observation.observation_id);
+                should().exist(observation.species);
+                should().exist(observation.jurisdiction);
+                should().exist(observation.speciesAgency);
+                should().exist(observation.spaceGeom);
+                should().exist(observation.density);
+                should().exist(observation.distribution);
+                should().exist(observation.observationType);
+                should().exist(observation.soilTexture);
+                should().exist(observation.specificUseCode);
+                should().exist(observation.slopeCode);
+                should().exist(observation.aspectCode);
+                should().exist(observation.proposedAction);
+            });
+        });
+    })
 });
 
 // -----------------------------------------------------------------------------------------------------------
