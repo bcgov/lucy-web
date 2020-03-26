@@ -33,30 +33,7 @@ export class ObservationRouteController extends ResourceRouteController<Observat
         path: '/search',
     })
     public async search(req: any, data?: any): Promise<[number, any]> {
-        const keyword = `%${req.query.keyword}%`;
-        const observations = await this.dataController.repo.createQueryBuilder('observation')
-            .innerJoinAndSelect('observation.species', 'species')
-            .innerJoinAndSelect('observation.jurisdiction', 'jurisdiction')
-            .innerJoinAndSelect('observation.speciesAgency', 'agency')
-            .innerJoinAndSelect('observation.spaceGeom', 'spaceGeom')
-            .innerJoinAndSelect('observation.density', 'density')
-            .innerJoinAndSelect('observation.distribution', 'distribution')
-            .innerJoinAndSelect('observation.observationType', 'observationType')
-            .innerJoinAndSelect('observation.soilTexture', 'soilTexture')
-            .innerJoinAndSelect('observation.specificUseCode', 'specificUseCode')
-            .innerJoinAndSelect('observation.slopeCode', 'slopeCode')
-            .innerJoinAndSelect('observation.aspectCode', 'aspectCode')
-            .innerJoinAndSelect('observation.proposedAction', 'proposedAction')
-            .where('CAST(observation.observation_id as TEXT) LIKE :keyword', { keyword })
-            .orWhere('observation.observerFirstName ILIKE :keyword', { keyword })
-            .orWhere('observation.observerLastName ILIKE :keyword', { keyword })
-            .orWhere('species.commonName ILIKE :keyword', { keyword })
-            .orWhere('jurisdiction.description ILIKE :keyword', { keyword })
-            .orWhere('agency.description ILIKE :keyword', { keyword })
-            .orderBy('observation.updatedAt', 'DESC')
-            .getMany();
-
-        return [200, observations];
+        return [200, await this.dataController.search(req.query.keyword)];
     }
 }
 

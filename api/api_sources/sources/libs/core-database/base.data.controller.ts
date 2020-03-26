@@ -45,7 +45,6 @@ export interface BaseDataController {
     dependencies: any[];
     meta: ControllerMetaData;
     idKey: string;
-    repo: Repository<any>;
     findById(id: number): Promise<any>;
     fetchOne(query: object): Promise<any>;
     remove(object: any): Promise<void>;
