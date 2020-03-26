@@ -69,7 +69,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 				details.other = item.otherWaterBody;
 			}
 			if (item.journeyType === 1) {
-				if (item.numberOfDaysOut && item.numberOfDaysOut !== NaN) {
+				if (item.numberOfDaysOut && item.numberOfDaysOut > 0) {
 					details.numberOfDaysOut = `${item.numberOfDaysOut} days out`;
 				}
 				// Previous journey
