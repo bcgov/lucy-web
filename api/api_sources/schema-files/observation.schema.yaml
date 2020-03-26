@@ -364,7 +364,7 @@ schemas:
         layout:
           header:
             key: 'distribution'
-            default: 'Species Distribution'
+            default: 'Observation Type'
           classes:
             - none
       speciesAgency:

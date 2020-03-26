@@ -32,10 +32,10 @@ class TestSchema extends BaseTableSchema {
         const table: ApplicationTable = super.defineTable();
         table.name = 'test_table';
         table.columnsDefinition = {
-            id: createColumn({ name: 'id', comment: 'PK', definition: 'INT NOT NULL'}),
-            col: createColumn({name: 'col', comment: 'Regular', definition: 'VARCHAR(20) NULL'}),
-            ref: createColumn({name: 'ref', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: true}),
-            ref2: createColumn({name: 'ref2', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: false})
+            id: createColumn({ name: 'id', comment: 'PK', definition: 'INT NOT NULL', examples: []}),
+            col: createColumn({name: 'col', comment: 'Regular', definition: 'VARCHAR(20) NULL', examples: []}),
+            ref: createColumn({name: 'ref', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: true, examples: []}),
+            ref2: createColumn({name: 'ref2', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: false, examples: []})
         };
         return table;
     }

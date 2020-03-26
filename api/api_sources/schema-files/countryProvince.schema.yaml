@@ -26,7 +26,8 @@ schemas:
     name: country_province
     description: 'Standard ISO-3166 code table for listed countries and sub-divisions such as provinces, states, territories, etc.'
     meta: {}
-    displayLayout: {}
+    displayLayout: 
+      displayLabel: '#(description) - #(countryCode)'
     layout: {}
     computedFields: {}
     relations: {}
