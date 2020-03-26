@@ -527,7 +527,7 @@ export class LocationInputComponent implements OnInit {
    * @param event the updated GeoJSON file
    */
   inputGeometryChanged(event: any) {
-    this.object.spaceGeom.inputGeometry = event;
+    this.object.spaceGeom.value.inputGeometry.geoJSON = event;
   }
 
   /**
