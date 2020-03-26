@@ -116,27 +116,27 @@ export class WaypointModalComponent implements OnInit {
   }
 
   submitTestData() {
-    // // valid data
-    // this.offset = 3;
-    // this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
-    // this.waypoints.push({latitude: 48.430997, longitude: -123.354144});
-    // this.waypoints.push({latitude: 48.431013, longitude: -123.354051});
-    // this.waypoints.push({latitude: 48.431088, longitude: -123.354008});
-    // this.waypoints.push({latitude: 48.431072, longitude: -123.353949});
-    // this.waypoints.push({latitude: 48.431154, longitude: -123.353922});
-    // this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
-    // this.waypoints.push({latitude: 48.431227, longitude: -123.354094});
-    // this.waypoints.push({latitude: 48.431248, longitude: -123.354148});
-    // this.waypoints.push({latitude: 48.431329, longitude: -123.354118});
-    // this.generatePath();
-
-    // invalid data
-    this.offset = 33;  // too large
+    // valid data
+    this.offset = 3;
     this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
+    this.waypoints.push({latitude: 48.430997, longitude: -123.354144});
+    this.waypoints.push({latitude: 48.431013, longitude: -123.354051});
+    this.waypoints.push({latitude: 48.431088, longitude: -123.354008});
+    this.waypoints.push({latitude: 48.431072, longitude: -123.353949});
+    this.waypoints.push({latitude: 48.431154, longitude: -123.353922});
     this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
-    this.waypoints.push({latitude: 48.431197, longitude: -123.353980}); // too close to previous
-    this.waypoints.push({latitude: 50.530961, longitude: -124.354008}); // too far away
-    this.waypoints.push({latitude: 48.541516, longitude: -123.121760}); // in Washington state
+    this.waypoints.push({latitude: 48.431227, longitude: -123.354094});
+    this.waypoints.push({latitude: 48.431248, longitude: -123.354148});
+    this.waypoints.push({latitude: 48.431329, longitude: -123.354118});
     this.generatePath();
+
+    // // invalid data
+    // this.offset = 33;  // too large
+    // this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
+    // this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
+    // this.waypoints.push({latitude: 48.431197, longitude: -123.353980}); // too close to previous
+    // this.waypoints.push({latitude: 50.530961, longitude: -124.354008}); // too far away
+    // this.waypoints.push({latitude: 48.541516, longitude: -123.121760}); // in Washington state
+    // this.generatePath();
   }
 }
