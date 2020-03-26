@@ -17,37 +17,16 @@
     line-height: 34px;
 }
 
+.map-box {
+    margin-top: 16px;
+}
+
 .map-box-partial {
     height: 400px;
 }
 
 .map-box-full {
     height: 80vh;
-}
-
-.toggle-btn-on {
-    height: 32px;
-    width: 32px;
-    background-color: #000000;
-    color: #D8D8D8;
-}
-
-.toggle-btn-off {
-    height: 32px;
-    width: 32px;
-    background-color: #D8D8D8;
-    color: #000000;
-    border-radius: 5;
-}
-
-.left-toggle {
-    border-top-left-radius: 20%;
-    border-bottom-left-radius: 20%;
-}
-
-.right-toggle {
-    border-top-right-radius: 20%;
-    border-bottom-right-radius: 20%;
 }
 
 .action-btn {
@@ -59,14 +38,6 @@
     text-align: center;
     border: 1px solid #000000;
     width: 100%;
-}
-
-.table-header {
-    background-color: #F7F7F7;
-}
-
-.db-view-toggle {
-    max-width: 300px;
 }
 
 .header-container {
@@ -85,16 +56,44 @@
     padding: 0 14px;
 }
 
+.toggle-container {
+    border: 1px solid white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.toggle-button {
+    height: 100%;
+    width: 100%;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.toggle-divider {
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background-color: #0053A4;
+    left: 50%;
+}
+
 .active-btn {
-    color: #FFFFFF;
+    background-color: white;
+    color: #0053A4;
 }
 
 .inactive-btn {
-    color: #5C668C;
+    color: #FFFFFF;
 }
 
 .action-icon {
     font-size: 15px;
+}
+
+.material-icons {
+    cursor: pointer;
 }
 
 table {
@@ -108,10 +107,138 @@ table {
     background: transparent;
 }
 
+.toolbar-row {
+    padding: 0;
+    justify-content: space-between;
+}
+
+.toolbar-action {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 992px) {
+    .toolbar-title, .toolbar-action {
+        width: 100%;
+    }
+
+    .toolbar-row {
+        justify-content: start;
+        flex-direction: column;
+        min-height: 64px;
+        height: unset;
+    }
+
+    ::ng-deep .inventory-search .mat-form-field-infix {
+        width: 300px !important;
+    }
+}
+
+@media (max-width: 465px) {
+    ::ng-deep .inventory-search .mat-form-field-infix {
+        width: 150px !important;
+    }
+}
+
 .material-icons.opaque {
     opacity: 1;
 }
 
 .material-icons.hidden {
     opacity: 0;
+}
+
+::ng-deep .inventory-search .mat-form-field-wrapper {
+    padding: 0;
+    margin-left: 16px !important;
+}
+
+::ng-deep .inventory-search .mat-form-field-infix {
+    padding: 0;
+    bottom: 8px;
+    width: 530px;
+}
+
+::ng-deep .inventory-search .mat-form-field-outline {
+    background-color: white;
+    border-radius: 4px;
+}
+
+::ng-deep .inventory-search .mat-form-field-flex:hover {
+    border: none;
+}
+
+::ng-deep .mat-form-field-outline-thick {
+    color: transparent !important;
+}
+
+.inventory-search-input {
+    font-size: 16px;
+    color: black;
+}
+
+.inventory-input-icon {
+    font-size: 24px;
+    color: black;
+    position: relative;
+    left: 5px;
+    bottom: 5px;
+    cursor: pointer;
+}
+
+.table-container {
+    padding-bottom: 24px;
+}
+
+.table-content {
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 10px 0 rgba(35,64,117,0.2);
+}
+
+.table-header-text {
+    opacity: 0.8;
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    border-bottom-width: 2px !important;
+    border-color: #F3B229;
+}
+
+td {
+    border: none !important;
+}
+
+td:first-of-type,.table-first-column {
+    padding-left: 12px !important;
+}
+
+td:last-of-type {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px !important;
+    position: relative;
+}
+
+.table-header {
+    height: 40px !important;
+    background-color: white !important;
+}
+
+.menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mat-row:nth-child(even) {
+    background-color:#FAFAFA;
 }

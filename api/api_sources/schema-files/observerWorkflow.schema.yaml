@@ -11,7 +11,7 @@ schemas:
       api:  /mussels/workflow
       base: api
     displayLayout:
-      displayLabel: '#(date) - #(createdBy.firstName)'
+      displayLabel: 'Day - #(date)'
       header:
         key: ObserverWorkflowSchema
         default: 'Workflow'

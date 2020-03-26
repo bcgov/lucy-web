@@ -87,6 +87,13 @@ export interface TableRelation {
     meta?: any;
 }
 
+export interface SqlInfo {
+    comment?: string;
+    before?: boolean;
+    sql: string;
+    downSql?: string;
+}
+
 /**
  * @description Table definition descriptor class
  * @export class ApplicationTable
@@ -107,6 +114,8 @@ export class ApplicationTable {
     importOptions: {[key: string]: CSVImportOptions} = {};
     viewColumn = 'id';
     columVersions: {[key: string]: ApplicationTableColumn[]} = {};
+    initialSqlCommands: SqlInfo[] = [];
+
 
     get relationalColumnKeys(): string[] {
         const r: string[] = [];
