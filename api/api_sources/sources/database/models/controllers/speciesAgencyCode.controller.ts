@@ -39,17 +39,6 @@ export class SpeciesAgencyCodeController extends RecordController<SpeciesAgencyC
 	public static get shared(): SpeciesAgencyCodeController {
 		return this.sharedInstance<SpeciesAgencyCode>(SpeciesAgencyCode, SpeciesAgencyCodeSchema) as SpeciesAgencyCodeController;
 	}
-
-	/**
-	 * @description Overriding all method to reverse order
-	 * @param object query
-	 * ** Sorting Code
-	 * ** (a, b) => (a.description > b.description) ? 1 : ((b.description > a.description) ? -1 : 0)
-	 */
-	async all(query?: object) {
-		const d = await super.all(query);
-		return d.reverse();
-	}
 }
 
 // ----------------------------------------------------------------------------
