@@ -62,6 +62,32 @@ export class ObservationController extends RecordController<Observation> {
          }
          return super.updateObject(obj, data, modifier);
     }
+
+    async search(param: string): Promise<Observation[]> {
+        const keyword = `%${param}%`;
+        const items = await this.repo.createQueryBuilder('observation')
+            .innerJoinAndSelect('observation.species', 'species')
+            .innerJoinAndSelect('observation.jurisdiction', 'jurisdiction')
+            .innerJoinAndSelect('observation.speciesAgency', 'agency')
+            .innerJoinAndSelect('observation.spaceGeom', 'spaceGeom')
+            .innerJoinAndSelect('observation.density', 'density')
+            .innerJoinAndSelect('observation.distribution', 'distribution')
+            .innerJoinAndSelect('observation.observationType', 'observationType')
+            .innerJoinAndSelect('observation.soilTexture', 'soilTexture')
+            .innerJoinAndSelect('observation.specificUseCode', 'specificUseCode')
+            .innerJoinAndSelect('observation.slopeCode', 'slopeCode')
+            .innerJoinAndSelect('observation.aspectCode', 'aspectCode')
+            .innerJoinAndSelect('observation.proposedAction', 'proposedAction')
+            .where('CAST(observation.observation_id as TEXT) LIKE :keyword', { keyword })
+            .orWhere('observation.observerFirstName ILIKE :keyword', { keyword })
+            .orWhere('observation.observerLastName ILIKE :keyword', { keyword })
+            .orWhere('species.commonName ILIKE :keyword', { keyword })
+            .orWhere('jurisdiction.description ILIKE :keyword', { keyword })
+            .orWhere('agency.description ILIKE :keyword', { keyword })
+            .orderBy('observation.updatedAt', 'DESC')
+            .getMany();
+        return items;
+    }
 }
 
 /**

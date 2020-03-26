@@ -28,13 +28,14 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN simple_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN complex_counter INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN very_complex_count INT NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_days_count INT NULL;
-ALTER TABLE watercraft_risk_assessment ADD COLUMN province VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN general_comment VARCHAR(300) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN passport_number VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN decontamination_reference VARCHAR(100) NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN high_risk_assessment_id INT NULL REFERENCES high_risk_assessment(high_risk_assessment_id) ON DELETE SET NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_ais_knowledge_source_code_id INT NULL REFERENCES previous_ais_knowledge_source_code(previous_ais_knowledge_source_code_id) ON DELETE SET NULL;
 ALTER TABLE watercraft_risk_assessment ADD COLUMN previous_inspection_source_code_id INT NULL REFERENCES previous_inspection_source_code(previous_inspection_source_code_id) ON DELETE SET NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN province_code VARCHAR(3) NULL;
+ALTER TABLE watercraft_risk_assessment ADD COLUMN country_code VARCHAR(3) NULL;
 
 
         
@@ -68,13 +69,14 @@ COMMENT ON COLUMN watercraft_risk_assessment.simple_counter IS 'Counter for numb
 COMMENT ON COLUMN watercraft_risk_assessment.complex_counter IS 'Counter for number of complex boats in the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.very_complex_count IS 'Counter for number of very complex boats in the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_days_count IS 'Counter for number of very complex boats in the inspection';
-COMMENT ON COLUMN watercraft_risk_assessment.province IS 'Province of residence of the boat';
-COMMENT ON COLUMN watercraft_risk_assessment.general_comment IS 'Province of residence of the boat';
+COMMENT ON COLUMN watercraft_risk_assessment.general_comment IS 'General comment associated with assessment';
 COMMENT ON COLUMN watercraft_risk_assessment.passport_number IS 'Passport number associated with previous inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.decontamination_reference IS 'Decontamination reference number. Optional and dependent on decontaminationPerformed indicator';
 COMMENT ON COLUMN watercraft_risk_assessment.high_risk_assessment_id IS 'Foreign key reference to High risk assessment of the inspection';
 COMMENT ON COLUMN watercraft_risk_assessment.previous_ais_knowledge_source_code_id IS 'Foreign key reference to previous_ais_knowledge_source_code table';
 COMMENT ON COLUMN watercraft_risk_assessment.previous_inspection_source_code_id IS 'Foreign key reference to previous_inspection_source_code table';
+COMMENT ON COLUMN watercraft_risk_assessment.province_code IS 'Province of residence of the boat. Joint foreign key reference to country_province table province_code column along with country code';
+COMMENT ON COLUMN watercraft_risk_assessment.country_code IS 'Country of the water-body location. Joint foreign key reference to country_province table country_code column along with province_code.';
 
 
         
@@ -95,3 +97,7 @@ ALTER TABLE watercraft_risk_assessment ADD COLUMN created_by_user_id INT NULL DE
 COMMENT ON COLUMN watercraft_risk_assessment.updated_by_user_id IS 'Audit column to track creator';
 COMMENT ON COLUMN watercraft_risk_assessment.created_by_user_id IS 'Audit column to track modifier';
  -- ### End: watercraft_risk_assessment ### --
+
+
+-- Adding Joint Foreign key reference --
+ALTER TABLE watercraft_risk_assessment ADD CONSTRAINT FK_watercraft_risk_assessment_country_province FOREIGN KEY (country_code, province_code) REFERENCES country_province (country_code, province_code) ON DELETE SET NULL;;
