@@ -312,4 +312,38 @@ export const Key = (input: {[key: string]: any}): string => {
     }
 };
 
+/**
+ * @description Select a random key or index for given input
+ * @param any input
+ */
+export const RandomizeSelection = (input: any) => {
+    if (input.constructor === Array) {
+        // Array input
+        const array: any[] = input as any[];
+        const count = array.length;
+        if  (count > 0) {
+            if (count === 1) {
+                return array[0];
+            }
+            const randomIndex = Math.floor((Math.random() * count));
+            if (randomIndex >= 0 && randomIndex < count) {
+                return array[randomIndex];
+            }
+        }
+        return;
+    } else if (typeof input === 'object') {
+        // Object index
+        // Get all keys
+        const keys: any[] = Object.keys(input);
+        const randomIndex = Math.floor((Math.random() * keys.length));
+        if (randomIndex >= 0 && randomIndex < keys.length) {
+            const randomKey = keys[randomIndex];
+            return {
+                key: randomKey,
+                value: input[randomKey]
+            };
+        }
+    }
+};
+
 // -------------------------------

@@ -74,7 +74,6 @@ export interface WatercraftRiskAssessmentSpec {
 	complex: number;
 	veryComplex: number;
 	previousInspectionDays: number;
-	provinceOfResidence: string;
 	generalComment: string;
 	passportNumber: string;
 	decontaminationReference: string;
@@ -82,6 +81,8 @@ export interface WatercraftRiskAssessmentSpec {
 	workflow: ObserverWorkflow;
 	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
 	previousInspectionSource: PreviousInspectionSource;
+	provinceOfResidence: string;
+	countryOfResidence: string;
 }
 // -- End: WatercraftRiskAssessmentSpec --
 
@@ -116,7 +117,6 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	complex?: number;
 	veryComplex?: number;
 	previousInspectionDays?: number;
-	provinceOfResidence?: string;
 	generalComment?: string;
 	passportNumber?: string;
 	decontaminationReference?: string;
@@ -124,6 +124,8 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	workflow?: ObserverWorkflow;
 	previousAISKnowledgeSource?: PreviousAISKnowledgeSource;
 	previousInspectionSource?: PreviousInspectionSource;
+	provinceOfResidence?: string;
+	countryOfResidence?: string;
 }
 // -- End: WatercraftRiskAssessmentUpdateSpec --
 
@@ -325,13 +327,6 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	previousInspectionDays: number;
 
 	/**
-	 * @description Getter/Setter property for column {province}
-	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.provinceOfResidence})
-	@ModelProperty({type: PropertyType.string})
-	provinceOfResidence: string;
-
-	/**
 	 * @description Getter/Setter property for column {general_comment}
 	 */
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.generalComment})
@@ -375,6 +370,20 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource, referencedColumnName: PreviousInspectionSourceSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	previousInspectionSource: PreviousInspectionSource;
+
+	/**
+	 * @description Getter/Setter property for column {province_code}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.provinceOfResidence})
+	@ModelProperty({type: PropertyType.string})
+	provinceOfResidence: string;
+
+	/**
+	 * @description Getter/Setter property for column {country_code}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.countryOfResidence})
+	@ModelProperty({type: PropertyType.string})
+	countryOfResidence: string;
 
 	/**
 	 * @description Getter/Setter property for column {observer_workflow_id}

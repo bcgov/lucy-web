@@ -30,7 +30,8 @@ import {
     SchemaLoader,
     incrementalWrite,
     CSVFieldTransformer,
-    unWrap
+    unWrap,
+    RandomizeSelection
 } from '../utilities';
 
 import {
@@ -182,11 +183,24 @@ export class  BaseSchema {
         table.relations = def.relations || {};
         table.modelName = def.modelName;
         table.displayLayout = def.displayLayout;
+        // Checking initial column
         _.each(def.columns, (value: TableColumnOption, key: string) => {
             const result = this._createColumn(value, key);
             table.initialColumns = {...table.initialColumns, ...result};
             table.columnsDefinition = {...table.columnsDefinition, ...result};
         });
+
+        // Checking initial Sql commands
+        if (def.initialSqlCommands && def.initialSqlCommands.constructor === Array) {
+            for (const item of def.initialSqlCommands) {
+                table.initialSqlCommands.push({
+                    comment: item.comment,
+                    sql: item.sql || '-- NONE --',
+                    downSql: item.downSql,
+                    before: item.before
+                });
+            }
+        }
 
         // Check version for tables
         if (def.versions) {
@@ -504,6 +518,16 @@ export class  BaseSchema {
      */
     public get revertMigrationFiles(): {[key: string]: string} {
         return SchemaHelper.shared.revertMigrationFiles(this);
+    }
+
+    public example(columnKey: string) {
+        if (this.table.columnsDefinition[columnKey]) {
+            const column: ApplicationTableColumn = this.table.columnsDefinition[columnKey];
+            const examples: any[] = column.examples;
+            if (examples && examples.length > 0) {
+                return RandomizeSelection(examples);
+            }
+        }
     }
 }
 

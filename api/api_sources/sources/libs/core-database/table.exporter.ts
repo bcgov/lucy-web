@@ -56,7 +56,7 @@ export class TableExporter {
                             }
                         } else {
                             // Key is code or other table integration
-                            result[key] = data[key].displayLabel || 'NA';
+                            result[key] = data[key] !== null ? data[key].displayLabel : 'NA';
                         }
                     } else {
                         // Key type is json
@@ -83,7 +83,7 @@ export class TableExporter {
                 }
             } else {
                 // Check created by or updated by object
-                if (typeof data[key] === 'object' && data[key].displayLabel) {
+                if (typeof data[key] === 'object' && data[key] !== null && data[key].displayLabel) {
                     result[key] = data[key].displayLabel;
                 }
             }
