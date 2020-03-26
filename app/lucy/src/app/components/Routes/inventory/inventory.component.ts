@@ -145,7 +145,7 @@ export class InventoryComponent implements OnInit {
     this.loadingService.remove();
   }
 
-  private async fetchObservations(initialRender?: boolean) {
+  async fetchObservations(initialRender?: boolean) {
     this.loadingService.add();
     let observations: Observation[] = [];
 

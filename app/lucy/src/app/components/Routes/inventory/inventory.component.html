@@ -19,7 +19,6 @@
                             matInput
                             placeholder="Search by: Observer Name, Observation ID, Species, Jurisdiction or Agency"
                             [(ngModel)]="searchKeyword"
-                            [attr.id]="search"
                             class="inventory-search-input"
                             (keydown.enter)="fetchObservations()"
                         />
