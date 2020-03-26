@@ -36,6 +36,11 @@ schemas:
   UserSchema:
     name: application_user
     description: 'User of the application is a person with valid IDR or BCeID. Default role of the user is Viewer of InvasiveBC data records. Other typical user types are admin, subject matter expert (sme/ or data editor)'
+    ## -- Display Layout
+    displayLayout:
+      displayLabel: '#(email)'
+    ## -- 
+    ## -- Columns
     columns:
       id: 
         name: user_id

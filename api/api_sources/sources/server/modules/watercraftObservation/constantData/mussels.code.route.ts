@@ -6,6 +6,7 @@ import { RouteHandler, Route, SecureRouteController, HTTPMethod } from '../../..
 import { AdultMusselsLocationController } from '../../../../database/models/adultMusselsLocation';
 import { PreviousAISKnowledgeSourceController } from '../../../../database/models/previousAISKnowledgeSource';
 import { PreviousInspectionSourceController } from '../../../../database/models/previousInspectionSource';
+import { CountryProvinceController } from '../../../../database/models';
 /**
  * Require
  * @description Importing json constant
@@ -41,6 +42,7 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
         const adultMusselsLocation: any[] = await AdultMusselsLocationController.shared.all();
         const previousAISKnowledgeSource: any[] = await PreviousAISKnowledgeSourceController.shared.all();
         const previousInspectionSource: any[] = await PreviousInspectionSourceController.shared.all();
+        const countryProvince: any[] = await CountryProvinceController.shared.all();
         return {
             observers: inspectorList,
             otherObservations: otherInspection,
@@ -48,7 +50,8 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
             watercraftList: watercraftList,
             adultMusselsLocation,
             previousAISKnowledgeSource,
-            previousInspectionSource
+            previousInspectionSource,
+            countryProvince
         };
     }
 

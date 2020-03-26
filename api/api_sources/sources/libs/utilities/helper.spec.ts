@@ -33,7 +33,8 @@ import {
     valueAtKeyPath,
     copyKeyAndSubKeys,
     capitalize,
-    getHTTPReqQueryString
+    getHTTPReqQueryString,
+    RandomizeSelection
 } from './helpers.utilities';
 
 
@@ -152,5 +153,24 @@ describe('Test Helper/Utilities', () => {
         };
         const r = getHTTPReqQueryString(obj);
         expect(r).to.be.equal(`?x=x&y=y&z=1.2&p=ESPG%3A4236`);
+    });
+
+    it('should select random entry from array', () => {
+        const array = ['BC', 'ALB', 'ONT'];
+        const val = RandomizeSelection(array);
+        should().exist(val);
+        expect(array.includes(val)).to.be.equal(true);
+    });
+
+    it ('should select random entry from object', () => {
+        const obj = {
+            x: 'x',
+            y: 'y'
+        };
+        const result: any = RandomizeSelection(obj);
+        should().exist(result);
+        expect(Object.keys(obj).includes(result.key)).to.be.equal(true);
+        should().exist(obj[result.key]);
+        expect(obj[result.key]).to.be.eql(result.value);
     });
 });

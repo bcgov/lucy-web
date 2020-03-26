@@ -115,9 +115,9 @@ export class AppLogger implements BaseLogger {
      * @param string logLevel
      */
     private finalLog(body: string, logLevel: string) {
-        const datestr = this.formatDate(this.dateMarker());
+        const dateStr = this.formatDate(this.dateMarker());
         const formattedBody = this.formatBody(body, logLevel);
-        return `[${this.formatLogLevel(logLevel)} | ${datestr} | ${this.formatTag()}] : ${formattedBody}`;
+        return `[${this.formatLogLevel(logLevel)} | ${dateStr} | ${this.formatTag()}] : ${formattedBody}`;
     }
 
     /**
