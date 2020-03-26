@@ -307,7 +307,7 @@ describe('Test for observation routes', () => {
         });
     });
 
-    it.only('should filter by keyword that matches observer name/id/species/jurisdiction/agency', async () => {
+    it('should filter by keyword that matches observer name/id/species/jurisdiction/agency', async () => {
         const spec = await ModelSpecFactory(ObservationController.shared)();
         const create = RequestFactory<any>(spec, {
             schema: ObservationSchema.shared
@@ -346,7 +346,7 @@ describe('Test for observation routes', () => {
                 should().exist(observation.proposedAction);
             });
         });
-    })
+    });
 });
 
 // -----------------------------------------------------------------------------------------------------------

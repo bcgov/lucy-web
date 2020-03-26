@@ -53,7 +53,7 @@ export class ObservationRouteController extends ResourceRouteController<Observat
             .orWhere('species.commonName ILIKE :keyword', { keyword })
             .orWhere('jurisdiction.description ILIKE :keyword', { keyword })
             .orWhere('agency.description ILIKE :keyword', { keyword })
-            .orderBy("observation.updatedAt", "DESC")
+            .orderBy('observation.updatedAt', 'DESC')
             .getMany();
 
         return [200, observations];
