@@ -19,7 +19,10 @@ import { Component, OnInit, AfterViewInit, AfterContentChecked, Input, Output , 
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
 import { Observation } from 'src/app/models';
+import { GeoJSONService } from 'src/app/services/geoJSON/geoJSON.service';
 import * as bcgeojson from './bcgeojson.json';
+import { GeometryJSON } from 'src/lib';
+import { keyframes } from '@angular/animations';
 declare let L;
 
 export interface MapPreviewPoint {
@@ -52,6 +55,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private markerGroup?;
   // flag set after viewChecked.
   private ready = false;
+  // Leaflet Feature objects drawn on map
+  private leafletFeatures = [];
 
   // Group close markers or always show individually
   @Input() cluster = true;
@@ -123,12 +128,23 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     }
   }
 
+  /////////////// GeoJSON file ////////////
+  private _inputGeometryJSON: any;
+  get inputGeometryJSON(): any {
+    return this._inputGeometryJSON;
+  }
+  @Input() set inputGeometryJSON(json: any) {
+    this._inputGeometryJSON = json;
+  }
+
+  @Output() inputGeometryChanged = new EventEmitter<any>();
+
   //////////////////////////////////////////////
 
   @Output() centerPointChanged = new EventEmitter<MapPreviewPoint>();
 
   ////////////// Class Functions //////////////
-  constructor() { }
+  constructor(private geoJSONService: GeoJSONService) { }
 
   ngOnInit() {
   }
@@ -347,10 +363,21 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     polygon.addTo(this.map);
     this.showMapAt({latitude: this.polygon[0][0], longitude: this.polygon[0][1], zoom: 18});
     this.drawLine();
+
+    this.inputGeometryJSON = this.geoJSONService.createFeatureCollectionGeoJSON(this.leafletFeatures);
+    this.inputGeometryChanged.emit(this.inputGeometryJSON);
   }
 
+  /**
+   * Draws a connected line on the map with circleMarkers for each of the lat/long coordinates
+   * assigned to this.markers
+   * Used as part of waypoint functionality.
+   * Outputs a dictionary of the Leaflet polyline and circleMarkers drawn on the map, to be saved
+   * to GeoJSON file if desired.
+   */
   drawLine() {
     const linePoints = [];
+
     for (const c of this.markers) {
       linePoints.push([c.latitude, c.longitude]);
     }
@@ -360,9 +387,12 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       fillOpacity: 0.4,
     });
     line.addTo(this.map);
+    this.leafletFeatures.push(line);
 
     for (const l of linePoints) {
-      L.circleMarker([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true}).addTo(this.map);
+      const circle = L.circleMarker([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
+      circle.addTo(this.map);
+      this.leafletFeatures.push(circle);
     }
   }
 
@@ -393,4 +423,19 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     const obj = JSON.parse(JSON.stringify(bcgeojson)).default;
     return obj;
   }
+
+  /**
+   * Creates and returns a list of one or more Leaflet map vector objects ready to be converted to a GeoJSON file
+   * GeoJSON file is used for storing a geometry object in the Postgres DB
+   * @param vector a single Leaflet object or an array of objects to be converted to GeoJSON
+   */
+  // toGeoJSON(vector: {}): any[] {
+  //   const geoJsonFile = [];
+  //   for (const [key, value] of Object.entries(vector)) {
+  //     const geometryDict = {type: key, coordinates: value['_latlngs'], options: value['options']};
+  //     const geoJsonEntry = {type: 'Feature', geometry: geometryDict, properties: {} };
+  //     geoJsonFile.push(geoJsonEntry);
+  //   }
+  //   return geoJsonFile;
+  // }
 }

@@ -523,6 +523,14 @@ export class LocationInputComponent implements OnInit {
   }
 
   /**
+   * @description Handler for change to the GeoJSON file
+   * @param event the updated GeoJSON file
+   */
+  inputGeometryChanged(event: any) {
+    this.object.spaceGeom.inputGeometry = event;
+  }
+
+  /**
    * @description Handling X dimensionChange event
    * @param value any
    */
@@ -591,12 +599,6 @@ export class LocationInputComponent implements OnInit {
   waypointsEventHandler(value: any) {
     this.onModalClose();
     this.calculateWaypointBoundaryPoints(value.offset, value.points);
-  }
-
-  /**
-   * Draw waypoint on map
-   */
-  private drawWaypointOnMap() {
     this.polygonChanged.emit(this.waypointBoundaryPointsLatLong);
   }
 
@@ -721,9 +723,6 @@ export class LocationInputComponent implements OnInit {
       const l = this.converterService.albersToLatLongCoordinate(a.x, a.y);
       this.waypointBoundaryPointsLatLong.push([l.latitude, l.longitude]);
     }
-
-    // draw the polygon on the map
-    this.drawWaypointOnMap();
   }
 
   private oneIterationOfIntersectionCalculations(i: number) {

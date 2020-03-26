@@ -60,7 +60,7 @@
             </div>
             <!-- Map -->
             <div class="col-12 col-md-8 leaf">
-                <app-map-preview (centerPointChanged)="mapCenterChanged($event)" (polygonChanged)="polygonChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers" [polygon]="waypointBoundaryPointsLatLong">
+                <app-map-preview (centerPointChanged)="mapCenterChanged($event)" (polygonChanged)="polygonChanged($event)" (inputGeometryChanged)="inputGeometryChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers" [polygon]="waypointBoundaryPointsLatLong">
                 </app-map-preview>
 
                 <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance animated wobble">
