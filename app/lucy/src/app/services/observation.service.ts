@@ -180,6 +180,22 @@ export class ObservationService {
   }
 
   /**
+   * Fetch and returns filtered observation objects
+   */
+  public async getFilteredObservations(keyword: string): Promise<Observation[]> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      `${AppConstants.API_observation}/search?keyword=${keyword}`,
+      null
+    );
+    if (response.success && Array.isArray(response.response) && this.objectValidator.isObservationObject(response.response[0])) {
+      return response.response;
+    } else {
+      return[];
+    }
+  }
+
+  /**
    * Fetch and return a specific observation object
    * @param id Observation Id
    */
