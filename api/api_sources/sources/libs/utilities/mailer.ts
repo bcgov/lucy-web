@@ -75,10 +75,13 @@ export class Mailer {
             this.transporter = nodemailer.createTransport({
                 host: 'apps.smtp.gov.bc.ca',
                 port: 25,
+                tls: {
+                    rejectUnauthorized: false // do not fail on invalid certs
+                },
                 auth: {
                     user: Mailer.sender,
                     pass: Mailer.password
-                }
+                },
             });
             let done = false;
             let verify = false;
