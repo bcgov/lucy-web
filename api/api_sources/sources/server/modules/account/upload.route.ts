@@ -65,12 +65,19 @@ export class UploadRouteController extends RouteController {
         // Assert if no file path
         assert(filePath, `No log file path created`);
         assert(AppConfig.reportReceivers, 'No receivers for report');
+        // Check any message
+        const body = req.body || {};
+        const message = body.message as string || '';
+        let text = `An issue is reported by user ${user.email}. Please check attached log for more details.`;
+        if (message && message.length > 0) {
+            text = `An issue is reported by user ${user.email}.\nMessage From User: ${message}\nPlease check attached log for more details.`;
+        }
         // Create Mail
         const mail: Mail = {
             to: AppConfig.reportReceivers,
             from: Mailer.sender,
             subject: `InvasivesBC iOS Application Issue`,
-            text: `An issue is reported by user ${user.email}. Please check attached log`,
+            text: text,
             attachments: [
                 {
                     filename: 'log.txt',
@@ -88,7 +95,6 @@ export class UploadRouteController extends RouteController {
         // Remove file
         fs.unlinkSync(filePath);
         // Responding
-        // TODO: Fix email send issue for OpenShift
         return [200, info];
     }
 
