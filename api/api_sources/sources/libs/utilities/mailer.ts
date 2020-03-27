@@ -71,31 +71,46 @@ export class Mailer {
             logger.error('Skipping email send');
             return new Promise( res => res({}));
         }
-        return new Promise( (res, rej) => {
+        return new Promise( async (res, rej) => {
             this.transporter = nodemailer.createTransport({
-                service: 'gmail',
+                host: 'apps.smtp.gov.bc.ca',
+                port: 25,
                 auth: {
                     user: Mailer.sender,
                     pass: Mailer.password
                 }
             });
             let done = false;
-            this.transporter.sendMail(options, (err, info) => {
+            let verify = false;
+            try {
+                verify = await this.transporter.verify();
+            } catch (excp) {
+                logger.error(`mailer: send: error while connection with mail server: ${excp}`);
+                rej(excp);
+            }
+            if (verify) {
+                // Send
+                this.transporter.sendMail(options, (err, info) => {
+                    done = true;
+                    if (err) {
+                        logger.error(`send | fail with error: ${err}`);
+                        rej(err);
+                    } else {
+                        logger.info(`send | [SUCCESS]`);
+                        res(info);
+                    }
+                    if (this.transporter) {
+                        // Clean transporter
+                        this.transporter.close();
+                        delete this.transporter;
+                    }
+                });
+            } else {
+                // Not Connected
                 done = true;
-                if (err) {
-                    logger.error(`send | fail with error: ${err}`);
-                    rej(err);
-                } else {
-                    logger.info(`send | [SUCCESS]`);
-                    res(info);
-                }
-
-                if (this.transporter) {
-                    // Clean transporter
-                    this.transporter.close();
-                    delete this.transporter;
-                }
-            });
+                logger.error(`mailer: send: Unable to connect with server`);
+                rej(new Error(`mailer: send: Unable to connect server`));
+            }
 
             // Setting up timeout
             setTimeout(() => {
