@@ -72,6 +72,7 @@ export class Mailer {
             return new Promise( res => res({}));
         }
         return new Promise( async (res, rej) => {
+            logger.info(`The mailer: ${Mailer.sender}`);
             this.transporter = nodemailer.createTransport({
                 host: 'apps.smtp.gov.bc.ca',
                 port: 25,
