@@ -78,10 +78,10 @@ export class Mailer {
                 tls: {
                     rejectUnauthorized: false // do not fail on invalid certs
                 },
-                auth: {
+                /*auth: {
                     user: Mailer.sender,
                     pass: Mailer.password
-                },
+                },*/
             });
             let done = false;
             let verify = false;
