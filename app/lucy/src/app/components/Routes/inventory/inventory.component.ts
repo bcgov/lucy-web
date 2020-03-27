@@ -89,22 +89,15 @@ export class InventoryComponent implements OnInit {
   /************ End of Sorting Variables ************/
 
   markers: MapMarker[] = [];
-  observations: Observation[];
+  observations: Observation[] = [];
 
   /************ Flags ************/
   showMap = true;
   showList = true;
   /************ End of Flags ************/
 
-  // TEMP
-  private _numberOfTests = 10;
-  set numberOfObservationForTesting(number: number) {
-    if (this.validationService.isValidInteger(String(number))) {
-      this._numberOfTests = number;
-    }
-  }
-  get numberOfObservationForTesting(): number {
-    return this._numberOfTests;
+  get isEmpty(): boolean {
+    return this.observations.length === 0;
   }
 
   /************ Material Table ************/
@@ -154,7 +147,7 @@ export class InventoryComponent implements OnInit {
       this.tableHeaderText = `${observations.length} Records found for "${this.searchKeyword}"`;
     } else {
       observations = await this.observationService.getAll();
-      this.tableHeaderText = `Showing ${observations.length} Records`;
+      this.tableHeaderText = observations.length ? `Showing ${observations.length} Records` : 'No records yet';
     }
 
     this.observations = observations;
