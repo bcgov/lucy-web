@@ -18,10 +18,9 @@
 import { Component, OnInit, AfterViewInit, AfterContentChecked, Input, Output , EventEmitter, AfterViewChecked} from '@angular/core';
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
+import { GeoJSON } from 'leaflet';
 import { Observation } from 'src/app/models';
-import { GeoJSONService } from 'src/app/services/geoJSON/geoJSON.service';
 import * as bcgeojson from './bcgeojson.json';
-import { GeometryJSON } from 'src/lib';
 import { keyframes } from '@angular/animations';
 declare let L;
 
@@ -56,7 +55,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   // flag set after viewChecked.
   private ready = false;
   // Leaflet Feature objects drawn on map
-  private leafletFeatures = [];
+  private leafletFeatures?: GeoJSON.FeatureCollection = {
+    type: 'FeatureCollection',
+    features: []
+  };
 
   // Group close markers or always show individually
   @Input() cluster = true;
@@ -135,6 +137,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   }
   @Input() set inputGeometryJSON(json: any) {
     this._inputGeometryJSON = json;
+    this.leafletFeatures = json;
+    if (this.ready) {
+      L.geoJSON(this._inputGeometryJSON).addTo(this.map);
+    }
   }
 
   @Output() inputGeometryChanged = new EventEmitter<any>();
@@ -144,7 +150,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   @Output() centerPointChanged = new EventEmitter<MapPreviewPoint>();
 
   ////////////// Class Functions //////////////
-  constructor(private geoJSONService: GeoJSONService) { }
+  constructor() { }
 
   ngOnInit() {
   }
@@ -193,6 +199,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       minZoom: 4,
     }).addTo(this.map);
     this.addBCBorder();
+    L.geoJSON(this.inputGeometryJSON).addTo(this.map);
   }
 
   private initMapWithGoogleSatellite() {
@@ -203,6 +210,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       key: this.makeid(10)
     }).addTo(this.map);
     this.addBCBorder();
+    L.geoJSON(this.inputGeometryJSON).addTo(this.map);
+    this.center = {latitude: this.inputGeometryJSON['features'][0]['geometry']['coordinates'][0][0][1], longitude: this.inputGeometryJSON['features'][0]['geometry']['coordinates'][0][0][0], zoom: 18};
+    this.showMapAtCenter();
   }
 
   private makeid(length: number) {
@@ -361,10 +371,11 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       weight: 2,
     });
     polygon.addTo(this.map);
+    this.leafletFeatures.features.push(polygon.toGeoJSON());
     this.showMapAt({latitude: this.polygon[0][0], longitude: this.polygon[0][1], zoom: 18});
     this.drawLine();
 
-    this.inputGeometryJSON = this.geoJSONService.createFeatureCollectionGeoJSON(this.leafletFeatures);
+    this.inputGeometryJSON = this.leafletFeatures;
     this.inputGeometryChanged.emit(this.inputGeometryJSON);
   }
 
@@ -387,12 +398,12 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       fillOpacity: 0.4,
     });
     line.addTo(this.map);
-    this.leafletFeatures.push(line);
+    this.leafletFeatures.features.push(line.toGeoJSON());
 
     for (const l of linePoints) {
       const circle = L.circleMarker([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
       circle.addTo(this.map);
-      this.leafletFeatures.push(circle);
+      this.leafletFeatures.features.push(circle.toGeoJSON());
     }
   }
 
