@@ -49,7 +49,7 @@
             <div class="side-menu">
                 <p class="text text-header">Export Records</p>
                 <hr class="section-divider" />
-                <button mat-stroked-button color="primary" class="export-button" [disabled]="isEmpty" (click)="export()">
+                <button mat-stroked-button color="primary" class="export-button" [disabled]="isEmpty" (click)="openExportModal()">
                     {{ exportText }}
                 </button>
             </div>
@@ -75,7 +75,7 @@
                         <button mat-raised-button color="primary">
                             Advanced Search
                         </button>
-                        <button mat-stroked-button color="primary" [disabled]="isEmpty" (click)="export()">
+                        <button mat-stroked-button color="primary" [disabled]="isEmpty" (click)="openExportModal()">
                             {{ exportText }}
                         </button>
                     </div>
@@ -166,3 +166,35 @@
         </div>
     </div>
 </div>
+
+<app-modal *ngIf="showExportModal">
+    <div class="modal-content-container" (clickAway)="closeExportModal()">
+        <div class="export-modal-container">
+            <p class="text text-title">{{ exportText }}</p>
+            <hr class="section-divider" />
+            <div class="export-modal-content">
+                <i class="material-icons-outlined export-icon">note</i>
+                <p class="text text-header text-margin">Export File Type</p>
+                <p class="text text-body text-margin"><b>CSV</b> files work with Microsoft Excel and other spreadsheet software.</p>
+                <p class="text text-body text-margin"><b>KML</b> will work with mapping software like Google Earth or ArcGIS</p>
+                <mat-radio-group class="export-radio-group" [(ngModel)]="exportFormat">
+                    <mat-radio-button value="csv">.CSV</mat-radio-button>
+                    <mat-radio-button value="kml">.KML</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <hr class="section-divider" />
+            <div class="action-container">
+                <div class="col action">
+                  <button mat-stroked-button color="primary" class="action-button" (click)="closeExportModal()">
+                    Cancel
+                  </button>
+                </div>
+                <div class="col action">
+                  <button mat-raised-button color="primary" class="action-button" (click)="export()">
+                    Download now
+                  </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-modal>

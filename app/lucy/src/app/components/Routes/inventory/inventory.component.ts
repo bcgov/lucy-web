@@ -33,6 +33,11 @@ import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
 import { ExportService, ExportType } from 'src/app/services/export/export.service';
 
+enum ExportFormat {
+  CSV='csv',
+  KML='kml'
+}
+
 
 declare const process: any;
 
@@ -78,6 +83,7 @@ export class InventoryComponent implements OnInit {
 
   searchKeyword = '';
   tableHeaderText = '';
+  exportFormat = ExportFormat.CSV;
 
   /************ Sorting Variables ************/
   sortAscending = false;
@@ -94,6 +100,7 @@ export class InventoryComponent implements OnInit {
   /************ Flags ************/
   showMap = true;
   showList = true;
+  showExportModal = true;
   /************ End of Flags ************/
 
   get isEmpty(): boolean {
@@ -104,6 +111,14 @@ export class InventoryComponent implements OnInit {
     if (this.observations && this.observations.length === 0) return 'Export';
 
     return `Export ${this.observations.length} Results`
+  }
+
+  openExportModal() {
+    this.showExportModal = true;
+  }
+
+  closeExportModal() {
+    this.showExportModal = false;
   }
 
   /************ Material Table ************/
@@ -439,7 +454,10 @@ export class InventoryComponent implements OnInit {
   }
 
   export() {
-    this.exportService.exportCSV(ExportType.Observation);
+    if (this.exportFormat === ExportFormat.CSV) {
+      this.exportService.exportCSV(ExportType.Observation);
+    } else {
+      console.log('KML');
+    }
   }
-
 }
