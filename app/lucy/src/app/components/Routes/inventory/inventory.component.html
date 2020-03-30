@@ -1,5 +1,5 @@
 <!-- Header Section -->
-<div class="container-fluid header-container sticky">
+<div class="container-fluid header-container fadeInDown animated sticky">
     <div class="container">
         <mat-toolbar class="toolbar">
             <mat-toolbar-row class="toolbar-row">
@@ -50,12 +50,40 @@
                 <p class="text text-header">Export Records</p>
                 <hr class="section-divider" />
                 <button mat-stroked-button color="primary" class="export-button" [disabled]="isEmpty" (click)="export()">
-                    Export {{ observations.length }} Results
+                    {{ exportText }}
                 </button>
             </div>
         </div>
         <div class="col">
-            <p class="table-header-text">{{ tableHeaderText }}</p>
+            <div class="search-container-mobile">
+                <p class="text text-body">Search by: Observer name, Observation ID, Species, Jurisdiction or Agency</p>
+                <div class="input-search-container">
+                    <div class="col input-search-mobile">
+                        <mat-form-field appearance="fill" class="inventory-search">
+                            <input
+                                matInput
+                                placeholder="Enter your search here"
+                                [(ngModel)]="searchKeyword"
+                                class="inventory-search-input"
+                                (keydown.enter)="fetchObservations()"
+                            />
+                            <mat-icon matSuffix class="inventory-input-icon" *ngIf="!searchKeyword">search</mat-icon>
+                            <mat-icon matSuffix class="inventory-input-icon" *ngIf="searchKeyword" (click)="clearInput()">close</mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <div class="mobile-actions">
+                        <button mat-raised-button color="primary">
+                            Advanced Search
+                        </button>
+                        <button mat-stroked-button color="primary" [disabled]="isEmpty" (click)="export()">
+                            {{ exportText }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-header-container">
+                <p class="table-header-text">{{ tableHeaderText }}</p>
+            </div>
             <div *ngIf="showMap" class="row map-box" [ngClass]="showList ? 'map-box-partial' : 'map-box-full'">
                 <div class="col-12">
                     <app-map-preview [markers]="markers">
