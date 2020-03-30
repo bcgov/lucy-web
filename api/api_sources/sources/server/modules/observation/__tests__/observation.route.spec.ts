@@ -48,7 +48,9 @@ import {
     destroyMechanicalTreatment,
     // ModelFactory,
     ModelSpecFactory,
-    RequestFactory
+    RequestFactory,
+    ModelFactory,
+    Destroyer
 } from '../../../../database/factory';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
 import { ObservationSchema } from '../../../../database/database-schema';
@@ -345,6 +347,19 @@ describe('Test for observation routes', () => {
                 should().exist(observation.aspectCode);
                 should().exist(observation.proposedAction);
             });
+        });
+    });
+
+    it.only(`should export all the observations`, async () => {
+        const observation = await ModelFactory(ObservationController.shared)();
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/observation/export',
+            expect: 200,
+            auth: AuthType.inspectAdmin
+        }).then(async resp => {
+            await verifySuccessBody(resp.body);
+            await Destroyer(ObservationController.shared)(observation);
         });
     });
 });
