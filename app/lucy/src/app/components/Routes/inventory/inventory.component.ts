@@ -100,6 +100,12 @@ export class InventoryComponent implements OnInit {
     return this.observations.length === 0;
   }
 
+  get exportText(): string {
+    if (this.observations && this.observations.length === 0) return 'Export';
+
+    return `Export ${this.observations.length} Results`
+  }
+
   /************ Material Table ************/
   displayedColumns: string[] = ['observation_id', 'date_observed', 'last_updated', 'species', 'observer', 'actions'];
   dataSource = new MatTableDataSource<Observation>(this.observations);
