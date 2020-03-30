@@ -49,6 +49,13 @@
     margin: 0;
 }
 
+.text-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 8px;
+}
+
 .text-header {
     font-size: 14px;
     font-weight: bold;
@@ -56,6 +63,10 @@
 
 .text-body {
     font-size: 12px;
+}
+
+.text-margin {
+    margin-top: 8px;
 }
 
 .section-divider {
@@ -320,4 +331,52 @@ td:last-of-type {
 
 .no-padding {
     padding: 0;
+}
+
+.modal-content-container {
+    padding: 16px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.export-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.export-icon {
+    color: #F3B229;
+    font-size: 40px;
+}
+
+.action-container {
+    display: flex;
+    justify-content: center;
+}
+  
+.action {
+    padding: 8px 32px;
+}
+  
+.action-button {
+    width: 100%;
+}
+
+.mat-radio-group {
+    padding: 8px 0;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+}
+
+::ng-deep .export-radio-group .mat-radio-checked .mat-radio-outer-circle {
+    border-color: #06056c !important;
+    background-color: #06056c !important;
+}
+
+::ng-deep .export-radio-group .mat-radio-checked .mat-radio-inner-circle {
+    background-color: #FFF;
 }
