@@ -43,7 +43,8 @@
     height: 1px;
     background-color: #002C71;
     opacity: 0.1;
-    margin-top: 8px;
+    margin-top: 4px;
+    margin-bottom: 8px;
 }
 
 .menu-container {

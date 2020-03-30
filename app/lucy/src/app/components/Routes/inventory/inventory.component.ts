@@ -31,7 +31,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
-import { ExportService } from 'src/app/services/export/export.service';
+import { ExportService, ExportType } from 'src/app/services/export/export.service';
 
 
 declare const process: any;
@@ -432,9 +432,8 @@ export class InventoryComponent implements OnInit {
     this.router.navigateTo(AppRoutes.ViewObservation, observation.observation_id);
   }
 
-  // TODO: use this for implementing the export functionality
   export() {
-    this.exportService.downloadCSV(this.observations, `observations - ${Date().toString()}`);
+    this.exportService.exportCSV(ExportType.Observation);
   }
 
 }

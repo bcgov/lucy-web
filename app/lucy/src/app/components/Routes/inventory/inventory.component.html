@@ -31,7 +31,7 @@
                 <mat-form-field appearance="fill" class="inventory-search">
                     <input
                         matInput
-                        placeholder="Search by: Observer Name, Observation ID, Species, Jurisdiction or Agency"
+                        placeholder="Enter your search here"
                         [(ngModel)]="searchKeyword"
                         class="inventory-search-input"
                         (keydown.enter)="fetchObservations()"
@@ -49,7 +49,7 @@
             <div class="side-menu">
                 <p class="text text-header">Export Records</p>
                 <hr class="section-divider" />
-                <button mat-stroked-button color="primary" class="export-button" [disabled]="isEmpty">
+                <button mat-stroked-button color="primary" class="export-button" [disabled]="isEmpty" (click)="export()">
                     Export {{ observations.length }} Results
                 </button>
             </div>
