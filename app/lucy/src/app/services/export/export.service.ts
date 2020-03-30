@@ -6,7 +6,8 @@ import { AppConstants } from 'src/app/constants';
 
 export enum ExportType {
   WatercraftRiskAssessment,
-  Shift
+  Shift,
+  Observation
 }
 
 @Injectable({
@@ -42,6 +43,8 @@ export class ExportService {
         return AppConstants.API_WatercraftAssessment_Export;
       case ExportType.Shift:
         return AppConstants.API_Shift_Export;
+      case ExportType.Observation:
+        return AppConstants.API_observation_Export;
     }
   }
 
@@ -50,11 +53,14 @@ export class ExportService {
    * @param type ExportType
    */
   private fileNameForExportType(type: ExportType): string {
+    const dateNow = Date().toString();
     switch (type) {
       case ExportType.WatercraftRiskAssessment:
-        return `Watercaft Risk Assessment Report - ${Date().toString()}`;
+        return `Watercaft Risk Assessment Report - ${dateNow}`;
       case ExportType.Shift:
-        return `Shift Report - ${Date().toString()}`;
+        return `Shift Report - ${dateNow}`;
+      case ExportType.Observation:
+        return `Observation Report - ${dateNow}`;
     }
   }
 
