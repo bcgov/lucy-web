@@ -21,17 +21,17 @@ import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { ValidationService } from 'src/app/services/validation.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
-import { StringConstants } from 'src/app/constants/string-constants';
+import { ExportService, ExportType } from 'src/app/services/export/export.service';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
-import { ExportService, ExportType } from 'src/app/services/export/export.service';
+import { StringConstants } from 'src/app/constants/string-constants';
 
 enum ExportFormat {
   CSV='csv',
@@ -100,7 +100,7 @@ export class InventoryComponent implements OnInit {
   /************ Flags ************/
   showMap = true;
   showList = true;
-  showExportModal = true;
+  showExportModal = false;
   /************ End of Flags ************/
 
   get isEmpty(): boolean {
@@ -130,11 +130,11 @@ export class InventoryComponent implements OnInit {
   constructor(
     private userService: UserService,
     private roles: RolesService,
-    private validationService: ValidationService,
     private observationService: ObservationService,
     private router: RouterService,
     private loadingService: LoadingService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private toastService: ToastService
     ) { }
 
   ngOnInit() {
@@ -457,7 +457,9 @@ export class InventoryComponent implements OnInit {
     if (this.exportFormat === ExportFormat.CSV) {
       this.exportService.exportCSV(ExportType.Observation);
     } else {
-      console.log('KML');
+      this.toastService.show('Feature not available yet', ToastIconType.fail);
+      return;
     }
+    this.showExportModal = false;
   }
 }
