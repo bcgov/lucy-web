@@ -73,6 +73,10 @@ export class LocationInputComponent implements OnInit {
   // waypoint boundary coordinates in BC Albers (needed for certain calculations)
   waypointBoundaryPointsAlbers: AlbersCoordinate[] = [];
 
+  // waypoint modal launch button should only be displayed if the geometry type selected
+  // is Waypoint
+  showModalLaunchButton = false;
+
   // Empty existing value
   private _existingValue: SpaceGeomData = { geometry: 1, latitude: 0, longitude: 0};
 
@@ -327,6 +331,16 @@ export class LocationInputComponent implements OnInit {
           space_geom_id: existing.space_geom_id
         };
         this.object.spaceGeom.value = value;
+
+        // 4 & 5 are the waypoint-related geometry input types
+        // this is really hacky, but we're anticipating that dropdown values will change soon so keeping
+        // this as is for now
+        if (this.object.spaceGeom.value.geometry === 4 || this.object.spaceGeom.value.geometry === 5) {
+          this.showModalLaunchButton = true;
+        } else {
+          this.showModalLaunchButton = false;
+        }
+
       }
       this.locationChanged.emit(this.object);
     }
