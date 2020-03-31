@@ -350,7 +350,7 @@ describe('Test for observation routes', () => {
         });
     });
 
-    it.only(`should export all the observations`, async () => {
+    it(`should export all the observations`, async () => {
         const observation = await ModelFactory(ObservationController.shared)();
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.get,
