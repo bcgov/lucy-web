@@ -61,6 +61,7 @@ export interface ObservationCreateModel {
 	observerLastName: string;
 	sampleIdentifier?: string;
 	rangeUnitNumber: string;
+	generalComment: string;
 	legacySiteIndicator: boolean;
 	edrrIndicator: boolean;
 	researchIndicator: boolean;
@@ -94,6 +95,7 @@ export interface ObservationUpdateModel {
 	observerLastName?: string;
 	sampleIdentifier?: string;
 	rangeUnitNumber?: string;
+	generalComment?: string;
 	legacySiteIndicator?: boolean;
 	edrrIndicator?: boolean;
 	researchIndicator?: boolean;
@@ -166,6 +168,13 @@ export class Observation extends Record implements ObservationCreateModel {
 	@Column({ name: ObservationSchema.columns.rangeUnitNumber, nullable: true})
 	@ModelProperty({type: PropertyType.string})
 	rangeUnitNumber: string;
+
+	/**
+	 * @description Getter/Setter property for column {general_comment}
+	 */
+	@Column({ name: ObservationSchema.columns.generalComment})
+	@ModelProperty({type: PropertyType.string})
+	generalComment: string;
 
 	/**
 	 * @description Getter/Setter property for column {legacy_site_ind}

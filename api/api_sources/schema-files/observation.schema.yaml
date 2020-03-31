@@ -60,6 +60,11 @@ schemas:
                 default: Location Description  
               fields:
                 - accessDescription
+            - title:
+                key: 'comment'
+                default: Comment
+              fields:
+                - generalComment
             # End-group(Geometry)
             - title: 
                 key: 'observerInformation' 
@@ -210,6 +215,17 @@ schemas:
           regx:
             re: '^[a-zA-Z0-9]+'
             flag: 'gm'
+      generalComment:
+        name: 'general_comment'
+        comment: 'General comment associated with observation'
+        definition: VARCHAR(500) NULL
+        required: true
+        layout:
+          header:
+            key: 'observation.generalComment'
+            default: 'General Comment'
+          classes:
+            - none
       # --
       # -- Indicators --
       legacySiteIndicator:

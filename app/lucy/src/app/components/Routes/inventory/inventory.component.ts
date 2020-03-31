@@ -21,17 +21,22 @@ import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { ValidationService } from 'src/app/services/validation.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
-import { StringConstants } from 'src/app/constants/string-constants';
+import { ExportService, ExportType } from 'src/app/services/export/export.service';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
-import { ExportService } from 'src/app/services/export/export.service';
+import { StringConstants } from 'src/app/constants/string-constants';
+
+enum ExportFormat {
+  CSV='csv',
+  KML='kml'
+}
 
 
 declare const process: any;
@@ -78,6 +83,7 @@ export class InventoryComponent implements OnInit {
 
   searchKeyword = '';
   tableHeaderText = '';
+  exportFormat = ExportFormat.CSV;
 
   /************ Sorting Variables ************/
   sortAscending = false;
@@ -89,22 +95,30 @@ export class InventoryComponent implements OnInit {
   /************ End of Sorting Variables ************/
 
   markers: MapMarker[] = [];
-  observations: Observation[];
+  observations: Observation[] = [];
 
   /************ Flags ************/
   showMap = true;
   showList = true;
+  showExportModal = false;
   /************ End of Flags ************/
 
-  // TEMP
-  private _numberOfTests = 10;
-  set numberOfObservationForTesting(number: number) {
-    if (this.validationService.isValidInteger(String(number))) {
-      this._numberOfTests = number;
-    }
+  get isEmpty(): boolean {
+    return this.observations.length === 0;
   }
-  get numberOfObservationForTesting(): number {
-    return this._numberOfTests;
+
+  get exportText(): string {
+    if (this.observations && this.observations.length === 0) return 'Export';
+
+    return `Export ${this.observations.length} Results`
+  }
+
+  openExportModal() {
+    this.showExportModal = true;
+  }
+
+  closeExportModal() {
+    this.showExportModal = false;
   }
 
   /************ Material Table ************/
@@ -116,11 +130,11 @@ export class InventoryComponent implements OnInit {
   constructor(
     private userService: UserService,
     private roles: RolesService,
-    private validationService: ValidationService,
     private observationService: ObservationService,
     private router: RouterService,
     private loadingService: LoadingService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private toastService: ToastService
     ) { }
 
   ngOnInit() {
@@ -154,7 +168,7 @@ export class InventoryComponent implements OnInit {
       this.tableHeaderText = `${observations.length} Records found for "${this.searchKeyword}"`;
     } else {
       observations = await this.observationService.getAll();
-      this.tableHeaderText = `Showing ${observations.length} Records`;
+      this.tableHeaderText = observations.length ? `Showing ${observations.length} Records` : 'No records yet';
     }
 
     this.observations = observations;
@@ -439,9 +453,13 @@ export class InventoryComponent implements OnInit {
     this.router.navigateTo(AppRoutes.ViewObservation, observation.observation_id);
   }
 
-  // TODO: use this for implementing the export functionality
   export() {
-    this.exportService.downloadCSV(this.observations, `observations - ${Date().toString()}`);
+    if (this.exportFormat === ExportFormat.CSV) {
+      this.exportService.exportCSV(ExportType.Observation);
+    } else {
+      this.toastService.show('Feature not available yet', ToastIconType.fail);
+      return;
+    }
+    this.showExportModal = false;
   }
-
 }
