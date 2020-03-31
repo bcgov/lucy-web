@@ -16,9 +16,10 @@ export class ObserverWorkflowController extends RecordController<ObserverWorkflo
 		return this.sharedInstance<ObserverWorkflow>(ObserverWorkflow, ObserverWorkflowSchema) as ObserverWorkflowController;
 	}
 
-	processExportData(data: ObserverWorkflow) {
-		delete data.displayLabel;
-		return data;
+	processForExport(data: ObserverWorkflow) {
+		const result = super.processForExport(data);
+		delete result.displayLabel;
+		return result;
 	}
 }
 // ----------------

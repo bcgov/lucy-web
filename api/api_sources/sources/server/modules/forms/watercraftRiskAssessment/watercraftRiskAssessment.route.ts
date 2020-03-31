@@ -23,6 +23,7 @@
 /**
  * Imports
  */
+import * as express from 'express';
 import {
     // SecureRouteController,
     ResourceRoute,
@@ -35,8 +36,44 @@ import {
 } from '../../../core';
 import {
     WatercraftRiskAssessmentController,
-    WatercraftRiskAssessmentSpec
+    WatercraftRiskAssessmentSpec,
+    CountryProvince,
+    CountryProvinceController
 } from '../../../../database/models';
+
+// Check Country and Province Code
+const CheckCountryAndProvinceCode = async (req: any, resp: express.Response, next: any) => {
+    const body: any = req.body || {};
+    let errorMessage = '';
+    if (body.provinceOfResidence && body.countryOfResidence) {
+        // Get all provinces
+        const code: CountryProvince = await CountryProvinceController.shared.fetchOne({
+            provinceCode: body.provinceOfResidence,
+            countryCode: body.countryOfResidence
+        });
+        if (code) {
+            next();
+            return;
+        } else {
+            errorMessage = `Unknown values for countryOfResidence = ${body.countryOfResidence}, provinceOfResidence = ${body.provinceOfResidence}`;
+        }
+    } else {
+        errorMessage = `Missing keys provinceOfResidence | countryOfResidence`;
+    }
+    if (errorMessage) {
+        resp.status(422).json({
+            message: errorMessage,
+            time: new Date(),
+            errors: [
+                {
+                    msg: 'provinceOfResidence | countryOfResidence: required',
+                    param: 'provinceOfResidence | countryOfResidence',
+                    location: 'body'
+                }
+            ]
+        });
+    }
+};
 @ResourceRoute({
     path: '/api/mussels/wra/#',
     description: 'API route controller for Watercraft risk assessment',
@@ -44,7 +81,7 @@ import {
     // validators: CreateTreatmentValidator,
     secure: true
 })
-@CreateMiddleware(() => [ inspectAppEditorRoute() ])
+@CreateMiddleware(() => [ inspectAppEditorRoute(), CheckCountryAndProvinceCode ])
 @UpdateMiddleware(() => [ inspectAppEditorRoute() ])
 export class WatercraftRiskAssessmentRouteController extends ResourceRouteController<WatercraftRiskAssessmentController, WatercraftRiskAssessmentSpec, any> {
     static get shared(): WatercraftRiskAssessmentRouteController {
