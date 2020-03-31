@@ -9,7 +9,8 @@ import {
     ResourceRouteController,
     writerOnlyRoute,
     UpdateMiddleware,
-    Get
+    Get,
+    inspectAppAdminRoute
 } from '../../core';
 import {
     ObservationController,
@@ -34,6 +35,15 @@ export class ObservationRouteController extends ResourceRouteController<Observat
     })
     public async search(req: any, data?: any): Promise<[number, any]> {
         return [200, await this.dataController.search(req.query.keyword)];
+    }
+
+    @Get({
+        path: '/export',
+        secure: true,
+        middleware: () => [ inspectAppAdminRoute() ]
+    })
+    public async export() {
+        return [200, await this.dataController.export()];
     }
 }
 
