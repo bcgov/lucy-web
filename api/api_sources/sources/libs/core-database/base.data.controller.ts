@@ -33,6 +33,7 @@ import { registerDataModelController, controllerForSchemaName } from './schema.s
 import { DataController } from '../../database/data.model.controller';
 import { unWrap, flatJSON } from '../utilities';
 import { DataFieldDefinition } from './application.column';
+import { TableExporter } from './table.exporter';
 
 export interface ControllerMetaData {
     modelName: string;
@@ -59,6 +60,7 @@ export interface BaseDataController {
     getIdValue(obj: any): any;
     validate(data: any): boolean;
     export(): Promise<any>;
+    processForExport(data: any): any;
 }
 
 
@@ -394,8 +396,25 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
         return obj[idKey];
     }
 
-    processExportData(data: T): any {
-        return data;
+    processForExport(data: T): any {
+        // Fine tune data
+        return TableExporter.export(this.schemaObject, data);
+    }
+
+    /**
+     * @description Key Mapping for export json
+     */
+    get exportKeyMapper(): {[key: string]: string} {
+        return {};
+    }
+
+    /**
+     * @description Sort priorities for export json
+     */
+    get exportKeyPriorities(): {[key: string]: number} {
+        return {
+            id: 5
+        };
     }
 
     /**
@@ -407,9 +426,10 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 		const result = [];
 		// Get flat json
 		for (const w of all) {
-			// Process it first
-			const processedItem = this.processExportData(w);
-			result.push(flatJSON(processedItem));
+            // Process it first
+            const processedItem = this.processForExport(w);
+            const flat = flatJSON(processedItem);
+			result.push(TableExporter.dataFlattening(this.schemaObject, flat, this.exportKeyMapper, this.exportKeyPriorities));
 		}
 		return result;
 	}

@@ -23,8 +23,7 @@
 import * as fs from 'fs';
 import * as _ from 'underscore';
 import { ApplicationTableColumn } from './application.column';
-import { TableVersion, SchemaChangeDefinition, ColumnChangeType } from './application.table';
-import { unWrap } from '../utilities';
+import { TableVersion, SchemaChangeDefinition, ColumnChangeType, SqlInfo } from './application.table';
 import { BaseSchema } from './baseSchema';
 import { getSQLDirPath, getSQLFileData } from './sql.loader';
 
@@ -82,13 +81,13 @@ export class SchemaHelper {
         let result = '';
         let comment = '';
         const existingColumn: ApplicationTableColumn = change.existingColumn;
-        if (change.deleteColumn) {
+        if (change.deleteColumn && change.type !== ColumnChangeType.UPDATE) {
             change.type = ColumnChangeType.DROP;
         }
         switch (change.type || ColumnChangeType.KEY_CHANGE) {
             case ColumnChangeType.DROP: {
                 // Dropping Column
-                comment = `## -- Dropping Column ${existingColumn} on table ${tableName} --`;
+                comment = `## -- Dropping Column ${existingColumn.name} on table ${tableName} --`;
                 const dropCol = existingColumn.dropColumnSql(tableName);
                 result = result + `\n${comment}\n${dropCol}\n-- ## --`;
 
@@ -100,16 +99,54 @@ export class SchemaHelper {
                 break;
             }
             case ColumnChangeType.RENAME: {
-                comment = `-- ## Renaming Column ${existingColumn.name} on table ${tableName} --`;
-                const rename = `ALTER TABLE ${tableName} RENAME ${existingColumn.name} TO ${ unWrap(change.column, {}).name || 'NA'};`;
-                result = result + `\n${comment}\n${rename}\n-- ## --`;
+                if (change.newColumnName) {
+                    comment = `-- ## Renaming Column ${existingColumn.name} on table ${tableName} --`;
+                    const rename = `ALTER TABLE ${tableName} RENAME ${existingColumn.name} TO ${change.newColumnName};`;
+                    result = result + `\n${comment}\n${rename}\n-- ## --`;
+                    if (!change.downSqlStatement) {
+                        change.downSqlStatement = `ALTER TABLE ${tableName} RENAME ${change.newColumnName} TO ${existingColumn.name}`;
+                    }
+                }
+                break;
+            }
+            case ColumnChangeType.UPDATE: {
+                if (change.column && existingColumn) {
+                    const newDef = change.column;
+                    comment = `-- ## Updating existing column ${existingColumn.name} on table ${tableName} --\n`;
+                    if (change.deleteColumn) {
+                        comment  = comment + `-- ## First Deleting existing column ${existingColumn.name} --\n`;
+                        result = result + `${comment}${existingColumn.dropColumnSql(tableName)}\n`;
+                        // Get new definition
+                        result = result + `-- ## Creating new Column Def --`;
+                        const newColumn = ApplicationTableColumn.createColumn(newDef);
+                        const columnDef = this._genColumnDef(newColumn, tableName);
+                        result = result + `${columnDef}`;
+                        if (!change.downSqlStatement) {
+                            let downSqlStatement = `-- ## Delete existing column --\n`;
+                            // Drop new def
+                            downSqlStatement = downSqlStatement + `${newColumn.dropColumnSql(tableName)}\n`;
+                            // Add back existing
+                            downSqlStatement = downSqlStatement + `-- ## Add previous version --\n`;
+                            downSqlStatement = downSqlStatement + `${this._genColumnDef(existingColumn, tableName)}`;
+                            change.downSqlStatement = downSqlStatement;
+                        }
+                    } else {
+                        comment = comment + `-- ## Updating existing column ${existingColumn.name} --\n`;
+                        result = result + `\n${comment}\n${existingColumn.updateColumnSql(tableName, newDef)}\n-- ## --\n`;
+
+                        if (!change.downSqlStatement)  {
+                            change.downSqlStatement = existingColumn.updateColumnSql(tableName, existingColumn);
+                        }
+                    }
+
+                }
                 break;
             }
         }
 
         if (change.sqlStatement) {
             comment = `-- ## Adding Custom Change SQL Statement -- ##`;
-            result = result + `\n${comment}\n${change.sqlStatement};\n-- ## --`;
+            result = `\n${comment}\n${change.sqlStatement};\n-- ## --` + result;
         }
         return result;
     }
@@ -256,6 +293,28 @@ export class SchemaHelper {
         }
     }
 
+
+    private _genInitialSql(schema: BaseSchema, columnDef: string) {
+        if (schema.table.initialSqlCommands.length > 0) {
+            let after = '';
+            let before = '';
+            const update = (target: string, sqlInfo: SqlInfo) => {
+                target = target + `\n-- ${sqlInfo.comment || 'SQL'} --`;
+                target = target + `\n${sqlInfo.sql};\n`;
+                return target;
+            };
+            for (const sqlInfo of schema.table.initialSqlCommands) {
+                if (sqlInfo.before) {
+                    before = update(before, sqlInfo);
+                } else {
+                    after = update(after, sqlInfo);
+                }
+            }
+            return `${before}${columnDef}\n${after}`;
+        }
+        return columnDef;
+    }
+
     /**
      * @description Generate set of migration file for schema
      * @param BaseSchema schema
@@ -273,7 +332,9 @@ export class SchemaHelper {
         const migrationFilePath: string = schema.migrationFilePath();
 
         // Current root version
-        const current = schema.createMigrationFile(undefined, true);
+        const columDef = schema.createMigrationFile(undefined, true);
+        // Now add additional sql
+        const current = this._genInitialSql(schema, columDef);
         // Check item exists on migration file path or not
         if (fs.existsSync(migrationFilePath)) {
             // Match both content

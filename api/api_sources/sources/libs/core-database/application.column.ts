@@ -58,6 +58,7 @@ export interface DataFieldDefinition {
     layout?: any;
     type: string;
     typeDetails: any;
+    examples: any[];
     fieldVerification(): DataFieldVerification | undefined;
 }
 
@@ -87,6 +88,7 @@ export type TableColumnDataOption = Pick<
     | 'deleteCascade'
     | 'refColumn'
     | 'comment'
+    | 'examples'
     | 'definition' >;
 
 export interface SchemaChangeOptions {
@@ -98,6 +100,14 @@ export interface SchemaChangeOptions {
     sqlStatement?: string;
     downSqlStatement?: string;
     deleteColumn?: boolean;
+    comment?: string;
+}
+
+export interface JointColumnDescription {
+    jointColumnKeys: string[];
+    referenceSchema: string;
+    referenceColumnMapping: {[key: string]: string};
+    info?: string;
 }
 
 
@@ -122,6 +132,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
     meta?: any;
     layout?: any;
     eager = true;
+    examples: any[] = [];
     constructor(
         name: string,
         comment: string,
@@ -166,6 +177,7 @@ export class ApplicationTableColumn implements TableColumnDefinition {
         column.layout = value.layout;
         column.eager = unWrap(value.eager, true);
         column.required = (value.required !== undefined) ? value.required : true;
+        column.examples = value.examples;
         return column;
     }
 
@@ -197,6 +209,18 @@ export class ApplicationTableColumn implements TableColumnDefinition {
 
     public dropColumnSql(tableName: string) {
         return `ALTER TABLE ${tableName} DROP COLUMN IF EXISTS ${this.name};`;
+    }
+
+    public updateColumnSql(tableName: string, data: TableColumnDataOption) {
+        const def = `ALTER TABLE ${tableName} ALTER COLUMN ${this.name} ${data.definition}`;
+        const ref = this.ref(data.foreignTable, data.refColumn, data.deleteCascade);
+        const final = ref ? `${def} ${ref};` : `${def};`;
+        const comment = `COMMENT ON ${tableName}.${this.name} IS '${data.comment}';`;
+        return `${final}\n${comment}\n`;
+    }
+
+    public get option(): TableColumnDataOption {
+        return this as TableColumnDataOption;
     }
 
     get type(): string {
@@ -314,6 +338,24 @@ export class ApplicationTableColumn implements TableColumnDefinition {
 
         typeInfo.required = this.required;
         return typeInfo;
+    }
+
+    get jointColumnInfo(): JointColumnDescription {
+        let info: JointColumnDescription = {
+            jointColumnKeys: [],
+            referenceSchema: '',
+            referenceColumnMapping: {}
+        };
+        if (this.meta && this.meta.jointColumnInfo) {
+            const input: any = this.meta.jointColumnInfo;
+            info = {
+                jointColumnKeys: input.jointColumnKeys || [],
+                referenceSchema: input.referenceSchema || '',
+                info: input.info,
+                referenceColumnMapping: input.referenceColumnMapping || {}
+            };
+        }
+        return info;
     }
 
 }
