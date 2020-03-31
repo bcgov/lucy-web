@@ -267,6 +267,14 @@ export const writerOnlyRoute = () => {
 };
 
 /**
+ * @description Route For all editors including inspect app admin
+ * @export closure editorOnlyRoute
+ */
+export const editorOnlyRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin, RolesCodeValue.editor]);
+};
+
+/**
  * @description Route for inspect app editor
  */
 export const inspectAppEditorRoute = () => {
