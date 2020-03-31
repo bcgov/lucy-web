@@ -40,7 +40,7 @@ export class ObservationRouteController extends ResourceRouteController<Observat
     @Get({
         path: '/export',
         secure: true,
-        middleware: () => [ inspectAppAdminRoute() ]
+        middleware: () => [ inspectAppAdminRoute(), writerOnlyRoute() ]
     })
     public async export() {
         return [200, await this.dataController.export()];
