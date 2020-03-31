@@ -48,7 +48,9 @@ import {
     destroyMechanicalTreatment,
     // ModelFactory,
     ModelSpecFactory,
-    RequestFactory
+    RequestFactory,
+    ModelFactory,
+    Destroyer
 } from '../../../../database/factory';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
 import { ObservationSchema } from '../../../../database/database-schema';
@@ -308,18 +310,9 @@ describe('Test for observation routes', () => {
     });
 
     it('should filter by keyword that matches observer name/id/species/jurisdiction/agency', async () => {
-        const spec = await ModelSpecFactory(ObservationController.shared)();
-        const create = RequestFactory<any>(spec, {
-            schema: ObservationSchema.shared
-        });
-        const firstName: string = create.observerFirstName;
-        await testRequest(SharedExpressApp.app, {
-            type: HttpMethodType.post,
-            url: '/api/observation',
-            expect: 201,
-            auth: AuthType.admin,
-            send: create
-        });
+        const obs = await ModelFactory(ObservationController.shared)();
+        should().exist(obs);
+        const firstName: string = obs.observerFirstName;
 
         const keyword = firstName.substring(1, firstName.length);
         await testRequest(SharedExpressApp.app, {
@@ -329,7 +322,7 @@ describe('Test for observation routes', () => {
             auth: AuthType.admin
         }).then(async (resp) => {
             await verifySuccessBody(resp.body, async (data) => {
-                expect(data.length).to.be.equal(1);
+                expect(data.length).to.be.greaterThan(0);
                 const observation = data[0];
                 should().exist(observation.observation_id);
                 should().exist(observation.species);
@@ -344,6 +337,9 @@ describe('Test for observation routes', () => {
                 should().exist(observation.slopeCode);
                 should().exist(observation.aspectCode);
                 should().exist(observation.proposedAction);
+                const filtered = data.filter( (item: any) => item.observerFirstName === firstName);
+                expect(filtered.length).to.be.greaterThan(0);
+                await Destroyer(ObservationController.shared)(obs);
             });
         });
     });
