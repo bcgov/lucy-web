@@ -96,6 +96,7 @@ export class InventoryComponent implements OnInit {
 
   markers: MapMarker[] = [];
   observations: Observation[] = [];
+  totalObservations = 0;
 
   /************ Flags ************/
   showMap = true;
@@ -104,13 +105,13 @@ export class InventoryComponent implements OnInit {
   /************ End of Flags ************/
 
   get isEmpty(): boolean {
-    return this.observations.length === 0;
+    return this.totalObservations === 0;
   }
 
   get exportText(): string {
-    if (this.observations && this.observations.length === 0) return 'Export';
+    if (this.totalObservations === 0) return 'Export';
 
-    return `Export ${this.observations.length} Results`
+    return `Export ${this.totalObservations} Results`
   }
 
   openExportModal() {
@@ -169,6 +170,7 @@ export class InventoryComponent implements OnInit {
     } else {
       observations = await this.observationService.getAll();
       this.tableHeaderText = observations.length ? `Showing ${observations.length} Records` : 'No records yet';
+      this.totalObservations = observations.length;
     }
 
     this.observations = observations;
