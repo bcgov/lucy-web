@@ -100,6 +100,12 @@ export class WaypointModalComponent implements OnInit {
   }
 
   generatePath() {
+    this.errors = [];
+    if (!this.validWaypointValues(this.offset, this.waypoints)) {
+      this.errors.push('Error: please fill all the fields');
+      return;
+    }
+    
     if (this.waypointEntryComponents.length > this.MAX_NUM_POINTS) {
       this.errors.push('Error: cannot enter more than 10 coordinates');
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
@@ -131,6 +137,13 @@ export class WaypointModalComponent implements OnInit {
       }
     }
     return (counter === 0);
+  }
+
+  validWaypointValues(offset: number, points: LatLongCoordinate[]) {
+    if (!offset || points.length === 0) return false;
+
+    const invalidPoints = points.filter(point => !point.latitude || !point.longitude);
+    return (invalidPoints.length === 0)
   }
 
   onBack() {

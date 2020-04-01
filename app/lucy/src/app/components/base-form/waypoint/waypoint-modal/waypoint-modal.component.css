@@ -149,8 +149,12 @@ p {
     padding: 0 15px;
 }
 
-.error-card-container {
-    padding: 4px 48px 4px 32px;
+.error-latlong-container {
+    padding: 4px 60px 4px 48px;
+}
+
+.error-utm-container {
+    padding: 4px 30px 4px 16px;
 }
 
 .error-card {
