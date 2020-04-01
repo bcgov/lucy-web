@@ -11,12 +11,27 @@ export class WaypointTextEntryComponent implements OnInit {
 
   lat: string;
   long: string;
+  eastings: string;
+  northings: string;
+  zone: string;
 
   latVerification = {
     required: true,
   };
 
   longVerification = {
+    required: true,
+  };
+
+  eastingsVerification = {
+    required: true,
+  };
+
+  northingsVerification = {
+    required: true,
+  };
+
+  zoneVerification = {
     required: true,
   };
 
@@ -56,6 +71,7 @@ export class WaypointTextEntryComponent implements OnInit {
     if ((this.validation.isValidLatitude(value)) || (value === ``)) {
       this.lat = value;
     }
+    this.latLongValuesChanged();
     this.notifyChangeEvent();
   }
 
@@ -63,8 +79,78 @@ export class WaypointTextEntryComponent implements OnInit {
     if ((this.validation.isValidLongitude(value)) || (value === ``)) {
       this.long = value;
     }
+    this.latLongValuesChanged();
     this.notifyChangeEvent();
   }
+
+  eastingChanged(value: string) {
+    if (!this.validation.isValidUTMEastings(value)) {
+      return;
+    }
+    this.eastings = value;
+    this.utmValuesChanged();
+    this.notifyChangeEvent();
+  }
+
+  northingsChanged(value: string) {
+    if (!this.validation.isValidUTMNorthings(value)) {
+      return;
+    }
+    this.northings = value;
+    this.utmValuesChanged();
+    this.notifyChangeEvent();
+  }
+
+  zoneChanged(value: string) {
+    if (!this.validation.isValidUTMZone(value)) {
+      return;
+    }
+    this.zone = value;
+    this.utmValuesChanged();
+    this.notifyChangeEvent();
+  }
+
+  latLongValuesChanged() {
+    if (!this.showLatLong) {
+      return;
+    }
+
+    const converted = this.converter.convertLatLongCoordinateToUTM(+this.lat, +this.long);
+
+    if (!converted
+        || !this.validation.isValidUTMEastings(String(Math.round(converted.eastings)))
+        || !this.validation.isValidUTMNorthings(String(Math.round(converted.northings)))
+        || !this.validation.isValidUTMZone(String(Math.round(converted.zone)))
+    ) {
+      this.eastings = '';
+      this.northings = '';
+      this.zone = '';
+      return;
+    }
+
+    this.eastings = `${Math.round(converted.eastings)}`;
+    this.northings = `${Math.round(converted.northings)}`;
+    this.zone = `${Math.round(converted.zone)}`;
+  }
+
+  utmValuesChanged() {
+    // If its in lat/long mode, dont run this function.
+    if (this.showLatLong) {
+      return;
+    }
+
+    const converted = this.converter.convertUTMToLatLongCoordinate(+this.eastings, +this.northings, +this.zone);
+
+    if (!converted || !this.validation.isValidLatitude(String(converted.latitude)) || !this.validation.isValidLongitude(String(converted.longitude))) {
+      this.lat = ``;
+      this.long = ``;
+      return;
+    }
+
+    this.lat = `${parseFloat(converted.latitude.toFixed(6))}`;
+    this.long = `${parseFloat(converted.latitude.toFixed(6))}`;
+  }
+  
 
   private notifyChangeEvent() {
     this._point = {

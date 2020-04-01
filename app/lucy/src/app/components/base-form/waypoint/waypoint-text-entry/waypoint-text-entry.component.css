@@ -8,4 +8,5 @@
 
 ::ng-deep app-field[appearance='fill'] > div {
     margin-top: 0 !important;
+    padding-bottom: 8px;
 }
