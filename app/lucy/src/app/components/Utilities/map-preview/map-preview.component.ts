@@ -18,7 +18,7 @@
 import { Component, OnInit, AfterViewInit, AfterContentChecked, Input, Output , EventEmitter, AfterViewChecked} from '@angular/core';
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
-import { GeoJSON } from 'leaflet';
+import 'node_modules/leaflet-draw';
 import { Observation } from 'src/app/models';
 import * as bcgeojson from './bcgeojson.json';
 import { keyframes } from '@angular/animations';
@@ -135,10 +135,17 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   get inputGeometryJSON(): any {
     return this._inputGeometryJSON;
   }
-  @Input() set inputGeometryJSON(json: any) {
+  @Input() set inputGeometryJSON(object: any) {
+    let json = '{}';
+    // if object is a spaceGeom object (from location-input.component)
+    if (object['spaceGeom'] !== undefined && object['spaceGeom']['value'] !== undefined && object['spaceGeom']['value']['inputGeometry'] !== undefined) {
+      json = object['spaceGeom']['value']['inputGeometry']['geoJSON'];
+      // this.leafletFeatures = json;
+    } else if (object['type'] === `FeatureCollection`) { // if object is a GeoJSON
+      json = object;
+    }
     this._inputGeometryJSON = json;
-    this.leafletFeatures = json;
-    if (this.ready) {
+    if (this.ready && this._inputGeometryJSON !== '{}') {
       L.geoJSON(this._inputGeometryJSON).addTo(this.map);
     }
   }
@@ -210,9 +217,30 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       key: this.makeid(10)
     }).addTo(this.map);
     this.addBCBorder();
-    L.geoJSON(this.inputGeometryJSON).addTo(this.map);
-    this.center = {latitude: this.inputGeometryJSON['features'][0]['geometry']['coordinates'][0][0][1], longitude: this.inputGeometryJSON['features'][0]['geometry']['coordinates'][0][0][0], zoom: 18};
-    this.showMapAtCenter();
+
+    L.geoJSON(this.inputGeometryJSON, {
+      style: function(feature) {
+        switch (feature.geometry.type) {
+          case 'Polygon': return {
+            color: '#F5A623',
+            fillColor: '#F5A623',
+            fillOpacity: 0.7,
+            weight: 2,
+          };
+          case 'MultiLineString': return {
+            color: 'black',
+            weight: 1,
+            fillOpacity: 0.4,
+          };
+          case 'Point': return {
+            radius: 0.5,
+            color: 'black',
+            fillColor: 'black',
+            fill: true
+          };
+        }
+      }
+    }).addTo(this.map);
   }
 
   private makeid(length: number) {
@@ -371,8 +399,11 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       weight: 2,
     });
     polygon.addTo(this.map);
-    this.leafletFeatures.features.push(polygon.toGeoJSON());
-    this.showMapAt({latitude: this.polygon[0][0], longitude: this.polygon[0][1], zoom: 18});
+    const area = L.GeometryUtil.geodesicArea(polygon._latlngs[0]);
+    const polygonGeoJson = polygon.toGeoJSON();
+    polygonGeoJson['properties'] = {'area': area};
+    this.leafletFeatures.features.push(polygonGeoJson);
+    this.map.fitBounds(polygon._bounds);
     this.drawLine();
 
     this.inputGeometryJSON = this.leafletFeatures;

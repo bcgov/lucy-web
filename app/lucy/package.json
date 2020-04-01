@@ -46,6 +46,7 @@
         "jquery": "^3.4.1",
         "jwt-decode": "^2.2.0",
         "leaflet": "^1.5.1",
+        "leaflet-draw": "^1.0.4",
         "leaflet.markercluster": "^1.4.1",
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.26",

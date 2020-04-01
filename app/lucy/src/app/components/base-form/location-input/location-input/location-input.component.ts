@@ -75,7 +75,7 @@ export class LocationInputComponent implements OnInit {
 
   // waypoint modal launch button should only be displayed if the geometry type selected
   // is Waypoint
-  showModalLaunchButton = false;
+  waypointGeometryTypeSelected = false;
 
   // Empty existing value
   private _existingValue: SpaceGeomData = { geometry: 1, latitude: 0, longitude: 0};
@@ -312,9 +312,13 @@ export class LocationInputComponent implements OnInit {
     this.setUTMFromLatLong();
   }
 
+  setAreaLabelWithValue(area: number) {
+    this.areaLabel = area ? `${area.toFixed(1)} square meters` : AreaFieldTitle.UNKNOWN;
+  }
+
   setAreaLabel(x: number, y: number) {
     const a = this.areaCalculator(x, y);
-    this.areaLabel = a ? `${a.toFixed(1)} square meter` : AreaFieldTitle.UNKNOWN;
+    this.areaLabel = a ? `${a.toFixed(1)} square meters` : AreaFieldTitle.UNKNOWN;
   }
 
   private notifyChangeEvent() {
@@ -336,9 +340,9 @@ export class LocationInputComponent implements OnInit {
         // this is really hacky, but we're anticipating that dropdown values will change soon so keeping
         // this as is for now
         if (this.object.spaceGeom.value.geometry === 4 || this.object.spaceGeom.value.geometry === 5) {
-          this.showModalLaunchButton = true;
+          this.waypointGeometryTypeSelected = true;
         } else {
-          this.showModalLaunchButton = false;
+          this.waypointGeometryTypeSelected = false;
         }
 
       }
@@ -542,6 +546,13 @@ export class LocationInputComponent implements OnInit {
    */
   inputGeometryChanged(event: any) {
     this.object.spaceGeom.value.inputGeometry.geoJSON = event;
+    for (const feature of event['features']) {
+      if (feature['geometry']['type'] === 'Polygon') {
+        this.setAreaLabelWithValue(feature['properties']['area']);
+        this.object.spaceGeom.value.inputGeometry.attributes['area'] = feature['properties']['area'];
+        break;
+      }
+    }
   }
 
   /**
