@@ -119,6 +119,10 @@ p {
     padding: 4px 0;
 }
 
+.waypoint-input-container {
+    padding: 0 8px;
+}
+
 .buttons-container {
     display: flex;
     align-items: center;
