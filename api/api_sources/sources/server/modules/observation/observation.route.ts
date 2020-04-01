@@ -10,7 +10,7 @@ import {
     writerOnlyRoute,
     UpdateMiddleware,
     Get,
-    inspectAppAdminRoute
+    editorOnlyRoute
 } from '../../core';
 import {
     ObservationController,
@@ -40,7 +40,7 @@ export class ObservationRouteController extends ResourceRouteController<Observat
     @Get({
         path: '/export',
         secure: true,
-        middleware: () => [ inspectAppAdminRoute() ]
+        middleware: () => [ editorOnlyRoute() ]
     })
     public async export() {
         return [200, await this.dataController.export()];
