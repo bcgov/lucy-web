@@ -1,0 +1,2 @@
+-- ## Add Combine Foriegn key Constraint to water_body table
+ALTER TABLE water_body ADD CONSTRAINT FK_water_body_country_province FOREIGN KEY (country_code, province_code) REFERENCES country_province (country_code, province_code) ON DELETE SET NULL;

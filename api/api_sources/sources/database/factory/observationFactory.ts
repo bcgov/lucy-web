@@ -24,8 +24,7 @@
   * Imports
   */
 import { Observation, ObservationController, User, UserDataController} from '../models';
-import { userFactory } from './userFactory';
-import { Destroy, ModelSpecFactory } from './helper';
+import { Destroy, ModelFactory } from './helper';
 
 /**
  * @description Observation Factory
@@ -33,8 +32,7 @@ import { Destroy, ModelSpecFactory } from './helper';
  * @param boolean noSave
  */
 export const observationFactory = async (noSave?: boolean): Promise<Observation> => {
-    const spec = await ModelSpecFactory(ObservationController.shared)();
-    return ObservationController.shared.createNewObject(spec, await userFactory());
+    return ModelFactory(ObservationController.shared)();
 };
 
 /**
@@ -42,7 +40,9 @@ export const observationFactory = async (noSave?: boolean): Promise<Observation>
  */
 export const destroyObservation =
 Destroy<Observation, ObservationController>(ObservationController.shared, async (obj: Observation) => {
+  if (obj.createdBy) {
     await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
     return;
+  }
 });
 // -------------------------------------------------------------

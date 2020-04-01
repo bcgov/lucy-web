@@ -26,6 +26,7 @@ import * as express from 'express';
 import * as assert from 'assert';
 import { errorBody, BaseRoutController, RouteHandler, Route, HTTPMethod} from '../../core';
 import { testIdr1Token, testIdr3Token, viewerToken } from '../../../test-helpers/token';
+import { check } from 'express-validator';
 
 export const miscellaneous = () => {};
 
@@ -57,7 +58,6 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
 
     constructor() {
         super();
-        this.applyRouteConfig();
     }
 
     get versionString(): string {
@@ -96,9 +96,30 @@ export class MiscellaneousRouteController extends BaseRoutController<any> {
         }]);
     }
 
-    @Route({ description: 'Test route', path: 'api/misc#/test', index: 1, method: HTTPMethod.get})
+    @Route({
+        description: 'Test route',
+        path: 'api/misc#/test',
+        index: 1,
+        method: HTTPMethod.get
+    })
     get test(): RouteHandler {
         return this.routeConfig<any>('test', async() => [200, {}]);
+    }
+
+    @Route({
+        description: 'Mirror',
+        path: 'api/misc#/mirror',
+        index: 2,
+        method: HTTPMethod.post,
+        validators: () => [
+            check('data').optional(),
+            check('data.lao').optional().isString()
+        ]
+    })
+    get mirror(): RouteHandler {
+        return this.routeConfig<any>('mirror', async (d: any, req: express.Request) => {
+            return [200, req.body];
+        });
     }
 }
 

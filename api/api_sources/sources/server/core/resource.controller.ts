@@ -21,25 +21,17 @@
  * -----
  */
 import * as assert from 'assert';
-import * as _ from 'underscore';
-import * as moment from 'moment';
 import { Request } from 'express';
 import { DataController} from '../../database/data.model.controller';
 import {
     RouteHandler,
-    MakeOptionalValidator,
-    ValidationInfo,
-    ValidatorExists,
-    ValidatorCheck,
     RouteController
 } from './base.route.controller';
-import { ResourceInfo } from './route.const';
+import { ResourceInfo, ValidationBypass } from './route.const';
 import { roleAuthenticationMiddleware } from './auth.middleware';
-import {
-    ApplicationTable,
-    ApplicationTableColumn,
-    controllerForSchemaName
-} from '../../libs/core-database';
+import { SchemaValidator, SchemaValidationOption } from './schema.validation';
+import { MakeOptionalValidator } from './core.validator';
+import { ModelSpecFactory, RequestFactory } from '../../database/factory';
 
 /**
  * @description The ResourceRouteController is generic route controller provide manipulation of resource or table row item. Typical functionality
@@ -51,6 +43,12 @@ import {
 export class BaseResourceRouteController extends RouteController {
     constructor() {
         super();
+    }
+
+    /**
+     * @description Setting up Controller
+     */
+    setup() {
         if (this.constructor.prototype._routeResourceInfo) {
             // Getting resource info
             // console.dir(this.constructor.prototype._routeResourceInfo);
@@ -78,31 +76,60 @@ export class BaseResourceRouteController extends RouteController {
                 this.router.use(middleware);
             }
             // Getting validator
-            const validators: any[] = this._createValidator();
-            const optional: any[] = MakeOptionalValidator(() => this._createValidator());
-            // const filters: any = MakeOptionalValidator(() => this._createValidator(true));
+            const validationBypass: ValidationBypass = info.validationBypass || {};
 
-            // Getting operation specific middleware
+            // If validation Bypass for post
+            // Getting create operation specific middleware
             const createMiddleware: any[] = info.createMiddleware ? info.createMiddleware() : [];
+            if (validationBypass.skipForCreate) {
+                // Configuring Create Route without validation
+                this.router.post(`/`, createMiddleware, this.create);
+            } else {
+                // // Configuring Create Route with validation
+                const validators: any[] = this._createValidator();
+                this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
+            }
+
+            // Getting Update Middleware
             const updateMiddleware: any[] = info.updateMiddleware ? info.updateMiddleware() : [];
+            if (validationBypass.skipForUpdate) {
+                // Configuring Update Route without validation
+                this.router.put(`/:id`, this.combineValidator(this.idValidation(), updateMiddleware), this.update);
+
+            } else {
+                // Options
+                const opt: SchemaValidationOption = {
+                    updateOnly: true,
+                    caller: 'update'
+                };
+                const optional: any[] = MakeOptionalValidator(() => this._createValidator(opt));
+
+                // Configuring Update Route with validation
+                this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
+            }
+
+            // View Middleware
             const viewMiddleware: any[] = info.viewMiddleware ? info.viewMiddleware() : [];
+            if (validationBypass.skipForRead) {
+                // Configuring View all Route with filter
+                this.router.get(`/`, viewMiddleware, this.index);
+            } else {
+                const filters: any = MakeOptionalValidator(() => this._createValidator({
+                    caller: 'filter'
+                }, true));
 
-            // Getting resource endpoint Endpoint
-
-            // Configuring Create Route
-            this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
-
-            // Configuring View all Route with filter
-            this.router.get(`/`, this.combineValidator(viewMiddleware), this.index);
+                // Configuring View all Route with filter
+                this.router.get(`/`, this.combineValidator(viewMiddleware, filters), this.index);
+            }
 
             // Configuring config route
             this.router.get(`/config`, viewMiddleware, this.config);
 
+            // Adding example route
+            this.router.get(`/example`, this.example);
+
             // Configuring View {single} Route
             this.router.get(`/:id`, this.combineValidator(this.idValidation(), viewMiddleware) , this.index);
-
-            // Configuring Update Route
-            this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
         }
     }
 
@@ -111,7 +138,7 @@ export class BaseResourceRouteController extends RouteController {
      */
     get create(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: create`, async (data: any, req: Request) => {
-            return [201, await this.dataController.createNewObject(data, req.user)];
+            return await this.createResource(req, data);
         });
     }
 
@@ -120,8 +147,7 @@ export class BaseResourceRouteController extends RouteController {
      */
     get update(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: update`, async (data: any, req: any) => {
-            assert(req.resource, `${this.className}: update: No resource object found`);
-            return [200, await this.dataController.updateObject(req.resource, data, req.user)];
+            return await this.updateResource(req, data);
         });
     }
 
@@ -130,7 +156,7 @@ export class BaseResourceRouteController extends RouteController {
      */
     get index(): RouteHandler {
         return this.routeConfig<any>(`${this.className}: index`, async (d: any, req: any) => {
-            return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
+            return await this.all(req, d);
         });
     }
 
@@ -143,101 +169,59 @@ export class BaseResourceRouteController extends RouteController {
         });
     }
 
+    get example(): RouteHandler {
+        return this.routeConfig<any>(`${this.className}: example`, async (d: any, req: any) => {
+            return this.exampleData(req);
+        });
+    }
+
+    /**
+     *
+     * Methods for subclass to handle actions
+     */
+    /**
+     * @description Create New Object
+     * @param Request req
+     * @param any data
+     */
+    public async createResource(req: any, data: any): Promise<[number, any]> {
+        return [201, await this.dataController.createNewObject(data, req.user)];
+    }
+
+    /**
+     * @description Update existing
+     * @param Request req
+     * @param any data
+     */
+    public async updateResource(req: any, data: any): Promise<[number, any]> {
+        assert(req.resource, `${this.className}: update: No resource object found`);
+        return [200, await this.dataController.updateObject(req.resource, data, req.user)];
+    }
+
+    /**
+     * @description Fetch object
+     * @param Request req
+     * @param any data
+     */
+    public async all(req: any, data?: any): Promise<[number, any]> {
+        return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
+    }
+
+    public async exampleData(req: any): Promise<[number, any]> {
+        if (process.env.ENVIRONMENT === 'local' || process.env.ENVIRONMENT === 'dev') {
+            const modelSpec: any = await ModelSpecFactory(this.dataController)();
+            const spec: any = await RequestFactory<any>(modelSpec, { schema: this.dataController.schemaObject});
+            return [200, spec];
+        } else {
+            return [200, {}];
+        }
+    }
+
     /**
      * @description Create Validator Logic based on Schema
      */
-    private _createValidator(filterOnly?: boolean): any[] {
-        const tableSchema: ApplicationTable = this.dataController.schema;
-        const columns = tableSchema.columnsDefinition;
-        let validatorCheck = {};
-        let validatorExists = {};
-        _.each(columns, (column: ApplicationTableColumn, key: string) => {
-            if (key === 'id') {
-                return;
-            }
-            const typeInfo: any = column.typeDetails;
-            const validateKey: {[key: string]: ValidationInfo} = {};
-            const validateExists: {[key: string]: DataController} = {};
-            switch  (typeInfo.type) {
-                case 'string':
-                    if (typeInfo.isDate) {
-                        validateKey[key] = {
-                            validate: validate => validate.isString().custom(async (val: string, {req}) => {
-                                assert(moment(val, 'YYYY-MM-DD').isValid(), `${key}: should be string in YYYY-MM-DD format`);
-                            }),
-                            message: 'should be string in YYYY-MM-DD format',
-                            optional: !column.required
-                        };
-                    } else {
-                        validateKey[key] = {
-                            validate: validate => validate.isString().custom(async (value: string, {req}) => {
-                                // 1. Check Size
-                                assert(value, `${key}: Value must be defined`);
-                                assert(value.length < typeInfo.size, `${key}: Exceed maximum size ${typeInfo.size}`);
-                                // 2. Regx check
-                                const verification = column.columnVerification || {};
-                                if (verification.regx) {
-                                    const regx = new RegExp(verification.regx.re, verification.regx.flag || 'gm');
-                                    assert(value.match(regx), `${key}: should match regx: ${regx}`);
-                                }
-                            }),
-                            message: 'should be string',
-                            optional: !column.required
-                        };
-                    }
-                    break;
-                case 'number':
-                    validateKey[key] = {
-                        validate: validate => validate.isNumeric(),
-                        message: 'should be number',
-                        optional: !column.required
-                    };
-                    break;
-                case 'boolean':
-                    validateKey[key] = {
-                        validate: validate => validate.isBoolean(),
-                        message: 'should be boolean',
-                        optional: !column.required
-                    };
-                    break;
-                case 'object':
-                    // Check Filter only or not
-                    if (filterOnly) {
-                        break;
-                    }
-                    // Get schema name
-                    const schemaName = typeInfo.schema;
-                    // console.log(`${key}: 1: ${schemaName}`);
-                    const controller = controllerForSchemaName(schemaName);
-                    if (controller) {
-                        // console.log(`${key}: 2`);
-                        validateExists[key] = controller;
-                    } else {
-                        validateKey[key] = {
-                            validate: validate => validate.isInt().custom(async (val: number, {req}) => {
-                                const con = controllerForSchemaName(schemaName);
-                                if (con) {
-                                    const item = await con.findById(val);
-                                    assert(item, `${key}: Item not exists with id: ${val}`);
-                                    if (!req.body) {
-                                        req.body = {};
-                                    }
-                                    req.body[key] = item;
-                                }
-                            }),
-                            optional: !column.required
-                        };
-                    }
-                    break;
-            }
-            validatorCheck = {...validatorCheck, ...validateKey};
-            validatorExists = {...validatorExists, ...validateExists};
-        });
-        // console.dir(validatorExists);
-        if (filterOnly) {
-            return ValidatorCheck(validatorCheck);
-        }
-        return ValidatorExists(validatorExists).concat(ValidatorCheck(validatorCheck));
+    private _createValidator(options?: SchemaValidationOption, filterOnly?: boolean): any[] {
+        return SchemaValidator.shared.validators(this.dataController.schemaObject, filterOnly, undefined, options);
     }
 }
 
@@ -252,7 +236,7 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
      */
     get create(): RouteHandler {
         return this.routeConfig<CreateSpec>(`${this.className}: create`, async (data: CreateSpec, req: Request) => {
-            return [201, await this.dataController.createNewObject(data, req.user)];
+            return await this.createResource(req, data);
         });
     }
 

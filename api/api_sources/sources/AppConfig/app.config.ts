@@ -20,8 +20,6 @@ class AppConfiguration {
     public appName: string = process.env.PROJECT_NAME || 'lucy';
     public dbs: string[] = ['templateDB'];
 
-    
-
     /**
      * @description Getter for shard instance
      * @return AppConfiguration
@@ -63,7 +61,7 @@ class AppConfiguration {
      * @description Check env is production or not
      */
     public get isProduction(): boolean {
-        return process.env.ENVIRONMENT === 'production';
+        return process.env.ENVIRONMENT === 'prod';
     }
 
     /**
@@ -121,7 +119,15 @@ class AppConfiguration {
      * @description Flag to check session token expiry
      */
     public get bypassTokenExpiry(): boolean {
-        return true;
+        // Get env
+        const env = process.env.ENVIRONMENT || 'prod';
+
+        // Bypassing token expiry for local or dev env
+        return (env === 'dev' || env === 'local');
+    }
+
+    public get reportReceivers(): string {
+        return process.env.APP_REPORT_RECEIVER || '';
     }
 }
 

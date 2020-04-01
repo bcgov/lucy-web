@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { ObjectValidatorService } from './object-validator.service';
@@ -6,9 +23,12 @@ import {
   Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes,
   SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes,
   SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
-  ProposedActionCodes, AspectCodes, SlopeCodes
+  ProposedActionCodes, AspectCodes, SlopeCodes,
 } from '../models';
+import { EfficacyCodes } from '../models/Monitor';
 import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';
 import { Key } from 'protractor';
 
 @Injectable({
@@ -37,6 +57,14 @@ export class CodeTableService {
   private mechanicalRootRemovalCodes: MechanicalRootRemovalCodes[];
   private mechanicalIssueCodes: MechanicalIssueCodes[];
   private mechanicalTreatmentProviders: MechanicalTreatmentProviders[];
+
+  private herbicideCodes: HerbicideCodes[];
+
+  private efficacyCodes: EfficacyCodes[];
+
+  private previousAISKnowledgeSources: PreviousAISKnowledgeSource[];
+  private previousInspectionSources: PreviousInspectionSource[];
+  private musselFoundLocations: AdultMusselsLocation[];
 
   private codeTables: any | null = null;
 
@@ -118,6 +146,29 @@ export class CodeTableService {
     return [];
   }
 
+  public async getHerbicideCodes(): Promise<HerbicideCodes[]> {
+    if (this.herbicideCodes && this.herbicideCodes.length > 0) {
+      return this.herbicideCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const herbicideCodes = codes.Herbicide;
+    if (herbicideCodes && (Array.isArray(herbicideCodes) && this.objectValidator.isHerbicideObject(herbicideCodes[0]))) {
+      this.herbicideCodes = herbicideCodes;
+      return herbicideCodes;
+    }
+    return [];
+  }
+
+  public async getHerbicideWithId(id: number): Promise<HerbicideCodes> {
+    const herbicide = this.herbicideCodes.filter(item => item.herbicide_id === id)[0];
+    return herbicide;
+  }
+
   public async getDensityCodes(): Promise<SpeciesDensityCodes[]> {
     if (this.density && this.density.length > 0) {
       return this.density;
@@ -172,7 +223,25 @@ export class CodeTableService {
     return this.agencies;
   }
 
-  public async observationTypeCodes(): Promise<ObservationTypeCodes[]> {
+  public async getEfficacyCodes(): Promise<EfficacyCodes[]> {
+    if (this.efficacyCodes && this.efficacyCodes.length > 0) {
+      return this.efficacyCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const efficacyCodes = codes.EfficacyCodes;
+    if (efficacyCodes && (Array.isArray(efficacyCodes) && this.objectValidator.isEfficacyCodesObject(efficacyCodes[0]))) {
+      this.efficacyCodes = efficacyCodes;
+      return efficacyCodes;
+    }
+    return this.efficacyCodes;
+  }
+
+  public async getObservationTypeCodes(): Promise<ObservationTypeCodes[]> {
     if (this.surveyTypes && this.surveyTypes.length > 0) {
       return this.surveyTypes;
     }
@@ -407,4 +476,51 @@ export class CodeTableService {
     return this.mechanicalTreatmentProviders;
   }
 
+  public async getPreviousAISKnowledgeSourceCodes(): Promise<PreviousAISKnowledgeSource[]> {
+    if (this.previousAISKnowledgeSources && this.previousAISKnowledgeSources.length > 0) {
+      return this.previousAISKnowledgeSources;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const previousAISKnowledgeSources = codes.previousAISKnowledgeSources;
+    if (previousAISKnowledgeSources && (Array.isArray(previousAISKnowledgeSources) && this.objectValidator.isPreviousAISKnowledgeSourceObject(previousAISKnowledgeSources[0]))) {
+      return previousAISKnowledgeSources;
+    }
+  }
+
+  public async getPreviousInspectionSourceCodes(): Promise<PreviousInspectionSource[]> {
+    if (this.previousInspectionSources && this.previousInspectionSources.length > 0) {
+      return this.previousInspectionSources;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const previousInspectionSources = codes.previousInspectionSources;
+    if (previousInspectionSources && (Array.isArray(previousInspectionSources) && this.objectValidator.isPreviousInspectionSourceObject(previousInspectionSources[0]))) {
+      return previousInspectionSources;
+    }
+  }
+
+  public async getAdultMusselsLocationCodes(): Promise<AdultMusselsLocation[]> {
+    if (this.musselFoundLocations && this.musselFoundLocations.length > 0) {
+      return this.musselFoundLocations;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const musselFoundLocations = codes.musselFoundLocations;
+    if (musselFoundLocations && (Array.isArray(musselFoundLocations) && this.objectValidator.isAdultMusselsLocationObject(musselFoundLocations[0]))) {
+      return musselFoundLocations;
+    }
+  }
 }

@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { CodeTableService } from './code-table.service';
 import * as faker from 'faker';
@@ -28,14 +45,10 @@ export class DummyService {
           const field = subsection.fields[i];
           if (field.isComputedField) {
             continue;
-          }
-          if (field.isLocationField) {
-            const fakeLat = await this.fakeFieldValue(field.latitude);
-            field.latitude.value = fakeLat.fieldValue;
-            responseBody[field.latitude.key] = fakeLat.bodyValue;
-            const fakeLong = await this.fakeFieldValue(field.longitude);
-            field.longitude.value = fakeLong.fieldValue;
-            responseBody[field.longitude.key] = fakeLong.bodyValue;
+          } else if (field.isSpaceGeom) {
+            const fake = await this.fakeFieldValue(field);
+            field.spaceGeom.value = fake.fieldValue;
+            responseBody['spaceGeom'] =  fake.bodyValue;
           } else {
             const fake = await this.fakeFieldValue(field);
             field.value = fake.fieldValue;
@@ -44,8 +57,7 @@ export class DummyService {
         }
       }
     }
-    // console.dir(config);
-    // console.dir(this.responseBody)
+
     return {
       config: config,
       json: JSON.parse(JSON.stringify(responseBody)),
@@ -96,45 +108,68 @@ export class DummyService {
     
     // Dropdown
     if (field.isDropdown) {
-      const randomIndex = this.randomNumber(0, field.dropdown.length - 1);
-      const value = field.dropdown[randomIndex];
-      const vieldValue = value;
-      let selectedID = 0;
-      for (const key in value) {
-        if (key.toLowerCase().indexOf(`id`) !== -1) {
-          selectedID = value[key];
-          break;
-        }
-      }
-      return {
-        fieldValue: vieldValue,
-        bodyValue: selectedID,
-      }
+      return this.randomDropdownOption(field.dropdown);
     }
 
-    if (field.key.toLowerCase() === `lat` || field.key.toLowerCase() === `latitude`) {
-      const value = this.randomLat();
-      return {
-        fieldValue: value,
-        bodyValue: value,
-      }
-    }
+    if (field.isSpaceGeom) {
+      const geometryDropdown = field.spaceGeom.embeddedFields.geometry.dropdown;
+      const latitude = this.randomLat();
+      const longitude = this.randomLong();
+      const fakeOption = this.randomDropdownOption(geometryDropdown);;
 
-    if (field.key.toLowerCase() === `lon` || field.key.toLowerCase() === `long` ||field.key.toLowerCase() === `longitude` ) {
-      const value = this.randomLong();
       return {
-        fieldValue: value,
-        bodyValue: value,
+        fieldValue: this.generateSpaceGeom(latitude, longitude, fakeOption.fieldValue),
+        bodyValue: this.generateSpaceGeom(latitude, longitude, fakeOption.bodyValue),
       }
     }
 
     console.log(`Unknown field ${field}`);
-    console.dir(field);
     return {
       fieldValue: undefined,
       bodyValue: undefined,
     }
     
+  }
+
+  public generateSpaceGeom(
+    latitude: number,
+    longitude: number,
+    geometry: any
+  ) {
+    return ({
+      latitude,
+      longitude,
+      geometry,
+      inputGeometry: {
+        attributes: {
+          geomId: geometry,
+          area: {
+            length: this.randomNumber(1, 20),
+            width: this.randomNumber(1, 20)
+          }
+        },
+        geoJson: {}
+      }
+    });
+  }
+
+  /**
+   * Generate a random option from dropdown
+   */
+  public randomDropdownOption(options: any[]): ({ fieldValue: any, bodyValue: any }) {
+    const randomIndex = this.randomNumber(0, options.length - 1);
+    const value = options[randomIndex];
+    let selectedID = 0;
+    for (const key in value) {
+      if (key.toLowerCase().indexOf(`id`) !== -1) {
+        selectedID = value[key];
+        break;
+      }
+    }
+    return {
+      fieldValue: value,
+      bodyValue: selectedID,
+    }
   }
 
   /**

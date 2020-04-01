@@ -25,6 +25,7 @@
  */
 export const AppEnvConstant = {
     DB_MIGRATION_TYPE_REFRESH: 'refresh',
+    DB_MIGRATION_TYPE_REVERT_LATEST: 'revertLatest',
     DB_CLEANUP_TYPE_NOME: 'none',
     DB_CLEANUP_TYPE_TEMP_USERS: 'temp-users',
     DB_SEED_ENABLE: 'yes',

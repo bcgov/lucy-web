@@ -1,4 +1,21 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SsoService } from '../services/sso.service';
 import { AppRoutes } from '../constants';
@@ -13,6 +30,8 @@ import { LoadingService } from '../services/loading.service';
 import { ErrorService } from '../services/error.service';
 import { StringConstants } from 'src/app/constants/string-constants';
 import { ToastService, ToastModel, ToastIconType } from '../services/toast/toast.service';
+import { ConverterService } from '../services/coordinateConversion/location.service';
+import { BcgwService } from '../services/bcgw/bcgw.service';
 
 @Component({
   selector: 'app-root',
@@ -64,7 +83,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private toastService: ToastService,
     private loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
-    private titleService: Title) {
+    private titleService: Title,
+    private zone: NgZone) {
     this.setupLoadingIcon();
     this.subscribeToAlertService();
     this.subscribeToToastService();
@@ -127,6 +147,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private unSubscribeFromLoadingService() {
+    if (!this.loadingSubscription) {return; }
     this.loadingSubscription.unsubscribe();
   }
 
@@ -144,22 +165,27 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private unSubscribeFromAlertService() {
+    if (!this.alertsSubscription) {return; }
     this.alertsSubscription.unsubscribe();
   }
   /******** End Alerts ********/
 
   /******** Toasts ********/
   private subscribeToToastService() {
-    this.toastSubscription = this.toastService.getObservable().subscribe(message => {
-      if (message) {
-        this.toastMessage = message;
-      } else {
-        this.alertMessage = undefined;
-      }
+    this.toastSubscription = this.toastService.getObservable().subscribe(model => {
+
+      this.zone.run(() => {
+        if (model && typeof model.message === typeof '') {
+          this.toastMessage = model;
+        } else {
+          this.alertMessage = undefined;
+        }
+      });
     });
   }
 
   private unSubscribeFromToastService() {
+    if (!this.toastSubscription) {return; }
     this.toastSubscription.unsubscribe();
   }
   /******** End Toasts ********/

@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import {
   Component,
   OnInit,
@@ -19,10 +36,13 @@ import { DiffResult } from 'src/app/services/diff.service';
 import { ElementRef } from '@angular/core';
 import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 import { DummyService } from 'src/app/services/dummy.service';
+import { AppConstants } from 'src/app/constants/app-constants';
+import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
 
 export enum FormType {
   Observation,
-  MechanicalTreeatment
+  MechanicalTreeatment,
+  ChemicalTreatment
 }
 @Component({
   selector: 'app-base-form',
@@ -41,6 +61,18 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
 
   public componentName = ` `;
+
+  /**
+   * Boolean to indicate whether app is running in 
+   * production environment
+   */
+  public isProd: boolean = false;
+
+  /**
+   * Boolean to indicate whether app is running in 
+   * test environment
+   */
+  public isTest: boolean = false;
 
   private _responseBody = {};
   get responseBody(): any {
@@ -87,7 +119,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /**
      Message displayed after submission
   */
-  get submitedMessage(): string {
+  get submittedMessage(): string {
     if (this.creating) {
       return `Entries Added`;
     } else if (this.editing) {
@@ -140,7 +172,7 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
   ////////////////////
 
-  ///// States Baed on Routes
+  ///// States Based on Routes
   private get viewing() {
     return this.router.isViewRoute;
   }
@@ -172,44 +204,88 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   /**
+   * Check if the spaceGeom is valid or not
+   */
+  isSpaceGeomValid(spaceGeomData: any): boolean {
+    if (!spaceGeomData
+      || !spaceGeomData.latitude
+      || !spaceGeomData.longitude
+      || (spaceGeomData.geometry !== 0 && !spaceGeomData.geometry)
+      || !spaceGeomData.inputGeometry
+    )
+      return false;
+
+    const geometryData = spaceGeomData.inputGeometry.attributes;
+    if (!geometryData) return false;
+
+    const area = geometryData.area;
+    const { radius, width, length } = area;
+    
+    if (radius) return true;
+    if (width && length) return true;
+
+    return false;
+  }
+
+  /**
+   * Check if tankmixes is valid or not
+   */
+  isTankMixesValid(tankMixes: HerbicideTankMix[]): boolean {
+    if (!tankMixes || tankMixes.length === 0) return false;
+    const invalidTankMixes = tankMixes.filter(tankMix => !tankMix.amountUsed || !tankMix.applicationRate);
+    return (invalidTankMixes.length === 0);
+  }
+
+  /**
+   * Check if species observations is valid or not
+   */
+  isSpeciesObservationsValid(speciesObservations: any): boolean {
+    if (!speciesObservations || speciesObservations.length === 0) return false;
+
+    const invalidSpeciesObservations = speciesObservations.filter(species => !species.treatmentAreaCoverage);
+    return (invalidSpeciesObservations.length === 0);
+  }
+
+  /**
    * Check if the required fields exist
    */
   get canSubmit(): boolean {
-    if (!this.config || !this.responseBody) {
-      return false;
-    }
-    let requiredFieldsExist = true;
+    if (!this.config || !this.responseBody) return false;
+
     for (const key of this.config.requiredFieldKeys) {
-      if (!this.responseBody[key]) {
-        requiredFieldsExist = false;
-      }
+      const value = this.responseBody[key];
+      if (!value) return false
+      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) return false;
+      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) return false;
+      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) return false;
     }
-    return requiredFieldsExist;
+
+    return true;
   }
 
    /**
    * Returns an array of strings containing headers
-   * of missing fields 
+   * of missing fields
    * @returns string array of headers
    */
   get missingFields(): string[] {
     const requiredMissingFieldKeys: string[] = [];
     for (const key of this.config.requiredFieldKeys) {
-      if (!this.responseBody[key]) {
-        requiredMissingFieldKeys.push(key);
-      }
+      const value = this.responseBody[key];
+      if (!value) requiredMissingFieldKeys.push(key);
+      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) requiredMissingFieldKeys.push(key);
+      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) requiredMissingFieldKeys.push(key);
+      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) requiredMissingFieldKeys.push(key);
     }
-    // let requiredMissingFieldHeaders: string[]= [];
+
     const missingFieldHeaders: string[] = [];
     let locationIncluded = false;
     for (const key of requiredMissingFieldKeys) {
       if (this.config.fieldHeaders[key] !== undefined) {
         // Group Lat long under "location" tag
-        if (key === 'lat' || key === 'long' || key === 'latitude' || key === 'longitude') {
-          if (!locationIncluded) {
-            missingFieldHeaders.push(`Location`);
-            locationIncluded = true;
-          }
+        if (key === 'spaceGeom' && !locationIncluded) {
+          missingFieldHeaders.push(`Location`);
+          locationIncluded = true;
         } else {
           // All other fields
           missingFieldHeaders.push(this.config.fieldHeaders[key]);
@@ -259,6 +335,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.isProd = AppConstants.CONFIG.env === `prod` ? true : false;
+    this.isTest = AppConstants.CONFIG.env === `test` ? true : false;
     this.initialize();
   }
 
@@ -273,7 +351,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       this.config = config;
     } else {
       this.alert.show('Configuration error', 'This feature is currently unavailable');
-      console.log(`Bad config`);
       this.router.navigateTo(AppRoutes.AddEntry);
       return;
     }
@@ -307,17 +384,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   fieldChanged(field: any, event: any) {
     // if input was invalid, field component emits ``
     // handle INVALID input cases
-    if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
+    if (field.isSpaceGeom) {
+      this.responseBody['spaceGeom'] = event.spaceGeom.value;
+    } else if (field.isLocationField && (event.latitude.value === `` || event.longitude.value === ``)) {
       // console.log('setting lat long in body to undefined')
       this.responseBody[field.latitude.key] = undefined;
       this.responseBody[field.longitude.key] = undefined;
     } else if (event === `` && this.responseBody[field.key] !== undefined) {
-      // console.log(`setting ${field.key} to undefined`)
-      // console.dir(event);
       this.responseBody[field.key] = undefined;
-    }
-    // handle valid input cases
-     else if (field.isLocationField) {
+    } else if (field.isLocationField) {
+      // handle valid input cases
       // location field - needs lat long extraction
       this.responseBody[field.latitude.key] = event.latitude.value;
       this.responseBody[field.longitude.key] = event.longitude.value;
@@ -336,6 +412,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         const formatted = moment(event).format('YYYY-MM-DD');
         this.responseBody[field.key] = formatted;
       }
+    } else if (field.isDateAndTimeField) {
+      const formatted = moment(event).format('YYYY-MM-DD HH:mm');
+      this.responseBody[field.key] = formatted;
     } else {
       // regular field - store key / value
       this.responseBody[field.key] = event;
@@ -347,6 +426,32 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     */
     const temp = { ...this.responseBody };
     this.responseBody = { ...temp};
+  }
+
+  /**
+   * handle changes in species treated custom subsection
+   * @param event changed list of speciesObservation records
+   */
+  speciesTreatedChanged(event: any) {
+    this.responseBody['speciesObservations'] = [];
+    event.forEach(element => {
+      this.responseBody['speciesObservations'].push({'observation': element.observation, 'treatmentAreaCoverage': +element.treatmentAreaCoverage});
+    });
+  }
+
+  /**
+   * handle changes in herbicide tank mixes custom subsection
+   * @param event changed list of herbicideTankMix records
+   */
+  tankMixesChanged(event: any) {
+    // if 1 or more tank mixes have changed
+    if (typeof(event) === `object`) {
+      this.responseBody['tankMixes'] = event;
+    }
+    // if mix delivery rate has changed
+    else if (typeof(event) === `number` || `string`) {
+      this.responseBody['mixDeliveryRate'] = event;
+    }
   }
 
   /**
@@ -364,7 +469,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
         return;
       }
       this.loadingService.add();
-      // const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify({key: 'hello'})), this.config);
+      if (this.config.api === `/treatment/chemical`) {
+        for (const speciesObservation of this.responseBody['speciesObservations']) {
+          speciesObservation.observation = speciesObservation.observation.observation_id;
+        }
+
+        for (const tankMix of this.responseBody['tankMixes']) {
+          tankMix.herbicide = tankMix.herbicide.herbicide_id;
+        }
+      }
+
       const submissionResult = await this.formService.submit(JSON.parse(JSON.stringify(this.responseBody)), this.config);
       this.loadingService.remove();
       if (submissionResult.success) {
@@ -535,7 +649,10 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   /////////// END Submission error handling ///////////
 
   shouldShowRelationship(forKey: string): boolean {
-    return (this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects);
+    const isEmbedded =  this.config.relationsConfigs[forKey]['meta'] !== undefined &&
+                        this.config.relationsConfigs[forKey]['meta']['embedded'] !== undefined &&
+                        this.config.relationsConfigs[forKey]['meta']['embedded'] === true;
+    return ( this.config.relationsConfigs && this.config.relationsConfigs[forKey] && this.config.relationsConfigs[forKey].objects && !isEmbedded);
   }
 
   // convert section title to a camelcased id
@@ -562,6 +679,9 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * @param block 'center', 'start', 'end'
    */
   async scrollToElement(elementId: string, block: string): Promise<boolean> {
+    if (elementId === `mixDeliveryRate(Calibrated)`) {
+      elementId = `mixDeliveryRate`;
+    }
     return new Promise<boolean>((res, rej) => {
       const el = this.elementRef.nativeElement.querySelector(`#${elementId}`);
       const element = document.getElementById(elementId);

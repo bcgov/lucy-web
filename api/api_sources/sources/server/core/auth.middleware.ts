@@ -97,10 +97,12 @@ export class ApplicationAuthMiddleware extends LoggerBase {
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
-             if (expiry && expiry > Date.now()) {
+             if (expiry && expiry < Date.now()) {
                  const message = `Token is expired for user ${email}`;
                  ApplicationAuthMiddleware.logger.info(message);
                  if (!AppConfig.bypassTokenExpiry) {
+                    ApplicationAuthMiddleware.logger.error(`Token Expire for user: ${email}`);
+                    ApplicationAuthMiddleware.logger.error(`Expiry: ${expiry}: current: ${Date.now()}, Diff: ${expiry - Date.now()}`);
                     done(errorWithCode(401, message), false);
                     return;
                  } else {
@@ -167,9 +169,9 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              const session = await UserDataController.shared.getCurrentSession(user);
              if (session) {
                  // Check session validity
-                 if (session.tokenExpiry > new Date() && !AppConfig.bypassTokenExpiry) {
-                     const message = `${api} |  Session Expire for user ${user.email} at ${session.tokenExpiry}`;
-                     ApplicationAuthMiddleware.logger.info(message);
+                 if (session.tokenExpiry < new Date() && !AppConfig.bypassTokenExpiry) {
+                     const message = `${api} |  Session Expire (app internal) for user ${user.email} at ${session.tokenExpiry}`;
+                     ApplicationAuthMiddleware.logger.error(message);
                      // Remove current
                      await UserDataController.shared.removeSession(user);
                       // Fail Session
@@ -231,7 +233,7 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
                 if (value) {
                     LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Accepted ${rc}`);
                 } else {
-                    LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
+                    LoggerBase.logger.error(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
                 }
                 LoggerBase.logger.disableInfoLog = false;
                 return value;
@@ -262,5 +264,27 @@ export const adminOnlyRoute = () => {
  */
 export const writerOnlyRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]);
+};
+
+/**
+ * @description Route For all editors including inspect app admin
+ * @export closure editorOnlyRoute
+ */
+export const editorOnlyRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin, RolesCodeValue.editor]);
+};
+
+/**
+ * @description Route for inspect app editor
+ */
+export const inspectAppEditorRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin, RolesCodeValue.inspectAppOfficer]);
+};
+
+/**
+ * @description Route for inspect app admin
+ */
+export const inspectAppAdminRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin]);
 };
 // -----------------------------------------------------------------------------------------------------------

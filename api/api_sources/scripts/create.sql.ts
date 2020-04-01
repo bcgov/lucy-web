@@ -26,9 +26,7 @@ import { SpeciesSchema } from '../sources/database/database-schema';
 import { SpeciesDistributionCodeSchema } from '../sources/database/database-schema';
 import { SpeciesDensityCodeSchema } from '../sources/database/database-schema';
 import { SpeciesAgencyCodeSchema } from '../sources/database/database-schema';
-import { SurveyTypeCodeSchema } from '../sources/database/database-schema';
 import { SoilTextureCodeSchema } from '../sources/database/database-schema';
-import { SurveyGeometryCodeSchema } from '../sources/database/database-schema';
 import { SpecificUseCodeSchema } from '../sources/database/database-schema';
 
 
@@ -59,17 +57,11 @@ import { SpecificUseCodeSchema } from '../sources/database/database-schema';
     agency.createMigrationFile();
     agency.createDataEntry();
 
-    const surveyTypeSchema = new SurveyTypeCodeSchema();
-    surveyTypeSchema.createMigrationFile();
-    surveyTypeSchema.createDataEntry();
 
     const soilTextureSchema = new SoilTextureCodeSchema();
     soilTextureSchema.createMigrationFile();
     soilTextureSchema.createDataEntry();
 
-    const surveyGeometrySchema = new SurveyGeometryCodeSchema();
-    surveyGeometrySchema.createMigrationFile();
-    surveyGeometrySchema.createDataEntry();
 
     const specificUseCodeSchema = new SpecificUseCodeSchema();
     specificUseCodeSchema.createMigrationFile();

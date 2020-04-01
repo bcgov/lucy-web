@@ -1,3 +1,11 @@
+
+# Application Dir
+tmp/
+**/tmp/
+
+# Schema-spy
+schemaspy.tar.gz
+
 # Sonar
 **/.scannerwork
 **/.sonar

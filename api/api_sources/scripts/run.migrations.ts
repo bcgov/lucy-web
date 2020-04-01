@@ -31,13 +31,21 @@ import { AppEnvConstant } from '../sources/app-constants';
 /**
  * Script
  */
-(() => {
-    if (process.env.DB_MIGRATION_TYPE === AppEnvConstant.DB_MIGRATION_TYPE_REFRESH) {
-        // Refreshing database: Drop all existing migration and refresh
-        AppDatabaseMigrationManager.shared.refresh();
-    } else {
-        // Migrating db
-        AppDatabaseMigrationManager.shared.migrate();
+(async () => {
+    try {
+        const TYPE = process.env.DB_MIGRATION_TYPE || '';
+        if (TYPE === AppEnvConstant.DB_MIGRATION_TYPE_REFRESH) {
+            // Refreshing database: Drop all existing migration and refresh
+            console.log('[MIGRATION]: REFRESH');
+            await AppDatabaseMigrationManager.shared.refresh();
+        } else {
+            // Migrating db
+            console.log('[MIGRATION]: NORMAL');
+            await AppDatabaseMigrationManager.shared.migrate();
+        }
+    } catch (excp) {
+        console.log(`MIGRATION: ${process.env.DB_MIGRATION_TYPE || 'NA'} : Error: ${excp}`);
+        process.exit(1);
     }
 })();
 

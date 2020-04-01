@@ -4,6 +4,7 @@ import { UserSession, UserSessionDataController } from '../user.session';
 import { DataModelController } from '../../data.model.controller';
 import { UserSchema } from '../../database-schema';
 import { setNull } from '../../../libs/utilities';
+import { RequestAccess } from '../requestAccess';
 /**
  * @description Data Model Controller for User
  * @export class UserDataController
@@ -50,6 +51,57 @@ export class UserDataController extends DataModelController<User> {
     public async removeSession(user: User): Promise<void> {
         setNull<User>(user, 'activeSessionId');
         await this.saveInDB(user);
+    }
+
+    /**
+     * @description The latest request made by the user or undefined
+     * @param user user
+     * @returns Promise<RequestAccess | undefined>
+     */
+    public async latestAccessRequest(user: User): Promise<RequestAccess | undefined> {
+        const allRequest: RequestAccess[] = await user.requestAccess;
+        if (allRequest && allRequest.length > 0) {
+            const sorted = allRequest.sort( (item1, item2) => {
+                return item2.request_id < item1.request_id ? -1 :
+                (item2.request_id > item1.request_id) ? 1 : 0;
+            });
+            return sorted[0];
+        }
+        return;
+    }
+
+    /**
+     * @description Returns true if there are pending requests matching the given roleId
+     * @param allRequest all pending requests
+     * @param roleCodeId role id
+     * @returns boolean
+     */
+    public getPendingRequestForRole(allRequest: RequestAccess[], roleCodeId: number): boolean {
+        if (!allRequest || allRequest.length === 0) {
+            return false;
+        }
+
+        return (allRequest.filter(request => request.requestedAccessCode.role_code_id === roleCodeId).length > 0);
+    }
+
+    /**
+     * @description Process all the pending requests and return the status associated with each role
+     * @param allRequest all pending requests
+     * @returns pending status for different roles
+     */
+    public getPendingStatus(allRequest: RequestAccess[]) {
+        if (!allRequest || allRequest.length === 0) {
+            return {};
+        }
+
+        return {
+            pendingAdminRequests: this.getPendingRequestForRole(allRequest, 1),
+            pendingViewerRequests: this.getPendingRequestForRole(allRequest, 2),
+            pendingEditorRequests: this.getPendingRequestForRole(allRequest, 3),
+            pendingSuperUserRequests: this.getPendingRequestForRole(allRequest, 4),
+            pendingOfficerRequests: this.getPendingRequestForRole(allRequest, 5),
+            pendingAdminInspectRequests: this.getPendingRequestForRole(allRequest, 6),
+        };
     }
 }
 

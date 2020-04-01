@@ -23,14 +23,15 @@ import * as assert from 'assert';
 import * as _ from 'underscore';
 import * as express from 'express';
 import * as passport from 'passport';
-import { validationResult, check, ValidationChain } from 'express-validator';
+import { validationResult, check } from 'express-validator';
 // SOURCE
 import { Logger } from '../logger';
 import { errorBody } from '../core';
 import { roleAuthenticationMiddleware } from './auth.middleware';
 import { RolesCodeValue, UserDataController } from '../../database/models';
 import { DataController} from '../../database/data.model.controller';
-import { isEmpty } from '../../libs/utilities';
+import { isEmpty, unWrap } from '../../libs/utilities';
+import { ResourceInfo } from './route.const';
 // import { getRouteConfigs } from './route.des';
 
 /**
@@ -70,19 +71,6 @@ export const UpdateRequest = (req: any, obj: object) => {
     req.validation = { ...existing, ...obj};
 };
 
-/**
- * @description Convert any validator chain to optional one
- * @param closure validators : Closure which return array of validator
- */
-export const MakeOptionalValidator = (validators: (() => any[])) => _.map(validators(), checkVal => checkVal.optional());
-
-export function idValidator<Controller extends DataController>(fieldName: string, controller: Controller, handle: (data: any, req: any) => Promise<void>) {
-    return check(fieldName).isInt().custom(async (value: number, {req}) => {
-        const data = await controller.findById(value);
-        assert(data, `${fieldName}: No such item exists with id: ${value}`);
-        await handle(data, req);
-    });
-}
 
 export enum HTTPMethod {
     get = 'get',
@@ -105,17 +93,22 @@ export interface RouteDescription {
     path: string;
     validators?: () => any[];
     middleware?: () => any[];
-    description: string;
+    description?: string;
     index?: number;
     method: HTTPMethod;
     responses?: {[key: number]: APIResponse};
+    secure?: boolean;
+    skipValidation?: boolean;
 }
+
+export type RouteBasicDescription = Pick<RouteDescription, 'path' | 'validators' | 'middleware' |  'description' | 'index' | 'secure' | 'responses'>;
 
 
 
 export interface RouteConfig {
     description: RouteDescription;
     handler: string;
+    isMethod?: boolean;
 }
 /**
  * @description Base express route controller. Provides
@@ -157,10 +150,29 @@ export class RouteController {
     constructor() {
         // Initiate logger
         this.logger = new Logger(this.constructor.name);
+        if (this.isSecure) {
+            this.router.use(this.authHandle);
+        }
+        if (this.controllerRouteInfo.dataController) {
+            this.dataController = this.controllerRouteInfo.dataController;
+        }
+        this.applyRouteConfig();
+        this.setup();
+    }
+
+    /**
+     * @description Additional setup method for sub-classes
+     */
+    setup() {
+        // Subclass to override additional setup method
     }
 
     get className(): string {
         return this.constructor.name;
+    }
+
+    get isSecure(): boolean {
+        return unWrap(this.controllerRouteInfo.secure, false);
     }
 
     apiName(request: express.Request) {
@@ -171,6 +183,10 @@ export class RouteController {
      * @description Adding config values
      */
     applyRouteConfig() {
+        // Check config applied or not
+        if (this.configs && this.configs.length > 0) {
+            return;
+        }
         // Get config
         this.configs = _.map(this.constructor.prototype._configMap, (val: RouteConfig) => val);
 
@@ -190,19 +206,74 @@ export class RouteController {
             return compare(c1.description.index || 0, c2.description.index || 1);
         });
         this.configs = sorted;
-
+        // console.log(`${this.className}`);
         // Apply config to route
-        _.each(this.configs, (config: RouteConfig) => {
+        for (const config of this.configs) {
             try {
-                const endPoint: string = config.description.path.split('#')[1];
+                // Getting endpoint
+                const paths: string[] = config.description.path.split('#');
+                let endPoint: string = paths.length > 0 ? paths[1] : paths[0];
+                if (!endPoint) {
+                    endPoint = config.description.path;
+                }
+                // Getting validator middleware
                 const validators = config.description.validators ? config.description.validators() : [];
+                // Getting other middleware
                 const middleware = config.description.middleware ? config.description.middleware() : [];
-                const allMiddleware = this.combineValidator(middleware, validators);
-                this.router[config.description.method](endPoint, allMiddleware, this[config.handler]);
+                // Combining them
+                let allMiddleware = this.combineValidator(middleware, validators);
+                // Checking security level of the api
+                // 1. Skip if controller is secure
+                if (config.description.secure && !this.isSecure) {
+                    allMiddleware = [this.authHandle, ...allMiddleware];
+                }
+                if (config.isMethod) {
+                    const routeMethod: Function = this[config.handler].bind(this);
+                    this.router[config.description.method](endPoint, allMiddleware, async (req: express.Request, res: express.Response) => {
+                        await this.handleRoute(req, res, routeMethod, config.handler);
+                    });
+
+                } else {
+                    this.router[config.description.method](endPoint, allMiddleware, this[config.handler]);
+                }
             } catch (excp) {
                 this.logger.error(`Exception  while applying route config: ${excp}`);
+                this.logger.error(`Config: ${JSON.stringify(config, null, 2)}`);
             }
-        });
+        }
+        /*_.each(this.configs, (config: RouteConfig) => {
+
+        });*/
+    }
+
+    async handleRoute(req: express.Request, res: express.Response, handler: any, tag: string, applyDataHandle?: boolean) {
+        // Check error
+        // Check for error
+        const errors = validationResult(req);
+        const infoTag = `${tag}(${this.apiName(req)})`;
+        if (!errors.isEmpty()) {
+            this.logger.error(`${infoTag}: Validation error:\n ${JSON.stringify(errors.array(), null, 2)}`);
+            this.logReq(req, tag);
+            return res.status(422).json({
+                message: 'Input validation error',
+                time: Date(),
+                errors: errors.array()
+            });
+        }
+        // Get data
+        // Get Data From handler
+        try {
+            const data: any = req.body;
+            const [status, body, error]  = applyDataHandle ? await handler(data, req, res) : await handler(req, data, res);
+            if (status > 0) {
+                return res.status(status).json(error ? this.getErrorJSON(body, []) : this.successResp(body));
+            } else {
+                this.logger.error(`handleRouteMethod: ${infoTag}: [FAIL]`);
+                return this.commonError(500, `handleRouteMethod:${infoTag}`, new Error(`${infoTag} : Unable to process req`), res);
+            }
+        } catch (excp) {
+            return this.commonError(500, `handleRouteMethod:${infoTag}`, excp, res);
+        }
     }
 
     /**
@@ -225,6 +296,7 @@ export class RouteController {
     public successResp(data?: any, message?: string) {
         return {
             message: message || CommonSuccessMessage,
+            time: Date(),
             data: data || {}
         };
     }
@@ -238,7 +310,7 @@ export class RouteController {
      * @param string message
      */
     public commonError(status: number, tag: string, error: any, resp: express.Response, message?: string) {
-        this.logger.error(`[API-${tag}] | Call Error => ${error}`);
+        this.logger.error(`[API-${tag}] | Call Error => ${error} | message => ${message}`);
         const errMsg = message || `${error}`;
         resp.status(status).json(errorBody(errMsg, [error]));
     }
@@ -286,20 +358,22 @@ export class RouteController {
      */
     get authHandle(): RouteMiddlewareHandler {
         return async (req: express.Request, resp: express.Response, next: any) => {
+            const tag = `authHandler-(${this.apiName(req)})`;
             try {
                 passport.authenticate('jwt', {session: false}, (err, user) => {
                     if (err) {
                         const msg = `Authorization fail with error ${err}`;
-                        this.commonError(401, 'authHandle', err, resp, msg);
+                        this.commonError(401, tag, err, resp, msg);
                     } else if (!user) {
-                        this.commonError(401, 'authHandle', 'Un-authorize access', resp, 'Un-authorize access');
+                        this.commonError(401, tag, 'Un-authorize access', resp, 'Un-authorize access (No User) check auth provider url');
                     } else {
                         req.user = user;
                         next();
                     }
                 })(req, resp, next);
             } catch (excp) {
-                this.commonError(500, 'authHandler', excp, resp);
+                this.logger.error(`${tag}: Exception ${JSON.stringify(excp, null, 2)}`);
+                this.commonError(500, tag, excp, resp);
             }
         };
     }
@@ -324,30 +398,14 @@ export class RouteController {
      */
     routeConfig<T>(tag: string, handler: (data: T, req: express.Request, resp: express.Response) => Promise<[number, any]>): RouteHandler {
         return async (req: express.Request, resp: express.Response) => {
-            try {
-                // Check for error
-                const errors = validationResult(req);
-                if (!errors.isEmpty()) {
-                    this.logger.error(`${tag}: Validation error:\n ${JSON.stringify(errors.array(), null, 2)}`);
-                    this.logReq(req, tag);
-                    return resp.status(422).json({
-                        message: 'Input validation error',
-                        errors: errors.array()
-                    });
-                }
-                // Get data
-                const data = req.body as T;
-                assert(data, `Unexpected request body: tag:${tag}`);
-                const [status, body]  = await handler(data, req, resp);
-                if (status > 0) {
-                    return resp.status(status).json(this.successResp(body));
-                } else {
-                    this.logger.error(`${tag}: [FAIL]`);
-                    return;
-                }
-            } catch (excp) {
-                return this.commonError(500, `routeConfig:${tag}`, excp, resp);
-            }
+            await this.handleRoute(req, resp, handler, tag, true);
+        };
+    }
+
+    get controllerRouteInfo(): ResourceInfo {
+        return this.constructor.prototype._routeResourceInfo || {
+            dataController: this.dataController,
+            secure: false
         };
     }
 }
@@ -368,11 +426,13 @@ export class BaseRoutController<Controller extends DataController> extends Route
  * @export class SecureRouteController
  */
 export class SecureRouteController<T extends DataController> extends BaseRoutController<T> {
+    get isSecure(): boolean {
+        return true;
+    }
     constructor() {
         super();
         // Register auth middleware
         // this.router.use(passport.authenticate('jwt', {session : false}));
-        this.router.use(this.authHandle);
     }
 }
 
@@ -382,7 +442,9 @@ export class SecureRouteController<T extends DataController> extends BaseRoutCon
 export class BaseAdminRouteController<T extends DataController> extends SecureRouteController<T> {
     constructor() {
         super();
+    }
 
+    setup() {
         // Register role middleware
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin]));
     }
@@ -394,54 +456,12 @@ export class BaseAdminRouteController<T extends DataController> extends SecureRo
 export class WriterRouteController<T extends DataController> extends SecureRouteController<T> {
     constructor() {
         super();
+    }
 
+    setup() {
         // Register role middleware
         this.router.use(roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]));
     }
 }
-
-/**
- * @description Create Validator to check item exists on db or not
- * @param any[] items: check input array with key in req and dataController to verify
- * @returns any[]
- */
-export const ValidatorExists = (items: {[key: string]: DataController}): any[] => {
-    const result: any[] = [];
-    _.each(items, (con: DataController, key: string) => {
-        result.push(check(key).isInt().custom(async (val: number, {req}) => {
-            const item = await con.findById(val);
-            assert(item, `${key}: Item not exists with id: ${val}`);
-            if (!req.body) {
-                req.body = {};
-            }
-            req.body[key] = item;
-        }));
-    });
-    return result;
-};
-
-export type Validate = (chain: ValidationChain) => ValidationChain;
-export interface ValidationInfo {
-    message?: string;
-    validate: Validate;
-    optional?: boolean;
-}
-
-/**
- * @description Create array of check validators
- * @param object query: Fields with verify function
- * @returns any[]: Array of check validators
- */
-export const ValidatorCheck = (query: {[key: string]: ValidationInfo}) => {
-    const result: any[] = [];
-    _.each(query, ( info: ValidationInfo, key) => {
-        if (info.optional !== undefined && info.optional === true) {
-            result.push(info.validate(check(key)).optional().withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
-        } else {
-            result.push(info.validate(check(key)).withMessage(`${key}: ${ info.message || 'Invalid variable'}`));
-        }
-    });
-    return result;
-};
 // --------------------------------------------------------------------------------------------------
 

@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { ValidationService } from 'src/app/services/validation.service';
@@ -33,6 +50,14 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() header = '';
   // Field header
   @Input() tabIndex = 0;
+  // Optional mat-suffix
+  @Input() suffix;
+  // Optional minimum numeric value
+  @Input() min: Number;
+  // Optional maximum numeric value
+  @Input() max: Number;
+  // Boolean to set focus onInit
+  @Input() showFocus: boolean;
 
   ///// Verification
   private _verification: any;
@@ -54,6 +79,10 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     if (value) {
       this._required = value;
     }
+  }
+
+  get hasSuffix(): boolean {
+    return (this.suffix && this.suffix.length || '') > 0;
   }
 
   get fieldId(): string {
@@ -167,6 +196,14 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
     if (this.verification.positiveNumber) {
       validatorOptions.push(this.positiveNumber);
     }
+    // Minimum numeric value
+    if (this.verification.minimumValue !== undefined) {
+      validatorOptions.push(Validators.min(this.verification.minimumValue));
+    }
+    // Maximum numeric value
+    if (this.verification.maximumValue !== undefined) {
+      validatorOptions.push(Validators.max(this.verification.maximumValue));
+    }
     // Required field
     if (this.verification.required !== undefined && this.verification.required) {
       validatorOptions.push(Validators.required);
@@ -242,7 +279,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       return { invalidLatitude: true, invalidLatitudeError: 'Not a valid number' };
     }
     // Must have at least 5 decimal places
-    const separated = control.value.split('.');
+    const valueString = typeof control.value === typeof 'x' ? control.value : `${control.value}`;
+    const separated = valueString.split('.');
     if (separated.length > 2) {
       // This wont happend because number validation will catch it first
       return { invalidLatitude: true, invalidLatitudeError: 'There have extra dots' };
@@ -268,7 +306,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
       return { validLongitude: true, invalidLongitudeError: 'Not a valid number' };
     }
     // Must have at least 5 decimal places
-    const separated = control.value.split('.');
+    const valueString = typeof control.value === typeof 'x' ? control.value : `${control.value}`;
+    const separated = valueString.split('.');
     if (separated.length > 2) {
       // This wont happend because number validation will catch it first
       return { validLongitude: true, invalidLongitudeError: 'There have extra dots' };

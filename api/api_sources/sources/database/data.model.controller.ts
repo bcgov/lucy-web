@@ -46,7 +46,7 @@ export class DataModelController<T extends ObjectLiteral> extends BaseDataModelC
      * @description Getter of db connection
      * @getter connection Connection
      */
-    protected get connection(): Connection {
+    get connection(): Connection {
         return SharedDBManager.connection || getConnection();
     }
 

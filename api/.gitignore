@@ -1,3 +1,5 @@
+# Local text files
+**/.local.script.txt
 # Certificates
 **/.certificates
 
@@ -8,6 +10,8 @@
 /env_config/env.local
 .env
 .nvm
+Test2Schema/
+TestSchema/
 
 
 # Example

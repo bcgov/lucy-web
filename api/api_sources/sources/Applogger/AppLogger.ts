@@ -19,6 +19,7 @@
 //
 
 import * as moment from 'moment';
+import { BaseLogger } from '../libs/utilities';
 
 declare const console: any;
 
@@ -37,7 +38,7 @@ interface LogLevel {
  * @description Logger class for application. This call provide base infrastructure of app logging
  * @export class AppLogger
  */
-export class AppLogger {
+export class AppLogger implements BaseLogger {
     // Tag
     public tag = 'AppLogger';
 
@@ -114,9 +115,9 @@ export class AppLogger {
      * @param string logLevel
      */
     private finalLog(body: string, logLevel: string) {
-        const datestr = this.formatDate(this.dateMarker());
+        const dateStr = this.formatDate(this.dateMarker());
         const formattedBody = this.formatBody(body, logLevel);
-        return `[${this.formatLogLevel(logLevel)} | ${datestr} | ${this.formatTag()}] : ${formattedBody}`;
+        return `[${this.formatLogLevel(logLevel)} | ${dateStr} | ${this.formatTag()}] : ${formattedBody}`;
     }
 
     /**

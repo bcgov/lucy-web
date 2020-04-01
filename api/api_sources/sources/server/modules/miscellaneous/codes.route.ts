@@ -35,18 +35,21 @@ import {
     SlopeCodeController,
     AspectCodeController,
     ProposedActionCodeController,
-    MechanicalMethodCodeController,
-    MechanicalDisposalMethodCodeController,
     MechanicalSoilDisturbanceCodeController,
     MechanicalRootRemovalCodeController,
-    MechanicalTreatmentIssueCodeController,
     TreatmentProviderContractorController,
     ProjectManagementPlanCodeController,
-    PesticideEmployerCodeController
+    ChemicalTreatmentMethodCodeController,
+    WindDirectionCodesController,
+    HerbicideController
 } from '../../../database/models';
 import { DataController } from '../../../database/data.model.controller';
 import { ChemicalTreatmentEmployeeController } from '../../../database/models/controllers/chemicalTreatmentEmployee.controller';
-
+import { PesticideEmployerCodeController } from '../../../database/models/controllers/pesticideEmployerCode.controller';
+import { MechanicalDisposalMethodCodeController } from '../../../database/models/controllers/mechanicalDisposalMethodCode.controller';
+import { MechanicalTreatmentIssueCodeController } from '../../../database/models/controllers/mechanicalTreatmentIssueCode.controller';
+import { MechanicalMethodCodeController } from '../../../database/models/controllers/mechanicalMethodCode.controller';
+import { EfficacyCodeController } from '../../../database/models/controllers/efficacyCode.controller';
 export class CodeTableRouteController extends SecureRouteController<any> {
     static get shared(): CodeTableRouteController {
         return this.sharedInstance<CodeTableRouteController>() as CodeTableRouteController;
@@ -54,7 +57,6 @@ export class CodeTableRouteController extends SecureRouteController<any> {
 
     constructor() {
         super();
-        this.applyRouteConfig();
     }
 
     codeTableObj: any;
@@ -85,6 +87,10 @@ export class CodeTableRouteController extends SecureRouteController<any> {
         await this.addCodes(ProjectManagementPlanCodeController.shared);
         await this.addCodes(PesticideEmployerCodeController.shared);
         await this.addCodes(ChemicalTreatmentEmployeeController.shared);
+        await this.addCodes(ChemicalTreatmentMethodCodeController.shared);
+        await this.addCodes(WindDirectionCodesController.shared);
+        await this.addCodes(HerbicideController.shared);
+        await this.addCodes(EfficacyCodeController.shared);
         return this.codeTableObj;
     }
 

@@ -22,7 +22,8 @@ module.exports = (settings)=>{
       'ENVIRONMENT':  phases[phase].env || 'dev',
       'SSO_URL': phases[phase].sso.url,
       'SSO_CLIENT_ID': phases[phase].sso.clientId,
-      'SSO_REALM': phases[phase].sso.realm
+      'SSO_REALM': phases[phase].sso.realm,
+      'REPLICAS': phases[phase].replicas || 1
     }
   }))
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, phases[phase].instance)

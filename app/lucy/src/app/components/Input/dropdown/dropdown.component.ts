@@ -1,15 +1,31 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { DropdownObject } from 'src/app/services/dropdown.service';
 import { FormControl } from '@angular/forms';
 import { Subject, ReplaySubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { MatSelect } from '@angular/material';
+import { MatSelect, MatSelectChange } from '@angular/material';
+import { AlertService, AlertModalButton } from 'src/app/services/alert.service';
+import { RouterService } from 'src/app/services/router.service';
+import { AppRoutes} from 'src/app/constants/app-routes.enum';
 
-interface Bank {
-  id: string;
-  name: string;
- }
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
@@ -29,9 +45,13 @@ export class DropdownComponent implements OnInit {
   @Input() fieldHeader = ``;
   // Optional Input
   @Input() editable = true;
+  actionButtons: AlertModalButton[];
+  emitter: EventEmitter<boolean>;
 
   get fieldId(): string {
-    return this.camelize(this.fieldHeader);
+    if (this.fieldHeader !== undefined) {
+      return this.camelize(this.fieldHeader);
+    } else { return ``; }
   }
 
   ///// Form Mode
@@ -76,11 +96,7 @@ export class DropdownComponent implements OnInit {
   }
 
   get selectedItemName(): string {
-    if (this.selectedItem) {
-      return this.selectedItem.name;
-    } else {
-      return ``;
-    }
+    return this.selectedItem ? this._selectedItem.name : '';
   }
 
   ///// Items list
@@ -93,6 +109,20 @@ export class DropdownComponent implements OnInit {
   @Input() set items(array: DropdownObject[]) {
     this.filteredItems = array;
     this._items = array;
+
+    // Create EventEmitter to be used with AlertModalButton.
+    // If there are no items available to be added to dropdown,
+    // assume that an error has occurred somewhere.
+    // (e.g., user is trying to add a new mechanical treatment before any observations have been created)
+    this.emitter = new EventEmitter<boolean>();
+    this.emitter.subscribe(item => {
+      this.routerService.navigateTo(AppRoutes.AddEntry, null, false);
+      this.emitter.unsubscribe();
+    });
+
+    if (this._items.length === 0) {
+      this.alert.show('Error', 'Must create at least one ' + this.fieldHeader + ' first', [{name: `Okay`, canDismiss: true, eventEmitter: this.emitter}]);
+    }
   }
   ////////////////////
 
@@ -111,7 +141,7 @@ export class DropdownComponent implements OnInit {
   // Response
   @Output() selectionChanged = new EventEmitter<DropdownObject>();
 
-  constructor() { }
+  constructor( private alert: AlertService, private routerService: RouterService ) {  }
 
   ngOnInit() {
     // set initial selection
@@ -123,9 +153,11 @@ export class DropdownComponent implements OnInit {
         this.filterOptions();
       });
   }
-
-  selected(item: DropdownObject) {
-    this.selectedItem = item;
+    
+  selected(event: MatSelectChange) {
+    const selectedOption = this.filteredItems.find(item => item.name === event.value);
+    this.selectedItem = selectedOption;
+    this.selectedItemName = selectedOption.name;
     this.selectionChanged.emit(this.selectedItem);
   }
 
@@ -143,7 +175,7 @@ export class DropdownComponent implements OnInit {
       search = search.toLowerCase();
     }
     this.filteredItems = [];
-    console.log(`searching`);
+
     for (const item of this.items) {
       if (item.name !== undefined && String(item.name).toLowerCase().includes(search.toLowerCase())) {
         this.filteredItems.push(item);
@@ -152,12 +184,10 @@ export class DropdownComponent implements OnInit {
   }
 
   filer(string: string) {
-    console.log(string);
     if (string === ``) {
       this.filteredItems = this.items;
     } else {
       this.filteredItems = [];
-      console.log(`searching`);
       for (const item of this.items) {
         if (item.name.toLowerCase().includes(string.toLowerCase())) {
           this.filteredItems.push(item);
@@ -168,7 +198,7 @@ export class DropdownComponent implements OnInit {
 
   camelize(str: string): string {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-      return index == 0 ? word.toLowerCase() : word.toUpperCase();
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
     }).replace(/\s+/g, '');
   }
 

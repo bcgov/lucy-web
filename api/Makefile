@@ -93,14 +93,21 @@ clean-local: ## -- Target : Closes and clean local development containers.
 pod:
 	@echo "+\n++ Make: Creating Pod ...\n+"
 	@oc new-app  -e POSTGRESQL_USER=$(DB_USER) -e POSTGRESQL_PASSWORD=$(DB_PASS) -e POSTGRESQL_DATABASE=$(DB_DATABASE) centos/postgresql-95-centos7
-
+build-remote-sonarqube:
+	@echo "+\n++ Make: Building Remote Sonarqube \n+"
+	@cd ./.pipeline && DEBUG=* npm run build-tools -- --pr=$$PR
 clean-dev:
 	@echo "+\n++ Make: Clean Remote Env with pr=$$PR"
 	@echo "+\n++ Cleanin API"
 	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=dev 
 	@echo "+\n++ Cleaning App"
 	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=dev
-
+clean-remote-deploy:
+	@echo "+\n++ Make: Clean Remote Deployment Env with pr=$$PR env=$$ENV"
+	@echo "+\n++ Cleanin API {Deploy}"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+	@echo "+\n++ Cleaning App {Deploy}"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
 clean-remote:
 	@echo "+\n++ Make: Clean Remote Env with pr=$$PR env=$$ENV"
 	@echo "+\n Cleaning API {Build}"
@@ -143,7 +150,15 @@ sonarqube:
 test-remote-api:
 	@echo "+\n Make: Test Remote API"
 	@cd ./.pipeline && DEBUG=* npm run test -- --pr=$$PR --env=$$ENV
-
+deploy-remote-backup:
+	@echo "+\n Deploy backup application in OpenShift"
+	@cd ./.pipeline && DEBUG=* npm run deploy-db-backup -- --env=$$ENV --type=static --pr=$$PR
+remote-backup:
+	@echo "+\n Make: Run backup of remote database"
+	@cd ./.pipeline && DEBUG=* npm run backup -- --env=$$ENV --backup=true
+remote-backup-ls:
+	@echo "+\n Make: Display listing of remote backups"
+	@cd ./.pipeline && DEBUG=* npm run backup -- --env=$$ENV --listing=true
 # ------------------------------------------------------------------------------
 # Helper Commands
 # ------------------------------------------------------------------------------

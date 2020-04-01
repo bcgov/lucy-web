@@ -48,14 +48,17 @@ import {
     destroyMechanicalTreatment,
     // ModelFactory,
     ModelSpecFactory,
-    RequestFactory
+    RequestFactory,
+    ModelFactory,
+    Destroyer
 } from '../../../../database/factory';
 import { ExpressResourceTest } from '../../../../test-helpers/expressTest';
+import { ObservationSchema } from '../../../../database/database-schema';
 
 describe('Test for observation routes', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();
@@ -149,7 +152,9 @@ describe('Test for observation routes', () => {
 
     it('should create observation', async () => {
         const spec = await ModelSpecFactory(ObservationController.shared)();
-        const create = RequestFactory<any>(spec);
+        const create = RequestFactory<any>(spec, {
+            schema: ObservationSchema.shared
+        });
         await testRequest(SharedExpressApp.app, {
             type: HttpMethodType.post,
             url: '/api/observation',
@@ -168,7 +173,6 @@ describe('Test for observation routes', () => {
                 should().exist(body.observationType);
                 should().exist(body.soilTexture);
                 should().exist(body.specificUseCode);
-                should().exist(body.observationGeometry);
                 should().exist(body.slopeCode);
                 should().exist(body.aspectCode);
                 should().exist(body.proposedAction);
@@ -199,7 +203,7 @@ describe('Test for observation routes', () => {
     it('should not update observation with {id} for viewer', async () => {
         const obs = await observationFactory();
         const update = {
-            lat: 35.78
+            accessDescription: 'Long distance'
         };
         await testRequest(SharedExpressApp.app , {
             type: HttpMethodType.put,
@@ -219,8 +223,6 @@ describe('Test for observation routes', () => {
         const jurisdictionCode = await jurisdictionCodeFactory(2);
         const species = await speciesFactory(2);
         const update = {
-            horizontalDimension: 6700.78,
-            verticalDimension: 900.00,
             accessDescription: 'Test description',
             researchIndicator: true,
             jurisdiction: jurisdictionCode.jurisdiction_code_id,
@@ -243,7 +245,6 @@ describe('Test for observation routes', () => {
                 should().exist(body.researchIndicator);
                 should().exist(body.rangeUnitNumber);
                 expect(body.researchIndicator).to.be.equal(true);
-                expect(body.verticalDimension).to.be.equal(update.verticalDimension);
                 expect(body.rangeUnitNumber).to.be.equal(update.rangeUnitNumber);
                 expect(body.date).to.be.equal(update.date);
             });
@@ -305,6 +306,54 @@ describe('Test for observation routes', () => {
         await ExpressResourceTest.testGetFilteredItem(SharedExpressApp.app, { auth: AuthType.viewer, expect: 200}, ObservationController.shared, {
             observerFirstName: 'Laba',
             observerLastName: 'Ballabh'
+        });
+    });
+
+    it('should filter by keyword that matches observer name/id/species/jurisdiction/agency', async () => {
+        const obs = await ModelFactory(ObservationController.shared)();
+        should().exist(obs);
+        const firstName: string = obs.observerFirstName;
+
+        const keyword = firstName.substring(1, firstName.length);
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: `/api/observation/search?keyword=${keyword}`,
+            expect: 200,
+            auth: AuthType.admin
+        }).then(async (resp) => {
+            await verifySuccessBody(resp.body, async (data) => {
+                expect(data.length).to.be.greaterThan(0);
+                const observation = data[0];
+                should().exist(observation.observation_id);
+                should().exist(observation.species);
+                should().exist(observation.jurisdiction);
+                should().exist(observation.speciesAgency);
+                should().exist(observation.spaceGeom);
+                should().exist(observation.density);
+                should().exist(observation.distribution);
+                should().exist(observation.observationType);
+                should().exist(observation.soilTexture);
+                should().exist(observation.specificUseCode);
+                should().exist(observation.slopeCode);
+                should().exist(observation.aspectCode);
+                should().exist(observation.proposedAction);
+                const filtered = data.filter( (item: any) => item.observerFirstName === firstName);
+                expect(filtered.length).to.be.greaterThan(0);
+                await Destroyer(ObservationController.shared)(obs);
+            });
+        });
+    });
+
+    it(`should export all the observations`, async () => {
+        const observation = await ModelFactory(ObservationController.shared)();
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/observation/export',
+            expect: 200,
+            auth: AuthType.inspectAdmin
+        }).then(async resp => {
+            await verifySuccessBody(resp.body);
+            await Destroyer(ObservationController.shared)(observation);
         });
     });
 });

@@ -1,0 +1,99 @@
+version: '1.0'
+description: Schema file for table high_risk_assessment
+externalTables: []
+includes: 
+  - inspectApp.codes.schema.yaml
+schemas:
+  HighRiskAssessmentSchema:
+    name: high_risk_assessment
+    description: 'Table to store High Risk Assessment information of Mussel Watercraft inspection'
+    meta: 
+      resource: true
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      # Primary
+      id:
+        name: high_risk_assessment_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      # Boolean
+      cleanDrainDryAfterInspection:
+        name: clean_drain_dry_after_inspection_ind
+        comment: 'Indicator is to show, watercraft was cleaned, drained and dried after inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      quarantinePeriodIssued:
+        name: quarantine_period_issued_ind
+        comment: 'Indicator is to show, watercraft was issued a quarantine period'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE  
+      standingWaterPresent:
+        name: standing_water_present_ind
+        comment: 'Indicator is to check any standing water present in watercraft during high risk assessment'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      adultDreissenidaeMusselFound:
+        name: adult_dreissenidae_mussel_found_ind
+        comment: 'Status flag any adult Dreissenidae Mussel found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      decontaminationPerformed:
+        name: decontamination_performed_ind
+        comment: 'Status flag to check decontamination performed or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      decontaminationOrderIssued:
+        name: decontamination_order_issued_ind
+        comment: 'Status flag to check decontamination order issued or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      sealIssued:
+        name: seal_issued_ind
+        comment: 'Status flag to check seal was issued or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      # Number
+      watercraftRegistration:
+        name: watercraft_registration
+        comment: 'Watercraft Registration number'
+        definition: VARCHAR(30) NULL
+      decontaminationReference:
+        name: decontamination_reference
+        comment: 'Decontamination reference number'
+        definition: VARCHAR(100) NULL
+        required: false
+      decontaminationOrderNumber:
+        name: decontamination_order_number
+        comment: 'Decontamination order number'
+        definition: INT NULL
+        required: false
+      sealNumber:
+        name: seal_number
+        comment: 'Seal number'
+        definition: INT NULL
+      # Strings
+      otherInspectionFindings:
+        name: other_inspection_findings
+        comment: 'Additional details about high risk assessment'
+        definition: VARCHAR(100) NULL
+      generalComments:
+        name: general_comments
+        comment: 'General Comments regarding high risk assessment'
+        definition: VARCHAR(300) NULL 
+      # Relationships
+      standingWaterLocation:
+        name: standing_water_location_code_id
+        comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations of standing water
+        definition: INT NULL
+        foreignTable: adult_mussels_location_code
+        refColumn: adult_mussels_location_code_id
+        deleteCascade: false
+        required: false
+        meta: {}
+      adultDreissenidaeMusselDetail:
+        name: adult_mussels_location_code_id
+        comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations where adult mussels were found on the watercraft 
+        definition: INT NULL
+        foreignTable: adult_mussels_location_code
+        refColumn: adult_mussels_location_code_id
+        deleteCascade: false
+        required: false
+        meta: {}
+    versions: []
+    fields: {}

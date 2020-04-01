@@ -28,7 +28,7 @@ import {
 import { DataController } from '../database/data.model.controller';
 import { BaseSchema } from '../libs/core-database';
 import { AuthType, verifySuccessBody, verifyErrorBody, testModel } from './testHelpers';
-import { adminToken, editorToken, viewerToken } from './token';
+import { adminToken, editorToken, viewerToken, inspectAppAdminToken, inspectAppOfficerToken } from './token';
 import { ModelSpecFactory, RequestFactory, Destroyer, ModelFactory } from '../database/factory';
 
 export interface ExpressSetup {
@@ -36,6 +36,7 @@ export interface ExpressSetup {
     auth?: AuthType;
     token?: string;
     expect?: number;
+    ignoreSchemaVerification?: boolean;
 }
 
 export class ExpressResourceTest {
@@ -62,6 +63,12 @@ export class ExpressResourceTest {
             case 2:
                 token = viewerToken();
                 break;
+            case 6:
+                token = inspectAppAdminToken();
+                break;
+            case 5:
+                token = inspectAppOfficerToken();
+                break;
             case 4:
                 token = '';
                 break;
@@ -84,7 +91,7 @@ export class ExpressResourceTest {
             const schema: BaseSchema = controller.schemaObject;
             // Create Data
             const spec: any = await ModelSpecFactory(controller)();
-            const req: any = RequestFactory<any>(spec);
+            const req: any = RequestFactory<any>(spec, { schema: schema});
             // Url
             const url: string = setup.url || controller.schemaObject.apiPath();
             // Checking token
@@ -93,7 +100,6 @@ export class ExpressResourceTest {
 
             // Expect
             const expectedStatus = setup.expect || 201;
-
             if (token && token !== '') {
                 request(app).post(url)
                 .set('Authorization', `Bearer ${token}`)
@@ -125,7 +131,7 @@ export class ExpressResourceTest {
             // Create Data
             const model = await ModelFactory(controller)();
             const spec = await ModelSpecFactory(controller)();
-            const req: any = RequestFactory<any>(spec);
+            const req: any = RequestFactory<any>(spec, {schema: schema});
 
             // Url
             const baseUrl: string = setup.url || controller.schemaObject.apiPath();
@@ -233,7 +239,9 @@ export class ExpressResourceTest {
                         expect(dataAll.length).to.be.greaterThan(0);
                         const filter = _.filter(dataAll, item => controller.getIdValue(item) === controller.getIdValue(model));
                         expect(filter.length).to.be.equal(1);
-                        this.verifyObjectBody(filter[0], schema);
+                        if (!setup.ignoreSchemaVerification) {
+                            this.verifyObjectBody(filter[0], schema);
+                        }
                         await Destroyer(controller)(model);
                     } else {
                         await Destroyer(controller)(model);

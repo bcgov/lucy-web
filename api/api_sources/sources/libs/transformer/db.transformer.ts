@@ -28,6 +28,16 @@ import * as moment from 'moment';
  /**
   * @description Transformer for string to float number
   */
+
+export class IntTransformer {
+    to(data: number) {
+        return data;
+    }
+
+    from(data: string) {
+        return parseInt(data, undefined);
+    }
+}
 export class NumericTransformer {
     to(data: number) {
         return data;
@@ -49,6 +59,24 @@ export class DateTransformer {
         }
         try {
             const ds = `${moment(date).format('YYYY-MM-DD')}`;
+            return ds;
+        } catch (excp) {
+            return `${date}`;
+        }
+    }
+}
+
+export class DateTimeTransformer {
+    to(date: any) {
+        return date;
+    }
+
+    from(date: any) {
+        if (typeof date === 'string') {
+            return date;
+        }
+        try {
+            const ds = `${moment(date).format('YYYY-MM-DD HH:mm:ss')}`;
             return ds;
         } catch (excp) {
             return `${date}`;
