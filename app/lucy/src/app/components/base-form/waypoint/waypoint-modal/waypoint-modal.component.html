@@ -49,7 +49,7 @@
 
         <!-- Error messages -->
         <div class="error-container">
-            <div *ngFor="let e of errors" class="error-card-container">
+            <div *ngFor="let e of errors" [ngClass]="showLatLong ? 'error-latlong-container' : 'error-utm-container'">
                 <div class="error-card">
                     <i class="material-icons-outlined error-icon">error</i>
                     <span>{{ e }}</span>
