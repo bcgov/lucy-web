@@ -1,8 +1,47 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
-import { User, Jurisdiction, InvasivePlantSpecies, Observation, SpeciesDensityCodes, SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes, SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes, SlopeCodes, AspectCodes, ProposedActionCodes} from '../models';
+import { User,
+         Jurisdiction,
+         InvasivePlantSpecies,
+         Observation,
+         SpeciesDensityCodes,
+         SpeciesDistributionCodes,
+         SpeciesAgencyCodes,
+         ObservationTypeCodes,
+         SoilTextureCodes,
+         ObservationGeometryCodes,
+         SpecificUseCodes,
+         SlopeCodes,
+         AspectCodes,
+         ProposedActionCodes} from '../models';
 import { AccessRequest } from '../models/AccessRequest';
 import { Role } from '../models/Role';
-import { MechanicalTreatmentMethodsCodes, MechanicalTreatment, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { MechanicalTreatmentMethodsCodes,
+         MechanicalTreatment,
+         MechanicalDisposalMethodsCodes,
+         MechanicalSoilDisturbanceCodes,
+         MechanicalRootRemovalCodes,
+         MechanicalIssueCodes,
+         MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { HerbicideCodes, ChemicalTreatment, ChemicalTreatmentMethodCode } from '../models/ChemicalTreatment';
+import { EfficacyCodes } from '../models/Monitor';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +96,15 @@ export class ObjectValidatorService {
   }
 
   /**
+   * Check if object is a herbicide object
+   * @param herbicide object
+   */
+  public isHerbicideObject(herbicide: any): herbicide is HerbicideCodes {
+    if (herbicide === undefined || herbicide === null) {return false; }
+    return (<HerbicideCodes>herbicide.herbicideCode) !== undefined;
+  }
+
+  /**
    * Check if object is SpeciesDensityCode
    * @param density object
    */
@@ -90,6 +138,11 @@ export class ObjectValidatorService {
   public isObservationTypeCodesObject(observationType: any): observationType is ObservationTypeCodes {
     if (observationType === undefined || observationType === null) {return false; }
     return (<ObservationTypeCodes>observationType.description) !== undefined;
+  }
+
+  public isEfficacyCodesObject(efficacyCode: any): efficacyCode is EfficacyCodes {
+    if (efficacyCode === undefined || efficacyCode === null) { return false; }
+    return (<EfficacyCodes>efficacyCode.efficacyRating) !== undefined;
   }
 
   /**
@@ -217,5 +270,50 @@ export class ObjectValidatorService {
   public isMechanicalTreatmentProvidersObject(mechanicalTreatmentProviders: any): mechanicalTreatmentProviders is MechanicalTreatmentProviders {
     if (mechanicalTreatmentProviders === undefined || mechanicalTreatmentProviders === null) {return false; }
     return (<MechanicalTreatmentProviders>mechanicalTreatmentProviders.registrationNumber) !== undefined;
+  }
+
+  /**
+   * Check if object is ChemicalTreatmentMethodCode
+   * @param chemicalTreatmentMethodsCodes object
+   */
+  public isChemicalTreatmentMethodsCodes(chemicalTreatmentMethodsCodes: any): chemicalTreatmentMethodsCodes is ChemicalTreatmentMethodCode {
+    if (chemicalTreatmentMethodsCodes === undefined || chemicalTreatmentMethodsCodes === null) { return false; }
+    return (<ChemicalTreatmentMethodCode>chemicalTreatmentMethodsCodes.description) !== undefined;
+  }
+
+  /**
+   * Check if object is ChemicalTreatment
+   * @param chemicalTreatment object
+   */
+  public isChemicalTreatmentObject(chemicalTreatment: any): chemicalTreatment is ChemicalTreatment {
+    if (chemicalTreatment === undefined || chemicalTreatment === null) { return false; }
+    return (<ChemicalTreatment>chemicalTreatment.tankMixes) !== undefined;
+  }
+
+  /**
+   * Check if object is PreviousAISKnowledgeSource
+   * @param knowledgeSource object
+   */
+  public isPreviousAISKnowledgeSourceObject(knowledgeSource: any): knowledgeSource is PreviousAISKnowledgeSource {
+    if (knowledgeSource === undefined || knowledgeSource === null) { return false; }
+    return (<PreviousAISKnowledgeSource>knowledgeSource.description) !== undefined;
+  }
+
+  /**
+   * Check if object is PreviousInspectionSource
+   * @param inspectionSource object
+   */
+  public isPreviousInspectionSourceObject(inspectionSource: any): inspectionSource is PreviousInspectionSource {
+    if (inspectionSource === undefined || inspectionSource === null) { return false; }
+    return (<PreviousInspectionSource>inspectionSource.description) !== undefined;
+  }
+
+  /**
+   * Check if object is AdultMusselsLocation
+   * @param locationFound object
+   */
+  public isAdultMusselsLocationObject(locationFound: any): locationFound is AdultMusselsLocation {
+    if (locationFound === undefined || locationFound === null) { return false; }
+    return (<AdultMusselsLocation>locationFound.description) !== undefined;
   }
 }

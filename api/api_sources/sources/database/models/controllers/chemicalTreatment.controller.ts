@@ -15,11 +15,9 @@ export class ChemicalTreatmentController extends RecordController<ChemicalTreatm
 	}
 
 	async findById(id: number): Promise<ChemicalTreatment> {
-		const items: ChemicalTreatment[] = await this.repo.find({
-			where: { chemical_treatment_id: id},
-			relations: ['secondApplicator']
-		}) as ChemicalTreatment[];
-        return items[0];
+		const items: ChemicalTreatment[] = await this.repo.find({ where: { chemical_treatment_id: id}, relations: ['secondApplicator']}) as ChemicalTreatment[];
+		const item: ChemicalTreatment = items[0];
+		return item;
 	}
 
 	/**

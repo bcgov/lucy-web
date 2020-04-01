@@ -1,0 +1,76 @@
+# Code Tables yaml
+version: '1.0'
+includes: []
+externalTables:
+  - name: country
+    schema: CountrySchema
+    description: Country code table
+  - name: country_province
+    schema: CountryProvinceSchema
+    description: Country province table
+schemas: 
+  ## -- WaterBodySchema
+  WaterBodySchema:
+    name: water_body
+    description: 'The table to store all lake/water body information. Watercraft observation require  information regarding its source and destination.'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: /mussels/water-body
+      base: api
+    displayLayout:
+      displayLabel: '#(name)'
+      header:
+        key: WaterBodySchema
+        default: 'Lake and River'
+    layout: {}
+    computedFields: {}
+    columns: 
+      id: 
+        name: 'water_body_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      name:
+        name: water_body_name
+        comment: Common or popular name of the water-body
+        definition: VARCHAR(100) NOT NULL
+      latitude: 
+        name: 'water_body_latitude'
+        comment: 'Latitude of water body location'
+        definition: NUMERIC(10, 7) NOT NULL
+      longitude:
+        name: 'water_body_longitude'
+        comment: 'Longitude of water body location'
+        definition: NUMERIC(10, 7) NOT NULL
+        meta: {}
+      country:
+        name: country_code
+        comment: Country of the water-body location. Joint foreign key reference to country_province table country_code column along with province_code.
+        definition: VARCHAR(3) NULL
+      province:
+        name: province_code
+        comment: Province of the water-body location. Joint foreign key reference to country_province table province_code column along with country code.
+        definition: VARCHAR(2) NULL
+      closest:
+        name: closest_city
+        comment: Nearest city/landmark from the water body
+        definition: VARCHAR(100) NOT NULL
+      distance:
+        name: distance
+        comment: Distance from closest city/landmark in kilometer
+        definition: NUMERIC(10, 5)
+      active:
+        name: active_ind
+        comment: Boolean flag to check, the record is active or not.
+        definition: BOOLEAN NOT NULL DEFAULT TRUE
+    ## -- columns
+    imports:
+      init:
+        fileName: WaterBody.csv
+        allColumnsExcept: 
+          - active
+  ## --    
+
+
+
+  

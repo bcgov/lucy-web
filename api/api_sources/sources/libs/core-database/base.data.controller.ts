@@ -20,15 +20,20 @@
  * Modified By: pushan (you@you.you>)
  * -----
  */
+import * as _ from 'underscore';
 import {
     Connection,
     Repository,
     ObjectLiteral,
     QueryRunner
 } from 'typeorm';
-import { ApplicationTable } from './application.table';
+import { ApplicationTable, TableRelation } from './application.table';
 import { BaseSchema } from './baseSchema';
-import { registerDataModelController } from './schema.storage';
+import { registerDataModelController, controllerForSchemaName } from './schema.storage';
+import { DataController } from '../../database/data.model.controller';
+import { unWrap, flatJSON } from '../utilities';
+import { DataFieldDefinition } from './application.column';
+import { TableExporter } from './table.exporter';
 
 export interface ControllerMetaData {
     modelName: string;
@@ -39,7 +44,9 @@ export interface BaseDataController {
     schemaObject: BaseSchema;
     dependencies: any[];
     meta: ControllerMetaData;
+    idKey: string;
     findById(id: number): Promise<any>;
+    fetchOne(query: object): Promise<any>;
     remove(object: any): Promise<void>;
     removeById( id: number): Promise<void>;
     all(filter?: any): Promise<any>;
@@ -48,8 +55,12 @@ export interface BaseDataController {
     random(): Promise<any>;
     createNewObject(newObj: any, creator: any, ...others: any[]): Promise<any>;
     updateObject(existing: any, update: any, modifier: any, ...others: any[]): Promise<any>;
+    checkObject(obj: any, user: any): Promise<any>;
     factory (): Promise<any>;
     getIdValue(obj: any): any;
+    validate(data: any): boolean;
+    export(): Promise<any>;
+    processForExport(data: any): any;
 }
 
 
@@ -104,8 +115,15 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
      * @description Getter of db connection
      * @getter connection Connection
      */
-    protected get connection(): Connection {
+    get connection(): Connection {
         throw Error('BaseDataModelController: Subclass must override');
+    }
+
+    /**
+     * @description Get table primary id column
+     */
+    get idKey(): string {
+        return this.schema.columns.id;
     }
 
     /**
@@ -150,6 +168,9 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
      * @param number id
      */
     async findById(id: number): Promise<T> {
+        if (typeof id === typeof {}) {
+            throw new Error(`${this.className}: Invalid id: ${typeof id}`);
+        }
         const items: T[] = await this.repo.find(this.idQuery(id)) as T[];
         return items[0];
     }
@@ -201,6 +222,7 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
             return;
         } catch (excp) {
             console.error(`${this.className}: Save Error: ${excp}`);
+            console.error(`${JSON.stringify(value, null, 2)}`);
             throw excp;
         }
     }
@@ -253,6 +275,8 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 
     async updateObj<U extends ObjectLiteral>(obj: T, update: U): Promise<T> {
         const o: any = obj;
+        // Update relationship
+
         for (const key in o) {
             if (obj.hasOwnProperty(key) && update.hasOwnProperty(key)) {
                 if (update[key] && typeof obj[key] === typeof update[key]) {
@@ -265,8 +289,93 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
     }
 
     newObject(data: any): T {
-        return this.repo.manager.create(this.entity, data);
+        const d: T = this.repo.manager.create(this.entity, data);
+        return d;
     }
+
+    async checkObject(obj: any, user: any): Promise<any> {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const info: DataFieldDefinition = this.schema.columnsDefinition[key];
+                if (!info) {
+                    continue;
+                }
+                const value: any = obj[key];
+                if (info.refSchema && typeof value === typeof 1) {
+                    // Get controller
+                    const con: DataController = controllerForSchemaName(info.refSchema);
+                    if (con) {
+                        obj[key] = await con.findById(value);
+                        // console.log(`Resolved => ${key} : ${info.refSchema}`);
+                        // console.dir(obj);
+                    }
+                }
+            }
+        }
+
+        // Create New Obj
+        // Get idKey
+        if (obj[this.idKey]) {
+            // Get Actual Object
+            const actualObj = await this.findById(obj[this.idKey]);
+            if (actualObj) {
+                return await this.updateObject(actualObj, obj, user);
+            } else {
+                return await this.createNewObject(obj, user);
+            }
+        } else {
+            return await this.createNewObject(obj, user);
+        }
+    }
+
+    async checkRelationship(data: any, user: any, caller: string = 'NONE'): Promise<void> {
+        const fetcher: any[] = [];
+        const itemFetcher: any[] = [];
+
+        // Handling OneToMany Embedded relationship
+        _.each(this.schema.relations, async (r: TableRelation, k: string) => {
+            const con: DataController = controllerForSchemaName(r.schema || '');
+            if (data[k] && con && unWrap(r.meta, {}).embedded) {
+                const array: any[] = data[k];
+                const newArray: Promise<any>[] = [];
+                for (const item of array) {
+                    // console.log(`Checking: ${k} => ${con.schemaObject.className}`);
+                    // console.dir(r);
+                    // console.dir(data[k]);
+                    // console.dir(item);
+                    newArray.push(con.checkObject(item, user));
+                }
+                fetcher.push( { key: k, prom: newArray});
+            }
+        });
+
+        // Embedded ManyToOne Relationship
+        _.each(this.schema.columnsDefinition, async (col: DataFieldDefinition, k: string) => {
+            if (col.refSchema && unWrap(col.meta, {}).embedded) {
+                const con: DataController = controllerForSchemaName(col.refSchema || '');
+                if (con && data[k]) {
+                    itemFetcher.push({
+                        key: k,
+                        prom: con.checkObject(data[k], user)
+                    });
+                }
+            }
+        });
+
+        // Fetch or create relationship object
+
+        // ManyToOne
+        for (const f of itemFetcher) {
+            data[f.key] = await f.prom;
+        }
+        // OneToMany
+        for (const i of fetcher) {
+            data[i.key] = await Promise.all(i.prom);
+        }
+
+        // console.dir(data);
+    }
+
 
     async createNewObject(newObj: any, creator: any): Promise<T> {
         const newModelObj = this.newObject(newObj);
@@ -285,6 +394,74 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
     getIdValue(obj: any): any {
         const idKey: string = this.schema.id;
         return obj[idKey];
+    }
+
+    processForExport(data: T): any {
+        // Fine tune data
+        return TableExporter.export(this.schemaObject, data);
+    }
+
+    /**
+     * @description Key Mapping for export json
+     */
+    get exportKeyMapper(): {[key: string]: string} {
+        return {};
+    }
+
+    /**
+     * @description Sort priorities for export json
+     */
+    get exportKeyPriorities(): {[key: string]: number} {
+        return {
+            id: 5
+        };
+    }
+
+    /**
+	 * @description Export to flat json
+	 */
+	public async export(): Promise<any> {
+		// Get all data
+		const all: T[] = await this.all();
+		const result = [];
+		// Get flat json
+		for (const w of all) {
+            // Process it first
+            const processedItem = this.processForExport(w);
+            const flat = flatJSON(processedItem);
+			result.push(TableExporter.dataFlattening(this.schemaObject, flat, this.exportKeyMapper, this.exportKeyPriorities));
+		}
+		return result;
+	}
+
+    validate(data: any): boolean {
+        let result = true;
+        _.each(this.schema.columnsDefinition, (col: DataFieldDefinition, key: string) => {
+            if (key === 'id') {
+                result = result && true;
+                return;
+            }
+            const isRelationShip = col.refSchema && typeof data[key] === typeof 1;
+            if (col.required && data[key] && (col.type === typeof data[key] || isRelationShip)) {
+                result = result && true;
+            } else {
+                if (data[key] && (col.type === typeof data[key] || isRelationShip)) {
+                    result = result && true;
+                } else {
+                    if (!col.required) {
+                        result = result && true;
+                    } else {
+                        if (typeof data[key] === typeof false && data[key] !== undefined) {
+                            result = result && true;
+                        } else {
+                            console.log(`${this.className} | Fail For key: ${key} => ${data[key]}`);
+                            result = result && false;
+                        }
+                    }
+                }
+            }
+        });
+        return result;
     }
 }
 

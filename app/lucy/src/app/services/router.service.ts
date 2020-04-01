@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { AppRoutes, AppConstants } from '../constants';
 import { Router } from '@angular/router';
@@ -88,6 +105,8 @@ export class RouterService {
         return AppRoutes.AddMechanicalTreatment;
       case 'chemical':
         return AppRoutes.AddChemicalTreatment;
+      case `monitor/mechanical`:
+        return AppRoutes.AddMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -96,7 +115,7 @@ export class RouterService {
   private resolveEditRoute(route: string): AppRoutes {
     const editTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
     // const editId = editTypeAndId.slice(editTypeAndId.indexOf(`/`) + 1, editTypeAndId.length);
-    const editType = editTypeAndId.slice(0, editTypeAndId.indexOf(`/`));
+    const editType = editTypeAndId.slice(0, editTypeAndId.lastIndexOf(`/`));
     switch (editType.toLowerCase()) {
       case `observation`:
         return AppRoutes.EditObservation;
@@ -104,6 +123,8 @@ export class RouterService {
         return AppRoutes.EditMechanicalTreatment;
       case 'chemical':
         return AppRoutes.EditChemicalTreatment;
+      case 'monitor/mechanical':
+        return AppRoutes.EditMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -112,7 +133,7 @@ export class RouterService {
   private resolveViewRoute(route: string): AppRoutes {
     const viewTypeAndId = route.slice(route.indexOf(`/`) + 1, route.length);
     // const viewId = viewTypeAndId.slice(viewTypeAndId.indexOf(`/`) + 1, viewTypeAndId.length);
-    const viewType = viewTypeAndId.slice(0, viewTypeAndId.indexOf(`/`));
+    const viewType = viewTypeAndId.slice(0, viewTypeAndId.lastIndexOf(`/`));
     switch (viewType.toLowerCase()) {
       case `observation`:
         return AppRoutes.ViewObservation;
@@ -120,6 +141,8 @@ export class RouterService {
         return AppRoutes.ViewMechanicalTreatment;
       case 'chemical':
         return AppRoutes.ViewChemicalTreatment;
+      case 'monitor/mechanical':
+        return AppRoutes.ViewMechanicalMonitor;
       default:
         return AppRoutes.Error;
     }
@@ -176,6 +199,10 @@ export class RouterService {
         return AppRoutes.ViewMechanicalTreatment;
       case AppConstants.API_observation:
         return AppRoutes.ViewObservation;
+      case AppConstants.API_chemicalTreatment:
+        return AppRoutes.ViewChemicalTreatment;
+      case AppConstants.API_mechanicalMonitor:
+        return AppRoutes.ViewMechanicalMonitor;
       default:
         console.log(`${api} does not have a route`);
     }
@@ -183,7 +210,6 @@ export class RouterService {
   }
 
   private preventReload() {
-    console.log('initialized prevent reload');
     window.addEventListener(`beforeunload`, (event) => {
       if (this.isCreateRoute || this.isEditRoute) {
         // Cancel the event as stated by the standard.

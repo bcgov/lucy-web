@@ -26,11 +26,16 @@ services:
     - DB_PORT=${DB_PORT}
     - DB_DATABASE=${DB_DATABASE}
     - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
+    - APP_CERTIFICATE_URL_TEST=${APP_CERTIFICATE_URL_TEST}
     - VERSION=${VERSION}
     - ENVIRONMENT=local
     - DB_MIGRATION_TYPE=refresh
     - DB_SEED=yes
     - DB_CLEAN_UP=none
+    - APP_EMAIL_SENDER=${APP_EMAIL_SENDER}
+    - APP_EMAIL_SENDER_PWD=${APP_EMAIL_SENDER_PWD}
+    - APP_EMAIL_TEST_RECEIVER=${APP_EMAIL_TEST_RECEIVER}
+    - APP_REPORT_RECEIVER=${APP_REPORT_RECEIVER}
   volumes:
     - ./api_sources:/opt/app-root/src
     - npmcache:/opt/app-root/src/node_modules
@@ -51,11 +56,12 @@ services:
     context: ./.docker/db
     dockerfile: Dockerfile.local
   ports:
-    - 5432:5432
+    - ${DB_PORT}:${DB_PORT}
   environment:
     - POSTGRES_USER=${DB_USER}
     - POSTGRES_PASSWORD=${DB_PASS}
     - POSTGRES_DB=${DB_DATABASE}
+    - PORT=${DB_PORT}
   networks:
     - local-network
   volumes:
@@ -84,7 +90,6 @@ services:
     dockerfile: .build/Dockerfile.local
   ports:
     - ${APP_PORT}:${APP_PORT}
-    - 3030:3030
   volumes: 
    - ../app/lucy/src:/opt/app-root/src/src
   networks:

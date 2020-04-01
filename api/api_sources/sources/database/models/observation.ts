@@ -34,6 +34,7 @@ import { SpeciesDistributionCode } from './speciesDistribution.code';
 import { SlopeCode } from './slope.code';
 import { AspectCode } from './observationAspect.code';
 import { ProposedActionCode } from './proposedAction.code';
+import { SpaceGeom } from './spaceGeom';
 import {
     SpeciesSchema,
     JurisdictionCodeSchema,
@@ -43,11 +44,11 @@ import {
     ObservationTypeCodeSchema,
     SpeciesAgencyCodeSchema,
     SoilTextureCodeSchema,
-    ObservationGeometryCodeSchema,
     SpecificUseCodeSchema,
     SlopeCodeSchema,
     AspectCodeSchema,
-    ProposedActionCodeSchema
+    ProposedActionCodeSchema,
+  SpaceGeomSchema
 } from '../database-schema';
 import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 import { MechanicalTreatment } from './mechanical.treatment';
@@ -55,15 +56,12 @@ import { MechanicalTreatment } from './mechanical.treatment';
 
 export interface ObservationCreateModel {
     date: string;
-	lat: number;
-	long: number;
-	horizontalDimension: number;
-	verticalDimension: number;
 	accessDescription: string;
 	observerFirstName: string;
 	observerLastName: string;
 	sampleIdentifier?: string;
 	rangeUnitNumber: string;
+	generalComment: string;
 	legacySiteIndicator: boolean;
 	edrrIndicator: boolean;
 	researchIndicator: boolean;
@@ -79,11 +77,11 @@ export interface ObservationCreateModel {
 	observationType: ObservationTypeCode;
 	speciesAgency: SpeciesAgencyCode;
 	soilTexture: SoilTextureCode;
-	observationGeometry: ObservationGeometryCode;
 	specificUseCode: SpecificUseCode;
 	slopeCode: SlopeCode;
 	aspectCode: AspectCode;
 	proposedAction: ProposedActionCode;
+	spaceGeom: SpaceGeom;
 }
 
 export interface ObservationUpdateModel {
@@ -97,6 +95,7 @@ export interface ObservationUpdateModel {
 	observerLastName?: string;
 	sampleIdentifier?: string;
 	rangeUnitNumber?: string;
+	generalComment?: string;
 	legacySiteIndicator?: boolean;
 	edrrIndicator?: boolean;
 	researchIndicator?: boolean;
@@ -117,6 +116,7 @@ export interface ObservationUpdateModel {
 	slopeCode?: SlopeCode;
 	aspectCode?: AspectCode;
 	proposedAction?: ProposedActionCode;
+	spaceGeom?: SpaceGeom;
 }
 
 @Entity({ name: ObservationSchema.dbTable})
@@ -142,40 +142,6 @@ export class Observation extends Record implements ObservationCreateModel {
         nullable: false,
         transformer: new NumericTransformer()
     })
-    @ModelProperty({ type: PropertyType.number})
-    lat: number;
-
-    @Column({ name: ObservationSchema.columns.long,
-        nullable: false,
-        transformer: new NumericTransformer()
-    })
-    @ModelProperty({ type: PropertyType.number})
-    long: number;
-
-    @Column({ name: ObservationSchema.columns.width,
-        nullable: false,
-        transformer: new NumericTransformer()
-    })
-
-    /**
-	 * @description Getter/Setter property for column {horizontal_dimension}
-	 */
-	@Column({
-        name: ObservationSchema.columns.horizontalDimension,
-        transformer: new NumericTransformer()
-    })
-	@ModelProperty({type: PropertyType.number})
-	horizontalDimension: number;
-
-	/**
-	 * @description Getter/Setter property for column {vertical_dimension}
-	 */
-	@Column({
-        name: ObservationSchema.columns.verticalDimension,
-        transformer: new NumericTransformer()
-    })
-	@ModelProperty({type: PropertyType.number})
-	verticalDimension: number;
 
     @Column({ name: ObservationSchema.columns.accessDescription, nullable: false})
     @ModelProperty({ type: PropertyType.string})
@@ -202,6 +168,13 @@ export class Observation extends Record implements ObservationCreateModel {
 	@Column({ name: ObservationSchema.columns.rangeUnitNumber, nullable: true})
 	@ModelProperty({type: PropertyType.string})
 	rangeUnitNumber: string;
+
+	/**
+	 * @description Getter/Setter property for column {general_comment}
+	 */
+	@Column({ name: ObservationSchema.columns.generalComment})
+	@ModelProperty({type: PropertyType.string})
+	generalComment: string;
 
 	/**
 	 * @description Getter/Setter property for column {legacy_site_ind}
@@ -316,14 +289,6 @@ export class Observation extends Record implements ObservationCreateModel {
 	@ModelProperty({type: PropertyType.object})
 	soilTexture: SoilTextureCode;
 
-    @ManyToOne( type => ObservationGeometryCode, {eager: true})
-    @JoinColumn({
-        name: ObservationSchema.columns.observationGeometry,
-        referencedColumnName: ObservationGeometryCodeSchema.columns.id
-    })
-	@ModelProperty({type: PropertyType.object})
-	observationGeometry: ObservationGeometryCode;
-
     @ManyToOne( type => SpecificUseCode, {eager: true})
     @JoinColumn({
         name: ObservationSchema.columns.specificUseCode,
@@ -355,6 +320,14 @@ export class Observation extends Record implements ObservationCreateModel {
     })
 	@ModelProperty({type: PropertyType.object})
     proposedAction: ProposedActionCode;
+
+  /**
+	 * @description Getter/Setter property for column {space_geom_id}
+	 */
+	@ManyToOne( type => SpaceGeom, { eager: true})
+	@JoinColumn({ name: ObservationSchema.columns.spaceGeom, referencedColumnName: SpaceGeomSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	spaceGeom: SpaceGeom;
 
     // Calculated Properties
     @OneToMany(

@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { Observation } from '../models';
 import { ApiService, APIRequestMethod } from './api.service';
@@ -34,6 +51,7 @@ export class ObservationService {
       lat: +String(observation.lat),
       long: +String(observation.long),
       date: observation.date,
+      updatedAt: observation.updatedAt,
       // Observer
       observerFirstName: observation.observerFirstName,
       observerLastName: observation.observerLastName,
@@ -162,6 +180,22 @@ export class ObservationService {
   }
 
   /**
+   * Fetch and returns filtered observation objects
+   */
+  public async getFilteredObservations(keyword: string): Promise<Observation[]> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      `${AppConstants.API_observation}/search?keyword=${keyword}`,
+      null
+    );
+    if (response.success && Array.isArray(response.response) && this.objectValidator.isObservationObject(response.response[0])) {
+      return response.response;
+    } else {
+      return[];
+    }
+  }
+
+  /**
    * Fetch and return a specific observation object
    * @param id Observation Id
    */
@@ -175,50 +209,44 @@ export class ObservationService {
   }
 
   /**
+   * Fetch and return all observation objects associated with a given lat/long
+   */
+  public async getByLocation(lat: number, long: number): Promise<Observation[]> {
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observationAt(lat, long), null);
+    if (response.success && Array.isArray(response.response) && this.objectValidator.isObservationObject(response.response[0])) {
+      return response.response;
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Helper function to create an empty abstract object
+   * with all property values undefined
+   */
+  public createEmptyObject = (obj: any, props: string[]) => {
+    for (const k of props) {
+      Object.defineProperty(obj, k, {
+        value: undefined,
+        writable: true,
+      });
+    }
+  }
+
+  /**
    * Return an empty observation object
    */
   public getEmptyObservation(): Observation {
-    const object: Observation = {
-      observation_id: -1,
-      // Basic //
-      // Location
-      lat: undefined,
-      long: undefined,
-      date: undefined,
-      // Observer
-      observerFirstName: undefined,
-      observerLastName: undefined,
-      speciesAgency: undefined,
-      // Invasive Plant
-      species: undefined,
-      jurisdiction: undefined,
-      density: undefined,
-      distribution: undefined,
-      observationType: undefined,
-      specificUseCode: undefined,
-      soilTexture: undefined,
-      width: undefined,
-      length: undefined,
-      accessDescription: undefined,
-      // Advanced //
-      // indicators
-      sampleTakenIndicator: false,
-      wellIndicator: false,
-      legacySiteIndicator: false,
-      edrrIndicator: false,
-      researchIndicator: false,
-      specialCareIndicator: false,
-      biologicalIndicator: false,
-      aquaticIndicator: false,
-      // Further details
-      proposedAction: undefined,
-      sampleIdentifier: undefined,
-      rangeUnitNumber: undefined,
-      aspectCode: undefined,
-      slopeCode: undefined,
-      observationGeometry: undefined,
-      mechanicalTreatments: [],
-    };
+    const observationProps = ['observation_id', 'lat', 'long', 'date', 'updatedAt', 'observerFirstName', 'observerLastName', 'speciesAgency', 'species', 'jurisdiction',
+   'density', 'distribution', 'observationType', 'specificUseCode', 'soilTexture', 'width', 'length', 'accessDescription', 'sampleTakenIndicator',
+   'wellIndicator', 'legacySiteIndicator', 'edrrIndicator', 'researchIndicator', 'specialCareIndicator', 'biologicalIndicator',
+   'aquaticIndicator', 'proposedAction', 'sampleIdentifier', 'rangeUnitNumber', 'aspectCode', 'slopeCode', 'observationGeometry'];
+
+    let object: Observation;
+    this.createEmptyObject(object, observationProps);
+    // add mechanicalTreatments property (specific to Observation object) as an empty list instead of 'undefined'
+    Object.defineProperty(object, 'mechanicalTreatments', []);
+
     return object;
   }
 

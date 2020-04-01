@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { RouterService } from 'src/app/services/router.service';
@@ -83,7 +100,23 @@ export class TableComponent implements OnInit {
       return;
     }
     for (const row of this.model.rows) {
-      this.tableRows.push(row.fields);
+      const fields = row.fields;
+      const rowData = {};
+
+      /* Populate the row data based on following constraints
+       *
+       * If it's an object, store the `displayLabel`
+       * For all other types, store the value directly
+       */
+      for (const field of Object.keys(fields)) {
+        if (typeof fields[field] === 'object') {
+          rowData[field] = fields[field].displayLabel;
+        } else {
+          rowData[field] = fields[field];
+        }
+      }
+
+      this.tableRows.push(rowData);
     }
   }
 

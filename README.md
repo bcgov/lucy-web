@@ -4,13 +4,15 @@ https://bcdevexchange.org/projects/prj-invasive-species
 
 ## Introduction
 
-Invasive species are non-native plants and animals whose introduction and spread in British Columbia cause significant economic, social or environmental damage.
+Invasive species are non-native plants and animals whose introduction and spread in British Columbia cause significant economic, social or environmental damage. This application tracks the observation, treatment, and monitoring of invasive species in the Province of British Columbia.
 
-This project tracks the observation, treatment, and monitoring of invasive species in the Province of British Columbia.
+This project is part of the Species and Ecosystems Information System Modernization (SEISM) program.
 
 ## Table of Contents
 
 1. [Project Status](#project-status)
+1. [Audience](#audience)
+1. [Features](#features)
 1. [Getting Help or Reporting an Issue](#getting-help-or-reporting-an-issue)
 1. [How to Contribute](#how-to-contribute)
 1. [Architecture](#architecture)
@@ -23,7 +25,32 @@ This project tracks the observation, treatment, and monitoring of invasive speci
 
 ## Project Status
 
-This project is in active development and has not yet been released.
+This application is in active development and has not yet been released.
+
+## Audience
+
+Anyone with a valid IDIR or BCeID login may access the application to view data that is being tracked.
+
+In addition, the application is intended for use by:
+
+* Surveyors who observe and record the absence, presence, and spread of invasive species
+* Subject matter experts who perform a variety of duties, including to record and analyze data and create action plans
+* Contractors who implement recommended treatments for observed invasive species
+* Administrators who manage the application and its users
+
+## Features
+
+This application is anticipated to include the following main features:
+
+1. Support for IDIR and BCeID access
+1. User roles and permissions management
+1. Interactive maps displaying multiple data layers
+1. Observations of invasive species absence/presence
+1. Recommendations, planning, and application records of treatments
+1. Monitoring of treatment outcomes
+1. Query and export of data
+1. Auditing and reports
+1. Bulk data entry and mobile device data entry
 
 ## Getting Help or Reporting an Issue
 
@@ -37,43 +64,39 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ## Architecture
 
-This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Our environments run on an OpenShift container platform cluster.  
+This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Containers are built using Jenkins pipelines and Docker. Our environments run on an OpenShift container platform cluster.
 
 ## Project Structure
 
-    .github/                   - PR and Issue templates
+    .config/                   - Whole application configuration
+    .jenkins/                  - Jenkins build config
+    .storybook/                - Storybook tests for the client
+    .vscode/                   - IDE config for Visual Studio Code
     api/                       - TypeORM API codebase
+    └── openshift              - OpenShift deployment specific files
+    └── openshift/tools        - Files related to tools such as SchemaSpy
     app/                       - Angular Client Application codebase
-    openshift/                 - OpenShift-deployment specific files
-    reverse-proxy/             - Reverse Proxy code
-    tools/                     - Devops utilities
-    └── jenkins                - Jenkins standup
+    └── openshift              - OpenShift deployment specific files
     CODE-OF-CONDUCT.md         - Code of Conduct
     CONTRIBUTING.md            - Contributing Guidelines
-    Jenkinsfile                - Top-level Pipeline
-    Jenkinsfile.cicd           - Pull-Request Pipeline
     LICENSE                    - License
 
 ## Documentation
 
-* [Front end Readme](app/README.md)
-* [API Readme](api/README.md)
-* [Openshift Readme](openshift/README.md)
-* [Tools Readme](tools/README.md)
+* [Client Readme](app/README.md)
+* [Server Readme](api/README.md)
+* [Form Framework Tool Readme](FormFrameworkREADME.md)
+* [Jenkins Readme](.jenkins/README.md)
+* Our database is documented using [SchemaSpy](http://schemaspy.org/)
 
 ## Requirements
 
-You must have Docker installed.
+* [Docker](https://store.docker.com/search?type=edition&offering=community) installed.
+* The ability to run Makefile commands, using a command line tool such as [GMAKE](https://www.gnu.org/software/make/)
 
-*For Mac OSX:*
+On Windows, you may require a tool like [Visual Studio Code](https://code.visualstudio.com/) or [Cygwin](http://www.cygwin.com/) in order to use the Makefile.
 
-1. Follow the instructions here: https://docs.docker.com/docker-for-mac/install/
-
-*For Windows:*
-
-1. Follow the instructions here: https://docs.docker.com/docker-for-windows/install/
-
-You must also install GMAKE.
+If you wish to deploy the application, you will also need to install [OpenShift CLI](https://docs.openshift.com/container-platform/3.7/cli_reference/get_started_cli.html).
 
 ## Setup Instructions
 
@@ -87,29 +110,50 @@ For example:
 
 `cd lucy-web`
 
+Finally, create initial local environment files:
+
+1. Create an empty `.env` file at the `api` directory root
+1. Within `api/env_config` create a `env.local` file, using `env.example` as a reference
+1. Update the app secret values in `env.local`
+
+Note: these files are git-ignored.
+
 ## Running the Application
 
 *Using Docker:*
 
-The backend (server) and frontend (client) of the application run in separate containers.
-
-To run the server, execute the following commands inside the `api` directory. To run the client, execute the following commands inside the `app` directory. Both client and server may be run independently or in parallel.
-
-The following commands are defined in the respective `Makefile` for each directory.
+The client (frontend) and server (backend) of the application run in separate containers. To run all of the application containers, execute the following commands inside the `api` directory.
 
 1. Build the application  
 `make build-local`
 
-2. Run the app container  
+2. Run the application containers  
 `make run-local`
+
+3. Run the application containers in debug mode
+`make local-debug`
+
+This will print additional logging statements to the console, which may be useful when debugging the backend.
+
+The above commands, along with additional options, are defined in the `Makefile`.
+
+*Running the App Locally:*
+
+To run the client (frontend) locally, execute the following command inside the `app` directory.
+
+`ng serve`
+
+This will perform hotloading of any changes made to the frontend code (i.e., your browser will automatically refresh whenever any client-side code changes are saved).
+
+To quit the local client, type `<Ctrl> + C`.
 
 *View the App:*
 
-Go to http://localhost:3000/
+Go to http://localhost:3033/
 
 *Quit the App:*
 
-On the command line, run `make close-local`
+On the command line, run `make close-local` or type `<Ctrl> + C`.
 
 ## License
 

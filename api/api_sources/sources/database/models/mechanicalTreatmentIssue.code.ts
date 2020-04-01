@@ -4,7 +4,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { MechanicalTreatmentIssueCodeSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { DataModelController } from '../data.model.controller';
 import { Record } from './generic.data.models';
 
 
@@ -74,21 +73,6 @@ export class MechanicalTreatmentIssueCode extends Record {
 	@ModelProperty({type: PropertyType.boolean})
 	activeIndicator: boolean;
 
-}
-
-
-// ** DataModel controller of MechanicalTreatmentIssueCode **
-
-/**
- * @description Data Model Controller Class for MechanicalTreatmentIssueCodeSchema and MechanicalTreatmentIssueCode
- */
-export class MechanicalTreatmentIssueCodeController extends DataModelController<MechanicalTreatmentIssueCode> {
-	/**
-	* @description Getter for shared instance
-	*/
-	public static get shared(): MechanicalTreatmentIssueCodeController {
-		return this.sharedInstance<MechanicalTreatmentIssueCode>(MechanicalTreatmentIssueCode, MechanicalTreatmentIssueCodeSchema) as MechanicalTreatmentIssueCodeController;
-	}
 }
 
 // -------------------------------------

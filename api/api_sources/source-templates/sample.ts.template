@@ -1,0 +1,12 @@
+// This is a sample template file
+export class #{className} {
+    #repeat(properties, prop) [
+        /**
+         * The Property: #{prop.des} 
+        */
+        #if(prop.comment) [// Comment on line: #{prop.comment} #if(className) [Hello]]
+        #{prop.name}: #{prop.type};
+    ]
+} 
+
+// -------------------

@@ -53,6 +53,24 @@ export * from './chemicalTreatment';
 export * from './pesticideEmployer.code';
 export * from './projectManagementPlan.code';
 export * from './chemicalTreatmentEmployee';
+export * from './watercraftRiskAssessment';
+export * from './waterBody';
+export * from './observerWorkflow';
+export * from './herbicide';
+export * from './herbicideTankMix';
+export * from './observationChemicalTreatment';
+export * from './windDirectionCodes';
+export * from './chemicalTreatmentMethodCode';
+export * from './spaceGeom';
+export * from './mechanicalMonitor';
+export * from './efficacyCode';
+export * from './highRiskAssessment';
+export * from './watercraftJourney';
+export * from './country';
+export * from './countryProvince';
+export * from './adultMusselsLocation';
+export * from './previousAISKnowledgeSource';
+export * from './previousInspectionSource';
 
 /**
  * Controllers
@@ -64,4 +82,20 @@ export * from './controllers/chemicalTreatment.controller';
 export * from './controllers/projectManagementPlanCode.controller';
 export * from './controllers/chemicalTreatmentEmployee.controller';
 export * from './controllers/speciesAgencyCode.controller';
+export * from './controllers/pesticideEmployerCode.controller';
+export * from './controllers/mechanicalDisposalMethodCode.controller';
+export * from './controllers/mechanicalTreatmentIssueCode.controller';
+export * from './controllers/mechanicalMethodCode.controller';
+export * from './controllers/watercraftRiskAssessment.controller';
+export * from './controllers/waterBody.controller';
+export * from './controllers/observerWorkflow.controller';
+export * from './controllers/herbicide.controller';
+export * from './controllers/herbicideTankMix.controller';
+export * from './controllers/observationChemicalTreatment.controller';
+export * from './controllers/chemicalTreatmentMethodCode.controller';
+export * from './controllers/spaceGeom.controller';
+export * from './controllers/mechanicalMonitor.controller';
+export * from './controllers/efficacyCode.controller';
+export * from './controllers/highRiskAssessment.controller';
+export * from './controllers/watercraftJourney.controller';
 // ----------------------------------------------------------------------------------------------------------------

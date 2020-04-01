@@ -26,7 +26,6 @@
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { MechanicalMethodCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { DataModelController } from '../data.model.controller';
 import { ApplicationCode } from './generic.data.models';
 
 /** Interface **/
@@ -81,21 +80,6 @@ export class MechanicalMethodCode extends ApplicationCode {
 	@ModelProperty({type: PropertyType.string})
 	code: string;
 
-}
-
-
-// ** DataModel controller of MechanicalMethodCode **
-
-/**
- * @description Data Model Controller Class for MechanicalMethodCodeSchema and MechanicalMethodCode
- */
-export class MechanicalMethodCodeController extends DataModelController<MechanicalMethodCode> {
-	/**
-	* @description Getter for shared instance
-	*/
-	public static get shared(): MechanicalMethodCodeController {
-		return this.sharedInstance<MechanicalMethodCode>(MechanicalMethodCode, MechanicalMethodCodeSchema) as MechanicalMethodCodeController;
-	}
 }
 
 // -------------------------------------

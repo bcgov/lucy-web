@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod, APIRequestResult } from '../api.service';
 import { AppConstants, AppRoutes } from 'src/app/constants';
@@ -9,61 +26,20 @@ import * as moment from 'moment';
 import { DiffResult } from '../diff.service';
 import { TableModel, TableColumn, TableRowModel } from 'src/app/components/base-form/table/table.component';
 import { CodeTableService } from '../code-table.service';
+import {
+  InputConfig,
+  RemoteFormConfig
+} from '../../../lib';
 
-export interface FormConfigField {
-  key: string;
-  header: string;
-  description: string;
-  required: boolean;
-  type: string;
-  verification: any;
-  meta: any;
-  cssClasses: string;
-  codeTable: string;
-  codeTableMeta: {};
-  displayKey: string;
-  condition: string;
-}
+/**
+ * @description Type define InputConfig as FormConfigField
+ */
+export type FormConfigField = InputConfig;
 
-export interface FormConfig {
-  idKey: string;
-  schemaName: string;
-  modelName: string;
-  description: string;
-  meta: {
-    resource: boolean;
-    api: string;
-  };
-  layout: {
-    title: string;
-    sections: {
-      title: string;
-      groups: {
-        title: string;
-        fields: string[];
-        style: {};
-      }[];
-    }[];
-  };
-  computedFields: {
-
-  };
-  relations: {
-
-  };
-  fields: {
-    key: string;
-    layout: {
-      header: string;
-      description: string;
-      classes: string[];
-    };
-    meta: {};
-    type: number;
-    verification: {};
-    required: boolean;
-  }[];
-}
+/**
+ * @description Type defining RemoteFormConfig as FormConfig
+ */
+export type FormConfig = RemoteFormConfig;
 
 export interface UIConfigObject {
   api: string;
@@ -154,6 +130,14 @@ export class FormService {
   }
 
   /**
+   * returns UI configuration for Mechanical Monitoring records
+   */
+  public async getMechanicalMonitorUIConfig(): Promise<any> {
+    const serverConfig = await this.getMechanicalMonitorServerConfig();
+    return await this.createUIConfig(serverConfig);
+  }
+
+  /**
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
@@ -202,6 +186,21 @@ export class FormService {
       //// Chemical Treatment Create route ////
       const configFile = await this.getChemicalTreatmentUIConfig();
       return configFile;
+    } else if (this.router.current === AppRoutes.AddMechanicalMonitor) {
+      //// Mechanical Monitor Create route ////
+      const configFile = await this.getMechanicalMonitorUIConfig();
+      return configFile;
+    } else if (
+      this.router.current === AppRoutes.ViewMechanicalMonitor ||
+      this.router.current === AppRoutes.EditMechanicalMonitor
+    ) {
+      //// Mechanical Monitor View and Edit Routes ////
+      const configFile = await this.getMechanicalMonitorUIConfig();
+      const monitor = await this.getObjectWithId(
+        configFile.api,
+        this.router.routeId
+      );
+      return await this.getUIConfigFrom(configFile, monitor);
     } else {
       console.log(this.router.current);
       console.log(
@@ -300,6 +299,29 @@ export class FormService {
     }
   }
 
+  private async getMechanicalMonitorServerConfig(): Promise<FormConfig> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_mechanicalMonitor,
+      undefined
+    );
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
+        console.dir(response);
+        return undefined;
+      }
+    } else {
+      console.dir(response);
+      return undefined;
+    }
+  }
+
   //////////////////////////////////// END Fetch Server Config ////////////////////////////////////
 
   //////////////////////////////////// Generate UI Config ////////////////////////////////////
@@ -314,6 +336,7 @@ export class FormService {
     const sections = serverConfig.layout.sections;
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
+    const relations = serverConfig.relations;
     let requiredFieldKeys: string[] = [];
     let dropdownFieldKeys: string[] = [];
     let fieldHeaders: {} = {};
@@ -337,15 +360,21 @@ export class FormService {
         // Loop thorugh groups in server config lay out
         for (const group of groups) {
           // Process group
-          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+          const groupInfo = await this.procesConfigGroup(group.fields, fields, computedFields, relations, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
           requiredFieldKeys = groupInfo.requiredFieldKeys;
           dropdownFieldKeys = groupInfo.dropdownFieldKeys;
           fieldHeaders = groupInfo.fieldHeaders;
+          let isCustom = false;
+          if (group.style && group.style.custom) {
+            isCustom = true;
+          }
           // Add Group/Subsection
           subSections.push({
             title: group.title,
             boxed: false,
-            fields: groupInfo.fields
+            fields: groupInfo.fields,
+            isCustom: isCustom,
+            custom: isCustom ? group.style.custom : {}
           });
         }
         // Add Section
@@ -361,13 +390,13 @@ export class FormService {
     const orphanFields: any[] = [];
     const orphanGroupFieldKeys: string[] = [];
     for (const field of fields) {
-      if (!fieldHeaders[field.key]) {
+      if (fieldHeaders[field.key] === undefined) {
         orphanFields.push(field);
         orphanGroupFieldKeys.push(field.key);
       }
     }
     if (orphanFields.length > 0) {
-      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
+      const orphanGroupInfo = await this.procesConfigGroup(orphanGroupFieldKeys, orphanFields, computedFields, null, requiredFieldKeys, dropdownFieldKeys, fieldHeaders);
       requiredFieldKeys = orphanGroupInfo.requiredFieldKeys;
       dropdownFieldKeys = orphanGroupInfo.dropdownFieldKeys;
       fieldHeaders = orphanGroupInfo.fieldHeaders;
@@ -401,6 +430,7 @@ export class FormService {
     groupFields: string[],
     fields: any[],
     computedFields: any[],
+    relations: any[],
     _requiredFieldKeys: string[],
     _dropdownFieldKeys: string[],
     _fieldHeaders: {}
@@ -421,19 +451,30 @@ export class FormService {
     for (let i = 0; i < groupFields.length; i++) {
       // Get key for field
       const fieldKey = groupFields[i];
+
+      let relationField: any;
+      if (fields.find((element) => element.key === fieldKey) === undefined) {
+        // check if the fieldKey is in relations array
+        const relation = relations[fieldKey];
+        if (relation === undefined) {
+          continue;
+        } else {
+          relationField = await this.configRelationField(fieldKey, relations);
+        }
+      }
       // Add type flags to field (to help with html generation) & convert data structure
-      let newField = await this.findFieldAndCreateConfigField(fieldKey, fields);
+      let newField = relationField || await this.findFieldAndCreateConfigField(fieldKey, fields);
       // If field key wasnt found in fields
       if (!newField) {
         // Could be a computed field
         newField = await this.configComputedField(fieldKey, computedFields);
         if (!newField) {
-          // If it wasnt, just skip it
+          // If it wasn't, just skip it
           continue;
         }
       }
       // Store required fields in a separate array
-      if (newField.required) {
+      if (newField.required && !requiredFieldKeys.includes(newField.key)) {
         requiredFieldKeys.push(newField.key);
       }
       // Store dropdown fields in a separate array
@@ -454,11 +495,20 @@ export class FormService {
       ////// Special case for lat or long fields //////
       if (
         newField.isLocationLatitudeField ||
-        newField.isLocationLongitudeField
+        newField.isLocationLongitudeField ||
+        newField.isSpaceGeom
       ) {
         // if its a latitude or logitude field, and we havent cached such field before, cache it
         // if its already chached, generate special location field to add to subsection
-        if (cachedLatOrLongField) {
+        if (newField.isSpaceGeom) {
+          const spaceGeom = {
+            key: 'location',
+            isLocationField: true,
+            isSpaceGeom: true,
+            spaceGeom: newField
+          };
+          subSectionFields.push(spaceGeom);
+        } else if (cachedLatOrLongField) {
           const cachedFieldIsLatitude =
             cachedLatOrLongField.isLocationLatitudeField === true;
           const locationField = {
@@ -521,6 +571,36 @@ export class FormService {
     }
     return result;
   }
+  private async configRelationField(
+    key: string,
+    relations: any
+  ): Promise<any> {
+    // if key is not in relations, return undefined
+    if (!relations[key]) {
+      return undefined;
+    }
+    const relationField = relations[key];
+    // set css classes // TODO: Server doesnt send this yet
+        let cssClasses = ``;
+        if (relationField.layout && relationField.layout.classes) {
+          const classes = relationField.layout.classes;
+          for (const item of classes) {
+            cssClasses = cssClasses + ` `;
+          }
+        }
+    return {
+      key: key,
+      header: relationField.header.default,
+      description: relationField.description,
+      required: true,
+      type: relationField.type,
+      verification: relationField.verification,
+      meta: relationField.meta,
+      cssClasses: cssClasses,
+      codeTable: '',
+      condition: '',
+    };
+  }
 
   private async configComputedField(
     key: string,
@@ -576,11 +656,13 @@ export class FormService {
         // Handle location differently
         fieldOfInterest.isLocationLatitudeField = this.isLatitude(field.key);
         fieldOfInterest.isLocationLongitudeField = this.isLongitude(field.key);
+        fieldOfInterest.isSpaceGeom = this.isSpaceGeom(field.key);
 
         // If its not a location field, proceed
         if (
           !fieldOfInterest.isLocationLatitudeField &&
-          !fieldOfInterest.isLocationLongitudeField
+          !fieldOfInterest.isLocationLongitudeField &&
+          !fieldOfInterest.isSpaceGeom
         ) {
           // Set field type flag
           switch (field.type) {
@@ -597,6 +679,7 @@ export class FormService {
             case 'number': {
               // Number is input field
               fieldOfInterest.isInputField = true;
+              fieldOfInterest.suffix = field.layout.suffix || '';
               break;
             }
             case 'string': {
@@ -604,6 +687,8 @@ export class FormService {
               if (fieldOfInterest.verification.isDate) {
                 // Date is Date FIeld
                 fieldOfInterest.isDateField = true;
+              } else if (fieldOfInterest.verification.subType === `timestamp`) {
+                fieldOfInterest.isDateAndTimeField = true;
               } else if (
                 fieldOfInterest.verification.size &&
                 fieldOfInterest.verification.size > 100
@@ -633,6 +718,17 @@ export class FormService {
             fieldOfInterest.codeTableMeta
           );
         }
+
+        // Check Embedded fields
+        if (fieldOfInterest.embeddedFields && Object.keys(fieldOfInterest.embeddedFields)) {
+          for (const f of Object.keys(fieldOfInterest.embeddedFields)) {
+            const val = fieldOfInterest.embeddedFields[f];
+            if (val.type === 'object') {
+              val.isDropdown = true;
+              val.dropdown = await this.dropdownfor(val.codeTable, val.displayKey, val.codeTableMeta);
+            }
+          }
+        }
         return fieldOfInterest;
       }
     }
@@ -648,7 +744,9 @@ export class FormService {
     let codeTable = ``;
     let codeTableDisplayKey = ``;
     let codeTableMeta = [];
-    if (field.type === `object`) {
+    const meta = field.meta || {};
+    let embeddedFields: any;
+    if (field.type === `object` && field.verification.subType !== 'json') {
       codeTable = field.refSchema.modelName;
       if (
         field.refSchema.displayLayout &&
@@ -659,9 +757,21 @@ export class FormService {
         codeTableDisplayKey = lastField.key;
         codeTableMeta = field.refSchema.meta;
       }
+
+      if (meta.embedded && field.refSchema.fields) {
+        const temp: any[] = field.refSchema.fields || [];
+        // Copying fields from refSchema
+        const eFields: any[] = temp.map((f: any) => {
+          return this.createFormConfigField(f);
+        });
+        embeddedFields = {};
+        for (const e of eFields) {
+          embeddedFields[e.key] = e;
+        }
+      }
     }
     let cssClasses = ``;
-    const classes = field.layout.classes;
+    const classes = field.layout.classes || [];
     for (const item of classes) {
       cssClasses = item + ` `;
     }
@@ -692,20 +802,28 @@ export class FormService {
     }
 
     ///// END Tweak verification object received
-    return {
-      key: field.key,
-      header: field.layout.header.default,
-      description: field.layout.description,
-      required: field.required,
-      type: field.type,
-      verification: verification,
-      meta: field.meta,
-      cssClasses: cssClasses,
-      codeTable: codeTable,
-      codeTableMeta: codeTableMeta,
-      displayKey: codeTableDisplayKey,
-      condition: ''
-    };
+    const header = field.layout.header ? field.layout.header.default : ``;
+    try {
+      return {
+        key: field.key,
+        header: header,
+        description: field.layout.description,
+        required: field.required,
+        type: field.type,
+        suffix: field.suffix,
+        verification: verification,
+        meta: field.meta,
+        cssClasses: cssClasses,
+        codeTable: codeTable,
+        codeTableMeta: codeTableMeta,
+        displayKey: codeTableDisplayKey,
+        condition: '',
+        embeddedFields: embeddedFields
+      };
+    } catch (excp) {
+      console.dir(field);
+      throw excp;
+    }
   }
 
   /**
@@ -731,6 +849,10 @@ export class FormService {
     );
   }
 
+  private isSpaceGeom(headerOrKey: string): boolean {
+    return headerOrKey.toLocaleLowerCase() === 'spacegeom';
+  }
+
   /**
    * Return array of dropdown objects for code table specified.
    * @param code table name
@@ -745,7 +867,7 @@ export class FormService {
       return [];
     }
     let codeTable = await this.codeTableService.getCodeTable(code);
-    // If it wasnt found in code table,
+    // If it wasn't found in code table,
     // try using api in meta field to fetch content
     if ((!codeTable || codeTable.length < 1) && meta.api) {
       const apiResult = await this.api.request(APIRequestMethod.GET, `${AppConstants.API_baseURL}${meta.api}`, null);
@@ -754,8 +876,7 @@ export class FormService {
       }
     }
     return this.dropdownService.createDropdownObjectsFrom(
-      codeTable,
-      displayKey
+      codeTable
     );
   }
 
@@ -828,18 +949,27 @@ export class FormService {
     // Sections/ subsections/ fields
     for (const section of configuration.sections) {
       for (const subSection of section.subSections) {
+        if (subSection.isCustom) {
+          for (const field of subSection.fields) {
+            field.value = object[field.key];
+          }
+        }
         for (const field of subSection.fields) {
           if (field.isLocationField) {
-            field.latitude.value = this.formatLatLongForDisplay(
-              object[field.latitude.key]
-            );
-            field.longitude.value = this.formatLatLongForDisplay(
-              object[field.longitude.key]
-            );
+            if (field.isSpaceGeom) {
+              field.spaceGeom.value = object.spaceGeom || {};
+            } else {
+              field.latitude.value = this.formatLatLongForDisplay(
+                object[field.latitude.key]
+              );
+              field.longitude.value = this.formatLatLongForDisplay(
+                object[field.longitude.key]
+              );
+            }
           } else {
             if (object[field.key] !== undefined) {
               const key = object[field.key];
-              if (typeof key === 'object' && key !== null) {
+              if (!config.relationKeys.includes(field.key) && typeof key === 'object' && key !== null) {
                 field.value = await this.getDropdownObjectWithId(
                   field.codeTable,
                   field.displayKey,
@@ -1045,8 +1175,13 @@ export class FormService {
             }
           } else if (field.isLocationField) {
             // If its a location field
-            body[field.latitude.key] = field.latitude.value;
-            body[field.longitude.key] = field.longitude.value;
+            if (field.isSpaceGeom) {
+              // Handling spaceGeom
+              body['spaceGeom'] = field.spaceGeom.value;
+            } else {
+              body[field.latitude.key] = field.latitude.value;
+              body[field.longitude.key] = field.longitude.value;
+            }
           } else if (field.isDateField) {
             // if its a date (needs to be formatted)
             body[field.key] = moment(field.value).format('YYYY-MM-DD');
@@ -1071,8 +1206,12 @@ export class FormService {
       for (const subSection of section.subSections) {
         for (const field of subSection.fields) {
           if (field.isLocationField) {
-            fields.push(field.longitude);
-            fields.push(field.latitude);
+            if (field.isSpaceGeom) {
+              fields.push(field.spaceGeom);
+            } else {
+              fields.push(field.longitude);
+              fields.push(field.latitude);
+            }
           } else {
             fields.push(field);
           }
@@ -1142,7 +1281,7 @@ export class FormService {
    * @param endpoint API endpoint
    * @param id Id of the object
    */
-  private async getObjectWithId(endpoint: string, id: number): Promise<any> {
+  async getObjectWithId(endpoint: string, id: number): Promise<any> {
     const endpointWithId = `${AppConstants.API_baseURL}${endpoint}/${id}`;
     const response = await this.api.request(
       APIRequestMethod.GET,
@@ -1203,14 +1342,41 @@ export class FormService {
     Object.keys(obj1 || {})
       .concat(Object.keys(obj2 || {}))
       .forEach(key => {
-        if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-          result[key] = obj2[key];
-        }
-        if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+        const t1 = typeof obj1[key];
+        const t2 = typeof obj2[key];
+        if (t1 === t2 && t1 === typeof {}) {
           const value = this.diff(obj1[key], obj2[key]);
-          if (value !== undefined) {
-            result[key] = value;
+          if (value !== undefined && Object.keys(value).length > 0) {
+            result[key] = JSON.stringify(value, null, 2);
           }
+        } else if (t1 !== t2 && (t1 === typeof {} || t2 === typeof {})) {
+          let nonObjValue;
+          if (t1 === typeof {} && t2 !== typeof {}) {
+            nonObjValue = obj2[key];
+          } else {
+            nonObjValue = JSON.stringify(obj2, null, 2);
+          }
+          if (t2 === typeof {}) {
+            result[key] = nonObjValue;
+          } else {
+            const obj = obj1[key];
+            if (obj === undefined || obj === null) {
+              result[key] = nonObjValue;
+              return;
+            }
+            // Find id key from obj;
+            const idKeys: string[] = Object.keys(obj).filter(k => k.includes('_id'));
+            if (idKeys.length > 0) {
+              const idKey = idKeys[0];
+              if (nonObjValue !== obj[idKey]) {
+                result[key] = nonObjValue;
+              }
+            } else {
+              result[key] = nonObjValue;
+            }
+          }
+        } else if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+          result[key] = obj2[key];
         }
       });
     return result;
@@ -1226,9 +1392,9 @@ export class FormService {
    * @param uiConfig object
    */
   public cleanBodyForSubmission(body: JSON, uiConfig: any): JSON {
-    const cleanBody = {};
-    const configFilds = this.getFieldsInConfig(uiConfig);
-    for (const field of configFilds) {
+    const cleanBody: any = {};
+    const configFields = this.getFieldsInConfig(uiConfig);
+    for (const field of configFields) {
       switch (field.type.toLowerCase()) {
         case 'string':
           cleanBody[field.key] = String(body[field.key]);
@@ -1237,7 +1403,28 @@ export class FormService {
           cleanBody[field.key] = Number(body[field.key]);
           break;
         default:
-          cleanBody[field.key] = body[field.key];
+          const objBody: any = body[field.key];
+          // Checking not array
+          if (typeof objBody === 'object' && objBody.constructor !== [].constructor) {
+            for (const k in objBody) {
+              if (objBody.hasOwnProperty(k)) {
+                if (objBody[k] === null) {
+                  // Removing null
+                  delete objBody[k];
+                } else if (typeof objBody[k] === typeof {}) {
+                  // Removing any db object ref and replacing with id key
+                  for (const kk in objBody[k]) {
+                    // TODO: Replace _id with regx
+                    if (objBody[k].hasOwnProperty(kk) && kk.includes('_id')) {
+                      objBody[k] = objBody[k][kk];
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          cleanBody[field.key] = objBody;
           break;
       }
     }
@@ -1320,6 +1507,11 @@ export class FormService {
       current === AppRoutes.AddChemicalTreatment
     ) {
       this.router.navigateTo(AppRoutes.ViewChemicalTreatment, id);
+    } else if (
+      current === AppRoutes.EditMechanicalMonitor ||
+      current === AppRoutes.AddMechanicalMonitor
+    ) {
+      this.router.navigateTo(AppRoutes.ViewMechanicalMonitor, id);
     }
   }
   /**
@@ -1346,10 +1538,34 @@ export class FormService {
           this.router.routeId
         );
       }
+      case AppRoutes.ViewMechanicalMonitor: {
+        return this.router.navigateTo(
+          AppRoutes.EditMechanicalMonitor,
+          this.router.routeId
+        );
+      }
       default: {
         console.log(`Case not handled`);
       }
     }
   }
   /////////////////////////////////// End Route helpers ////////////////////////////////////
+
+  public getEmptyConfigField(): FormConfigField {
+    return {
+      key: '',
+      header: '',
+      description: '',
+      required: false,
+      type: '',
+      suffix: '',
+      verification: '',
+      meta: {},
+      cssClasses: '',
+      codeTable: '',
+      codeTableMeta: {},
+      displayKey: '',
+      condition: '',
+    };
+  }
 }

@@ -21,7 +21,78 @@
  * -----
  */
 import * as _ from 'underscore';
-import { ApplicationTableColumn} from './application.column';
+import { ApplicationTableColumn, SchemaChangeOptions, DataFieldDefinition} from './application.column';
+import { unWrap } from '../utilities';
+
+/**
+ * @description Change column type constants in schema version
+ */
+export const ColumnChangeType = {
+    RENAME: 'rename',
+    DROP: 'drop',
+    KEY_CHANGE: 'key-change',
+    CUSTOM: 'custom',
+    UPDATE: 'update'
+};
+
+/**
+ * @description Interface to check column changes
+ */
+export interface SchemaChangeDefinition extends SchemaChangeOptions {
+    existingColumn: ApplicationTableColumn;
+    type: string;
+}
+
+/**
+ * @description Interface to store table version information in schema file
+ */
+export interface TableVersionDefinition {
+    name: string;
+    id?: string;
+    columns?: {[key: string]: any};
+    schemaChanges?: any[];
+    info?: string;
+}
+
+/**
+ * @description Interface to store detailed schema version info and migration file associated that
+ */
+export interface TableVersion extends TableVersionDefinition {
+    name: string;
+    fileName: string;
+    columns: {[key: string]: ApplicationTableColumn};
+    schemaChanges: SchemaChangeDefinition[];
+    info?: string;
+}
+
+/**
+ * @description CSV import options for table
+ */
+export interface CSVImportOptions {
+    fileName: string;
+    entryColumns: string[];
+    info?: string;
+    transformer?: string;
+    allColumns?: boolean;
+    allColumnsExcept?: string[];
+}
+
+export interface TableRelation {
+    header?: any;
+    description?: any;
+    type: string;
+    relationshipType: string;
+    schema?: string;
+    tableName?: string;
+    meta?: any;
+}
+
+export interface SqlInfo {
+    comment?: string;
+    before?: boolean;
+    sql: string;
+    downSql?: string;
+}
 
 /**
  * @description Table definition descriptor class
@@ -30,14 +101,31 @@ import { ApplicationTableColumn} from './application.column';
 export class ApplicationTable {
     name: string;
     columnsDefinition: {[key: string]: ApplicationTableColumn} = {};
+    initialColumns: {[key: string]: ApplicationTableColumn} = {};
     description = 'Application table';
     private _columnNames: {[key: string]: string};
     meta: any;
     layout: any;
     displayLayout: any;
     computedFields: any;
-    relations: any;
+    relations: {[key: string]: TableRelation};
     modelName?: string;
+    versions: TableVersion[] = [];
+    importOptions: {[key: string]: CSVImportOptions} = {};
+    viewColumn = 'id';
+    columVersions: {[key: string]: ApplicationTableColumn[]} = {};
+    initialSqlCommands: SqlInfo[] = [];
+
+
+    get relationalColumnKeys(): string[] {
+        const r: string[] = [];
+        _.each(this.columnsDefinition, (col: ApplicationTableColumn, key) => {
+            if (col.foreignTable || col.refSchema) {
+                r.push(key);
+            }
+        });
+        return r;
+    }
 
     get columns(): {[key: string]: string} {
         if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
@@ -61,16 +149,16 @@ export class ApplicationTable {
     public createTableSql(): string {
         let sql = '';
         const createTable = `CREATE TABLE ${this.name} ();`;
-        const allColumns: string[] = _.map(this.columnsDefinition, (column: ApplicationTableColumn) => column.createColumnSql(this.name));
+        const allColumns: string[] = _.map(this.initialColumns, (column: ApplicationTableColumn) => column.createColumnSql(this.name));
         _.each(allColumns, (sqlString: string) => (sql = sql + `${sqlString}\n`));
         return `${createTable}\n${sql}`;
     }
 
     public createCommentsForTable(): string {
         let commentForColumns = ``;
-        for (const key in this.columnsDefinition) {
+        for (const key in this.initialColumns) {
             if (this.columnsDefinition.hasOwnProperty(key)) {
-                const column: ApplicationTableColumn = this.columnsDefinition[key];
+                const column: ApplicationTableColumn = this.initialColumns[key];
                 commentForColumns = commentForColumns + `COMMENT ON COLUMN ${this.name}.${column.name} IS '${column.comment}';\n`;
             }
         }
@@ -124,5 +212,103 @@ export class ApplicationTable {
             };
         }
         return null;
+    }
+
+    handleColumnChanges(columnChange: SchemaChangeOptions): SchemaChangeDefinition {
+        const key = columnChange.newKey || columnChange.existingKey;
+        const existingColumnDef = this.columnsDefinition[columnChange.existingKey];
+        const type = columnChange.type || ColumnChangeType.KEY_CHANGE;
+
+        // Verify change type are having consistent data
+        // Type
+        if (!columnChange.type) {
+            throw new Error(`Table: handleColumnChanges: No type`);
+        }
+        // RENAME type must have different column name
+        if (type === ColumnChangeType.RENAME) {
+            if (!columnChange.newColumnName) {
+                throw new Error(`Table: handleColumnChanges: RENAME => No new column name`);
+            }
+            if (columnChange.newColumnName === existingColumnDef.name) {
+                throw new Error(`Table: handleColumnChanges: RENAME => same name ${existingColumnDef.name}`);
+            }
+        }
+
+        if (type === ColumnChangeType.UPDATE) {
+            if (!columnChange.column) {
+                throw new Error(`Table: handleColumnChanges: UPDATE: No new column def`);
+            }
+            if (columnChange.column.name !== existingColumnDef.name) {
+            throw new Error(`Table: handleColumnChanges: UPDATE: New definition name mismatch existing ${existingColumnDef.name} new name ${columnChange.column.name}`);
+            }
+
+        }
+
+        // Deleting existing column for any other kind of changes
+        if (this.columnsDefinition[columnChange.existingKey] && type !== ColumnChangeType.RENAME) {
+            // Store it in version
+            if (existingColumnDef) {
+                if (this.columVersions[columnChange.existingKey]) {
+                    this.columVersions[columnChange.existingKey].push(existingColumnDef);
+                } else {
+                    this.columVersions[columnChange.existingKey] = [existingColumnDef];
+                }
+            }
+            delete (this.columnsDefinition[columnChange.existingKey]);
+        }
+        // Handling column rename
+        if (this.columnsDefinition[columnChange.existingKey] && type === ColumnChangeType.RENAME) {
+            const newColum: ApplicationTableColumn = { ...existingColumnDef } as ApplicationTableColumn;
+            newColum.name = columnChange.newColumnName || existingColumnDef.name;
+            this.columnsDefinition[columnChange.existingKey] = newColum;
+        }
+
+
+        if (type !== ColumnChangeType.DROP  && type !== ColumnChangeType.RENAME) {
+            if (columnChange.column) {
+                this.columnsDefinition[key] = ApplicationTableColumn.createColumn(columnChange.column);
+            } else {
+                this.columnsDefinition[key] = existingColumnDef;
+            }
+        }
+        return {
+            existingKey: columnChange.existingKey,
+            newKey: columnChange.newKey,
+            existingColumn: existingColumnDef,
+            column: this.columnsDefinition[key],
+            newColumnName: columnChange.newColumnName,
+            type: type,
+            deleteColumn: columnChange.deleteColumn
+        };
+    }
+
+    getVersion(version: number | string): TableVersion {
+        if (typeof version === typeof '') {
+            return this.versions.filter( v => v.name === version)[0];
+        } else {
+            return this.versions[version];
+        }
+    }
+
+    get embeddedRelations(): string[] {
+        const r: string[] = [];
+        _.each(this.columnsDefinition, (c: DataFieldDefinition, k: string) => {
+            if (unWrap(c.meta, {}).embedded) {
+                r.push(k);
+            }
+        });
+        _.each(this.relations, (rel: TableRelation, k: string) => {
+            if (unWrap(rel.meta, {}).embedded) {
+                r.push(k);
+            }
+        });
+        return r;
+    }
+
+    get viewColumnInfo(): any {
+        return {
+            columnName: this.columnsDefinition['id'].name,
+            key: 'id'
+        };
     }
 }

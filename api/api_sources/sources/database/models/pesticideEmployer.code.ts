@@ -1,12 +1,11 @@
 // ** Model: PesticideEmployerCode from schema PesticideEmployerCodeSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { PesticideEmployerCodeSchema } from '../database-schema';
-
+import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { NumericTransformer, DateTransformer } from '../../libs/transformer';
-import { DataModelController } from '../data.model.controller';
 import { Record } from './generic.data.models';
+import { PesticideEmployerCodeSchema } from '../database-schema';
+import { NumericTransformer, DateTransformer } from '../../libs/transformer';
+
 
 /** Interface **/
 /**
@@ -74,21 +73,6 @@ export class PesticideEmployerCode extends Record implements PesticideEmployerCo
 	@ModelProperty({type: PropertyType.string})
 	licenceExpiryDate: string;
 
-}
-
-
-
-// ** PesticideEmployerCodeController **//
-/**
- * @description Data Model Controller Class for PesticideEmployerCodeSchema and PesticideEmployerCode
- */
-export class PesticideEmployerCodeController extends DataModelController<PesticideEmployerCode> {
-	/**
-	* @description Getter for shared instance
-	*/
-	public static get shared(): PesticideEmployerCodeController {
-		return this.sharedInstance<PesticideEmployerCode>(PesticideEmployerCode, PesticideEmployerCodeSchema) as PesticideEmployerCodeController;
-	}
 }
 
 // -------------------------------------

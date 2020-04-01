@@ -8,7 +8,9 @@ import {
     CreateMiddleware,
     ResourceRouteController,
     writerOnlyRoute,
-    UpdateMiddleware
+    UpdateMiddleware,
+    Get,
+    editorOnlyRoute
 } from '../../core';
 import {
     ObservationController,
@@ -26,6 +28,22 @@ import {
 export class ObservationRouteController extends ResourceRouteController<ObservationController, ObservationCreateModel, any> {
     static get shared(): ObservationRouteController {
         return this.sharedInstance() as ObservationRouteController;
+    }
+
+    @Get({
+        path: '/search',
+    })
+    public async search(req: any, data?: any): Promise<[number, any]> {
+        return [200, await this.dataController.search(req.query.keyword)];
+    }
+
+    @Get({
+        path: '/export',
+        secure: true,
+        middleware: () => [ editorOnlyRoute() ]
+    })
+    public async export() {
+        return [200, await this.dataController.export()];
     }
 }
 

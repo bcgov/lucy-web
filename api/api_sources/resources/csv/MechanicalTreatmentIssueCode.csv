@@ -1,11 +1,11 @@
-mechanical_treatment_issue_code,description
-NA,None
-FC,Fencing
-AW,Adverse weather
-PL,Private land
-RB,River bank
-ST,Stability 
-SR,Silt release
-RA,Range animals
-WO,Wash out
-WF,Wildfire 
+treatment_issues_code,description
+NA,none
+AW,adverse weather
+FC,fencing
+PL,private land
+RA,range animals
+RB,river bank
+SR,silt release
+ST,stability 
+WO,wash out
+WF,wildfire 

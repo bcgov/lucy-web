@@ -21,10 +21,10 @@
  */
 import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
-import { SecureRouteController, adminOnlyRoute, BaseRoutController, RouteHandler } from '../../core';
+import { SecureRouteController, BaseRoutController, RouteHandler, inspectAppAdminRoute, errorBody } from '../../core';
 import { UserDataController, User, RoleCodeController, RolesCode, AccountStatus } from '../../../database/models';
 import { userMessagesRoute } from './messages.route';
-import { unWrap } from '../../../libs/utilities';
+import { unWrap, LogProvider } from '../../../libs/utilities';
 
 interface UserUpdateRequestData {
     firstName?: string;
@@ -32,6 +32,23 @@ interface UserUpdateRequestData {
     roles?: number[];
     accountStatus?: number;
 }
+
+const checkAdmin = (provider: LogProvider) => async (req: any, res: any, next: any) => {
+    if (req.params.userId) {
+        // Getting user
+        const user = await UserDataController.shared.findById(req.params.userId);
+        const logger = provider();
+        if (user) {
+           const reqUser: User = req.user as User;
+           if (reqUser.isInspectAppAdmin && !user.isInspectAppEditor) {
+               logger.error(`Inspect App Admin tries to update non officer user`);
+               res.status(401).json(errorBody('Un-authorize users', []));
+               return;
+           }
+        }
+    }
+    next();
+};
 
 /**
  * @description Route controller to fetch all routes
@@ -59,6 +76,9 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
  */
  class AccountRouteController extends SecureRouteController<UserDataController> {
      roleRouteController: RolesRouteController = new RolesRouteController();
+     static get shared(): AccountRouteController {
+        return this.sharedInstance() as AccountRouteController;
+    }
      constructor() {
          super();
          this.dataController = UserDataController.shared;
@@ -79,12 +99,20 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
          this.router.put('/me', this.update);
 
          // Get user info
-         this.router.get('/user/:userId', [adminOnlyRoute()], this.index);
+         this.router.get('/user/:userId',
+         [
+             inspectAppAdminRoute(),
+            checkAdmin(() => AccountRouteController.shared.logger)
+         ], this.index);
 
          // Update user
-         this.router.put('/user/:userId', [adminOnlyRoute()], this.update);
+         this.router.put('/user/:userId',
+         [
+             inspectAppAdminRoute(),
+            checkAdmin(() => AccountRouteController.shared.logger)],
+            this.update);
          // Get All users
-         this.router.get('/users', [adminOnlyRoute()], this.index);
+         this.router.get('/users', [inspectAppAdminRoute()], this.index);
      }
 
      /**
@@ -148,14 +176,18 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
       * @return RouteHandler
       */
      get index(): RouteHandler {
-         return async (req: Request, resp: Response) => {
+         return async (req: any, resp: Response) => {
             try {
                 // Get user requested user id
+                const user: User = req.user as User;
                 let result: User[] | User = [];
                 if (req.params.userId) {
                     result = await this.dataController.findById(req.params.userId);
                 } else {
                     result = await this.dataController.all();
+                    if (user.isInspectAppAdmin) {
+                        result = result.filter( item => item.isInspectAppEditor);
+                    }
                 }
                 return resp.status(200).json(this.successResp(result));
             } catch (excp) {
@@ -204,7 +236,7 @@ class RolesRouteController extends BaseRoutController<RoleCodeController> {
  * @description Getter for account route
  */
 export const accountRoute = (): Router => {
-    const controller = new AccountRouteController();
+    const controller = AccountRouteController.shared;
     return controller.router;
 };
 // -----------------------------------------------------------------------------------------------------------

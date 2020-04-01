@@ -25,7 +25,13 @@ import { should, expect } from 'chai';
 import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
 import { action } from '../libs/utilities';
 import { SharedDBManager } from '../database/dataBaseManager';
-import { adminToken, editorToken, viewerToken } from './token';
+import {
+    adminToken,
+    editorToken,
+    viewerToken,
+    inspectAppAdminToken,
+    inspectAppOfficerToken
+} from './token';
 import { BaseSchema } from '../libs/core-database';
 
 /**
@@ -120,6 +126,12 @@ export const commonTestSetupAction = async (): Promise<any> => {
     } else {
         await SharedDBManager.connect();
     }
+    // Set Certificate url to prod
+    // Check certificate url
+    // Test Certificate url
+    if (process.env.APP_CERTIFICATE_URL && process.env.APP_CERTIFICATE_URL_TEST &&  process.env.APP_CERTIFICATE_URL !== process.env.APP_CERTIFICATE_URL_TEST) {
+        process.env.APP_CERTIFICATE_URL = process.env.APP_CERTIFICATE_URL_TEST;
+    }
     return resp;
 };
 
@@ -139,6 +151,8 @@ export const enum AuthType {
     admin = 1,
     viewer = 2,
     sme = 3,
+    inspectOfficer = 5,
+    inspectAdmin = 6,
     noAuth = 4,
     token = 0
 }
@@ -184,6 +198,12 @@ export const testRequest = (app: any, setup: TestSetup) => {
         case 4:
             token = '';
             break;
+        case 5:
+            token = inspectAppOfficerToken();
+            break;
+        case 6:
+            token = inspectAppAdminToken();
+            break;
         default:
             token = setup.token || '';
             break;
@@ -213,7 +233,10 @@ export const  testModel = (model: any, schema: BaseSchema, log: boolean = false)
         }
         const info = col.typeDetails;
         const val = model[key];
-        if (col.required === true) {
+        if (col.required === true && col.eager === true) {
+            if (val === undefined) {
+                console.log(`${schema.className}[${key}] => value not exists`);
+            }
             should().exist(val);
         }
         if (val) {

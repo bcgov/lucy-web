@@ -21,28 +21,95 @@
  * -----
  */
 import 'reflect-metadata';
-import { RouteDescription, RouteConfig } from './base.route.controller';
+import { RouteDescription, RouteConfig, RouteBasicDescription, HTTPMethod } from './base.route.controller';
 import { ResourceInfo } from './route.const';
 
 const StaticConfig: {[key: string]: RouteConfig[]} = {};
 
-export function Route (des: RouteDescription) {
-    return function<T>(obj: Object, prop: string, propDes?: PropertyDescriptor) {
-        /*const existing: RouteConfig[] = StaticConfig[obj.constructor.name] || [];
-        existing.push({description: des, handler: prop});
-        StaticConfig[obj.constructor.name] = existing;*/
-        // console.dir(obj);
-        // console.log(`${typeof obj} | ${obj.constructor.name}`);
-        const existing: {[key: string]: RouteConfig} = obj.constructor.prototype._configMap || {};
-        existing[prop] = {description: des, handler: prop};
+/**
+ * @description Handle common route decoration
+ * @param RouteDescription des: Meta data object for route
+ * @param object obj: Object of decoration
+ * @param string prop: property or method of decoration
+ * @param description: Property description
+ */
+const handleDescription = (des: RouteDescription, obj: object, prop: string, description: any) => {
+    const existing: {[key: string]: RouteConfig} = obj.constructor.prototype._configMap || {};
+        let isMethod = true;
+        if (description.get || description.set) {
+            isMethod = false;
+        }
+        // console.log(`XXX: ${typeof obj} | ${obj.constructor.name} | ${prop}`);
+        // console.dir(description);
+        // console.log(`isMethod: ${isMethod}`);
+        existing[prop] = {description: des, handler: prop, isMethod: isMethod};
         obj.constructor.prototype._configMap = existing;
+};
+
+/**
+ * @description Generic Express Route Decoration
+ * @param RouteDescription des
+ */
+export function Route (des: RouteDescription) {
+    return function<T>(obj: Object, prop: string, description:  TypedPropertyDescriptor<T> ) {
+        handleDescription(des, obj, prop, description);
+    };
+}
+
+/**
+ * @description Get route decoration
+ * @param RouteBasicDescription des
+ */
+export function Get (des: RouteBasicDescription) {
+    return function<T>(obj: Object, prop: string, description:  TypedPropertyDescriptor<T> ) {
+        handleDescription({method: HTTPMethod.get, ...des}, obj, prop, description);
+    };
+}
+
+/**
+ * @description Post route decoration
+ * @param RouteBasicDescription des
+ */
+export function Post (des: RouteBasicDescription) {
+    return function<T>(obj: Object, prop: string, description:  TypedPropertyDescriptor<T> ) {
+        handleDescription({method: HTTPMethod.post, ...des}, obj, prop, description);
+    };
+}
+
+/**
+ * @description Put route decoration
+ * @param RouteBasicDescription des
+ */
+export function Put (des: RouteBasicDescription) {
+    return function<T>(obj: Object, prop: string, description:  TypedPropertyDescriptor<T> ) {
+        handleDescription({method: HTTPMethod.put, ...des}, obj, prop, description);
+    };
+}
+
+/**
+ * @description Delete route decoration
+ * @param RouteBasicDescription des
+ */
+export function Delete (des: RouteBasicDescription) {
+    return function<T>(obj: Object, prop: string, description:  TypedPropertyDescriptor<T> ) {
+        handleDescription({method: HTTPMethod.delete, ...des}, obj, prop, description);
+    };
+}
+
+/**
+ * @description Patch route decoration
+ * @param RouteBasicDescription des
+ */
+export function Patch (des: RouteBasicDescription) {
+    return function<T>(obj: Object, prop: string, description:  TypedPropertyDescriptor<T> ) {
+        handleDescription({method: HTTPMethod.patch, ...des}, obj, prop, description);
     };
 }
 
 export function ResourceRoute(info: ResourceInfo) {
     return function(target: Function) {
         // 1. Check existing
-        const existing: any = target.prototype._routeResourceInfo;
+        const existing: any = target.prototype._routeResourceInfo || {};
         info.createMiddleware = existing.createMiddleware || info.createMiddleware;
         info.updateMiddleware = existing.updateMiddleware || info.updateMiddleware;
         info.viewMiddleware = existing.viewMiddleware || info.viewMiddleware;
