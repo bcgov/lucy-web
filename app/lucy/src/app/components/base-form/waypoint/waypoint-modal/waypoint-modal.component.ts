@@ -41,8 +41,7 @@ export class WaypointModalComponent implements OnInit {
   }
 
   @Output() offsetChangedEmitter = new EventEmitter<any>();
-
-  @Output() waypointsEventHandler = new EventEmitter<any>();
+  @Output() waypointEmitter = new EventEmitter<any>();
 
   constructor(
     private validation: ValidationService,
@@ -88,7 +87,7 @@ export class WaypointModalComponent implements OnInit {
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
       this.errors.push('Error: cannot enter less than 2 coordinates');
     } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
-      this.waypointsEventHandler.emit({offset: this.offset, points: this.waypoints});
+      this.waypointEmitter.emit(this.waypoints);
     }
   }
 

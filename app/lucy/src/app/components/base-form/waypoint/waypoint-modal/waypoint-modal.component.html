@@ -57,7 +57,7 @@
 
     <!-- Map preview -->
     <div>
-        <app-map-preview (centerPointChanged)="mapCenterChanged($event)" (polygonChanged)="polygonChanged($event)" [markers]="markers" [polygon]="waypointBoundaryPointsLatLong"></app-map-preview>
+        <app-map-preview (polygonChanged)="polygonChanged($event)" (pointsChanged)="waypointEmitter($event)" [points]="waypoints" [polygon]="waypointBoundaryPointsLatLong"></app-map-preview>
     </div>
 
     <!-- Text disclaimer -->

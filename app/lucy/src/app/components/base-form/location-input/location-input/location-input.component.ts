@@ -23,6 +23,7 @@ import { ValidationService } from 'src/app/services/validation.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 import { GeometryJSON, InputGeometryJSON } from 'src/lib';
 import { BcgwService } from 'src/app/services/bcgw/bcgw.service';
+import { createEmbeddedViewAndNode } from '@angular/core/src/render3/instructions';
 
 
 interface SpaceGeomData {
@@ -68,6 +69,8 @@ export class LocationInputComponent implements OnInit {
   // Markers shown on map
   markers: MapMarker[] = [];
 
+  // coordinates entered as waypoints (along centre line of polygon)
+  points: LatLongCoordinate[] = [];
   // lat/long coordinates to be used as boundary if drawing waypoint
   waypointBoundaryPointsLatLong: number[][];
   // waypoint boundary coordinates in BC Albers (needed for certain calculations)
@@ -100,6 +103,7 @@ export class LocationInputComponent implements OnInit {
 
   @Output() locationChanged = new EventEmitter<any>();
   @Output() polygonChanged = new EventEmitter<number[][]>();
+  @Output() pointsChanged = new EventEmitter<LatLongCoordinate[]>();
 
   @Input() set mode(mode: FormMode) {
     this._mode = mode;
@@ -625,6 +629,7 @@ export class LocationInputComponent implements OnInit {
     this.onModalClose();
     this.calculateWaypointBoundaryPoints(value.offset, value.points);
     this.polygonChanged.emit(this.waypointBoundaryPointsLatLong);
+    this.pointsChanged.emit(this.points);
   }
 
   mapCenterChanged(event: any) {
@@ -670,6 +675,7 @@ export class LocationInputComponent implements OnInit {
    */
   private calculateWaypointBoundaryPoints(offset: number, coords: [LatLongCoordinate]) {
     this.waypointBoundaryPointsLatLong = [];
+    this.points = coords;
     const coordsInAlbers: AlbersCoordinate[] = [];
 
     // convert lat/long coords to Albers

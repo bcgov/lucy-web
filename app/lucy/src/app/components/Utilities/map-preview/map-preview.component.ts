@@ -22,6 +22,9 @@ import 'node_modules/leaflet-draw';
 import { Observation } from 'src/app/models';
 import * as bcgeojson from './bcgeojson.json';
 import { keyframes } from '@angular/animations';
+import { Point, LatLng } from 'leaflet';
+import { LabelOptions } from '@angular/material';
+import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
 declare let L;
 
 export interface MapPreviewPoint {
@@ -116,6 +119,15 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     if (this.ready) {
       this.addMarkers();
     }
+  }
+
+  ///////////// Line Points /////////////
+  private _points: LatLongCoordinate[] = [];
+  get points(): LatLongCoordinate[] {
+    return this._points;
+  }
+  @Input() set points(locations: LatLongCoordinate[]) {
+    this._points = locations;
   }
 
   /////////////// Polygon ////////////////
@@ -218,29 +230,31 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     }).addTo(this.map);
     this.addBCBorder();
 
-    L.geoJSON(this.inputGeometryJSON, {
-      style: function(feature) {
-        switch (feature.geometry.type) {
-          case 'Polygon': return {
-            color: '#F5A623',
-            fillColor: '#F5A623',
-            fillOpacity: 0.7,
-            weight: 2,
-          };
-          case 'MultiLineString': return {
-            color: 'black',
-            weight: 1,
-            fillOpacity: 0.4,
-          };
-          case 'Point': return {
-            radius: 0.5,
-            color: 'black',
-            fillColor: 'black',
-            fill: true
-          };
+    if (this.inputGeometryJSON !== undefined && this.inputGeometryJSON !== '{}') {
+      L.geoJSON(this.inputGeometryJSON, {
+        style: function(feature) {
+          switch (feature.geometry.type) {
+            case 'Polygon': return {
+              color: '#F5A623',
+              fillColor: '#F5A623',
+              fillOpacity: 0.7,
+              weight: 2,
+            };
+            case 'MultiLineString': return {
+              color: 'black',
+              weight: 1,
+              fillOpacity: 0.4,
+            };
+            case 'Point': return {
+              radius: 0.5,
+              color: 'black',
+              fillColor: 'black',
+              fill: true
+            };
+          }
         }
-      }
-    }).addTo(this.map);
+      }).addTo(this.map);
+    }
   }
 
   private makeid(length: number) {
@@ -266,6 +280,13 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     // L.geoJSON(this.bc).addTo(this.map);
     // Show bc border and gray out everything outside:
     this.addInvertedPolygon(this.bcBorderCoordinates);
+  }
+
+  pointsChanged(points: LatLongCoordinate[]) {
+    this._points = points;
+    if (this.ready) {
+      this.drawLine();
+    }
   }
   /////////////////////////////////////////////
 
@@ -412,7 +433,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
 
   /**
    * Draws a connected line on the map with circleMarkers for each of the lat/long coordinates
-   * assigned to this.markers
+   * assigned to this.points
    * Used as part of waypoint functionality.
    * Outputs a dictionary of the Leaflet polyline and circleMarkers drawn on the map, to be saved
    * to GeoJSON file if desired.
@@ -420,8 +441,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   drawLine() {
     const linePoints = [];
 
-    for (const c of this.markers) {
-      linePoints.push([c.latitude, c.longitude]);
+    for (const c of this.points) {
+      linePoints.push(c);
     }
     const line = L.polyline([linePoints], {
       color: 'black',
@@ -465,19 +486,4 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     const obj = JSON.parse(JSON.stringify(bcgeojson)).default;
     return obj;
   }
-
-  /**
-   * Creates and returns a list of one or more Leaflet map vector objects ready to be converted to a GeoJSON file
-   * GeoJSON file is used for storing a geometry object in the Postgres DB
-   * @param vector a single Leaflet object or an array of objects to be converted to GeoJSON
-   */
-  // toGeoJSON(vector: {}): any[] {
-  //   const geoJsonFile = [];
-  //   for (const [key, value] of Object.entries(vector)) {
-  //     const geometryDict = {type: key, coordinates: value['_latlngs'], options: value['options']};
-  //     const geoJsonEntry = {type: 'Feature', geometry: geometryDict, properties: {} };
-  //     geoJsonFile.push(geoJsonEntry);
-  //   }
-  //   return geoJsonFile;
-  // }
 }
