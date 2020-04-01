@@ -37,6 +37,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatRadioModule} from '@angular/material/radio';
 
 // Third-party
 // ng-bootstrap
@@ -178,7 +179,8 @@ export const bootstrapFactory = (bootStrapper: AppBootService) => {
     MatTableModule,
     MatPaginatorModule,
     MatSlideToggleModule,
-    MatChipsModule
+    MatChipsModule,
+    MatRadioModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
