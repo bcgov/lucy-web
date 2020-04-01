@@ -1,13 +1,13 @@
-<div class="modal-content-container">
+<div class="modal-content-container waypoint-modal">
 
     <p *ngIf="!showInfo" class="header-text">Waypoint Details</p>
     <hr class="section-divider" />
 
     <!-- waypoint geometry -->
-    <div *ngIf="!showInfo">
+    <div *ngIf="!showInfo" class="info-button-container">
         <div class="info-button" (click)="toggleView()">
             <i class="material-icons-outlined info-icon">info</i>
-            <p>More Info</p>
+            <p class="info-text">More Info</p>
         </div>
     </div>
 
@@ -15,70 +15,71 @@
     <app-waypoint-info *ngIf="showInfo" (onBackAction)="toggleView()">
     </app-waypoint-info>
 
-    <!-- offset width -->
-    <div class="row">
-        <div class="col-6">
-            <app-field [mode]="mode" [verification]="offsetVerification" suffix='m' header='Offset width' [value]=offset (valueChanged)="offsetChanged($event)"></app-field>
-        </div>
-    </div>
-
-    <!-- text fields for pin entries -->
-    <div *ngFor="let pt of waypointEntryComponents; let j = index" class="waypoints-container">
-        <div class="row animated fadeIn animationDuration">
-            <div class="col-1 waypoint-index">
-                <p>{{ j+1 }}</p>
+    <div *ngIf="!showInfo">
+        <!-- offset width -->
+        <div class="row offset-container">
+            <div class="col-4 offset-field-container">
+                <app-field [mode]="mode" [verification]="offsetVerification" appearance="fill" suffix='m' header='Offset width' [value]=offset (valueChanged)="offsetChanged($event)"></app-field>
             </div>
-            <div class="col-10">
-                <app-waypoint-text-entry [value]=pt [mode]=mode [responseBody]=responseBody (pointChanged)="pointChanged($event,j)"></app-waypoint-text-entry>
-            </div>
-            <div class="col-1 remove-point-button" (click)="removeWaypoint(j)">
-                <i class="material-icons-outlined clear-icon">clear</i>
+            <div class="input-mode-container">
+                <button class="btn switch-btn" [ngClass]="!showLatLong ? 'input-mode-on' : 'input-mode-off'" (click)="toggleUTM()">
+                UTM
+                </button>
+                <button class="btn switch-btn" [ngClass]="showLatLong ? 'input-mode-on' : 'input-mode-off'" (click)="toggleLAT()">
+                Lat / Long
+                </button>
             </div>
         </div>
-    </div>
 
-    <!-- Add button to inject another waypoint-text-entry component -->
-    <div *ngIf="!maxPointsLengthReached">
-        <div class="row add-button" (click)="addNewWaypointTextEntry()">
-            <i class="material-icons-outlined add-icon">add</i>
-            <p>Add</p>
-        </div>
-    </div>
-
-    <!-- Error messages -->
-    <div class="errors-container">
-        <div *ngFor="let e of errors" class="row">
-            <div class="error-card col-10 col-align-self-center">
-                <i class="material-icons-outlined error-icon">error</i>
-                <span>{{ e }}</span>
+        <!-- text fields for pin entries -->
+        <div class="waypoints-container">
+            <div *ngFor="let pt of waypointEntryComponents; let j = index">
+                <div class="waypoint-row animated fadeIn animationDuration">
+                    <p>{{ j+1 }}</p>
+                    <div class="waypoint-input-container">
+                        <app-waypoint-text-entry [value]=pt [mode]=mode [showLatLong]="showLatLong" [responseBody]=responseBody (pointChanged)="pointChanged($event,j)"></app-waypoint-text-entry>
+                    </div>
+                    <div class="waypoint-action-container">
+                        <i class="material-icons-outlined clear-icon" (click)="removeWaypoint(j)">maximize</i>
+                        <i class="material-icons" *ngIf="showAddIcon(j)" (click)="addNewWaypointTextEntry()">add</i>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Map preview -->
-    <div>
-        <app-map-preview (polygonChanged)="polygonChanged($event)" (pointsChanged)="waypointEmitter($event)" [points]="waypoints" [polygon]="waypointBoundaryPointsLatLong"></app-map-preview>
-    </div>
-
-    <!-- Text disclaimer -->
-    <div class="disclaimer-container">
-        <div class="row">
-            <h5>Please note:</h5>
-            <p>Waypoints must be listed in sequence as observed on ground. If listed otherwise, generated path will differ.</p>
-        </div>
-        <div class="row">
-            <hr>
-        </div>
-    </div>
-
-    <!-- Buttons -->
-    <div class="row">
-        <div class="buttons-container col-6">
-            <div class="back-button col-6">
-                Back
+        <!-- Error messages -->
+        <div class="error-container">
+            <div *ngFor="let e of errors" [ngClass]="showLatLong ? 'error-latlong-container' : 'error-utm-container'">
+                <div class="error-card">
+                    <i class="material-icons-outlined error-icon">error</i>
+                    <span>{{ e }}</span>
+                </div>
             </div>
-            <div class="generate-path-button col-6" (click)="generatePath()">
-                Generate path
+        </div>
+
+        <!-- Map preview -->
+        <div>
+            <app-map-preview *ngIf="showMap" (pointsChanged)="waypointEmitter($event)" [points]="waypoints" (centerPointChanged)="mapCenterChanged($event)" (polygonChanged)="polygonChanged($event)" [markers]="markers" [polygon]="waypointBoundaryPointsLatLong"></app-map-preview>
+        </div>
+
+        <!-- Text disclaimer -->
+        <div class="disclaimer-container">
+            <h5 class="disclaimer-header">Please note:</h5>
+            <p class="disclaimer-body">Waypoints must be listed in sequence as observed on ground. If listed otherwise, generated path will differ.</p>
+        </div>
+        <hr class="section-divider" />
+
+        <!-- Buttons -->
+        <div class="modal-action-container">
+            <div class="col modal-action">
+                <button mat-stroked-button color="primary" class="modal-action-button" (click)="onBack()">
+                    Back
+                </button>
+            </div>
+            <div class="col modal-action">
+                <button mat-raised-button color="primary" class="modal-action-button" (click)="generatePath()">
+                    Generate Path
+                </button>
             </div>
         </div>
     </div>

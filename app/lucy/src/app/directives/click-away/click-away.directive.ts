@@ -48,7 +48,7 @@ export class ClickAwayDirective {
 
     const targetId = targetElement.id;
     const targetClass = targetElement.className;
-    const targetParentId = targetElement.parentElement.id;
+    const targetParentId = targetElement.parentElement && targetElement.parentElement.id;
 
     // Close any existing popper when opening a modal
     if (targetParentId === 'custom-modal-action') {
