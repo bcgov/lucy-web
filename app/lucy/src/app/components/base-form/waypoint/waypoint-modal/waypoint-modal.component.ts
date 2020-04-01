@@ -17,6 +17,8 @@ export class WaypointModalComponent implements OnInit {
   MAX_DISTANCE_BTWN_POINTS = 20;  // in metres
 
   showInfo = false;
+  showMap = false;
+  showLatLong = true;
   waypointEntryComponents = [];
   waypoints: [LatLongCoordinate?] = [];
   offset: number;
@@ -44,6 +46,13 @@ export class WaypointModalComponent implements OnInit {
 
   @Output() waypointsEventHandler = new EventEmitter<any>();
 
+  @Output() onClose = new EventEmitter<any>();
+
+  showAddIcon(index: number) {
+    const totalWaypoints = this.waypointEntryComponents.length - 1;
+    return totalWaypoints === index;
+  }
+
   constructor(
     private validation: ValidationService,
     private converter: ConverterService,
@@ -58,6 +67,14 @@ export class WaypointModalComponent implements OnInit {
 
   toggleView() {
     this.showInfo = !this.showInfo;
+  }
+
+  toggleUTM() {
+    this.showLatLong = false;
+  }
+
+  toggleLAT() {
+    this.showLatLong = true;
   }
 
   offsetChanged(value: number) {
@@ -88,7 +105,8 @@ export class WaypointModalComponent implements OnInit {
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
       this.errors.push('Error: cannot enter less than 2 coordinates');
     } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
-      this.waypointsEventHandler.emit({offset: this.offset, points: this.waypoints});
+      this.waypointsEventHandler.emit({ offset: this.offset, points: this.waypoints });
+      this.showMap = true;
     }
   }
 
@@ -101,7 +119,7 @@ export class WaypointModalComponent implements OnInit {
         counter += 1;
       }
     }
-    return true ? counter === 0 : false;
+    return (counter === 0);
   }
 
   get pointsAreWithinBC() {
@@ -112,7 +130,11 @@ export class WaypointModalComponent implements OnInit {
         counter += 1;
       }
     }
-    return true ? counter === 0 : false;
+    return (counter === 0);
+  }
+
+  onBack() {
+    this.onClose.emit();
   }
 
   submitTestData() {

@@ -42,6 +42,8 @@ export class WaypointTextEntryComponent implements OnInit {
 
   @Output() pointChanged = new EventEmitter<any>();
 
+  @Input() showLatLong: boolean = true;
+
   constructor(
     private validation: ValidationService,
     private converter: ConverterService,

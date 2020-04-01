@@ -101,10 +101,10 @@
             </div>
         </div>
         <!-- Waypoint Entry Modal -->
-        <app-modal *ngIf="showModal" (onClose)="onModalClose()" [align]="'center'">
+        <app-modal *ngIf="showModal" [align]="'center'">
 
             <!-- Add waypoint modal -->
-            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" [config]="config" [responseBody]="responseBody" (waypointsEventHandler)="waypointsEventHandler($event)">
+            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" [config]="config" [responseBody]="responseBody" (waypointsEventHandler)="waypointsEventHandler($event)" (onClose)="onModalClose()">
             </app-waypoint-modal>
 
         </app-modal>
