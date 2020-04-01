@@ -17,6 +17,8 @@ export class WaypointModalComponent implements OnInit {
   MAX_DISTANCE_BTWN_POINTS = 20;  // in metres
 
   showInfo = false;
+  showMap = false;
+  showLatLong = true;
   waypointEntryComponents = [];
   waypoints: [LatLongCoordinate?] = [];
   offset: number;
@@ -43,6 +45,13 @@ export class WaypointModalComponent implements OnInit {
   @Output() offsetChangedEmitter = new EventEmitter<any>();
   @Output() waypointEmitter = new EventEmitter<any>();
 
+  @Output() onClose = new EventEmitter<any>();
+
+  showAddIcon(index: number) {
+    const totalWaypoints = this.waypointEntryComponents.length - 1;
+    return totalWaypoints === index;
+  }
+
   constructor(
     private validation: ValidationService,
     private converter: ConverterService,
@@ -57,6 +66,14 @@ export class WaypointModalComponent implements OnInit {
 
   toggleView() {
     this.showInfo = !this.showInfo;
+  }
+
+  toggleUTM() {
+    this.showLatLong = false;
+  }
+
+  toggleLAT() {
+    this.showLatLong = true;
   }
 
   offsetChanged(value: number) {
@@ -82,12 +99,19 @@ export class WaypointModalComponent implements OnInit {
   }
 
   generatePath() {
+    this.errors = [];
+    if (!this.validWaypointValues(this.offset, this.waypoints)) {
+      this.errors.push('Error: please fill all the fields');
+      return;
+    }
+
     if (this.waypointEntryComponents.length > this.MAX_NUM_POINTS) {
       this.errors.push('Error: cannot enter more than 10 coordinates');
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
       this.errors.push('Error: cannot enter less than 2 coordinates');
     } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
       this.waypointEmitter.emit(this.waypoints);
+      this.showMap = true;
     }
   }
 
@@ -100,7 +124,7 @@ export class WaypointModalComponent implements OnInit {
         counter += 1;
       }
     }
-    return true ? counter === 0 : false;
+    return (counter === 0);
   }
 
   get pointsAreWithinBC() {
@@ -111,7 +135,20 @@ export class WaypointModalComponent implements OnInit {
         counter += 1;
       }
     }
-    return true ? counter === 0 : false;
+    return (counter === 0);
+  }
+
+  validWaypointValues(offset: number, points: LatLongCoordinate[]) {
+    if (!offset || points.length === 0) {
+      return false;
+    }
+
+    const invalidPoints = points.filter(point => !point.latitude || !point.longitude);
+    return (invalidPoints.length === 0);
+  }
+
+  onBack() {
+    this.onClose.emit();
   }
 
   submitTestData() {

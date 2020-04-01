@@ -149,6 +149,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .modal-action-container {
   display: flex;
   justify-content: center;
+  margin: auto;
+  width: 80%;
 }
 
 .modal-action {
