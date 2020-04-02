@@ -63,9 +63,8 @@ schemas:
           groups:
             - title: 
                 key: '' 
-                default: Species 
+                default: '' 
               fields: 
-                - species
                 - speciesAgency
                 - observation
               style: {}
@@ -212,20 +211,6 @@ schemas:
           header: 
             key: 'observation' 
             default: 'Observation'
-          classes:
-            - none
-      species:
-        name: 'species_id'
-        comment: 'Species associated with a treatment'
-        definition: INT NULL
-        foreignTable: species
-        refColumn: species_id
-        deleteCascade: true
-        meta: {}
-        layout:
-          header: 
-            key: 'species' 
-            default: 'Species'
           classes:
             - none
       speciesAgency:
