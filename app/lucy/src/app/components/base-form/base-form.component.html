@@ -129,7 +129,7 @@
                             </div>
                         </div>
                         <div *ngFor="let subSection of section.subSections; let j = index" class="row">
-                            <div class="col-12 sub-section-title">
+                            <div class="col-12 sub-section-title" *ngIf="subSection['title'].default">
                                 <br /> {{ subSection["title"].default }}
                             </div>
                             <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
