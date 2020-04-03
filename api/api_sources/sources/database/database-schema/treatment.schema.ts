@@ -56,6 +56,15 @@ export class MechanicalTreatmentSchema extends TreatmentSchema {
 }
 
 /**
+ * @description Schema Handler class for Mechanical Treatment Observation Schema
+ */
+export class MechanicalTreatmentObservationSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('mechanicalTreatmentObservation.schema.yaml');
+    }
+}
+
+/**
  * @description Schema Handler for Mechanical Treatment Code
  */
 export class MechanicalMethodCodeSchema extends TreatmentCodeSchema {}

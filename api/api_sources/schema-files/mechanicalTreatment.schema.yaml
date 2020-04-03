@@ -95,6 +95,19 @@ schemas:
     # Computed fields
     computedFields: {}
     # End - Computed fields
+    # Relations
+    relations: 
+      observations:
+        header:
+          key: 'mechanicalTreatment.observations'
+          default: Observations
+        description: 
+          key: 'mechanicalTreatments.observation.description'
+          default: 'Observations linked to the Mechanical treatment'
+        type: array
+        relationshipType: many-to-many
+        schema: ObservationSchema
+    # End: Relations
     columns: 
       # -- Data Columns
       id: 
@@ -213,6 +226,20 @@ schemas:
             default: 'Observation'
           classes:
             - none
+      species:
+        name: 'species_id'
+        comment: 'Species associated with a treatment'
+        definition: INT NULL
+        foreignTable: species
+        refColumn: species_id
+        deleteCascade: true
+        meta: {}
+        layout:
+          header: 
+            key: 'species' 
+            default: 'Species'
+          classes:
+            - none
       speciesAgency:
         name: 'species_agency_code_id'
         comment: Foreign key reference to Species Agency Code table 
@@ -321,4 +348,15 @@ schemas:
           - spaceGeom
       # -- SpaceGeomModelSchema
     ## -- End - CopyFrom
+    versions:
+      - name: observations
+        id: '1.1'
+        info: Schema changes to support many-to-many relation with observation table
+        schemaChanges:
+          - comment: Dropping column observation
+            existingKey: observation
+            type: drop
+          - comment: Dropping column species
+            existingKey: species
+            type: drop
   ## --
