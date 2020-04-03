@@ -19,7 +19,7 @@
 /**
  * Imports
  */
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, ManyToMany } from 'typeorm';
 import { Record } from './generic.data.models';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
@@ -48,7 +48,7 @@ import {
     SlopeCodeSchema,
     AspectCodeSchema,
     ProposedActionCodeSchema,
-  SpaceGeomSchema
+	SpaceGeomSchema
 } from '../database-schema';
 import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 import { MechanicalTreatment } from './mechanical.treatment';
@@ -329,13 +329,15 @@ export class Observation extends Record implements ObservationCreateModel {
 	@ModelProperty({type: PropertyType.object})
 	spaceGeom: SpaceGeom;
 
-    // Calculated Properties
-    @OneToMany(
-        type => MechanicalTreatment,
-        mechanicalTreatment => mechanicalTreatment.observation
-    )
-    mechanicalTreatmentsFetcher: Promise<MechanicalTreatment[]>;
-    @ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
+	/**
+	 * @description ManyToMany relationship
+	 */
+	@ManyToMany(
+		type => MechanicalTreatment,
+		mechanicalTreatment => mechanicalTreatment.observations
+	)
+	mechanicalTreatmentsFetcher: Promise<MechanicalTreatment[]>;
+	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
     mechanicalTreatments?: MechanicalTreatment[];
 
     /**

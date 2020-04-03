@@ -131,8 +131,10 @@ schemas:
           key: 'observation.mechanicalTreatments.description'
           default: 'Mechanical treatments performed on observation'
         type: array
-        relationshipType: one-to-many
+        relationshipType: many-to-many
         schema: MechanicalTreatmentSchema
+        meta:
+          skipValidation: true
     # End - Relation
     columns: 
       # -- Regular Columns
