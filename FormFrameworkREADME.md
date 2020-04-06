@@ -6,6 +6,7 @@ One of the benefits of the Form Framework tool is that it allows simple coupling
 
 * [Step-by-Step Guide to Create a New Form](#step-by-step-guide-to-create-a-new-form)
 * [Modifying an Existing Schema](#modifying-an-existing-schema)
+* [Adding a Pivot table Schema](#adding-a-pivot-table-schema)
 * [Front-End Architecture Overview](#front-end-architecture-overview)
 * [Front-End keywords glossary](#front-end-keywords-glossary)
 * [Back-End keywords glossary](#back-end-keywords-glossary)
@@ -22,11 +23,11 @@ The starting point for a new form is the schema's .yaml file, which specifies th
   Alternatively, rather than creating a new schema file, you can create a new schema by adding it to an existing schema file (multiple schemas can be defined with a .yaml file). This is recommended if 2 or more schemas are related in some logical way.
 
   1. Begin by populating the preliminary information for the schema:
-    - `name:` the name of the table as it will be stored in the DB. Should be in snake-case, with only lowercase letters
-    - `description:` a brief description of the schema, which will be stored in the DB as a comment on the table
-    - `baseSchema:` if the schema is for a record (user-generated data), the baseSchema should be `RecordSchema`. If the schema is for a code table, the baseSchema should be `CodeTableSchema`
-    - `skipVerification:` an **optional** boolean field indicating if the schemaLoader should or should not perform automated validation on the schema
-    - `meta:` there are multiple possible fields for this section (all are **optional**).
+      - `name:` the name of the table as it will be stored in the DB. Should be in snake-case, with only lowercase letters
+      - `description:` a brief description of the schema, which will be stored in the DB as a comment on the table
+      - `baseSchema:` if the schema is for a record (user-generated data), the baseSchema should be `RecordSchema`. If the schema is for a code table, the baseSchema should be `CodeTableSchema`
+      - `skipVerification:` an **optional** boolean field indicating if the schemaLoader should or should not perform automated validation on the schema
+      - `meta:` there are multiple possible fields for this section (all are **optional**).
       - `api:` the string that will be used as an API route, if an API route for the schema is desired. Only the substring that will appear after "/api" should be given here
       - `resource:` default value is false, but this should be set to `true` if you want the Form Framework to automatically generate a controller for the schema (refer to Step 3)
       - `baseModel:` specifies the template of the model that will be automatically generated for the schema (as in Step 3). If the baseSchema (above) is RecordSchema, the baseModel should be `Record`. If the baseSchema is CodeTableSchema, the baseModel should be `ApplicationCode`
@@ -34,17 +35,17 @@ The starting point for a new form is the schema's .yaml file, which specifies th
 
   4. Fill in the `columns:` section, which is a list of all columns that should be inserted into the DB's table for the schema. A column to store the primary key for the table is automatically inserted into the .yaml file when the `create.schema.ts` script is used to generate the skeleton (Step 1.2). By convention, the "columns" section is broken up into 2 subsections: the first is for data columns, the second is for relation columns, which consists of foreign key references to other DB tables.  
   Each column is assigned a name unique to the schema, which will be used to refer to the field within the schema (camel-case has been used by convention). Indented underneath each column are a number of field properties.
-    - "data" columns may have the following properties specified:
-      - `name:` the name of the column as it will appear in the DB, written in lowercase snake-case, by SQL convention. This DB column does not need to exactly match the name of the column in the .yaml file, but the correlation between the 2 names should be obvious
-      - `comment:` a brief description of the field, which will be assigned to the DB's column as a comment
-      - `definition:` a string of SQL code defining the column (e.g., "VARCHAR(100) NULL", "NUMERIC(4,1) NULL", etc.)
-      - `meta:` **optional**. In most cases, this property will likely be null, but may include `embedded: true` to indicate that a component is being injected into the form from another schema
-      - `verification:` **optional**. Any validation filters specified here will be applied *only on the front-end* (i.e., these restrictions will not be applied to the column in the DB). The Form Framework currently supports validation for `minimumValue` (input must be &ge; minimumValue); `maximumValue` (input must be &le; maximumValue); and `positive` (input must be > 0)
-      - `layout:` **optional**. The layout property typically includes nested properties for the field's header in the front-end (`header.key` and `header.default`) and the CSS `classes:` that should be applied to the field's HTML element. If a `suffix:` should be applied to the field, this will also be indicated in the layout property.
-    - "relation" columns may have all the properties listed above (except for verification), and these additional properties:
-      - `foreignTable:` the name of the table as it appears in the DB
-      - `refColumn:` the name (as it appears in the DB) of the foreign table's reference column (i.e., the reference column will be used as the foreign key)
-      - `deleteCascade:` boolean value indicating whether deletion of the foreign key should cause deletion of the entry for the current schema
+      - "data" columns may have the following properties specified:
+        - `name:` the name of the column as it will appear in the DB, written in lowercase snake-case, by SQL convention. This DB column does not need to exactly match the name of the column in the .yaml file, but the correlation between the 2 names should be obvious
+        - `comment:` a brief description of the field, which will be assigned to the DB's column as a comment
+        - `definition:` a string of SQL code defining the column (e.g., "VARCHAR(100) NULL", "NUMERIC(4,1) NULL", etc.)
+        - `meta:` **optional**. In most cases, this property will likely be null, but may include `embedded: true` to indicate that a component is being injected into the form from another schema
+        - `verification:` **optional**. Any validation filters specified here will be applied *only on the front-end* (i.e., these restrictions will not be applied to the column in the DB). The Form Framework currently supports validation for `minimumValue` (input must be &ge; minimumValue); `maximumValue` (input must be &le; maximumValue); and `positive` (input must be > 0)
+        - `layout:` **optional**. The layout property typically includes nested properties for the field's header in the front-end (`header.key` and `header.default`) and the CSS `classes:` that should be applied to the field's HTML element. If a `suffix:` should be applied to the field, this will also be indicated in the layout property.
+      - "relation" columns may have all the properties listed above (except for verification), and these additional properties:
+        - `foreignTable:` the name of the table as it appears in the DB
+        - `refColumn:` the name (as it appears in the DB) of the foreign table's reference column (i.e., the reference column will be used as the foreign key)
+        - `deleteCascade:` boolean value indicating whether deletion of the foreign key should cause deletion of the entry for the current schema
 
   5. (**Optional**) If the form should include any computed fields, these fields are configured in the `computedFields:` section of the .yaml file. Computed fields are read-only values that may or may not be stored as a column in the DB. A computed field is configured similarly to the standard fields from the previous step, but with the addition of defined `computationRules:`, which consists of a list of one or more rules defined as follows:
 
@@ -88,7 +89,7 @@ The starting point for a new form is the schema's .yaml file, which specifies th
           key: 'observation.mechanicalTreatments.description'
           default: 'Mechanical treatments performed on observation'
         type: array
-        relationshipType: one-to-many
+        relationshipType: many-to-many
         schema: MechanicalTreatmentSchema
         meta:
           embedded: true
@@ -217,6 +218,115 @@ Here are some tips for writing unit tests:
 If the modifications to an existing schema are **only on the front-end** (i.e., the database schema does not need to be modified), once the schema's .yaml file has been modified, save the .yaml file and a random .ts file in the /api directory. No actual modifications to the random .ts file are required, but the action of saving a .ts file will fire a re-compilation when running the application locally.
 
 The steps required to modify a schema when **back-end changes** are involved will vary depending on the nature of the modifications. At the very least, it will be necessary to re-run `npm run migration` within the Docker api-container. Other steps before this may be necessary - refer to the Step-by-Step Guide for Creating a New Form to see what commands are necessary for each step of the process.
+
+### Creating a version for Schema modifications
+Follow these steps to add versioning for any schema modifications(Alter/Drop). Create a new field named `versions` under the `schemas` section in the yaml file. Once the changes are made, follow from Step 3 in Step-by-Step Guide to generate the SQL file for these schema changes. A new migration file needs to be added.
+
+The following fields can be specified in this section.
+  - `name`: The desired name for the version
+  - `id`: The Id for the version
+  - `info`: A small description about the version
+  - `columns`: This section is to add any new columns to the database and it can have the following fields inside
+  ```yaml
+    columnName:
+      name: Name of the column
+      definition: Column definition indicating the type and other constraints
+      comment: A short description about the column
+  ```
+  - `schemaChanges`: This section is to modify any existing columns
+
+    - To rename a column
+    ```yaml
+      comment: A short description of what the change is about
+      type: rename
+      existingKey: The name of the column that needs to be modified
+      newColumnName: The new column name
+    ```
+    - To modify a column
+    ```yaml
+      comment: A short description of what the change is about
+      type: update
+      existingKey: The name of the column that needs to be modified
+      columnName:
+        name: Name of the column
+        definition: Column definition indicating the type and other constraints
+        comment: A short description about the column
+    ```
+    - To delete a column
+    ```yaml
+      comment: A short description of what the change is about
+      type: drop
+      existingKey: The name of the column that needs to be dropped
+    ```
+
+## Adding a Pivot table Schema
+Often times, the tables in a relational database tend to have a foreign key reference to one or more tables. The backend comes integrated with a Postgres DB using TypeORM.
+
+TypeORM supports the following relationships,
+  - One-to-One
+  - One-to-Many
+  - Many-to-One
+  - Many-to-Many
+
+A Many-to-Many relationship requires a pivot table which has a reference to the two entities involved. To create a pivot schema, follow these instructions
+
+  - Generate a skeleton .yaml file for the schema by running `ts-node api/api_sources/scripts/create.schema.ts -s <Schema-Name>` and fill out the following fields
+    ```yaml
+      version: version number
+      description: A short description about the schema
+      includes: The list of yaml filenames containing the schema of external tables involved
+      schemas:
+        pivotSchemaName:
+          name: The name of the pivot table
+          description: Description about the pivot table
+          columns:
+            id:
+              name: The name of the primary column
+              comment: Auto generated sequential primary key column.
+              definition: SERIAL PRIMARY KEY
+            firstColumnName:
+              name: The name of the column
+              comment: A comment about the reference used
+              definition: Column definition indicating the type and other constraints
+              foreignTable: The name of the referenced foreign table
+              refColumn: The column in the foreign table being referenced
+              deleteCascade: Action on delete
+            secondColumnName:
+              name: The name of the column
+              comment: A comment about the reference used
+              definition: Column definition indicating the type and other constraints
+              foreignTable: The name of the referenced foreign table
+              refColumn: The column in the foreign table being referenced
+              deleteCascade: Action on delete
+    ```
+  - Follow the instructions from Step 2 in the Step-by-Step guide
+  - A SQL file and a model file will be created after Step 3. Keep the SQL file and delete the model file. If not deleted, the model file will cause issues and throw unexpected errors.
+  - Use `observation.ts` and `mechanical.treatment.ts` under the models folder in the database as a reference to implement Many-to-Many relationship
+
+  ```ts
+    @ManyToMany(type => MechanicalTreatment, mechanicalTreatment => mechanicalTreatment.observations)
+    mechanicalTreatmentsFetcher: Promise<MechanicalTreatment[]>;
+    @ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
+    mechanicalTreatments?: MechanicalTreatment[];
+  ```
+
+  ```ts
+    @ManyToMany(type => Observation, observation => observation.mechanicalTreatmentsFetcher, { eager: true} )
+    @JoinTable({
+        name: MechanicalTreatmentObservationSchema.dbTable,
+        joinColumn: {
+			name: MechanicalTreatmentObservationSchema.columns.mechanicalTreatment,
+            referencedColumnName: MechanicalTreatmentSchema.id
+        },
+        inverseJoinColumn: {
+            name: MechanicalTreatmentObservationSchema.columns.observation,
+            referencedColumnName: ObservationSchema.id
+        }
+    })
+    @ModelProperty({type: PropertyType.object})
+    observations: Observation[];  
+  ```
+
 
 ## Front-End Architecture Overview
 ### Overall Structure
