@@ -83,7 +83,7 @@ export class SchemaValidator {
                     }
                     allValidators = allValidators.concat(this._relationshipValidators(key, rel, rootKey, optional, opt));
                 } else if (!(unWrap(rel.meta, {}).skipValidation)) {
-                    allValidators.concat(check(`${relKey}`).exists().isArray().custom(async (value: any, {req}) => {
+                    allValidators = allValidators.concat(check(`${relKey}`).exists().isArray().custom(async (value: any, {req}) => {
                         const controller: DataController = controllerForSchemaName(rel.schema  || '');
                         const values: number[] = value as number[];
                         const results: any[] = [];
