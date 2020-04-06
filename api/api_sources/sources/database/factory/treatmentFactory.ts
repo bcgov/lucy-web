@@ -58,6 +58,8 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
  */
 export const mechanicalTreatmentFactory = async () => {
   const spec = await mechanicalTreatmentCreateSpecFactory();
+  const obs = await observationFactory();
+  spec.observations = [obs];
   return await MechanicalTreatmentController.shared.createNewObject(spec, await userFactory());
 };
 
@@ -78,7 +80,7 @@ export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, Mechanica
 
 export const mechanicalTreatmentUpdateSpecFactory = async (): Promise<MechanicalTreatmentUpdateSpec> => {
   return {
-    observations: [await observationFactory()],
+    // observations: [await observationFactory()],
   };
 };
 

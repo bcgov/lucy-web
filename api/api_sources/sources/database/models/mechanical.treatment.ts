@@ -74,6 +74,7 @@ export interface MechanicalTreatmentSpec {
 	issue: MechanicalTreatmentIssueCode;
 	providerContractor: TreatmentProviderContractor;
 	spaceGeom: SpaceGeom;
+	observations: Observation[];
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -99,6 +100,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	issue?: MechanicalTreatmentIssueCode;
 	providerContractor?: TreatmentProviderContractor;
 	spaceGeom?: SpaceGeom;
+	observations?: Observation[];
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
