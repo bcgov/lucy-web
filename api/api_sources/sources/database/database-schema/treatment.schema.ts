@@ -27,6 +27,7 @@ import { RecordTableSchema, CodeTableSchema, } from './base.record.schema';
 import { getYAMLFilePath } from '../../libs/core-database';
 import { TreatmentProviderCSVData, PesticideEmployerCSVData, ProjectManagementPlanCSVData, ChemicalTreatmentEmployeeCSVData } from '../pre.load';
 import { convertDateString, arrayToString } from '../../libs/utilities';
+import { BaseTableSchema } from '../applicationSchemaInterface';
 
 /**
  * @description Treatment base schema class which includes schema file name
@@ -58,7 +59,7 @@ export class MechanicalTreatmentSchema extends TreatmentSchema {
 /**
  * @description Schema Handler class for Mechanical Treatment Observation Schema
  */
-export class MechanicalTreatmentObservationSchema extends RecordTableSchema {
+export class MechanicalTreatmentObservationSchema extends BaseTableSchema {
     get schemaFilePath(): string {
         return getYAMLFilePath('mechanicalTreatmentObservation.schema.yaml');
     }

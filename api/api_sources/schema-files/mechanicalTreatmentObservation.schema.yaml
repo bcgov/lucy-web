@@ -7,12 +7,7 @@ includes:
 schemas:
   MechanicalTreatmentObservationSchema:
     name: mechanical_treatment_observation
-    description: '#Add description of the table'
-    meta: {}
-    displayLayout: {}
-    layout: {}
-    computedFields: {}
-    relations: {}
+    description: Joining table for mechanical treatment and observation
     columns:
       id:
         name: mechanical_treatment_observation_id
@@ -32,5 +27,3 @@ schemas:
         foreignTable: mechanical_treatment
         refColumn: mechanical_treatment_id
         deleteCascade: true
-    versions: []
-    fields: {}

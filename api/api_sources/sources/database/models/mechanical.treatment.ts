@@ -99,7 +99,6 @@ export interface MechanicalTreatmentUpdateSpec {
 	issue?: MechanicalTreatmentIssueCode;
 	providerContractor?: TreatmentProviderContractor;
 	spaceGeom?: SpaceGeom;
-	observations?: Observation[];
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -251,7 +250,7 @@ export class MechanicalTreatment extends Record {
 	/**
 	 * @description ManyToMany relationship
 	 */
-	@ManyToMany(type => Observation, { eager: true} )
+	@ManyToMany(type => Observation, observation => observation.mechanicalTreatmentsFetcher, { eager: true} )
     @JoinTable({
         name: MechanicalTreatmentObservationSchema.dbTable,
         joinColumn: {
