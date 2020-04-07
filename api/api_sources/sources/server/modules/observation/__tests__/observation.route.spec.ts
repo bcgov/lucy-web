@@ -343,6 +343,19 @@ describe('Test for observation routes', () => {
             });
         });
     });
+
+    it(`should export all the observations`, async () => {
+        const observation = await ModelFactory(ObservationController.shared)();
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/observation/export',
+            expect: 200,
+            auth: AuthType.inspectAdmin
+        }).then(async resp => {
+            await verifySuccessBody(resp.body);
+            await Destroyer(ObservationController.shared)(observation);
+        });
+    });
 });
 
 // -----------------------------------------------------------------------------------------------------------
