@@ -60,6 +60,7 @@ export class AppConstants {
 
     // Observation
     static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }
+    static get API_observation_Export(): string { return `${AppConstants.API_observation}/export`; }
     static get API_observationSpecies(): string { return `${AppConstants.API_baseURL}/observation/species`; }
     static API_observationWith(id: number): string {
         return `${AppConstants.API_baseURL}/observation/${id}`; }

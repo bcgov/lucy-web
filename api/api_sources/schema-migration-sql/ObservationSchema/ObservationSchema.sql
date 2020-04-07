@@ -9,6 +9,7 @@ ALTER TABLE observation ADD COLUMN observer_first_name VARCHAR(100) NULL;
 ALTER TABLE observation ADD COLUMN observer_last_name VARCHAR(100) NULL;
 ALTER TABLE observation ADD COLUMN sample_identifier VARCHAR(50) NULL;
 ALTER TABLE observation ADD COLUMN range_unit_number VARCHAR(50) NULL;
+ALTER TABLE observation ADD COLUMN general_comment VARCHAR(500) NULL;
 ALTER TABLE observation ADD COLUMN legacy_site_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE observation ADD COLUMN early_detection_rapid_resp_ind BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE observation ADD COLUMN research_detection_ind BOOLEAN NOT NULL DEFAULT FALSE;
@@ -42,6 +43,7 @@ COMMENT ON COLUMN observation.observer_first_name IS 'First name of the observer
 COMMENT ON COLUMN observation.observer_last_name IS 'Last name of the observer of the observation';
 COMMENT ON COLUMN observation.sample_identifier IS 'Identifier for sample taken.';
 COMMENT ON COLUMN observation.range_unit_number IS 'Identifier/Number of range unit associated with observation.';
+COMMENT ON COLUMN observation.general_comment IS 'General comment associated with observation';
 COMMENT ON COLUMN observation.legacy_site_ind IS 'This indicator used to indicate the observation site is legacy site or not.';
 COMMENT ON COLUMN observation.early_detection_rapid_resp_ind IS 'Indicator for early detection and rapid response for observed species.';
 COMMENT ON COLUMN observation.research_detection_ind IS 'Values of this column indicates this observation is research purpose or not.';
