@@ -14,12 +14,12 @@ schemas:
       api: /treatment/mechanical
     # End-meta
     displayLayout:
-      displayLabel: '#(species.commonName) - #(mechanicalMethod.description)'
+      displayLabel: '#(mechanicalMethod.description) - #(date)'
       fields:
         - header:
-            key: 'species'
-            default: 'Species'
-          key: species.commonName
+            key: 'speciesAgency'
+            default: 'Species Agency'
+          key: speciesAgency.displayLabel
         - header:
             key: 'date'
             default: 'Date'

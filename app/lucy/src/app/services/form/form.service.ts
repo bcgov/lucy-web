@@ -887,7 +887,6 @@ export class FormService {
     meta: any
   ): Promise<DropdownObject[]> {
     if (!code) {
-      console.log(`${code} not found`);
       return [];
     }
     let codeTable = await this.codeTableService.getCodeTable(code);
@@ -1077,8 +1076,11 @@ export class FormService {
               if (_i === 0) {
                 tableRowConfig[columnKey[0]] = object[key];
               } else {
-                tableRowConfig[columnKey[0]] =
-                  tableRowConfig[columnKey[0]][key];
+                if (columnKey[0] === 'spaceGeom') {
+                  tableRowConfig[columnKey[1]] = tableRowConfig[columnKey[0]][key];
+                } else {
+                  tableRowConfig[columnKey[0]] = tableRowConfig[columnKey[0]][key];
+                }
               }
             }
           } else {
@@ -1104,13 +1106,13 @@ export class FormService {
     const tableRows: TableRowModel[] = [];
     for (const element of tableDataConfig) {
       const displayedHeader = element.header.default;
+      const keys = this.convertDotSeparatedStringToArray(element.key);
+      const keyToBeAdded = (keys[0] !== 'spaceGeom') ? keys[0] : keys[1];
       columns.push({
-        key: this.convertDotSeparatedStringToArray(element.key)[0],
+        key: keyToBeAdded,
         display: displayedHeader
       });
-      displayedColums.push(
-        this.convertDotSeparatedStringToArray(element.key)[0]
-      );
+      displayedColums.push(keyToBeAdded);
     }
 
     for (const fields of values) {
