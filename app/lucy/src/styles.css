@@ -124,3 +124,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 	width: 100%;
 	border: 1px solid grey;
 }
+
+input:focus {
+  outline: none;
+}

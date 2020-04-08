@@ -148,7 +148,6 @@ describe('Treatment Test', () => {
         spec.observations = [newObs];
         await MechanicalTreatmentController.shared.updateObject(f, spec, user);
         const mt = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
-        
         should().exist(mt);
         should().exist(mt.observations);
         const updatedObservation = mt.observations.find(observation => observation.observation_id === newObs.observation_id);

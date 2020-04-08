@@ -25,3 +25,15 @@
 ::ng-deep .mat-form-field {
     width: 100%;
 } 
+
+::ng-deep mat-option.mat-active {
+    background: #FFF !important;
+}
+
+::ng-deep mat-option.mat-selected, ::ng-deep mat-option:hover {
+    background: rgba(0,51,101,0.05) !important;
+}
+
+::ng-deep mat-option.mat-option.mat-selected:not(.mat-option-disabled) {
+    color: #000 !important;
+}

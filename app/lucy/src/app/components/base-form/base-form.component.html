@@ -149,7 +149,7 @@
                                         <!-- Date & Time Fields -->
                                         <app-date-time-picker *ngIf="field.isDateAndTimeField" [mode]="mode" [header]="field.header" [dateTime]="field.value" (selected)="fieldChanged(field, $event)"></app-date-time-picker>
                                         <!-- Dropdown --->
-                                        <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [fieldHeader]="field.header" [selectedItem]="field.value" (selectionChanged)="fieldChanged(field, $event)">
+                                        <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [multiple]="field.multiple" [fieldHeader]="field.header" [selectedItem]="field.value" (selectionChanged)="fieldChanged(field, $event)">
                                         </app-dropdown>
                                         <!-- Checkbox -->
                                         <div class="col">
