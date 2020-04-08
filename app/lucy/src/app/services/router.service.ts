@@ -101,7 +101,7 @@ export class RouterService {
     switch (createType.toLowerCase()) {
       case `observation`:
         return AppRoutes.AddObservation;
-      case `mechnical`:
+      case `mechanical`:
         return AppRoutes.AddMechanicalTreatment;
       case 'chemical':
         return AppRoutes.AddChemicalTreatment;
@@ -119,7 +119,7 @@ export class RouterService {
     switch (editType.toLowerCase()) {
       case `observation`:
         return AppRoutes.EditObservation;
-      case `mechnical`:
+      case `mechanical`:
         return AppRoutes.EditMechanicalTreatment;
       case 'chemical':
         return AppRoutes.EditChemicalTreatment;
@@ -137,7 +137,7 @@ export class RouterService {
     switch (viewType.toLowerCase()) {
       case `observation`:
         return AppRoutes.ViewObservation;
-      case `mechnical`:
+      case `mechanical`:
         return AppRoutes.ViewMechanicalTreatment;
       case 'chemical':
         return AppRoutes.ViewChemicalTreatment;

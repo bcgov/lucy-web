@@ -30,6 +30,7 @@ export class MechanicalTreatmentObservationSchema1585864510614 extends AppDBMigr
 
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[STAR]', 'DOWN');
+        await queryRunner.query(`DELETE FROM mechanical_treatment`);
         await this.runQuerySqlFiles(this.downMigrations(), queryRunner);
         await queryRunner.query(this.mechanicalTreatmentObservationSchema.dropTable());
         this.log('[END]', 'DOWN');

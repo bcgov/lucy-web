@@ -38,6 +38,7 @@ import { ToastService, ToastIconType } from 'src/app/services/toast/toast.servic
 import { DummyService } from 'src/app/services/dummy.service';
 import { AppConstants } from 'src/app/constants/app-constants';
 import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
+import { DropdownObject } from 'src/app/services/dropdown.service';
 
 export enum FormType {
   Observation,
@@ -399,11 +400,27 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       this.responseBody[field.longitude.key] = event.longitude.value;
     } else if (field.isDropdown) {
       // dropdown field - needs id extraction
-      for (const key in event.object) {
-        // find id field
-        if (key.toLowerCase().indexOf('id') !== -1) {
-          this.responseBody[field.key] = event.object[key];
-          break;
+      
+      if (field.multiple) {
+        const selectedOptions = event as DropdownObject[];
+        const selectedIds: number[] = [];
+        selectedOptions.forEach(item => {
+          for (const key in item.object) {
+            // find id field
+            if (key.toLowerCase().indexOf('id') !== -1) {
+              selectedIds.push(item.object[key]);
+              break;
+            }
+          }
+        });
+        this.responseBody[field.key] = selectedIds;
+      } else {
+        for (const key in event.object) {
+          // find id field
+          if (key.toLowerCase().indexOf('id') !== -1) {
+            this.responseBody[field.key] = event.object[key];
+            break;
+          }
         }
       }
     } else if (field.isDateField) {

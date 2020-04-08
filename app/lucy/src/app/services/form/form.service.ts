@@ -581,24 +581,48 @@ export class FormService {
     }
     const relationField = relations[key];
     // set css classes // TODO: Server doesnt send this yet
-        let cssClasses = ``;
-        if (relationField.layout && relationField.layout.classes) {
-          const classes = relationField.layout.classes;
-          for (const item of classes) {
-            cssClasses = cssClasses + ` `;
-          }
-        }
+    let cssClasses = ``;
+    if (relationField.layout && relationField.layout.classes) {
+      const classes = relationField.layout.classes;
+      for (const item of classes) {
+        cssClasses = cssClasses + ` `;
+      }
+    }
+
+    let codeTableDisplayKey, codeTableMeta;
+
+    if (
+      relationField.refSchema.displayLayout &&
+      relationField.refSchema.displayLayout.fields
+    ) {
+      // const lastField = field.refSchema.displayLayout.fields.slice(-1)[0];
+      const lastField = relationField.refSchema.displayLayout.fields[0];
+      codeTableDisplayKey = lastField.key;
+      codeTableMeta = relationField.refSchema.meta;
+    }
+
+    const dropdown = await this.dropdownfor(
+      relationField.refSchema.modelName,
+      codeTableDisplayKey,
+      codeTableMeta
+    );
+
     return {
       key: key,
       header: relationField.header.default,
-      description: relationField.description,
+      description: relationField.description.default,
       required: true,
       type: relationField.type,
       verification: relationField.verification,
-      meta: relationField.meta,
+      meta: codeTableMeta,
       cssClasses: cssClasses,
-      codeTable: '',
+      codeTable: relationField.refSchema.modelName,
+      displayKey: codeTableDisplayKey,
       condition: '',
+      value: undefined,
+      isDropdown: true,
+      multiple: (relationField.type === 'array'),
+      dropdown
     };
   }
 
@@ -976,6 +1000,19 @@ export class FormService {
                   object[field.key],
                   field.codeTableMeta
                 );
+              } else if (config.relationKeys.includes(field.key) && key !== null) {
+                const values: any[] = object[field.key];
+                const mappedDropdownValues: DropdownObject[] = [];
+                values.forEach(async (value) => {
+                  const dropdownObj = await this.getDropdownObjectWithId(
+                    field.codeTable,
+                    field.displayKey,
+                    value,
+                    field.meta
+                  );
+                  mappedDropdownValues.push(dropdownObj);
+                });
+                field.value = mappedDropdownValues;
               } else {
                 field.value = object[field.key];
               }
@@ -1166,13 +1203,30 @@ export class FormService {
         for (const field of subSection.fields) {
           // if its a dropdown
           if (field.isDropdown && field.value) {
-            // Find the id of the value
-            for (const key in field.value.object) {
-              if (key.toLowerCase().indexOf('id') !== -1) {
-                body[field.key] = field.value.object[key];
+            switch (field.type) {
+              case 'object':
+                for (const key in field.value.object) {
+                  if (key.toLowerCase().indexOf('id') !== -1) {
+                    body[field.key] = field.value.object[key];
+                    break;
+                  }
+                }
                 break;
-              }
+              case 'array':
+                const items = [];
+                (field.value as any[]).forEach(obj => {
+                  for (const key in obj) {
+                    if (key.toLowerCase().indexOf('id') !== -1) {
+                      items.push(obj[key]);
+                      break;
+                    }
+                  }
+                });
+                body[field.key] = items;
+                break;
             }
+            // Find the id of the value
+            
           } else if (field.isLocationField) {
             // If its a location field
             if (field.isSpaceGeom) {

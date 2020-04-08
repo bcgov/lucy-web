@@ -1,6 +1,6 @@
 <div *ngIf="!readonly" class="col-12 field d-inline-block animated" id="{{fieldId}}">
     <mat-form-field>
-        <mat-select [formControl]="optionCtrl" placeholder="{{fieldHeader}}" [(ngModel)]="selectedItemName" #singleSelect (selectionChange)="selected($event)">
+        <mat-select [formControl]="optionCtrl" placeholder="{{fieldHeader}}" [(ngModel)]="selectedItemName" [multiple]="multiple" (selectionChange)="selected($event)">
           <app-mat-select-search [formControl]="optionFilterCtrl"></app-mat-select-search>
           <mat-option *ngFor="let item of filteredItems; let i = index" [value]="item.name">
               {{item.name}}

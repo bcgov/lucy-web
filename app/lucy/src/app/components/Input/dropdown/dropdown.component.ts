@@ -43,6 +43,7 @@ export class DropdownComponent implements OnInit {
   private _onDestroy = new Subject<void>();
 
   @Input() fieldHeader = ``;
+  @Input() multiple = false;
   // Optional Input
   @Input() editable = true;
   actionButtons: AlertModalButton[];
@@ -75,28 +76,31 @@ export class DropdownComponent implements OnInit {
   }
 
   ///// Selected item
-  private _selectedItem: DropdownObject;
+  @Output() selectionChanged = new EventEmitter<DropdownObject | DropdownObject[]>();
+  private _selectedItem: DropdownObject | DropdownObject[];
   // Get selected item
-  get selectedItem(): DropdownObject {
+  get selectedItem(): DropdownObject | DropdownObject[] {
     return this._selectedItem;
   }
   // Set selected item
-  @Input() set selectedItem(item: DropdownObject) {
+  @Input() set selectedItem(item: DropdownObject | DropdownObject[]) {
     if (!item) { return; }
+
     this._selectedItem = item;
-    if (item) {
-      this.selectionChanged.emit(item);
-    }
+    this.selectionChanged.emit(item);
   }
   ////////////////////
 
-  private _selectedItemName: string;
-  set selectedItemName(name: string) {
-    this._selectedItemName = name;
-  }
+  get selectedItemName(): string | string[] {
+    if (this.multiple) {
+      const items = this.selectedItem as DropdownObject[];
+      if (!items || items.length === 0) return '';
 
-  get selectedItemName(): string {
-    return this.selectedItem ? this._selectedItem.name : '';
+      const itemNames = items.map(item => item.name);
+      return this.mode === FormMode.View ? itemNames.join(',') : itemNames;
+    }
+    const item = this.selectedItem as DropdownObject;
+    return item ? item.name : '';
   }
 
   ///// Items list
@@ -138,9 +142,6 @@ export class DropdownComponent implements OnInit {
   }
   ////////////////////
 
-  // Response
-  @Output() selectionChanged = new EventEmitter<DropdownObject>();
-
   constructor( private alert: AlertService, private routerService: RouterService ) {  }
 
   ngOnInit() {
@@ -155,10 +156,20 @@ export class DropdownComponent implements OnInit {
   }
     
   selected(event: MatSelectChange) {
+    if (this.multiple) {
+      const selectedOptions = event.value as string[];
+      const items = [];
+      selectedOptions.forEach(value => {
+        const item = this.filteredItems.find(option => option.name === value);
+        items.push(item);
+      });
+      this.selectedItem = items;
+      this.selectionChanged.emit(items);
+      return;
+    }
     const selectedOption = this.filteredItems.find(item => item.name === event.value);
     this.selectedItem = selectedOption;
-    this.selectedItemName = selectedOption.name;
-    this.selectionChanged.emit(this.selectedItem);
+    this.selectionChanged.emit(selectedOption);
   }
 
   filterOptions() {
