@@ -78,6 +78,10 @@
     .side-menu {
         display: none !important;
     }
+
+    .diff-container {
+        padding-left: 15px !important;
+    }
 }
 
 /****************************************/
@@ -149,13 +153,10 @@
     background-color: transparent;
     width: 100%;
     padding-left: 0;
-    padding-right: 0;
     animation-duration: 0.5s;
     animation-delay: 0s;
     margin-bottom: 10px;
-
-    border-radius: 5px;
-    box-shadow: 0 0 5px 0 #E5E9F2;
+    box-shadow: none !important;
 }
 
 .no-content {

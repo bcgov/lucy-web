@@ -45,24 +45,24 @@
                     <span class="spacer-toolbar"></span>
                     <!-- Submit button -->
                     <button mat-flat-button *ngIf="!readonly || inReviewMode" type="button" class="btn btn-secondary submit-button" (click)="submitAction()">
-            {{ submitButtonPrefix }} {{ config["title"] }}
-          </button>
+                        {{ submitButtonPrefix }} {{ config["title"] }}
+                    </button>
                     <!-- ---- -->
                     <!-- Edit button for review -->
                     <button mat-flat-button *ngIf="inReviewMode" type="button" class="btn btn-secondary edit-button animated fadeIn" (click)="exitReviewMode()">
-            <i class="material-icons action-icon">
-              edit
-            </i>
-            Make changes
-          </button>
+                        <i class="material-icons action-icon">
+                        edit
+                        </i>
+                        Make changes
+                    </button>
                     <!-- ---- -->
                     <!-- Edit Button for when in view mode and user is data editor -->
                     <button mat-flat-button (click)="edit()" *ngIf="isDataEditor && viewing" type="button" class="btn btn-secondary edit-button animated fadeIn">
-            <i class="material-icons action-icon">
-              edit
-            </i>
-            Make changes
-          </button>
+                        <i class="material-icons action-icon">
+                        edit
+                        </i>
+                        Make changes
+                    </button>
                     <!-- ---- -->
                 </mat-toolbar-row>
             </mat-toolbar>
@@ -165,8 +165,8 @@
                                             <div class="row">
                                                 <div class="col no-content">
                                                     <i class="material-icons">
-                            build
-                          </i>This section does not have any content yet.
+                                                        build
+                                                    </i>This section does not have any content yet.
                                                 </div>
                                             </div>
                                         </div>
@@ -197,9 +197,9 @@
                             </div>
                             <div class="col-12">
                                 <app-table *ngIf="
-              config.relationsConfigs[relationKey] &&
-              config.relationsConfigs[relationKey].table
-            " [model]="config.relationsConfigs[relationKey].table"></app-table>
+                                config.relationsConfigs[relationKey] &&
+                                config.relationsConfigs[relationKey].table
+                                " [model]="config.relationsConfigs[relationKey].table"></app-table>
                             </div>
                         </div>
                     </div>
@@ -213,8 +213,8 @@
     <div *ngIf="creating && !isProd && !isTest" class="row test-btn">
         <div class="col-12">
             <button class="btn" (click)="generateForTesting()">
-        T
-      </button>
+                T
+            </button>
         </div>
     </div>
     <br />

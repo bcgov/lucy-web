@@ -255,10 +255,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
     for (const key of this.config.requiredFieldKeys) {
       const value = this.responseBody[key];
-      if (!value) return false
-      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) return false;
-      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) return false;
-      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) return false;
+
+      if (this.config.relationKeys.includes(key)) {
+        const fieldType = this.config.relationsConfigs[key].type;
+        if (fieldType === 'array' && (!value || value.length === 0)) return false;
+      } else {
+        if (!value) return false
+        else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) return false;
+        else if (key === 'tankMixes' && !this.isTankMixesValid(value)) return false;
+        else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) return false;
+      }
     }
 
     return true;
@@ -273,10 +279,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     const requiredMissingFieldKeys: string[] = [];
     for (const key of this.config.requiredFieldKeys) {
       const value = this.responseBody[key];
-      if (!value) requiredMissingFieldKeys.push(key);
-      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) requiredMissingFieldKeys.push(key);
-      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) requiredMissingFieldKeys.push(key);
-      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) requiredMissingFieldKeys.push(key);
+
+      if (this.config.relationKeys.includes(key)) {
+        const fieldType = this.config.relationsConfigs[key].type;
+        if (fieldType === 'array' && (!value || value.length === 0)) requiredMissingFieldKeys.push(key);
+      } else {
+        if (!value) requiredMissingFieldKeys.push(key);
+        else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) requiredMissingFieldKeys.push(key);
+        else if (key === 'tankMixes' && !this.isTankMixesValid(value)) requiredMissingFieldKeys.push(key);
+        else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) requiredMissingFieldKeys.push(key);
+      }
     }
 
     const missingFieldHeaders: string[] = [];
@@ -475,7 +487,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * Form submission
    */
   async submitAction() {
-    // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.triedToSubmit = true;
       this.toast.show('Some required fields are missing', ToastIconType.fail);
