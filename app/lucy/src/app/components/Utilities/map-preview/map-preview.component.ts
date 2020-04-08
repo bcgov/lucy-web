@@ -15,7 +15,7 @@
  *
  * 	Created by Amir Shayegh on 2019-10-23.
  */
-import { Component, OnInit, AfterViewInit, AfterContentChecked, Input, Output , EventEmitter, AfterViewChecked} from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output , EventEmitter, AfterViewChecked, OnChanges, SimpleChanges, SimpleChange} from '@angular/core';
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
 import 'node_modules/leaflet-draw';
@@ -45,7 +45,7 @@ export interface MapMarker {
   styleUrls: ['./map-preview.component.css']
 })
 
-export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
 
   // Map reference
   private map?;
@@ -57,6 +57,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private markerGroup?;
   // flag set after viewChecked.
   private ready = false;
+  // list of points in LatLng format, so they're Leaflet-compatible
+  private pointsLatLng: number[][] = [];
+  // list of points in polygon, in LatLng format, so they're Leaflet-compatible
+  private polygonLatLng: number[][] = [];
   // Leaflet Feature objects drawn on map
   private leafletFeatures?: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
@@ -122,25 +126,45 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   }
 
   ///////////// Line Points /////////////
-  private _points: LatLongCoordinate[] = [];
+  _points: LatLongCoordinate[] = [];
   get points(): LatLongCoordinate[] {
     return this._points;
   }
-  @Input() set points(locations: LatLongCoordinate[]) {
-    this._points = locations;
-  }
+  @Input() set points(input: LatLongCoordinate[]) {
+    this._points = input;
 
-  /////////////// Polygon ////////////////
-  private _polygon: number[][] = [[]];
-  get polygon(): number[][] {
-    return this._polygon;
-  }
-  @Input() set polygon(coordinates: number[][]) {
-    this._polygon = coordinates;
+    // convert each point in this._points from LatLongCoordinate to LatLng,
+    // push the converted point to pointsLatLng so it can be used by Leaflet
+    this.pointsLatLng = [];
+    for (const p of this._points) {
+      this.pointsLatLng.push([p.latitude, p.longitude]);
+    }
     if (this.ready) {
       this.drawPolygon();
     }
   }
+
+  /////////////// Polygon ////////////////
+  _polygon: LatLongCoordinate[] = [];
+  get polygon(): LatLongCoordinate[] {
+    return this._polygon;
+  }
+  @Input() set polygon(coordinates: LatLongCoordinate[]) {
+    this._polygon = coordinates;
+
+    // convert each point in this._polygon from LatLongCoordinate to LatLng,
+    // push the converted point to polygonLatLng so it can be used by Leaflet
+    this.polygonLatLng = [];
+    for (const p of this._polygon) {
+      this.polygonLatLng.push([p.latitude, p.longitude]);
+    }
+    if (this.ready) {
+      this.drawPolygon();
+    }
+  }
+
+  //////////////// Offset ////////////////////
+  @Input() private _offset = 0;
 
   /////////////// GeoJSON file ////////////
   private _inputGeometryJSON: any;
@@ -174,6 +198,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   ngOnInit() {
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+  }
+
   ngAfterViewInit() {
     if (!this.center) {
       this.initMapAt(this.defaultPoint());
@@ -191,6 +219,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
         this.showMapAtCenter();
       }
       this.addMarkers();
+      this.drawPolygon();
     }
   }
   //////////////////////////////////////////////
@@ -410,10 +439,13 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
 
   /**
    * Draws a polygon on the map based on the list of lat/long coordinates
-   * assigned to this.polygon
+   * assigned to this.polygonLatLng
    */
   drawPolygon() {
-    const polygon = L.polygon([this.polygon], {
+    if (this.polygonLatLng.length === 0) {
+      return;
+    }
+    const polygon = L.polygon([this.polygonLatLng], {
       color: '#F5A623',
       fillColor: '#F5A623',
       fillOpacity: 0.7,
@@ -426,33 +458,31 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     this.leafletFeatures.features.push(polygonGeoJson);
     this.map.fitBounds(polygon._bounds);
     this.drawLine();
+    this.drawPoints();
 
     this.inputGeometryJSON = this.leafletFeatures;
     this.inputGeometryChanged.emit(this.inputGeometryJSON);
   }
 
   /**
-   * Draws a connected line on the map with circleMarkers for each of the lat/long coordinates
-   * assigned to this.points
+   * Draws a connected line on the map with circleMarkers for each of the LatLng coordinates
+   * assigned to this.pointsLatLng
    * Used as part of waypoint functionality.
    * Outputs a dictionary of the Leaflet polyline and circleMarkers drawn on the map, to be saved
    * to GeoJSON file if desired.
    */
   drawLine() {
-    const linePoints = [];
-
-    for (const c of this.points) {
-      linePoints.push(c);
-    }
-    const line = L.polyline([linePoints], {
+    const line = L.polyline([this.pointsLatLng], {
       color: 'black',
       weight: 1,
       fillOpacity: 0.4,
     });
     line.addTo(this.map);
     this.leafletFeatures.features.push(line.toGeoJSON());
+  }
 
-    for (const l of linePoints) {
+  drawPoints() {
+    for (const l of this.pointsLatLng) {
       const circle = L.circleMarker([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
       circle.addTo(this.map);
       this.leafletFeatures.features.push(circle.toGeoJSON());
