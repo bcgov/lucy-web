@@ -24,11 +24,11 @@ schemas:
         - header:
             key: 'latitude'
             default: 'Latitude'
-          key: lat
+          key: spaceGeom.latitude
         - header:
             key: 'longitude'
             default: 'Longitude'
-          key: long
+          key: spaceGeom.longitude
         - header:
             key: 'date'
             default: 'Date'
