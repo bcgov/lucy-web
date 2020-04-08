@@ -60,8 +60,7 @@
             </div>
             <!-- Map -->
             <div class="col-12 col-md-8 leaf">
-                <app-map-preview (centerPointChanged)="mapCenterChanged($event)" (polygonChanged)="polygonChanged($event)" (pointsChanged)="pointsChanged($event)" (inputGeometryChanged)="inputGeometryChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers"
-                    [polygon]="waypointBoundaryPointsLatLong" [points]="points" [inputGeometryJSON]="object">
+                <app-map-preview (centerPointChanged)="mapCenterChanged($event)" (inputGeometryChanged)="inputGeometryChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers" [inputGeometryJSON]="object">
                 </app-map-preview>
 
                 <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance animated wobble">
@@ -105,7 +104,7 @@
         <app-modal *ngIf="showModal" [align]="'center'">
 
             <!-- Add waypoint modal -->
-            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" [config]="config" [responseBody]="responseBody" (waypointsEventHandler)="waypointsEventHandler($event)" (onClose)="onModalClose()">
+            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" (onClose)="onModalClose()" [mode]="mode">
             </app-waypoint-modal>
 
         </app-modal>

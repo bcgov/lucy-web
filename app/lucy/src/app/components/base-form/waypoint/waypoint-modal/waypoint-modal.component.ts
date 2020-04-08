@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { WaypointTextEntryComponent } from '../waypoint-text-entry/waypoint-text-entry.component';
+import { MapPreviewPoint } from 'src/app/components/Utilities/map-preview/map-preview.component';
 import { ValidationService } from 'src/app/services/validation.service';
-import { ConverterService, LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
+import { ConverterService, LatLongCoordinate, AlbersCoordinate } from 'src/app/services/coordinateConversion/location.service';
 const haversine = require('haversine-distance');
 
 @Component({
@@ -10,6 +11,12 @@ const haversine = require('haversine-distance');
   styleUrls: ['./waypoint-modal.component.css']
 })
 export class WaypointModalComponent implements OnInit {
+  // Set the initial view location for map
+  public mapCenter: MapPreviewPoint = {
+    latitude: 52.068508,
+    longitude: -123.288152,
+    zoom: 4
+  };
 
   MIN_NUM_POINTS = 2;
   MAX_NUM_POINTS = 10;
@@ -20,8 +27,10 @@ export class WaypointModalComponent implements OnInit {
   showMap = false;
   showLatLong = true;
   waypointEntryComponents = [];
-  waypoints: [LatLongCoordinate?] = [];
   offset: number;
+  points: LatLongCoordinate[] = [];
+  polygon: LatLongCoordinate[] = [];
+  polygonInAlbers: AlbersCoordinate[] = [];
   maxPointsLengthReached = false;
   waypointValid: boolean;
   offsetValid: boolean;
@@ -32,15 +41,6 @@ export class WaypointModalComponent implements OnInit {
     max: 20,
     required: true,
   };
-
-  // Base form response body
-  private _responseBody: any = {};
-  get responseBody(): any {
-    return this._responseBody;
-  }
-  @Input() set responseBody(responseBody: any) {
-    this._responseBody = responseBody;
-  }
 
   @Output() offsetChangedEmitter = new EventEmitter<any>();
   @Output() waypointEmitter = new EventEmitter<any>();
@@ -82,25 +82,25 @@ export class WaypointModalComponent implements OnInit {
   }
 
   pointChanged(coordinate: LatLongCoordinate, index: number) {
-    this.waypoints.splice(index, 1, coordinate);
+    this.points.splice(index, 1, coordinate);
   }
 
   addNewWaypointTextEntry() {
     const newWaypointEntry = new WaypointTextEntryComponent(this.validation, this.converter);
     this.waypointEntryComponents.push(newWaypointEntry);
     this.maxPointsLengthReached = this.waypointEntryComponents.length === this.MAX_NUM_POINTS ? true : false;
-    this.waypoints.push(newWaypointEntry.point);
+    this.points.push(newWaypointEntry.point);
   }
 
   removeWaypoint(index: number) {
     this.waypointEntryComponents.splice(index, 1);
-    this.waypoints.splice(index, 1);
-    this.maxPointsLengthReached = this.waypoints.length === this.MAX_NUM_POINTS ? true : false;
+    this.points.splice(index, 1);
+    this.maxPointsLengthReached = this.points.length === this.MAX_NUM_POINTS ? true : false;
   }
 
   generatePath() {
     this.errors = [];
-    if (!this.validWaypointValues(this.offset, this.waypoints)) {
+    if (!this.validWaypointValues(this.offset, this.points)) {
       this.errors.push('Error: please fill all the fields');
       return;
     }
@@ -110,15 +110,16 @@ export class WaypointModalComponent implements OnInit {
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
       this.errors.push('Error: cannot enter less than 2 coordinates');
     } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
-      this.waypointEmitter.emit(this.waypoints);
       this.showMap = true;
+      this.calculateWaypointBoundaryPoints(this.offset, this.points);
+      // this.waypointEmitter.emit(this.points);
     }
   }
 
   get validDistanceBetweenPoints() {
     let counter = 0;
-    for (let i = 0; i < this.waypoints.length - 1; i++) {
-      const distance = haversine(this.waypoints[i], this.waypoints[i + 1]);
+    for (let i = 0; i < this.points.length - 1; i++) {
+      const distance = haversine(this.points[i], this.points[i + 1]);
       if ( distance < this.MIN_DISTANCE_BTWN_POINTS || distance > this.MAX_DISTANCE_BTWN_POINTS ) {
         this.errors.push(`Error: invalid distance (` + distance.toFixed(2) + `m) between points ` + (i + 1) + ` and ` + (i + 2));
         counter += 1;
@@ -129,8 +130,8 @@ export class WaypointModalComponent implements OnInit {
 
   get pointsAreWithinBC() {
     let counter = 0;
-    for (let i = 0; i < this.waypoints.length - 1; i++) {
-      if (!this.converter.isInsideBC(this.waypoints[i].latitude, this.waypoints[i].longitude)) {
+    for (let i = 0; i < this.points.length - 1; i++) {
+      if (!this.converter.isInsideBC(this.points[i].latitude, this.points[i].longitude)) {
         this.errors.push(`Error: point ` + (i + 1) + ` is not within BC`);
         counter += 1;
       }
@@ -154,25 +155,168 @@ export class WaypointModalComponent implements OnInit {
   submitTestData() {
     // valid data
     this.offset = 3;
-    this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
-    this.waypoints.push({latitude: 48.430997, longitude: -123.354144});
-    this.waypoints.push({latitude: 48.431013, longitude: -123.354051});
-    this.waypoints.push({latitude: 48.431088, longitude: -123.354008});
-    this.waypoints.push({latitude: 48.431072, longitude: -123.353949});
-    this.waypoints.push({latitude: 48.431154, longitude: -123.353922});
-    this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
-    this.waypoints.push({latitude: 48.431227, longitude: -123.354094});
-    this.waypoints.push({latitude: 48.431248, longitude: -123.354148});
-    this.waypoints.push({latitude: 48.431329, longitude: -123.354118});
+    this.points.push({latitude: 48.430961, longitude: -123.354064});
+    this.points.push({latitude: 48.430997, longitude: -123.354144});
+    this.points.push({latitude: 48.431013, longitude: -123.354051});
+    this.points.push({latitude: 48.431088, longitude: -123.354008});
+    this.points.push({latitude: 48.431072, longitude: -123.353949});
+    this.points.push({latitude: 48.431154, longitude: -123.353922});
+    this.points.push({latitude: 48.431197, longitude: -123.353981});
+    this.points.push({latitude: 48.431227, longitude: -123.354094});
+    this.points.push({latitude: 48.431248, longitude: -123.354148});
+    this.points.push({latitude: 48.431329, longitude: -123.354118});
     this.generatePath();
 
     // // invalid data
     // this.offset = 33;  // too large
-    // this.waypoints.push({latitude: 48.430961, longitude: -123.354064});
-    // this.waypoints.push({latitude: 48.431197, longitude: -123.353981});
-    // this.waypoints.push({latitude: 48.431197, longitude: -123.353980}); // too close to previous
-    // this.waypoints.push({latitude: 50.530961, longitude: -124.354008}); // too far away
-    // this.waypoints.push({latitude: 48.541516, longitude: -123.121760}); // in Washington state
+    // this.points.push({latitude: 48.430961, longitude: -123.354064});
+    // this.points.push({latitude: 48.431197, longitude: -123.353981});
+    // this.points.push({latitude: 48.431197, longitude: -123.353980}); // too close to previous
+    // this.points.push({latitude: 50.530961, longitude: -124.354008}); // too far away
+    // this.points.push({latitude: 48.541516, longitude: -123.121760}); // in Washington state
     // this.generatePath();
   }
+
+  /********* Waypoint Math/Helper Methods **********/
+
+  /**
+   * Given an offset distance in metres and a list of lat/long coordinates representing the centre line
+   * of the waypoint, calculates the lat/long coordinates to be used as the boundary of the waypoint
+   * (drawn on the map as a polygon). Calculations are performed in BC Albers, so input lat/long coords
+   * are first converted into Albers, calculated upon, and then converted back into lat/long for drawing
+   * on map.
+   * @param offset width in metres of the waypoint line
+   * @param coords ordered list of lat/long coords centred along waypoint line (distance of half of offset to either
+   * side of each coordinate)
+   */
+  private calculateWaypointBoundaryPoints(offset: number, coords: LatLongCoordinate[]) {
+    this.points = coords;
+    const coordsInAlbers: AlbersCoordinate[] = [];
+
+    // convert lat/long coords to Albers
+    for (const c of coords) {
+      const point: AlbersCoordinate = this.converter.latLongCoordinateToAlbers(c.latitude, c.longitude);
+      coordsInAlbers.push(point);
+    }
+
+    // traverse list of Albers coords, calculating left side of offset/buffer
+    for (let i = 0; i < coordsInAlbers.length - 1; i++) {
+      const vx = coordsInAlbers[i + 1].x - coordsInAlbers[i].x;
+      const vy = coordsInAlbers[i + 1].y - coordsInAlbers[i].y;
+      const dist = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+      const ux = (-1 * vy) / dist;
+      const uy = vx / dist;
+
+      let nextPoint = {
+        x: coordsInAlbers[i].x + (offset * ux),
+        y: coordsInAlbers[i].y + (offset * uy)
+      };
+      this.polygonInAlbers.push(nextPoint);
+
+      nextPoint = {
+        x: coordsInAlbers[i + 1].x + (offset * ux),
+        y: coordsInAlbers[i + 1].y + (offset * uy)
+      };
+      this.polygonInAlbers.push(nextPoint);
+    }
+
+    // traverse list of coords in reverse, calculating other side of offset/buffer
+    for (let i = coordsInAlbers.length - 1; i > 0; i--) {
+      const vx = coordsInAlbers[i].x - coordsInAlbers[i - 1].x;
+      const vy = coordsInAlbers[i].y - coordsInAlbers[i - 1].y;
+      const dist = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+      const ux = (-1 * vy) / dist;
+      const uy = vx / dist;
+
+      let nextPoint = {
+        x: coordsInAlbers[i].x - (offset * ux),
+        y: coordsInAlbers[i].y - (offset * uy)
+      };
+      this.polygonInAlbers.push(nextPoint);
+
+      nextPoint = {
+        x: coordsInAlbers[i - 1].x - (offset * ux),
+        y: coordsInAlbers[i - 1].y - (offset * uy)
+      };
+      this.polygonInAlbers.push(nextPoint);
+    }
+
+    // iterate through lower portion of polygonInAlbers to calculate intersection point
+    for (let i = 0; i < ((this.polygonInAlbers.length / 2) - 2); i = i + 2) {
+      this.oneIterationOfIntersectionCalculations(i);
+    }
+
+    // iterate through second portion of polygonInAlbers to calculate intersection points
+    for (let i = (this.polygonInAlbers.length / 2); i < this.polygonInAlbers.length - 3; i = i + 2) {
+      this.oneIterationOfIntersectionCalculations(i);
+    }
+
+    // check for duplicated coordinates in polygonInAlbers
+    // if any duplicates found, remove them
+    for (let i = 0; i < this.polygonInAlbers.length; i++) {
+      const pt = this.polygonInAlbers[i];
+      const indices = this.polygonInAlbers.map(p => (p.x === pt.x && p.y === pt.y));
+      const index = indices.indexOf(true, i + 1);
+      if (index > -1) {
+        this.polygonInAlbers.splice(index, 1);
+      }
+    }
+
+    // convert each coordinate in waypointBoundaryPointsAlbers from BC Albers to
+    // lat/long, add to polygon
+    for (const a of this.polygonInAlbers) {
+      const l = this.converter.albersToLatLongCoordinate(a.x, a.y);
+      this.polygon.push(l);
+    }
+  }
+
+  private oneIterationOfIntersectionCalculations(i: number) {
+    const x11 = this.polygonInAlbers[i].x;
+    const x12 = this.polygonInAlbers[i + 1].x;
+    const y11 = this.polygonInAlbers[i].y;
+    const y12 = this.polygonInAlbers[i + 1].y;
+    const x21 = this.polygonInAlbers[i + 2].x;
+    const x22 = this.polygonInAlbers[i + 3].x;
+    const y21 = this.polygonInAlbers[i + 2].y;
+    const y22 = this.polygonInAlbers[i + 3].y;
+
+    const points = {
+      x11: x11,
+      x12: x12,
+      y11: y11,
+      y12: y12,
+      x21: x21,
+      x22: x22,
+      y21: y21,
+      y22: y22
+    };
+    const intersection = this.findIntersection(points);
+
+    // replace end point of first arc & start point of second arc with intersection
+    this.polygonInAlbers[i + 1].x = intersection.interX;
+    this.polygonInAlbers[i + 1].y = intersection.interY;
+    this.polygonInAlbers[i + 2].x = intersection.interX;
+    this.polygonInAlbers[i + 2].y = intersection.interY;
+  }
+
+  /**
+   * Returns the x & y coordinates of the point of intersection amongst input values
+   * @param values dictionary object of 4 x and 4 y values
+   */
+  private findIntersection(values: any) {
+    const dx1 = values.x12 - values.x11;
+    const dy1 = values.y12 - values.y11;
+    const dx2 = values.x22 - values.x21;
+    const dy2 = values.y22 - values.y21;
+    const denom = dy1 * dx2 - dx1 * dy2;
+    const tt1 = ((values.x11 - values.x21) * dy2 + (values.y21 - values.y11) * dx2) / denom; // cannot be zero
+
+    // Find the point of intersection
+    const interX = values.x11 + dx1 * tt1;
+    const interY = values.y11 + dy1 * tt1;
+
+    return ({interX: interX, interY: interY});
+  }
+
+  /******** End Waypoint Math/Helper Methods *******/
 }

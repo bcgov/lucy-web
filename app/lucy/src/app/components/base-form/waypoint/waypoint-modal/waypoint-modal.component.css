@@ -175,6 +175,10 @@ p {
     color: #FFFFFF;
 }
 
+.map-container {
+    margin: 12px;
+}
+
 .test-btn {
     align-content: center;
     text-align: center;
@@ -186,4 +190,18 @@ p {
     height: 50px;
     width: 50px;
     font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .leaf {
+        min-height: 285px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .leaf {
+        height: 500px;
+    }
 }
