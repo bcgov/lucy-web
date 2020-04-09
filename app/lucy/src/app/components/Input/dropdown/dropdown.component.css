@@ -13,14 +13,9 @@
     overflow-x: hidden;
 }
 
-/* ::ng-deep .mat-select{
-    display: block;
-    height: calc(1.5em + .75rem + 2px);
-    font-style: normal;
-    font-weight: normal; 
-    font-size: 15px;
-    line-height: 1.5;
-} */
+p {
+    margin: 0;
+}
 
 ::ng-deep .mat-form-field {
     width: 100%;

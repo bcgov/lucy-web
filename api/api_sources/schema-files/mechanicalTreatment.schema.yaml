@@ -107,6 +107,11 @@ schemas:
         type: array
         relationshipType: many-to-many
         schema: ObservationSchema
+        layout:
+          classes:
+            - mode: view
+              classNames:
+                - col-12
     # End: Relations
     columns: 
       # -- Data Columns

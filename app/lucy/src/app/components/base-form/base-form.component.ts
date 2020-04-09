@@ -204,6 +204,19 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._diffObject = object;
   }
 
+  classNames(field: any): string {
+    const classes = field.classNames;
+    if (!classes) return '';
+
+    if (this.mode === FormMode.Create) {
+      return classes.create + ` ` + field.classNames.common;
+    } else if (this.mode === FormMode.Edit) {
+      return classes.edit + ` ` + field.classNames.common;
+    } else {
+      return classes.view + ` ` + field.classNames.common;
+    }
+  }
+
   /**
    * Check if the spaceGeom is valid or not
    */
