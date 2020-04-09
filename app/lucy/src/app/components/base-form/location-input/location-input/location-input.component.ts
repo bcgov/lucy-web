@@ -205,16 +205,43 @@ export class LocationInputComponent implements OnInit {
   headerYDimension = AreaFieldTitle.LENGTH;
   x = '';
   y = '';
-  _showXOnly = false;
+
+  _showX = true;
+  _showY = true;
   areaLabel = AreaFieldTitle.UNKNOWN;
 
-  get showXOnly(): boolean {
-    return this._showXOnly;
+  get showX(): boolean {
+    return this._showX;
   }
-  set showXOnly(val: boolean) {
-    this._showXOnly = val;
-    this.areaCalculator = val === true ? this.calculatePoint : this.calculatePlot;
-    this.headerXDimension = val === true ? AreaFieldTitle.RADIUS : AreaFieldTitle.WIDTH;
+  set showX(val: boolean) {
+    this._showX = val;
+    if (this.showX && this.showY) {
+      this.areaCalculator = this.calculatePlot;
+      this.headerXDimension = AreaFieldTitle.WIDTH;
+    } else if (this.showX && !this.showY) {
+      this.areaCalculator = this.calculatePoint;
+      this.headerXDimension = AreaFieldTitle.RADIUS;
+    } else {
+      this.headerXDimension = AreaFieldTitle.UNKNOWN;
+      this.headerYDimension = AreaFieldTitle.UNKNOWN;
+    }
+  }
+
+  get showY(): boolean {
+    return this._showY;
+  }
+  set showY(val: boolean) {
+    this._showY = val;
+    if (this.showX && this.showY) {
+      this.areaCalculator = this.calculatePlot;
+      this.headerXDimension = AreaFieldTitle.WIDTH;
+    } else if (this.showX && !this.showY) {
+      this.areaCalculator = this.calculatePoint;
+      this.headerXDimension = AreaFieldTitle.RADIUS;
+    } else {
+      this.headerXDimension = AreaFieldTitle.UNKNOWN;
+      this.headerYDimension = AreaFieldTitle.UNKNOWN;
+    }
   }
 
   private _long = '';
@@ -275,6 +302,13 @@ export class LocationInputComponent implements OnInit {
     if (typeof geometry === typeof {}) {
       geometry = geometry['observation_geometry_code_id'] || 1;
     }
+    if (geometry === 1) {
+      this.showX = true;
+      this.showY = false;
+    } else if (geometry === 4 || geometry === 5) {
+      this.showX = false;
+      this.showY = false;
+    }
     return {
       latitude: input.latitude,
       longitude: input.longitude,
@@ -294,8 +328,12 @@ export class LocationInputComponent implements OnInit {
       // Setting bind props
       this.x = x ? `${x}` : '';
       this.y = y ? `${y}` : '';
-      this.showXOnly = json.attributes.area.radius ? true : false;
-      this.setAreaLabel(x, y);
+      this.showY = json.attributes.area.radius ? true : false;
+      if (this.x === '') {
+        this.areaLabel = `${Number(json.attributes.area).toFixed(1)} square meters`;
+      } else {
+        this.setAreaLabel(x, y);
+      }
     }
   }
 
@@ -503,9 +541,12 @@ export class LocationInputComponent implements OnInit {
     this.lat = `${this.fieldObject.latitude.value}`;
     this.long = `${this.fieldObject.longitude.value}`;
 
-    // 5) Set Map
-    this.setMapToCurrentLocation();
+    if (this.fieldObject.geometry.value !== 4 && this.fieldObject.geometry.value !== 5) {
+      // 5) Set Map
+      this.setMapToCurrentLocation();
+    }
 
+    // 6) get well info
     this.findNearestWell();
   }
 
@@ -528,10 +569,16 @@ export class LocationInputComponent implements OnInit {
         this._existingValue.geometry = geomID;
       }
       if (geomID === 1) {
-        this.showXOnly = true;
+        this.showY = true;
+        this.y = '';
+      } else if (geomID === 4 || geomID === 5) {
+        this.showX = false;
+        this.showY = false;
+        this.x = '';
         this.y = '';
       } else {
-        this.showXOnly = false;
+        this.showX = true;
+        this.showY = true;
       }
       this.setGeometryData();
     }
@@ -547,6 +594,14 @@ export class LocationInputComponent implements OnInit {
       if (feature['geometry']['type'] === 'Polygon') {
         this.setAreaLabelWithValue(feature['properties']['area']);
         this.object.spaceGeom.value.inputGeometry.attributes['area'] = feature['properties']['area'];
+      } else if (feature['geometry']['type'] === 'Point') {
+        // take coordinate of first Point, set it to lat/long value of spaceGeom object
+        this.fieldObject.latitude.value = feature['geometry']['coordinates'][1];
+        this.fieldObject.longitude.value = feature['geometry']['coordinates'][0];
+        this.lat = `${this.fieldObject.latitude.value}`;
+        this.long = `${this.fieldObject.longitude.value}`;
+        this.latChanged(this.lat);
+        this.longChanged(this.long);
         break;
       }
     }
@@ -580,8 +635,11 @@ export class LocationInputComponent implements OnInit {
       );
     this._existingValue.inputGeometry = json;
 
-    // Calculate Area
-    this.setAreaLabel(x, y);
+    if (this._existingValue.inputGeometry.attributes.geomId !== 4 && this._existingValue.inputGeometry.attributes.geomId !== 5) {
+      // Calculate Area
+      this.setAreaLabel(x, y);
+    }
+
     this.notifyChangeEvent();
   }
 

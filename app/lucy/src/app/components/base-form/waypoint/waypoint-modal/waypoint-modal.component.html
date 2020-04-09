@@ -61,7 +61,7 @@
         <div class="map-container min-map-height" *ngIf="showMap">
             <div class="row">
                 <div class="col-12 leaf">
-                    <app-map-preview [points]="points" [polygon]="polygon" [offset]="offset"></app-map-preview>
+                    <app-map-preview [points]="points" [polygon]="polygon" [offset]="offset" (inputGeometryChanged)="geoJSONChangeHandler($event)"></app-map-preview>
                 </div>
             </div>
         </div>
@@ -80,9 +80,14 @@
                     Back
                 </button>
             </div>
-            <div class="col modal-action">
+            <div class="col modal-action" *ngIf="inputDirtyFlag">
                 <button mat-raised-button color="primary" class="modal-action-button" (click)="generatePath()">
                     Generate Path
+                </button>
+            </div>
+            <div class="col modal-action" *ngIf="!inputDirtyFlag">
+                <button mat-raised-button color="primary" class="modal-action-button" (click)="waypointEntryDone()">
+                    Done
                 </button>
             </div>
         </div>

@@ -213,17 +213,26 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       || !spaceGeomData.longitude
       || (spaceGeomData.geometry !== 0 && !spaceGeomData.geometry)
       || !spaceGeomData.inputGeometry
-    )
+    ) {
       return false;
+    }
 
     const geometryData = spaceGeomData.inputGeometry.attributes;
-    if (!geometryData) return false;
+    if (!geometryData) { return false; }
 
     const area = geometryData.area;
+
+    // if input geometry type is waypoints, there won't be radius, width, or length
+    if (spaceGeomData.geometry === 4 || spaceGeomData.geometry === 5) {
+      if (spaceGeomData.inputGeometry.attributes && spaceGeomData.inputGeometry.geoJSON) {
+        return true;
+      }
+    }
+
     const { radius, width, length } = area;
-    
-    if (radius) return true;
-    if (width && length) return true;
+
+    if (radius) { return true; }
+    if (width && length) { return true; }
 
     return false;
   }

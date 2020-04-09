@@ -35,6 +35,14 @@ export class WaypointModalComponent implements OnInit {
   waypointValid: boolean;
   offsetValid: boolean;
   errors: string[] = [];
+  /**
+   * flag is used to indicate whether the waypoint displayed in map-preview matches
+   * the values input by the user in the modal text fields
+   * 
+   * if inputDirtyFlag == true, primary button in modal will be "Generate Path"
+   * if inputDirtyFlag == false, primary button in modal will be "Done"
+   */
+  inputDirtyFlag = true;
 
   offsetVerification = {
     positive: true,
@@ -42,9 +50,11 @@ export class WaypointModalComponent implements OnInit {
     required: true,
   };
 
+  @Input() geoJSON: any;
+
   @Output() offsetChangedEmitter = new EventEmitter<any>();
   @Output() waypointEmitter = new EventEmitter<any>();
-
+  @Output() geoJSONEmitter = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
 
   showAddIcon(index: number) {
@@ -78,11 +88,44 @@ export class WaypointModalComponent implements OnInit {
 
   offsetChanged(value: number) {
     this.offset = value;
+    this.inputDirtyFlag = true;
     this.offsetChangedEmitter.emit(value);
   }
 
   pointChanged(coordinate: LatLongCoordinate, index: number) {
     this.points.splice(index, 1, coordinate);
+    this.inputDirtyFlag = true;
+  }
+
+  geoJSONChangeHandler(json: any) {
+    this.geoJSON = json;
+    this.geoJSONEmitter.emit(this.geoJSON);
+  }
+
+  /**
+   * parses points from input GeoJSON and adds them to this.points
+   */
+  private addPointsFromGeoJSON() {
+    for (const feature of this.geoJSON['features']) {
+      if (feature['geometry']['type'] === 'Polygon') {
+        this.offset = feature['properties']['offset'];
+      } else if (feature['geometry']['type'] === 'Point') {
+        this.points.push({latitude: feature['geometry']['coordinates'][1], longitude: feature['geometry']['coordinates'][0]});
+      }
+    }
+  }
+
+  private createWaypointTextEntriesForPoints() {
+    // first remove any existing waypoint entry components
+    while (this.waypointEntryComponents.length > 0) {
+      this.removeWaypoint(0);
+    }
+    for (const pt of this.points) {
+      const wte = new WaypointTextEntryComponent(this.validation, this.converter);
+      wte.point = pt;
+      this.waypointEntryComponents.push(wte);
+      this.maxPointsLengthReached = this.waypointEntryComponents.length === this.MAX_NUM_POINTS ? true : false;
+    }
   }
 
   addNewWaypointTextEntry() {
@@ -90,12 +133,19 @@ export class WaypointModalComponent implements OnInit {
     this.waypointEntryComponents.push(newWaypointEntry);
     this.maxPointsLengthReached = this.waypointEntryComponents.length === this.MAX_NUM_POINTS ? true : false;
     this.points.push(newWaypointEntry.point);
+    this.inputDirtyFlag = true;
   }
 
   removeWaypoint(index: number) {
     this.waypointEntryComponents.splice(index, 1);
     this.points.splice(index, 1);
     this.maxPointsLengthReached = this.points.length === this.MAX_NUM_POINTS ? true : false;
+    this.inputDirtyFlag = true;
+  }
+
+  waypointEntryDone() {
+    this.geoJSONEmitter.emit(this.geoJSON);
+    this.onClose.emit();
   }
 
   generatePath() {
@@ -112,7 +162,7 @@ export class WaypointModalComponent implements OnInit {
     } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
       this.showMap = true;
       this.calculateWaypointBoundaryPoints(this.offset, this.points);
-      // this.waypointEmitter.emit(this.points);
+      this.inputDirtyFlag = false;
     }
   }
 
