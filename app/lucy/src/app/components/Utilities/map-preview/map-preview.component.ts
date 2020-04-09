@@ -194,31 +194,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
           break;
         }
       }
-      L.geoJSON(this.inputGeometryJSON, {
-        style: function(feature) {
-          switch (feature.geometry.type) {
-            case 'Polygon': return {
-              color: '#F5A623',
-              fillColor: '#F5A623',
-              fillOpacity: 0.7,
-              weight: 2,
-            };
-            case 'MultiLineString': return {
-              color: 'black',
-              weight: 1,
-              fillOpacity: 0.4,
-            };
-            case 'Point': return {
-              radius: 0.5,
-              color: 'black',
-              fillColor: 'black',
-              fill: true
-            };
-          }
-        }
-      }).addTo(this.map);
-      this.center = {latitude: point['geometry']['coordinates'][1], longitude: point['geometry']['coordinates'][0], zoom: 18};
-      this.showMapAtCenter();
+      this.addGeoJSONtoMap();
     }
   }
 
@@ -254,7 +230,11 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
         this.showMapAtCenter();
       }
       this.addMarkers();
-      this.drawPolygon();
+      if (this.polygon.length > 0) {
+        this.drawPolygon();
+      } else if (this.inputGeometryJSON !== '{}') {
+        this.addGeoJSONtoMap();
+      }
     }
   }
   //////////////////////////////////////////////
@@ -282,7 +262,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       minZoom: 4,
     }).addTo(this.map);
     this.addBCBorder();
-    L.geoJSON(this.inputGeometryJSON).addTo(this.map);
+    this.addGeoJSONtoMap();
   }
 
   private initMapWithGoogleSatellite() {
@@ -293,7 +273,10 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       key: this.makeid(10)
     }).addTo(this.map);
     this.addBCBorder();
+    this.addGeoJSONtoMap();
+  }
 
+  private addGeoJSONtoMap() {
     if (this.inputGeometryJSON !== undefined && this.inputGeometryJSON !== '{}') {
       let point: any;
       for (const feature of this.inputGeometryJSON['features']) {
@@ -303,6 +286,10 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
         }
       }
       L.geoJSON(this.inputGeometryJSON, {
+        // pointToLayer necessary because otherwise Leaflet overrides geoJSON Point styling with pin markers
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
+        },
         style: function(feature) {
           switch (feature.geometry.type) {
             case 'Polygon': return {
@@ -316,15 +303,15 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
               weight: 1,
               fillOpacity: 0.4,
             };
-            case 'Point': return {
-              radius: 0.5,
-              color: 'black',
-              fillColor: 'black',
-              fill: true
-            };
           }
         }
-      }).addTo(this.map);
+      }).bindTooltip(function (layer) {
+        switch (layer.feature.geometry.type) {
+          case 'Polygon': return `Offset: ${layer.feature.properties.offset}m\nArea: ${layer.feature.properties.area.toFixed(1)}m²`;
+          case 'Point': return `${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}`;
+        }
+      })
+      .addTo(this.map);
       this.center = {latitude: point['geometry']['coordinates'][1], longitude: point['geometry']['coordinates'][0], zoom: 18};
       this.showMapAtCenter();
     }
@@ -495,6 +482,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       fillOpacity: 0.7,
       weight: 2,
     });
+    polygon.bindPopup(`Offset: ${this.offset}m`);
     polygon.addTo(this.map);
     const area = L.GeometryUtil.geodesicArea(polygon._latlngs[0]);
     const polygonGeoJson = polygon.toGeoJSON();

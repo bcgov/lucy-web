@@ -589,7 +589,6 @@ export class LocationInputComponent implements OnInit {
    * @param event the updated GeoJSON file
    */
   inputGeometryChanged(event: any) {
-    this.object.spaceGeom.value.inputGeometry.geoJSON = event;
     for (const feature of event['features']) {
       if (feature['geometry']['type'] === 'Polygon') {
         this.setAreaLabelWithValue(feature['properties']['area']);
@@ -604,6 +603,7 @@ export class LocationInputComponent implements OnInit {
         this.longChanged(this.long);
         break;
       }
+      this.object.spaceGeom.value.inputGeometry.geoJSON = event;
     }
   }
 
