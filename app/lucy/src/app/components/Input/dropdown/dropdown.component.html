@@ -10,10 +10,17 @@
     <!-- https://stackblitz.com/edit/mat-select-search -->
 </div>
 
-<div *ngIf="readonly">
-    <app-field
-    [mode]="mode"
-    [header]="fieldHeader"
-    [value]="selectedItemName">
-  </app-field>
+<div *ngIf="readonly && !multiple">
+    <app-field [mode]="mode" [header]="fieldHeader" [value]="selectedItemName">
+    </app-field>
+</div>
+
+<div *ngIf="readonly && multiple">
+  <div class="col-12" *ngIf="fieldHeader">
+      <label class="field-header">{{ fieldHeader }}</label>
+  </div>
+  <div *ngFor="let name of selectedItemName">
+    <app-field [mode]="mode" [value]="name">
+    </app-field>
+  </div>
 </div>

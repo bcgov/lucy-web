@@ -28,6 +28,12 @@
     align-items: center;
 }
 
-mat-expansion-panel {
-    overflow: scroll;
+::ng-deep .mat-expansion-panel-content {
+    max-height: 200px;
+    overflow: scroll !important;
+    margin-bottom: 8px;
+}
+
+mat-list-item {
+    height: auto !important;
 }

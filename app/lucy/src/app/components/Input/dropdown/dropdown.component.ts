@@ -97,7 +97,7 @@ export class DropdownComponent implements OnInit {
       if (!items || items.length === 0) return '';
 
       const itemNames = items.map(item => item.name);
-      return this.mode === FormMode.View ? itemNames.join(',') : itemNames;
+      return itemNames;
     }
     const item = this.selectedItem as DropdownObject;
     return item ? item.name : '';

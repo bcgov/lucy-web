@@ -485,8 +485,8 @@ export class FormService {
       fieldHeaders[newField.key] = newField.header;
 
       // Add Bootstrap column size
-      newField.cssClasses = this.addColumnClass(
-        newField.cssClasses,
+      newField.classNames.common = this.addColumnClass(
+        newField.classNames.common,
         i,
         groupFields.length,
         newField.isTextAreaField
@@ -537,14 +537,14 @@ export class FormService {
   }
 
   private addColumnClass(
-    cssClasses: string,
+    classNames: string,
     fieldIndex: number,
     numberOfFields: number,
     isTextAreaField: boolean
   ): string {
-    let result = cssClasses;
+    let result = classNames;
     // If column is specified (from config) dont add
-    if (cssClasses.indexOf('col') === -1) {
+    if (classNames.indexOf('col') === -1) {
       // set column size:
       if (
         numberOfFields >= 3 &&
@@ -571,6 +571,36 @@ export class FormService {
     }
     return result;
   }
+
+  private generataClassNames(classNameData: string[]) {
+    let className = '';
+    for (const name of classNameData) {
+      className = name + ` `;
+    }
+    return className.trim();
+  }
+
+  private generateClassWithModes(classData: any) {
+    let classes = {
+      create: '',
+      view: '',
+      edit: '',
+      common: ''
+    };
+    for (const item of classData) {
+      if (item.mode === 'create') {
+        classes['create'] = classes['create'] + this.generataClassNames(item.classNames);
+      } else if (item.mode === 'view') {
+        classes['view'] = classes['view'] + this.generataClassNames(item.classNames);
+      } else if (item.mode === 'edit') {
+        classes['edit'] = classes['edit'] + this.generataClassNames(item.classNames);
+      } else {
+        classes['common'] = classes['common'] + this.generataClassNames(item);
+      }
+    }
+    return classes;
+  }
+
   private async configRelationField(
     key: string,
     relations: any
@@ -580,13 +610,9 @@ export class FormService {
       return undefined;
     }
     const relationField = relations[key];
-    // set css classes // TODO: Server doesnt send this yet
-    let cssClasses = ``;
+    let classNames: any = {};
     if (relationField.layout && relationField.layout.classes) {
-      const classes = relationField.layout.classes;
-      for (const item of classes) {
-        cssClasses = cssClasses + ` `;
-      }
+      classNames = this.generateClassWithModes(relationField.layout.classes);
     }
 
     let codeTableDisplayKey, codeTableMeta;
@@ -615,7 +641,7 @@ export class FormService {
       type: relationField.type,
       verification: relationField.verification,
       meta: codeTableMeta,
-      cssClasses: cssClasses,
+      classNames,
       codeTable: relationField.refSchema.modelName,
       displayKey: codeTableDisplayKey,
       condition: '',
@@ -635,13 +661,10 @@ export class FormService {
       return undefined;
     }
     const computedField = computedFields[key];
-    // set css classes // TODO: Server doesnt send this yet
-    let cssClasses = ``;
+    let classNames = {};
     if (computedField.layout && computedField.layout.classes) {
       const classes = computedField.layout.classes;
-      for (const item of classes) {
-        cssClasses = cssClasses + ` `;
-      }
+      classNames = this.generateClassWithModes(computedField.layout.classes);
     }
     // END set css classes
     return {
@@ -652,7 +675,7 @@ export class FormService {
       type: 'computed',
       verification: undefined,
       meta: computedField.meta, // TODO: Server doesnt send this yet
-      cssClasses: cssClasses, // TODO: Server doesnt send this yet
+      classNames,
       codeTable: '',
       condition: '',
       computationRules: computedField.computationRules,
@@ -794,11 +817,8 @@ export class FormService {
         }
       }
     }
-    let cssClasses = ``;
-    const classes = field.layout.classes || [];
-    for (const item of classes) {
-      cssClasses = item + ` `;
-    }
+
+    const classNames = this.generateClassWithModes(field.layout.classes);
 
     // BEGIN Tweak verification object received.
     let verification = field.verification;
@@ -837,7 +857,7 @@ export class FormService {
         suffix: field.suffix,
         verification: verification,
         meta: field.meta,
-        cssClasses: cssClasses,
+        classNames,
         codeTable: codeTable,
         codeTableMeta: codeTableMeta,
         displayKey: codeTableDisplayKey,
@@ -950,7 +970,7 @@ export class FormService {
    * @return UIConfig object with values for fields
    */
   private async merge(config: any, object: any): Promise<any> {
-    const configuration = config;
+    const configuration = {...config};
     // set id & date
     for (const key in object) {
       if (object.hasOwnProperty(key)) {
@@ -1000,18 +1020,16 @@ export class FormService {
                   field.codeTableMeta
                 );
               } else if (config.relationKeys.includes(field.key) && key !== null) {
-                const values: any[] = object[field.key];
-                const mappedDropdownValues: DropdownObject[] = [];
-                values.forEach(async (value) => {
-                  const dropdownObj = await this.getDropdownObjectWithId(
+                if (field.type === 'array') {
+                  field.value = await this.processRelationArrayValues(field, object[field.key]);
+                } else if (field.type === 'object') {
+                  field.value = await this.getDropdownObjectWithId(
                     field.codeTable,
                     field.displayKey,
-                    value,
+                    object[field.key],
                     field.meta
                   );
-                  mappedDropdownValues.push(dropdownObj);
-                });
-                field.value = mappedDropdownValues;
+                }
               } else {
                 field.value = object[field.key];
               }
@@ -1037,6 +1055,20 @@ export class FormService {
       }
     }
     return configuration;
+  }
+
+  async processRelationArrayValues(field: any, values: any[]) {
+    const dropdownValues: DropdownObject[] = [];
+    for (const value of values) {
+      const dropdownObj = await this.getDropdownObjectWithId(
+        field.codeTable,
+        field.displayKey,
+        value,
+        field.meta
+      );
+      dropdownValues.push(dropdownObj);
+    }
+    return dropdownValues;
   }
 
   /**
@@ -1216,10 +1248,10 @@ export class FormService {
                 break;
               case 'array':
                 const items = [];
-                (field.value as any[]).forEach(obj => {
-                  for (const key in obj) {
+                (field.value as any[]).forEach(item => {
+                  for (const key in item.object) {
                     if (key.toLowerCase().indexOf('id') !== -1) {
-                      items.push(obj[key]);
+                      items.push(item.object[key]);
                       break;
                     }
                   }
@@ -1617,7 +1649,7 @@ export class FormService {
       suffix: '',
       verification: '',
       meta: {},
-      cssClasses: '',
+      classNames: {},
       codeTable: '',
       codeTableMeta: {},
       displayKey: '',
