@@ -86,12 +86,12 @@
                 </app-dropdown>
             </div>
             <!-- Geometry: Dimension X-->
-            <div class="col col-md-3 nopadding" *ngIf="!waypointGeometryTypeSelected">
+            <div class="col col-md-3 nopadding" *ngIf="!waypointGeometryTypeSelected && showX">
                 <app-field [mode]="mode" [header]="headerXDimension" [value]="x" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionXChange($event)">
                 </app-field>
             </div>
             <!-- Geometry: Dimension Y-->
-            <div class="col col-md-3" *ngIf="!showXOnly && !waypointGeometryTypeSelected">
+            <div class="col col-md-3" *ngIf="showY && !waypointGeometryTypeSelected">
                 <app-field [mode]="mode" [header]="headerYDimension" [value]="y" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionYChange($event)">
                 </app-field>
             </div>
@@ -104,7 +104,7 @@
         <app-modal *ngIf="showModal" [align]="'center'">
 
             <!-- Add waypoint modal -->
-            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" (onClose)="onModalClose()" [mode]="mode">
+            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" (onClose)="onModalClose()" [mode]="mode" [geoJSON]="object.spaceGeom.value.inputGeometry.geoJSON" (geoJSONEmitter)="inputGeometryChanged($event)">
             </app-waypoint-modal>
 
         </app-modal>

@@ -21,7 +21,6 @@ import 'node_modules/leaflet.markercluster';
 import 'node_modules/leaflet-draw';
 import { Observation } from 'src/app/models';
 import * as bcgeojson from './bcgeojson.json';
-import { keyframes } from '@angular/animations';
 import { Point, LatLng } from 'leaflet';
 import { LabelOptions } from '@angular/material';
 import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
@@ -164,7 +163,13 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
   }
 
   //////////////// Offset ////////////////////
-  @Input() private _offset = 0;
+  private _offset = 0;
+  get offset(): number {
+    return this._offset;
+  }
+  @Input() set offset(value: number) {
+    this._offset = value;
+  }
 
   /////////////// GeoJSON file ////////////
   private _inputGeometryJSON: any;
@@ -182,7 +187,38 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     }
     this._inputGeometryJSON = json;
     if (this.ready && this._inputGeometryJSON !== '{}') {
-      L.geoJSON(this._inputGeometryJSON).addTo(this.map);
+      let point: any;
+      for (const feature of this.inputGeometryJSON['features']) {
+        if (feature['geometry']['type'] === 'Point') {
+          point = feature;
+          break;
+        }
+      }
+      L.geoJSON(this.inputGeometryJSON, {
+        style: function(feature) {
+          switch (feature.geometry.type) {
+            case 'Polygon': return {
+              color: '#F5A623',
+              fillColor: '#F5A623',
+              fillOpacity: 0.7,
+              weight: 2,
+            };
+            case 'MultiLineString': return {
+              color: 'black',
+              weight: 1,
+              fillOpacity: 0.4,
+            };
+            case 'Point': return {
+              radius: 0.5,
+              color: 'black',
+              fillColor: 'black',
+              fill: true
+            };
+          }
+        }
+      }).addTo(this.map);
+      this.center = {latitude: point['geometry']['coordinates'][1], longitude: point['geometry']['coordinates'][0], zoom: 18};
+      this.showMapAtCenter();
     }
   }
 
@@ -199,7 +235,6 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
   }
 
   ngAfterViewInit() {
@@ -260,6 +295,13 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     this.addBCBorder();
 
     if (this.inputGeometryJSON !== undefined && this.inputGeometryJSON !== '{}') {
+      let point: any;
+      for (const feature of this.inputGeometryJSON['features']) {
+        if (feature['geometry']['type'] === 'Point') {
+          point = feature;
+          break;
+        }
+      }
       L.geoJSON(this.inputGeometryJSON, {
         style: function(feature) {
           switch (feature.geometry.type) {
@@ -283,6 +325,8 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
           }
         }
       }).addTo(this.map);
+      this.center = {latitude: point['geometry']['coordinates'][1], longitude: point['geometry']['coordinates'][0], zoom: 18};
+      this.showMapAtCenter();
     }
   }
 
@@ -454,14 +498,12 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     polygon.addTo(this.map);
     const area = L.GeometryUtil.geodesicArea(polygon._latlngs[0]);
     const polygonGeoJson = polygon.toGeoJSON();
-    polygonGeoJson['properties'] = {'area': area};
+    polygonGeoJson['properties'] = {'area': area, 'offset': this._offset};
     this.leafletFeatures.features.push(polygonGeoJson);
     this.map.fitBounds(polygon._bounds);
     this.drawLine();
     this.drawPoints();
-
-    this.inputGeometryJSON = this.leafletFeatures;
-    this.inputGeometryChanged.emit(this.inputGeometryJSON);
+    this.inputGeometryChanged.emit(this.leafletFeatures);
   }
 
   /**
@@ -483,7 +525,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
 
   drawPoints() {
     for (const l of this.pointsLatLng) {
-      const circle = L.circleMarker([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
+      const circle = L.circle([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
       circle.addTo(this.map);
       this.leafletFeatures.features.push(circle.toGeoJSON());
     }
