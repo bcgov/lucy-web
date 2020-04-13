@@ -1342,7 +1342,9 @@ export class FormService {
     // 6) get json body for merged ui condig
     const originalJSONBody = this.generateBodyForMergedConfig(mergedUIConfig);
     // 7) diff with body in params
-    const diffResult = this.diff(originalJSONBody, newBody);
+    const fieldChanges = this.diff(originalJSONBody, newBody, mergedUIConfig);
+    const relationFieldChanges = this.relationDiff(originalJSONBody, newBody, mergedUIConfig);
+    const diffResult = { ...fieldChanges, ...relationFieldChanges };
     if (!diffResult) {
       console.log(`Couldnt diff`);
       return undefined;
@@ -1354,9 +1356,9 @@ export class FormService {
       return fromCamel.charAt(0).toUpperCase() + fromCamel.slice(1);
     });
     const changedKeys = keys.join(`, `);
-    const changed = changedKeys.length > 1;
+
     return {
-      changed: changed,
+      changed: changedKeys.length > 1,
       newObject: newBody,
       originalObject: originalJSONBody,
       diffMessage: changedKeys,
@@ -1411,6 +1413,56 @@ export class FormService {
       return undefined;
     }
   }
+
+  /**
+   * Compare the old and new values for relation fields
+   * @param config UI config
+   * @param oldBody old values
+   * @param newBody new values
+   * @returns An object with all the modified values
+   */
+  private relationDiff(oldBody: any, newBody: any, config: UIConfigObject) {
+    let diff = {};
+    Object.entries(config.relationsConfigs).forEach(([key, value]) => {
+      const relationField = value as any;
+      if (relationField.type === 'array') {
+        const newValue = newBody[key];
+        const oldValue = oldBody[key];
+
+        if (newValue && oldValue) {
+          const isSameArray = this.isArrayEqual(newValue, oldValue);
+          if (!isSameArray) {
+            diff[key] = newValue;
+          }
+        }
+      }
+    });
+    return diff;
+  }
+
+  /**
+   * Compare 2 Arrays
+   * @param arr1 JSON object
+   * @param arr2 JSON object
+   * @returns true if the arrays are same, false if not
+   */
+  private isArrayEqual(arr1, arr2): boolean {
+    if (arr1 instanceof Array && arr2 instanceof Array)
+    {
+      if (arr1.length !== arr2.length)
+        return false;
+  
+      for (var i = 0; i < arr1.length; i++)
+        if (!this.isArrayEqual(arr1[i], arr2[i]))
+          return false;
+  
+      return true;
+    }
+  
+    return arr1 === arr2;
+  }
+
+
   /**
    * Compare 2 JSON object and
    * return Object containing differences
@@ -1419,7 +1471,7 @@ export class FormService {
    * @param obj1 JSON object
    * @param obj2 JSON object
    */
-  private diff(obj1: JSON, obj2: JSON): any {
+  private diff(obj1: JSON, obj2: JSON, config: UIConfigObject): any {
     const result = {};
     if (Object.is(obj1, obj2)) {
       return undefined;
@@ -1430,41 +1482,43 @@ export class FormService {
     Object.keys(obj1 || {})
       .concat(Object.keys(obj2 || {}))
       .forEach(key => {
-        const t1 = typeof obj1[key];
-        const t2 = typeof obj2[key];
-        if (t1 === t2 && t1 === typeof {}) {
-          const value = this.diff(obj1[key], obj2[key]);
-          if (value !== undefined && Object.keys(value).length > 0) {
-            result[key] = JSON.stringify(value, null, 2);
-          }
-        } else if (t1 !== t2 && (t1 === typeof {} || t2 === typeof {})) {
-          let nonObjValue;
-          if (t1 === typeof {} && t2 !== typeof {}) {
-            nonObjValue = obj2[key];
-          } else {
-            nonObjValue = JSON.stringify(obj2, null, 2);
-          }
-          if (t2 === typeof {}) {
-            result[key] = nonObjValue;
-          } else {
-            const obj = obj1[key];
-            if (obj === undefined || obj === null) {
-              result[key] = nonObjValue;
-              return;
+        if (!config.relationKeys.includes(key)) {
+          const t1 = typeof obj1[key];
+          const t2 = typeof obj2[key];
+          if (t1 === t2 && t1 === typeof {}) {
+            const value = this.diff(obj1[key], obj2[key], config);
+            if (value !== undefined && Object.keys(value).length > 0) {
+              result[key] = JSON.stringify(value, null, 2);
             }
-            // Find id key from obj;
-            const idKeys: string[] = Object.keys(obj).filter(k => k.includes('_id'));
-            if (idKeys.length > 0) {
-              const idKey = idKeys[0];
-              if (nonObjValue !== obj[idKey]) {
+          } else if (t1 !== t2 && (t1 === typeof {} || t2 === typeof {})) {
+            let nonObjValue;
+            if (t1 === typeof {} && t2 !== typeof {}) {
+              nonObjValue = obj2[key];
+            } else {
+              nonObjValue = JSON.stringify(obj2, null, 2);
+            }
+            if (t2 === typeof {}) {
+              result[key] = nonObjValue;
+            } else {
+              const obj = obj1[key];
+              if (obj === undefined || obj === null) {
+                result[key] = nonObjValue;
+                return;
+              }
+              // Find id key from obj;
+              const idKeys: string[] = Object.keys(obj).filter(k => k.includes('_id'));
+              if (idKeys.length > 0) {
+                const idKey = idKeys[0];
+                if (nonObjValue !== obj[idKey]) {
+                  result[key] = nonObjValue;
+                }
+              } else {
                 result[key] = nonObjValue;
               }
-            } else {
-              result[key] = nonObjValue;
             }
+          } else if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+            result[key] = obj2[key];
           }
-        } else if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-          result[key] = obj2[key];
         }
       });
     return result;

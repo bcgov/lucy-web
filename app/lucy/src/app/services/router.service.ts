@@ -233,6 +233,7 @@ export class RouterService {
   public storeCurrentRouteInSession() {
     if (this.current.length > 0) {
       localStorage.setItem('lastRoute', this.current);
+      localStorage.setItem('lastRouteID', String(this.routeId));
     }
   }
 
@@ -247,6 +248,15 @@ export class RouterService {
     } else {
       return undefined;
     }
+  }
+
+  /**
+   * Get the lastRouteId specified in session storage (if exists).
+   * @returns string or undefined
+   */
+  public getLastRouteIDInSession(): string | undefined {
+    const lastRouteID = localStorage.getItem('lastRouteID');
+    return lastRouteID;
   }
 
   /**
