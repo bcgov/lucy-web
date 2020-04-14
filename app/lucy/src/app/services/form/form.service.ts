@@ -663,7 +663,6 @@ export class FormService {
     const computedField = computedFields[key];
     let classNames = {};
     if (computedField.layout && computedField.layout.classes) {
-      const classes = computedField.layout.classes;
       classNames = this.generateClassWithModes(computedField.layout.classes);
     }
     // END set css classes
