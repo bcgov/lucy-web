@@ -308,6 +308,7 @@ export class LocationInputComponent implements OnInit {
     } else if (geometry === 4 || geometry === 5) {
       this.showX = false;
       this.showY = false;
+      this.waypointGeometryTypeSelected = true;
     }
     return {
       latitude: input.latitude,

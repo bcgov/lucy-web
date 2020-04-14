@@ -50,10 +50,19 @@ export class WaypointModalComponent implements OnInit {
     required: true,
   };
 
-  @Input() geoJSON: any;
+  private _geoJSON: any;
+  get geoJSON(): any {
+    return this._geoJSON;
+  }
+  @Input() set geoJSON(json: any) {
+    this._geoJSON = json;
+    if (this._geoJSON['features'] !== undefined && this.points.length === 0) {
+      this.addPointsFromGeoJSON();
+      this.createWaypointTextEntriesForPoints();
+    }
+    this.geoJSONEmitter.emit(this._geoJSON);
+  }
 
-  @Output() offsetChangedEmitter = new EventEmitter<any>();
-  @Output() waypointEmitter = new EventEmitter<any>();
   @Output() geoJSONEmitter = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
 
@@ -89,7 +98,6 @@ export class WaypointModalComponent implements OnInit {
   offsetChanged(value: number) {
     this.offset = value;
     this.inputDirtyFlag = true;
-    this.offsetChangedEmitter.emit(value);
   }
 
   pointChanged(coordinate: LatLongCoordinate, index: number) {
@@ -117,9 +125,7 @@ export class WaypointModalComponent implements OnInit {
 
   private createWaypointTextEntriesForPoints() {
     // first remove any existing waypoint entry components
-    while (this.waypointEntryComponents.length > 0) {
-      this.removeWaypoint(0);
-    }
+    this.waypointEntryComponents = [];
     for (const pt of this.points) {
       const wte = new WaypointTextEntryComponent(this.validation, this.converter);
       wte.point = pt;
