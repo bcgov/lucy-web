@@ -80,7 +80,8 @@ export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, Mechanica
 
 export const mechanicalTreatmentUpdateSpecFactory = async (): Promise<MechanicalTreatmentUpdateSpec> => {
   return {
-    // observations: [await observationFactory()],
+    applicatorFirstName: faker.name.firstName(),
+    speciesAgency: await speciesAgencyCodeFactory()
   };
 };
 

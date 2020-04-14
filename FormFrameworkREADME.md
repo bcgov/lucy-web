@@ -372,9 +372,31 @@ Each subsection may contain 1-p fields. There are 8 different field types built 
 
 | Layout keyword | Description |
 |----------------|-------------|
-| `classes:`     | The names of CSS classes that should be applied to the HTML element in the form. Using `- none` allows the Form Framework tool to automatically configure the CSS classes for the element. |
 | `header:`      | Two children can be placed in this section: `- key:` indicates the key-lookup ; `- default:` is the default header that will be used if a value for the key does not exist. |
 | `suffix:`      | A string that will be appended to the end of the input field as a read-only Material-UI suffix (matSuffix). Typically used for units (e.g., 'm', '&deg;C', etc.) |
+| `classes:`     | The names of CSS classes that should be applied to the HTML element in the form.|
+
+  - The form framework interprets the `classes` and categorize it under four different variables
+      - create: Styles for create mode
+      - edit: Styles for edit mode
+      - view: Styles for view mode
+      - common: The common styles for all modes
+  - A sample structure for classes is given below
+    ```yaml
+    classes:
+      - <common-classname-1>
+      - <common-classname-2>
+      - mode: create | edit | view
+        classNames: 
+          - <classname-1>
+          ...
+    ```
+  - Using `none` allows the Form Framework tool to automatically configure the CSS classes for the element
+    ```yaml
+    classes:
+      - none
+    ```
+
 
 **Verification:** a list of keywords that will be used to perform **front-end validation** on the input for a particular field. The keyword `verification:` should appear as the first-level descendant of the relevant field under the `columns:` section of the .yaml file.  
 
