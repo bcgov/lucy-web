@@ -21,7 +21,7 @@ export class WaypointModalComponent implements OnInit {
   MIN_NUM_POINTS = 2;
   MAX_NUM_POINTS = 10;
   MIN_DISTANCE_BTWN_POINTS = 1;   // in metres
-  MAX_DISTANCE_BTWN_POINTS = 20;  // in metres
+  MAX_DISTANCE_BTWN_POINTS = 200;  // in metres
 
   showInfo = false;
   showMap = false;

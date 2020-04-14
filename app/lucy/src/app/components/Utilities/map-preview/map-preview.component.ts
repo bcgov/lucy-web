@@ -24,6 +24,7 @@ import * as bcgeojson from './bcgeojson.json';
 import { Point, LatLng } from 'leaflet';
 import { LabelOptions } from '@angular/material';
 import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
+const haversine = require('haversine-distance');
 declare let L;
 
 export interface MapPreviewPoint {
@@ -307,8 +308,10 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
         }
       }).bindTooltip(function (layer) {
         switch (layer.feature.geometry.type) {
-          case 'Polygon': return `Offset: ${layer.feature.properties.offset}m\nArea: ${layer.feature.properties.area.toFixed(1)}m²`;
-          case 'Point': return `${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}`;
+          case 'Polygon': return `<html>Offset: ${layer.feature.properties.offset}m<br>
+              Area: ${layer.feature.properties.area.toFixed(1)}m²<br>
+              Length: ${layer.feature.properties.length.toFixed(1)}m</html>`;
+          case 'Point': return `<html>${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}</html>`;
         }
       })
       .addTo(this.map);
@@ -486,7 +489,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     polygon.addTo(this.map);
     const area = L.GeometryUtil.geodesicArea(polygon._latlngs[0]);
     const polygonGeoJson = polygon.toGeoJSON();
-    polygonGeoJson['properties'] = {'area': area, 'offset': this._offset};
+    polygonGeoJson['properties'] = {'area': area, 'offset': this._offset, 'length': this.calculatePolylinePathLength()};
     this.leafletFeatures.features.push(polygonGeoJson);
     this.map.fitBounds(polygon._bounds);
     this.drawLine();
@@ -517,6 +520,14 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       circle.addTo(this.map);
       this.leafletFeatures.features.push(circle.toGeoJSON());
     }
+  }
+
+  calculatePolylinePathLength(): number {
+    let sumLength = 0.0;
+    for (let i = 0; i < this.pointsLatLng.length - 1; i++) {
+      sumLength += haversine(this.pointsLatLng[i], this.pointsLatLng[i + 1]);
+    }
+    return sumLength;
   }
 
   //////////////////////////////////////////////
