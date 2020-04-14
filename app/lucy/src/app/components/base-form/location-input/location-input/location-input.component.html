@@ -96,7 +96,7 @@
                 </app-field>
             </div>
             <!-- Button to launch Waypoint Modal -->
-            <div *ngIf="waypointGeometryTypeSelected" class="col col-md-1 nopadding open-modal-button" (click)="openModal(1)">
+            <div *ngIf="waypointGeometryTypeSelected && !isViewMode" class="col col-md-1 nopadding open-modal-button" (click)="openModal(1)">
                 <i class="material-icons-outlined launch-icon">launch</i>
             </div>
         </div>
