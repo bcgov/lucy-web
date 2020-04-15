@@ -14,12 +14,12 @@ schemas:
       api: /treatment/mechanical
     # End-meta
     displayLayout:
-      displayLabel: '#(species.commonName) - #(mechanicalMethod.description)'
+      displayLabel: '#(mechanicalMethod.description) - #(date)'
       fields:
         - header:
-            key: 'species'
-            default: 'Species'
-          key: species.commonName
+            key: 'speciesAgency'
+            default: 'Species Agency'
+          key: speciesAgency.displayLabel
         - header:
             key: 'date'
             default: 'Date'
@@ -63,11 +63,10 @@ schemas:
           groups:
             - title: 
                 key: '' 
-                default: Species 
+                default: '' 
               fields: 
-                - species
                 - speciesAgency
-                - observation
+                - observations
               style: {}
             - title: 
                 key: '' 
@@ -96,6 +95,24 @@ schemas:
     # Computed fields
     computedFields: {}
     # End - Computed fields
+    # Relations
+    relations: 
+      observations:
+        header:
+          key: 'mechanicalTreatment.observations'
+          default: Observations
+        description: 
+          key: 'mechanicalTreatments.observation.description'
+          default: 'Observations linked to the Mechanical treatment'
+        type: array
+        relationshipType: many-to-many
+        schema: ObservationSchema
+        layout:
+          classes:
+            - mode: view
+              classNames:
+                - col-12
+    # End: Relations
     columns: 
       # -- Data Columns
       id: 
@@ -336,4 +353,15 @@ schemas:
           - spaceGeom
       # -- SpaceGeomModelSchema
     ## -- End - CopyFrom
+    versions:
+      - name: observations
+        id: '1.1'
+        info: Schema changes to support many-to-many relation with observation table
+        schemaChanges:
+          - comment: Dropping column observation
+            existingKey: observation
+            type: drop
+          - comment: Dropping column species
+            existingKey: species
+            type: drop
   ## --

@@ -24,6 +24,7 @@
   * Imports
   */
 import { Destroy, ModelSpecFactory } from './helper';
+import * as _ from 'underscore';
 import { MechanicalTreatment,
   MechanicalTreatmentController,
   MechanicalTreatmentSpec,
@@ -57,6 +58,8 @@ export const mechanicalTreatmentCreateSpecFactory = async (): Promise<Mechanical
  */
 export const mechanicalTreatmentFactory = async () => {
   const spec = await mechanicalTreatmentCreateSpecFactory();
+  const obs = await observationFactory();
+  spec.observations = [obs];
   return await MechanicalTreatmentController.shared.createNewObject(spec, await userFactory());
 };
 
@@ -67,15 +70,18 @@ export const destroyMechanicalTreatment = Destroy<MechanicalTreatment, Mechanica
   if (obj.createdBy) {
     await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
   }
-  if (obj.observation) {
-    await Destroy<Observation, ObservationController>(ObservationController.shared)(obj.observation);
+  if (obj.observations) {
+    _.each(obj.observations, async (observation) => {
+      await Destroy<Observation, ObservationController>(ObservationController.shared)(observation);
+    });
   }
 });
 
 
 export const mechanicalTreatmentUpdateSpecFactory = async (): Promise<MechanicalTreatmentUpdateSpec> => {
   return {
-    observation: (await observationFactory()),
+    applicatorFirstName: faker.name.firstName(),
+    speciesAgency: await speciesAgencyCodeFactory()
   };
 };
 
