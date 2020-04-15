@@ -71,7 +71,7 @@ export class LocationInputComponent implements OnInit {
   // coordinates entered as waypoints (along centre line of polygon)
   points: LatLongCoordinate[] = [];
 
-  offset = 0.0;
+  offset: number;
   polygon: LatLongCoordinate[] = [];
 
   // waypoint modal launch button should only be displayed if the geometry type selected
