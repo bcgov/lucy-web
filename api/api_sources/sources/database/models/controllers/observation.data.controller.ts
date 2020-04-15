@@ -66,7 +66,7 @@ export class ObservationController extends RecordController<Observation> {
                 });
                 for (let i = 0; i < newMts.length; i++) {
                     const mtFull = await newMts[i];
-                    delete(mtFull.observation);
+                    delete(mtFull.observations);
                     newItems.push(mtFull);
                 }
                 item.mechanicalTreatments = newItems;

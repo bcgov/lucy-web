@@ -72,16 +72,28 @@ export class SchemaValidator {
         // Getting validation from embedded schema relation
         if (schema.table.relations && Object.keys(schema.table.relations).length > 0) {
             _.each(schema.table.relations, (rel: TableRelation, key: string) => {
+                const relKey: string = rootKey ? `${rootKey}.${key}` : key;
+                const optional = unWrap(rel.meta, {}).optional || false;
+                const errorMessage = `${relKey}: should exists as ${rel.type}`;
                 if (unWrap(rel.meta, {}).embedded) {
-                    const relKey: string = rootKey ? `${rootKey}.${key}` : key;
-                    const optional = unWrap(rel.meta, {}).optional || false;
-                    const errorMessage = `${relKey}: should exists as ${rel.type}`;
                     if (optional) {
                         allValidators = allValidators.concat(check(relKey).exists().optional().withMessage(errorMessage));
                     } else {
                         allValidators = allValidators.concat(check(relKey).exists().withMessage(errorMessage));
                     }
                     allValidators = allValidators.concat(this._relationshipValidators(key, rel, rootKey, optional, opt));
+                } else if (!(unWrap(rel.meta, {}).skipValidation)) {
+                    allValidators = allValidators.concat(check(`${relKey}`).exists().isArray().custom(async (value: any, {req}) => {
+                        const controller: DataController = controllerForSchemaName(rel.schema  || '');
+                        const values: number[] = value as number[];
+                        const results: any[] = [];
+                        for (const id of values) {
+                            const obj = await controller.findById(id);
+                            assert(obj, ``);
+                            results.push(obj);
+                        }
+                        req.body[key] = results;
+                    }));
                 }
             });
         }
