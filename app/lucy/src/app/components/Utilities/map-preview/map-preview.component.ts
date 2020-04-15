@@ -66,6 +66,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     type: 'FeatureCollection',
     features: []
   };
+  private leafletDrawLayerGroup?;
 
   // Group close markers or always show individually
   @Input() cluster = true;
@@ -140,7 +141,8 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       this.pointsLatLng.push([p.latitude, p.longitude]);
     }
     if (this.ready) {
-      this.drawPolygon();
+      this.drawLine();
+      this.drawPoints();
     }
   }
 
@@ -250,6 +252,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     if (this.map) { return; }
     this.map = L.map(this.mapId).setView([center.latitude, center.latitude], center.zoom);
     this.markerGroup = L.layerGroup().addTo(this.map);
+    this.leafletDrawLayerGroup = L.layerGroup().addTo(this.map);
     this.initMapWithGoogleSatellite();
     // this.initWithOpenStreet();
   }
@@ -347,8 +350,15 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
 
   pointsChanged(points: LatLongCoordinate[]) {
     this._points = points;
+    // convert each point in this._points from LatLongCoordinate to LatLng,
+    // push the converted point to pointsLatLng so it can be used by Leaflet
+    this.pointsLatLng = [];
+    for (const p of this._points) {
+      this.pointsLatLng.push([p.latitude, p.longitude]);
+    }
     if (this.ready) {
       this.drawLine();
+      this.drawPoints();
     }
   }
   /////////////////////////////////////////////
@@ -479,6 +489,8 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     if (this.polygonLatLng.length === 0) {
       return;
     }
+    this.leafletDrawLayerGroup.clearLayers();
+    this.leafletFeatures['features'] = [];
     const polygon = L.polygon([this.polygonLatLng], {
       color: '#F5A623',
       fillColor: '#F5A623',
@@ -486,7 +498,7 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       weight: 2,
     });
     polygon.bindPopup(`Offset: ${this.offset}m`);
-    polygon.addTo(this.map);
+    polygon.addTo(this.leafletDrawLayerGroup);
     const area = L.GeometryUtil.geodesicArea(polygon._latlngs[0]);
     const polygonGeoJson = polygon.toGeoJSON();
     polygonGeoJson['properties'] = {'area': area, 'offset': this._offset, 'length': this.calculatePolylinePathLength()};
@@ -505,19 +517,25 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
    * to GeoJSON file if desired.
    */
   drawLine() {
+    if (this.points.length !== this.pointsLatLng.length) {
+      this.pointsLatLng = [];
+      for (const p of this.points) {
+        this.pointsLatLng.push([p.latitude, p.longitude]);
+      }
+    }
     const line = L.polyline([this.pointsLatLng], {
       color: 'black',
       weight: 1,
       fillOpacity: 0.4,
     });
-    line.addTo(this.map);
+    line.addTo(this.leafletDrawLayerGroup);
     this.leafletFeatures.features.push(line.toGeoJSON());
   }
 
   drawPoints() {
     for (const l of this.pointsLatLng) {
       const circle = L.circle([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
-      circle.addTo(this.map);
+      circle.addTo(this.leafletDrawLayerGroup);
       this.leafletFeatures.features.push(circle.toGeoJSON());
     }
   }
