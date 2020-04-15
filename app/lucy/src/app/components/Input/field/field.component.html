@@ -89,7 +89,7 @@
 
 <!-- Read only -->
 <div *ngIf="readonly" class="col-12 field">
-    <div class="row">
+    <div class="row" *ngIf="header">
         <div class="col-12">
             <label class="field-header">{{ header }}</label>
         </div>

@@ -40,7 +40,8 @@ import {
     chemicalTreatmentMethodCodeFactory,
     speciesAgencyCodeFactory,
     windDirectionCodeFactory,
-    herbicideCodeFactory
+    herbicideCodeFactory,
+    observationFactory
 } from '../factory';
 import {
     MechanicalTreatmentController,
@@ -61,9 +62,11 @@ import {
     Herbicide,
     SpeciesAgencyCode
 } from '../models';
-import { Destroy, ModelFactory, ModelSpecFactory } from '../factory/helper';
-// import { MechanicalTreatmentSchema } from '../database-schema';
-// import { SharedDBManager } from '../dataBaseManager';
+import {
+    Destroy,
+    ModelFactory,
+    ModelSpecFactory
+} from '../factory/helper';
 
 describe('Treatment Test', () => {
     before(async () => {
@@ -109,8 +112,6 @@ describe('Treatment Test', () => {
         should().exist(f);
         const mt: MechanicalTreatment = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
         should().exist(mt);
-        should().exist(mt.observation);
-        should().exist(mt.species);
         should().exist(mt.speciesAgency);
         should().exist(mt.mechanicalMethod);
         should().exist(mt.mechanicalDisposalMethod);
@@ -118,8 +119,6 @@ describe('Treatment Test', () => {
         should().exist(mt.rootRemoval);
         should().exist(mt.issue);
         should().exist(mt.providerContractor);
-        expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
-        expect(mt.species.species_id).to.be.equal(f.species.species_id);
         expect(mt.speciesAgency.species_agency_code_id).to.be.equal(f.speciesAgency.species_agency_code_id);
         expect(mt.mechanicalMethod.mechanical_method_code_id).to.be.equal(f.mechanicalMethod.mechanical_method_code_id);
         expect(mt.mechanicalDisposalMethod.mechanical_disposal_method_code_id).to.be.equal(f.mechanicalDisposalMethod.mechanical_disposal_method_code_id);
@@ -137,31 +136,31 @@ describe('Treatment Test', () => {
         const obj = await MechanicalTreatmentController.shared.createNewObject(f, user);
         const mt = await MechanicalTreatmentController.shared.findById(obj.mechanical_treatment_id);
         should().exist(mt);
-        should().exist(mt.observation);
-        expect(mt.observation.observation_id).to.be.equal(f.observation.observation_id);
         await destroyMechanicalTreatment(obj);
     });
 
-    // Test2: Create Treatment with specification
+    // Test4: Create Treatment with specification
     it('should update mechanical treatment with spec', async () => {
         const f = await mechanicalTreatmentFactory();
         const user = await userFactory();
+        const newObs = await observationFactory();
         const spec: MechanicalTreatmentUpdateSpec = await mechanicalTreatmentUpdateSpecFactory();
+        spec.observations = [newObs];
         await MechanicalTreatmentController.shared.updateObject(f, spec, user);
         const mt = await MechanicalTreatmentController.shared.findById(f.mechanical_treatment_id);
         should().exist(mt);
-        should().exist(mt.observation);
-        const updateObs = spec.observation || {observation_id: 0};
-        expect(mt.observation.observation_id).to.be.equal(updateObs.observation_id);
+        should().exist(mt.observations);
+        const updatedObservation = mt.observations.find(observation => observation.observation_id === newObs.observation_id);
+        should().exist(updatedObservation);
         await destroyMechanicalTreatment(f);
         await Destroy<User, UserDataController>(UserDataController.shared)(user);
     });
 
-    // Test3: Fetch Mechanical Treatments of observation
+    // Test5: Fetch Mechanical Treatments of observation
     it('should fetch MechanicalTreatment for observation with promise', async () => {
         const f = await mechanicalTreatmentFactory();
         should().exist(f);
-        const obs = f.observation;
+        const obs = f.observations[0];
         should().exist(obs);
         let list: MechanicalTreatment[] = await obs.mechanicalTreatmentsFetcher;
         list = list.filter( t => t.mechanical_treatment_id === f.mechanical_treatment_id);
@@ -169,11 +168,11 @@ describe('Treatment Test', () => {
         await destroyMechanicalTreatment(f);
     });
 
-    // Test3: Fetch Mechanical Treatments of observation
+    // Test6: Fetch Mechanical Treatments of observation
     it('should fetch MechanicalTreatment for observation through prop', async () => {
         const f = await mechanicalTreatmentFactory();
         should().exist(f);
-        const obs = f.observation;
+        const obs = f.observations[0];
         const fetchObs: Observation = await ObservationController.shared.findById(obs.observation_id);
         should().exist(fetchObs);
         let list: MechanicalTreatment[] = fetchObs.mechanicalTreatments || [];

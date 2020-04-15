@@ -91,7 +91,7 @@
                 </app-field>
             </div>
             <!-- Geometry: Dimension Y-->
-            <div class="col col-md-3" *ngIf="showY && !waypointGeometryTypeSelected">
+            <div class="col col-md-3 nopadding" *ngIf="showY && !waypointGeometryTypeSelected">
                 <app-field [mode]="mode" [header]="headerYDimension" [value]="y" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionYChange($event)">
                 </app-field>
             </div>

@@ -38,6 +38,7 @@ import { ToastService, ToastIconType } from 'src/app/services/toast/toast.servic
 import { DummyService } from 'src/app/services/dummy.service';
 import { AppConstants } from 'src/app/constants/app-constants';
 import { HerbicideTankMix } from 'src/app/models/ChemicalTreatment';
+import { DropdownObject } from 'src/app/services/dropdown.service';
 
 export enum FormType {
   Observation,
@@ -204,6 +205,19 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     this._diffObject = object;
   }
 
+  classNames(field: any): string {
+    const classes = field.classNames;
+    if (!classes) return '';
+
+    if (this.mode === FormMode.Create) {
+      return classes.create + ` ` + field.classNames.common;
+    } else if (this.mode === FormMode.Edit) {
+      return classes.edit + ` ` + field.classNames.common;
+    } else {
+      return classes.view + ` ` + field.classNames.common;
+    }
+  }
+
   /**
    * Check if the spaceGeom is valid or not
    */
@@ -266,10 +280,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
 
     for (const key of this.config.requiredFieldKeys) {
       const value = this.responseBody[key];
-      if (!value) return false
-      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) return false;
-      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) return false;
-      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) return false;
+
+      if (this.config.relationKeys.includes(key)) {
+        const fieldType = this.config.relationsConfigs[key].type;
+        if (fieldType === 'array' && (!value || value.length === 0)) return false;
+      } else {
+        if (!value) return false
+        else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) return false;
+        else if (key === 'tankMixes' && !this.isTankMixesValid(value)) return false;
+        else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) return false;
+      }
     }
 
     return true;
@@ -284,10 +304,16 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
     const requiredMissingFieldKeys: string[] = [];
     for (const key of this.config.requiredFieldKeys) {
       const value = this.responseBody[key];
-      if (!value) requiredMissingFieldKeys.push(key);
-      else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) requiredMissingFieldKeys.push(key);
-      else if (key === 'tankMixes' && !this.isTankMixesValid(value)) requiredMissingFieldKeys.push(key);
-      else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) requiredMissingFieldKeys.push(key);
+
+      if (this.config.relationKeys.includes(key)) {
+        const fieldType = this.config.relationsConfigs[key].type;
+        if (fieldType === 'array' && (!value || value.length === 0)) requiredMissingFieldKeys.push(key);
+      } else {
+        if (!value) requiredMissingFieldKeys.push(key);
+        else if (key === 'spaceGeom' && !this.isSpaceGeomValid(value)) requiredMissingFieldKeys.push(key);
+        else if (key === 'tankMixes' && !this.isTankMixesValid(value)) requiredMissingFieldKeys.push(key);
+        else if (key === 'speciesObservations' && !this.isSpeciesObservationsValid(value)) requiredMissingFieldKeys.push(key);
+      }
     }
 
     const missingFieldHeaders: string[] = [];
@@ -411,11 +437,27 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
       this.responseBody[field.longitude.key] = event.longitude.value;
     } else if (field.isDropdown) {
       // dropdown field - needs id extraction
-      for (const key in event.object) {
-        // find id field
-        if (key.toLowerCase().indexOf('id') !== -1) {
-          this.responseBody[field.key] = event.object[key];
-          break;
+      
+      if (field.multiple) {
+        const selectedOptions = event as DropdownObject[];
+        const selectedIds: number[] = [];
+        selectedOptions.forEach(item => {
+          for (const key in item.object) {
+            // find id field
+            if (key.toLowerCase().indexOf('id') !== -1) {
+              selectedIds.push(item.object[key]);
+              break;
+            }
+          }
+        });
+        this.responseBody[field.key] = selectedIds;
+      } else {
+        for (const key in event.object) {
+          // find id field
+          if (key.toLowerCase().indexOf('id') !== -1) {
+            this.responseBody[field.key] = event.object[key];
+            break;
+          }
         }
       }
     } else if (field.isDateField) {
@@ -470,7 +512,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
    * Form submission
    */
   async submitAction() {
-    // const endpoint = `${AppConstants.API_baseURL}${this.config.api}`;
     if (!this.canSubmit) {
       this.triedToSubmit = true;
       this.toast.show('Some required fields are missing', ToastIconType.fail);
