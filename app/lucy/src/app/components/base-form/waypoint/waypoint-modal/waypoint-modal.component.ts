@@ -166,8 +166,11 @@ export class WaypointModalComponent implements OnInit {
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
       this.errors.push('Error: cannot enter less than 2 coordinates');
     } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
+      this.polygon = [];
+      this.polygonInAlbers = [];
       this.showMap = true;
-      this.calculateWaypointBoundaryPoints(this.offset, this.points);
+      this.geoJSON = {};
+      this.calculateWaypointBoundaryPoints();
       this.inputDirtyFlag = false;
     }
   }
@@ -245,12 +248,11 @@ export class WaypointModalComponent implements OnInit {
    * @param coords ordered list of lat/long coords centred along waypoint line (distance of half of offset to either
    * side of each coordinate)
    */
-  private calculateWaypointBoundaryPoints(offset: number, coords: LatLongCoordinate[]) {
-    this.points = coords;
+  private calculateWaypointBoundaryPoints() {
     const coordsInAlbers: AlbersCoordinate[] = [];
 
     // convert lat/long coords to Albers
-    for (const c of coords) {
+    for (const c of this.points) {
       const point: AlbersCoordinate = this.converter.latLongCoordinateToAlbers(c.latitude, c.longitude);
       coordsInAlbers.push(point);
     }
@@ -264,14 +266,14 @@ export class WaypointModalComponent implements OnInit {
       const uy = vx / dist;
 
       let nextPoint = {
-        x: coordsInAlbers[i].x + (offset * ux),
-        y: coordsInAlbers[i].y + (offset * uy)
+        x: coordsInAlbers[i].x + (this.offset * ux),
+        y: coordsInAlbers[i].y + (this.offset * uy)
       };
       this.polygonInAlbers.push(nextPoint);
 
       nextPoint = {
-        x: coordsInAlbers[i + 1].x + (offset * ux),
-        y: coordsInAlbers[i + 1].y + (offset * uy)
+        x: coordsInAlbers[i + 1].x + (this.offset * ux),
+        y: coordsInAlbers[i + 1].y + (this.offset * uy)
       };
       this.polygonInAlbers.push(nextPoint);
     }
@@ -285,14 +287,14 @@ export class WaypointModalComponent implements OnInit {
       const uy = vx / dist;
 
       let nextPoint = {
-        x: coordsInAlbers[i].x - (offset * ux),
-        y: coordsInAlbers[i].y - (offset * uy)
+        x: coordsInAlbers[i].x - (this.offset * ux),
+        y: coordsInAlbers[i].y - (this.offset * uy)
       };
       this.polygonInAlbers.push(nextPoint);
 
       nextPoint = {
-        x: coordsInAlbers[i - 1].x - (offset * ux),
-        y: coordsInAlbers[i - 1].y - (offset * uy)
+        x: coordsInAlbers[i - 1].x - (this.offset * ux),
+        y: coordsInAlbers[i - 1].y - (this.offset * uy)
       };
       this.polygonInAlbers.push(nextPoint);
     }
