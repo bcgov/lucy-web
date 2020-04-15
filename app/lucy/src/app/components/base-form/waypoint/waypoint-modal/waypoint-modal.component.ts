@@ -77,10 +77,12 @@ export class WaypointModalComponent implements OnInit {
   ) {  }
 
   ngOnInit() {
-    // minimum 2 points are required for waypoint, so adding 2 empty text entry fields by default
-    this.waypointEntryComponents.push(new WaypointTextEntryComponent(this.validation, this.converter));
-    this.waypointEntryComponents.push(new WaypointTextEntryComponent(this.validation, this.converter));
-    this.maxPointsLengthReached = this.waypointEntryComponents.length === this.MAX_NUM_POINTS ? true : false;
+    if (this.geoJSON['features'].length === 0) {
+      // minimum 2 points are required for waypoint, so adding 2 empty text entry fields by default
+      this.waypointEntryComponents.push(new WaypointTextEntryComponent(this.validation, this.converter));
+      this.waypointEntryComponents.push(new WaypointTextEntryComponent(this.validation, this.converter));
+      this.maxPointsLengthReached = this.waypointEntryComponents.length === this.MAX_NUM_POINTS ? true : false;
+    }
   }
 
   toggleView() {
