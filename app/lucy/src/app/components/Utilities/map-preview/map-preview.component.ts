@@ -184,7 +184,6 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     // if object is a spaceGeom object (from location-input.component)
     if (object['spaceGeom'] !== undefined && object['spaceGeom']['value'] !== undefined && object['spaceGeom']['value']['inputGeometry'] !== undefined) {
       json = object['spaceGeom']['value']['inputGeometry']['geoJSON'];
-      // this.leafletFeatures = json;
     } else if (object['type'] === `FeatureCollection`) { // if object is a GeoJSON
       json = object;
     }

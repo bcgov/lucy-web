@@ -71,6 +71,9 @@ export class LocationInputComponent implements OnInit {
   // coordinates entered as waypoints (along centre line of polygon)
   points: LatLongCoordinate[] = [];
 
+  offset = 0.0;
+  polygon: LatLongCoordinate[] = [];
+
   // waypoint modal launch button should only be displayed if the geometry type selected
   // is Waypoint
   waypointGeometryTypeSelected = false;
@@ -590,6 +593,9 @@ export class LocationInputComponent implements OnInit {
    * @param event the updated GeoJSON file
    */
   inputGeometryChanged(event: any) {
+    if (event === undefined || event['features'] === undefined) {
+      return;
+    }
     for (const feature of event['features']) {
       if (feature['geometry']['type'] === 'Polygon') {
         this.setAreaLabelWithValue(feature['properties']['area']);
@@ -697,8 +703,11 @@ export class LocationInputComponent implements OnInit {
     this.modalType = this.selectedModalType(modal);
   }
 
-  onModalClose() {
+  onModalClose(event: any) {
     this.modalType = undefined;
+    this.offset = event['offset'];
+    this.points = event['points'];
+    this.polygon = event['polygon'];
   }
   /********* End Modal Methods **********/
 }
