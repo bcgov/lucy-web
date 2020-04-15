@@ -19,7 +19,7 @@ export class WaypointModalComponent implements OnInit {
   };
 
   MIN_NUM_POINTS = 2;
-  MAX_NUM_POINTS = 10;
+  MAX_NUM_POINTS = 20;
   MIN_DISTANCE_BTWN_POINTS = 1;   // in metres
   MAX_DISTANCE_BTWN_POINTS = 200;  // in metres
 
@@ -153,7 +153,7 @@ export class WaypointModalComponent implements OnInit {
 
   waypointEntryDone() {
     this.geoJSONEmitter.emit(this.geoJSON);
-    this.onClose.emit();
+    this.onClose.emit({offset: this.offset, points: this.points, polygon: this.polygon});
   }
 
   generatePath() {
