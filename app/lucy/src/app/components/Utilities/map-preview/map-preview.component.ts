@@ -166,12 +166,15 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
   }
 
   //////////////// Offset ////////////////////
-  private _offset = 0;
+  private _offset: number;
   get offset(): number {
     return this._offset;
   }
   @Input() set offset(value: number) {
     this._offset = value;
+    if (this.ready) {
+      this.drawPolygon();
+    }
   }
 
   /////////////// GeoJSON file ////////////
@@ -496,11 +499,12 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       fillOpacity: 0.7,
       weight: 2,
     });
-    polygon.bindPopup(`Offset: ${this.offset}m`);
-    polygon.addTo(this.leafletDrawLayerGroup);
     const area = L.GeometryUtil.geodesicArea(polygon._latlngs[0]);
     const polygonGeoJson = polygon.toGeoJSON();
-    polygonGeoJson['properties'] = {'area': area, 'offset': this._offset, 'length': this.calculatePolylinePathLength()};
+    const length = this.calculatePolylinePathLength();
+    polygon.bindPopup(`<html>Offset: ${Number(this._offset)}m<br>Area: ${area.toFixed(1)}m²<br>Length: ${length.toFixed(1)}m</html>`);
+    polygon.addTo(this.leafletDrawLayerGroup);
+    polygonGeoJson['properties'] = {'area': area, 'offset': Number(this._offset), 'length': length};
     this.leafletFeatures.features.push(polygonGeoJson);
     this.map.fitBounds(polygon._bounds);
     this.drawLine();
