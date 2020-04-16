@@ -164,9 +164,9 @@ export class WaypointModalComponent implements OnInit {
     }
 
     if (this.waypointEntryComponents.length > this.MAX_NUM_POINTS) {
-      this.errors.push('Error: cannot enter more than 10 coordinates');
+      this.errors.push(`Error: cannot enter more than ${this.MAX_NUM_POINTS} coordinates`);
     } else if (this.waypointEntryComponents.length < this.MIN_NUM_POINTS) {
-      this.errors.push('Error: cannot enter less than 2 coordinates');
+      this.errors.push(`Error: cannot enter less than ${this.MIN_NUM_POINTS} coordinates`);
     } else if (this.validDistanceBetweenPoints && this.pointsAreWithinBC) {
       this.polygon = [];
       this.polygonInAlbers = [];
