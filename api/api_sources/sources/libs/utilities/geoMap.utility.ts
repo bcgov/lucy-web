@@ -137,7 +137,7 @@ export class GeoMapUtility {
     }
 
     /**
-     * @description Return New location with offset distances 
+     * @description Return New location with offset distances
      * @param GeoLocation loc
      * @param number distanceX
      * @param bumber distanceY

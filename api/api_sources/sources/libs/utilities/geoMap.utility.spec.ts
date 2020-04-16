@@ -99,15 +99,4 @@ describe('Test for Geo Map Utility', () => {
         // Compare
         expect(  Math.ceil(d * d) ).to.be.equal(Math.ceil((dx * dx + dy * dy)));
     });
-
-    it('should return bounding box of given location', () => {
-        const loc: GeoLocation = {
-            latitude: 51.00000000,
-            longitude: 0.00000000
-        };
-        const dx = 200.000000;
-        const dy = 200.000000;
-
-        const box = GeoMapUtility.calculateBox(loc, dx, dy);
-    });
 });
