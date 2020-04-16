@@ -60,9 +60,9 @@
             </div>
             <!-- Map -->
             <div class="col-12 col-md-8 leaf">
-                <app-map-preview (centerPointChanged)="mapCenterChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers">
+                <app-map-preview (centerPointChanged)="mapCenterChanged($event)" (inputGeometryChanged)="inputGeometryChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers" [points]="points" [polygon]="polygon" [offset]="offset" [inputGeometryJSON]="object">
                 </app-map-preview>
-    
+
                 <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance animated wobble">
                     There is a well
                     <span class="well-distance-value">{{ wellDistance }} meters</span> from this location.
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Geometry -->
     <div class="container">
         <!-- Title: Row -->
@@ -86,18 +86,30 @@
                 </app-dropdown>
             </div>
             <!-- Geometry: Dimension X-->
-            <div class="col col-md-3 nopadding">
+            <div class="col col-md-3 nopadding" *ngIf="!waypointGeometryTypeSelected && showX">
                 <app-field [mode]="mode" [header]="headerXDimension" [value]="x" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionXChange($event)">
                 </app-field>
             </div>
             <!-- Geometry: Dimension Y-->
-            <div class="col col-md-3 nopadding" *ngIf="!showXOnly">
+            <div class="col col-md-3 nopadding" *ngIf="showY && !waypointGeometryTypeSelected">
                 <app-field [mode]="mode" [header]="headerYDimension" [value]="y" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionYChange($event)">
                 </app-field>
             </div>
+            <!-- Button to launch Waypoint Modal -->
+            <div *ngIf="waypointGeometryTypeSelected && !isViewMode" class="col col-md-1 nopadding open-modal-button" (click)="openModal(1)">
+                <i class="material-icons-outlined launch-icon">launch</i>
+            </div>
         </div>
+        <!-- Waypoint Entry Modal -->
+        <app-modal *ngIf="showModal" [align]="'center'">
+
+            <!-- Add waypoint modal -->
+            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" (onClose)="onModalClose($event)" [mode]="mode" [geoJSON]="object.spaceGeom.value.inputGeometry.geoJSON" (geoJSONEmitter)="inputGeometryChanged($event)">
+            </app-waypoint-modal>
+
+        </app-modal>
     </div>
-    
+
     <!-- ////// -->
 </div>
 

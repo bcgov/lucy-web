@@ -26,15 +26,15 @@
     height: 100%;
 }
 
-.padding-0{
-    padding-right:0;
-    padding-left:0;
+.padding-0 {
+    padding-right: 0;
+    padding-left: 0;
 }
 
 .full-width {
     width: 100%;
-    padding-right:0;
-    padding-left:0;
+    padding-right: 0;
+    padding-left: 0;
 }
 
 @media (min-width: 768px) {
@@ -66,8 +66,8 @@
 }
 
 .area-calculated {
-	color: #000000;
-	font-size: 17px;
+    color: #000000;
+    font-size: 17px;
     font-weight: bold;
     text-align: center;
     background-color: rgba(51, 51, 51, 0.08);
@@ -76,6 +76,11 @@
 
 .area-value {
     color: #234075;
+}
+
+.open-modal-button {
+    cursor: pointer;
+    vertical-align: middle;
 }
 
 .sub-section-title {
@@ -97,7 +102,7 @@
     font-size: 13px;
 }
 
-.well-distance-value { 
+.well-distance-value {
     color: #E2A014;
     font-size: 14px;
     font-weight: bold;
