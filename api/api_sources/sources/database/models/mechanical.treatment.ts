@@ -23,11 +23,10 @@
 
 // ** Model: MechanicalTreatment from schema MechanicalTreatmentSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from 'typeorm';
-import { MechanicalTreatmentSchema } from '../database-schema';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, ManyToMany, JoinTable} from 'typeorm';
+import { MechanicalTreatmentSchema, MechanicalTreatmentObservationSchema } from '../database-schema';
 import {
 	ObservationSchema,
-	SpeciesSchema,
 	SpeciesAgencyCodeSchema,
 	MechanicalMethodCodeSchema,
 	MechanicalDisposalMethodCodeSchema,
@@ -41,7 +40,6 @@ import {
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import {
 	Observation,
-	Species,
 	SpeciesAgencyCode,
 	MechanicalMethodCode,
 	MechanicalDisposalMethodCode,
@@ -68,8 +66,6 @@ export interface MechanicalTreatmentSpec {
 	paperFileReference: string;
 	comment: string;
 	signageOnSiteIndicator: boolean;
-	observation: Observation;
-	species: Species;
 	speciesAgency: SpeciesAgencyCode;
 	mechanicalMethod: MechanicalMethodCode;
 	mechanicalDisposalMethod: MechanicalDisposalMethodCode;
@@ -78,6 +74,7 @@ export interface MechanicalTreatmentSpec {
 	issue: MechanicalTreatmentIssueCode;
 	providerContractor: TreatmentProviderContractor;
 	spaceGeom: SpaceGeom;
+	observations: Observation[];
 }
 // -- End: MechanicalTreatmentSpec --
 
@@ -95,8 +92,6 @@ export interface MechanicalTreatmentUpdateSpec {
 	paperFileReference?: string;
 	comment?: string;
 	signageOnSiteIndicator?: boolean;
-	observation?: Observation;
-	species?: Species;
 	speciesAgency?: SpeciesAgencyCode;
 	mechanicalMethod?: MechanicalMethodCode;
 	mechanicalDisposalMethod?: MechanicalDisposalMethodCode;
@@ -105,6 +100,7 @@ export interface MechanicalTreatmentUpdateSpec {
 	issue?: MechanicalTreatmentIssueCode;
 	providerContractor?: TreatmentProviderContractor;
 	spaceGeom?: SpaceGeom;
+	observations?: Observation[];
 }
 // -- End: MechanicalTreatmentUpdateSpec --
 
@@ -190,22 +186,6 @@ export class MechanicalTreatment extends Record {
 	signageOnSiteIndicator: boolean;
 
 	/**
-	 * @description Getter/Setter property for column {observation_id}
-	 */
-	@ManyToOne( type => Observation, { eager: true})
-	@JoinColumn({ name: MechanicalTreatmentSchema.columns.observation, referencedColumnName: ObservationSchema.pk})
-	@ModelProperty({type: PropertyType.object})
-	observation: Observation;
-
-	/**
-	 * @description Getter/Setter property for column {species_id}
-	 */
-	@ManyToOne( type => Species, { eager: true})
-	@JoinColumn({ name: MechanicalTreatmentSchema.columns.species, referencedColumnName: SpeciesSchema.pk})
-	@ModelProperty({type: PropertyType.object})
-	species: Species;
-
-	/**
 	 * @description Getter/Setter property for column {species_agency_code_id}
 	 */
 	@ManyToOne( type => SpeciesAgencyCode, { eager: true})
@@ -268,6 +248,24 @@ export class MechanicalTreatment extends Record {
 	@JoinColumn({ name: MechanicalTreatmentSchema.columns.spaceGeom, referencedColumnName: SpaceGeomSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	spaceGeom: SpaceGeom;
+
+	/**
+	 * @description ManyToMany relationship
+	 */
+	@ManyToMany(type => Observation, observation => observation.mechanicalTreatmentsFetcher, { eager: true } )
+    @JoinTable({
+        name: MechanicalTreatmentObservationSchema.dbTable,
+        joinColumn: {
+			name: MechanicalTreatmentObservationSchema.columns.mechanicalTreatment,
+            referencedColumnName: MechanicalTreatmentSchema.id
+        },
+        inverseJoinColumn: {
+            name: MechanicalTreatmentObservationSchema.columns.observation,
+            referencedColumnName: ObservationSchema.id
+        }
+    })
+    @ModelProperty({type: PropertyType.object})
+    observations: Observation[];
 
 }
 // -------------------------------------

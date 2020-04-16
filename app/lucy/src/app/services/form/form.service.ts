@@ -485,8 +485,8 @@ export class FormService {
       fieldHeaders[newField.key] = newField.header;
 
       // Add Bootstrap column size
-      newField.cssClasses = this.addColumnClass(
-        newField.cssClasses,
+      newField.classNames.common = this.addColumnClass(
+        newField.classNames.common,
         i,
         groupFields.length,
         newField.isTextAreaField
@@ -537,14 +537,14 @@ export class FormService {
   }
 
   private addColumnClass(
-    cssClasses: string,
+    classNames: string,
     fieldIndex: number,
     numberOfFields: number,
     isTextAreaField: boolean
   ): string {
-    let result = cssClasses;
+    let result = classNames;
     // If column is specified (from config) dont add
-    if (cssClasses.indexOf('col') === -1) {
+    if (classNames.indexOf('col') === -1) {
       // set column size:
       if (
         numberOfFields >= 3 &&
@@ -571,6 +571,36 @@ export class FormService {
     }
     return result;
   }
+
+  private generataClassNames(classNameData: string[]) {
+    let className = '';
+    for (const name of classNameData) {
+      className = name + ` `;
+    }
+    return className.trim();
+  }
+
+  private generateClassWithModes(classData: any) {
+    let classes = {
+      create: '',
+      view: '',
+      edit: '',
+      common: ''
+    };
+    for (const item of classData) {
+      if (item.mode === 'create') {
+        classes['create'] = classes['create'] + this.generataClassNames(item.classNames);
+      } else if (item.mode === 'view') {
+        classes['view'] = classes['view'] + this.generataClassNames(item.classNames);
+      } else if (item.mode === 'edit') {
+        classes['edit'] = classes['edit'] + this.generataClassNames(item.classNames);
+      } else {
+        classes['common'] = classes['common'] + this.generataClassNames(item);
+      }
+    }
+    return classes;
+  }
+
   private async configRelationField(
     key: string,
     relations: any
@@ -580,25 +610,45 @@ export class FormService {
       return undefined;
     }
     const relationField = relations[key];
-    // set css classes // TODO: Server doesnt send this yet
-        let cssClasses = ``;
-        if (relationField.layout && relationField.layout.classes) {
-          const classes = relationField.layout.classes;
-          for (const item of classes) {
-            cssClasses = cssClasses + ` `;
-          }
-        }
+    let classNames: any = {};
+    if (relationField.layout && relationField.layout.classes) {
+      classNames = this.generateClassWithModes(relationField.layout.classes);
+    }
+
+    let codeTableDisplayKey, codeTableMeta;
+
+    if (
+      relationField.refSchema.displayLayout &&
+      relationField.refSchema.displayLayout.fields
+    ) {
+      // const lastField = field.refSchema.displayLayout.fields.slice(-1)[0];
+      const lastField = relationField.refSchema.displayLayout.fields[0];
+      codeTableDisplayKey = lastField.key;
+      codeTableMeta = relationField.refSchema.meta;
+    }
+
+    const dropdown = await this.dropdownfor(
+      relationField.refSchema.modelName,
+      codeTableDisplayKey,
+      codeTableMeta
+    );
+
     return {
       key: key,
       header: relationField.header.default,
-      description: relationField.description,
+      description: relationField.description.default,
       required: true,
       type: relationField.type,
       verification: relationField.verification,
-      meta: relationField.meta,
-      cssClasses: cssClasses,
-      codeTable: '',
+      meta: codeTableMeta,
+      classNames,
+      codeTable: relationField.refSchema.modelName,
+      displayKey: codeTableDisplayKey,
       condition: '',
+      value: undefined,
+      isDropdown: true,
+      multiple: (relationField.type === 'array'),
+      dropdown
     };
   }
 
@@ -611,13 +661,9 @@ export class FormService {
       return undefined;
     }
     const computedField = computedFields[key];
-    // set css classes // TODO: Server doesnt send this yet
-    let cssClasses = ``;
+    let classNames = {};
     if (computedField.layout && computedField.layout.classes) {
-      const classes = computedField.layout.classes;
-      for (const item of classes) {
-        cssClasses = cssClasses + ` `;
-      }
+      classNames = this.generateClassWithModes(computedField.layout.classes);
     }
     // END set css classes
     return {
@@ -628,7 +674,7 @@ export class FormService {
       type: 'computed',
       verification: undefined,
       meta: computedField.meta, // TODO: Server doesnt send this yet
-      cssClasses: cssClasses, // TODO: Server doesnt send this yet
+      classNames,
       codeTable: '',
       condition: '',
       computationRules: computedField.computationRules,
@@ -770,11 +816,8 @@ export class FormService {
         }
       }
     }
-    let cssClasses = ``;
-    const classes = field.layout.classes || [];
-    for (const item of classes) {
-      cssClasses = item + ` `;
-    }
+
+    const classNames = this.generateClassWithModes(field.layout.classes);
 
     // BEGIN Tweak verification object received.
     let verification = field.verification;
@@ -813,7 +856,7 @@ export class FormService {
         suffix: field.suffix,
         verification: verification,
         meta: field.meta,
-        cssClasses: cssClasses,
+        classNames,
         codeTable: codeTable,
         codeTableMeta: codeTableMeta,
         displayKey: codeTableDisplayKey,
@@ -863,7 +906,6 @@ export class FormService {
     meta: any
   ): Promise<DropdownObject[]> {
     if (!code) {
-      console.log(`${code} not found`);
       return [];
     }
     let codeTable = await this.codeTableService.getCodeTable(code);
@@ -927,7 +969,7 @@ export class FormService {
    * @return UIConfig object with values for fields
    */
   private async merge(config: any, object: any): Promise<any> {
-    const configuration = config;
+    const configuration = {...config};
     // set id & date
     for (const key in object) {
       if (object.hasOwnProperty(key)) {
@@ -976,6 +1018,17 @@ export class FormService {
                   object[field.key],
                   field.codeTableMeta
                 );
+              } else if (config.relationKeys.includes(field.key) && key !== null) {
+                if (field.type === 'array') {
+                  field.value = await this.processRelationArrayValues(field, object[field.key]);
+                } else if (field.type === 'object') {
+                  field.value = await this.getDropdownObjectWithId(
+                    field.codeTable,
+                    field.displayKey,
+                    object[field.key],
+                    field.meta
+                  );
+                }
               } else {
                 field.value = object[field.key];
               }
@@ -1001,6 +1054,20 @@ export class FormService {
       }
     }
     return configuration;
+  }
+
+  async processRelationArrayValues(field: any, values: any[]) {
+    const dropdownValues: DropdownObject[] = [];
+    for (const value of values) {
+      const dropdownObj = await this.getDropdownObjectWithId(
+        field.codeTable,
+        field.displayKey,
+        value,
+        field.meta
+      );
+      dropdownValues.push(dropdownObj);
+    }
+    return dropdownValues;
   }
 
   /**
@@ -1040,8 +1107,11 @@ export class FormService {
               if (_i === 0) {
                 tableRowConfig[columnKey[0]] = object[key];
               } else {
-                tableRowConfig[columnKey[0]] =
-                  tableRowConfig[columnKey[0]][key];
+                if (columnKey[0] === 'spaceGeom') {
+                  tableRowConfig[columnKey[1]] = tableRowConfig[columnKey[0]][key];
+                } else {
+                  tableRowConfig[columnKey[0]] = tableRowConfig[columnKey[0]][key];
+                }
               }
             }
           } else {
@@ -1067,13 +1137,13 @@ export class FormService {
     const tableRows: TableRowModel[] = [];
     for (const element of tableDataConfig) {
       const displayedHeader = element.header.default;
+      const keys = this.convertDotSeparatedStringToArray(element.key);
+      const keyToBeAdded = (keys[0] !== 'spaceGeom') ? keys[0] : keys[1];
       columns.push({
-        key: this.convertDotSeparatedStringToArray(element.key)[0],
+        key: keyToBeAdded,
         display: displayedHeader
       });
-      displayedColums.push(
-        this.convertDotSeparatedStringToArray(element.key)[0]
-      );
+      displayedColums.push(keyToBeAdded);
     }
 
     for (const fields of values) {
@@ -1166,13 +1236,30 @@ export class FormService {
         for (const field of subSection.fields) {
           // if its a dropdown
           if (field.isDropdown && field.value) {
-            // Find the id of the value
-            for (const key in field.value.object) {
-              if (key.toLowerCase().indexOf('id') !== -1) {
-                body[field.key] = field.value.object[key];
+            switch (field.type) {
+              case 'object':
+                for (const key in field.value.object) {
+                  if (key.toLowerCase().indexOf('id') !== -1) {
+                    body[field.key] = field.value.object[key];
+                    break;
+                  }
+                }
                 break;
-              }
+              case 'array':
+                const items = [];
+                (field.value as any[]).forEach(item => {
+                  for (const key in item.object) {
+                    if (key.toLowerCase().indexOf('id') !== -1) {
+                      items.push(item.object[key]);
+                      break;
+                    }
+                  }
+                });
+                body[field.key] = items;
+                break;
             }
+            // Find the id of the value
+            
           } else if (field.isLocationField) {
             // If its a location field
             if (field.isSpaceGeom) {
@@ -1254,7 +1341,9 @@ export class FormService {
     // 6) get json body for merged ui condig
     const originalJSONBody = this.generateBodyForMergedConfig(mergedUIConfig);
     // 7) diff with body in params
-    const diffResult = this.diff(originalJSONBody, newBody);
+    const fieldChanges = this.diff(originalJSONBody, newBody, mergedUIConfig);
+    const relationFieldChanges = this.relationDiff(originalJSONBody, newBody, mergedUIConfig);
+    const diffResult = { ...fieldChanges, ...relationFieldChanges };
     if (!diffResult) {
       console.log(`Couldnt diff`);
       return undefined;
@@ -1266,9 +1355,9 @@ export class FormService {
       return fromCamel.charAt(0).toUpperCase() + fromCamel.slice(1);
     });
     const changedKeys = keys.join(`, `);
-    const changed = changedKeys.length > 1;
+
     return {
-      changed: changed,
+      changed: changedKeys.length > 1,
       newObject: newBody,
       originalObject: originalJSONBody,
       diffMessage: changedKeys,
@@ -1323,6 +1412,56 @@ export class FormService {
       return undefined;
     }
   }
+
+  /**
+   * Compare the old and new values for relation fields
+   * @param config UI config
+   * @param oldBody old values
+   * @param newBody new values
+   * @returns An object with all the modified values
+   */
+  private relationDiff(oldBody: any, newBody: any, config: UIConfigObject) {
+    let diff = {};
+    Object.entries(config.relationsConfigs).forEach(([key, value]) => {
+      const relationField = value as any;
+      if (relationField.type === 'array') {
+        const newValue = newBody[key];
+        const oldValue = oldBody[key];
+
+        if (newValue && oldValue) {
+          const isSameArray = this.isArrayEqual(newValue, oldValue);
+          if (!isSameArray) {
+            diff[key] = newValue;
+          }
+        }
+      }
+    });
+    return diff;
+  }
+
+  /**
+   * Compare 2 Arrays
+   * @param arr1 JSON object
+   * @param arr2 JSON object
+   * @returns true if the arrays are same, false if not
+   */
+  private isArrayEqual(arr1, arr2): boolean {
+    if (arr1 instanceof Array && arr2 instanceof Array)
+    {
+      if (arr1.length !== arr2.length)
+        return false;
+  
+      for (var i = 0; i < arr1.length; i++)
+        if (!this.isArrayEqual(arr1[i], arr2[i]))
+          return false;
+  
+      return true;
+    }
+  
+    return arr1 === arr2;
+  }
+
+
   /**
    * Compare 2 JSON object and
    * return Object containing differences
@@ -1331,7 +1470,7 @@ export class FormService {
    * @param obj1 JSON object
    * @param obj2 JSON object
    */
-  private diff(obj1: JSON, obj2: JSON): any {
+  private diff(obj1: JSON, obj2: JSON, config: UIConfigObject): any {
     const result = {};
     if (Object.is(obj1, obj2)) {
       return undefined;
@@ -1342,41 +1481,43 @@ export class FormService {
     Object.keys(obj1 || {})
       .concat(Object.keys(obj2 || {}))
       .forEach(key => {
-        const t1 = typeof obj1[key];
-        const t2 = typeof obj2[key];
-        if (t1 === t2 && t1 === typeof {}) {
-          const value = this.diff(obj1[key], obj2[key]);
-          if (value !== undefined && Object.keys(value).length > 0) {
-            result[key] = JSON.stringify(value, null, 2);
-          }
-        } else if (t1 !== t2 && (t1 === typeof {} || t2 === typeof {})) {
-          let nonObjValue;
-          if (t1 === typeof {} && t2 !== typeof {}) {
-            nonObjValue = obj2[key];
-          } else {
-            nonObjValue = JSON.stringify(obj2, null, 2);
-          }
-          if (t2 === typeof {}) {
-            result[key] = nonObjValue;
-          } else {
-            const obj = obj1[key];
-            if (obj === undefined || obj === null) {
-              result[key] = nonObjValue;
-              return;
+        if (!config.relationKeys.includes(key)) {
+          const t1 = typeof obj1[key];
+          const t2 = typeof obj2[key];
+          if (t1 === t2 && t1 === typeof {}) {
+            const value = this.diff(obj1[key], obj2[key], config);
+            if (value !== undefined && Object.keys(value).length > 0) {
+              result[key] = JSON.stringify(value, null, 2);
             }
-            // Find id key from obj;
-            const idKeys: string[] = Object.keys(obj).filter(k => k.includes('_id'));
-            if (idKeys.length > 0) {
-              const idKey = idKeys[0];
-              if (nonObjValue !== obj[idKey]) {
+          } else if (t1 !== t2 && (t1 === typeof {} || t2 === typeof {})) {
+            let nonObjValue;
+            if (t1 === typeof {} && t2 !== typeof {}) {
+              nonObjValue = obj2[key];
+            } else {
+              nonObjValue = JSON.stringify(obj2, null, 2);
+            }
+            if (t2 === typeof {}) {
+              result[key] = nonObjValue;
+            } else {
+              const obj = obj1[key];
+              if (obj === undefined || obj === null) {
+                result[key] = nonObjValue;
+                return;
+              }
+              // Find id key from obj;
+              const idKeys: string[] = Object.keys(obj).filter(k => k.includes('_id'));
+              if (idKeys.length > 0) {
+                const idKey = idKeys[0];
+                if (nonObjValue !== obj[idKey]) {
+                  result[key] = nonObjValue;
+                }
+              } else {
                 result[key] = nonObjValue;
               }
-            } else {
-              result[key] = nonObjValue;
             }
+          } else if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+            result[key] = obj2[key];
           }
-        } else if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
-          result[key] = obj2[key];
         }
       });
     return result;
@@ -1561,7 +1702,7 @@ export class FormService {
       suffix: '',
       verification: '',
       meta: {},
-      cssClasses: '',
+      classNames: {},
       codeTable: '',
       codeTableMeta: {},
       displayKey: '',

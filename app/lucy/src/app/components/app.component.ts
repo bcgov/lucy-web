@@ -198,8 +198,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // if last route is specified in session (from Login component), go to it and remove key from session.
       const lastRoute = this.routerService.getLastRouteInSession();
+      const lastRouteId = this.routerService.getLastRouteIDInSession();
       if (lastRoute) {
-        this.routerService.navigateTo(lastRoute);
+        this.routerService.navigateTo(lastRoute, +lastRouteId);
         this.routerService.clearLastRouteInSession();
       } else {
         // Otherwise go to profile
