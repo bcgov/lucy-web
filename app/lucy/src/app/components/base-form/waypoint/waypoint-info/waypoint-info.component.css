@@ -1,0 +1,31 @@
+.modal-divider {
+  margin: 8px 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.section-header {
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0;
+}
+
+.section-content {
+  padding: 12px 0;
+  color: #333333;
+  font-family: Lato;
+  font-size: 14px;
+  letter-spacing: 0.05px;
+  line-height: 19px;
+  text-align: justify;
+}
+
+p {
+  margin: 0;
+}

@@ -15,7 +15,7 @@
  *
  * 	Created by Rajasekaran Manivannan on 2019-02-12.
  */
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 
 @Component({
   selector: 'app-modal',
@@ -24,7 +24,18 @@ import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/cor
 })
 export class ModalComponent implements OnInit, OnDestroy {
 
+  @Input() align: string;
   @Output() onBackdropClick = new EventEmitter<any>();
+
+  get classNames(): Object {
+    if (!this.align) return { 'top-align': true };
+    
+    // add more class for alignment if needed
+    switch (this.align) {
+      case 'center': return { 'center-align': true };
+      default: return { 'top-align': true };
+    }
+  }
 
   constructor() { }
 
@@ -38,8 +49,8 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.body.style.overflow = 'unset';
   }
 
-  public onClickAway(): void {
-    this.onBackdropClick.emit();
+  onClickAway(): void {
+    if (this.onBackdropClick) this.onBackdropClick.emit();
   }
 
 }
