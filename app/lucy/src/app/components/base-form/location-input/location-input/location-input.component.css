@@ -48,6 +48,7 @@
     /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
     .leaf {
         height: 500px;
+        margin: 16px 0;
     }
 }
 
