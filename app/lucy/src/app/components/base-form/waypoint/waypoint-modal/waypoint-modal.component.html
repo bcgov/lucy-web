@@ -1,0 +1,95 @@
+<div class="modal-content-container waypoint-modal animated">
+
+    <p *ngIf="!showInfo" class="header-text">Waypoint Details</p>
+    <hr class="section-divider" />
+
+    <!-- waypoint geometry -->
+    <div *ngIf="!showInfo" class="info-button-container">
+        <div class="info-button" (click)="toggleView()">
+            <i class="material-icons-outlined info-icon">info</i>
+            <p class="info-text">More Info</p>
+        </div>
+    </div>
+
+    <!-- waypoint info -->
+    <app-waypoint-info *ngIf="showInfo" (onBackAction)="toggleView()">
+    </app-waypoint-info>
+
+    <div *ngIf="!showInfo">
+        <!-- offset width -->
+        <div class="row offset-container">
+            <div class="col-4 offset-field-container">
+                <app-field [mode]="mode" [verification]="offsetVerification" appearance="fill" suffix='m' header='Offset width' [value]=offset (valueChanged)="offsetChanged($event)"></app-field>
+            </div>
+            <div class="input-mode-container">
+                <button class="btn switch-btn" [ngClass]="!showLatLong ? 'input-mode-on' : 'input-mode-off'" (click)="toggleUTM()">
+                UTM
+                </button>
+                <button class="btn switch-btn" [ngClass]="showLatLong ? 'input-mode-on' : 'input-mode-off'" (click)="toggleLAT()">
+                Lat / Long
+                </button>
+            </div>
+        </div>
+
+        <!-- text fields for pin entries -->
+        <div class="waypoints-container">
+            <div *ngFor="let wec of waypointEntryComponents; let j = index">
+                <div class="waypoint-row animated fadeIn animationDuration">
+                    <p>{{ j+1 }}</p>
+                    <div class="waypoint-input-container">
+                        <app-waypoint-text-entry [point]=wec.point [mode]=mode [showLatLong]="showLatLong" (pointChanged)="pointChanged($event,j)"></app-waypoint-text-entry>
+                    </div>
+                    <div class="waypoint-action-container">
+                        <i class="material-icons-outlined clear-icon" (click)="removeWaypoint(j)">maximize</i>
+                        <i class="material-icons" *ngIf="showAddIcon(j)" (click)="addNewWaypointTextEntry()">add</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error messages -->
+        <div class="error-container">
+            <div *ngFor="let e of errors" [ngClass]="showLatLong ? 'error-latlong-container' : 'error-utm-container'">
+                <div class="error-card">
+                    <i class="material-icons-outlined error-icon">error</i>
+                    <span>{{ e }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map preview -->
+        <div class="map-container min-map-height" *ngIf="showMap">
+            <div class="row">
+                <div class="col-12 leaf">
+                    <app-map-preview [points]="points" [polygon]="polygon" [offset]="offset" (inputGeometryChanged)="geoJSONChangeHandler($event)"></app-map-preview>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text disclaimer -->
+        <div class="disclaimer-container">
+            <h5 class="disclaimer-header">Please note:</h5>
+            <p class="disclaimer-body">Waypoints must be listed in sequence as observed on ground. If listed otherwise, generated path will differ.</p>
+        </div>
+        <hr class="section-divider" />
+
+        <!-- Buttons -->
+        <div class="modal-action-container">
+            <div class="col modal-action">
+                <button mat-stroked-button color="primary" class="modal-action-button" (click)="onBack()">
+                    Back
+                </button>
+            </div>
+            <div class="col modal-action" *ngIf="inputDirtyFlag">
+                <button mat-raised-button color="primary" class="modal-action-button" (click)="generatePath()">
+                    Generate Path
+                </button>
+            </div>
+            <div class="col modal-action" *ngIf="!inputDirtyFlag">
+                <button mat-raised-button color="primary" class="modal-action-button" (click)="waypointEntryDone()">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
