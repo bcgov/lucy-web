@@ -108,6 +108,12 @@ export class RequestTableComponent implements OnInit, OnChanges {
     this.requestDataSource.paginator = this.paginator;
   }
 
+  disableRespond(user: User): boolean {
+    if (!user || !this.currentUser) return false;
+
+    return (this.currentUser.user_id === user.user_id);
+  }
+
   public onRespondAction(item: AccessRequestTableData) {
     const { request_id } = item;
     if (!request_id) return;
