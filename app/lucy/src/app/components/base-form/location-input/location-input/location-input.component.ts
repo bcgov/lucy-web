@@ -18,12 +18,12 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormMode } from 'src/app/models';
 import { MapPreviewPoint, MapMarker } from 'src/app/components/Utilities/map-preview/map-preview.component';
-import { ConverterService } from 'src/app/services/coordinateConversion/location.service';
+import { ConverterService, LatLongCoordinate, AlbersCoordinate } from 'src/app/services/coordinateConversion/location.service';
 import { ValidationService } from 'src/app/services/validation.service';
-import { DropdownService } from 'src/app/services/dropdown.service';
 import { FormConfigField, FormService } from 'src/app/services/form/form.service';
 import { GeometryJSON, InputGeometryJSON } from 'src/lib';
 import { BcgwService } from 'src/app/services/bcgw/bcgw.service';
+
 
 interface SpaceGeomData {
   geometry: any;
@@ -34,6 +34,10 @@ interface SpaceGeomData {
   longitude: number;
   metaData?: string;
   space_geom_id?: number;
+}
+
+enum ModalType {
+  WayPoint = 1,
 }
 
 const AreaFieldTitle = {
@@ -64,6 +68,16 @@ export class LocationInputComponent implements OnInit {
   // Markers shown on map
   markers: MapMarker[] = [];
 
+  // coordinates entered as waypoints (along centre line of polygon)
+  points: LatLongCoordinate[] = [];
+
+  offset: number;
+  polygon: LatLongCoordinate[] = [];
+
+  // waypoint modal launch button should only be displayed if the geometry type selected
+  // is Waypoint
+  waypointGeometryTypeSelected = false;
+
   // Empty existing value
   private _existingValue: SpaceGeomData = { geometry: 1, latitude: 0, longitude: 0};
 
@@ -76,6 +90,8 @@ export class LocationInputComponent implements OnInit {
   northings: string;
   zone: string;
   minUTMDecimals = 2;
+
+  modalType: number;
 
   ///// Form Mode
   private _mode: FormMode = FormMode.View;
@@ -192,16 +208,43 @@ export class LocationInputComponent implements OnInit {
   headerYDimension = AreaFieldTitle.LENGTH;
   x = '';
   y = '';
-  _showXOnly = false;
+
+  _showX = true;
+  _showY = true;
   areaLabel = AreaFieldTitle.UNKNOWN;
 
-  get showXOnly(): boolean {
-    return this._showXOnly;
+  get showX(): boolean {
+    return this._showX;
   }
-  set showXOnly(val: boolean) {
-    this._showXOnly = val;
-    this.areaCalculator = val === true ? this.calculatePoint : this.calculatePlot;
-    this.headerXDimension = val === true ? AreaFieldTitle.RADIUS : AreaFieldTitle.WIDTH;
+  set showX(val: boolean) {
+    this._showX = val;
+    if (this.showX && this.showY) {
+      this.areaCalculator = this.calculatePlot;
+      this.headerXDimension = AreaFieldTitle.WIDTH;
+    } else if (this.showX && !this.showY) {
+      this.areaCalculator = this.calculatePoint;
+      this.headerXDimension = AreaFieldTitle.RADIUS;
+    } else {
+      this.headerXDimension = AreaFieldTitle.UNKNOWN;
+      this.headerYDimension = AreaFieldTitle.UNKNOWN;
+    }
+  }
+
+  get showY(): boolean {
+    return this._showY;
+  }
+  set showY(val: boolean) {
+    this._showY = val;
+    if (this.showX && this.showY) {
+      this.areaCalculator = this.calculatePlot;
+      this.headerXDimension = AreaFieldTitle.WIDTH;
+    } else if (this.showX && !this.showY) {
+      this.areaCalculator = this.calculatePoint;
+      this.headerXDimension = AreaFieldTitle.RADIUS;
+    } else {
+      this.headerXDimension = AreaFieldTitle.UNKNOWN;
+      this.headerYDimension = AreaFieldTitle.UNKNOWN;
+    }
   }
 
   private _long = '';
@@ -254,13 +297,21 @@ export class LocationInputComponent implements OnInit {
     private converterService: ConverterService,
     private validation: ValidationService,
     private formService: FormService,
-    private BCGWService: BcgwService
+    private BCGWService: BcgwService,
     ) { }
 
   private processInputValues(input: SpaceGeomData) {
     let geometry = input.geometry;
     if (typeof geometry === typeof {}) {
       geometry = geometry['observation_geometry_code_id'] || 1;
+    }
+    if (geometry === 1) {
+      this.showX = true;
+      this.showY = false;
+    } else if (geometry === 4 || geometry === 5) {
+      this.showX = false;
+      this.showY = false;
+      this.waypointGeometryTypeSelected = true;
     }
     return {
       latitude: input.latitude,
@@ -281,8 +332,12 @@ export class LocationInputComponent implements OnInit {
       // Setting bind props
       this.x = x ? `${x}` : '';
       this.y = y ? `${y}` : '';
-      this.showXOnly = json.attributes.area.radius ? true : false;
-      this.setAreaLabel(x, y);
+      this.showY = json.attributes.area.radius ? true : false;
+      if (this.x === '') {
+        this.areaLabel = `${Number(json.attributes.area).toFixed(1)} square meters`;
+      } else {
+        this.setAreaLabel(x, y);
+      }
     }
   }
 
@@ -296,9 +351,13 @@ export class LocationInputComponent implements OnInit {
     this.setUTMFromLatLong();
   }
 
+  setAreaLabelWithValue(area: number) {
+    this.areaLabel = area ? `${area.toFixed(1)} square meters` : AreaFieldTitle.UNKNOWN;
+  }
+
   setAreaLabel(x: number, y: number) {
     const a = this.areaCalculator(x, y);
-    this.areaLabel = a ? `${a.toFixed(1)} square meter` : AreaFieldTitle.UNKNOWN;
+    this.areaLabel = a ? `${a.toFixed(1)} square meters` : AreaFieldTitle.UNKNOWN;
   }
 
   private notifyChangeEvent() {
@@ -315,6 +374,16 @@ export class LocationInputComponent implements OnInit {
           space_geom_id: existing.space_geom_id
         };
         this.object.spaceGeom.value = value;
+
+        // 4 & 5 are the waypoint-related geometry input types
+        // this is really hacky, but we're anticipating that dropdown values will change soon so keeping
+        // this as is for now
+        if (this.object.spaceGeom.value.geometry === 4 || this.object.spaceGeom.value.geometry === 5) {
+          this.waypointGeometryTypeSelected = true;
+        } else {
+          this.waypointGeometryTypeSelected = false;
+        }
+
       }
       this.locationChanged.emit(this.object);
     }
@@ -476,9 +545,12 @@ export class LocationInputComponent implements OnInit {
     this.lat = `${this.fieldObject.latitude.value}`;
     this.long = `${this.fieldObject.longitude.value}`;
 
-    // 5) Set Map
-    this.setMapToCurrentLocation();
+    if (this.fieldObject.geometry.value !== 4 && this.fieldObject.geometry.value !== 5) {
+      // 5) Set Map
+      this.setMapToCurrentLocation();
+    }
 
+    // 6) get well info
     this.findNearestWell();
   }
 
@@ -501,12 +573,44 @@ export class LocationInputComponent implements OnInit {
         this._existingValue.geometry = geomID;
       }
       if (geomID === 1) {
-        this.showXOnly = true;
+        this.showY = true;
+        this.y = '';
+      } else if (geomID === 4 || geomID === 5) {
+        this.showX = false;
+        this.showY = false;
+        this.x = '';
         this.y = '';
       } else {
-        this.showXOnly = false;
+        this.showX = true;
+        this.showY = true;
       }
       this.setGeometryData();
+    }
+  }
+
+  /**
+   * @description Handler for change to the GeoJSON file
+   * @param event the updated GeoJSON file
+   */
+  inputGeometryChanged(event: any) {
+    if (event === undefined || event['features'] === undefined) {
+      return;
+    }
+    for (const feature of event['features']) {
+      if (feature['geometry']['type'] === 'Polygon') {
+        this.setAreaLabelWithValue(feature['properties']['area']);
+        this.object.spaceGeom.value.inputGeometry.attributes['area'] = feature['properties']['area'];
+      } else if (feature['geometry']['type'] === 'Point') {
+        // take coordinate of first Point, set it to lat/long value of spaceGeom object
+        this.fieldObject.latitude.value = feature['geometry']['coordinates'][1];
+        this.fieldObject.longitude.value = feature['geometry']['coordinates'][0];
+        this.lat = `${this.fieldObject.latitude.value}`;
+        this.long = `${this.fieldObject.longitude.value}`;
+        this.latChanged(this.lat);
+        this.longChanged(this.long);
+        break;
+      }
+      this.object.spaceGeom.value.inputGeometry.geoJSON = event;
     }
   }
 
@@ -538,8 +642,11 @@ export class LocationInputComponent implements OnInit {
       );
     this._existingValue.inputGeometry = json;
 
-    // Calculate Area
-    this.setAreaLabel(x, y);
+    if (this._existingValue.inputGeometry.attributes.geomId !== 4 && this._existingValue.inputGeometry.attributes.geomId !== 5) {
+      // Calculate Area
+      this.setAreaLabel(x, y);
+    }
+
     this.notifyChangeEvent();
   }
 
@@ -575,4 +682,32 @@ export class LocationInputComponent implements OnInit {
   mapCenterChanged(event: any) {
   }
 
+  /*********** Modal Methods ************/
+  get showModal(): boolean {
+    return !!this.modalType;
+  }
+
+  selectedModalType(modal: number): ModalType {
+    switch (modal) {
+      case 1: return ModalType.WayPoint;
+      default: return undefined;
+    }
+  }
+  showModalContent(modal: number): boolean {
+    if (!modal) { return false; }
+    return this.modalType === modal;
+  }
+
+  openModal(modal: number) {
+    if (!modal) { return; }
+    this.modalType = this.selectedModalType(modal);
+  }
+
+  onModalClose(event: any) {
+    this.modalType = undefined;
+    this.offset = event['offset'];
+    this.points = event['points'];
+    this.polygon = event['polygon'];
+  }
+  /********* End Modal Methods **********/
 }

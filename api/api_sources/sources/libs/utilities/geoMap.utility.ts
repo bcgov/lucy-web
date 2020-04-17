@@ -31,7 +31,11 @@
   * Constants
   */
 // Web Mercator scaling const
-const a = 6378137;
+/**
+ * @description Earth radius in meter
+ */
+const EarthRadius = 6378137;
+const DegreeToRadian = 0.017453292519943295; // === Math.PI / 180
 /**
  * Types
  */
@@ -51,6 +55,12 @@ export interface GeoLocation {
     longitude: number;
 }
 
+export interface GeoBox {
+    topLeft: GeoLocation;
+    topRight: GeoLocation;
+    bottomLeft: GeoLocation;
+    bottomRight: GeoLocation;
+}
 /**
  * @description Utility to performing mapping function
  */
@@ -79,8 +89,8 @@ export class GeoMapUtility {
      * @param number latitude
      */
     static longitudeLatitudeToWebMercator(longitude: number, latitude: number): PointTuple {
-        const x = a * GeoMapUtility.degreeToRadian(longitude);
-        const y = a * Math.log(Math.tan(GeoMapUtility.degreeToRadian((45.0 + (latitude / 2.0)))));
+        const x = EarthRadius * GeoMapUtility.degreeToRadian(longitude);
+        const y = EarthRadius * Math.log(Math.tan(GeoMapUtility.degreeToRadian((45.0 + (latitude / 2.0)))));
         return {x, y};
     }
 
@@ -90,23 +100,29 @@ export class GeoMapUtility {
      * @param number latitude
      */
     static webMercatorToLongitudeLatitude(x: number, y: number): GeoLocation {
-        const longitude = GeoMapUtility.radianToDegree(x / a);
-        const latitude = 90 - 2 * GeoMapUtility.radianToDegree(Math.atan(Math.exp(-y / a)));
+        const longitude = GeoMapUtility.radianToDegree(x / EarthRadius);
+        const latitude = 90 - 2 * GeoMapUtility.radianToDegree(Math.atan(Math.exp(-y / EarthRadius)));
         return {latitude, longitude};
     }
 
+    /**
+     * @description Calculate distance between two location, return in meter if isInKm flag is true then return in km
+     * @param GeoLocation loc1
+     * @param GeoLocation loc2
+     * @param boolean isInKM
+     */
     static distance(loc1: GeoLocation, loc2: GeoLocation, isInKM: boolean = false): number {
         let lon1 = loc1.longitude;
         let lat1 = loc1.latitude;
         let lon2 = loc2.longitude;
         let lat2 = loc2.latitude;
-        const deg2rad = 0.017453292519943295; // === Math.PI / 180
+        const deg2rad = DegreeToRadian; // === Math.PI / 180
         const cos = Math.cos;
         lat1 *= deg2rad;
         lon1 *= deg2rad;
         lat2 *= deg2rad;
         lon2 *= deg2rad;
-        const diam = 12742 * 1000; // Diameter of the earth in km (2 * 6371)
+        const diam = 2 * EarthRadius; // Diameter of the earth in km (2 * 6371)
         const dLat = lat2 - lat1;
         const dLon = lon2 - lon1;
         const x = (
@@ -120,6 +136,27 @@ export class GeoMapUtility {
         return d;
     }
 
+    /**
+     * @description Return New location with offset distances
+     * @param GeoLocation loc
+     * @param number distanceX
+     * @param bumber distanceY
+     */
+    static offset(loc: GeoLocation, distanceX: number, distanceY: number): GeoLocation {
+        const c = 1.0 / DegreeToRadian;
+        const newLat = loc.latitude + (distanceY / EarthRadius) * c;
+        const newLon = loc.longitude + ((distanceX / EarthRadius) * c) / Math.cos(loc.latitude  * DegreeToRadian);
+        return {
+            latitude: newLat,
+            longitude: newLon
+        };
+    }
+
+    /**
+     * @description Convert latitude/ longitude project to Albers
+     * @param number latitude
+     * @param number longitude
+     */
     static longitudeLatitudeCoordinateToAlbers(
         latitude: number,
         longitude: number
@@ -161,7 +198,7 @@ export class GeoMapUtility {
             ));
         const n = (Math.pow(m1, 2) - Math.pow(m2, 2)) / (q2 - q1);
         const c = Math.pow(m1, 2) + n * q1;
-        const p0 = (a * Math.pow(c - n * q0, 0.5)) / n;
+        const p0 = (EarthRadius * Math.pow(c - n * q0, 0.5)) / n;
         const q =
         (1 - e2) *
         (Math.sin(latY) / (1 - e2 * Math.pow(Math.sin(latY), 2)) -
@@ -169,7 +206,7 @@ export class GeoMapUtility {
             Math.log(
             (1 - this.e * Math.sin(latY)) / (1 + this.e * Math.sin(latY))
             ));
-        const p = (a * Math.pow(c - n * q, 0.5)) / n;
+        const p = (EarthRadius * Math.pow(c - n * q, 0.5)) / n;
         const theta = this.degreeToRadian(n * (longitude - angle4));
         const albersX = p * Math.sin(theta) + offsetX;
         const albersY = p0 - p * Math.cos(theta) + offsetY;
@@ -177,7 +214,33 @@ export class GeoMapUtility {
         x: albersX,
         y: albersY
         };
-      }
+    }
+
+    /**
+     * @description Returns a bounding box of given location
+     * @param GeoLocation loc
+     * @param number boxWidth
+     * @param number boxHeight
+     */
+    static calculateBox(loc: GeoLocation, boxWidth: number, boxHeight: number): GeoBox {
+        const offsetX = boxWidth / 2.0;
+        const offsetY = boxHeight / 2.0;
+        const topRight: GeoLocation = GeoMapUtility.offset(loc, offsetX, offsetY);
+        const bottomRight: GeoLocation = GeoMapUtility.offset(loc, offsetX, -offsetY);
+        const topLeft: GeoLocation = GeoMapUtility.offset(loc, -offsetX, offsetY);
+        const bottomLeft: GeoLocation = GeoMapUtility.offset(loc, -offsetX, -offsetY);
+        return { topLeft, topRight, bottomLeft, bottomRight};
+    }
+
+    /**
+     * @description Returns a bounding square of given location
+     * @param GeoLocation loc
+     * @param number diagonal
+     */
+    static calculateSquare(loc: GeoLocation, diagonal: number): GeoBox {
+        const offset = diagonal / Math.sqrt(2);
+        return GeoMapUtility.calculateBox(loc, offset, offset);
+    }
 }
 
 // ------------------------------
