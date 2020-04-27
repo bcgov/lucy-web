@@ -26,7 +26,7 @@
 <div *ngIf="!isLoading" class="form-bg">
     <!-- Header Section  -->
     <div class="container-fluid header-container sticky animated" [ngClass]="
-      inReviewMode
+        inReviewMode
         ? headerOnReviewAnimationClass
         : headerInitialAnimationClass
     ">
@@ -45,24 +45,24 @@
                     <span class="spacer-toolbar"></span>
                     <!-- Submit button -->
                     <button mat-flat-button *ngIf="!readonly || inReviewMode" type="button" class="btn btn-secondary submit-button" (click)="submitAction()">
-            {{ submitButtonPrefix }} {{ config["title"] }}
-          </button>
+                        {{ submitButtonPrefix }} {{ config["title"] }}
+                    </button>
                     <!-- ---- -->
                     <!-- Edit button for review -->
                     <button mat-flat-button *ngIf="inReviewMode" type="button" class="btn btn-secondary edit-button animated fadeIn" (click)="exitReviewMode()">
-            <i class="material-icons action-icon">
-              edit
-            </i>
-            Make changes
-          </button>
+                        <i class="material-icons action-icon">
+                        edit
+                        </i>
+                        Make changes
+                    </button>
                     <!-- ---- -->
                     <!-- Edit Button for when in view mode and user is data editor -->
                     <button mat-flat-button (click)="edit()" *ngIf="isDataEditor && viewing" type="button" class="btn btn-secondary edit-button animated fadeIn">
-            <i class="material-icons action-icon">
-              edit
-            </i>
-            Make changes
-          </button>
+                        <i class="material-icons action-icon">
+                        edit
+                        </i>
+                        Make changes
+                    </button>
                     <!-- ---- -->
                 </mat-toolbar-row>
             </mat-toolbar>
@@ -129,12 +129,12 @@
                             </div>
                         </div>
                         <div *ngFor="let subSection of section.subSections; let j = index" class="row">
-                            <div class="col-12 sub-section-title">
+                            <div class="col-12 sub-section-title" *ngIf="subSection['title'].default">
                                 <br /> {{ subSection["title"].default }}
                             </div>
                             <div class="container" [ngClass]="subSection.boxed ? 'boxed' : ''">
                                 <div class="row" *ngIf="!subSection.isCustom">
-                                    <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index" [ngClass]="field.cssClasses">
+                                    <div class="col nopadding" *ngFor="let field of subSection.fields; let j = index" [ngClass]="classNames(field)">
                                         <!-- Location Field -->
                                         <app-location-input *ngIf="field.isLocationField" [mode]="mode" [object]="field" (locationChanged)="fieldChanged(field, $event)">
                                         </app-location-input>
@@ -149,7 +149,7 @@
                                         <!-- Date & Time Fields -->
                                         <app-date-time-picker *ngIf="field.isDateAndTimeField" [mode]="mode" [header]="field.header" [dateTime]="field.value" (selected)="fieldChanged(field, $event)"></app-date-time-picker>
                                         <!-- Dropdown --->
-                                        <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [fieldHeader]="field.header" [selectedItem]="field.value" (selectionChanged)="fieldChanged(field, $event)">
+                                        <app-dropdown *ngIf="field.isDropdown" [mode]="mode" [items]="field.dropdown" [multiple]="field.multiple" [fieldHeader]="field.header" [selectedItem]="field.value" (selectionChanged)="fieldChanged(field, $event)">
                                         </app-dropdown>
                                         <!-- Checkbox -->
                                         <div class="col">
@@ -165,8 +165,8 @@
                                             <div class="row">
                                                 <div class="col no-content">
                                                     <i class="material-icons">
-                            build
-                          </i>This section does not have any content yet.
+                                                        build
+                                                    </i>This section does not have any content yet.
                                                 </div>
                                             </div>
                                         </div>
@@ -197,9 +197,9 @@
                             </div>
                             <div class="col-12">
                                 <app-table *ngIf="
-              config.relationsConfigs[relationKey] &&
-              config.relationsConfigs[relationKey].table
-            " [model]="config.relationsConfigs[relationKey].table"></app-table>
+                                config.relationsConfigs[relationKey] &&
+                                config.relationsConfigs[relationKey].table
+                                " [model]="config.relationsConfigs[relationKey].table"></app-table>
                             </div>
                         </div>
                     </div>
@@ -213,10 +213,9 @@
     <div *ngIf="creating && !isProd && !isTest" class="row test-btn">
         <div class="col-12">
             <button class="btn" (click)="generateForTesting()">
-        T
-      </button>
+                T
+            </button>
         </div>
     </div>
-    <br />
     <!-- -------------------- -->
 </div>

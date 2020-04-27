@@ -58,6 +58,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() max: Number;
   // Boolean to set focus onInit
   @Input() showFocus: boolean;
+  // mat-form-field appearance
+  @Input() appearance = 'legacy';
 
   ///// Verification
   private _verification: any;
@@ -87,6 +89,15 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   get fieldId(): string {
     return this.camelize(this.header);
+  }
+
+  get showHeader(): boolean {
+    return this.appearance === 'fill';
+  }
+
+  get placeHolderText(): string {
+    if (this.appearance === 'fill') return '';
+    return this.header;
   }
 
   ///// Form Mode

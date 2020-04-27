@@ -1,0 +1,12 @@
+.point-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 0.5px solid #979797;
+    border-radius: 8pt;
+}
+
+::ng-deep app-field[appearance='fill'] > div {
+    margin-top: 0 !important;
+    padding-bottom: 8px;
+}

@@ -51,8 +51,13 @@ export class DummyService {
             responseBody['spaceGeom'] =  fake.bodyValue;
           } else {
             const fake = await this.fakeFieldValue(field);
-            field.value = fake.fieldValue;
-            responseBody[field.key] = fake.bodyValue;
+            if (field.multiple) {
+              field.value = [fake.fieldValue];
+              responseBody[field.key] = [fake.bodyValue];
+            } else {
+              field.value = fake.fieldValue;
+              responseBody[field.key] = fake.bodyValue;
+            }
           }
         }
       }
@@ -75,6 +80,12 @@ export class DummyService {
     }
 
     if (field.isCheckbox) {
+      if (field.verification && field.verification.required) {
+        return {
+          fieldValue: true,
+          bodyValue: true,
+        }
+      }
       const fake = faker.random.boolean();
       return {
         fieldValue: fake,
