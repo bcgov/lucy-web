@@ -1,0 +1,29 @@
+version: '1.0'
+description: Schema file for table mechanical_treatment_observation
+externalTables: []
+includes:
+  - observation.schema.yaml
+  - mechanicalTreatment.schema.yaml
+schemas:
+  MechanicalTreatmentObservationSchema:
+    name: mechanical_treatment_observation
+    description: Joining table for mechanical treatment and observation
+    columns:
+      id:
+        name: mechanical_treatment_observation_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      observation:
+        name: observation_id
+        comment: 'Foreign key reference to observation table'
+        definition: INT NOT NULL
+        foreignTable: observation
+        refColumn: observation_id
+        deleteCascade: true
+      mechanicalTreatment:
+        name: mechanical_treatment_id
+        comment: 'Foreign key reference to mechanical treatment table'
+        definition: INT NOT NULL
+        foreignTable: mechanical_treatment
+        refColumn: mechanical_treatment_id
+        deleteCascade: true

@@ -1,0 +1,207 @@
+.waypoint-modal {
+    height: auto !important;
+}
+
+.header-text {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+}
+
+.info-button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.info-button {
+    display: flex;
+    align-items: center;
+    background-color: #0053A4;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.info-text {
+    padding: 0 12px;
+}
+
+p {
+    margin: 0;
+}
+
+.offset-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin: 0 !important;
+    padding-bottom: 24px;
+}
+
+.offset-field-container {
+    padding: 0 !important;
+}
+
+.input-mode-container {
+    width: 200px;
+    border-radius: 4px;
+    border: 1px solid #002C71;
+    margin: 8px 0;
+}
+
+.input-mode-on {
+    background-color: #002C71;
+    color: white;
+}
+
+.input-mode-off {
+    background-color: transparent;
+    color: #333333;
+}
+
+.switch-btn {
+    border: none;
+    border-radius: 0;
+    width: 50%;
+    height: 100%;
+}
+
+.waypoint-action-container {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.generate-path-button {
+    display: flex;
+    float: right;
+    cursor: pointer;
+    background-color: #0053A4;
+    color: #FFFFFF;
+    border-style: solid;
+    border-color: #474747;
+    border-radius: 8px;
+    border-width: 1px;
+    padding: 8px;
+    margin: 10px;
+}
+
+.back-button {
+    display: flex;
+    float: left;
+    cursor: pointer;
+    border-style: solid;
+    border-color: #474747;
+    border-width: 1px;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 10px;
+}
+
+.waypoint-index {
+    display: flex;
+    align-items: center;
+}
+
+.waypoints-container {
+    padding: 0 15px;
+}
+
+.waypoint-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+}
+
+.waypoint-input-container {
+    padding: 0 8px;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    float: center;
+}
+
+.disclaimer-container {
+    padding: 15px 30px 0 30px;
+}
+
+.disclaimer-header {
+    font-size: 16px;
+    color: #333333;
+    font-weight: bold;
+    text-align: center;
+}
+
+.disclaimer-body {
+    font-size: 14px;
+    color: #333333;
+}
+
+.error-container {
+    padding: 0 15px;
+}
+
+.error-latlong-container {
+    padding: 4px 60px 4px 48px;
+}
+
+.error-utm-container {
+    padding: 4px 30px 4px 16px;
+}
+
+.error-card {
+    padding: 5pt;
+    background-color: #FF534A;
+    border-radius: 8pt;
+    display: flex;
+    align-items: center;
+}
+
+.error-card span {
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 0 8px;
+}
+
+.error-card i {
+    color: #FFFFFF;
+}
+
+.map-container {
+    margin: 12px;
+}
+
+.test-btn {
+    align-content: center;
+    text-align: center;
+    background: greenyellow;
+    border-radius: .25rem;
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    height: 50px;
+    width: 50px;
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .leaf {
+        min-height: 285px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .leaf {
+        height: 500px;
+    }
+}

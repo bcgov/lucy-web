@@ -101,7 +101,7 @@ export class RouterService {
     switch (createType.toLowerCase()) {
       case `observation`:
         return AppRoutes.AddObservation;
-      case `mechnical`:
+      case `mechanical`:
         return AppRoutes.AddMechanicalTreatment;
       case 'chemical':
         return AppRoutes.AddChemicalTreatment;
@@ -119,7 +119,7 @@ export class RouterService {
     switch (editType.toLowerCase()) {
       case `observation`:
         return AppRoutes.EditObservation;
-      case `mechnical`:
+      case `mechanical`:
         return AppRoutes.EditMechanicalTreatment;
       case 'chemical':
         return AppRoutes.EditChemicalTreatment;
@@ -137,7 +137,7 @@ export class RouterService {
     switch (viewType.toLowerCase()) {
       case `observation`:
         return AppRoutes.ViewObservation;
-      case `mechnical`:
+      case `mechanical`:
         return AppRoutes.ViewMechanicalTreatment;
       case 'chemical':
         return AppRoutes.ViewChemicalTreatment;
@@ -233,6 +233,7 @@ export class RouterService {
   public storeCurrentRouteInSession() {
     if (this.current.length > 0) {
       localStorage.setItem('lastRoute', this.current);
+      localStorage.setItem('lastRouteID', String(this.routeId));
     }
   }
 
@@ -247,6 +248,15 @@ export class RouterService {
     } else {
       return undefined;
     }
+  }
+
+  /**
+   * Get the lastRouteId specified in session storage (if exists).
+   * @returns string or undefined
+   */
+  public getLastRouteIDInSession(): string | undefined {
+    const lastRouteID = localStorage.getItem('lastRouteID');
+    return lastRouteID;
   }
 
   /**

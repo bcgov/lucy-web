@@ -6,12 +6,11 @@
 }
 
 .sub-header {
-	color: #FFFFFF;
-	font-size: 14px;
-	letter-spacing: -0.05px;
-	line-height: 18px;
+    color: #FFFFFF;
+    font-size: 14px;
+    letter-spacing: -0.05px;
+    line-height: 18px;
 }
-
 
 .sub-section-title {
     color: #000000;
@@ -63,7 +62,7 @@
     margin: 0 auto;
     width: 100%;
     background: linear-gradient(135deg, #EA8B0F 0%, #F1AC24 100%);
-    box-shadow: 0 20px 40px 0 rgba(190,190,205,0.5);
+    box-shadow: 0 20px 40px 0 rgba(190, 190, 205, 0.5);
     animation-duration: 0.5s;
 }
 
@@ -71,18 +70,24 @@
     flex: 1 1 auto;
 }
 
+
 /* HANDELING SIDE NAV ON SCREEN SIZE CHANGE */
+
 @media (min-width: 992px) {}
 
 @media (max-width: 992px) {
     .side-menu {
         display: none !important;
     }
+    .diff-container {
+        padding-left: 15px !important;
+    }
 }
 
-/****************************************/
-@media (max-width: 768px) {
 
+/****************************************/
+
+@media (max-width: 768px) {
     /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
     .header-container-inner {
         margin: 0 auto;
@@ -131,6 +136,22 @@
     font-weight: bold;
 }
 
+
+/* TODO: needs to be removed later (temporary trigger for modal) */
+
+.modal-btn {
+    align-content: center;
+    text-align: center;
+    background: greenyellow;
+    border-radius: .25rem;
+    position: fixed;
+    bottom: 65px;
+    left: 15px;
+    height: 50px;
+    width: 50px;
+    font-weight: bold;
+}
+
 .submit-button {
     background-color: white;
     border-color: white;
@@ -149,13 +170,10 @@
     background-color: transparent;
     width: 100%;
     padding-left: 0;
-    padding-right: 0;
     animation-duration: 0.5s;
     animation-delay: 0s;
     margin-bottom: 10px;
-
-    border-radius: 5px;
-    box-shadow: 0 0 5px 0 #E5E9F2;
+    box-shadow: none !important;
 }
 
 .no-content {
@@ -163,13 +181,7 @@
     border-radius: 9px;
     text-align: center;
     border: 1px solid #CCCCCC;
-    background: repeating-linear-gradient(
-      45deg,
-      #F7F7F7,
-      #F7F7F7 10px,
-      #ffffff 10px,
-      #ffffff 20px
-    );
+    background: repeating-linear-gradient( 45deg, #F7F7F7, #F7F7F7 10px, #ffffff 10px, #ffffff 20px);
     margin: 15px;
     display: flex;
     justify-content: center;
@@ -183,13 +195,11 @@
     position: sticky;
     top: 8%;
     z-index: 1;
-
     height: 427px;
-
     border-radius: 5px;
     background-color: #FFFFFF;
     animation-duration: 0.4s;
-    box-shadow: 0 2px 10px 0 rgba(35,64,117,0.2);
+    box-shadow: 0 2px 10px 0 rgba(35, 64, 117, 0.2);
     padding-bottom: 20px;
 }
 

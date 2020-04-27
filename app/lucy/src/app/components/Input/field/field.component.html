@@ -1,8 +1,9 @@
 <!-- Editable -->
 <div *ngIf="!readonly" class="col-12 field animated" id="{{ fieldId }}">
+    <p *ngIf="showHeader" class="input-header-text">{{ header }}</p>
     <!-- Input field -->
-    <mat-form-field *ngIf="!multiline">
-        <input matInput placeholder="{{ header }}" [(ngModel)]="value" [attr.id]="fieldId" [formControl]="fieldFormControl" [errorStateMatcher]="matcher" appElementFocus [setFocus]="showFocus" />
+    <mat-form-field *ngIf="!multiline" [appearance]="appearance">
+        <input matInput [placeholder]="placeHolderText" [(ngModel)]="value" [attr.id]="fieldId" [formControl]="fieldFormControl" [errorStateMatcher]="matcher" appElementFocus [setFocus]="showFocus" />
         <span matSuffix>{{ suffix }}</span>
         <!-- ERROR MESSAGES  -->
         <!-- Required  -->
@@ -88,7 +89,7 @@
 
 <!-- Read only -->
 <div *ngIf="readonly" class="col-12 field">
-    <div class="row">
+    <div class="row" *ngIf="header">
         <div class="col-12">
             <label class="field-header">{{ header }}</label>
         </div>
