@@ -109,3 +109,8 @@ INSERT INTO specific_use_code(specific_use_code, description)
 VALUES
 ('IS','Industrial site');
 -- ## End of item: 21 ## --
+-- ## Inserting Item: 22  ## --
+INSERT INTO specific_use_code(specific_use_code, description)
+VALUES
+('NA','None');
+-- ## End of item: 22 ## --

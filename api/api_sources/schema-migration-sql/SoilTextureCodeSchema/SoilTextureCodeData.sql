@@ -19,3 +19,8 @@ INSERT INTO soil_texture_code(soil_texture_code, description)
 VALUES
 ('O','Organic (Dark soil with organic material)');
 -- ## End of item: 3 ## --
+-- ## Inserting Item: 4  ## --
+INSERT INTO soil_texture_code(soil_texture_code, description)
+VALUES
+('N','None');
+-- ## End of item: 4 ## --
