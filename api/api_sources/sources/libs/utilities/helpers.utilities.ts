@@ -205,7 +205,7 @@ export const reverseCapitalize = (s: any) => {
  * @description Return capitalize string of any given string
  * @param string s
  */
-export const capitalize = (s: any) => {
+export const capitalize = (s: any): string => {
     if (typeof s !== 'string') {
         return '';
     }

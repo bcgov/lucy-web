@@ -127,19 +127,31 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 					lakeName: item.waterBody.name,
 					country: item.waterBody.country,
 					province: item.waterBody.province,
-					city: item.waterBody.closest
+					city: item.waterBody.closest,
+					numberOfDaysOut: 'NA',
+					other: 'NA'
 				};
 			} else if (item.otherWaterBody) {
-				details.other = item.otherWaterBody;
+				details = {
+					lakeName: 'NA',
+					country: 'NA',
+					province: 'NA',
+					city: 'NA',
+					numberOfDaysOut: 'NA',
+					other: item.otherWaterBody
+				};
 			}
 			if (item.journeyType === 1) {
 				if (item.numberOfDaysOut && item.numberOfDaysOut > 0) {
-					details.numberOfDaysOut = `${item.numberOfDaysOut} days out`;
+					details.numberOfDaysOut = `${item.numberOfDaysOut}`;
+				} else {
+					details.numberOfDaysOut = `NA`;
 				}
 				// Previous journey
 				previousJourney.push(details);
 			} else {
 				// Destination Journey
+				delete details.numberOfDaysOut;
 				destinationJourney.push(details);
 			}
 		}
