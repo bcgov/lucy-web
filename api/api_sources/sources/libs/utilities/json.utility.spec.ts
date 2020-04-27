@@ -59,14 +59,20 @@ describe('Test json utility', () => {
             a: [
                 {
                     x: 1,
-                    y: 2
+                    y: 21
                 },
                 {
-                    x: 7,
+                    x: 745,
                     y: 8
                 }
             ]
         };
+        const offset = 4;
+        const maxX = 3 + offset;
+        const maxY = 2 + offset;
+        const headerX = 'X'.padEnd(maxX, ' ');
+        const headerY = 'Y'.padEnd(maxY, ' ');
+        const line = `${headerX}, ${headerY}\n${'1'.padEnd(maxX, ' ')}, ${'21'.padEnd(maxY, ' ')}\n${'745'.padEnd(maxX, ' ')}, ${'8'.padEnd(maxY, ' ')}`;
         const expected = {
             'x.a': 'a',
             'x.b': 'b',
@@ -75,7 +81,7 @@ describe('Test json utility', () => {
             'zz.n.nn': 'nn',
             'zz.n.mm': 'mm',
             'zz.m': 'm',
-            a: '(1,2),(7,8)'
+            a: line
         };
         expect(flatJSON(data)).to.be.eql(expected);
     });
