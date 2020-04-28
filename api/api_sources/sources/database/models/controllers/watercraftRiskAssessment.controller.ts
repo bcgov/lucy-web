@@ -24,9 +24,10 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 
 	get exportKeyMapper(): {[key: string]: string} {
 		return {
-			workflow: 'shift',
 			highRiskArea: 'highRiskWhirlingDisease',
-			decontaminationReference: 'recordOfDecontaminationNumber'
+			decontaminationReference: 'recordOfDecontaminationNumber',
+			'highRiskAssessment.adultDreissenidaeMusselDetail': 'highRiskAssessment.adultDreissenidaeMusselLocation',
+			'highRiskAssessment.decontaminationReference': 'highRiskAssessment.recordOfDecontaminationNumber'
 		};
 	}
 
@@ -80,6 +81,22 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			adultDreissenidaeFound: (basePriority - 440),
 			highRiskArea: (basePriority - 450),
 			highRiskAIS: (basePriority - 500),
+			'highRiskAssessment.id': basePriority - 590,
+			'highRiskAssessment.watercraftRegistration': basePriority - 591,
+			'highRiskAssessment.cleanDrainDryAfterInspection': basePriority - 592,
+			'highRiskAssessment.standingWaterPresent': basePriority - 593,
+			'highRiskAssessment.standingWaterLocation': basePriority - 594,
+			'highRiskAssessment.adultDreissenidaeMusselFound': basePriority - 595,
+			'highRiskAssessment.adultDreissenidaeMusselDetail': basePriority - 596,
+			'highRiskAssessment.decontaminationPerformed': basePriority - 597,
+			'highRiskAssessment.decontaminationReference': basePriority - 598,
+			'highRiskAssessment.decontaminationOrderIssued': basePriority - 599,
+			'highRiskAssessment.decontaminationOrderNumber': basePriority - 600,
+			'highRiskAssessment.quarantinePeriodIssued': basePriority - 601,
+			'highRiskAssessment.sealIssued': basePriority - 602,
+			'highRiskAssessment.sealNumber': basePriority - 603,
+			'highRiskAssessment.otherInspectionFindings': basePriority - 604,
+			'highRiskAssessment.generalComments': basePriority - 605,
 			generalComment: -1
         };
     }
