@@ -31,53 +31,55 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 	}
 
 	get exportKeyPriorities(): {[key: string]: number} {
-		const priorityShift = 97;
+		const basePriority = 1000;
+		const topPriority = 100;
         return {
-			id: 99,
-			createdBy: 98,
-			timestamp: 95,
-			timeOfInspection: 95,
-			stationName: priorityShift,
-			shiftDate: priorityShift,
-			shiftStartTime: priorityShift,
-			shiftEndTime: priorityShift,
-			k9OnShift: priorityShift,
-			motorizedBlowBys: priorityShift,
-			nonMotorizedBlowBys: priorityShift,
-			shiftStartComment: priorityShift,
-			shiftEndComment: priorityShift,
-			passportHolder: 89,
-			passportNumber: 88,
-			launchedOutsideBC: 87,
-			decontaminationPerformed: 86,
-			decontaminationReference: 85,
-			provinceOfResidence: 85,
-			countryOfResidence: 83,
-			nonMotorized: 82,
-			simple: 81,
-			complex: 80,
-			veryComplex: 79,
-			numberOfPeopleInParty: 78,
-			commerciallyHauled: 77,
-			previousAISKnowledge: 76,
-			previousAISKnowledgeSource: 75,
-			previousInspection: 74,
-			previousInspectionSource: 73,
-			previousInspectionDays: 72,
-			previousJourneyDetails: 71,
-			previousDryStorage: 70,
-			unknownPreviousWaterBody: 69,
-			commercialManufacturerAsPreviousWaterBody: 68,
-			destinationJourneyDetails: 67,
-			destinationDryStorage: 66,
-			unknownDestinationWaterBody: 65,
-			commercialManufacturerAsDestinationWaterBody: 64,
-			marineSpeciesFound: 63,
-			aquaticPlantsFound: 62,
-			marineMusselFound: 61,
-			adultDreissenidaeFound: 60,
-			highRiskArea: 59,
-			highRiskAIS: 58,
+			id: basePriority + topPriority,
+			createdBy: (basePriority + topPriority  - 10),
+			stationName: (basePriority + topPriority - 40),
+			shiftDate: (basePriority + topPriority - 50),
+			shiftStartTime: (basePriority + topPriority - 60),
+			shiftEndTime: (basePriority + topPriority - 70),
+			k9OnShift: (basePriority  + topPriority - 80),
+			motorizedBlowBys: (basePriority + topPriority - 90),
+			nonMotorizedBlowBys: (basePriority + topPriority - 100),
+			noBoatInspected: (basePriority + topPriority - 110),
+			shiftStartComment: (basePriority - 120),
+			shiftEndComment: (basePriority - 140),
+			timestamp: (basePriority + - 145),
+			passportHolder: (basePriority - 150),
+			passportNumber: (basePriority - 160),
+			timeOfInspection: (basePriority - 165),
+			launchedOutsideBC: (basePriority - 170),
+			decontaminationPerformed: (basePriority - 180),
+			decontaminationReference: (basePriority - 190),
+			provinceOfResidence: (basePriority - 200),
+			countryOfResidence: (basePriority - 210),
+			nonMotorized: (basePriority - 220),
+			simple: (basePriority - 230),
+			complex: (basePriority - 240),
+			veryComplex: (basePriority - 250),
+			numberOfPeopleInParty: (basePriority - 260),
+			commerciallyHauled: (basePriority - 270),
+			previousAISKnowledge: (basePriority - 280),
+			previousAISKnowledgeSource: (basePriority - 290),
+			previousInspection: (basePriority - 300),
+			previousInspectionSource: (basePriority - 310),
+			previousInspectionDays: (basePriority - 320),
+			previousJourneyDetails: (basePriority - 330),
+			previousDryStorage: (basePriority - 340),
+			unknownPreviousWaterBody: (basePriority - 350),
+			commercialManufacturerAsPreviousWaterBody: (basePriority - 360),
+			destinationJourneyDetails: (basePriority - 370),
+			destinationDryStorage: (basePriority - 380),
+			unknownDestinationWaterBody: (basePriority - 390),
+			commercialManufacturerAsDestinationWaterBody: (basePriority - 400),
+			marineSpeciesFound: (basePriority - 410),
+			aquaticPlantsFound: (basePriority - 420),
+			marineMusselFound: (basePriority - 430),
+			adultDreissenidaeFound: (basePriority - 440),
+			highRiskArea: (basePriority - 450),
+			highRiskAIS: (basePriority - 500),
 			generalComment: -1
         };
     }
@@ -105,6 +107,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		result.shiftEndTime = `${workflow.endTime}`;
 		result.k9OnShift = `${workflow.k9OnShift}`;
 		result.motorizedBlowBys = workflow.motorizedBlowBys;
+		result.noBoatInspected = false;
 		result.nonMotorizedBlowBys = workflow.nonMotorizedBlowBys;
 		result.shiftStartComment = workflow.shiftStartComment;
 		result.shiftEndComment = workflow.shiftEndComment;
@@ -158,7 +161,8 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		delete result.journeys;
 		result.previousJourneyDetails = previousJourney;
 		result.destinationJourneyDetails = destinationJourney;
-
+		delete result.workflow;
+		delete result.shift;
 		return result;
 	}
 }
