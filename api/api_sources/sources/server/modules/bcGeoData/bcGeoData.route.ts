@@ -22,24 +22,32 @@
  */
 
 import {
-    ResourceRoute,
-    ResourceRouteController,
+    Route,
+    RouteController,
+    HTTPMethod,
     Get,
 } from '../../core';
 import { WFSService, BCGWFeatures } from '../../../integrations';
 import { Router } from 'express';
-import { BCGeoDataController } from '../../../database/models/controllers/bcGeoData.controller';
-import { BCGeoJSONSpec } from '../../../database/models/bcGeoData';
 
-@ResourceRoute({
-    path: 'api/bcgeodata#/',
-    description: 'API route controller for BC Data Catalogue queries',
-    dataController: BCGeoDataController.shared,
-    secure: true
-})
-export class BCGeoDataRouteController extends ResourceRouteController<BCGeoDataController, BCGeoJSONSpec, any> {
+export class BCGeoDataRouteController extends RouteController {
+
+    @Route({
+        path: 'api/bcgeodata#/',
+        description: 'API route controller for BC Data Catalogue queries',
+        method: HTTPMethod.get,
+        secure: true
+    })
+
+    /**
+     * @description Shared instance
+     */
     static get shared(): BCGeoDataRouteController {
         return this.sharedInstance() as BCGeoDataRouteController;
+    }
+
+    constructor() {
+        super();
     }
 
     @Get({
@@ -59,8 +67,8 @@ export class BCGeoDataRouteController extends ResourceRouteController<BCGeoDataC
     @Get({
         path: '/wells',
     })
-    public async wells(bbox: string): Promise<[number, any]> {
-        return [200, await WFSService.shared.getLayerInBoundingBox(BCGWFeatures.well, bbox)];
+    public async wells(req: any, data?: any): Promise<[number, any]> {
+        return [200, await WFSService.shared.getLayerInBoundingBox(BCGWFeatures.well, req.query.bbox)];
     }
 }
 

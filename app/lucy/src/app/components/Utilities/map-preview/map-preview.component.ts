@@ -345,14 +345,21 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     const wellsLayerGroup = L.layerGroup();
     const wellsGeoJSON = await this.bcDataCatalogueService.getWellsDataLayer(bbox);
     L.geoJSON(wellsGeoJSON, {
-      style: function(feature) {
-        switch (feature.geometry.type) {
-          case 'Point': return {
-            color: '#03e3fc',
-          };
-        }
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 5,
+          fillColor: '#03e3fc',
+          color: '#03e3fc',
+          weight: 1,
+          opacity: 0.8,
+          fillOpacity: 0.8,
+        });
       }
-    }).addTo(wellsLayerGroup);
+    })
+    .bindTooltip(function (layer) {
+      return `Well at ${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}`;
+    })
+    .addTo(wellsLayerGroup);
     this.bcDataCatalogueLayerGroups.push(wellsLayerGroup);
   }
 
