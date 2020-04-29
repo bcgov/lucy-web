@@ -71,5 +71,3 @@ export class BCGeoDataRouteController extends RouteController {
         return [200, await WFSService.shared.getLayerInBoundingBox(BCGWFeatures.well, req.query.bbox)];
     }
 }
-
-export const bcGeoDataRoute = (): Router => BCGeoDataRouteController.shared.router;
