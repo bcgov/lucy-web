@@ -77,6 +77,19 @@ export interface CSVImportOptions {
     allColumnsExcept?: string[];
 }
 
+export interface GroupFieldOptions {
+    key: string;
+    fields: any;
+}
+
+export interface SeedOptions {
+    fileName: string;
+    environments?: string[];
+    allColumnsExcept?: string[];
+    mapper?: any;
+    groupFields: GroupFieldOptions[];
+}
+
 export interface TableRelation {
     header?: any;
     description?: any;
@@ -112,6 +125,7 @@ export class ApplicationTable {
     modelName?: string;
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
+    batchImportOptions: SeedOptions[] = [];
     viewColumn = 'id';
     columVersions: {[key: string]: ApplicationTableColumn[]} = {};
     initialSqlCommands: SqlInfo[] = [];
