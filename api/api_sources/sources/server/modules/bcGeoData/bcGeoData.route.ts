@@ -28,7 +28,6 @@ import {
     Get,
 } from '../../core';
 import { WFSService, BCGWFeatures } from '../../../integrations';
-import { Router } from 'express';
 
 export class BCGeoDataRouteController extends RouteController {
 
