@@ -68,8 +68,6 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     features: []
   };
   private leafletDrawLayerGroup?;
-  // list of Leaflet layer group for displaying GeoJSON data pulled from BC Data Catalogue
-  private bcDataCatalogueLayerGroups = [];
 
   // Group close markers or always show individually
   @Input() cluster = true;
@@ -260,14 +258,6 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     this.map.on('zoom', () => {
       if (this.map.getZoom() >= 16) {
         this.addWellsLayerToMap(this.map.getBounds());
-      } else if (this.bcDataCatalogueLayerGroups.length === 3) {
-        // if user has zoomed out and wells layer has been added, it should now be removed
-        // TODO fix this - current solution is very janky. Is based on the assumption that the
-        // wells layer is at the end of the list of layer groups, but that may not be true
-        // with future features added.
-        // Probably need dictionary of layer groups with labels for
-        // each layer and booleans to toggle layer visibility
-        this.removeLastLayerFromMap();
       }
       this.addBcDataCatalogueLayersToMap();
     });
@@ -300,13 +290,6 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private async addBcDataCatalogueLayersToMap() {
     this.addRegionalDistrictsLayerToMap();
     this.addMunicipalitiesLayerToMap();
-    this.addLayerGroupsToMap();
-  }
-
-  private addLayerGroupsToMap() {
-    for (const layer of this.bcDataCatalogueLayerGroups) {
-      layer.addTo(this.map);
-    }
   }
 
   private async addMunicipalitiesLayerToMap() {
@@ -322,7 +305,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     .bindTooltip(function (feature) {
       return `${feature.feature.properties.ADMIN_AREA_NAME}`;
     }).addTo(municipalitiesLayerGroup);
-    this.bcDataCatalogueLayerGroups.push(municipalitiesLayerGroup);
+    municipalitiesLayerGroup.addTo(this.map);
   }
 
   private async addRegionalDistrictsLayerToMap() {
@@ -338,7 +321,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     .bindTooltip(function (feature) {
       return `${feature.feature.properties.DISTRICT_NAME}`;
     }).addTo(regionalDistrictsLayerGroup);
-    this.bcDataCatalogueLayerGroups.push(regionalDistrictsLayerGroup);
+    regionalDistrictsLayerGroup.addTo(this.map);
   }
 
   private async addWellsLayerToMap(bbox: number[]) {
@@ -360,11 +343,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       return `Well at ${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}`;
     })
     .addTo(wellsLayerGroup);
-    this.bcDataCatalogueLayerGroups.push(wellsLayerGroup);
-  }
-
-  private removeLastLayerFromMap() {
-    this.bcDataCatalogueLayerGroups.splice(this.bcDataCatalogueLayerGroups.length - 1, 1);
+    wellsLayerGroup.addTo(this.map);
   }
 
   private addGeoJSONtoMap() {
