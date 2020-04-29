@@ -15,7 +15,7 @@
  *
  * 	Created by Amir Shayegh on 2019-10-23.
  */
-import { Component, OnInit, AfterViewInit, Input, Output , EventEmitter, AfterViewChecked, OnChanges, SimpleChanges, SimpleChange} from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output , EventEmitter, AfterViewChecked } from '@angular/core';
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
 import 'node_modules/leaflet-draw';
@@ -24,6 +24,7 @@ import * as bcgeojson from './bcgeojson.json';
 import { Point, LatLng } from 'leaflet';
 import { LabelOptions } from '@angular/material';
 import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
+import { BcDataCatalogueService } from 'src/app/services/bcDataCatalogue/bcDataCatalogue.service';
 const haversine = require('haversine-distance');
 declare let L;
 
@@ -45,7 +46,7 @@ export interface MapMarker {
   styleUrls: ['./map-preview.component.css']
 })
 
-export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   // Map reference
   private map?;
@@ -67,6 +68,8 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     features: []
   };
   private leafletDrawLayerGroup?;
+  // list of Leaflet layer group for displaying GeoJSON data pulled from BC Data Catalogue
+  private bcDataCatalogueLayerGroups = [];
 
   // Group close markers or always show individually
   @Input() cluster = true;
@@ -210,12 +213,9 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
   @Output() centerPointChanged = new EventEmitter<MapPreviewPoint>();
 
   ////////////// Class Functions //////////////
-  constructor() { }
+  constructor(private bcDataCatalogueService: BcDataCatalogueService) { }
 
   ngOnInit() {
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
   }
 
   ngAfterViewInit() {
@@ -257,6 +257,20 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     this.leafletDrawLayerGroup = L.layerGroup().addTo(this.map);
     this.initMapWithGoogleSatellite();
     // this.initWithOpenStreet();
+    this.map.on('zoom', () => {
+      if (this.map.getZoom() >= 16) {
+        this.addWellsLayerToMap(this.map.getBounds());
+      } else if (this.bcDataCatalogueLayerGroups.length === 3) {
+        // if user has zoomed out and wells layer has been added, it should now be removed
+        // TODO fix this - current solution is very janky. Is based on the assumption that the
+        // wells layer is at the end of the list of layer groups, but that may not be true
+        // with future features added.
+        // Probably need dictionary of layer groups with labels for
+        // each layer and booleans to toggle layer visibility
+        this.removeLastLayerFromMap();
+      }
+      this.addBcDataCatalogueLayersToMap();
+    });
   }
 
   private initWithOpenStreet() {
@@ -279,7 +293,71 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       key: this.makeid(10)
     }).addTo(this.map);
     this.addBCBorder();
+    this.addBcDataCatalogueLayersToMap();
     this.addGeoJSONtoMap();
+  }
+
+  private async addBcDataCatalogueLayersToMap() {
+    this.addRegionalDistrictsLayerToMap();
+    this.addMunicipalitiesLayerToMap();
+    this.addLayerGroupsToMap();
+  }
+
+  private addLayerGroupsToMap() {
+    for (const layer of this.bcDataCatalogueLayerGroups) {
+      layer.addTo(this.map);
+    }
+  }
+
+  private async addMunicipalitiesLayerToMap() {
+    const municipalitiesLayerGroup = L.layerGroup();
+    const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
+    L.geoJSON(municipalitiesGeoJSON, {
+      style: {
+        color: '#fcec03',
+        weight: 1,
+        fillOpacity: 0,
+      }
+    })
+    .bindTooltip(function (feature) {
+      return `${feature.feature.properties.ADMIN_AREA_NAME}`;
+    }).addTo(municipalitiesLayerGroup);
+    this.bcDataCatalogueLayerGroups.push(municipalitiesLayerGroup);
+  }
+
+  private async addRegionalDistrictsLayerToMap() {
+    const regionalDistrictsLayerGroup = L.layerGroup();
+    const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
+    L.geoJSON(regionalDistrictsGeoJSON, {
+      style: {
+        color: '#03fc07',
+        weight: 1,
+        fillOpacity: 0,
+      }
+    })
+    .bindTooltip(function (feature) {
+      return `${feature.feature.properties.DISTRICT_NAME}`;
+    }).addTo(regionalDistrictsLayerGroup);
+    this.bcDataCatalogueLayerGroups.push(regionalDistrictsLayerGroup);
+  }
+
+  private async addWellsLayerToMap(bbox: number[]) {
+    const wellsLayerGroup = L.layerGroup();
+    const wellsGeoJSON = await this.bcDataCatalogueService.getWellsDataLayer(bbox);
+    L.geoJSON(wellsGeoJSON, {
+      style: function(feature) {
+        switch (feature.geometry.type) {
+          case 'Point': return {
+            color: '#03e3fc',
+          };
+        }
+      }
+    }).addTo(wellsLayerGroup);
+    this.bcDataCatalogueLayerGroups.push(wellsLayerGroup);
+  }
+
+  private removeLastLayerFromMap() {
+    this.bcDataCatalogueLayerGroups.splice(this.bcDataCatalogueLayerGroups.length - 1, 1);
   }
 
   private addGeoJSONtoMap() {
