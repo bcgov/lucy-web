@@ -131,5 +131,59 @@ export class WFSService {
             return result.features[0];
         }
     }
+
+    async getLayer(typeName: string,
+                   baseURL: string = url,
+                   featureConfig: object = WFSFeatureConfig,
+                   logger: BaseLogger = DefaultLogger): Promise<any> {
+        // Creating config for query
+        const config = {
+            typeName: typeName
+        };
+        const finalConfig = { ...featureConfig, ...config};
+        // Query string
+        const query = getHTTPReqQueryString(finalConfig);
+        const finalURL = `${baseURL}${query}`;
+        try {
+            const result: axios.AxiosResponse = await axios.default.get(finalURL);
+            if (result.data) {
+                return result.data;
+            } else {
+                logger.error(`WFSService: getLayer: Empty response`);
+                throw new Error(`WFSService: getLayer: Empty response`);
+            }
+        } catch (excp) {
+            logger.error(`WFSService: getLayer: received exception => ${excp}`);
+            logger.info(`WFSService: getLayer: url: ${finalURL}`);
+            throw excp;
+        }
+    }
+
+    async getLayerInBoundingBox(typeName: string,
+                                bbox: string,
+                                baseURL: string = url,
+                                featureConfig: object = WFSFeatureConfig,
+                                logger: BaseLogger = DefaultLogger): Promise<any> {
+        const config = {
+            typeName: typeName
+        };
+        const finalConfig = { ...featureConfig, ...config};
+        // Query string
+        const query = getHTTPReqQueryString(finalConfig);
+        const finalURL = `${baseURL}${query}&bbox=${encodeURIComponent(bbox)},epsg:4326`;
+        try {
+            const result: axios.AxiosResponse = await axios.default.get(finalURL);
+            if (result.data) {
+                return result.data;
+            } else {
+                logger.error(`WFSService: getLayerInBoundingBox: Empty response`);
+                throw new Error(`WFSService: getLayerInBoundingBox: Empty response`);
+            }
+        } catch (excp) {
+            logger.error(`WFSService: getLayerInBoundaryBox: received exception => ${excp}`);
+            logger.info(`WFSService: getLayerInBoundingBox: url: ${finalURL}`);
+            throw excp;
+        }
+    }
 }
  // -----------------------------------------

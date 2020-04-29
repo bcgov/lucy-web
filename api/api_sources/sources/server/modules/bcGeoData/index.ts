@@ -11,27 +11,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * File: bcgov.const.ts
+ * File: index.ts
  * Project: lucy
- * File Created: Friday, 13th December 2019 3:28:02 pm
- * Author: Pushan  (you@you.you)
+ * File Created: Thursday, 23rd April 2020 1:36:03 pm
+ * Author: Williams, Andrea IIT (you@you.you)
  * -----
- * Last Modified: Friday, 13th December 2019 3:29:39 pm
- * Modified By: Pushan  (you@you.you>)
+ * Last Modified: Thursday, 23rd April 2020 1:36:31 pm
+ * Modified By: Williams, Andrea IIT (you@you.you>)
  * -----
  */
-/**
- * @description Available features set
- */
-export const BCGWFeatures = {
-    well: 'WHSE_WATER_MANAGEMENT.GW_WATER_WELLS_WRBC_SVW',
-    municipality: 'WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP',
-    regionalDistrict: 'WHSE_ADMIN_BOUNDARIES.ADM_NR_DISTRICTS_SPG',
-};
 
-/**
- * @description BCGW other constant
- */
-export const BCGWConst = {
-    minimalDistance: 750
-};
+export * from './bcGeoData.route';
