@@ -19,10 +19,21 @@ export class SeedRunner {
         if (environmentsToSeed.includes(currentEnv)) {
             const csv = new GenericCSV(getCSVDataFilePath(options.fileName));
             const csvData = await csv.load();
+            console.log(`[SEED - ${schemaName}]: CSV LOADED SUCCESSFULLY`);
 
-            const mappedData = await this.mapDataWithSchema(schema, csvData, creator, options);
+            if (csvData.length > 0) {
+                console.log(`[SEED - ${schemaName}]: MAPPING DATA WITH SCHEMA`);
+                const mappedData = await this.mapDataWithSchema(schema, csvData, creator, options);
 
-            await this.storeDataIntoDB(schemaName, mappedData, creator);
+                console.log(`[SEED - ${schemaName}]: STORING DATA IN DB`);
+                await this.storeDataIntoDB(schemaName, mappedData, creator);
+
+                console.log(`[SEED - ${schemaName}]: SUCCESS`);
+            } else {
+                console.log(`[SEED - ${schemaName}]: NO DATA TO SEED`);
+            }
+        } else {
+            console.log(`[SEED - ${schemaName}]: SKIPPED FOR CURRENT ENVIRONMENT`);
         }
     }
 
