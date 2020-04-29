@@ -248,6 +248,11 @@ export class  BaseSchema {
             table.importOptions = def.imports;
         }
 
+        // Batch import options
+        if (def.batchImport) {
+            table.batchImportOptions = def.batchImport;
+        }
+
         assert((Object.keys(table.columnsDefinition)).length > 0, 'Not able to load column def');
         this.table = table;
         return true;

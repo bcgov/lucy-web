@@ -13,6 +13,7 @@
         "watch": "gulp watch",
         "test:all": "TEST_RUN=yes nyc ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 60000",
         "migration": "ts-node scripts/run.migrations.ts",
+        "seed-db": "ts-node scripts/seed.data.ts",
         "migration-refresh": "ts-node scripts/refresh-migration.ts",
         "typeorm": "ts-node -r ./tsconfig.json/register ./node_modules/typeorm/cli.js",
         "test": "ts-mocha --timeout 60000",

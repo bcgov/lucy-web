@@ -473,4 +473,18 @@ schemas:
           - spaceGeom
       # -- SpaceGeomModelSchema
     ## -- End - CopyFrom
+    batchImport:
+      - fileName: ObservationSeed.csv
+        environments: 
+          - test
+        allColumnsExcept: 
+          - observation_id
+        mapper:
+          observation_comment: general_comment
+        groupFields:
+          - key: spaceGeom
+            fields:
+              obs_lat: latitude
+              obs_lon: longitude
+              radius: radius
   # --
