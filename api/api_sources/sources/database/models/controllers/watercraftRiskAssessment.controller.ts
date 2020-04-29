@@ -24,16 +24,61 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 
 	get exportKeyMapper(): {[key: string]: string} {
 		return {
-			workflow: 'shift'
+			workflow: 'shift',
+			highRiskArea: 'highRiskWhirlingDisease',
+			decontaminationReference: 'recordOfDecontaminationNumber'
 		};
 	}
 
 	get exportKeyPriorities(): {[key: string]: number} {
+		const priorityShift = 97;
         return {
-			id: 5,
-			createdBy: 4,
-			workflow: 3,
-			timestamp: 2
+			id: 99,
+			createdBy: 98,
+			timestamp: 95,
+			timeOfInspection: 95,
+			stationName: priorityShift,
+			shiftDate: priorityShift,
+			shiftStartTime: priorityShift,
+			shiftEndTime: priorityShift,
+			k9OnShift: priorityShift,
+			motorizedBlowBys: priorityShift,
+			nonMotorizedBlowBys: priorityShift,
+			shiftStartComment: priorityShift,
+			shiftEndComment: priorityShift,
+			passportHolder: 89,
+			passportNumber: 88,
+			launchedOutsideBC: 87,
+			decontaminationPerformed: 86,
+			decontaminationReference: 85,
+			provinceOfResidence: 85,
+			countryOfResidence: 83,
+			nonMotorized: 82,
+			simple: 81,
+			complex: 80,
+			veryComplex: 79,
+			numberOfPeopleInParty: 78,
+			commerciallyHauled: 77,
+			previousAISKnowledge: 76,
+			previousAISKnowledgeSource: 75,
+			previousInspection: 74,
+			previousInspectionSource: 73,
+			previousInspectionDays: 72,
+			previousJourneyDetails: 71,
+			previousDryStorage: 70,
+			unknownPreviousWaterBody: 69,
+			commercialManufacturerAsPreviousWaterBody: 68,
+			destinationJourneyDetails: 67,
+			destinationDryStorage: 66,
+			unknownDestinationWaterBody: 65,
+			commercialManufacturerAsDestinationWaterBody: 64,
+			marineSpeciesFound: 63,
+			aquaticPlantsFound: 62,
+			marineMusselFound: 61,
+			adultDreissenidaeFound: 60,
+			highRiskArea: 59,
+			highRiskAIS: 58,
+			generalComment: -1
         };
     }
 
@@ -42,7 +87,6 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		delete temp.displayLabel;
 		let result: any = {};
 		result.id = temp.id;
-		result.workflow = temp.workflow;
 		result.createdBy = temp.createdBy;
 		result.timestamp = temp.timestamp;
 		delete temp.workflow;
@@ -52,7 +96,27 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		if (temp.highRiskAssessment === null) {
 			delete temp.highRiskAssessment;
 		}
+
+		// Handle Shift Details
+		const workflow = data.workflow;
+		result.stationName = workflow.station;
+		result.shiftDate = `${workflow.date}`;
+		result.shiftStartTime = `${workflow.startTime}`;
+		result.shiftEndTime = `${workflow.endTime}`;
+		result.k9OnShift = `${workflow.k9OnShift}`;
+		result.motorizedBlowBys = workflow.motorizedBlowBys;
+		result.nonMotorizedBlowBys = workflow.nonMotorizedBlowBys;
+		result.shiftStartComment = workflow.shiftStartComment;
+		result.shiftEndComment = workflow.shiftEndComment;
+
+		// Get time
+		const date = new Date(data.timestamp);
+		const timeString = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+		result.timeOfInspection = timeString;
+
+		// Creating final result
 		result = { ...result, ...temp};
+
 		// Next handle journey details
 		const previousJourney: any[] = [];
 		const destinationJourney: any[] = [];
@@ -63,25 +127,38 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 					lakeName: item.waterBody.name,
 					country: item.waterBody.country,
 					province: item.waterBody.province,
-					city: item.waterBody.closest
+					city: item.waterBody.closest,
+					numberOfDaysOut: 'NA',
+					other: 'NA'
 				};
 			} else if (item.otherWaterBody) {
-				details.other = item.otherWaterBody;
+				details = {
+					lakeName: 'NA',
+					country: 'NA',
+					province: 'NA',
+					city: 'NA',
+					numberOfDaysOut: 'NA',
+					other: item.otherWaterBody
+				};
 			}
 			if (item.journeyType === 1) {
 				if (item.numberOfDaysOut && item.numberOfDaysOut > 0) {
-					details.numberOfDaysOut = `${item.numberOfDaysOut} days out`;
+					details.numberOfDaysOut = `${item.numberOfDaysOut}`;
+				} else {
+					details.numberOfDaysOut = `NA`;
 				}
 				// Previous journey
 				previousJourney.push(details);
 			} else {
 				// Destination Journey
+				delete details.numberOfDaysOut;
 				destinationJourney.push(details);
 			}
 		}
 		delete result.journeys;
 		result.previousJourneyDetails = previousJourney;
 		result.destinationJourneyDetails = destinationJourney;
+
 		return result;
 	}
 }
