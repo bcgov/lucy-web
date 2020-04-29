@@ -15,7 +15,7 @@
  *
  * 	Created by Amir Shayegh on 2019-10-23.
  */
-import { Component, OnInit, AfterViewInit, Input, Output , EventEmitter, AfterViewChecked, OnChanges, SimpleChanges, SimpleChange} from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output , EventEmitter, AfterViewChecked } from '@angular/core';
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
 import 'node_modules/leaflet-draw';
@@ -24,6 +24,7 @@ import * as bcgeojson from './bcgeojson.json';
 import { Point, LatLng } from 'leaflet';
 import { LabelOptions } from '@angular/material';
 import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
+import { BcDataCatalogueService } from 'src/app/services/bcDataCatalogue/bcDataCatalogue.service';
 const haversine = require('haversine-distance');
 declare let L;
 
@@ -45,7 +46,7 @@ export interface MapMarker {
   styleUrls: ['./map-preview.component.css']
 })
 
-export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   // Map reference
   private map?;
@@ -210,12 +211,9 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
   @Output() centerPointChanged = new EventEmitter<MapPreviewPoint>();
 
   ////////////// Class Functions //////////////
-  constructor() { }
+  constructor(private bcDataCatalogueService: BcDataCatalogueService) { }
 
   ngOnInit() {
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
   }
 
   ngAfterViewInit() {
@@ -257,6 +255,12 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
     this.leafletDrawLayerGroup = L.layerGroup().addTo(this.map);
     this.initMapWithGoogleSatellite();
     // this.initWithOpenStreet();
+    this.map.on('zoom', () => {
+      if (this.map.getZoom() >= 16) {
+        this.addWellsLayerToMap(this.map.getBounds());
+      }
+      this.addBcDataCatalogueLayersToMap();
+    });
   }
 
   private initWithOpenStreet() {
@@ -279,7 +283,67 @@ export class MapPreviewComponent implements OnInit, OnChanges, AfterViewInit, Af
       key: this.makeid(10)
     }).addTo(this.map);
     this.addBCBorder();
+    this.addBcDataCatalogueLayersToMap();
     this.addGeoJSONtoMap();
+  }
+
+  private async addBcDataCatalogueLayersToMap() {
+    this.addRegionalDistrictsLayerToMap();
+    this.addMunicipalitiesLayerToMap();
+  }
+
+  private async addMunicipalitiesLayerToMap() {
+    const municipalitiesLayerGroup = L.layerGroup();
+    const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
+    L.geoJSON(municipalitiesGeoJSON, {
+      style: {
+        color: '#fcec03',
+        weight: 1,
+        fillOpacity: 0,
+      }
+    })
+    .bindTooltip(function (feature) {
+      return `${feature.feature.properties.ADMIN_AREA_NAME}`;
+    }).addTo(municipalitiesLayerGroup);
+    municipalitiesLayerGroup.addTo(this.map);
+  }
+
+  private async addRegionalDistrictsLayerToMap() {
+    const regionalDistrictsLayerGroup = L.layerGroup();
+    const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
+    L.geoJSON(regionalDistrictsGeoJSON, {
+      style: {
+        color: '#03fc07',
+        weight: 1,
+        fillOpacity: 0,
+      }
+    })
+    .bindTooltip(function (feature) {
+      return `${feature.feature.properties.DISTRICT_NAME}`;
+    }).addTo(regionalDistrictsLayerGroup);
+    regionalDistrictsLayerGroup.addTo(this.map);
+  }
+
+  private async addWellsLayerToMap(bbox: number[]) {
+    const wellsLayerGroup = L.layerGroup();
+    const wellsGeoJSON = await this.bcDataCatalogueService.getWellsDataLayer(bbox);
+    L.geoJSON(wellsGeoJSON, {
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 5,
+          fillColor: '#03e3fc',
+          color: '#03e3fc',
+          weight: 1,
+          opacity: 0.8,
+          fillOpacity: 0.8,
+        });
+      }
+    })
+    .bindTooltip(function (layer) {
+      return `Well at ${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}`;
+    })
+    .addTo(wellsLayerGroup);
+    wellsLayerGroup.addTo(this.map);
   }
 
   private addGeoJSONtoMap() {
