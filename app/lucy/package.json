@@ -43,7 +43,7 @@
         "hammerjs": "^2.0.8",
         "haversine-distance": "1.2.1",
         "intersection-observer": "^0.7.0",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "jwt-decode": "^2.2.0",
         "leaflet": "^1.5.1",
         "leaflet-draw": "^1.0.4",
