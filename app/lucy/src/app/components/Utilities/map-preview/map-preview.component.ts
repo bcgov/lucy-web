@@ -21,6 +21,7 @@ import 'node_modules/leaflet.markercluster';
 import 'node_modules/leaflet-draw';
 import { Observation } from 'src/app/models';
 import * as bcgeojson from './bcgeojson.json';
+import { WaterDropletSVG } from './water-droplet';
 import { Point, LatLng } from 'leaflet';
 import { LabelOptions } from '@angular/material';
 import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
@@ -319,28 +320,25 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       }
     })
     .bindTooltip(function (feature) {
-      return `${feature.feature.properties.DISTRICT_NAME}`;
+      return `${feature.feature.properties.ADMIN_AREA_NAME}`;
     }).addTo(regionalDistrictsLayerGroup);
     regionalDistrictsLayerGroup.addTo(this.map);
   }
 
   private async addWellsLayerToMap(bbox: number[]) {
+    const wellIcon = L.icon({
+      iconUrl: encodeURI('data:image/svg+xml,' + WaterDropletSVG.waterDroplet),
+      iconSize: [20, 20]
+    });
     const wellsLayerGroup = L.layerGroup();
     const wellsGeoJSON = await this.bcDataCatalogueService.getWellsDataLayer(bbox);
     L.geoJSON(wellsGeoJSON, {
       pointToLayer: function(feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 5,
-          fillColor: '#03e3fc',
-          color: '#03e3fc',
-          weight: 1,
-          opacity: 0.8,
-          fillOpacity: 0.8,
-        });
+        return L.marker(latlng, {icon: wellIcon});
       }
     })
     .bindTooltip(function (layer) {
-      return `Well at ${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}`;
+      return `<html>Well Tag ${layer.feature.properties.WELL_TAG_NUMBER}<br>${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}</html>`;
     })
     .addTo(wellsLayerGroup);
     wellsLayerGroup.addTo(this.map);
