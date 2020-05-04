@@ -1,3 +1,5 @@
+import { PointTuple, GeoLocation } from "./geoMap.utility";
+
 /**
  *  Copyright © 2019 Province of British Columbia
  *
@@ -22,16 +24,6 @@ export interface UTMCoordinate {
   northings: number;
   eastings: number;
   zone: number;
-}
-
-export interface LatLongCoordinate {
-  latitude: number;
-  longitude: number;
-}
-
-export interface AlbersCoordinate {
-  x: number;
-  y: number;
 }
 
 export interface NeighborOffset {
@@ -124,8 +116,12 @@ export class LocationConverter {
     return (rad / this.pi) * 180;
   }
 
-  public static getBCAlbersBoundry(): AlbersCoordinate[] {
-    return JSON.parse(JSON.stringify(bcAlbersBoundry)).default;
+  public static getBCAlbersBoundry(): PointTuple[] {
+    return JSON.parse(JSON.stringify(bcAlbersBoundry));
+  }
+
+  public static getHexRules(): any[] {
+    return JSON.parse(JSON.stringify(hexRules));
   }
 
   public static isInsideBC(latitude: number, longitude: number): boolean {
@@ -226,7 +222,7 @@ export class LocationConverter {
     x: number,
     y: number,
     zone: number
-  ): LatLongCoordinate | undefined {
+  ): GeoLocation | undefined {
     let g1 = 0;
     switch (+zone) {
       case 12: {
@@ -327,7 +323,7 @@ export class LocationConverter {
   public static latLongCoordinateToAlbers(
     latitude: number,
     longitude: number
-  ): AlbersCoordinate {
+  ): PointTuple {
     const a = this.b;
     const e2 = 2 * (1 / 298.257) - Math.pow(1 / 298.257, 2);
     const offsetX = 1000000;
@@ -386,7 +382,7 @@ export class LocationConverter {
     };
   }
 
-  public static albersToLatLongCoordinate(x: number, y: number): LatLongCoordinate {
+  public static albersToLatLongCoordinate(x: number, y: number): GeoLocation {
     const a = this.b;
     const e2 = 2 * (1 / 298.257222101) - Math.pow(1 / 298.257222101, 2);
     const e1 = Math.pow(e2, 0.5);
@@ -771,15 +767,13 @@ export class LocationConverter {
       return neighbors;
     }
 
-    let dxy = 100;
-
     const offset = offsets.shift() as NeighborOffset;
     const offX = offset.offX;
     const offy = offset.offY;
 
     let closestIndex = -1;
     for (let i = 0; i < target7.length; i++) {
-      dxy = Math.pow((Math.pow((target7[i].xAlb0 - target.xAlb0 - offX), 2) + Math.pow((target7[i].yAlb0 - target.yAlb0 - offy), 2)), 0.5);
+      const dxy = Math.pow((Math.pow((target7[i].xAlb0 - target.xAlb0 - offX), 2) + Math.pow((target7[i].yAlb0 - target.yAlb0 - offy), 2)), 0.5);
       if (dxy < 50) {
         closestIndex = i;
       }
@@ -798,10 +792,6 @@ export class LocationConverter {
 
     neighbors.push((bchexID));
     return this.getNeighbor(offsets, target, target7, neighbors);
-  }
-
-  public static getHexRules(): any[] {
-    return JSON.parse(JSON.stringify(hexRules));
   }
 
 }
