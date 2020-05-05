@@ -28,6 +28,7 @@ export * from './cmd';
 export * from './string.util';
 export * from './logger';
 export * from './geoMap.utility';
+export * from './location.converter';
 export * from './json.utility';
 export * from './mailer';
 // ---------------------------
