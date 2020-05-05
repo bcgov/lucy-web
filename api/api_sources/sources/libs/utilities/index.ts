@@ -24,4 +24,10 @@ export * from './bc.helpers';
 export * from './csv';
 export * from './schemaLoader';
 export * from './date.utilities';
+export * from './cmd';
+export * from './string.util';
+export * from './logger';
+export * from './geoMap.utility';
+export * from './json.utility';
+export * from './mailer';
 // ---------------------------

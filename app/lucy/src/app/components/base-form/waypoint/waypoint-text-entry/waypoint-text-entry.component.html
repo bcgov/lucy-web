@@ -1,0 +1,20 @@
+<div class="point-container" *ngIf="showLatLong">
+    <div class="waypoint-field">
+        <app-field [mode]="mode" appearance="fill"  header='Latitude' [value]="lat" [verification]=latVerification (valueChanged)="latChanged($event)"></app-field>
+    </div>
+    <div>
+        <app-field [mode]="mode" appearance="fill"  header='Longitude' [value]="long" [verification]=longVerification (valueChanged)="longChanged($event)"></app-field>
+    </div>
+</div>
+
+<div class="point-container" *ngIf="!showLatLong">
+    <div class="waypoint-field">
+        <app-field [mode]="mode" appearance="fill" [header]="'Eastings'" [value]="eastings" [verification]="eastingsVerification" (valueChanged)="eastingChanged($event)"></app-field>
+    </div>
+    <div>
+        <app-field [mode]="mode" appearance="fill" [header]="'Northings'" [value]="northings" [verification]="northingsVerification" (valueChanged)="northingsChanged($event)"></app-field>
+    </div>
+    <div>
+        <app-field [mode]="mode" appearance="fill" [header]="'Zone'" [value]="zone" [verification]="zoneVerification" (valueChanged)="zoneChanged($event)"></app-field>
+    </div>
+</div>

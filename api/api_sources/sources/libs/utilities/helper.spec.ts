@@ -21,7 +21,21 @@
  * -----
  */
 import { should, expect } from 'chai';
-import { verifyObject, incrementalFileName, applicationTemFileDir, incrementalWrite, arrayToString, ifDefined } from './helpers.utilities';
+import {
+    verifyObject,
+    incrementalFileName,
+    applicationTemFileDir,
+    incrementalWrite,
+    arrayToString,
+    ifDefined,
+    writeIfNotExists,
+    reverseCapitalize,
+    valueAtKeyPath,
+    copyKeyAndSubKeys,
+    capitalize,
+    getHTTPReqQueryString,
+    RandomizeSelection
+} from './helpers.utilities';
 
 
 describe('Test Helper/Utilities', () => {
@@ -72,5 +86,91 @@ describe('Test Helper/Utilities', () => {
         expect(y).to.be.equal(1);
         const z = ifDefined(y, 2);
         expect(z).to.be.equal(y);
+    });
+
+    it('should write to empty path', () => {
+        const filePath = `${applicationTemFileDir()}/test.${Date.now()}.txt`;
+        const r = writeIfNotExists(filePath, 'Laba is back');
+        expect(r).to.be.equal(filePath);
+        const nr = writeIfNotExists(filePath, 'Laba is back again');
+        expect(nr).to.be.equal(null);
+    });
+
+    it ('should reverse capitalize string', () => {
+        const value = 'Lao';
+        const value2 = 'LaBa';
+        expect(reverseCapitalize(value)).to.be.equal('lao');
+        expect(reverseCapitalize(value2)).to.be.equal('laBa');
+        expect(reverseCapitalize({})).to.be.equal('');
+    });
+
+    it('should fetch values', () => {
+        const o = {
+            x : {
+                y: {
+                    z: 100
+                }
+            }
+        };
+        expect(valueAtKeyPath(o, 'x.y.z')).to.be.equal(100);
+    });
+
+    it('should not fetch values', () => {
+        const o = {};
+        expect(valueAtKeyPath(o, 'x.y.z')).to.be.equal(undefined);
+    });
+
+    it('should copy key', () => {
+        const x = { x: 'abc', y: { a: 'a', b: 'b', c: 'c'}};
+        const y = { n: 'n', y: { l: 'l'}};
+        copyKeyAndSubKeys('y', x, y);
+        should().exist(y.y.l);
+        should().exist(y.y['a']);
+        should().exist(y.y['b']);
+    });
+
+    it('should copy key with subKeys', () => {
+        const x = { x: 'abc', y: { a: 'a', b: 'b', c: 'c'}};
+        const y = { n: 'n', y: { l: 'l'}};
+        copyKeyAndSubKeys('y', x, y, ['a', 'b']);
+        should().exist(y.y.l);
+        should().exist(y.y['a']);
+        should().exist(y.y['b']);
+        should().not.exist(y.y['c']);
+    });
+
+    it('should capitalize string', () => {
+        const string = 'helloWorld';
+        expect(capitalize(string)).to.be.equal('HelloWorld');
+    });
+
+    it('should get url encoded string', () => {
+        const obj = {
+            x: 'x',
+            y: 'y',
+            z: '1.2',
+            p: 'ESPG:4236'
+        };
+        const r = getHTTPReqQueryString(obj);
+        expect(r).to.be.equal(`?x=x&y=y&z=1.2&p=ESPG%3A4236`);
+    });
+
+    it('should select random entry from array', () => {
+        const array = ['BC', 'ALB', 'ONT'];
+        const val = RandomizeSelection(array);
+        should().exist(val);
+        expect(array.includes(val)).to.be.equal(true);
+    });
+
+    it ('should select random entry from object', () => {
+        const obj = {
+            x: 'x',
+            y: 'y'
+        };
+        const result: any = RandomizeSelection(obj);
+        should().exist(result);
+        expect(Object.keys(obj).includes(result.key)).to.be.equal(true);
+        should().exist(obj[result.key]);
+        expect(obj[result.key]).to.be.eql(result.value);
     });
 });

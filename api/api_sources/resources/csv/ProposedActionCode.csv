@@ -1,0 +1,11 @@
+﻿proposed_action_code,description
+NA,None
+CT,Chemical treatment
+CM,Chemical monitoring
+MT,Mechanical treatment
+MM,Mechanical monitoring
+BT,Biological treatment
+BO,Biological collection
+BM,Biological monitoring
+BDS,Biological dispersal survey
+MN,Monitor

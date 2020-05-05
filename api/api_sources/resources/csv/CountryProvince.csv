@@ -1,0 +1,90 @@
+﻿prov_state_code,country_code,description
+AB,CAN,Alberta
+BC,CAN,British Columbia
+MB,CAN,Manitoba
+NB,CAN,New Brunswick
+NL,CAN,Newfoundland and Labrador
+NT,CAN,Northwest Territories
+NS,CAN,Nova Scotia
+NU,CAN,Nunavut
+ON,CAN,Ontario
+QC,CAN,Quebec
+SK,CAN,Saskatchewan
+YT,CAN,Yukon Territory
+BC,MEX,Baja California
+BS,MEX,Baja California Sur
+CM,MEX,Campeche
+CS,MEX,Chiapas
+CH,MEX,Chihuahua
+CO,MEX,Coahuila de Zaragoza
+DG,MEX,Durango
+GT,MEX,Guanajuato
+GR,MEX,Guerrero
+HG,MEX,Hidalgo
+JA,MEX,Jalisco
+DF,MEX,Mexico
+MI,MEX,Michoacan de Ocampo
+MO,MEX,Morelos
+NA,MEX,Nayarit
+NL,MEX,Nuevo Leon
+OA,MEX,Oaxaca
+PU,MEX,Puebla
+QT,MEX,Queretaro de Arteaga
+QR,MEX,Quintana Roo
+SL,MEX,San Luis Potosi
+SI,MEX,Sinaloa
+SO,MEX,Sonora
+TB,MEX,Tabasco
+TM,MEX,Tamaulipas
+VE,MEX,Veracruz-Llave
+ZA,MEX,Zacatecas
+AL,USA,Alabama
+AK,USA,Alaska
+AZ,USA,Arizona
+AR,USA,Arkansas
+CA,USA,California
+CO,USA,Colorado
+CT,USA,Connecticut
+DE,USA,Delaware
+FL,USA,Florida
+GA,USA,Georgia
+HI,USA,Hawaii
+ID,USA,Idaho
+IL,USA,Illinois
+IN,USA,Indiana
+IA,USA,Iowa
+KS,USA,Kansas
+KY,USA,Kentucky
+LA,USA,Louisiana
+ME,USA,Maine
+MD,USA,Maryland
+MA,USA,Massachusetts
+MI,USA,Michigan
+MN,USA,Minnesota
+MS,USA,Mississippi
+MO,USA,Missouri
+MT,USA,Montana
+NE,USA,Nebraska
+NV,USA,Nevada
+NH,USA,New Hampshire
+NJ,USA,New Jersey
+NM,USA,New Mexico
+NY,USA,New York
+NC,USA,North Carolina
+ND,USA,North Dakota
+OH,USA,Ohio
+OK,USA,Oklahoma
+OR,USA,Oregon
+PA,USA,Pennsylvania
+RI,USA,Rhode Island
+SC,USA,South Carolina
+SD,USA,South Dakota
+TN,USA,Tennessee
+TX,USA,Texas
+UT,USA,Utah
+VT,USA,Vermont
+VA,USA,Virginia
+WA,USA,Washington
+WV,USA,West Virginia
+WI,USA,Wisconsin
+WY,USA,Wyoming

@@ -1,4 +1,4 @@
-<div *ngIf="!readonly" class="col-12 field">
+<div *ngIf="!readonly" class="col-12 field animated" id="{{fieldId}}">
     <mat-form-field [attr.id]="'date'">
         <input 
           matInput
@@ -8,7 +8,7 @@
           [value]="_date"
           (dateChange)="dateChanged($event)"
           (click)="datePicker.open()"
-          (keydown)="false">
+          (keydown)="checkKey($event)">
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker></mat-datepicker>
     </mat-form-field>

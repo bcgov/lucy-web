@@ -20,18 +20,23 @@
  * Imports
  */
  // Lib Import
-import {Column, Entity, OneToMany,  JoinTable, PrimaryGeneratedColumn, ManyToMany, OneToOne, ManyToOne, JoinColumn, AfterLoad, ObjectLiteral} from 'typeorm';
+import {
+    Column,
+    Entity,
+    OneToMany,
+    JoinTable,
+    PrimaryGeneratedColumn,
+    ManyToMany
+} from 'typeorm';
 
 // Local Import
 import { BaseModel } from './baseModel';
-import { UserSession, UserSessionDataController } from './user.session';
+import { UserSession} from './user.session';
 import { RolesCode, RolesCodeValue } from './appRolesCode';
-import { DataModelController } from '../data.model.controller';
-import { UserSchema, RolesCodeTableSchema} from '../database-schema';
+import { UserSchema, RolesCodeTableSchema, UserRoleSchema} from '../database-schema';
 import { UserMessage } from './userMessage';
 import { RequestAccess } from './requestAccess';
-import {  ModelProperty, PropertyType } from '../../libs/core-model';
-import { RecordTableSchema, CodeTableSchema } from '../database-schema/base.record.schema';
+import {  ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 
 
 /**
@@ -59,6 +64,11 @@ export interface UserData {
  * @description Entity model class for Users
  * @export class User
  */
+@ModelDescription({
+	description: 'Data Model Class for UserSchema',
+	schema: UserSchema,
+	apiResource: false
+})
 @Entity({
     name: UserSchema.schema.name
 })
@@ -71,61 +81,81 @@ export class User extends BaseModel  {
     existingRequestAccess?: RequestAccess;
 
     /**
-     * Database column attributes
+	 * Class Properties
+	 */
+
+	/**
+	 * @description Getter/Setter property for column {user_id}
+	 */
+	@PrimaryGeneratedColumn()
+	@ModelProperty({type: PropertyType.number})
+	user_id: number;
+
+	/**
+	 * @description Getter/Setter property for column {first_name}
+	 */
+	@Column({ name: UserSchema.columns.firstName})
+	@ModelProperty({type: PropertyType.string})
+	firstName: string;
+
+	/**
+	 * @description Getter/Setter property for column {last_name}
+	 */
+	@Column({ name: UserSchema.columns.lastName})
+	@ModelProperty({type: PropertyType.string})
+	lastName: string;
+
+	/**
+	 * @description Getter/Setter property for column {email}
+	 */
+	@Column({ name: UserSchema.columns.email})
+	@ModelProperty({type: PropertyType.string})
+	email: string;
+
+	/**
+	 * @description Getter/Setter property for column {preferred_username}
+	 */
+	@Column({ name: UserSchema.columns.preferredUsername})
+	@ModelProperty({type: PropertyType.string})
+	preferredUsername: string;
+
+	/**
+	 * @description Getter/Setter property for column {account_status}
+	 */
+	@Column({ name: UserSchema.columns.accountStatus})
+	@ModelProperty({type: PropertyType.number})
+	accountStatus: number;
+
+	/**
+	 * @description Getter/Setter property for column {expiry_date}
+	 */
+	@Column({ name: UserSchema.columns.expiryDate})
+	@ModelProperty({type: PropertyType.string})
+	expiryDate: string;
+
+	/**
+	 * @description Getter/Setter property for column {activation_status}
+	 */
+	@Column({ name: UserSchema.columns.activation})
+	@ModelProperty({type: PropertyType.number})
+    activation: number;
+
+    /**
+     * @description Getter/Setter property for column {active_session_id}
      */
-    @PrimaryGeneratedColumn()
-    @ModelProperty({type: PropertyType.number})
-    user_id: number;
-
-    @Column()
-    @ModelProperty({type: PropertyType.string})
-    email: string;
-
-    @Column({
-        name: UserSchema.schema.columns.firstName,
-        nullable: true
-    })
-    @ModelProperty({type: PropertyType.string})
-    firstName: string;
-
-    @Column({
-        name: UserSchema.schema.columns.lastName,
-        nullable: true
-    })
-    @ModelProperty({type: PropertyType.string})
-    lastName: string;
-
-    @Column({
-        name: UserSchema.schema.columns.preferredUsername,
-        nullable: true
-    })
-    @ModelProperty({type: PropertyType.string})
-    preferredUsername: string;
-
-    @Column({
-        name: UserSchema.schema.columns.refCurrentSession,
-        nullable: true,
-    })
-    @ModelProperty({type: PropertyType.number})
-    currentSessionId?: number;
-
-    @Column({
-        name: UserSchema.schema.columns.accountStatus
-    })
-    @ModelProperty({type: PropertyType.number})
-    accountStatus: number;
+    activeSessionId: number;
 
 
     @ManyToMany(type => RolesCode, { eager: true} )
     @JoinTable({
-        name: 'user_role',
+        name: UserRoleSchema.dbTable,
         joinColumn: {
-            name: 'ref_user_id',
-            referencedColumnName: UserSchema.schema.columns.id
+            name: UserRoleSchema.columns.user,
+            referencedColumnName: UserSchema.id
         },
         inverseJoinColumn: {
-            name: 'ref_access_role_id',
-            referencedColumnName: RolesCodeTableSchema.schema.columns.id
+            name: UserRoleSchema.columns.role,
+            referencedColumnName: RolesCodeTableSchema.id
         }
     })
     @ModelProperty({type: PropertyType.object})
@@ -139,8 +169,9 @@ export class User extends BaseModel  {
     @OneToMany(type => UserMessage, message => message.receiver)
     messages: Promise<UserMessage[]>;
 
-    @OneToOne(type => RequestAccess, requestAccess => requestAccess.requester)
-    requestAccess: Promise<RequestAccess>;
+    @OneToMany(type => RequestAccess, requestAccess => requestAccess.requester)
+    requestAccess: Promise<RequestAccess[]>;
+
 
     /**
      * @description Checking user is admin or not
@@ -150,105 +181,14 @@ export class User extends BaseModel  {
         return this.roles.filter(item => item.code === RolesCodeValue.admin).length > 0;
     }
 
-    /**
-     * DB Hook/listener
-     */
-    @AfterLoad()
-    async entityDidLoad() {
-        this.existingRequestAccess = await this.requestAccess;
+    get isInspectAppAdmin(): boolean {
+        return this.roles.filter( item => item.roleCode === RolesCodeValue.inspectAppAdmin).length > 0;
+    }
+
+    get isInspectAppEditor(): boolean {
+        return this.roles.filter( item => item.roleCode === RolesCodeValue.inspectAppOfficer).length > 0;
     }
 }
 
-/**
- * @description Base class for record
- */
-export abstract class Record extends BaseModel {
-    @ManyToOne( type => User, {eager : true})
-    @JoinColumn({
-        name: RecordTableSchema.auditColumns.createdBy,
-        referencedColumnName: UserSchema.schema.columns.id
-    })
-    createdBy: User;
-
-    @ManyToOne( type => User, { eager: true})
-    @JoinColumn({
-        name: RecordTableSchema.auditColumns.updatedBy,
-        referencedColumnName: UserSchema.schema.columns.id
-    })
-    updatedBy: User;
-}
-
-export abstract class ApplicationCode extends Record {
-    @Column({ name: CodeTableSchema.codeColumns.description, nullable: true })
-    @ModelProperty({type: PropertyType.string})
-    description: string;
-
-    @Column({ name: CodeTableSchema.codeColumns.activeIndicator, nullable: false})
-    @ModelProperty({type: PropertyType.boolean})
-    activeIndicator: boolean;
-}
-
-export class RecordController<T extends Record> extends DataModelController<T> {
-    async createNewObject(spec: any, creator: User, ...other: any[]): Promise<T> {
-        const newObj: T = spec as T;
-        newObj.createdBy = creator;
-        newObj.updatedBy = creator;
-        await this.saveInDB(newObj);
-        return newObj;
-    }
-
-    async updateObject(existing: T, update: ObjectLiteral, modifier: User): Promise<T> {
-        existing.updatedBy = modifier;
-        await this.updateObj<ObjectLiteral>(existing, update);
-        return existing;
-    }
-}
-
-/**
- * @description Data Model Controller for User
- * @export class UserDataController
- */
-export class UserDataController extends DataModelController<User> {
-    /**
-     * @description Getter for shared instance
-     */
-    public static get shared(): UserDataController {
-        return this.sharedInstance<User>(User, UserSchema) as UserDataController;
-    }
-
-    /**
-     * @description Get current session of given user
-     * @method getCurrentSession
-     * @param User user
-     * @return Promise<UserSession>
-     */
-    public async getCurrentSession(user: User): Promise<UserSession> {
-        const session: UserSession = await UserSessionDataController.shared.findById((user.currentSessionId || -1));
-        return session;
-    }
-
-    /**
-     * @description Set current session of given user
-     * @method setCurrentSession
-     * @param User user
-     * @param UserSession session
-     * @return Promise<void>
-     */
-    public async setCurrentSession(user: User, session: UserSession): Promise<void> {
-        user.currentSessionId = session.session_id;
-        await this.saveInDB(user);
-    }
-
-    /**
-     * @description Remove current session of given user
-     * @method removeSession
-     * @param User user
-     * @return Promise<void>
-     */
-    public async removeSession(user: User): Promise<void> {
-        user.currentSessionId = undefined;
-        this.saveInDB(user);
-    }
-}
 // ----------------------------------------------------------------------------------------------------------------
 

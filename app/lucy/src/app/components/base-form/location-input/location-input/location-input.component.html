@@ -1,0 +1,125 @@
+<div class="animated" id="location">
+    <div class="container min-map-height">
+        <!-- Location And Map-->
+        <div class="row">
+            <!-- Left content  -->
+            <div class="col-12 col-md-4">
+                <div class="row">
+                    <!-- Input mode switch  -->
+                    <div class="col-12 input-mode">
+                        <div class="input-mode-container">
+                            <button class="btn switch-btn" [ngClass]="
+                                !locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'
+                            " (click)="switchInputUTM()">
+                            UTM
+                            </button>
+                            <button class="btn switch-btn" [ngClass]="
+                                locationEntryModeLatLong ? 'input-mode-on' : 'input-mode-off'
+                            " (click)="switchInputLatLong()">
+                            Lat / Long
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- lat long input  -->
+                <div *ngIf="locationEntryModeLatLong">
+                    <div class="row">
+                        <div class="full-width animated fadeIn animationDuration">
+                            <app-field [mode]="mode" [header]="latitudeField.header" [value]="lat" [verification]="latitudeField.verification" [required]="latitudeField.required" (valueChanged)="latChanged($event)">
+                            </app-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="full-width animated fadeIn animationDuration">
+                            <app-field [mode]="mode" [header]="longitudeField.header" [value]="long" [verification]="longitudeField.verification" [required]="longitudeField.required" (valueChanged)="longChanged($event)">
+                            </app-field>
+                        </div>
+                    </div>
+                </div>
+                <!-- UTM input  -->
+                <div *ngIf="!locationEntryModeLatLong">
+                    <div class="row">
+                        <div class="full-width animated fadeIn animationDuration">
+                            <app-field [mode]="mode" [header]="'Eastings'" [value]="eastings" [verification]="eastingsVerification" (valueChanged)="eastingChanged($event)">
+                            </app-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="full-width animated fadeIn animationDuration">
+                            <app-field [mode]="mode" [header]="'Northings'" [value]="northings" [verification]="northingsVerification" (valueChanged)="northingsChanged($event)">
+                            </app-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="full-width animated fadeInDown animationDuration">
+                            <app-field [mode]="mode" [header]="'Zone'" [value]="zone" [verification]="zonesVerification" (valueChanged)="zoneChanged($event)">
+                            </app-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Map -->
+            <div class="col-12 col-md-8 leaf">
+                <app-map-preview (centerPointChanged)="mapCenterChanged($event)" (inputGeometryChanged)="inputGeometryChanged($event)" [cluster]="false" [center]="mapCenter" [markers]="markers" [points]="points" [polygon]="polygon" [offset]="offset" [inputGeometryJSON]="object">
+                </app-map-preview>
+
+                <div *ngIf="wellDistance > -1" class="col-12 nopadding well-distance animated wobble">
+                    There is a well
+                    <span class="well-distance-value">{{ wellDistance }} meters</span> from this location.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Geometry -->
+    <div class="container">
+        <!-- Title: Row -->
+        <div class="row">
+            <div class="col sub-section-title">
+                {{ titles.geometrySection }}
+            </div>
+        </div>
+        <div class="row">
+            <!-- Geometry: Dropdown --->
+            <div class="col-12 col-md-5 nopadding">
+                <app-dropdown [mode]="mode" [items]="geometry.dropdown" [fieldHeader]="geometry.header" [selectedItem]="geometry.value" (selectionChanged)="geometryChanged($event)">
+                </app-dropdown>
+            </div>
+            <!-- Geometry: Dimension X-->
+            <div class="col col-md-3 nopadding" *ngIf="!waypointGeometryTypeSelected && showX">
+                <app-field [mode]="mode" [header]="headerXDimension" [value]="x" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionXChange($event)">
+                </app-field>
+            </div>
+            <!-- Geometry: Dimension Y-->
+            <div class="col col-md-3 nopadding" *ngIf="showY && !waypointGeometryTypeSelected">
+                <app-field [mode]="mode" [header]="headerYDimension" [value]="y" suffix="m" [verification]="dimensionVerification" [required]="true" (valueChanged)="dimensionYChange($event)">
+                </app-field>
+            </div>
+            <!-- Button to launch Waypoint Modal -->
+            <div *ngIf="waypointGeometryTypeSelected && !isViewMode" class="col col-md-1 nopadding open-modal-button" (click)="openModal(1)">
+                <i class="material-icons-outlined launch-icon">launch</i>
+            </div>
+        </div>
+        <!-- Waypoint Entry Modal -->
+        <app-modal *ngIf="showModal" [align]="'center'">
+
+            <!-- Add waypoint modal -->
+            <app-waypoint-modal *ngIf="showModalContent(1)" class="modal-wrapper" (onClose)="onModalClose($event)" [mode]="mode" [geoJSON]="object.spaceGeom.value.inputGeometry.geoJSON" (geoJSONEmitter)="inputGeometryChanged($event)">
+            </app-waypoint-modal>
+
+        </app-modal>
+    </div>
+
+    <!-- ////// -->
+</div>
+
+<!-- Area Calculated-->
+<div class="container area-container">
+    <div class="row">
+        <div class="col-12">
+            <div class="col-12 area-calculated">
+                Calculated Area: <span class="area-value">{{ areaLabel }}</span>
+            </div>
+        </div>
+    </div>
+</div>

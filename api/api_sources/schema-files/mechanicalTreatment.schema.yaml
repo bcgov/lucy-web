@@ -1,0 +1,367 @@
+version: '1.0'
+includes:
+  - treatment.schema.yaml
+  - spaceGeom.schema.yaml
+schemas:
+  ## -- MechanicalTreatmentSchema
+  MechanicalTreatmentSchema:
+    name: mechanical_treatment
+    description: 'An application of a mechanical or cultural control. Mechanical weed control employs various implements and techniques to physically disturb weeds or to interrupt their reproduction by depleting root reserves through repeated defoliation of the plant. Mechanical control includes the mowing, ploughing, chopping, and crushing of weeds.
+    Cultural control includes selective grazing, irrigation and deliberate flooding, mulching, hand pulling, and burning. Strategies and timing should depend on the weed species and its location in the province.'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: /treatment/mechanical
+    # End-meta
+    displayLayout:
+      displayLabel: '#(mechanicalMethod.description) - #(date)'
+      fields:
+        - header:
+            key: 'speciesAgency'
+            default: 'Species Agency'
+          key: speciesAgency.displayLabel
+        - header:
+            key: 'date'
+            default: 'Date'
+          key: date
+    layout:
+      title: 
+        key: '' 
+        default: 'Mechanical Treatment'
+      sections: 
+        - title: 
+            key: '' 
+            default: 'Basic Elements'
+          groups:
+            - title: 
+                key: '' 
+                default: Location and Geometry
+              fields: 
+                - spaceGeom
+              style: {}
+            - title: 
+                key: '' 
+                default: Applicator Information
+              fields:
+                - applicatorFirstName
+                - applicatorLastName
+                - secondaryApplicatorFirstName
+                - secondaryApplicatorLastName
+                - providerContractor
+              style: {}
+            - title: 
+                key: '' 
+                default: Time and Reference
+              fields: 
+                - date
+                - paperFileReference
+              style: {}
+        # End-Section
+        - title: 
+            key: '' 
+            default: 'Treatment Details'
+          groups:
+            - title: 
+                key: '' 
+                default: '' 
+              fields: 
+                - speciesAgency
+                - observations
+              style: {}
+            - title: 
+                key: '' 
+                default: Method and techniques
+              fields:
+                - mechanicalMethod
+                - mechanicalDisposalMethod
+                - rootRemoval
+              style: {}
+            - title: 
+                key: '' 
+                default: Issues
+              fields:
+                - soilDisturbance
+                - issue
+              style: {}
+            - title: 
+                key: '' 
+                default: Additional Information
+              fields:
+                - signageOnSiteIndicator
+                - comment
+              style: {}
+      # End-Section
+    # End Of Layouts
+    # Computed fields
+    computedFields: {}
+    # End - Computed fields
+    # Relations
+    relations: 
+      observations:
+        header:
+          key: 'mechanicalTreatment.observations'
+          default: Observations
+        description: 
+          key: 'mechanicalTreatments.observation.description'
+          default: 'Observations linked to the Mechanical treatment'
+        type: array
+        relationshipType: many-to-many
+        schema: ObservationSchema
+        layout:
+          classes:
+            - mode: view
+              classNames:
+                - col-12
+    # End: Relations
+    columns: 
+      # -- Data Columns
+      id: 
+        name: 'mechanical_treatment_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      applicatorFirstName: 
+        name: 'applicator_first_name'
+        comment: 'First name of the applicator'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'applicatorFirstName' 
+            default: 'Applicator First Name'
+          classes:
+            - none
+      applicatorLastName: 
+        name: 'applicator_last_name'
+        comment: 'Last name of the applicator'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'applicatorLastName' 
+            default: 'Applicator Last Name'
+          classes:
+            - none
+      secondaryApplicatorFirstName: 
+        name: 'secondary_applicator_first_name'
+        comment: 'First name of the secondary applicator'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'secondaryApplicatorFirstName' 
+            default: 'Secondary Applicator First Name'
+          classes:
+            - none
+      secondaryApplicatorLastName: 
+        name: 'secondary_applicator_last_name'
+        comment: 'Last name of the secondary applicator'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'secondaryApplicatorLastName' 
+            default: 'Secondary Applicator Last Name'
+          classes:
+            - none
+      date:
+        name: mechanical_treatment_date
+        comment: 'Date of the treatment'
+        definition: DATE NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'date' 
+            default: 'Date'
+          classes:
+            - none
+      paperFileReference:
+        name: mechanical_treatment_paper_file_ref
+        comment: 'Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'paperFileReference' 
+            default: 'Paper File Ref'
+          classes:
+            - none
+      comment:
+        name: mechanical_treatment_comment
+        comment: 'Comment on treatment record'
+        definition: VARCHAR(500) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'comment' 
+            default: 'Comment'
+          classes:
+            - none
+      # -- Indicators --
+      signageOnSiteIndicator:
+        name: signage_on_site_ind
+        comment: 'Sign collected for on site indicator'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+        meta: {}
+        layout:
+          header: 
+            key: 'signageOnSiteIndicator' 
+            default: 'Sign collected'
+          classes:
+            - none
+      ## -- Relationship columns
+      observation:
+        name: 'observation_id'
+        comment: 'Observation associated with treatment'
+        definition: INT NOT NULL
+        foreignTable: observation
+        refColumn: observation_id
+        deleteCascade: true
+        meta: 
+          filters:
+            location:
+              note: Fetch relationship data based on location
+              keys:
+                - key: latitude
+                  refKey: lat
+                - key: longitude
+                  refKey: long
+        layout:
+          header: 
+            key: 'observation' 
+            default: 'Observation'
+          classes:
+            - none
+      species:
+        name: 'species_id'
+        comment: 'Species associated with a treatment'
+        definition: INT NULL
+        foreignTable: species
+        refColumn: species_id
+        deleteCascade: true
+        meta: {}
+        layout:
+          header: 
+            key: 'species' 
+            default: 'Species'
+          classes:
+            - none
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency Code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'speciesAgency' 
+            default:  'Species Agency'
+          classes:
+            - none
+      mechanicalMethod:
+        name: 'mechanical_method_code_id'
+        comment: Foreign key reference to Mechanical Method Code table 
+        definition: INT NULL
+        foreignTable: mechanical_method_code
+        refColumn: mechanical_method_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'mechanicalMethod' 
+            default: 'Mechanical Method'
+          classes:
+            - none
+      mechanicalDisposalMethod:
+        name: 'mechanical_disposal_method_code_id'
+        comment: Foreign key reference to Mechanical Disposal Method Code table 
+        definition: INT NULL
+        foreignTable: mechanical_disposal_method_code
+        refColumn: mechanical_disposal_method_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'mechanicalDisposalMethod' 
+            default: 'Mechanical Disposal Methods'
+          classes:
+            - none
+      soilDisturbance:
+        name: 'mechanical_soil_disturbance_code_id'
+        comment: Foreign key reference to Mechanical Soil Disturbance code 
+        definition: INT NULL
+        foreignTable: mechanical_soil_disturbance_code
+        refColumn: mechanical_soil_disturbance_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'soilDisturbance' 
+            default: 'Mechanical Soil Disturbance'
+          classes:
+            - none
+      rootRemoval:
+        name: 'mechanical_root_removal_code_id'
+        comment: Foreign key reference to Mechanical Root Removal Code table
+        definition: INT NULL
+        foreignTable: mechanical_root_removal_code
+        refColumn: mechanical_root_removal_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'rootRemoval' 
+            default: 'Root Removal'
+          classes:
+            - none
+      issue:
+        name: 'mechanical_treatment_issue_code_id'
+        comment: Foreign key reference to Mechanical Treatment Issue Code table
+        definition: INT NULL
+        foreignTable: mechanical_treatment_issue_code
+        refColumn: mechanical_treatment_issue_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'issue' 
+            default: 'Issue'
+          classes:
+            - none
+      providerContractor:
+        name: 'treatment_provider_contractor_id'
+        comment: Foreign key reference to Mechanical Treatment Provider Contractor table
+        definition: INT NULL
+        foreignTable: treatment_provider_contractor
+        refColumn: treatment_provider_contractor_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'providerContractor' 
+            default: 'Contractor'
+          classes:
+            - none
+    # End - Columns
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
+    versions:
+      - name: observations
+        id: '1.1'
+        info: Schema changes to support many-to-many relation with observation table
+        schemaChanges:
+          - comment: Dropping column observation
+            existingKey: observation
+            type: drop
+          - comment: Dropping column species
+            existingKey: species
+            type: drop
+  ## --

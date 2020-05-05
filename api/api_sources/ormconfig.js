@@ -14,5 +14,6 @@ module.exports = {
     migrationsTableName: "app_migration_table",
     synchronize: false,
     logging: (process.env.DB_LOG === 'yes') ? true : false,
-    dirname: __dirname
+    dirname: __dirname,
+    schema: process.env.DB_SCHEMA || 'invasivesbc'
  }

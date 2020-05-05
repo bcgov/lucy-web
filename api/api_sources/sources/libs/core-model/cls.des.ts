@@ -40,7 +40,7 @@ export enum ClassType {
  * @description Class information
  */
 export interface ClassInfo {
-    description: string;
+    description?: string;
     schema?: any;
     parent?: Function;
     other?: any;
@@ -54,6 +54,9 @@ export interface ClassInfo {
 export function ModelDescription(info: ClassInfo) {
     return function (target: Function) {
         classInfoStorage[target.name] = info;
+        target.prototype.getClassInfo = () => {
+            return classInfoStorage[target.name];
+        };
     };
 }
 

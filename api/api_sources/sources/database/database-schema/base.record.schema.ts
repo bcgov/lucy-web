@@ -62,7 +62,8 @@ export class CodeTableSchema extends RecordTableSchema {
             this.table.columnsDefinition.description = createColumn(
                 {name: CodeTableSchema.codeColumns.description,
                     comment: 'Description of code',
-                    definition: 'VARCHAR(100) NULL'
+                    definition: 'VARCHAR(100) NULL',
+                    examples: []
                 });
         }
         // Creating Code active indicator
@@ -70,7 +71,8 @@ export class CodeTableSchema extends RecordTableSchema {
             this.table.columnsDefinition.activeIndicator = createColumn(
                 {name: CodeTableSchema.codeColumns.activeIndicator,
                     comment: 'Indicator to check active status of code',
-                    definition: 'BOOLEAN NOT NULL DEFAULT TRUE'
+                    definition: 'BOOLEAN NOT NULL DEFAULT TRUE',
+                    examples: []
                 });
         }
     }
@@ -82,6 +84,10 @@ export class CodeTableSchema extends RecordTableSchema {
     csvData(): Promise<any> {
         const csvData = new CodeCSVData(`${this.className.split('Schema')[0]}.csv`);
         return csvData.load();
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
     }
 }
 

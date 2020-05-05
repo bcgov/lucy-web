@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SsoService } from './sso.service';
@@ -116,7 +133,7 @@ export class ApiService {
       this.APIRequests.splice(index, 1);
     }
     if (this.APIRequests.length < 1) {
-      console.log(`** No more requests in waiting **`);
+      // console.log(`** No more requests in waiting **`);
     }
   }
 
@@ -194,14 +211,13 @@ export class ApiService {
 
     } catch (error) {
       console.log(`API ERROR`);
-      console.log();
       const apiError: APIError = {
         endpoint: endpoint,
         body: body,
         method: APIRequestMethod.POST,
         error: error,
         attempts: (attempts + 1)
-      }
+      };
       return await this.handleError(apiError);
     }
   }
@@ -295,13 +311,19 @@ export class ApiService {
   private async handleError(error: APIError): Promise<APIRequestResult> {
     switch (error.error.status) {
       case 401:
-        console.log(`Error 401 received, refreshing`);
+        // console.log(`Error 401 received, refreshing`);
         return await this.hendleErrorDescision(error, await this.decideOn401(error));
       case 404:
-        console.log(`Error 401 received: Resource is not Available`);
+        // console.log(`Error 404 received: Resource is not Available`);
         return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
+      case 500:
+        // console.log(`Error 500 received: Resource is not Available`);
+        return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
+      case 422:
+          // console.log(`Error 422 received: Unprocessable Entity`);
+          return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
       default:
-        console.log(`ERRPR CASE NOT HANDLED.\n Error Code received: ${error.error.status}\nObject:`);
+        // console.log(`ERRPR CASE NOT HANDLED.\n Error Code received: ${error.error.status}\nObject:`);
         console.dir(error);
         return await this.hendleErrorDescision(error, APIErrorDescision.Stop);
     }
@@ -327,7 +349,7 @@ export class ApiService {
       case APIErrorDescision.Stop:
         return {
           success: false,
-          response: null
+          response: error,
         };
     }
   }

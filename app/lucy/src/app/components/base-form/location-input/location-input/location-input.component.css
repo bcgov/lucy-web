@@ -1,0 +1,109 @@
+.input-mode {
+    text-align: center;
+}
+
+.input-mode-container {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #002C71;
+    border-radius: 4px;
+}
+
+.input-mode-on {
+    background-color: #002C71;
+    color: white;
+}
+
+.input-mode-off {
+    background-color: transparent;
+    color: 333333;
+}
+
+.switch-btn {
+    border: none;
+    border-radius: 0;
+    width: 50%;
+    height: 100%;
+}
+
+.padding-0 {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.full-width {
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+@media (min-width: 768px) {
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .leaf {
+        min-height: 285px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* CSS that should be displayed if width is equal to or smaller than 768px goes here */
+    .leaf {
+        height: 500px;
+        margin: 16px 0;
+    }
+}
+
+.animationDuration {
+    animation-duration: 0.3s;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.area-container {
+    margin-top: 8px;
+}
+
+.area-calculated {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgba(51, 51, 51, 0.08);
+    padding: 15px;
+}
+
+.area-value {
+    color: #234075;
+}
+
+.open-modal-button {
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.sub-section-title {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 22px;
+}
+
+.section-divider {
+    box-sizing: border-box;
+    height: 1px;
+    width: 100%;
+    border: 2px solid #E2A014;
+}
+
+.well-distance {
+    color: #234075;
+    font-size: 13px;
+}
+
+.well-distance-value {
+    color: #E2A014;
+    font-size: 14px;
+    font-weight: bold;
+}

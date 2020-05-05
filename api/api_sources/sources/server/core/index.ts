@@ -26,4 +26,5 @@ export * from './common.error.handler';
 export * from './route.des';
 export * from './route.const';
 export * from './resource.controller';
+export * from './core.validator';
 // -----------------------------------------------------------------------------------------------------------

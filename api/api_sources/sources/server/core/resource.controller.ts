@@ -24,30 +24,50 @@ import * as assert from 'assert';
 import { Request } from 'express';
 import { DataController} from '../../database/data.model.controller';
 import {
-    BaseRoutController,
     RouteHandler,
-    MakeOptionalValidator
+    RouteController
 } from './base.route.controller';
-import { ResourceInfo } from './route.const';
+import { ResourceInfo, ValidationBypass } from './route.const';
 import { roleAuthenticationMiddleware } from './auth.middleware';
+import { SchemaValidator, SchemaValidationOption } from './schema.validation';
+import { MakeOptionalValidator } from './core.validator';
+import { ModelSpecFactory, RequestFactory } from '../../database/factory';
 
-
-export class ResourceRouteController<D extends DataController, CreateSpec, UpdateSpec> extends BaseRoutController<D> {
+/**
+ * @description The ResourceRouteController is generic route controller provide manipulation of resource or table row item. Typical functionality
+ * 1. Provides CURD functionality of table row item
+ * 2. Provides Automated request data manipulation
+ * 3. Custom middleware configuring
+ * 4. Securing resource
+ */
+export class BaseResourceRouteController extends RouteController {
     constructor() {
         super();
+    }
+
+    /**
+     * @description Setting up Controller
+     */
+    setup() {
         if (this.constructor.prototype._routeResourceInfo) {
             // Getting resource info
             // console.dir(this.constructor.prototype._routeResourceInfo);
             const info: ResourceInfo = this.constructor.prototype._routeResourceInfo;
-            this.dataController = info.dataController as D;
+            this.dataController = info.dataController;
             // Check secure
             if (info.secure && info.secure === true) {
                 this.router.use(this.authHandle);
             }
+            // this['dependencies'] = this.dataController.dependencies;
 
             // Check users
             if (info.users) {
                 this.router.use(roleAuthenticationMiddleware(info.users));
+            }
+
+            // Calling Dependencies
+            if (info.dependency) {
+                info.dependency();
             }
 
             // Getting controller specific middleware
@@ -56,45 +76,177 @@ export class ResourceRouteController<D extends DataController, CreateSpec, Updat
                 this.router.use(middleware);
             }
             // Getting validator
-            const validators: any[] = info.validators ? info.validators() : [];
-            const optional: any[] = MakeOptionalValidator(() => info.validators ? info.validators() : []);
+            const validationBypass: ValidationBypass = info.validationBypass || {};
 
-            // Getting operation specific middleware
+            // If validation Bypass for post
+            // Getting create operation specific middleware
             const createMiddleware: any[] = info.createMiddleware ? info.createMiddleware() : [];
+            if (validationBypass.skipForCreate) {
+                // Configuring Create Route without validation
+                this.router.post(`/`, createMiddleware, this.create);
+            } else {
+                // // Configuring Create Route with validation
+                const validators: any[] = this._createValidator();
+                this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
+            }
+
+            // Getting Update Middleware
             const updateMiddleware: any[] = info.updateMiddleware ? info.updateMiddleware() : [];
+            if (validationBypass.skipForUpdate) {
+                // Configuring Update Route without validation
+                this.router.put(`/:id`, this.combineValidator(this.idValidation(), updateMiddleware), this.update);
+
+            } else {
+                // Options
+                const opt: SchemaValidationOption = {
+                    updateOnly: true,
+                    caller: 'update'
+                };
+                const optional: any[] = MakeOptionalValidator(() => this._createValidator(opt));
+
+                // Configuring Update Route with validation
+                this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
+            }
+
+            // View Middleware
             const viewMiddleware: any[] = info.viewMiddleware ? info.viewMiddleware() : [];
+            if (validationBypass.skipForRead) {
+                // Configuring View all Route with filter
+                this.router.get(`/`, viewMiddleware, this.index);
+            } else {
+                const filters: any = MakeOptionalValidator(() => this._createValidator({
+                    caller: 'filter'
+                }, true));
 
-            // Getting resource endpoint Endpoint
-            // const endPoint = info.path.split('#')[1] || this.className.toLowerCase();
+                // Configuring View all Route with filter
+                this.router.get(`/`, this.combineValidator(viewMiddleware, filters), this.index);
+            }
 
-            // Configuring Create Route
-            this.router.post(`/`, this.combineValidator(middleware, validators, createMiddleware), this.create);
+            // Configuring config route
+            this.router.get(`/config`, viewMiddleware, this.config);
 
-            // Configuring View all Route with filter
-            this.router.get(`/`, this.combineValidator(viewMiddleware), this.index);
+            // Adding example route
+            this.router.get(`/example`, this.example);
 
             // Configuring View {single} Route
             this.router.get(`/:id`, this.combineValidator(this.idValidation(), viewMiddleware) , this.index);
-
-            // Configuring Update Route
-            this.router.put(`/:id`, this.combineValidator(this.idValidation(), optional, updateMiddleware), this.update);
         }
     }
 
+    /**
+     * @description Create Route Handler
+     */
     get create(): RouteHandler {
-        return this.routeConfig<CreateSpec>(`${this.className}: create`, async (data: CreateSpec, req: Request) => {
-            return [201, await this.dataController.createNewObject(data, req.user)];
+        return this.routeConfig<any>(`${this.className}: create`, async (data: any, req: Request) => {
+            return await this.createResource(req, data);
         });
     }
+
+    /**
+     * @description Update Route Handler
+     */
+    get update(): RouteHandler {
+        return this.routeConfig<any>(`${this.className}: update`, async (data: any, req: any) => {
+            return await this.updateResource(req, data);
+        });
+    }
+
+    /**
+     * @description Index or Fetch route
+     */
+    get index(): RouteHandler {
+        return this.routeConfig<any>(`${this.className}: index`, async (d: any, req: any) => {
+            return await this.all(req, d);
+        });
+    }
+
+    /**
+     * @description Handler for config route
+     */
+    get config(): RouteHandler {
+        return this.routeConfig<any>(`${this.className}: config`, async () => {
+            return [200, this.dataController.schemaObject.config()];
+        });
+    }
+
+    get example(): RouteHandler {
+        return this.routeConfig<any>(`${this.className}: example`, async (d: any, req: any) => {
+            return this.exampleData(req);
+        });
+    }
+
+    /**
+     *
+     * Methods for subclass to handle actions
+     */
+    /**
+     * @description Create New Object
+     * @param Request req
+     * @param any data
+     */
+    public async createResource(req: any, data: any): Promise<[number, any]> {
+        return [201, await this.dataController.createNewObject(data, req.user)];
+    }
+
+    /**
+     * @description Update existing
+     * @param Request req
+     * @param any data
+     */
+    public async updateResource(req: any, data: any): Promise<[number, any]> {
+        assert(req.resource, `${this.className}: update: No resource object found`);
+        return [200, await this.dataController.updateObject(req.resource, data, req.user)];
+    }
+
+    /**
+     * @description Fetch object
+     * @param Request req
+     * @param any data
+     */
+    public async all(req: any, data?: any): Promise<[number, any]> {
+        return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
+    }
+
+    public async exampleData(req: any): Promise<[number, any]> {
+        if (process.env.ENVIRONMENT === 'local' || process.env.ENVIRONMENT === 'dev') {
+            const modelSpec: any = await ModelSpecFactory(this.dataController)();
+            const spec: any = await RequestFactory<any>(modelSpec, { schema: this.dataController.schemaObject});
+            return [200, spec];
+        } else {
+            return [200, {}];
+        }
+    }
+
+    /**
+     * @description Create Validator Logic based on Schema
+     */
+    private _createValidator(options?: SchemaValidationOption, filterOnly?: boolean): any[] {
+        return SchemaValidator.shared.validators(this.dataController.schemaObject, filterOnly, undefined, options);
+    }
+}
+
+/**
+ * @description Generic subclass of BaseResourceRouteController
+ */
+export class ResourceRouteController<D extends DataController, CreateSpec, UpdateSpec> extends BaseResourceRouteController {
+    // DataController
+    protected dataController: D;
+    /**
+     * @description Create Route Handler
+     */
+    get create(): RouteHandler {
+        return this.routeConfig<CreateSpec>(`${this.className}: create`, async (data: CreateSpec, req: Request) => {
+            return await this.createResource(req, data);
+        });
+    }
+
+    /**
+     * @description Update Route Handler
+     */
     get update(): RouteHandler {
         return this.routeConfig<UpdateSpec>(`${this.className}: update`, async (data: UpdateSpec, req: any) => {
             assert(req.resource, `${this.className}: update: No resource object found`);
             return [200, await this.dataController.updateObject(req.resource, data, req.user)];
-        });
-    }
-    get index(): RouteHandler {
-        return this.routeConfig<any>(`${this.className}: index`, async (d: any, req: any) => {
-            return [200, req.resource !== undefined ? req.resource : await this.dataController.all(req.query)];
         });
     }
 }

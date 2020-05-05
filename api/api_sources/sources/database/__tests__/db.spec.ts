@@ -22,18 +22,20 @@
 import { should, expect } from 'chai';
 import { ApplicationTable, ApplicationTableColumn } from '../../libs/core-database';
 import { defineColumn, createColumn, BaseTableSchema} from '../applicationSchemaInterface';
-import { getYAMLFilePath } from '../database-schema/schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 import { SchemaCache } from '../../libs/utilities';
+import { MechanicalTreatmentSchema, ObservationSchema } from '../database-schema';
+import { appSchemaMap } from '../app.schema.loader';
 
 class TestSchema extends BaseTableSchema {
     defineTable() {
         const table: ApplicationTable = super.defineTable();
         table.name = 'test_table';
         table.columnsDefinition = {
-            id: createColumn({ name: 'id', comment: 'PK', definition: 'INT NOT NULL'}),
-            col: createColumn({name: 'col', comment: 'Regular', definition: 'VARCHAR(20) NULL'}),
-            ref: createColumn({name: 'ref', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: true}),
-            ref2: createColumn({name: 'ref2', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: false})
+            id: createColumn({ name: 'id', comment: 'PK', definition: 'INT NOT NULL', examples: []}),
+            col: createColumn({name: 'col', comment: 'Regular', definition: 'VARCHAR(20) NULL', examples: []}),
+            ref: createColumn({name: 'ref', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: true, examples: []}),
+            ref2: createColumn({name: 'ref2', comment: 'Ref', definition: 'INT NULL', foreignTable: 'user', refColumn: 'id', deleteCascade: false, examples: []})
         };
         return table;
     }
@@ -46,6 +48,9 @@ class TestSchema extends BaseTableSchema {
 }*/
 
 describe('Test for db utilities', () => {
+    before(async () => {
+        appSchemaMap();
+    });
     it('should return column create sql', () => {
         const table = 'jjy';
         const columnName = 'laba';
@@ -97,6 +102,33 @@ describe('Test for db utilities', () => {
         should().exist(schema);
         should().exist(schema.schemaFileObj);
         should().exist(schema.schemaFileObj.schemas);
+    });
+
+    it('should return size of column', () => {
+        const column = new ApplicationTableColumn('x', 'xyz', 'VARCHAR(400) NOT NULL');
+        const info = column.typeDetails;
+        expect(info.type).to.be.equal(typeof 'x');
+        expect(info.size).to.be.equal(400);
+    });
+
+    it('should test MechanicalTreatmentSchema', () => {
+        const mtSchema = new MechanicalTreatmentSchema();
+        should().exist(mtSchema);
+        should().exist(mtSchema.table);
+        should().exist(mtSchema.table.columnsDefinition);
+        should().exist(mtSchema.table.meta);
+        should().exist(mtSchema.table.layout);
+        should().exist(mtSchema.config());
+    });
+
+    it('should load Observation Schema', () => {
+        const obsSchema = new ObservationSchema();
+        should().exist(obsSchema);
+        should().exist(obsSchema.table);
+        should().exist(obsSchema.table.columnsDefinition);
+        should().exist(obsSchema.table.meta);
+        should().exist(obsSchema.table.layout);
+        should().exist(obsSchema.config());
     });
 });
 

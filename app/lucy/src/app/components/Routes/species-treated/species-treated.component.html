@@ -1,0 +1,70 @@
+<hr class="thinOrangeDivider" *ngIf="!inViewMode" />
+
+<div class="container-fluid speciesContainer" *ngIf="!inViewMode">
+    <div class="row sub-section-title">
+        <p>Invasive Species to be treated at this location</p>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p><b>Select Invasive Species treated with Herbicide selected
+                <br>
+            If species found at treatment is not found below an additional survey record is required.</b></p>
+        </div>
+    </div>
+    <div class="row animated" id="invasiveSpecies">
+        <div class="col-12">
+            <label class="speciesTreatedLabel">Being Treated</label>
+            <div class="row">
+                <div *ngIf="speciesBeingTreated === undefined || speciesBeingTreated.length == 0" class="col-12">
+                    <div class="container" id="emptySpeciesTreatedContainer">
+                        <span class="align-middle">Select a species below to add it to this chemical treatment record</span>
+                    </div>
+                </div>
+                <div *ngFor="let s of speciesBeingTreated; let i = index" class="col-md-6 col-sm-12">
+                    <div [@treated] [id]="s.observation.species.commonName" class="card speciesTreatedCard container animated animation-config bounceUpIn">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="card-title col-7">{{ s.observation.species.commonName }} ({{ s.observation.species.species }} {{ s.observation.species.genus }})</div>
+                                <app-field class="card-text col-4" id="percentageField" [mode]="mode" suffix="%" [verification]="percentageFieldVerification" [value]="s.treatmentAreaCoverage" (valueChanged)="updatedAreaCoverage($event, s)" [showFocus]="showFocus(i)"></app-field>
+                                <button class="card-link btn button-empty col-1" id="deleteButton" (click)="moveBeingTreatedToNotTreated(s)">
+                                    <mat-icon style="color: #CDCED2;">delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label class="speciesTreatedLabel">Not Being Treated</label>
+            <hr />
+            <div class="row">
+                <div *ngFor="let n of speciesNotBeingTreated" class="col-md-6 col-sm-12 align-items-stretch">
+                    <div [@notTreated] [id]="n.species.commonName" class="card speciesNotTreatedCard container animated">
+                        <div class="card-body">
+                            <div class="row align-items-center justify-content-between">
+                                <div class="card-title col-7">
+                                    <p>{{ n.species.commonName }} ({{ n.species.species }} {{ n.species.genus }})</p>
+                                </div>
+                                <div class="col-5">
+                                    <button class="btn button-fill treatButton" (click)="moveNotTreatedToBeingTreated(n)">Treat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!inViewMode" class="container-fluid add-species-card">
+            <div class="row add-species-card-content">
+                <span class="align-middle" style="margin-top: auto; margin-bottom: auto;">Is there an additional species in this area that is not shown above?</span>
+                <button class="btn addSpeciesButton" (click)="openModal()">Add Additional Species</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-add-quick-observation-modal *ngIf="addQuickObs" (addQuickObsModalEventEmitter)='addQuickObservationModalEventEmitter($event)'>
+</app-add-quick-observation-modal>

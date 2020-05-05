@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { ObjectValidatorService } from './object-validator.service';
@@ -6,9 +23,13 @@ import {
   Jurisdiction, InvasivePlantSpecies, SpeciesDensityCodes,
   SpeciesDistributionCodes, SpeciesAgencyCodes, ObservationTypeCodes,
   SoilTextureCodes, ObservationGeometryCodes, SpecificUseCodes,
-  ProposedActionCodes, AspectCodes, SlopeCodes
+  ProposedActionCodes, AspectCodes, SlopeCodes,
 } from '../models';
+import { EfficacyCodes } from '../models/Monitor';
 import { MechanicalTreatmentMethodsCodes, MechanicalDisposalMethodsCodes, MechanicalSoilDisturbanceCodes, MechanicalRootRemovalCodes, MechanicalIssueCodes, MechanicalTreatmentProviders } from '../models/MechanicalTreatment';
+import { HerbicideCodes } from 'src/app/models/ChemicalTreatment';
+import { PreviousAISKnowledgeSource, PreviousInspectionSource, AdultMusselsLocation } from '../models/musselInspect';
+import { Key } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +58,14 @@ export class CodeTableService {
   private mechanicalIssueCodes: MechanicalIssueCodes[];
   private mechanicalTreatmentProviders: MechanicalTreatmentProviders[];
 
+  private herbicideCodes: HerbicideCodes[];
+
+  private efficacyCodes: EfficacyCodes[];
+
+  private previousAISKnowledgeSources: PreviousAISKnowledgeSource[];
+  private previousInspectionSources: PreviousInspectionSource[];
+  private musselFoundLocations: AdultMusselsLocation[];
+
   private codeTables: any | null = null;
 
   constructor(private api: ApiService, private objectValidator: ObjectValidatorService) { }
@@ -51,13 +80,22 @@ export class CodeTableService {
       return this.codeTables;
     }
 
-    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_observationCodes, null);
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_CodeTables, null);
     if (response.success) {
       this.codeTables = response.response;
       return response.response;
     } else {
       return null;
     }
+  }
+
+  public async getCodeTable(key: string): Promise<any[]> {
+    const codes = await this.getCodes();
+    if (codes === null) {
+      console.dir('not found');
+      return [];
+    }
+    return codes[key] ? codes[key] : [];
   }
 
   /**
@@ -76,7 +114,7 @@ export class CodeTableService {
       return [];
     }
 
-    const juristictionCodes = codes.jurisdictionCodes;
+    const juristictionCodes = codes.JurisdictionCode;
     if (juristictionCodes && (Array.isArray(juristictionCodes) && this.objectValidator.isJurisdictionObject(juristictionCodes[0]))) {
       this.juristictions = juristictionCodes;
       return this.juristictions;
@@ -100,12 +138,35 @@ export class CodeTableService {
       return [];
     }
 
-    const speciesCodes = codes.speciesList;
+    const speciesCodes = codes.Species;
     if (speciesCodes && (Array.isArray(speciesCodes) && this.objectValidator.isInvasivePlantSpeciesObject(speciesCodes[0]))) {
       this.invasivePlantSpecies = speciesCodes;
       return speciesCodes;
     }
     return [];
+  }
+
+  public async getHerbicideCodes(): Promise<HerbicideCodes[]> {
+    if (this.herbicideCodes && this.herbicideCodes.length > 0) {
+      return this.herbicideCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const herbicideCodes = codes.Herbicide;
+    if (herbicideCodes && (Array.isArray(herbicideCodes) && this.objectValidator.isHerbicideObject(herbicideCodes[0]))) {
+      this.herbicideCodes = herbicideCodes;
+      return herbicideCodes;
+    }
+    return [];
+  }
+
+  public async getHerbicideWithId(id: number): Promise<HerbicideCodes> {
+    const herbicide = this.herbicideCodes.filter(item => item.herbicide_id === id)[0];
+    return herbicide;
   }
 
   public async getDensityCodes(): Promise<SpeciesDensityCodes[]> {
@@ -118,7 +179,7 @@ export class CodeTableService {
       return [];
     }
 
-    const densityCodes = codes.speciesDensityCodes;
+    const densityCodes = codes.SpeciesDensityCode;
     if (densityCodes && (Array.isArray(densityCodes) && this.objectValidator.isSpeciesDensityCodeObject(densityCodes[0]))) {
       this.density = densityCodes;
       return densityCodes;
@@ -136,7 +197,7 @@ export class CodeTableService {
       return [];
     }
 
-    const distributionCodes = codes.speciesDistributionCodes;
+    const distributionCodes = codes.SpeciesDistributionCode;
     if (distributionCodes && (Array.isArray(distributionCodes) && this.objectValidator.isSpeciesDistributionCodeObject(distributionCodes[0]))) {
       this.distributions = distributionCodes;
       return distributionCodes;
@@ -154,7 +215,7 @@ export class CodeTableService {
       return [];
     }
 
-    const agencies = codes.speciesAgencyCodes;
+    const agencies = codes.SpeciesAgencyCode;
     if (agencies && (Array.isArray(agencies) && this.objectValidator.isSpeciesAgencyCodeObject(agencies[0]))) {
       this.agencies = agencies;
       return agencies;
@@ -162,7 +223,25 @@ export class CodeTableService {
     return this.agencies;
   }
 
-  public async observationTypeCodes(): Promise<ObservationTypeCodes[]> {
+  public async getEfficacyCodes(): Promise<EfficacyCodes[]> {
+    if (this.efficacyCodes && this.efficacyCodes.length > 0) {
+      return this.efficacyCodes;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const efficacyCodes = codes.EfficacyCodes;
+    if (efficacyCodes && (Array.isArray(efficacyCodes) && this.objectValidator.isEfficacyCodesObject(efficacyCodes[0]))) {
+      this.efficacyCodes = efficacyCodes;
+      return efficacyCodes;
+    }
+    return this.efficacyCodes;
+  }
+
+  public async getObservationTypeCodes(): Promise<ObservationTypeCodes[]> {
     if (this.surveyTypes && this.surveyTypes.length > 0) {
       return this.surveyTypes;
     }
@@ -172,7 +251,7 @@ export class CodeTableService {
       return [];
     }
 
-    const surveyTypes = codes.observationTypeCodes;
+    const surveyTypes = codes.ObservationTypeCode;
     if (surveyTypes && (Array.isArray(surveyTypes) && this.objectValidator.isObservationTypeCodesObject(surveyTypes[0]))) {
       this.surveyTypes = surveyTypes;
       return surveyTypes;
@@ -190,7 +269,7 @@ export class CodeTableService {
       return [];
     }
 
-    const soilTextures = codes.soilTextureCodes;
+    const soilTextures = codes.SoilTextureCode;
     if (soilTextures && (Array.isArray(soilTextures) && this.objectValidator.isSoilTextureCodesObject(soilTextures[0]))) {
       this.soilTextures = soilTextures;
       return soilTextures;
@@ -208,7 +287,7 @@ export class CodeTableService {
       return [];
     }
 
-    const geometries = codes.observationGeometryCodes;
+    const geometries = codes.ObservationGeometryCode;
     if (geometries && (Array.isArray(geometries) && this.objectValidator.isObservationGeometryCodesObject(geometries[0]))) {
       this.geometries = geometries;
       return geometries;
@@ -226,7 +305,7 @@ export class CodeTableService {
       return [];
     }
 
-    const useCodes = codes.specificUseCodes;
+    const useCodes = codes.SpecificUseCode;
     if (useCodes && (Array.isArray(useCodes) && this.objectValidator.isSpecificUseCodesObject(useCodes[0]))) {
       this.useCodes = useCodes;
       return useCodes;
@@ -244,7 +323,7 @@ export class CodeTableService {
       return [];
     }
 
-    const proposedActions = codes.proposedActionCodes;
+    const proposedActions = codes.ProposedActionCode;
     if (proposedActions && (Array.isArray(proposedActions) && this.objectValidator.isProposedActionCodesObject(proposedActions[0]))) {
       this.proposedActions = proposedActions;
       return proposedActions;
@@ -262,7 +341,7 @@ export class CodeTableService {
       return [];
     }
 
-    const mechanicalTreatmentMethodsCodes = codes.mechanicalTreatmentMethodsCodes;
+    const mechanicalTreatmentMethodsCodes = codes.MechanicalMethodCode;
     if (mechanicalTreatmentMethodsCodes && (Array.isArray(mechanicalTreatmentMethodsCodes) && this.objectValidator.isMechanicalTreatmentMethodsCodes(mechanicalTreatmentMethodsCodes[0]))) {
       this.mechanicalTreatmentMethodsCodes = mechanicalTreatmentMethodsCodes;
       return mechanicalTreatmentMethodsCodes;
@@ -280,7 +359,7 @@ export class CodeTableService {
       return [];
     }
 
-    const groundSlope = codes.slopeCodes;
+    const groundSlope = codes.SlopeCode;
     if (groundSlope && (Array.isArray(groundSlope) && this.objectValidator.isGroundSlopeCodesObject(groundSlope[0]))) {
       this.groundSlope = groundSlope;
       return groundSlope;
@@ -298,7 +377,7 @@ export class CodeTableService {
       return [];
     }
 
-    const groundAspects = codes.aspectCodes;
+    const groundAspects = codes.AspectCode;
     if (groundAspects && (Array.isArray(groundAspects) && this.objectValidator.isGroundAspectCodesObject(groundAspects[0]))) {
       this.groundAspects = groundAspects;
       return groundAspects;
@@ -317,7 +396,7 @@ export class CodeTableService {
       return [];
     }
 
-    const mechanicalDisposalMethods = codes.mechanicalDisposalMethodCodes;
+    const mechanicalDisposalMethods = codes.MechanicalDisposalMethodCode;
     if (mechanicalDisposalMethods && (Array.isArray(mechanicalDisposalMethods) && this.objectValidator.isMechanicalDisposalMethodCodesObject(mechanicalDisposalMethods[0]))) {
       this.mechanicalDisposalMethodCodes = mechanicalDisposalMethods;
       return mechanicalDisposalMethods;
@@ -335,7 +414,7 @@ export class CodeTableService {
       return [];
     }
 
-    const mechanicalSoilDisturbanceCodes = codes.mechanicalSoilDisturbanceCodes;
+    const mechanicalSoilDisturbanceCodes = codes.MechanicalSoilDisturbanceCode;
     if (mechanicalSoilDisturbanceCodes && (Array.isArray(mechanicalSoilDisturbanceCodes) && this.objectValidator.isMechanicalSoilDisturbanceCodesObject(mechanicalSoilDisturbanceCodes[0]))) {
       this.mechanicalSoilDisturbanceCodes = mechanicalSoilDisturbanceCodes;
       return mechanicalSoilDisturbanceCodes;
@@ -353,7 +432,7 @@ export class CodeTableService {
       return [];
     }
 
-    const mechanicalRootRemovalCodes = codes.mechanicalRootRemovalCodes;
+    const mechanicalRootRemovalCodes = codes.MechanicalRootRemovalCode;
     if (mechanicalRootRemovalCodes && (Array.isArray(mechanicalRootRemovalCodes) && this.objectValidator.isMechanicalRootRemovalCodesObject(mechanicalRootRemovalCodes[0]))) {
       this.mechanicalRootRemovalCodes = mechanicalRootRemovalCodes;
       return mechanicalRootRemovalCodes;
@@ -371,7 +450,7 @@ export class CodeTableService {
       return [];
     }
 
-    const mechanicalIssueCodes = codes.mechanicalIssueCodes;
+    const mechanicalIssueCodes = codes.MechanicalTreatmentIssueCode;
     if (mechanicalIssueCodes && (Array.isArray(mechanicalIssueCodes) && this.objectValidator.isMechanicalIssueCodesObject(mechanicalIssueCodes[0]))) {
       this.mechanicalIssueCodes = mechanicalIssueCodes;
       return mechanicalIssueCodes;
@@ -389,7 +468,7 @@ export class CodeTableService {
       return [];
     }
 
-    const mechanicalTreatmentProviders = codes.mechanicalTreatmentProviders;
+    const mechanicalTreatmentProviders = codes.TreatmentProviderContractor;
     if (mechanicalTreatmentProviders && (Array.isArray(mechanicalTreatmentProviders) && this.objectValidator.isMechanicalTreatmentProvidersObject(mechanicalTreatmentProviders[0]))) {
       this.mechanicalTreatmentProviders = mechanicalTreatmentProviders;
       return mechanicalTreatmentProviders;
@@ -397,4 +476,51 @@ export class CodeTableService {
     return this.mechanicalTreatmentProviders;
   }
 
+  public async getPreviousAISKnowledgeSourceCodes(): Promise<PreviousAISKnowledgeSource[]> {
+    if (this.previousAISKnowledgeSources && this.previousAISKnowledgeSources.length > 0) {
+      return this.previousAISKnowledgeSources;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const previousAISKnowledgeSources = codes.previousAISKnowledgeSources;
+    if (previousAISKnowledgeSources && (Array.isArray(previousAISKnowledgeSources) && this.objectValidator.isPreviousAISKnowledgeSourceObject(previousAISKnowledgeSources[0]))) {
+      return previousAISKnowledgeSources;
+    }
+  }
+
+  public async getPreviousInspectionSourceCodes(): Promise<PreviousInspectionSource[]> {
+    if (this.previousInspectionSources && this.previousInspectionSources.length > 0) {
+      return this.previousInspectionSources;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const previousInspectionSources = codes.previousInspectionSources;
+    if (previousInspectionSources && (Array.isArray(previousInspectionSources) && this.objectValidator.isPreviousInspectionSourceObject(previousInspectionSources[0]))) {
+      return previousInspectionSources;
+    }
+  }
+
+  public async getAdultMusselsLocationCodes(): Promise<AdultMusselsLocation[]> {
+    if (this.musselFoundLocations && this.musselFoundLocations.length > 0) {
+      return this.musselFoundLocations;
+    }
+
+    const codes = await this.getCodes();
+    if (codes === null) {
+      return [];
+    }
+
+    const musselFoundLocations = codes.musselFoundLocations;
+    if (musselFoundLocations && (Array.isArray(musselFoundLocations) && this.objectValidator.isAdultMusselsLocationObject(musselFoundLocations[0]))) {
+      return musselFoundLocations;
+    }
+  }
 }

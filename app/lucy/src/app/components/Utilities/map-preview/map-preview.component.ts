@@ -1,7 +1,32 @@
-import { Component, OnInit, AfterViewInit, AfterContentChecked, Input, Output , EventEmitter, AfterViewChecked} from '@angular/core';
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
+import { Component, OnInit, AfterViewInit, Input, Output , EventEmitter, AfterViewChecked } from '@angular/core';
 import 'node_modules/leaflet/';
 import 'node_modules/leaflet.markercluster';
+import 'node_modules/leaflet-draw';
 import { Observation } from 'src/app/models';
+import * as bcgeojson from './bcgeojson.json';
+import { WaterDropletSVG } from './water-droplet';
+import { Point, LatLng } from 'leaflet';
+import { LabelOptions } from '@angular/material';
+import { LatLongCoordinate } from 'src/app/services/coordinateConversion/location.service';
+import { BcDataCatalogueService } from 'src/app/services/bcDataCatalogue/bcDataCatalogue.service';
+const haversine = require('haversine-distance');
 declare let L;
 
 export interface MapPreviewPoint {
@@ -34,6 +59,16 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private markerGroup?;
   // flag set after viewChecked.
   private ready = false;
+  // list of points in LatLng format, so they're Leaflet-compatible
+  private pointsLatLng: number[][] = [];
+  // list of points in polygon, in LatLng format, so they're Leaflet-compatible
+  private polygonLatLng: number[][] = [];
+  // Leaflet Feature objects drawn on map
+  private leafletFeatures?: GeoJSON.FeatureCollection = {
+    type: 'FeatureCollection',
+    features: []
+  };
+  private leafletDrawLayerGroup?;
 
   // Group close markers or always show individually
   @Input() cluster = true;
@@ -92,12 +127,92 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       this.addMarkers();
     }
   }
+
+  ///////////// Line Points /////////////
+  _points: LatLongCoordinate[] = [];
+  get points(): LatLongCoordinate[] {
+    return this._points;
+  }
+  @Input() set points(input: LatLongCoordinate[]) {
+    this._points = input;
+
+    // convert each point in this._points from LatLongCoordinate to LatLng,
+    // push the converted point to pointsLatLng so it can be used by Leaflet
+    this.pointsLatLng = [];
+    for (const p of this._points) {
+      this.pointsLatLng.push([p.latitude, p.longitude]);
+    }
+    if (this.ready) {
+      this.drawLine();
+      this.drawPoints();
+    }
+  }
+
+  /////////////// Polygon ////////////////
+  _polygon: LatLongCoordinate[] = [];
+  get polygon(): LatLongCoordinate[] {
+    return this._polygon;
+  }
+  @Input() set polygon(coordinates: LatLongCoordinate[]) {
+    this._polygon = coordinates;
+
+    // convert each point in this._polygon from LatLongCoordinate to LatLng,
+    // push the converted point to polygonLatLng so it can be used by Leaflet
+    this.polygonLatLng = [];
+    for (const p of this._polygon) {
+      this.polygonLatLng.push([p.latitude, p.longitude]);
+    }
+    if (this.ready) {
+      this.drawPolygon();
+    }
+  }
+
+  //////////////// Offset ////////////////////
+  private _offset: number;
+  get offset(): number {
+    return this._offset;
+  }
+  @Input() set offset(value: number) {
+    this._offset = value;
+    if (this.ready) {
+      this.drawPolygon();
+    }
+  }
+
+  /////////////// GeoJSON file ////////////
+  private _inputGeometryJSON: any;
+  get inputGeometryJSON(): any {
+    return this._inputGeometryJSON;
+  }
+  @Input() set inputGeometryJSON(object: any) {
+    let json = '{}';
+    // if object is a spaceGeom object (from location-input.component)
+    if (object['spaceGeom'] !== undefined && object['spaceGeom']['value'] !== undefined && object['spaceGeom']['value']['inputGeometry'] !== undefined) {
+      json = object['spaceGeom']['value']['inputGeometry']['geoJSON'];
+    } else if (object['type'] === `FeatureCollection`) { // if object is a GeoJSON
+      json = object;
+    }
+    this._inputGeometryJSON = json;
+    if (this.ready && this._inputGeometryJSON !== '{}') {
+      let point: any;
+      for (const feature of this.inputGeometryJSON['features']) {
+        if (feature['geometry']['type'] === 'Point') {
+          point = feature;
+          break;
+        }
+      }
+      this.addGeoJSONtoMap();
+    }
+  }
+
+  @Output() inputGeometryChanged = new EventEmitter<any>();
+
   //////////////////////////////////////////////
 
   @Output() centerPointChanged = new EventEmitter<MapPreviewPoint>();
 
   ////////////// Class Functions //////////////
-  constructor() { }
+  constructor(private bcDataCatalogueService: BcDataCatalogueService) { }
 
   ngOnInit() {
   }
@@ -119,6 +234,11 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
         this.showMapAtCenter();
       }
       this.addMarkers();
+      if (this.polygon.length > 0) {
+        this.drawPolygon();
+      } else if (this.inputGeometryJSON !== '{}') {
+        this.addGeoJSONtoMap();
+      }
     }
   }
   //////////////////////////////////////////////
@@ -133,8 +253,15 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     if (this.map) { return; }
     this.map = L.map(this.mapId).setView([center.latitude, center.latitude], center.zoom);
     this.markerGroup = L.layerGroup().addTo(this.map);
-    // this.initMapWithGoogleSatellite();
-    this.initWithOpenStreet();
+    this.leafletDrawLayerGroup = L.layerGroup().addTo(this.map);
+    this.initMapWithGoogleSatellite();
+    // this.initWithOpenStreet();
+    this.map.on('zoom', () => {
+      if (this.map.getZoom() >= 16) {
+        this.addWellsLayerToMap(this.map.getBounds());
+      }
+      this.addBcDataCatalogueLayersToMap();
+    });
   }
 
   private initWithOpenStreet() {
@@ -146,6 +273,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       minZoom: 4,
     }).addTo(this.map);
     this.addBCBorder();
+    this.addGeoJSONtoMap();
   }
 
   private initMapWithGoogleSatellite() {
@@ -156,6 +284,107 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       key: this.makeid(10)
     }).addTo(this.map);
     this.addBCBorder();
+    this.addBcDataCatalogueLayersToMap();
+    this.addGeoJSONtoMap();
+  }
+
+  private async addBcDataCatalogueLayersToMap() {
+    this.addRegionalDistrictsLayerToMap();
+    this.addMunicipalitiesLayerToMap();
+  }
+
+  private async addMunicipalitiesLayerToMap() {
+    const municipalitiesLayerGroup = L.layerGroup();
+    const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
+    L.geoJSON(municipalitiesGeoJSON, {
+      style: {
+        color: '#fcec03',
+        weight: 1,
+        fillOpacity: 0,
+      }
+    })
+    .bindTooltip(function (feature) {
+      return `${feature.feature.properties.ADMIN_AREA_NAME}`;
+    }).addTo(municipalitiesLayerGroup);
+    municipalitiesLayerGroup.addTo(this.map);
+  }
+
+  private async addRegionalDistrictsLayerToMap() {
+    const regionalDistrictsLayerGroup = L.layerGroup();
+    const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
+    L.geoJSON(regionalDistrictsGeoJSON, {
+      style: {
+        color: '#03fc07',
+        weight: 1,
+        fillOpacity: 0,
+      }
+    })
+    .bindTooltip(function (feature) {
+      return `${feature.feature.properties.ADMIN_AREA_NAME}`;
+    }).addTo(regionalDistrictsLayerGroup);
+    regionalDistrictsLayerGroup.addTo(this.map);
+  }
+
+  private async addWellsLayerToMap(bbox: number[]) {
+    const wellIcon = L.icon({
+      iconUrl: encodeURI('data:image/svg+xml,' + WaterDropletSVG.waterDroplet),
+      iconSize: [20, 20]
+    });
+    const wellsLayerGroup = L.layerGroup();
+    const wellsGeoJSON = await this.bcDataCatalogueService.getWellsDataLayer(bbox);
+    L.geoJSON(wellsGeoJSON, {
+      pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {icon: wellIcon});
+      }
+    })
+    .bindTooltip(function (layer) {
+      return `<html>Well Tag ${layer.feature.properties.WELL_TAG_NUMBER}<br>${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}</html>`;
+    })
+    .addTo(wellsLayerGroup);
+    wellsLayerGroup.addTo(this.map);
+  }
+
+  private addGeoJSONtoMap() {
+    if (this.inputGeometryJSON !== undefined && this.inputGeometryJSON !== '{}') {
+      let point: any;
+      for (const feature of this.inputGeometryJSON['features']) {
+        if (feature['geometry']['type'] === 'Point') {
+          point = feature;
+          break;
+        }
+      }
+      L.geoJSON(this.inputGeometryJSON, {
+        // pointToLayer necessary because otherwise Leaflet overrides geoJSON Point styling with pin markers
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
+        },
+        style: function(feature) {
+          switch (feature.geometry.type) {
+            case 'Polygon': return {
+              color: '#F5A623',
+              fillColor: '#F5A623',
+              fillOpacity: 0.7,
+              weight: 2,
+            };
+            case 'MultiLineString': return {
+              color: 'black',
+              weight: 1,
+              fillOpacity: 0.4,
+            };
+          }
+        }
+      }).bindTooltip(function (layer) {
+        switch (layer.feature.geometry.type) {
+          case 'Polygon': return `<html>Offset: ${layer.feature.properties.offset}m<br>
+              Area: ${layer.feature.properties.area.toFixed(1)}m²<br>
+              Length: ${layer.feature.properties.length.toFixed(1)}m</html>`;
+          case 'Point': return `<html>${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}</html>`;
+        }
+      })
+      .addTo(this.map);
+      this.center = {latitude: point['geometry']['coordinates'][1], longitude: point['geometry']['coordinates'][0], zoom: 18};
+      this.showMapAtCenter();
+    }
   }
 
   private makeid(length: number) {
@@ -182,6 +411,20 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     // Show bc border and gray out everything outside:
     this.addInvertedPolygon(this.bcBorderCoordinates);
   }
+
+  pointsChanged(points: LatLongCoordinate[]) {
+    this._points = points;
+    // convert each point in this._points from LatLongCoordinate to LatLng,
+    // push the converted point to pointsLatLng so it can be used by Leaflet
+    this.pointsLatLng = [];
+    for (const p of this._points) {
+      this.pointsLatLng.push([p.latitude, p.longitude]);
+    }
+    if (this.ready) {
+      this.drawLine();
+      this.drawPoints();
+    }
+  }
   /////////////////////////////////////////////
 
 
@@ -205,6 +448,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * @param center MapPreviewPoint
    */
   private showMapAt(center: MapPreviewPoint) {
+    if (!center || !center.latitude || !center.longitude) {
+      console.log('invalid coordinates');
+      return;
+    }
     this.map.setView(new L.LatLng(center.latitude, center.longitude), center.zoom);
   }
   //////////////////////////////////////////////
@@ -221,7 +468,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     } else {
       this.clearMarkers();
       this.markers.forEach((element) => {
-        this.addMapMarkerAt(element.latitude, element.longitude);
+        if (element.latitude && element.longitude) {
+          this.addMapMarkerAt(element.latitude, element.longitude);
+        }
       });
     }
   }
@@ -292,7 +541,76 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
         fillOpacity: 0.7,
         weight: 1,
       }
-    ).addTo(this.map);
+    );
+    polygon.addTo(this.map);
+  }
+
+  /**
+   * Draws a polygon on the map based on the list of lat/long coordinates
+   * assigned to this.polygonLatLng
+   */
+  drawPolygon() {
+    if (this.polygonLatLng.length === 0) {
+      return;
+    }
+    this.leafletDrawLayerGroup.clearLayers();
+    this.leafletFeatures['features'] = [];
+    const polygon = L.polygon([this.polygonLatLng], {
+      color: '#F5A623',
+      fillColor: '#F5A623',
+      fillOpacity: 0.7,
+      weight: 2,
+    });
+    const area = L.GeometryUtil.geodesicArea(polygon._latlngs[0]);
+    const polygonGeoJson = polygon.toGeoJSON();
+    const length = this.calculatePolylinePathLength();
+    polygon.bindPopup(`<html>Offset: ${Number(this._offset)}m<br>Area: ${area.toFixed(1)}m²<br>Length: ${length.toFixed(1)}m</html>`);
+    polygon.addTo(this.leafletDrawLayerGroup);
+    polygonGeoJson['properties'] = {'area': area, 'offset': Number(this._offset), 'length': length};
+    this.leafletFeatures.features.push(polygonGeoJson);
+    this.map.fitBounds(polygon._bounds);
+    this.drawLine();
+    this.drawPoints();
+    this.inputGeometryChanged.emit(this.leafletFeatures);
+  }
+
+  /**
+   * Draws a connected line on the map with circleMarkers for each of the LatLng coordinates
+   * assigned to this.pointsLatLng
+   * Used as part of waypoint functionality.
+   * Outputs a dictionary of the Leaflet polyline and circleMarkers drawn on the map, to be saved
+   * to GeoJSON file if desired.
+   */
+  drawLine() {
+    if (this.points.length !== this.pointsLatLng.length) {
+      this.pointsLatLng = [];
+      for (const p of this.points) {
+        this.pointsLatLng.push([p.latitude, p.longitude]);
+      }
+    }
+    const line = L.polyline([this.pointsLatLng], {
+      color: 'black',
+      weight: 1,
+      fillOpacity: 0.4,
+    });
+    line.addTo(this.leafletDrawLayerGroup);
+    this.leafletFeatures.features.push(line.toGeoJSON());
+  }
+
+  drawPoints() {
+    for (const l of this.pointsLatLng) {
+      const circle = L.circle([l[0], l[1]], {radius: 0.5, color: 'black', fillColor: 'black', fill: true});
+      circle.addTo(this.leafletDrawLayerGroup);
+      this.leafletFeatures.features.push(circle.toGeoJSON());
+    }
+  }
+
+  calculatePolylinePathLength(): number {
+    let sumLength = 0.0;
+    for (let i = 0; i < this.pointsLatLng.length - 1; i++) {
+      sumLength += haversine(this.pointsLatLng[i], this.pointsLatLng[i + 1]);
+    }
+    return sumLength;
   }
 
   //////////////////////////////////////////////
@@ -302,7 +620,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * of the border of BC
    */
   get bcBorderCoordinates(): MapMarker[] {
-    const coordinates = this.bcGeoJSON.features[0].geometry.coordinates;
+    const coordinates = this.bcGeoJSON.features[0].geometry.coordinates[0][0];
     const bcCoordinates: MapMarker[] = [];
     for (const point of coordinates) {
       // Note: geoJSON is long,lat
@@ -319,304 +637,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
    * generated with http://geojson.io/
    */
   get bcGeoJSON(): any {
-    const bc = {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "LineString",
-            "coordinates": [
-              [
-                -120.0146484375,
-                59.99898612060444
-              ],
-              [
-                -120.05859375,
-                53.80065082633023
-              ],
-              [
-                -119.794921875,
-                53.67068019347264
-              ],
-              [
-                -119.92675781249999,
-                53.48804553605622
-              ],
-              [
-                -119.53125,
-                53.30462107510271
-              ],
-              [
-                -118.95996093749999,
-                53.25206880589411
-              ],
-              [
-                -118.47656249999999,
-                52.96187505907603
-              ],
-              [
-                -118.0810546875,
-                52.348763181988105
-              ],
-              [
-                -116.98242187499999,
-                52.05249047600099
-              ],
-              [
-                -116.806640625,
-                51.699799849741936
-              ],
-              [
-                -116.1474609375,
-                51.37178037591737
-              ],
-              [
-                -115.57617187499999,
-                50.93073802371819
-              ],
-              [
-                -115.1806640625,
-                50.56928286558243
-              ],
-              [
-                -114.6533203125,
-                50.317408112618686
-              ],
-              [
-                -114.5654296875,
-                49.809631563563094
-              ],
-              [
-                -114.6533203125,
-                49.468124067331644
-              ],
-              [
-                -113.8623046875,
-                49.009050809382046
-              ],
-              [
-                -123.0908203125,
-                48.951366470947725
-              ],
-              [
-                -123.1787109375,
-                48.69096039092549
-              ],
-              [
-                -123.0908203125,
-                48.3416461723746
-              ],
-              [
-                -123.3984375,
-                48.19538740833338
-              ],
-              [
-                -124.23339843749999,
-                48.37084770238366
-              ],
-              [
-                -125.46386718749999,
-                48.60385760823255
-              ],
-              [
-                -126.69433593749999,
-                49.18170338770663
-              ],
-              [
-                -127.88085937499999,
-                49.89463439573421
-              ],
-              [
-                -128.5400390625,
-                50.3454604086048
-              ],
-              [
-                -128.84765625,
-                50.62507306341435
-              ],
-              [
-                -129.462890625,
-                50.792047064406866
-              ],
-              [
-                -129.3310546875,
-                51.09662294502995
-              ],
-              [
-                -128.759765625,
-                51.15178610143037
-              ],
-              [
-                -128.3642578125,
-                51.28940590271679
-              ],
-              [
-                -128.49609375,
-                51.72702815704774
-              ],
-              [
-                -128.84765625,
-                52.07950600379697
-              ],
-              [
-                -129.28710937499997,
-                52.29504228453735
-              ],
-              [
-                -129.814453125,
-                52.562995039558004
-              ],
-              [
-                -129.8583984375,
-                52.8823912222619
-              ],
-              [
-                -130.2099609375,
-                53.09402405506325
-              ],
-              [
-                -130.5615234375,
-                53.25206880589411
-              ],
-              [
-                -130.869140625,
-                53.4357192066942
-              ],
-              [
-                -130.95703125,
-                53.74871079689897
-              ],
-              [
-                -131.1767578125,
-                54.13669645687002
-              ],
-              [
-                -131.3525390625,
-                54.41892996865827
-              ],
-              [
-                -131.396484375,
-                54.648412502316695
-              ],
-              [
-                -130.60546875,
-                54.80068486732233
-              ],
-              [
-                -130.2978515625,
-                55.07836723201515
-              ],
-              [
-                -130.0341796875,
-                55.3791104480105
-              ],
-              [
-                -130.1220703125,
-                55.62799595426723
-              ],
-              [
-                -130.1220703125,
-                55.85064987433714
-              ],
-              [
-                -130.1220703125,
-                56.07203547180089
-              ],
-              [
-                -130.60546875,
-                56.31653672211301
-              ],
-              [
-                -131.1328125,
-                56.511017504952136
-              ],
-              [
-                -131.7919921875,
-                56.65622649350222
-              ],
-              [
-                -132.099609375,
-                56.84897198026975
-              ],
-              [
-                -132.0556640625,
-                57.040729838360875
-              ],
-              [
-                -132.4072265625,
-                57.088515327886505
-              ],
-              [
-                -132.36328125,
-                57.326521225217064
-              ],
-              [
-                -133.4619140625,
-                58.37867853932655
-              ],
-              [
-                -133.9453125,
-                58.83649009392136
-              ],
-              [
-                -134.3408203125,
-                58.88194208135912
-              ],
-              [
-                -134.47265625,
-                59.130863097255904
-              ],
-              [
-                -134.912109375,
-                59.28833169203345
-              ],
-              [
-                -135.1318359375,
-                59.44507509904714
-              ],
-              [
-                -135.087890625,
-                59.60109549032134
-              ],
-              [
-                -135.4833984375,
-                59.84481485969105
-              ],
-              [
-                -136.31835937499997,
-                59.62332522313024
-              ],
-              [
-                -136.5380859375,
-                59.17592824927136
-              ],
-              [
-                -137.373046875,
-                58.97266715450153
-              ],
-              [
-                -137.6806640625,
-                59.28833169203345
-              ],
-              [
-                -138.6474609375,
-                59.80063426102869
-              ],
-              [
-                -139.130859375,
-                59.99898612060444
-              ],
-              [
-                -120.0146484375,
-                59.99898612060444
-              ]
-            ]
-          }
-        }
-      ]
-    };
-    return bc;
+    const obj = JSON.parse(JSON.stringify(bcgeojson)).default;
+    return obj;
   }
 }

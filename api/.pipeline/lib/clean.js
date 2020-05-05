@@ -1,5 +1,6 @@
 'use strict';
-const {OpenShiftClientX} = require('pipeline-cli')
+const {OpenShiftClientX} = require('pipeline-cli');
+const checkAndClean = require('./checkAndClean');
 
 module.exports = (settings)=>{
   const phases = settings.phases
@@ -11,6 +12,7 @@ module.exports = (settings)=>{
     if (phases.hasOwnProperty(k)) {
       const phase=phases[k]
       if (k == target_phase ){
+        
         //console.log(`phase=${phase}`)
         //oc.raw('get', ['bc'], {selector:`app-name=${phase.name},env-id=${phase.changeId},env-name!=prod,!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, namespace:phase.namespace, 'output':'custom-columns=kind:.spec.output.to.kind,name:.spec.output.to.name', 'no-headers':'true'})
         let buildConfigs=oc.get('bc', {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, namespace:phase.namespace})
@@ -28,9 +30,18 @@ module.exports = (settings)=>{
             }
           })
         })
+
+        // Cleaning other pods
+        if (k !== 'build') {
+          const newOC = new OpenShiftClientX(Object.assign({'namespace':phases[k].namespace}, options));
+          const podName1 = `${phases[k].name}${phases[k].suffix}-setup`;
+          const podName2 = `${phases[k].name}${phases[k].suffix}-test`;
+          checkAndClean(`pod/${podName1}`, newOC);
+          checkAndClean(`pod/${podName2}`, newOC);
+        }
         
         oc.raw('delete', ['all'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
-        oc.raw('delete', ['pvc,Secret,configmap,endpoints,RoleBinding,role,ServiceAccount,Endpoints'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
+        oc.raw('delete', ['pvc,secrets,secret,configmap,endpoints,RoleBinding,role,ServiceAccount,Endpoints'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
       }
     }
   }

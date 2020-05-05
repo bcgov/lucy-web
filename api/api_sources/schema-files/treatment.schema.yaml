@@ -1,0 +1,137 @@
+# Schema Model for Treatment 
+version: '1.0'
+description: Schema model for various Treatment
+externalTables:
+  - name: observation
+    description: Observation table described in observation.codes.schema.yaml
+    schema: ObservationSchema
+  - name: species
+    description: Species table 
+    schema: SpeciesSchema
+  - name: species_agency_code
+    description: Species agency code table
+    schema: SpeciesAgencyCodeSchema
+schemas:
+  ## -- MechanicalMethodCodeSchema
+  MechanicalMethodCodeSchema:
+    name: mechanical_method_code
+    description: 'Indicates the method of mechanical or cultural control. Examples: mulching, burning, mowing.
+    IAPP methods: Controlled Burning, Cultivation or till, Dead-heading, Digging, Flaming / Tiger Torch burn, Hand pulling, Hot water / Steam, Mowing Mulching, Suction dredging, Sheet Mulching , Salt water / Vinegar, Targeted grazing, Tarping , Seeding, Planting'
+    columns:
+      id: 
+        name: 'mechanical_method_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_method_code'
+        comment: String encoded enum values for Mechanical treatment methods.
+        definition: VARCHAR(4) NOT NULL UNIQUE
+  ## --
+  ## -- MechanicalDisposalMethodCodeSchema
+  MechanicalDisposalMethodCodeSchema:
+    name: mechanical_disposal_method_code
+    description: 'Mechanical treatment disposal methods code. Indicate disposal method of species treated in mechanical treatment'
+    columns:
+      id: 
+        name: 'mechanical_disposal_method_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_disposal_method_code'
+        comment: String encoded enum values for Mechanical disposal methods.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## --
+  ## -- MechanicalTreatmentDisturbanceCodeSchema
+  MechanicalSoilDisturbanceCodeSchema:
+    name: mechanical_soil_disturbance_code
+    description: 'This table is collection of soil disturbance code for mechanical treatment'
+    columns:
+      id: 
+        name: 'mechanical_soil_disturbance_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_soil_disturbance_code'
+        comment: String encoded enum values for Mechanical Soil disturbance codes.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## --
+  ## -- MechanicalRootSystemCodeSchema
+  MechanicalRootRemovalCodeSchema:
+    name: mechanical_root_removal_code
+    description: 'This table is collection of mechanical root removal code for mechanical treatment'
+    columns:
+      id: 
+        name: 'mechanical_root_removal_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_root_removal_code'
+        comment: String encoded enum values for Mechanical root system codes.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## -- 
+  ## -- MechanicalTreatmentIssueCodeSchema
+  MechanicalTreatmentIssueCodeSchema:
+    name: mechanical_treatment_issue_code
+    description: 'This table is collection of code related to mechanical treatments'
+    columns:
+      id: 
+        name: 'mechanical_treatment_issue_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'mechanical_treatment_issue_code'
+        comment: String encoded enum values for issue code related to mechanical treatments.
+        definition: VARCHAR(6) NOT NULL UNIQUE
+  ## -- 
+  ## -- TreatmentProviderSchema
+  TreatmentProviderContractorSchema:
+    name: treatment_provider_contractor
+    description: 'Treatment providers are govt contractors, who executes/applies treatment. This table contains list of such contractor and their details.'
+    displayLayout:
+      displayLabel: '#(businessName)'
+      header:
+        key: TreatmentProviderContractor.header
+        default: 'Contractor'
+      fields: 
+        - header:
+            key: 'TreatmentProviderContractor.businessName'
+            default: 'Contractor Name'
+          key: businessName
+    columns:
+      id: 
+        name: treatment_provider_contractor_id
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      registrationNumber:
+        name: registration_number
+        comment: 'The registration number associated with contractor'
+        definition: INT NOT NULL UNIQUE
+      businessName:
+        name: business_name
+        comment: 'The name of the contactor organization'
+        definition: VARCHAR(100) NOT NULL
+      category:
+        name: category
+        comment: 'The category label mentioned for contractor'
+        definition: VARCHAR(100) NOT NULL
+      address:
+        name: address
+        comment: 'The address of the contractor'
+        definition: VARCHAR(200) NOT NULL
+      regions:
+        name: region_operation
+        comment: 'Comma separated values of region of operation. Example LOWER MAINLAND, OMINECA, PEACE'
+        definition: VARCHAR(1000) NULL
+        notes:
+          - type: dev
+            note: This is not a standard column type for database. Need some clarification
+      licenceExpiryDate:
+          name: license_expiry_date
+          comment: 'Date of expiry of license of contractor'
+          definition: DATE NOT NULL
+      serviceProvideIndicator:
+          name: service_provide_ind
+          comment: 'Indicator to show, associated contractor is active or not'
+          definition: BOOLEAN NOT NULL DEFAULT TRUE
+  ## --
+

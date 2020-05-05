@@ -1,0 +1,245 @@
+# Water-Craft Risk Assessment Form Schema
+version: '1.0'
+includes: 
+  - observerWorkflow.schema.yaml
+  - highRiskAssessment.schema.yaml
+  - inspectApp.codes.schema.yaml
+  - countryProvince.schema.yaml
+schemas: 
+  ## -- WaterCraftRiskAssessmentSchema
+  WatercraftRiskAssessmentSchema:
+    name: watercraft_risk_assessment
+    description: 'This is schema for data model of water craft observation for invasive aquatic species specially Mussels. This data model will be used to capture all kind of variables related to a water craft observation'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: /mussels/wra
+      base: /api
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    # Relations
+    relations: 
+      journeys:
+        header:
+          key: 'watercraftAssessment.journeys'
+          default: Water Craft Journeys
+        description: 
+          key: 'watercraftAssessment.journeys.description'
+          default: 'Associated Water-bodies'
+        type: array
+        relationshipType: one-to-many
+        schema: WatercraftJourneySchema
+        meta: 
+          embedded: true 
+    # End: Relations
+    columns: 
+      # Primary Column
+      id: 
+        name: 'watercraft_risk_assessment_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      # Time
+      timestamp: 
+        name: 'timestamp'
+        comment: 'Date and time of watercraft observation.'
+        definition: 'TIMESTAMP NOT NULL'
+      # Boolean
+      passportHolder:
+        name: 'passport_holder_ind'
+        comment: 'Indicator to show that inspected boat has previously issued passport'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      k9Inspection:
+        name: k9_inspection_ind
+        comment: 'Indicator to show that inspection type is K9'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      marineSpeciesFound:
+        name: marine_species_found_ind
+        comment: 'Indicator to show any marine species found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      aquaticPlantsFound:
+        name: aquatic_plants_found_ind
+        comment: 'Indicator to show any aquatic plants found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousAISKnowledge:
+        name: previous_ais_knowledge_ind
+        comment: 'Indicator to store status of previous AIS knowledge'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousInspection:
+        name: previous_inspection_ind
+        comment: 'Indicator to store status of previous inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      marineMusselFound:
+        name: marine_mussel_found_ind
+        comment: 'Indicator to store status marine mussel found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      adultDreissenidaeFound:
+        name: adult_dreissenidae_found_ind
+        comment: 'Status flag any adult Dreissenidae found during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      launchedOutsideBC:
+        name: launched_outside_bc_ind
+        comment: 'Status flag to check the boat was launched outside of bc or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      decontaminationPerformed:
+        name: decontamination_performed_ind
+        comment: 'Status flag to check any decontamination performed during inspection'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commerciallyHauled:
+        name: commercially_hauled_ind
+        comment: 'Status flag to check inspected boats are commercially hauled or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      highRiskArea:
+        name: high_risk_area_ind
+        comment: 'Indicator flag to check boats are from High risk area or not.'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      highRiskAIS:
+        name: high_risk_ais_ind
+        comment: 'Indicator flag to check high risk AIS or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousDryStorage:
+        name: previous_dry_storage_ind
+        comment: Boolean indicator that watercraft''s previous water body is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      destinationDryStorage:
+        name: destination_dry_storage_ind
+        comment: Boolean indicator that watercraft''s destination water body is Dry Storage
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      unknownPreviousWaterBody:
+        name: unknown_previous_water_body_ind
+        comment: Boolean indicate that watercraft''s previous water body is unknown
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      unknownDestinationWaterBody:
+        name: unknown_destination_water_body_ind
+        comment: Boolean indicate that watercraft''s destination water body is unknown
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commercialManufacturerAsPreviousWaterBody:
+        name: commercial_manufacturer_as_previous_water_body_ind
+        comment: Boolean indicate that watercraft''s previous water body is commercial manufacturer
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      commercialManufacturerAsDestinationWaterBody:
+        name: commercial_manufacturer_as_destination_water_body_ind
+        comment: Boolean indicate that watercraft''s destination water body is commercial manufacturer
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      # Counter
+      nonMotorized:
+        name: 'non_motorized_counter'
+        comment: 'Counter for non motorized boats in inspection'
+        definition: INT NULL
+      simple:
+        name: 'simple_counter'
+        comment: 'Counter for number of simple boats in the inspection'
+        definition: INT NULL
+      complex:
+        name: 'complex_counter'
+        comment: 'Counter for number of complex boats in the inspection'
+        definition: INT NULL  
+      veryComplex:
+        name: 'very_complex_count'
+        comment: 'Counter for number of very complex boats in the inspection'
+        definition: INT NULL
+      previousInspectionDays:
+        name: 'previous_inspection_days_count'
+        comment: 'Counter for number of very complex boats in the inspection'
+        definition: INT NULL
+      # Strings
+      generalComment:
+        name: general_comment
+        comment: 'General comment associated with assessment'
+        definition: VARCHAR(300) NULL
+        required: false
+      passportNumber: 
+        name: passport_number
+        comment: 'Passport number associated with previous inspection'
+        definition: VARCHAR(100) NULL
+      decontaminationReference:
+        name: decontamination_reference
+        comment: 'Decontamination reference number. Optional and dependent on decontaminationPerformed indicator'
+        definition: VARCHAR(100) NULL
+        required: false
+      # Relationship
+      highRiskAssessment:
+        name: high_risk_assessment_id
+        comment: 'Foreign key reference to High risk assessment of the inspection'
+        definition: INT NULL
+        foreignTable: high_risk_assessment
+        refColumn: high_risk_assessment_id
+        required: false
+        meta: 
+          embedded: true
+      previousAISKnowledgeSource:
+        name: previous_ais_knowledge_source_code_id
+        comment: Foreign key reference to previous_ais_knowledge_source_code table
+        definition: INT NULL
+        foreignTable: previous_ais_knowledge_source_code
+        refColumn: previous_ais_knowledge_source_code_id
+        deleteCascade: false
+        required: false
+        meta: {}
+      previousInspectionSource:
+        name: previous_inspection_source_code_id
+        comment: Foreign key reference to previous_inspection_source_code table
+        definition: INT NULL
+        foreignTable: previous_inspection_source_code
+        refColumn: previous_inspection_source_code_id
+        deleteCascade: false
+        required: false
+        meta: {}
+      # Joint Relationship 
+      provinceOfResidence:
+        name: province_code
+        comment: 'Province of residence of the boat. Joint foreign key reference to country_province table province_code column along with country code'
+        definition: VARCHAR(3) NULL
+        required: false
+        meta:
+          # Joint Column info and key mapping 
+          jointColumnInfo:
+            jointColumnKeys: 
+              - countryOfResidence
+            referenceSchema: CountryProvinceSchema
+            referenceColumnMapping:
+              provinceCode: provinceOfResidence
+              countryCode: countryOfResidence
+        examples:
+          - BC
+      countryOfResidence:
+        name: country_code
+        comment: Country of the water-body location. Joint foreign key reference to country_province table country_code column along with province_code.
+        definition: VARCHAR(3) NULL
+        required: false
+        examples: 
+          - CAN
+    ## -- end columns
+    ## Additional Sql Commands
+    initialSqlCommands:
+      - comment: 'Adding Joint Foreign key reference'
+        sql: 'ALTER TABLE watercraft_risk_assessment ADD CONSTRAINT FK_watercraft_risk_assessment_country_province FOREIGN KEY (country_code, province_code) REFERENCES country_province (country_code, province_code) ON DELETE SET NULL;'
+    ## Versions
+    versions:
+      ## -- version: workflow
+      - name: 'workflow'
+        id: '20191106'
+        info: 'Adding workflow foreign key reference'
+        columns: 
+          workflow:
+            name: observer_workflow_id
+            comment: Foreign key reference to reference to observer_workflow table
+            definition: INT NULL
+            foreignTable: observer_workflow
+            refColumn: observer_workflow_id
+            meta: {}
+      ## -- end: workflow
+      ## -- version: numberOfPeopleInParty
+      - name: 'numberOfPeopleInParty'
+        id: '20200426'
+        info: 'Adding new column numberOfPeopleInParty'
+        columns:
+          numberOfPeopleInParty:
+            name: number_of_people_in_party
+            comment: Number of peoples in inspected boats
+            definition: INT NULL DEFAULT 1
+            meta: {}
+      ## -- end: numberOfPeopleInParty
+    ## -- end version
+  ## --
+

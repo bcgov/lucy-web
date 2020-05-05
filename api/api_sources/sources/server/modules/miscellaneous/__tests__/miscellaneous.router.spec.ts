@@ -28,14 +28,39 @@ import {
     commonTestSetupAction,
     commonTestTearDownAction,
     testRequest,
-    HttpMethodType
+    HttpMethodType,
+    AuthType
 } from '../../../../test-helpers/testHelpers';
 import { testIdr1Token, testIdr3Token, viewerToken } from '../../../../test-helpers/token';
+import {
+    JurisdictionCodeController,
+    SpeciesController,
+    SpeciesDensityCodeController,
+    SpeciesAgencyCodeController,
+    SpeciesDistributionCodeController,
+    SoilTextureCodeController,
+    ObservationTypeCodeController,
+    ObservationGeometryCodeController,
+    SpecificUseCodeController,
+    SlopeCodeController,
+    AspectCodeController,
+    ProposedActionCodeController,
+    MechanicalMethodCodeController,
+    MechanicalDisposalMethodCodeController,
+    MechanicalSoilDisturbanceCodeController,
+    MechanicalRootRemovalCodeController,
+    MechanicalTreatmentIssueCodeController,
+    TreatmentProviderContractorController,
+    ProjectManagementPlanCodeController,
+    PesticideEmployerCodeController
+} from '../../../../database/models';
+import { DataController } from '../../../../database/data.model.controller';
+import { ChemicalTreatmentEmployeeController } from '../../../../database/models/controllers/chemicalTreatmentEmployee.controller';
 
 describe('Test miscellaneous routes', () => {
     before(async () => {
-        await SharedExpressApp.initExpress();
         await commonTestSetupAction();
+        await SharedExpressApp.initExpress();
     });
     after(async () => {
         await commonTestTearDownAction();
@@ -101,6 +126,42 @@ describe('Test miscellaneous routes', () => {
             await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.token);
                 expect(data.token).to.be.equal('');
+            });
+        });
+    });
+
+    it('should return codes', async () => {
+        await testRequest(SharedExpressApp.app, {
+            url: '/api/codes',
+            type: HttpMethodType.get,
+            expect: 200,
+            auth: AuthType.viewer
+        }).then(async resp => {
+            await verifySuccessBody(resp.body, async data => {
+                const checkCodes = async (controller: DataController) => {
+                    should().exist(data[controller.meta.modelName]);
+                };
+                await checkCodes(JurisdictionCodeController.shared);
+                await checkCodes(SpeciesController.shared);
+                await checkCodes(SpeciesAgencyCodeController.shared);
+                await checkCodes(SpeciesDensityCodeController.shared);
+                await checkCodes(SpeciesDistributionCodeController.shared);
+                await checkCodes(SoilTextureCodeController.shared);
+                await checkCodes(ObservationTypeCodeController.shared);
+                await checkCodes(ObservationGeometryCodeController.shared);
+                await checkCodes(SpecificUseCodeController.shared);
+                await checkCodes(SlopeCodeController.shared);
+                await checkCodes(AspectCodeController.shared);
+                await checkCodes(ProposedActionCodeController.shared);
+                await checkCodes(MechanicalMethodCodeController.shared);
+                await checkCodes(MechanicalDisposalMethodCodeController.shared);
+                await checkCodes(MechanicalSoilDisturbanceCodeController.shared);
+                await checkCodes(MechanicalRootRemovalCodeController.shared);
+                await checkCodes(MechanicalTreatmentIssueCodeController.shared);
+                await checkCodes(TreatmentProviderContractorController.shared);
+                await checkCodes(ProjectManagementPlanCodeController.shared);
+                await checkCodes(PesticideEmployerCodeController.shared);
+                await checkCodes(ChemicalTreatmentEmployeeController.shared);
             });
         });
     });

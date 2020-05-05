@@ -1,6 +1,22 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { AlertModel, AlertService, AlertModalButton } from 'src/app/services/alert.service';
-import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-alert',
@@ -8,6 +24,9 @@ import {NgbModal, NgbModalRef, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap
   styleUrls: ['./alert.component.css']
 })
 export class AlertComponent implements OnInit {
+  presenting = true;
+  private dirmissDurationInSeconds = 1;
+
   public get title(): string {
     if (this.model === undefined) {
       return ``;
@@ -16,9 +35,9 @@ export class AlertComponent implements OnInit {
     }
   }
 
-  public get body(): string {
+  public get body(): string[] {
     if (this.model === undefined) {
-      return ``;
+      return [];
     } else {
       return this.model.body;
     }
@@ -36,8 +55,6 @@ export class AlertComponent implements OnInit {
     return this.model !== undefined;
   }
 
-  private modalReference: NgbModalRef;
-
   private _model: AlertModel;
 
   get model(): AlertModel {
@@ -47,54 +64,42 @@ export class AlertComponent implements OnInit {
   @Input()
   set model(model: AlertModel) {
      this._model = model;
-     this.delay(1).then(() => {
+     this.wait(1).then(() => {
       this.showModal();
     });
   }
 
   @Output() alertEventEmitter = new EventEmitter<boolean>();
-  @ViewChild('alertModal') private content;
 
-  constructor(private alertService: AlertService, private modalService: NgbModal) { }
+  constructor(private alertService: AlertService) { }
 
   ngOnInit() {}
 
-  buttonPressed(button: AlertModalButton) {
+  async buttonPressed(button: AlertModalButton) {
     button.eventEmitter.emit();
     if (button.canDismiss) {
-      this.removeModal();
+      await this.removeModal();
       if (this.model) {
         this.alertService.clear(this.model);
       }
     }
   }
 
-  private removeModal() {
-    if (this.modalReference) {
-      console.log(`XX closing Modal`);
-      this.modalReference.close();
-      delete(this.modalReference)
-      this.modalReference = undefined;
-    }
+  private async removeModal(): Promise<boolean> {
+    this.presenting = false;
+    await this.wait(this.dirmissDurationInSeconds * 1000);
+    return true;
   }
 
   private async showModal() {
-    const ngbModalOptions: NgbModalOptions = {
-      backdrop : 'static',
-      keyboard : false,
-      ariaLabelledBy: 'alertModalTitle'
-    };
-
-    if (!this.modalReference) {
-      this.modalReference = this.modalService.open(this.content, ngbModalOptions);
-    }
+    this.presenting = true;
   }
 
    /**
    * Create a delay
    * @param ms milliseconds
    */
-  private delay(ms: number) {
+  private wait(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }

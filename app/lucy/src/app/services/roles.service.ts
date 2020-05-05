@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { ApiService, APIRequestMethod } from './api.service';
 import { AppConstants } from '../constants';
@@ -46,16 +63,37 @@ export class RolesService {
         return UserAccessType.DataEditor;
       case `SUP`:
         return UserAccessType.SuperUser;
+      case `I_OFFICER`:
+        return UserAccessType.Officer;
+      case `I_ADM`:
+        return UserAccessType.InspectAdmin;
     }
   }
 
   public canCreate(accessType: UserAccessType) {
-    return (accessType === UserAccessType.Admin ||
-      accessType === UserAccessType.DataEditor);
+    const validUsers = [
+      UserAccessType.Admin,
+      UserAccessType.SuperUser,
+      UserAccessType.DataEditor,
+      UserAccessType.InspectAdmin
+    ];
+    return validUsers.includes(accessType);
   }
 
   public canEdit(accessType: UserAccessType) {
     return this.canCreate(accessType);
+  }
+
+  /**
+   * Determines whether or not the current user can edit the target user.
+   * - Only admin users can edit other users at this time.
+   * - Admin users can edit all other user types at this time.
+   * 
+   * @param accessType Access type of the current user
+   * @param targetUserAccessType Access type of the user to edit
+   */
+  public canEditUser(accessType: UserAccessType, targetUserAccessType: UserAccessType) {
+    return accessType === UserAccessType.Admin;
   }
 
   private getDummyRoles(): Role[] {

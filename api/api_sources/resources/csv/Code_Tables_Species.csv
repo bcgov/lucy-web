@@ -1,0 +1,226 @@
+MapCode, EDRR, CMT, SHP, Species, Genus, Common, Latin
+AR,Y,0,0,PEGA,HAR,African rue / harmal,Peganum harmala
+AB,N,0,0,AMMO,BRE,American beachgrass,Ammophila breviligulata
+YC,N,0,0,RORI,AMP,Amphibious yellow cress,Rorippa amphibian
+HB,N,0,0,CREP,TEC,Annual hawksbeard,Crepis tectorum
+AS,N,0,0,SONC,OLE,Annual sow thistle,Sonchus oleraceus
+BY,N,0,0,GYPS,PAN,Baby's breath,Gypsophila paniculata
+BB,N,0,0,CENT,CYA,Bachelor's button,Centaurea cyanus
+BA,N,0,0,ECHI,CRU,Barnyard grass,Echinochloa crusgalli
+KB,N,0,0,CENT,MAC,Bighead knapweed,Centaurea macrocephala
+BP,N,0,0,VINC,MAJ,Bigleaf periwinkle / large periwinkle,Vinca major
+BH,Y,0,0,HYOS,NIG,Black henbane,Hyoscyamus niger
+BL,N,0,0,CENT,NIG,Black knapweed,Centaurea nigra
+RB,N,0,0,ROBI,PSE,Black locust,Robinia pseudoacacia
+BC,N,0,0,SILE,VUL,Bladder campion,Silene vulgaris
+BW,N,1,4,ECHI,VUL,Blueweed,Echium vulgare
+RI,Y,0,0,SCHO,MUC,Bog bulrush / ricefield bulrush,Schoenoplectus mucronatus
+BO,N,0,0,FALL,BOH,Bohemian knotweed,Fallopia x bohemicum
+ED,Y,0,0,EGER,DEN,Brazilian waterweed,Egeria densa
+RA,N,0,0,ROBI,HIS,Bristly locust / rose acacia,Robinia hispida
+BK,N,0,0,CENT,JAC,Brown knapweed,Centaurea jacea
+BT,N,0,0,CIRS,VUL,Bull thistle,Cirsium vulgare
+CB,N,0,0,ANTH,CAU,Bur chervil,Anthriscus caucalis
+BU,N,0,0,ARCT,SPP,Burdock species,Arctium spp
+BD,N,0,0,BUDD,DAV,Butterfly bush,Buddleja davidii
+AM,Y,0,0,ALHA,MAU,Camel thorn,Alhagi maurorum
+CT,N,0,0,CIRS,ARV,Canada thistle,Cirsium arvense
+CA,N,0,0,CARU,CAR,Caraway,Carum carvi
+CG,N,0,0,SOLI,SES,Carpet burweed,Soliva sessilis
+DB,N,0,0,BROM,TEC,Cheatgrass / downy brome,Bromus tectorum
+LC,N,0,0,PRUN,LAU,Cherry laurel,Prunus laurocerasus
+CY,N,0,0,CICH,INT,Chicory,Cichorium intybus
+CH,N,0,0,MADI,SAT,Chilean tarweed,Madia sativa
+CE,Y,0,0,SALV,SCL,Clary sage,Salvia sclarea
+CF,N,0,0,TUSS,FAR,Coltsfoot,Tussilago farfara
+AO,N,0,0,ANCH,OFF,Common bugloss,Anchusa officinalis
+CO,N,0,0,SYMP,OFF,Common comfrey,Symphytum officinale
+CC,Y,0,0,CRUP,VUL,Common crupina,Crupina vulgaris
+FC,N,0,0,HYDR,MOR,Common frogbit,Hydrocharis morsus-range
+CX,N,1,13,HIER,VUL,Common hawkweed,Hieracium lanchenalii
+CP,N,0,0,VINC,MIN,Common periwinkle,Vinca minor
+RC,Y,0,0,PHRA,AUS,Common reed,Phragmites australis subsp. australis
+TC,N,1,2,TANA,VUL,Common tansy,Tanacetum vulgare
+CR,N,0,0,RANU,REP,Creeping buttercup,Ranunculus repens
+CU,N,0,0,GNAP,ULI,Cudweed,Gnaphalium uliginosum
+CD,N,0,0,RUME,CRI,Curled dock,Rumex crispus
+UP,N,0,0,POTA,CRI,Curly leaf pondweed,Potamogeton crispus
+CL,N,0,0,RUBU,LAC,Cutleaf blackberry,Rubus laciniatus
+CS,N,0,0,EUPH,CYP,Cypress spurge,Euphorbia cyparissias
+DT,N,0,0,LINA,DAL,Dalmatian toadflax,Linaria dalmatica
+DR,N,0,0,HESP,MAT,Dame's rocket,Hesperis matronalis
+SL,N,0,0,DAPH,LAU,Daphne / spurge laurel,Daphne laureola
+DC,Y,0,0,SPAR,DEN,Dense-flowered cordgrass,Spartina densiflora
+DI,N,0,0,DIDY,GEM,Didymo,Didymosphenia geminata
+DK,N,0,0,CENT,DIF,Diffuse knapweed,Centaurea diffusa
+DO,N,0,0,CUSC,SPP,Dodder,Cuscuta spp.
+DE,N,0,0,ZOST,JAP,Dwarf eelgrass,Zostera japonica
+DW,Y,0,0,ISAT,TIN,Dyer's woad,Isatis tinctoria
+ES,Y,0,0,EUPH,OBL,Eggleaf spurge,Euphorbia oblongata
+EC,Y,0,0,SPAR,ANG,English cordgrass,Spartina anglica
+HO,N,0,0,ILEX,AQU,English holly,Ilex aquifolium
+EI,N,0,0,HEDE,HEL,English ivy,Hedera helix
+EW,N,0,0,MYRI,SPI,Eurasian watermilfoil,Myriophyllum spicatum
+EB,N,0,0,AMMO,ARE,European beachgrass,Ammophila arenaria
+EH,N,1,13,HIER,SAB,European hawkweed,Hieracium sabaudum
+EL,N,0,0,CARE,ACU,European lake sedge,Carex acutiformis
+MQ,N,0,0,MARS,QUA,European water clover,Marsilea quadrifolia
+WE,N,0,0,NYMP,ALB,European waterlily,Nymphaea alba
+EY,N,0,0,EUPH,NEM,Eyebright,Euphrasia nemorosa
+BF,Y,0,0,BRAC,SYL,False brome,Brachypodium sylvaticum
+FW,N,0,0,CABO,CAR,Fanwort,Cabomba caroliniana
+FM,N,0,0,AZOL,PIN,Feathered mosquito-fern,Azolla pinnata
+FB,N,0,0,CONV,ARV,Field bindweed,Convolvulus arvensis
+FS,N,1,6,KNAU,ARV,Field scabious,Knautia arvensis
+FP,N,0,0,LATH,SYL,Flat pea / flat peavine,Lathyrus sylvestris
+FR,Y,0,0,BUTO,UMB,Flowering rush,Butomus umbellatus
+FL,N,0,0,NYMP,ODO,Fragrant water lily,Nymphaea odorata subsp. odorata
+GM,N,0,0,GENI,MON,French broom,Genista monspessulana
+GL,Y,0,0,LYSI,VUL,Garden yellow loosestrife,Lysimachia vulgaris
+AP,Y,0,0,ALLI,PET,Garlic mustard,Alliaria petiolata
+MA,N,0,0,MYOS,AQU,Giant chickweed,Myosoton aquaticum
+GH,N,0,0,HERA,MAN,Giant hogweed,Heracleum mantegazzianum
+GK,N,0,0,FALL,SAC,Giant knotweed,Fallopia sachalinensis
+SW,Y,0,0,GLYC,MAX,Giant mannagrass / reed sweetgrass,Glyceria maxima
+AD,Y,0,0,ARUN,DON,Giant reed / giant cane,Arundo donax
+SV,N,0,0,SALV,MOL,Giant salvinia,Salvinia molesta
+RG,Y,0,0,GALE,OFF,Goat's rue / french lilac,Galega officinalis
+GO,N,0,0,ULEX,EUR,Gorse,Ulex europaeus
+GW,N,0,0,AEGO,POD,Goutweed / bishop's weed,Aegopodium podagraria
+GC,N,0,0,CHEL,MAJ,Greater celandine,Chelidonium majus
+GN,N,0,0,CENT,SCA,Greater knapweed,Centaurea scabiosa
+GF,N,0,0,SETA,VIR,Green foxtail / green bristlegrass,Setaria viridis
+GS,N,0,0,SENE,VUL,Groundsel,Senecio vulgaris
+HR,N,0,0,HYPO,RAD,Hairy cat's-ear,Hypochaeris radicata
+HS,N,1,13,HIER,SPP,Hawkweed species,Hieracium spp
+BI,N,0,0,CALY,SEP,Hedge false bindweed,Calystegia sepium
+HD,N,0,0,CYNO,ECH,Hedgehog dogtail,Cynosurus echinatus
+GR,N,0,0,GERA,ROB,Herb robert,Geranium robertianum
+HI,N,1,10,RUBU,ARM,Himalayan blackberry,Rubus armeniacus
+PO,N,0,0,POLY,POL,Himalayan knotweed,Polygonum polystachyum
+HA,N,1,9,BERT,INC,Hoary alyssum,Berteroa incana
+HC,N,1,11,CARD,DRA,Hoary cress,Cardaria draba
+HT,N,0,0,CYNO,OFF,Hound's-tongue,Cynoglossum officinale
+HY,Y,0,0,HYDR,VER,Hydrilla,Hydrilla verticillata
+IS,Y,0,0,CENT,IBE,Iberian starthistle,Centaurea iberica
+IT,Y,0,0,CARD,PYC,Italian plumeless thistle,Carduus pycnocephalus
+JK,N,0,0,FALL,JAP,Japanese knotweed,Fallopia japonica
+JW,N,0,0,SARG,MUT,Japanese wireweed,Sargassum muticum
+GJ,Y,0,0,SORG,HAL,Johnsongrass,Sorghum halepense
+JG,Y,0,0,AEGI,CYL,Jointed goatgrass,Aegilops cylindrica
+KH,N,1,13,HIER,FLO,King devil hawkweed,Hieracium floribundum
+KS,N,0,0,CENT,SPP,Knapweed species,Centaurea spp.
+KO,N,0,0,KOCH,SCO,Kochia,Kochia scoparia
+KU,Y,0,0,PUER,MON,Kudzu,Pueraria montana
+LT,N,0,0,POLY,PER,Lady's-thumb,Polygonum persicaria
+LL,N,0,0,LYSI,PUN,Large yellow / spotted loosestrife,Lysimachia punctata
+LS,N,0,0,EUPH,ESU,Leafy spurge,Euphorbia esula
+RF,N,0,0,RANU,FIC,Lesser celandine / fig buttercup,Ranunculus ficaria
+LO,N,0,0,CENC,LON,Longspine sandbur,Cenchrus longispinus
+OW,N,0,0,LAGA,ROS,Major oxygen weed,Lagarosiphon
+MX,Y,0,0,CENT,MEL,Maltese star thistle,Centaurea melitensis
+MT,N,1,1,CIRS,PAL,Marsh plume thistle/Marsh thistle,Cirsium palustre
+MB,N,0,0,RANU,ACR,Meadow buttercup,Ranunculus acris
+MC,Y,0,0,SALV,PRA,Meadow clary,Salvia pratensis
+MG,N,0,0,TRAG,PRA,Meadow goats-beard,Tragopogon pratensis
+MH,N,1,13,HIER,CAE,Meadow hawkweed,Hieracium caespitosum
+MK,N,0,0,CENT,DEB,Meadow knapweed,Centaurea debeauxii
+MS,Y,0,0,SALV,AET,Mediterranean sage,Salvia aethiopsis
+TM,Y,0,0,TAEN,CAP,Medusahead,Taeniatherum caput-medusae
+MI,N,0,0,SILY,MAR,Milk thistle,Silybum marianum
+MO,N,0,0,CENT,MON,Mountain bluet,Centaurea montana
+ME,N,0,0,HIER,PIL,Mouse ear hawkweed,Hieracium pilosella
+MU,N,0,0,VERB,THA,Mullein,Verbascum thapsis
+NC,N,0,0,SILE,NOC,Night-flowering catchfly,Silene noctiflora
+NI,N,0,0,SOLA,SPP,Nightshade,Solanum spp
+NT,N,0,0,CARD,NUT,Nodding thistle,Carduus nutans
+NA,Y,0,0,VENT,DUB,North africa grass,Ventenata dubia
+OM,N,0,0,CLEM,VIT,Old man's beard / traveller's joy,Clematis vitalba
+OH,N,1,12,HIER,AUR,Orange hawkweed,Hieracium aurantiacum
+OD,N,0,0,LEUC,VUL,Oxeye daisy,Leucanthemum vulgare
+PF,N,0,0,MYRI,AQU,Parrot feather,Myriophyllum aquaticum
+PP,Y,0,0,LEPI,LAT,Perennial pepperweed,Lepidium latifolium
+PS,N,0,0,SONC,ARV,Perennial sow thistle,Sonchus arvensis
+PT,N,0,0,CARD,ACA,Plumeless thistle,Carduus acanthoides
+PH,N,0,0,CONI,MAC,Poison hemlock,Conium maculatum
+PA,N,1,13,HIER,ATR,Polar hawkweed,Hieracium atratum
+IM,N,0,0,IMPA,GLA,Policeman's helmet / himalayan balsam,Impatiens glandulifera
+LP,N,0,0,PRUN,LUS,Portugese laurel,Prunus lusitanica
+PR,N,0,0,CYTI,STR,Portuguese broom,Cytisus striatus
+PC,N,0,0,SYMP,ASP,Prickly comfrey,Symphytum asperum
+PV,N,0,0,TRIB,TER,Puncturevine,Tribulus terrestris
+PD,N,0,0,LAMI,PUR,Purple deadnettle,Lamium purpureum
+PL,N,0,0,LYTH,SAL,Purple loosestrife,Lythrum salicaria
+PN,Y,0,0,CYPE,ROT,Purple nutsedge,Cyperus rotundus
+PU,Y,0,0,CENT,CAL,Purple starthistle,Centaurea calcitrapa
+QA,N,0,0,DAUC,CAR,Queen anne's lace / wild carrot,Daucus carota
+QH,N,1,13,HIER,PRE,Queen devil hawkweed,Hieracium praealtum
+BR,Y,0,0,ODON,SER,Red bartsia,Odontites serotina
+RP,N,0,0,AMAR,RET,Redroot amaranth / rough pigweed,Amaranthus retroflexus
+RS,N,1,3,CHON,JUN,Rush skeletonweed,Chondrilla juncea
+RK,N,0,0,ACRO,REP,Russian knapweed,Acroptilon repens
+RO,N,0,0,ELAE,ANG,Russian olive,Elaeagnus angustifolia
+RT,N,0,0,SALS,KAL,Russian thistle,Salsola kali
+TA,N,0,0,TAMA,RAM,Saltcedar / tamarisk,Tamarix ramosissima
+AH,Y,0,0,HALO,GLO,Saltlover / halogeton,Halogeton glomeratus
+SN,Y,0,0,SPAR,PAT,Salt-meadow cord grass,Spartina patens
+SA,Y,0,0,SPAR,ALT,Saltwater cord grass,Spartina alterniflora
+SH,N,0,0,MATR,PER,Scentless chamomile,Matricaria perforata
+SB,N,1,8,CYTI,SCO,Scotch broom,Cytisus scoparius
+ST,N,0,0,ONOP,ACA,Scotch thistle,Onopordum acanthium
+SS,N,0,0,RUME,ACE,Sheep sorrel,Rumex acetosella
+SP,N,0,0,CAPS,BUR,Shepherd's-purse,Capsella bursa-pastoris
+SG,Y,0,0,GERA,LUC,Shiny geranium,Geranium lucidum
+CN,N,0,0,CENT,NIR,Short-fringed knapweed,Centaurea nigrescens
+SE,N,0,0,ULMU,PUM,Siberian elm,Ulmus pumila
+NS,Y,0,0,SOLA,ELA,Silverleaf nightshade,Solanum elaeagnifolium
+FT,Y,0,0,ALOP,MYO,Slender meadow foxtail,Alopecurus myosuroides
+HG,N,0,0,HYPO,GLA,Smooth cat's ear,Hypochaeris glabra
+SM,N,1,13,HIER,LAE,Smooth hawkweed,Hieracium laevigatum
+SO,N,0,0,SONC,SPP,Sowthistle species,Sonchus species
+BS,N,0,0,HYAC,HIS,Spanish bluebells,Hyacinthoides hispanica
+SI,N,0,0,SPAR,JUN,Spanish broom,Spartium junceum
+SX,N,0,0,HIER,MAC,Spotted hawkweed,Hieracium maculatum
+SK,N,1,7,CENT,BIE,Spotted knapweed,Centaurea biebersteinii
+MV,Y,0,0,MILI,VER,Spring millet grass,Milium vernale
+TP,Y,0,0,THYM,PAS,Spurge flax,Thymelaea passerina
+CV,Y,0,0,CENT,VIR,Squarrose knapweed,Centaurea virgata ssp. squarrosa
+SJ,N,0,0,HYPE,PER,St. John's wort/Saint John's wort/ Goatweed,Hypericum perforatum
+SC,N,0,0,POTE,REC,Sulphur cinquefoil,Potentilla recta
+SF,N,0,0,FOEN,VUL,Sweet fennel,Foeniculum vulgare
+SY,Y,0,0,ZYGO,FAB,Syrian bean-caper,Zygophyllum fabago
+TH,N,1,13,HIER,OID,Tall hawkweed,Hieracium piloselloides
+TR,N,1,5,SENE,JAC,Tansy ragwort,Senecio jacobaea
+TB,N,0,0,FAGO,TAT,Tartary buckwheat,Fagopyrum tataricum
+TS,N,0,0,DIPS,FUL,Teasel,Dipsacus fullonum
+TX,Y,0,0,HELI,CIL,Texas blueweed,Helianthus ciliaris
+AA,N,0,0,AILA,ALT,Tree of heaven,Ailanthus altissima
+LM,N,0,0,MYRI,HET,Variable leaf milfoil,Myriophyllum heterophyllum
+VL,Y,0,0,ABUT,THE,Velvet leaf,Abutilon theophrasti
+WA,N,1,13,HIER,MUR,Wall hawkweed,Hieracium murorum
+WL,N,0,0,LYTH,VIR,Wand loosestrife,Lythrum virgatum
+TN,Y,0,0,TRAP,NAT,Water chestnut,Trapa natans
+WH,Y,0,0,EICH,CRA,Water hyacinth,Eichhornia crassipes
+LW,N,0,0,PIST,STR,Water lettuce,Pistia stratiotes
+AQ,Y,0,0,STRA,ALO,Water soldier,Stratiotes aloides
+NO,N,0,0,NAST,OFF,Watercress,Nasturtium officinale
+WG,N,0,0,TRAG,DUB,Western goat's-beard,Tragopogon dubius
+WP,N,1,12,HIER,FLA,Whiplash hawkweed,Hieracium flagellare
+WC,N,0,0,LYCH,ALB,White cockle,Lychnis alba
+WB,N,0,0,POLY,CON,Wild buckwheat,Polygonum convolvulus
+WI,N,0,0,ANTH,SYL,Wild chervil,Anthriscus sylvestris
+WF,N,0,0,MIRA,NYC,Wild four o'clock,Mirabilis nyctaginea
+WM,N,0,0,SINA,ARV,Wild mustard,Sinapis arvensis
+WO,N,0,0,AVEN,FAT,Wild oats,Avena fatua
+PW,N,0,0,PAST,SAT,Wild parsnip,Pastinaca sativa
+WT,Y,0,0,CARD,TEN,Winged thistle / slender-flowered thistle,Carduus tenuiflorus
+WS,N,0,0,SALV,NEM,Wood sage,Salvia nemorsa
+WW,N,0,0,ARTE,ABS,Wormwood,Artemisia absinthium
+YA,N,0,0,LAMI,GAL,Yellow archangel,Lamiastrum galeobdolon
+YD,N,1,13,HIER,GLO,Yellow devil hawkweed,Hieracium glomeratum
+YF,N,0,0,NYMP,PEL,Yellow floating heart,Nymphoides peltata
+YH,N,1,13,HIER,PRA,Yellow hawkweed,Hieracium pratense
+YI,N,0,0,IRIS,PSE,Yellow iris,Iris pseudachorus
+YN,Y,0,0,CYPE,ESC,Yellow nutsedge,Cyperus esculentus
+YS,Y,0,0,CENT,SOL,Yellow starthistle,Centaurea solstitialis
+YT,N,0,0,LINA,VUL,Yellow/common toadflax,Linaria vulgaris

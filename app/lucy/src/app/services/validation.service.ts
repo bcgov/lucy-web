@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { Observation } from '../models';
 import { MechanicalTreatment } from '../models/MechanicalTreatment';
@@ -38,6 +55,14 @@ export class ValidationService {
     return regexpOneResult;
   }
 
+  public isLessThanMax(value: number, ceiling: number): boolean {
+    return (value <= ceiling);
+  }
+
+  public isGreaterThanMin(value: number, floor: number): boolean {
+    return (value >= floor);
+  }
+
   /**
    * TODO: Refactor
    * From:
@@ -66,11 +91,15 @@ export class ValidationService {
   //////////////// Location Validations ////////////////
 
   public isValidUTMNorthings(value: string): boolean {
-    return (this.isValidNumber(value) && value.length < 8);
+    return (this.isValidNumber(value) && value.length < 8 && +value >= 5330000 && +value <= 6700000);
   }
 
   public isValidUTMEastings(value: string): boolean {
-    return (this.isValidNumber(value) && value.length < 7);
+    return (this.isValidNumber(value) && value.length < 7 && +value >= 250000 && +value <= 720000);
+  }
+
+  public isValidUTMZone(value: string): boolean {
+    return (this.isValidInteger(value) && +value >= 7 && +value <= 11);
   }
 
   /**
@@ -79,10 +108,7 @@ export class ValidationService {
    * @param latitude string - * use String(number) if needed.
    */
   public isValidLatitude(latitude: string) {
-    if (!this.hasMinDecimalPlaces(latitude, 5)) {
-      return false;
-    }
-    return +latitude >= 48 && +latitude <= 61;
+    return Number(latitude) >= 48 && Number(latitude) <= 61;
   }
 
   /**
@@ -91,10 +117,7 @@ export class ValidationService {
    * @param longitude string - * use String(number) if needed.
    */
   public isValidLongitude(longitude: string) {
-    if (!this.hasMinDecimalPlaces(longitude, 5)) {
-      return false;
-    }
-    return +longitude >= -139 && +longitude <= -114;
+    return Number(longitude) >= -139 && Number(longitude) <= -114;
   }
 
   //////////////// End Location Validations ////////////////

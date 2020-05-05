@@ -19,7 +19,8 @@ const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
 const defaultHostAPI = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca'
 
-console.dir(staticUrlsAPI);
+// Get SSO_Info
+const sso = config.sso;
 
 const phases = {
   build: {
@@ -44,31 +45,40 @@ const phases = {
     tag:`dev-${version}-${deployChangeId}`, 
     host: isStaticDeployment() ? staticUrls['dev'] || defaultHost : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`, 
     apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
-    env: 'dev'
+    env: 'dev',
+    sso: sso.dev,
+    replicas: 1
   },
   test: {
     namespace:'8ecbmv-test'    , 
     name: `${name}`, 
     phase: 'test'  , 
-    changeId:changeId, 
+    changeId: deployChangeId, 
     suffix: `-test`  , 
     instance: `${name}-test`  , 
     version:`${version}`, 
     tag:`test-${version}`, 
     host: staticUrls['staging'],
     apiHost: staticUrlsAPI['staging'] || defaultHostAPI,
-    env: 'test'
+    env: 'test',
+    sso: sso.test,
+    replicas: 3
   },
   prod: {
     namespace:'8ecbmv-prod'    , 
-    name: `${name}`, phase: 'prod'  , 
-    changeId:changeId, suffix: `-prod`  , 
+    name: `${name}`,
+    phase: 'prod'  , 
+    changeId: deployChangeId,
+    suffix: `-prod`  , 
     instance: `${name}-prod`  , 
     version:`${version}`, 
     tag:`prod-${version}`, 
-    host: staticUrlsAPI['prod']},
+    host: staticUrls['prod'],
     apiHost: staticUrlsAPI['prod'] || defaultHostAPI,
-    env: 'prod'
+    env: 'prod',
+    sso: sso.prod,
+    replicas: 3
+  }
 };
 
 // This callback forces the node process to exit as failure.

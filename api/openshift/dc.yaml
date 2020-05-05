@@ -40,7 +40,7 @@ objects:
         requests:
           cpu: 500m
           memory: 1Gi
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         annotations: null
@@ -77,6 +77,32 @@ objects:
             value: ${ENVIRONMENT}
           - name: VERSION
             value: ${VERSION}
+          - name: DB_MIGRATION_TYPE
+            value: ${DB_MIGRATION_TYPE}
+          - name: DB_CLEAN_UP
+            value: ${DB_CLEAN_UP}
+          - name: DB_SEED
+            value: ${DB_SEED}
+          - name: APP_EMAIL_SENDER
+            valueFrom:
+              secretKeyRef:
+                key: sender
+                name: ${MAILER_INFO}
+          - name: APP_EMAIL_SENDER_PWD
+            valueFrom:
+              secretKeyRef:
+                key: sender-password
+                name: ${MAILER_INFO}
+          - name: APP_EMAIL_TEST_RECEIVER
+            valueFrom:
+              secretKeyRef:
+                key: test-receiver
+                name: ${MAILER_INFO}
+          - name: APP_REPORT_RECEIVER
+            valueFrom:
+              secretKeyRef:
+                key: receiver-list
+                name: ${MAILER_INFO}
           image: " "
           imagePullPolicy: Always
           name: api
@@ -187,6 +213,9 @@ objects:
     name: ${NAME}${SUFFIX}
   spec:
     host: ${HOST}
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
     port:
       targetPort: ${NAME}-${APP_PORT_DEFAULT}
     to:
@@ -242,3 +271,11 @@ parameters:
   value: '8080-tcp'
 - name: PORT
   value: '3001'
+- name: DB_MIGRATION_TYPE
+  value: 'refresh'
+- name: DB_CLEAN_UP
+  value: 'none'
+- name: DB_SEED
+  value: 'yes'
+- name: MAILER_INFO
+  value: 'invasivesbc-mailer'

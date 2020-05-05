@@ -21,24 +21,34 @@
  */
 export const DefaultLoginAccessCodes = [
     {
-        code : 'ADM',
+        role_code : 'ADM',
         role : 'Admin',
-        description: 'Overall SEISM Access'
+        description: 'Overall InvasivesBC application Access and user management'
     },
     {
-        code : 'DAV',
+        role_code : 'DAV',
         role : 'Data Viewer',
         description: 'General data view access'
     },
     {
-        code : 'DAE',
+        role_code : 'DAE',
         role : 'Data Editor',
         description: 'General access'
     },
     {
-        code : 'SUP',
+        role_code : 'SUP',
         role : 'Super User',
         description: 'Lead admin for each of the taxonomic components'
+    },
+    {
+        role_code : 'I_OFFICER',
+        role : 'Officer Mussel Inspect App',
+        description: 'The conservation officer making inspection and shift records'
+    },
+    {
+        role_code : 'I_ADM',
+        role : 'Admin Mussel Inspect App',
+        description: 'The user and data management admin of Mussel Inspect App. Also can export Mussel Inspect App Data'
     }
 ];
 

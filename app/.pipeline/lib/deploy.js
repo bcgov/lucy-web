@@ -17,9 +17,13 @@ module.exports = (settings)=>{
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'HOST': phases[phase].host,
-      'CHANGE_ID': phases[phase].changeId,
+      'CHANGE_ID':  phases.build.changeId || changeId,
       'API_HOST': phases[phase].apiHost,
-      'ENVIRONMENT':  phases[phase].env || 'dev'
+      'ENVIRONMENT':  phases[phase].env || 'dev',
+      'SSO_URL': phases[phase].sso.url,
+      'SSO_CLIENT_ID': phases[phase].sso.clientId,
+      'SSO_REALM': phases[phase].sso.realm,
+      'REPLICAS': phases[phase].replicas || 1
     }
   }))
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, phases[phase].instance)

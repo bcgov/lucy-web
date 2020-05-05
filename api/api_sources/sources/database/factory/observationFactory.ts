@@ -23,24 +23,8 @@
 /**
   * Imports
   */
-import * as faker from 'faker';
-import * as moment from 'moment';
 import { Observation, ObservationController, User, UserDataController} from '../models';
-import { userFactory } from './userFactory';
-import { jurisdictionCodeFactory,
-    speciesFactory,
-    speciesDensityCodeFactory,
-    speciesDistributionCodeFactory,
-    speciesAgencyCodeFactory,
-    observationTypeCodeFactory,
-    soilTextureCodeFactory,
-    observerGeometryCodeFactory,
-    specificUseCodeFactory,
-    slopeCodeFactory,
-    aspectCodeFactory,
-    proposedActionCodeFactory
-} from './observationCodesFactory';
-import { Create, Destroy } from './helper';
+import { Destroy, ModelFactory } from './helper';
 
 /**
  * @description Observation Factory
@@ -48,41 +32,7 @@ import { Create, Destroy } from './helper';
  * @param boolean noSave
  */
 export const observationFactory = async (noSave?: boolean): Promise<Observation> => {
-    const creator = Create<Observation, ObservationController>(ObservationController.shared);
-    return creator(async (obs: Observation) => {
-        obs.createdBy = await userFactory();
-        obs.updatedBy = obs.createdBy;
-        obs.lat = parseFloat(faker.address.latitude());
-        obs.long = parseFloat(faker.address.longitude());
-        obs.date = `${moment(faker.date.recent()).format('YYYY-MM-DD')}`;
-        obs.accessDescription = faker.random.word();
-        obs.jurisdiction = await jurisdictionCodeFactory();
-        obs.species = await speciesFactory();
-        obs.width = faker.random.number();
-        obs.length = faker.random.number();
-        obs.density = await speciesDensityCodeFactory();
-        obs.distribution = await speciesDistributionCodeFactory();
-        obs.speciesAgency = await speciesAgencyCodeFactory();
-        obs.observationType = await observationTypeCodeFactory();
-        obs.soilTexture = await soilTextureCodeFactory();
-        obs.observationGeometry = await observerGeometryCodeFactory();
-        obs.specificUseCode = await specificUseCodeFactory();
-        obs.observerFirstName = faker.name.firstName();
-        obs.observerLastName = faker.name.lastName();
-        obs.slopeCode = await slopeCodeFactory();
-        obs.aspectCode = await aspectCodeFactory();
-        obs.proposedAction = await proposedActionCodeFactory();
-        obs.legacySiteIndicator = faker.random.boolean();
-        obs.edrrIndicator = faker.random.boolean();
-        obs.sampleTakenIndicator = true;
-        obs.sampleIdentifier = faker.random.alphaNumeric(49);
-        obs.rangeUnitNumber = faker.random.alphaNumeric(49);
-        obs.researchIndicator = faker.random.boolean();
-        obs.wellIndicator = false;
-        obs.specialCareIndicator = faker.random.boolean();
-        obs.biologicalIndicator = faker.random.boolean();
-        obs.aquaticIndicator = faker.random.boolean();
-    });
+    return ModelFactory(ObservationController.shared)();
 };
 
 /**
@@ -90,7 +40,9 @@ export const observationFactory = async (noSave?: boolean): Promise<Observation>
  */
 export const destroyObservation =
 Destroy<Observation, ObservationController>(ObservationController.shared, async (obj: Observation) => {
+  if (obj.createdBy) {
     await Destroy<User, UserDataController>(UserDataController.shared)(obj.createdBy);
     return;
+  }
 });
 // -------------------------------------------------------------

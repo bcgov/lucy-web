@@ -1,43 +1,111 @@
 <!-- Editable -->
-<div *ngIf="!readonly" class="col-12 field">
-  <label *ngIf="multiline" class="field-header">{{header}}</label>
+<div *ngIf="!readonly" class="col-12 field animated" id="{{ fieldId }}">
+    <p *ngIf="showHeader" class="input-header-text">{{ header }}</p>
+    <!-- Input field -->
+    <mat-form-field *ngIf="!multiline" [appearance]="appearance">
+        <input matInput [placeholder]="placeHolderText" [(ngModel)]="value" [attr.id]="fieldId" [formControl]="fieldFormControl" [errorStateMatcher]="matcher" appElementFocus [setFocus]="showFocus" />
+        <span matSuffix>{{ suffix }}</span>
+        <!-- ERROR MESSAGES  -->
+        <!-- Required  -->
+        <mat-error *ngIf="fieldFormControl.hasError('required')">
+            <strong>required</strong>
+        </mat-error>
+        <!-- Over max size  -->
+        <mat-error *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('maxlength')
+      ">
+            You are over the {{ fieldFormControl.errors.maxlength.requiredLength }} character limit
+        </mat-error>
+        <!-- Positive Number  -->
+        <mat-error *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('positiveNumber')
+      ">
+            {{ fieldFormControl.errors.positiveNumberError }}
+        </mat-error>
+        <!-- Exceeds maximum value -->
+        <mat-error *ngIf="!fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('max')">
+            Cannot exceed {{ verification.maximumValue }}
+        </mat-error>
+        <!-- Below minimum value -->
+        <mat-error *ngIf="!fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('min')">
+            Must be at least {{ verification.minimumValue }}
+        </mat-error>
+        <!-- Regex  -->
+        <mat-error *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('requiredPattern')
+      ">
+            Invalid characters
+        </mat-error>
+        <!-- Latitude -->
+        <mat-error *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('invalidLatitude')
+      ">
+            {{ fieldFormControl.errors.invalidLatitudeError }}
+        </mat-error>
+        <!-- Longitude -->
+        <mat-error *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('validLongitude')
+      ">
+            {{ fieldFormControl.errors.invalidLongitudeError }}
+        </mat-error>
 
-    <!-- Single field - Not required -->
-    <mat-form-field *ngIf="!multiline && !required">
-        <input 
-         matInput placeholder="{{header}}"
-         [(ngModel)]="value"
-         [attr.id]="fieldId"
-         >
+        <!-- Eastings -->
+        <mat-error *ngIf="fieldFormControl.hasError('validEastingsUTM')">
+            {{ fieldFormControl.errors.invalidEastingsUTMError }}
+        </mat-error>
+        <!-- Northings -->
+        <mat-error *ngIf="fieldFormControl.hasError('validNorthingsUTM')">
+            {{ fieldFormControl.errors.invalidNorthingsUTMError }}
+        </mat-error>
+        <!-- Zone -->
+        <mat-error *ngIf="fieldFormControl.hasError('validZoneUTM')">
+            {{ fieldFormControl.errors.invalidZoneUTMError }}
+        </mat-error>
     </mat-form-field>
 
-    <!-- Single field - Required -->
-    <mat-form-field *ngIf="!multiline && required">
-        <input 
-         matInput placeholder="{{header}}"
-         [(ngModel)]="value"
-         [attr.id]="fieldId"
-         [formControl]="fieldFormControl"
-         [errorStateMatcher]="matcher">
-          <mat-error *ngIf="fieldFormControl.hasError('required')">
-              {{header}} is <strong>required</strong>
-          </mat-error>
+    <!-- MultiLine (TextArea) -->
+
+    <mat-form-field *ngIf="multiline" appearance="outline">
+        <mat-label>{{ header }}</mat-label>
+        <textarea matInput rows="4" [attr.id]="fieldId" [(ngModel)]="value" [formControl]="fieldFormControl" [errorStateMatcher]="matcher"></textarea>
+        <mat-error *ngIf="fieldFormControl.hasError('required')">
+            <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="
+        !fieldFormControl.hasError('required') &&
+        fieldFormControl.hasError('maxlength')
+      ">
+            You are over the {{ fieldFormControl.errors.maxlength.requiredLength }} character limit
+        </mat-error>
     </mat-form-field>
-    
-  <!-- multiLine -->
-  <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control" [attr.id]="fieldId"
-    [ngClass]="isValid ? 'valid' : 'invalid'"
-    [readonly]="readonly"></textarea>
 </div>
 
 <!-- Read only -->
 <div *ngIf="readonly" class="col-12 field">
-  <label class="field-header">{{header}}</label>
-
-  <!-- Single Field -->
-  <input *ngIf="!multiline" type="text" [(ngModel)]="value" class="form-control view" [attr.id]="fieldId"
-    [readonly]="readonly"/>
-  <!-- multiLine -->
-  <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control" [attr.id]="fieldId"
-  [readonly]="readonly"></textarea>
+    <div class="row" *ngIf="header">
+        <div class="col-12">
+            <label class="field-header">{{ header }}</label>
+        </div>
+    </div>
+    <!-- Input Field -->
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="!multiline" class="container input-group form-control view view-field-background">
+                <!-- If field has suffix -->
+                <input *ngIf="hasSuffix" class="col-8" type="text" [(ngModel)]="value" readonly />
+                <span *ngIf="hasSuffix" class="input-group-addon col-4">{{ suffix }}</span>
+                <!-- If field has no suffix -->
+                <input *ngIf="!hasSuffix" class="col-12" type="text" [(ngModel)]="value" readonly />
+            </div>
+        </div>
+    </div>
+    <!-- multiLine -->
+    <textarea *ngIf="multiline" rows="4" [(ngModel)]="value" class="form-control view-field-background" [attr.id]="fieldId" [readonly]="readonly"></textarea>
 </div>

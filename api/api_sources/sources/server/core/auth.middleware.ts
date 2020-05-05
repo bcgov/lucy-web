@@ -89,6 +89,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
         try {
              // Get user info
              // ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
+             ApplicationAuthMiddleware.logger.disableInfoLog = true;
              const { preferred_username, email, family_name, given_name} = payload;
              assert((preferred_username || email), `Email And Preferred user name is missing from payload\n ${JSON.stringify(payload)}`);
 
@@ -96,10 +97,12 @@ export class ApplicationAuthMiddleware extends LoggerBase {
 
              // Check token expiry
              const expiry = (payload.exp * 1000);
-             if (expiry && expiry > Date.now()) {
+             if (expiry && expiry < Date.now()) {
                  const message = `Token is expired for user ${email}`;
                  ApplicationAuthMiddleware.logger.info(message);
                  if (!AppConfig.bypassTokenExpiry) {
+                    ApplicationAuthMiddleware.logger.error(`Token Expire for user: ${email}`);
+                    ApplicationAuthMiddleware.logger.error(`Expiry: ${expiry}: current: ${Date.now()}, Diff: ${expiry - Date.now()}`);
                     done(errorWithCode(401, message), false);
                     return;
                  } else {
@@ -166,9 +169,9 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              const session = await UserDataController.shared.getCurrentSession(user);
              if (session) {
                  // Check session validity
-                 if (session.tokenExpiry > new Date() && !AppConfig.bypassTokenExpiry) {
-                     const message = `${api} |  Session Expire for user ${user.email} at ${session.tokenExpiry}`;
-                     ApplicationAuthMiddleware.logger.info(message);
+                 if (session.tokenExpiry < new Date() && !AppConfig.bypassTokenExpiry) {
+                     const message = `${api} |  Session Expire (app internal) for user ${user.email} at ${session.tokenExpiry}`;
+                     ApplicationAuthMiddleware.logger.error(message);
                      // Remove current
                      await UserDataController.shared.removeSession(user);
                       // Fail Session
@@ -220,6 +223,7 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
     // Returning Middleware callback
     return (req: express.Request, resp: express.Response, next: any) => {
         try {
+            LoggerBase.logger.disableInfoLog = true;
             assert(req.user || req['appUser'], 'Invalid request parameters: [No User]');
             const user: User = req.user || req['appUser'];
             const userRoles = user.roles;
@@ -229,15 +233,18 @@ export const roleAuthenticationMiddleware = (roles: RolesCodeValue[]) => {
                 if (value) {
                     LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Accepted ${rc}`);
                 } else {
-                    LoggerBase.logger.info(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
+                    LoggerBase.logger.error(`roleAuthenticationMiddleware | => Role Not Accepted ${rc}`);
                 }
+                LoggerBase.logger.disableInfoLog = false;
                 return value;
             });
+            LoggerBase.logger.disableInfoLog = false;
             return acceptedRoles.length > 0 ? next() : (resp.status(401).json(errorBody('User role is not authorized to access this route', [{
                 acceptedRoles: `Accepted roles are [${roles}]`
             }])));
 
         } catch (excp) {
+            LoggerBase.logger.disableInfoLog = false;
             resp.status(500).json(errorBody(`${excp}`, [excp]));
         }
     };
@@ -257,5 +264,27 @@ export const adminOnlyRoute = () => {
  */
 export const writerOnlyRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.editor]);
+};
+
+/**
+ * @description Route For all editors including inspect app admin
+ * @export closure editorOnlyRoute
+ */
+export const editorOnlyRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin, RolesCodeValue.editor]);
+};
+
+/**
+ * @description Route for inspect app editor
+ */
+export const inspectAppEditorRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin, RolesCodeValue.inspectAppOfficer]);
+};
+
+/**
+ * @description Route for inspect app admin
+ */
+export const inspectAppAdminRoute = () => {
+    return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin]);
 };
 // -----------------------------------------------------------------------------------------------------------

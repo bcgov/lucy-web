@@ -8,6 +8,13 @@ RUN npm install -g npm
 ENV HOME_ROOT=/opt/app-root
 ENV HOME=/opt/app-root/src
 
+# Create DIR Structure
+# Temp File Structure
+RUN mkdir -p ${HOME_ROOT}/temp
+# Issue Files
+RUN mkdir -p ${HOME_ROOT}/temp/uploads/issues
+
+# Source DIR
 RUN mkdir -p $HOME
 
 WORKDIR $HOME_ROOT
@@ -25,9 +32,9 @@ COPY ./ .
 
 
 VOLUME ${HOME}
+ENV PATH ${HOME}/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
-
-#ENTRYPOINT [ "npm", "run", "docker_start" ]
+# Cleaning any existing generated file
+RUN rm -rf ./dist-server
 
 CMD [ "npm", "run", "hotload" ]
-#ENTRYPOINT /usr/bin/tail -f /dev/null

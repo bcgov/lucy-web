@@ -1,21 +1,42 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observation } from 'src/app/models';
-import { CodeTableService } from 'src/app/services/code-table.service';
 import { ObservationService } from 'src/app/services/observation.service';
 import { AppRoutes } from 'src/app/constants';
 import { RouterService } from 'src/app/services/router.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { DummyService } from 'src/app/services/dummy.service';
-import * as moment from 'moment';
-import { ValidationService } from 'src/app/services/validation.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserAccessType } from 'src/app/models/Role';
 import { UserService } from 'src/app/services/user.service';
+import { ExportService, ExportType } from 'src/app/services/export/export.service';
+import { ToastService, ToastIconType } from 'src/app/services/toast/toast.service';
 
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { MapMarker } from '../../Utilities/map-preview/map-preview.component';
 import { AppConstants } from 'src/app/constants/app-constants';
+import { StringConstants } from 'src/app/constants/string-constants';
+
+enum ExportFormat {
+  CSV='csv',
+  KML='kml'
+}
 
 
 declare const process: any;
@@ -31,11 +52,23 @@ export class InventoryComponent implements OnInit {
    */
   public accessType: UserAccessType = UserAccessType.DataViewer;
 
+   /**
+   * Name of database
+   * to be consumed by HTML
+   */
+  public databaseTitle = ``;
+  
   /**
    * Boolean to indicate whether app is running in 
    * production environment
    */
   public isProd: boolean = false;
+
+  /**
+   * Boolean to indicate whether app is running in 
+   * test environment
+   */
+  public isTest: boolean = false;
 
   /**
    * Show/Hide Add edit observation button
@@ -48,39 +81,49 @@ export class InventoryComponent implements OnInit {
     return this.roles.canCreate(this.accessType);
   }
 
+  searchKeyword = '';
+  tableHeaderText = '';
+  exportFormat = ExportFormat.CSV;
+
   /************ Sorting Variables ************/
   sortAscending = false;
   sortingByObservationId = false;
-  sortingByDate = false;
+  sortingByDateObserved = false;
+  sortingByDateUpdated = true;   // default sorting mechanism is by date last updated
   sortingBySpecies = false;
-  sortingByLocation = false;
-  sortingBySurveyor = false;
+  sortingByObserver = false;
   /************ End of Sorting Variables ************/
 
   markers: MapMarker[] = [];
-  observations: Observation[];
+  observations: Observation[] = [];
+  totalObservations = 0;
 
   /************ Flags ************/
   showMap = true;
   showList = true;
+  showExportModal = false;
   /************ End of Flags ************/
 
-  // TEMP
-  private _numberOfTests = 10;
-  set numberOfObservationForTesting(number: number) {
-    if (this.validationService.isValidInteger(String(number))) {
-      this._numberOfTests = number;
-    }
+  get isEmpty(): boolean {
+    return this.totalObservations === 0;
   }
-  get numberOfObservationForTesting(): number {
-    return this._numberOfTests;
-  }
-  panelOpenState = false;
-  materialTable = true;
 
+  get exportText(): string {
+    if (this.totalObservations === 0) return 'Export';
+
+    return `Export ${this.totalObservations} Results`
+  }
+
+  openExportModal() {
+    this.showExportModal = true;
+  }
+
+  closeExportModal() {
+    this.showExportModal = false;
+  }
 
   /************ Material Table ************/
-  displayedColumns: string[] = ['Observation_id', 'location', 'species', 'date', 'observer', 'actions'];
+  displayedColumns: string[] = ['observation_id', 'date_observed', 'last_updated', 'species', 'observer', 'actions'];
   dataSource = new MatTableDataSource<Observation>(this.observations);
   @ViewChild(MatPaginator) paginator: MatPaginator;
    /************ END OF Material Table ************/
@@ -88,17 +131,19 @@ export class InventoryComponent implements OnInit {
   constructor(
     private userService: UserService,
     private roles: RolesService,
-    private validationService: ValidationService,
-    private codeTables: CodeTableService,
     private observationService: ObservationService,
     private router: RouterService,
     private loadingService: LoadingService,
-    private dummy: DummyService) { }
+    private exportService: ExportService,
+    private toastService: ToastService
+    ) { }
 
   ngOnInit() {
-    this.isProd = AppConstants.CONFIG.env == `prod` ? true : false;
-    this.fetchObservations();
+    this.isProd = AppConstants.CONFIG.env === `prod` ? true : false;
+    this.isTest = AppConstants.CONFIG.env === `test` ? true : false;
+    this.fetchObservations(true);
     this.setAccessType();
+    this.setDatabaseTitle();
   }
 
   private initMaterialTable() {
@@ -115,10 +160,22 @@ export class InventoryComponent implements OnInit {
     this.loadingService.remove();
   }
 
-  private async fetchObservations() {
+  async fetchObservations(initialRender?: boolean) {
     this.loadingService.add();
-    const observations = await this.observationService.getAll();
+    let observations: Observation[] = [];
+
+    if (this.searchKeyword) {
+      observations = await this.observationService.getFilteredObservations(this.searchKeyword);
+      this.tableHeaderText = `${observations.length} Records found for "${this.searchKeyword}"`;
+    } else {
+      observations = await this.observationService.getAll();
+      this.tableHeaderText = observations.length ? `Showing ${observations.length} Records` : 'No records yet';
+      this.totalObservations = observations.length;
+    }
+
     this.observations = observations;
+    if (initialRender) this.sortByDateUpdated()
+
     this.initMaterialTable();
     this.setMapMarkers();
     this.loadingService.remove();
@@ -128,19 +185,27 @@ export class InventoryComponent implements OnInit {
     this.markers = [];
     for (const object of this.observations) {
       this.markers.push( {
-        latitude: object.lat,
-        longitude: object.long,
+        latitude: object.spaceGeom.latitude,
+        longitude: object.spaceGeom.longitude,
         observation: object,
       });
     }
   }
 
+  private setDatabaseTitle() {
+    this.databaseTitle = StringConstants.database_Title;
+  }
+
   switchShowMap() {
-    this.showMap = !this.showMap;
+    if (this.showList) {
+      this.showMap = !this.showMap;
+    }
   }
 
   switchShowList() {
-    this.showList = !this.showList;
+    if (this.showMap) {
+      this.showList = !this.showList;
+    }
 
     /**
      * When adding and removing
@@ -156,6 +221,11 @@ export class InventoryComponent implements OnInit {
     }
   }
 
+  clearInput() {
+    this.searchKeyword = '';
+    this.fetchObservations();
+  }
+
   /**
    * Create a delay
    * @param ms milliseconds
@@ -169,10 +239,14 @@ export class InventoryComponent implements OnInit {
   // }
 
   /************ Sorting Function ************/
-  sortByDate() {
+  /**
+   * Sorts observations based on the date that the
+   * observation was made
+   */
+  sortByDateObserved() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
-    if (this.sortingByDate) {
+    if (this.sortingByDateObserved) {
       this.sortAscending = !this.sortAscending;
     } else {
       this.sortAscending = false;
@@ -180,7 +254,7 @@ export class InventoryComponent implements OnInit {
 
     // Set sort flags
     this.resetSortFields();
-    this.sortingByDate = true;
+    this.sortingByDateObserved = true;
 
     // Sort objects
     this.observations.sort((left, right): number => {
@@ -192,6 +266,44 @@ export class InventoryComponent implements OnInit {
         }
       }
       if (left.date > right.date) {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    this.initMaterialTable();
+  }
+
+  /**
+   * Sorts observations based on the date that the observation
+   * info was last updated (updatedAt property)
+   */
+  sortByDateUpdated() {
+    // If aready sorting by this criteria,
+    // Flip between ascending and descending
+    if (this.sortingByDateUpdated) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortAscending = false;
+    }
+
+    // Set sort flags
+    this.resetSortFields();
+    this.sortingByDateUpdated = true;
+
+    // Sort objects
+    this.observations.sort((left, right): number => {
+      if (left.updatedAt < right.updatedAt) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      if (left.updatedAt > right.updatedAt) {
         if (this.sortAscending) {
           return -1;
         } else {
@@ -237,15 +349,10 @@ export class InventoryComponent implements OnInit {
     this.initMaterialTable();
   }
 
-  sortByLocation() {
-    this.resetSortFields();
-    this.sortingByLocation = true;
-  }
-
-  sortBySurveyor() {
+  sortByObserver() {
     // If aready sorting by this criteria,
     // Flip between ascending and descending
-    if (this.sortingBySurveyor) {
+    if (this.sortingByObserver) {
       this.sortAscending = !this.sortAscending;
     } else {
       this.sortAscending = false;
@@ -253,24 +360,40 @@ export class InventoryComponent implements OnInit {
 
     // Set sort flags
     this.resetSortFields();
-    this.sortingBySurveyor = true;
+    this.sortingByObserver = true;
 
     // Sort objects
-    this.observations.sort((left, right): number => {
-      if (left.observerFirstName < right.observerLastName) {
+    this.observations.sort((leftObservation, rightObservation): number => {
+      if (leftObservation.observerLastName < rightObservation.observerLastName) {
         if (this.sortAscending) {
           return 1;
         } else {
           return -1;
         }
       }
-      if (left.observerFirstName > right.observerLastName) {
+      if (leftObservation.observerLastName > rightObservation.observerLastName) {
         if (this.sortAscending) {
           return -1;
         } else {
           return 1;
         }
       }
+      // if we've reached here, left and right LastNames are equal
+      // now sort by first name
+      if (leftObservation.observerFirstName < rightObservation.observerFirstName) {
+        if (this.sortAscending) {
+          return 1;
+        } else {
+          return -1;
+        }
+      } else {
+        if (this.sortAscending) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      // if here, left observer name is identical to right observer name
       return 0;
     });
     this.initMaterialTable();
@@ -310,11 +433,19 @@ export class InventoryComponent implements OnInit {
     this.initMaterialTable();
   }
 
+  getIconName(): string {
+    if (this.sortAscending) {
+      return 'arrow_upward';
+    } else {
+      return 'arrow_downward';
+    }
+  }
+
   resetSortFields() {
-    this.sortingByDate = false;
+    this.sortingByDateObserved = false;
+    this.sortingByDateUpdated = false;
     this.sortingBySpecies = false;
-    this.sortingByLocation = false;
-    this.sortingBySurveyor = false;
+    this.sortingByObserver = false;
     this.sortingByObservationId = false;
   }
 
@@ -324,53 +455,13 @@ export class InventoryComponent implements OnInit {
     this.router.navigateTo(AppRoutes.ViewObservation, observation.observation_id);
   }
 
-  edit(observation: Observation) {
-    this.router.navigateTo(AppRoutes.EditObservation, observation.observation_id);
-  }
-
-  /************ Dummy Data ************/
-  async createDummys() {
-    this.loadingService.add();
-    await this.delayAsync(100);
-    this.observations = [];
-    console.log(`generating`);
-    const random = await this.dummy.createDummyObservations(this.numberOfObservationForTesting);
-    console.log(`generated`);
-    this.observations = random;
-    this.initMaterialTable();
-    console.log(`Adding Pins`);
-    this.setMapMarkers();
-    this.loadingService.remove();
-  }
-
-  private getUniqueId(): number {
-    if (this.observations.length < 1) {
-      return 0;
+  export() {
+    if (this.exportFormat === ExportFormat.CSV) {
+      this.exportService.exportCSV(ExportType.Observation);
+    } else {
+      this.toastService.show('Feature not available yet', ToastIconType.fail);
+      return;
     }
-    const usedIds: number[] = [];
-    for (const object of this.observations) {
-      usedIds.push(object.observation_id);
-    }
-
-    const sortedUsedIds = usedIds.sort((n1, n2) => n1 - n2);
-    return sortedUsedIds.pop() + 1;
+    this.showExportModal = false;
   }
-
-  generateObservationForTesting() {
-    this.createDummys();
-  }
-
-  removeGeneratedObservations() {
-    this.fetchObservations();
-  }
-
-   /**
-   * Create a delay
-   * @param ms milliseconds
-   */
-  async delayAsync(ms: number): Promise<any> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  /************ End of Dummy Data ************/
-
 }
