@@ -70,6 +70,17 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   };
   private leafletDrawLayerGroup?;
 
+  // Layer Flags
+  showWells = true;
+  showRegionaldistricts = true;
+  showMunicipalities = true;
+
+  // Layers
+  municipalitiesLayerGroup?;
+  regionalDistrictsLayerGroup?;
+  wellsLayerGroup?;
+  
+
   // Group close markers or always show individually
   @Input() cluster = true;
 
@@ -257,7 +268,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     this.initMapWithGoogleSatellite();
     // this.initWithOpenStreet();
     this.map.on('zoom', () => {
-      if (this.map.getZoom() >= 16) {
+      if ((this.map.getZoom() >= 16) && this.showWells) {
         this.addWellsLayerToMap(this.map.getBounds());
       }
       this.addBcDataCatalogueLayersToMap();
@@ -288,12 +299,81 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     this.addGeoJSONtoMap();
   }
 
+  private initMapWithBCGW() {
+    // Use Google tiles
+    L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      // attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'.
+      preferCanvas: true,
+      key: this.makeid(10)
+    }).addTo(this.map);
+    this.addBCBorder();
+    this.addBcDataCatalogueLayersToMap();
+    this.addGeoJSONtoMap();
+  }
+
   private async addBcDataCatalogueLayersToMap() {
     this.addRegionalDistrictsLayerToMap();
     this.addMunicipalitiesLayerToMap();
   }
 
+  //Layers
+  switchShowWells() {
+    this.showWells = !this.showWells
+    if (this.showWells) {
+      // show
+      // will show depending on zoom
+    } else {
+      // remove
+      this.removeWells()
+    }
+  }
+
+  switchShowRegionaldistricts() {
+    this.showRegionaldistricts = !this.showRegionaldistricts
+    if (this.showRegionaldistricts) {
+      // show
+      this.addRegionalDistrictsLayerToMap()
+    } else {
+      // remove
+      this.removeRegionaldistricts()
+    }
+  }
+
+  switchMunicipalities() {
+    this.showMunicipalities = !this.showMunicipalities
+    if (this.showMunicipalities) {
+      // show
+      this.addMunicipalitiesLayerToMap()
+    } else {
+      // remove
+      this.removeMunicipalities()
+    }
+  }
+
+  private removeWells() {
+    if (this.wellsLayerGroup) {
+      this.map.removeLayer(this.wellsLayerGroup);
+      this.wellsLayerGroup = undefined;
+    }
+  }
+
+  private removeRegionaldistricts() {
+    if (this.regionalDistrictsLayerGroup) {
+      this.map.removeLayer(this.regionalDistrictsLayerGroup);
+      this.regionalDistrictsLayerGroup = undefined;
+    }
+  }
+
+  private removeMunicipalities() {
+    if (this.municipalitiesLayerGroup) {
+      this.map.removeLayer(this.municipalitiesLayerGroup);
+      this.municipalitiesLayerGroup = undefined;
+    }
+  }
+  
   private async addMunicipalitiesLayerToMap() {
+    this.removeMunicipalities();
+    
     const municipalitiesLayerGroup = L.layerGroup();
     const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
     L.geoJSON(municipalitiesGeoJSON, {
@@ -307,9 +387,12 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       return `${feature.feature.properties.ADMIN_AREA_NAME}`;
     }).addTo(municipalitiesLayerGroup);
     municipalitiesLayerGroup.addTo(this.map);
+    this.municipalitiesLayerGroup = municipalitiesLayerGroup
   }
 
   private async addRegionalDistrictsLayerToMap() {
+    this.removeRegionaldistricts();
+    
     const regionalDistrictsLayerGroup = L.layerGroup();
     const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
     L.geoJSON(regionalDistrictsGeoJSON, {
@@ -323,9 +406,12 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
       return `${feature.feature.properties.ADMIN_AREA_NAME}`;
     }).addTo(regionalDistrictsLayerGroup);
     regionalDistrictsLayerGroup.addTo(this.map);
+    this.regionalDistrictsLayerGroup = regionalDistrictsLayerGroup
   }
 
   private async addWellsLayerToMap(bbox: number[]) {
+    this.removeWells();
+    
     const wellIcon = L.icon({
       iconUrl: encodeURI('data:image/svg+xml,' + WaterDropletSVG.waterDroplet),
       iconSize: [20, 20]
@@ -342,6 +428,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     })
     .addTo(wellsLayerGroup);
     wellsLayerGroup.addTo(this.map);
+    this.wellsLayerGroup = wellsLayerGroup
   }
 
   private addGeoJSONtoMap() {

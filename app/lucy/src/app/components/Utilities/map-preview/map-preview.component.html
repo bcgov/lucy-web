@@ -1,6 +1,21 @@
 <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" /> -->
 <div class="row" style="height: 100%;">
     <div class="col-12" style="height: 100%;">
-            <div class="box-shadow" [attr.id]="mapId" style="height: 100%; position: relative;"></div>
+        <div class="box-shadow" [attr.id]="mapId" style="height: 100%; position: relative;"></div>
+        <div id="toggles">
+            <div class="container">
+                <div class="row">
+                    <div class="col-2 mx-1 d-flex justify-content-center" [ngClass]="showWells ? 'toggle-on' : 'toggle-off'" (click)="switchShowWells()">
+                        Wells
+                    </div>
+                    <div class="col-5 mx-1 d-flex justify-content-center" [ngClass]="showRegionaldistricts ? 'toggle-on' : 'toggle-off'" (click)="switchShowRegionaldistricts()">
+                        Regional districts
+                    </div>
+                    <div class="col-4 mx-1 d-flex justify-content-center" [ngClass]="showMunicipalities ? 'toggle-on' : 'toggle-off'" (click)="switchMunicipalities()">
+                        Municipalities
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

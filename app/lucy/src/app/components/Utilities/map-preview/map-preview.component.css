@@ -5,3 +5,22 @@
 .leaflet-container {
     z-index: 0;
 }
+
+#toggles {
+    z-index: 2; 
+    position: absolute; 
+    top: 5pt; 
+    left: 45pt;
+}
+
+.toggle-on {
+    background-color: #002C71;
+    color: white;
+    border-radius: 5px;
+}
+
+.toggle-off {
+    border-radius: 5px;
+    color: #002C71;
+    background-color: white;
+}
