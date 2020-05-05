@@ -16,14 +16,52 @@
     },
     "staticBranches": ["dev", "staging", "prod"],
     "staticUrls": {
-        "dev": "dev.invasivesbc.pathfinder.gov.bc.ca",
-        "staging": "test.invasivesbc.pathfinder.gov.bc.ca",
-        "prod": "invasivesbc.gov.bc.ca"
+        "dev": "dev-invasivesbc.pathfinder.gov.bc.ca",
+        "staging": "test-invasivesbc.pathfinder.gov.bc.ca",
+        "prod": "invasivesbc.pathfinder.gov.bc.ca"
     },
     "staticUrlsAPI": {
-        "dev": "api.dev.invasivesbc.8ecbmv.pathfinder.gov.bc.ca",
-        "staging": "api.test.invasivesbc.8ecbmv.pathfinder.gov.bc.ca",
-        "prod": "api.invasivesbc.gov.bc.ca"
+        "dev": "api-dev-invasivesbc.pathfinder.gov.bc.ca",
+        "staging": "api-test-invasivesbc.pathfinder.gov.bc.ca",
+        "prod": "api-invasivesbc.pathfinder.gov.bc.ca"
+    },
+    "certificateURL": {
+        "dev": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
+        "test": "https://sso-test.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
+        "prod": "https://sso.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+    },
+    "sso": {
+        "dev": {
+            "url": "https://sso-dev.pathfinder.gov.bc.ca",
+            "clientId": "invasives-bc",
+            "realm": "dfmlcg7z"
+        },
+        "test": {
+            "url": "https://sso-test.pathfinder.gov.bc.ca",
+            "clientId": "invasives-bc",
+            "realm": "dfmlcg7z"
+        },
+        "prod": {
+            "url": "https://sso.pathfinder.gov.bc.ca",
+            "clientId": "invasives-bc",
+            "realm": "dfmlcg7z"
+        }
+    },
+    "migrationInfo" : {
+        "dev": {
+            "type": "normal",
+            "cleanup": "none",
+            "dbSeed": "yes"
+        },
+        "test": {
+            "type": "normal",
+            "cleanup": "none",
+            "dbSeed": "yes"
+        },
+        "prod": {
+            "type": "normal",
+            "cleanup": "none",
+            "dbSeed": "yes"
+        }
     }
-    
 }

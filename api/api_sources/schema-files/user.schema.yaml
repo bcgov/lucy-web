@@ -1,0 +1,105 @@
+# User Table Schema 
+version: '1.0'
+externalTables: 
+  - name: app_role_code
+    schema: RolesCodeTableSchema
+    description: Application roles code table
+schemas: 
+  ## RolesCodeTableSchema
+  RolesCodeTableSchema:
+    name: app_role_code
+    modelName: RolesCode
+    description: This table holds definition of different user roles of the system along with cross domain code.
+    columns:
+      id:
+        name: role_code_id
+        comment: 'Auto generated primary key.'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: role_code
+        comment: Cross domain code to uniquely identify any role 
+        definition: VARCHAR(10) NOT NULL UNIQUE
+      role:
+        name: role
+        comment: Role description in words
+        definition: VARCHAR(50) NULL
+      description:
+        name: description
+        comment: Detail description of of different roles and access level and functional capability
+        definition: VARCHAR(300) NULL
+      activeIndicator:
+          name: active_ind
+          comment: Indicator to check active status of code
+          definition: BOOLEAN NOT NULL DEFAULT TRUE
+  ## --
+  # -- UserSchema --
+  UserSchema:
+    name: application_user
+    description: 'User of the application is a person with valid IDR or BCeID. Default role of the user is Viewer of InvasiveBC data records. Other typical user types are admin, subject matter expert (sme/ or data editor)'
+    ## -- Display Layout
+    displayLayout:
+      displayLabel: '#(email)'
+    ## -- 
+    ## -- Columns
+    columns:
+      id: 
+        name: user_id
+        comment: 'Auto generated primary key. Uniquely identify user'
+        definition: SERIAL PRIMARY KEY
+      firstName:
+        name: first_name
+        comment: First name of the user
+        definition: VARCHAR(100) NULL
+      lastName: 
+        name: last_name
+        comment: Last name of the user
+        definition: VARCHAR(100) NULL
+      email:
+        name: email
+        comment: Email address of user
+        definition: VARCHAR(300) NOT NULL UNIQUE
+      preferredUsername:
+        name: preferred_username
+        comment: IDR of BCeID associated with user
+        definition: VARCHAR(300) NOT NULL UNIQUE
+      accountStatus:
+        name: account_status
+        comment: 'Status of user account. This application level enum flag values. 0 => Inactive, 1 => Active, 2 => Suspended. Currently this values are managed by application, no code table for business'
+        definition: SMALLINT DEFAULT 1
+      expiryDate:
+        name: expiry_date
+        comment: Expiry date of the account
+        definition: DATE NULL
+      activation:
+        name: activation_status
+        comment: Flag to check account is active or not
+        definition: SMALLINT DEFAULT 1
+      activeSessionId:
+        name: active_session_id
+        comment: 'Reference to active session table. This is non referential colum to create soft link to user_session table. This column will used to keep track current active session of the user'
+        definition: INT NULL
+  # --
+  ## -- UserRoleSchema
+  UserRoleSchema:
+    name: user_role
+    description: This is join (pivot) table for to store different role associated with an account user. The relation between user and roles are many to many in nature.
+    columns:
+      id:
+        name: user_role_id
+        comment: 'Auto generated primary key.'
+        definition: SERIAL PRIMARY KEY
+      user:
+        name: user_id
+        comment: 'Foreign key reference to user table'
+        definition: INT NOT NULL
+        foreignTable: application_user
+        refColumn: user_id
+        deleteCascade: true
+      role:
+        name: role_code_id
+        comment: 'Foreign key reference to role code table'
+        definition: INT NOT NULL
+        foreignTable: app_role_code
+        refColumn: role_code_id
+        deleteCascade: true
+  ## -- 

@@ -3,6 +3,7 @@ FROM postgres:9.5
 
 ENV POSTGISV 2.5
 ENV TZ America/New_York
+ENV PORT 5432
 
 # add addressing dictionary
 RUN mkdir -p /opt/apps
@@ -25,5 +26,5 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN mkdir -p /docker-entrypoint-initdb.d
 COPY ./create_postgis.sql /docker-entrypoint-initdb.d/postgis.sql
 
-EXPOSE 5432
+EXPOSE ${PORT}
 CMD ["postgres"]

@@ -60,16 +60,16 @@ export class CreateObservationCode1562358560325 implements MigrationInterface {
         await queryRunner.query(this.aspectCodeSchema.migrationSQL);
         await queryRunner.query(this.proposedCodeSchema.migrationSQL);
         // Pre-load codes
-        await queryRunner.query(getSQLFileData(this.densitySchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.distributionSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.agencyCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.observationTypeCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.soilTextureCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.observationGeometryCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.specificUseCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.slopeCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.aspectCodeSchema.dataSQLPath()));
-        await queryRunner.query(getSQLFileData(this.proposedCodeSchema.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.densitySchema.dataSQLPath(), this.densitySchema.className));
+        await queryRunner.query(getSQLFileData(this.distributionSchema.dataSQLPath(), this.distributionSchema.className));
+        await queryRunner.query(getSQLFileData(this.agencyCodeSchema.dataSQLPath(), this.agencyCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.observationTypeCodeSchema.dataSQLPath(), this.observationTypeCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.soilTextureCodeSchema.dataSQLPath(), this.soilTextureCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.observationGeometryCodeSchema.dataSQLPath(), this.observationGeometryCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.specificUseCodeSchema.dataSQLPath(), this.specificUseCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.slopeCodeSchema.dataSQLPath(), this.slopeCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.aspectCodeSchema.dataSQLPath(), this.aspectCodeSchema.className));
+        await queryRunner.query(getSQLFileData(this.proposedCodeSchema.dataSQLPath(), this.proposedCodeSchema.className));
     }
 
     /**

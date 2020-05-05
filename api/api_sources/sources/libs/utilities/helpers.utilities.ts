@@ -66,6 +66,16 @@ export const unWrap = (value?: any, defaultValue?: any): any => {
 };
 
 /**
+ * @description Unwrap object or return default
+ * @param any value
+ * @param T defaultValue
+ * @returns T
+ */
+export function unWrapType<T> (value: any, defaultValue: T): T  {
+    return value !== undefined ? (value as T) : defaultValue;
+}
+
+/**
  * @description Load json from yaml file
  * @param string yamlPath Path of yml file
  * @returns any
@@ -168,6 +178,41 @@ export const incrementalWrite = (filePath: string, data: any) => {
 };
 
 /**
+ * @description Write into provided file path if nothing exists on path
+ * @param string filePath: File path to write back
+ * @param any data: Data object to write
+ */
+export const writeIfNotExists = (filePath: string, data: any) => {
+    if (fs.existsSync(filePath)) {
+        return null;
+    }
+    fs.writeFileSync(filePath, data, { flag: 'w', encoding: 'utf8'});
+    return filePath;
+};
+
+/**
+ * @description Reverse Capitalize any given string
+ * @param any s: Input string
+ */
+export const reverseCapitalize = (s: any) => {
+    if (typeof s !== 'string') {
+        return '';
+    }
+    return s.charAt(0).toLocaleLowerCase() + s.slice(1);
+};
+
+/**
+ * @description Return capitalize string of any given string
+ * @param string s
+ */
+export const capitalize = (s: any): string => {
+    if (typeof s !== 'string') {
+        return '';
+    }
+    return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+/**
  * @description Check status of value and return if defined or return default
  * @param any value
  * @param any defaultValue
@@ -183,5 +228,122 @@ export const ifDefined = (value: any, defaultValue: any) => {
  * @param string key
  */
 export function setNull<T> (obj: T, key: keyof T) { (obj[key as string] = null); }
+
+/**
+ * @description Check any object is empty or not
+ * @param any obj : any object
+ */
+export const isEmpty = (obj: any) => (obj !== undefined && Object.keys(obj).length === 0);
+
+/**
+ * @description Iterate through input object with keys mentioned in key path and fetch values
+ * @param any obj: Input object
+ * @param string keyPath: keyPath separated by '.'
+ */
+export const valueAtKeyPath = (obj: any, keyPath: string) => {
+    const getValue = (o: any, ks: string[]): any => {
+        if (o === undefined) {
+            return;
+        }
+        const k = ks.shift() || '';
+        if (ks.length === 0) {
+            return o[k];
+        } else {
+            return getValue(o[k], ks);
+        }
+    };
+
+    const keys: string[] = keyPath.split('.');
+    return getValue(obj, keys);
+};
+
+/**
+ * @description This function copy a key of the source object to same key of destination object and if set of subKeys supplied then only coy subKeys.
+ * @param string key: key of the source object
+ * @param any source: source object
+ * @param any destination: Destination object
+ * @param string[] keys: array of sub keys with key object of the source
+ */
+export const copyKeyAndSubKeys = (key: string, source: any, destination: any, subKeys?: string[]) => {
+    // Check main key exists in destination
+    if (!destination[key]) {
+        return;
+    }
+    // Copy Obj
+    let copy = {};
+    if (subKeys && subKeys.length > 0) {
+        // Copy keys only
+        for (const k of subKeys) {
+            if (k !== 'id' && source[key][k]) {
+                copy[k] = source[key][k];
+            }
+        }
+    } else {
+        // Copy enter object
+        const all: any = { ...source[key] };
+        if (all.id) {
+            delete all.id;
+        }
+        copy = { ...all };
+    }
+
+    // Now update destinations key
+    destination[key] = { ...(destination[key] || {}), ...copy };
+};
+
+/**
+ * @description Create a query string from input object
+ * @param object input
+ */
+export const getHTTPReqQueryString = (input: {[key: string]: any}) => {
+    let result = '';
+    _.each(input, (val: any, k: string) => {
+        result = result + `${encodeURIComponent(k)}=${encodeURIComponent(val)}&`;
+    });
+    result = result.slice(0, -1);
+    return `?${result}`;
+};
+
+export const Key = (input: {[key: string]: any}): string => {
+    if (Object.keys(input).length > 0) {
+        return Object.keys(input)[0];
+    } else {
+        return '';
+    }
+};
+
+/**
+ * @description Select a random key or index for given input
+ * @param any input
+ */
+export const RandomizeSelection = (input: any) => {
+    if (input.constructor === Array) {
+        // Array input
+        const array: any[] = input as any[];
+        const count = array.length;
+        if  (count > 0) {
+            if (count === 1) {
+                return array[0];
+            }
+            const randomIndex = Math.floor((Math.random() * count));
+            if (randomIndex >= 0 && randomIndex < count) {
+                return array[randomIndex];
+            }
+        }
+        return;
+    } else if (typeof input === 'object') {
+        // Object index
+        // Get all keys
+        const keys: any[] = Object.keys(input);
+        const randomIndex = Math.floor((Math.random() * keys.length));
+        if (randomIndex >= 0 && randomIndex < keys.length) {
+            const randomKey = keys[randomIndex];
+            return {
+                key: randomKey,
+                value: input[randomKey]
+            };
+        }
+    }
+};
 
 // -------------------------------

@@ -23,12 +23,14 @@ import {MigrationInterface, QueryRunner} from 'typeorm';
 import { DatabaseMigrationHelper} from '../migration.helpers';
 import { DefaultLoginAccessCodes } from '../initial-data';
 import { RolesCodeTableSchema} from '../database-schema';
+import { AppLogger } from '../../Applogger';
 
 /**
  * @description Generated Migration file for creation of role table
  * @export class LoginAccessCodeCreate1557785001021
  */
-export class LoginAccessCodeCreate1557785001021 extends RolesCodeTableSchema implements MigrationInterface {
+export class LoginAccessCodeCreate1557785001021 extends AppLogger implements MigrationInterface {
+    roleCodeSchema: RolesCodeTableSchema = new RolesCodeTableSchema();
 
     /**
      * @description Up method
@@ -38,22 +40,14 @@ export class LoginAccessCodeCreate1557785001021 extends RolesCodeTableSchema imp
     public async up(queryRunner: QueryRunner): Promise<any> {
         // Creating table
         // Schema
-        await queryRunner.query(`CREATE TABLE ${this.table.name} (
-            ${this.table.columns.id} SERIAL PRIMARY KEY,
-            ${this.table.columns.code} VARCHAR (100)  NOT NULL UNIQUE,
-            ${this.table.columns.role} VARCHAR(100) NOT NULL,
-            ${this.table.columns.description} VARCHAR(500) NULL
-        );`);
-
-        // Creating timestamp column
-        await queryRunner.query(this.createTimestampsColumn());
-
-        // Creating comments
-        await queryRunner.query(this.createComments());
+        this.info(`[Running]`);
+        // Create Table
+        await queryRunner.query(this.roleCodeSchema.migrationSQL);
         // Put default values
         for (const code of DefaultLoginAccessCodes) {
-            await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB(this.table.name, code));
+            await queryRunner.query(DatabaseMigrationHelper.shared.insertJSONInDB(this.roleCodeSchema.table.name, code));
         }
+        this.info(`[DONE]`);
     }
 
     /**
@@ -62,7 +56,8 @@ export class LoginAccessCodeCreate1557785001021 extends RolesCodeTableSchema imp
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(this.dropTable());
+        await queryRunner.query(`DROP TABLE IF EXISTS app_roles_code`);
+        await queryRunner.query(this.roleCodeSchema.dropTable());
     }
 }
 

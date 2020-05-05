@@ -24,6 +24,7 @@ import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { BaseModel } from './baseModel';
 import { DataModelController } from '../data.model.controller';
 import { RolesCodeTableSchema} from '../database-schema';
+import { ModelDescription, ModelProperty, PropertyType } from '../../libs/core-model';
 
 /**
  *
@@ -34,7 +35,9 @@ export enum RolesCodeValue {
     admin = 'ADM',
     viewer  = 'DAV',
     editor = 'DAE',
-    superUser = 'SUP'
+    superUser = 'SUP',
+    inspectAppOfficer = 'I_OFFICER',
+    inspectAppAdmin = 'I_ADM'
 }
 
 /**
@@ -43,6 +46,11 @@ export enum RolesCodeValue {
  */
 @Entity({
     name: RolesCodeTableSchema.schema.name
+})
+@ModelDescription({
+	description: 'Data Model Class Role table schema',
+	schema: RolesCodeTableSchema,
+	apiResource: false
 })
 export class RolesCode extends BaseModel {
     @PrimaryGeneratedColumn()
@@ -62,6 +70,13 @@ export class RolesCode extends BaseModel {
         name: RolesCodeTableSchema.schema.columns.description
     })
     description: string;
+
+    /**
+	 * @description Getter/Setter property for column {active_ind}
+	 */
+	@Column({ name: RolesCodeTableSchema.columns.activeIndicator})
+	@ModelProperty({type: PropertyType.boolean})
+	activeIndicator: boolean;
 
     get roleCode(): RolesCodeValue {
         return this.code as RolesCodeValue;

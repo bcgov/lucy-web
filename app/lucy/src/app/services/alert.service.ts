@@ -1,15 +1,32 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable, EventEmitter} from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 
 export interface AlertModel {
   title: string;
-  body: string;
+  body: string[];
   buttons: AlertModalButton[];
 }
 
 export interface AlertModalButton {
   name: string;
-  canDismiss: boolean,
+  canDismiss: boolean;
   eventEmitter: EventEmitter<boolean> | undefined;
 }
 
@@ -51,63 +68,62 @@ export class AlertService {
       actionButtons = buttons;
     }
 
-    const model: AlertModel = {
-      title: title,
-      body: body,
-      buttons: actionButtons
-    };
-    this.que.push(model);
-    this.emit();
+    this.pushModal(title, body, actionButtons);
   }
 
-  /**
-   * Add message to que and returns true or false
-   * to indicate if user confirmed or cancelled.
-   * @returns boolean
-   */
-  public async showConfirmation(title: string, body: string): Promise<boolean> {
+ /**
+  * Add message to que and returns true or false
+  * to indicate if user confirmed or cancelled.
+  * @param title Message title
+  * @param body Message body
+  * @param confirmName Defaults to Confirm
+  * @param cancelName Defefaults to Cancel
+  * @returns boolean
+  */
+
+  public async showConfirmation(title: string, body: string, confirmName?: string, cancelName?: string): Promise<boolean> {
     const confirmAction = new EventEmitter<boolean>();
     const cancelAction = new EventEmitter<boolean>();
     const actionButtons: AlertModalButton[] = [];
 
     return new Promise<boolean>((resolve, reject) => {
-
-
       confirmAction.subscribe(item => {
         confirmAction.unsubscribe();
         cancelAction.unsubscribe();
-        console.log(`should confirm`);
         resolve(true);
       });
 
       cancelAction.subscribe(item => {
         confirmAction.unsubscribe();
         cancelAction.unsubscribe();
-        console.log(`should cancel`);
         resolve(false);
       });
 
       actionButtons.push({
-        name: `Confirm`,
+        name: cancelName ? confirmName : `Confirm`,
         canDismiss: true,
         eventEmitter: confirmAction,
       });
 
       actionButtons.push({
-        name: `Cancel`,
+        name: cancelName ? cancelName : `Cancel`,
         canDismiss: true,
         eventEmitter: cancelAction,
       });
 
-      const model: AlertModel = {
-        title: title,
-        body: body,
-        buttons: actionButtons
-      };
-
-      this.que.push(model);
-      this.emit();
+      this.pushModal(title, body, actionButtons);
     });
+  }
+
+  private pushModal(title: string, body: string, actionButtons: AlertModalButton[]) {
+    const model: AlertModel = {
+      title: title,
+      body: body.split('\n'),
+      buttons: actionButtons
+    };
+
+    this.que.push(model);
+    this.emit();
   }
 
   /**
@@ -116,7 +132,8 @@ export class AlertService {
    */
   public clear(message: AlertModel) {
     if (!message) { return; }
-    this.que.splice(this.indexOf(message, this.que), 1);
+    this.que.splice(0, 1);
+    // this.que.splice(this.indexOf(message, this.que), 1);
     this.emit();
   }
 

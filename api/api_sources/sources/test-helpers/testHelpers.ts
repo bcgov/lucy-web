@@ -20,11 +20,19 @@
  * Imports
  */
 import * as request from 'supertest';
-import { should } from 'chai';
+import * as _ from 'underscore';
+import { should, expect } from 'chai';
 import { UserDataController, RoleCodeController, RolesCodeValue, User } from '../database/models';
 import { action } from '../libs/utilities';
 import { SharedDBManager } from '../database/dataBaseManager';
-import { adminToken, editorToken, viewerToken } from './token';
+import {
+    adminToken,
+    editorToken,
+    viewerToken,
+    inspectAppAdminToken,
+    inspectAppOfficerToken
+} from './token';
+import { BaseSchema } from '../libs/core-database';
 
 /**
  * @description Closure type to verify any data
@@ -68,10 +76,10 @@ export const createAdmin = async (): Promise<User> => {
         return existing;
     }
     const admin = await UserDataController.shared.create();
-    admin.email = 'amir@freshworks.io';
-    admin.preferredUsername = 'ashayega@idir';
-    admin.firstName = 'Amir';
-    admin.lastName = 'Shyega';
+    admin.email = 'istest1@idir';
+    admin.preferredUsername = 'istest1@idir';
+    admin.firstName = 'First';
+    admin.lastName = 'Last';
     admin.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.admin)];
     await UserDataController.shared.saveInDB(admin);
     return admin;
@@ -118,6 +126,12 @@ export const commonTestSetupAction = async (): Promise<any> => {
     } else {
         await SharedDBManager.connect();
     }
+    // Set Certificate url to prod
+    // Check certificate url
+    // Test Certificate url
+    if (process.env.APP_CERTIFICATE_URL && process.env.APP_CERTIFICATE_URL_TEST &&  process.env.APP_CERTIFICATE_URL !== process.env.APP_CERTIFICATE_URL_TEST) {
+        process.env.APP_CERTIFICATE_URL = process.env.APP_CERTIFICATE_URL_TEST;
+    }
     return resp;
 };
 
@@ -137,6 +151,8 @@ export const enum AuthType {
     admin = 1,
     viewer = 2,
     sme = 3,
+    inspectOfficer = 5,
+    inspectAdmin = 6,
     noAuth = 4,
     token = 0
 }
@@ -182,6 +198,12 @@ export const testRequest = (app: any, setup: TestSetup) => {
         case 4:
             token = '';
             break;
+        case 5:
+            token = inspectAppOfficerToken();
+            break;
+        case 6:
+            token = inspectAppAdminToken();
+            break;
         default:
             token = setup.token || '';
             break;
@@ -195,6 +217,45 @@ export const testRequest = (app: any, setup: TestSetup) => {
         return request(app)[setup.type](setup.url)
         .send(setup.send)
         .expect(setup.expect);
+    }
+};
+
+/**
+ * @description Test model data conforming schema or not
+ * @param any model: Model object
+ * @param BaseSchema schema: Base Schema
+ */
+export const  testModel = (model: any, schema: BaseSchema, log: boolean = false) => {
+    should().exist(model);
+    _.each(schema.table.columnsDefinition, (col, key) => {
+        if (key === 'id') {
+            return;
+        }
+        const info = col.typeDetails;
+        const val = model[key];
+        if (col.required === true && col.eager === true) {
+            if (val === undefined) {
+                console.log(`${schema.className}[${key}] => value not exists`);
+            }
+            should().exist(val);
+        }
+        if (val) {
+            expect(typeof val).to.be.equal(info.type);
+        }
+    });
+
+    // Test display label
+    should().exist(model.displayLabel);
+
+    // Get id
+    const id = model[schema.table.id];
+    should().exist(id);
+
+    // TODO: Add test to separate id from display label
+
+    // Logging
+    if (log) {
+        console.log(`${schema.modelName}: id => ${id}, display: ${model.displayLabel}`);
     }
 };
 

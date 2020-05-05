@@ -1,0 +1,51 @@
+.herbicideContainer {
+    border-style: solid;
+    border-radius: 4pt;
+    border-width: 1pt;
+    border-color: #E5E9F2;
+    font-size: smaller;
+    padding: 16px 0;
+    box-shadow: 0 0 5pt #E5E9F2;
+    margin-top: 16pt;
+    width: 100%;
+}
+
+.sub-section-title {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 22px;
+    margin-left: 2pt;
+}
+
+.addHerbicideButton {
+    background-color: white;
+    vertical-align: middle;
+    height: 30pt;
+    border-width: 1pt;
+    border-color: #284578;
+    font-size: small;
+    margin: 16pt;
+    color: #284578;
+}
+
+.labelsRow {
+    color: #AFAFAF;
+    font-size: small;
+    padding: 0 15px;
+}
+
+input {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+.thinOrangeDivider {
+    border: 1px solid #F3B229;
+    margin-top: -4pt;
+}
+
+.zeroPadding {
+    padding: 0;
+}

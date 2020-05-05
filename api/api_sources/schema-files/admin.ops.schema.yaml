@@ -1,0 +1,89 @@
+version: '1.0'
+externalTables: 
+  - name: application_user
+    schema: UserSchema
+    description: Application user table
+  - name: app_role_code
+    schema: RolesCodeTableSchema
+    description: Application roles code table 
+schemas:
+  ## -- RequestAccessTableSchema
+  RequestAccessSchema: 
+    name: access_request
+    description: 'Table to store requests of access level change for a user. Request will be handle by admin'
+    columns: 
+      id: 
+        name: request_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY
+      requestNote:
+        name: request_note
+        comment: Note attached with access request.
+        definition: VARCHAR(500) NULL
+      status:
+        name: status
+        comment: This column will store status of the request. This is integer enum. Values managed by application.
+        definition: INT NULL
+      approverNote:
+        name: approver_note
+        comment: Note from approver
+        definition: VARCHAR(500) NULL
+      requestedAccessCode:
+        name: 'requested_role_code_id'
+        comment: 'FOREIGN KEY reference to Role Code Table. This value specify requested access type'
+        definition: INT NOT NULL
+        foreignTable: app_role_code
+        refColumn: role_code_id
+      requester:
+        name: 'requester_user_id'
+        comment: 'FOREIGN KEY reference to User table to store requester id'
+        definition: INT NOT NULL
+        foreignTable: application_user
+        refColumn: user_id
+      approver:
+        name: 'approver_user_id'
+        comment: 'FOREIGN KEY reference to User table to store approver id'
+        definition: INT NULL
+        foreignTable: application_user
+        refColumn: user_id
+  ## --
+  ## -- UserMessagesSchema
+  UserMessagesSchema:
+    name: user_message
+    modelName: UserMessage
+    description: Table to store user messages. Messages can be created by system or other user. This messages will be displayed as notification.
+    columns:
+      id: 
+        name: message_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY
+      title:
+        name: title
+        comment: Title of the messages.
+        definition: VARCHAR(200) NULL
+      body:
+        name: body
+        comment: Message body
+        definition: VARCHAR(1000) NULL
+      type:
+        name: message_type
+        comment: 'Integer enum value to specify message type. Currently types are managed by application'
+        definition: SMALLINT NOT NULL DEFAULT 0
+      status:
+        name: message_status
+        comment: 'Integer enum value to specify message status. Currently types are managed by application'
+        definition: SMALLINT NOT NULL DEFAULT 0
+      receiver:
+        name: receiver_user_id
+        comment: 'FOREIGN KEY reference to User table. This column will store receiver of the message'
+        definition: INT NULL
+        foreignTable: application_user
+        refColumn: user_id
+      creator:
+        name: creator_user_id
+        comment: 'FOREIGN KEY reference to User table. This column will store creator of the message '
+        definition: INT NULL
+        foreignTable: application_user
+        refColumn: user_id
+  ## --
+

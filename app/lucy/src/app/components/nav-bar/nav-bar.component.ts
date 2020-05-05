@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppRoutes, AppRoutesParams } from '../../constants/app-routes.enum';
 import { StringConstants } from 'src/app/constants/string-constants';
@@ -16,6 +33,11 @@ declare const location: any;
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  /**
+   * Title of application to be displayed in header
+   */
+  public appTitle = ``;
 
   /**
    * User initials & full name
@@ -88,6 +110,13 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+  * Used for Highlighting element in
+  * navigation bar when route is active
+  */
+ public get isAboutActive(): boolean {
+  return this.routerService.current === AppRoutes.About;
+}
+  /**
    * Used for displaying/hiding menu items in
    * navigation bar when Info route is active
    */
@@ -122,7 +151,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * call this.setAccessType().
    */
   public get isAdmin(): boolean {
-    return (this.accessType === UserAccessType.Admin);
+    return (this.accessType === UserAccessType.Admin || this.accessType === UserAccessType.InspectAdmin);
   }
 
   /**
@@ -145,9 +174,11 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private routerService: RouterService, private ssoService: SsoService, private userService: UserService, private roles: RolesService) { }
 
   ngOnInit() {
+    this.setAppTitle();
   }
 
   ngAfterViewInit() {
+    this.setAppTitle();
     this.setInitials();
     this.setFullName();
     this.setAccessType();
@@ -171,6 +202,7 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setInitials();
       this.setFullName();
       this.setAccessType();
+      this.setAppTitle();
       this.setOrganization();
       this.setRole();
       this.setAccessTypeMessage();
@@ -182,6 +214,10 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private endRouteEventsListener() {
     this.routeEventsListener.unsubscribe();
+  }
+
+  private setAppTitle() {
+    this.appTitle = StringConstants.app_Title;
   }
 
   /**
@@ -227,9 +263,13 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
         case UserAccessType.DataEditor:
           this.accessTypeMessage = StringConstants.databaseAccess_DataEntry_Badge;
           break;
+        case UserAccessType.Officer:
+          // Fall though to give Officers the same permission as a Data viewer
         case UserAccessType.DataViewer:
           this.accessTypeMessage = StringConstants.databaseAccess_View_Badge;
           break;
+        case UserAccessType.InspectAdmin:
+          // Fall though to give Inspect Admin the same permission as an Admin
         case UserAccessType.Admin:
           this.accessTypeMessage = StringConstants.databaseAccess_Admin_Badge;
           break;
@@ -253,34 +293,41 @@ export class NavBarComponent implements OnInit, AfterViewInit, OnDestroy {
    * Navigate to Profile Component
    */
   navigateToProfile() {
-    this.routerService.navigateTo(AppRoutes.Profile);
+    this.routerService.navigateTo(AppRoutes.Profile, null, true);
+  }
+
+  /**
+   * Navigate to About Component
+   */
+  navigateToAbout() {
+    this.routerService.navigateTo(AppRoutes.About, null, true);
   }
 
   /**
    * Navigate to Admin Tools Component
    */
   navigateToAdminTools() {
-    this.routerService.navigateTo(AppRoutes.AdminTools);
+    this.routerService.navigateTo(AppRoutes.AdminTools, null, true);
   }
 
   /**
    * Navigate to Add Observation Component
    */
   navigateToAddEntry() {
-    this.routerService.navigateTo(AppRoutes.AddEntry);
+    this.routerService.navigateTo(AppRoutes.AddEntry, null, true);
   }
 
   /**
    * Navigate to Add Observation Component
    */
   navigateToAddObservation() {
-    this.routerService.navigateTo(AppRoutes.AddObservation);
+    this.routerService.navigateTo(AppRoutes.AddObservation, null, true);
   }
 
   /**
    * Navigate to Inventory Component
    */
   navigateToInventory() {
-    this.routerService.navigateTo(AppRoutes.Inventory);
+    this.routerService.navigateTo(AppRoutes.Inventory, undefined, true);
   }
 }

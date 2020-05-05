@@ -1,0 +1,81 @@
+version: '1.0'
+includes: []
+schemas:
+  ## -- ObserverWorkflowSchema
+  ObserverWorkflowSchema:
+    name: observer_workflow
+    description: 'Table to store typical work flow data for watercraft observer. Which includes start of the day form and end of the day form. This table is used to store refer from WatercraftRiskAssessment and WaterCraft quick pass schema'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api:  /mussels/workflow
+      base: api
+    displayLayout:
+      displayLabel: 'Day - #(date)'
+      header:
+        key: ObserverWorkflowSchema
+        default: 'Workflow'
+    layout: {}
+    computedFields: {}
+    columns: 
+      # Primary column
+      id: 
+        name: 'observer_workflow_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      # Date
+      date:
+        name: 'date'
+        comment: 'Date of the work shift'
+        definition: DATE NOT NULL
+      # Shift Times
+      startTime: 
+        name: 'start_time'
+        comment: 'Start time of workflow'
+        definition: TIMESTAMP NULL
+      endTime: 
+        name: 'end_time'
+        comment: 'End time of workflow'
+        definition: TIMESTAMP NULL
+      # Location Info
+      station:
+        name: 'station'
+        comment: 'Station name'
+        definition: VARCHAR(100) NULL
+      location:
+        name: 'location'
+        comment: 'Location name'
+        definition: VARCHAR(100) NULL
+      # Comments
+      shiftStartComment:
+        name: 'shift_start_comment'
+        comment: 'This column will store user comment on start of the day'
+        definition: VARCHAR(300) NULL
+        required: false
+      shiftEndComment:
+        name: 'shift_end_comment'
+        comment: 'This column will store user comment on end of the day'
+        definition: VARCHAR(300) NULL
+        required: false
+      # Counter
+      motorizedBlowBys:
+        name: 'motorized_blow_bys_counter'
+        comment: 'Counter for number of motorized boats inspected during the shift'
+        definition: INT NOT NULL DEFAULT 0
+      nonMotorizedBlowBys:
+        name: 'non_motorized_blow_bys_counter'
+        comment: 'Counter for number of non motorized boats inspected during the shift'
+        definition: INT NOT NULL DEFAULT 0
+      # End: Counter
+      # Booleans
+      boatsInspected:
+        name: 'boats_inspected_ind'
+        comment: 'Boolean indicator to show any boat was inspected during shift'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      k9OnShift:
+        name: 'k9_on_shift_ind'
+        comment: 'Boolean indicator to show K9 on shift'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      # End: Booleans
+    ## --
+  ## --

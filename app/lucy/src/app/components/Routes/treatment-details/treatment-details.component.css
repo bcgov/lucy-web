@@ -1,0 +1,30 @@
+.thinOrangeDivider {
+    border: 1px solid #F3B229;
+    margin-top: -4pt;
+}
+
+.treatmentCard {
+    border-style: solid;
+    border-radius: 4pt;
+    border-width: 1pt;
+    border-color: #E5E9F2;
+    font-size: smaller;
+    box-shadow: 0 0 5pt #E5E9F2;
+    margin-top: 16pt;
+    padding: 16px;
+}
+
+.treatmentLabel {
+    text-transform: uppercase;
+    color: #636363;
+    padding-top: 3pt;
+    letter-spacing: 1pt;
+}
+
+.sub-section-title {
+    color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 22px;
+    margin-left: 2pt;
+}

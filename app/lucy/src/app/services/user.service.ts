@@ -1,3 +1,20 @@
+/**
+ *  Copyright © 2019 Province of British Columbia
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 	Unless required by applicable law or agreed to in writing, software
+ * 	distributed under the License is distributed on an "AS IS" BASIS,
+ * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * 	See the License for the specific language governing permissions and
+ * 	limitations under the License.
+ *
+ * 	Created by Amir Shayegh on 2019-10-23.
+ */
 import { Injectable } from '@angular/core';
 import { User} from 'src/app/models';
 import { CookieService } from 'ngx-cookie-service';
@@ -257,29 +274,4 @@ export class UserService {
   }
 
   /*------------------------------------ END OF User Preferences------------------------------------*/
-  /*------------------------------------MOCK DATA------------------------------------*/
-  private getMockUser(): User {
-    var user: User = {
-      roles: [{
-        "code": "ADM",
-        "createdAt": "2019-06-11T12:10:12.495Z",
-        "description": "Overall SEISM Access",
-        "role": "Admin",
-        "role_code_id": 1,
-        "updateAt": "2019-06-11T12:10:12.495Z",
-      }],
-      "createdAt": "2019-06-11T12:10:12.495Z",
-      "currentSessionId": 1,
-      "email": "amir@freshworks.io",
-      "firstName": "Amir",
-      "lastName": "Shayegh",
-      "preferredUsername": "ashayega@idir",
-      "updateAt": "2019-06-11T12:48:36.361Z",
-      "user_id": 1,
-      "accountStatus": 1.
-    };
-    return user
-  }
-  /*------------------------------------END OF MOCK DATA------------------------------------*/
-
 }

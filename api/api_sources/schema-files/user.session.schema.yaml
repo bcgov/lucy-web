@@ -1,0 +1,86 @@
+version: '1.0'
+externalTables: 
+  - name: application_user
+    schema: UserSchema
+    description: Application user table
+schemas:
+  ## -- UserSessionSchema
+  UserSessionSchema:
+    name: user_session
+    description: 'User session information. This table is maintain all session of user.'
+    columns:
+      id: 
+        name: session_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY
+      lastLoginAt:
+        name: last_login_at
+        comment: Last login timestamp
+        definition: TIMESTAMP NULL
+      token:
+        name: token
+        comment: Keyclock token of the user
+        definition: VARCHAR(1000) NULL
+      tokenExpiry:
+        name: token_expiry
+        comment: Keyclock token expiry timestamp
+        definition: TIMESTAMP NULL
+      tokenLifetime:
+        name: token_lifetime
+        comment: Life time of KC token in sec
+        definition: INT NULL
+      lastActiveAt:
+        name: last_active_at
+        comment: Timestamp to check last activity of user
+        definition: TIMESTAMP NULL
+      user: 
+        name: user_id
+        comment: Foreign key reference to user table. Owner of the session.
+        definition: INT NOT NULL
+        foreignTable: application_user
+        refColumn: user_id
+        deleteCascade: true
+  ## --
+  ## -- SessionActivityCodeSchema
+  SessionActivityCodeSchema:
+    name: 'session_activity_code'
+    description: 'Code table to hold various session activities, like Date Add (DA), Data edit (DE), Date Delete (DD), Reporting (RP), Other Activities (OTHER)'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: session_activity_code_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY 
+      code: 
+        name: session_activity_code
+        comment: Unique activity code for session
+        definition: VARCHAR(10) NOT NULL UNIQUE
+  ## --
+  ## -- SessionActivitySchema
+  SessionActivitySchema:
+    name: 'user_session_activity'
+    description: 'This table is used to hold user session activities. Activities are defined by session activity code table'
+    columns:
+      id: 
+        name: user_session_activity_id
+        comment: Auto generated primary key 
+        definition: SERIAL PRIMARY KEY
+      info:
+        name: session_activity_info
+        comment: Additional information on activity
+        definition: VARCHAR(500)
+      ## -- Relations
+      activityCode:
+        name: session_activity_code_id
+        comment: Foreign key reference to session_activity_code table. 
+        definition: INT NOT NULL 
+        foreignTable: session_activity_code
+        refColumn: session_activity_code_id
+      session:
+        name: session_id
+        comment: Foreign key reference to user session table
+        definition: INT NOT NULL
+        foreignTable: user_session
+        refColumn: session_id
+        deleteCascade: true
+  ## --

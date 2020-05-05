@@ -26,21 +26,21 @@ import * as path from 'path';
  * @description Getter: Admin token
  */
 export const adminToken = (): string => {
-    return fs.readFileSync(path.join(__dirname, 'test.token'), 'utf8');
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr1.token'), 'utf8');
 };
 
 /**
  * @description Getter: viewer token
  */
 export const viewerToken = (): string => {
-    return fs.readFileSync(path.join(__dirname, 'viewer.token'), 'utf8');
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr5.token'), 'utf8');
 };
 
 /**
  * @description Getter: editor token
  */
 export const editorToken = (): string => {
-    return fs.readFileSync(path.join(__dirname, 'editor.token'), 'utf8');
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr3.token'), 'utf8');
 };
 
 /**
@@ -63,5 +63,14 @@ export const testIdr1Token = (): string => {
 export const testIdr2Token = (): string => {
     return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr2.token'), 'utf8');
 };
-// -----------------------------------------------------------------------------------------------------------
+
+/**
+ * @description Getter: Mussel app admin
+ */
+export const inspectAppAdminToken = testIdr2Token;
+
+export const inspectAppOfficerToken = (): string => {
+    return fs.readFileSync(path.join(__dirname, '../test-resources/test.idr4.token'), 'utf8');
+};
+// -------------------------------------------------------------------------------------------
 

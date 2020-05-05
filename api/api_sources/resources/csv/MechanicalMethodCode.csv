@@ -1,0 +1,21 @@
+mechanical_method_code, description
+NA, None
+BRY,Bury
+DIG,Digging
+BUR,Controlled Burning
+CUL,Cultivation or till
+DED,Dead-heading
+FLA,Flaming / Tiger Torch burn
+HAN,Hand pulling
+HWS,Hot water / Steam
+MOW,Mowing
+MUL,Mulching
+PLT,Planting
+SV ,Salt water / Vinegar
+SED,Seeding
+SHM,Sheet Mulching
+SD ,Suction dredging     
+TG ,Targeted grazing
+TR ,Tarping
+CNV,Legacy
+

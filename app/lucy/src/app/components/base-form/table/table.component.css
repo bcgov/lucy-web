@@ -1,0 +1,15 @@
+table, .table-container {
+    width: 100%;
+}
+
+.mat-row {
+    cursor: pointer;
+}
+
+.mat-row:nth-child(even){
+    background-color:white;
+    }
+
+.mat-row:nth-child(odd){
+    background-color:#F7F7F7;
+}

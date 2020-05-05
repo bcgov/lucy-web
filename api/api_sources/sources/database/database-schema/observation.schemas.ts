@@ -19,10 +19,8 @@
 /**
  * Imports
  */
-import { ApplicationTable } from '../../libs/core-database';
-import { defineColumn} from '../applicationSchemaInterface';
 import { RecordTableSchema, CodeTableSchema} from './base.record.schema';
-import { getYAMLFilePath } from './schema-files';
+import { getYAMLFilePath } from '../../libs/core-database';
 import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData, SpeciesDensityCodeCSVData, CodeCSVData } from '../pre.load';
 
 /**
@@ -30,7 +28,10 @@ import { SpeciesCSVData, JurisdictionCodeCSVData, SpeciesDistributionCodeCSVData
  */
 export class SpeciesSchema extends RecordTableSchema {
     private _dataSqlPath = 'SpeciesData.sql';
-    defineTable() {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('species.schema.yaml');
+    }
+    /*defineTable() {
         const table: ApplicationTable = super.defineTable();
         table.name = 'species';
         table.description = 'Table to store species information';
@@ -46,6 +47,10 @@ export class SpeciesSchema extends RecordTableSchema {
             latinName: defineColumn('latin_name', 'Latin name text')
         };
         return table;
+    }*/
+
+    get hasDefaultValues(): boolean {
+        return true;
     }
 
     csvData(): Promise<any> {
@@ -98,7 +103,7 @@ export class JurisdictionCodeSchema extends CodeTableSchema {
  */
 export class ObservationSchema extends RecordTableSchema {
     get schemaFilePath(): string {
-        return getYAMLFilePath('observation.codes.schema.yaml');
+        return getYAMLFilePath('observation.schema.yaml');
     }
 }
 

@@ -19,9 +19,11 @@
 /**
  * Imports
  */
-import {createConnection, Connection} from 'typeorm';
+import {createConnection, Connection } from 'typeorm';
 import { LoggerBase} from '../server/logger';
 import { SeedManager } from './seed.manager';
+import * as modelsModule from './models';
+import { ApplicationDataControllers, DBControllerLoader } from '../libs/core-database';
 const dbConfig = require('../../ormconfig');
 
 /**
@@ -31,6 +33,9 @@ const dbConfig = require('../../ormconfig');
 export class DBManager extends LoggerBase {
     // Share Instance
     private static instance: DBManager;
+
+    // Controllers
+    dataControllers: ApplicationDataControllers;
 
     // DB connection object
     connection: Connection;
@@ -67,10 +72,10 @@ export class DBManager extends LoggerBase {
             });
         }
         return new Promise<boolean>((resolve, reject) => {
-            DBManager.logger.info('Connecting DB ...');
+            DBManager.logger.info('CONNECTING DB ...');
             createConnection(dbConfig).then((connection: Connection) => {
                 this.connection = connection;
-                // DBManager.logger.info(`[DB Connection] success with config: ${JSON.stringify(this.connection.options)}`);
+                DBManager.logger.info('[DB CONNECTED]');
                 resolve(true);
             }).catch((err) => {
                 DBManager.logger.error(`[DB Connection] Error: ${err}`);
@@ -90,6 +95,22 @@ export class DBManager extends LoggerBase {
         });
     }
 
+    private loadControllers() {
+        this.dataControllers = DBControllerLoader(modelsModule, DBManager.logger);
+    }
+
+    /**
+     * @description Setup data base structure
+     */
+    async setupDB() {
+        const connection = this.connection;
+        // Get Schema
+        const schema = process.env.DB_SCHEMA || 'invasivesbc';
+        await connection.query(`CREATE SCHEMA IF NOT EXISTS ${schema};`);
+        await connection.query(`SET search_path TO ${schema}, public;`);
+        await connection.query(`SET SCHEMA '${schema}';`);
+    }
+
     /**
      * @description API to connect db
      * @method connect
@@ -97,6 +118,8 @@ export class DBManager extends LoggerBase {
     async connect(): Promise<void> {
         try {
             await this._connect();
+            await this.setupDB();
+            this.loadControllers();
             return;
         } catch (err) {
             throw Error(`Unable to connect DB, please check log`);

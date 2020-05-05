@@ -1,6 +1,7 @@
 'use strict';
 const {OpenShiftClientX} = require('pipeline-cli')
 const wait = require('./wait');
+const checkAndClean = require('./checkAndClean');
 const path = require('path');
 
 module.exports = (settings) => {
@@ -18,6 +19,9 @@ module.exports = (settings) => {
   const instance = `${isName}-${changeId}`;
   const setupTag = `${phases[phase].tag}-setup`
   const image = `${isName}:${setupTag}`;
+
+  // Clean existing image 
+  checkAndClean(`istag/${image}`, oc);
 
   // Creating image stream for setup
   is.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/is.api.yaml`, {
@@ -47,11 +51,14 @@ module.exports = (settings) => {
         'CHANGE_ID': phases[phase].changeId,
         'ENVIRONMENT': phases[phase].env || 'dev',
         'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
-        'IMAGE': imageStream.image.dockerImageReference
+        'IMAGE': imageStream.image.dockerImageReference,
+        'DB_MIGRATION_TYPE': phases[phase].migrationInfo.type,
+        'DB_CLEAN_UP': phases[phase].migrationInfo.cleanup,
+        'DB_SEED': phases[phase].migrationInfo.dbSeed
       }
   }))
-  
+  checkAndClean(`pod/${podName}`, oc);
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
-  wait(`pod/${podName}`, settings);
+  wait(`pod/${podName}`, settings, 30);
 }

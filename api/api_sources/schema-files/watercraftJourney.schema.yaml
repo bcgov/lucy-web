@@ -1,0 +1,55 @@
+version: '1.0'
+description: Schema file for table watercraft_journey
+externalTables: []
+includes: 
+ - waterBody.schema.yaml
+ - watercraftRiskAssessment.schema.yaml
+schemas:
+  WatercraftJourneySchema:
+    name: watercraft_journey
+    description: 'Joining table for water-body details and a inspection'
+    meta: 
+      resource: true
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      # Primary
+      id:
+        name: watercraft_journey_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      # Enum
+      journeyType:
+        name: journey_type
+        comment: 'Journey type of the associated regarding water body. i.e Previous (0) and next (1)'
+        definition: INT NOT NULL DEFAULT 0
+      # Counter
+      numberOfDaysOut:
+        name: number_of_days_out
+        comment: 'Number of days out of water'
+        definition: INT NULL
+        required: false
+      # Other Details
+      otherWaterBody:
+        name: other_water_body_detail
+        comment: 'Details of not listed water body. This is an optional field. User can provide a brief description of water-body which is not listed in application water body list.'
+        definition: VARCHAR(300) NULL 
+        required: false
+      # Relation
+      watercraftAssessment:
+        name: watercraft_risk_assessment_id
+        comment: 'Foreign key reference to Watercraft risk assessment table'
+        definition: INT NULL
+        foreignTable: watercraft_risk_assessment
+        refColumn: watercraft_risk_assessment_id
+      waterBody:
+        name: water_body_id
+        comment: 'Foreign key reference to Water body detail table'
+        definition: INT NULL
+        foreignTable: water_body
+        refColumn: water_body_id
+        required: false
+    versions: []
+    fields: {}

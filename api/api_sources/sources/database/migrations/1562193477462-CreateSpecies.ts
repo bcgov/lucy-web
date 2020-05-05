@@ -21,12 +21,14 @@
  */
 import {MigrationInterface, QueryRunner} from 'typeorm';
 import { SpeciesSchema, getSQLFileData } from '../database-schema';
+import { AppLogger } from '../../Applogger';
 
 /**
  * @description Migration class to create Species table
  */
-export class CreateSpecies1562193477462 extends SpeciesSchema implements MigrationInterface {
+export class CreateSpecies1562193477462 extends AppLogger implements MigrationInterface {
 
+    speciesSchema: SpeciesSchema = new SpeciesSchema();
     /**
      * @description Up method
      * @param QueryRunner queryRunner
@@ -34,29 +36,12 @@ export class CreateSpecies1562193477462 extends SpeciesSchema implements Migrati
      */
     public async up(queryRunner: QueryRunner): Promise<any> {
         // Create Table
-        await queryRunner.query(`CREATE TABLE ${this.table.name} (
-            ${this.table.columns.id} SERIAL PRIMARY KEY,
-            ${this.table.columns.mapCode} VARCHAR(4) NULL,
-            ${this.table.columns.earlyDetection} BOOLEAN NULL,
-            ${this.table.columns.cmt} SMALLINT NULL,
-            ${this.table.columns.shp} SMALLINT NULL,
-            ${this.table.columns.species} VARCHAR(4) NULL,
-            ${this.table.columns.genus} VARCHAR(4) NULL,
-            ${this.table.columns.commonName} VARCHAR(50) NULL,
-            ${this.table.columns.latinName} VARCHAR(50) NULL
-        )`);
-
-        // Create Timestamp Column
-        await queryRunner.query(this.createTimestampsColumn());
-
-        // Create Audit column
-        await queryRunner.query(this.createAuditColumns());
-
-        // Create Comments
-        await queryRunner.query(this.createComments());
+        this.info('[RUNNING]');
+        await queryRunner.query(this.speciesSchema.migrationSQL);
 
         // Pre-load species
-        await queryRunner.query(getSQLFileData(this.dataSQLPath()));
+        await queryRunner.query(getSQLFileData(this.speciesSchema.dataSQLPath(), this.speciesSchema.className));
+        this.info('[DONE]');
     }
 
     /**
@@ -65,7 +50,7 @@ export class CreateSpecies1562193477462 extends SpeciesSchema implements Migrati
      * @return Promise<any>
      */
     public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(this.dropTable());
+        await queryRunner.query(this.speciesSchema.dropTable());
     }
 
 }

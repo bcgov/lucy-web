@@ -1,0 +1,172 @@
+version: '1.0'
+externalTables:
+  - name: species
+    description: Species table
+    schema: SpeciesSchema
+  - name: application_user
+    description: User table
+schemas: 
+  JurisdictionCodeSchema:
+    name: jurisdiction_code
+    description: 'Who owns or is responsible for the land.  85% of the province is "crown" under the jurisdiction of the Ministry of Forests, Lands, Natural Resource Operations & Rural Development'
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: 'jurisdiction_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: jurisdiction_code
+        comment: Unique code value for jurisdiction area
+        definition: VARCHAR(10) NOT NULL UNIQUE
+  # -- End JurisdictionCode
+  # -- SpeciesDistributionCode
+  SpeciesDistributionCodeSchema:
+    name: species_distribution_code
+    description: 'Identifies the geographic distribution of individuals of each species. Example: several well-spaced patches or clumps.'
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: species_distribution_code_id
+        comment: Identifier as code
+        definition: INT NOT NULL PRIMARY KEY
+      description:
+        name: description
+        comment: Description of distribution code
+        definition: VARCHAR(100) NOT NULL
+  # --
+  # -- SpeciesDensityCodeSchema --
+  SpeciesDensityCodeSchema:
+    name: species_density_code
+    description: 'Indicates the number of plants per square metre. Examples: 2-5 plants/m2, 6-10 plants/m2.'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'species_density_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: 'density_code'
+        comment: Density code values based on species present on location
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- Survey Type Codes
+  ObservationTypeCodeSchema:
+    name: observation_type_code
+    description: 'The description of the observation was obtained (akin to quality): Operational, cursory, research, mobile, aerial photo, satellite imagery.'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'observation_type_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_type_code'
+        comment: Cross domain Code values for observation type types
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- SpeciesAgencyCodeSchema
+  SpeciesAgencyCodeSchema:
+    name: species_agency_code
+    description: 'Any BC Ministry, Federal Department, local government (Regional District, municipality, etc), corporation, non-profit or other organization that funds and/or manages invasive plant species on the land base for which they are responsible.  The Agency that oversees a particular activity concerning the Invasive Alien Plant Program. It is the originating agency that data belongs to or the agency that funded the activity.'
+    baseSchema: CodeTableSchema
+    meta:
+      baseModel: Record
+      resource: true
+    columns:
+      id: 
+        name: 'species_agency_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'species_agency_code'
+        comment: Agency code values for managing invasive species
+        definition: VARCHAR(10) NOT NULL UNIQUE
+  # --
+  # -- SoilTextureCodeSchema
+  SoilTextureCodeSchema:
+    name: soil_texture_code
+    description: 'The soil texture code provides details regarding the quality and water-retention of soil in a site where an invasive plant has been identified. Values are C (Coarse), M (Medium), F (Fine), O (Organic)'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'soil_texture_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'soil_texture_code'
+        comment: Soil texture code values in the system
+        definition: VARCHAR(1) NOT NULL UNIQUE
+  # --
+  # -- SurveyGeometryCodeSchema
+  ObservationGeometryCodeSchema:
+    name: observation_geometry_code
+    description: 'A 2 or 3 dimensional geometry used to describe the spatial extent of an observation: Point, linear corridor, transect, circle, rectangular plot, stratified grid, radio tract, GPS tract, water body outline.'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'observation_geometry_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_geometry_code'
+        comment: Observation geometry code of the system
+        definition: VARCHAR(2) NOT NULL UNIQUE
+  # --
+  # -- SpecificUseCodeSchema
+  SpecificUseCodeSchema:
+    name: specific_use_code
+    description: 'The site specific use code provides details regarding the use of an area where invasive species have been found. This assists in determining the appropriate response and treatment methods when dealing with the identified invasive plant species. Values are GR (Gravel pit), NS (No-spray buffer), NH (Numbered Highway), PL (Parking Lot), RT (Rec Site/Trail), RA (Rest Area), SS (Sensitive Site), TL (Transfer station/Landfil), WP (Within PFZ), YW (Yard/Ditching waste dump).'
+    baseSchema: CodeTableSchema
+    columns:
+      id: 
+        name: 'specific_use_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'specific_use_code'
+        comment: Code values of specific use codes
+        definition: VARCHAR(2) NOT NULL UNIQUE
+  # --
+  # -- SlopCodeSchema
+  SlopeCodeSchema:
+    name: observation_slope_code
+    description: 'Observation area slope code. Slope code is encoded value of description . NA specified data not available and FL means flat with 0%, similarly VSTS specified very steep slop with more than 45%'
+    columns:
+      id: 
+        name: 'observation_slope_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_slope_code'
+        comment: Integer encoded enum values for slope code
+        definition: VARCHAR(5) NOT NULL UNIQUE
+  # --
+  # -- AspectCodeSchema
+  AspectCodeSchema:
+    name: observation_aspect_code
+    description: 'Observation area aspect code. Aspect code provides string encoded enum values for directional aspect of the observed species. The typical values like North facing(NF) or south facing(SF)'
+    columns:
+      id: 
+        name: 'observation_aspect_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_aspect_code'
+        comment: String encoded enum values for observation aspect code
+        definition: VARCHAR(4) NOT NULL UNIQUE
+  # --
+  # -- ProposedActionCodeSchema
+  ProposedActionCodeSchema:
+    name: observation_proposed_action_code
+    description: 'The is list of proposed action item of observation like Treatment or Monitoring. So code values like CT for Chemical treatment or CM for Chemical monitoring'
+    columns:
+      id: 
+        name: 'observation_proposed_action_code_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      code: 
+        name: 'observation_proposed_action_code'
+        comment: String encoded enum values for proposed action items.
+        definition: VARCHAR(4) NOT NULL UNIQUE
+  # --

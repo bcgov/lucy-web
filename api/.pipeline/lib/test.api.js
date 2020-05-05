@@ -2,6 +2,7 @@
 const {OpenShiftClientX} = require('pipeline-cli')
 const path = require('path');
 const wait = require('./wait');
+const checkAndClean = require('./checkAndClean');
 
 module.exports = (settings) => {
   const phases = settings.phases
@@ -33,11 +34,15 @@ module.exports = (settings) => {
       'CHANGE_ID': phases[phase].changeId,
       'ENVIRONMENT': phases[phase].env || 'dev',
       'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
-      'IMAGE': imageStream.image.dockerImageReference
+      'IMAGE': imageStream.image.dockerImageReference,
+      'CERTIFICATE_URL': 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs',
+      'DB_MIGRATION_TYPE': phases[phase].migrationInfo.type,
+      'DB_CLEAN_UP': phases[phase].migrationInfo.cleanup,
+      'DB_SEED': phases[phase].migrationInfo.dbSeed
     }
   }))
-  
+  checkAndClean(`pod/${podName}`, oc);
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance)
   oc.applyAndDeploy(objects, phases[phase].instance)
-  wait(`pod/${podName}`, settings, 15);
+  wait(`pod/${podName}`, settings, 35);
 }

@@ -1,0 +1,67 @@
+version: '1.0'
+description: Schema file for table herbicide
+externalTables: []
+includes: []
+schemas:
+  ## -- HerbicideSchema
+  HerbicideSchema:
+    name: herbicide
+    description: 'Table to store herbicide information'
+    meta: 
+      resource: true
+    displayLayout:
+      displayLabel: '#(compositeName)'
+      header:
+        key: Herbicide.header
+        default: 'Herbicide'
+    layout: {}
+    computedFields: {}
+    relations: {}
+    ## -- columns
+    columns:
+      id:
+        name: herbicide_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      herbicideCode:
+        name: 'herbicide_code'
+        comment: 'Code associated with herbicide. This code is used to uniquely identify with application domain'
+        definition: VARCHAR(20) NOT NULL UNIQUE
+      compositeName:
+        name: 'composite_name'
+        comment: 'Name of herbicide to be displayed in herbicide dropdown menu'
+        definition: VARCHAR(100) NOT NULL UNIQUE
+      activeIngredient:
+        name: 'active_ingredient'
+        comment: 'Active ingredient contained in herbicide'
+        definition: VARCHAR(50)
+      tradeName:
+        name: 'trade_name'
+        comment: 'Trade name associated with herbicide'
+        definition: VARCHAR(50)
+      pmraNum:
+        name: 'pmra_reg_num'
+        comment: 'Pest Management Regulatory Agency registration number of herbicide'
+        definition: INT NOT NULL UNIQUE 
+      formulation:
+        name: 'formulation'
+        comment: 'String value describing the nature of the herbicide'
+        definition: VARCHAR(20)
+      applicationRate:
+        name: 'application_rate'
+        comment: 'Manufacturer-recommended application rate of herbicide'
+        definition: NUMERIC(6,3)
+      applicationUnits:
+        name: 'application_units'
+        comment: 'Units used to describe application rate of herbicide'
+        definition: VARCHAR(10)
+      # -- columns
+    versions: []
+    fields: {}
+    imports: 
+      init:
+        fileName: HerbicideCode.csv
+        allColumns: true
+
+  ## -- HerbicideSchema
+# -- end schemas

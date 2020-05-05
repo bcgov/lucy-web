@@ -1,0 +1,106 @@
+.modal-content-container {
+    padding: 16px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+}
+
+.content-container {
+    flex-direction: column;
+    padding: 0 15px;
+}
+
+.section-divider {
+    height: 2px;
+    background-color: #002C71;
+    opacity: 0.1;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.modal-header-text {
+    font-size: 20px;
+}
+
+.text {
+    color: black;
+    margin: 0;
+    font-weight: 500;
+    text-align: center;
+}
+
+.text-name {
+    font-size: 24px;
+}
+
+.text-header {
+    font-size: 17px;
+    padding: 8px 0;
+}
+
+.text-body {
+    color: #333333 !important;
+    font-size: 14px;
+    margin-bottom: 8px !important;
+    text-align: left;
+}
+
+.role-container {
+    display: flex;
+    align-items: center;
+    background-color: #0053A4;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #FFFFFF;
+}
+
+.account-icon {
+    color: #F5A623;
+    font-size: 48px;
+}
+
+.role-icon {
+    font-size: 16px;
+    padding-right: 8px;
+}
+
+.role-text {
+    font-size: 12px;
+    color: #FFFFFF;
+}
+
+.label {
+    margin: 0;
+}
+
+.text-label {
+    font-size: 12px;
+    text-align: left;
+    color: #333333;
+    opacity: 80%;
+}
+
+#response,
+#response:focus {
+    border: 1px solid #ced4da !important;
+    box-shadow: none;
+}
+
+.new-role-container {
+    padding: 8px 0;
+}
+
+.status-container {
+    justify-content: space-between;
+    padding: 15px 0;
+}
+
+.account-status {
+    margin: 0;
+    padding-right: 20px;
+}

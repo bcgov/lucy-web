@@ -22,9 +22,20 @@
     jest.mock('../data.model.controller');
 }*/
 
-import { expect } from 'chai';
+import { expect, should } from 'chai';
 import { commonTestSetupAction, commonTestTearDownAction } from '../../test-helpers/testHelpers';
-import { User, UserDataController, RolesCodeValue, UserSession, UserSessionDataController, SessionActivity, SessionActivityCodeValues, SessionActivityController } from '../models';
+import {
+    User,
+    UserDataController,
+    RolesCodeValue,
+    UserSession,
+    UserSessionDataController,
+    SessionActivity,
+    SessionActivityCodeValues,
+    SessionActivityController,
+    RolesCode,
+    RoleCodeController
+} from '../models';
 // import { SharedDBManager } from '../dataBaseManager';
 import { userFactory, sessionFactory, sessionActivityFactory } from '../factory';
 
@@ -36,7 +47,23 @@ describe('Test Login Data Model', () => {
         await commonTestTearDownAction();
         return;
     });
-    it('-should create/fetch model (admin)-', async () => {
+
+    it('should fetch different roles', async () => {
+
+        const test = async (code: RolesCodeValue) => {
+            const item: RolesCode = await  RoleCodeController.shared.getCode(code);
+            should().exist(item);
+            expect(item.roleCode).to.be.equal(code);
+        };
+        await test(RolesCodeValue.admin);
+        await test(RolesCodeValue.editor);
+        await test(RolesCodeValue.viewer);
+        await test(RolesCodeValue.superUser);
+        await test(RolesCodeValue.inspectAppAdmin);
+        await test(RolesCodeValue.inspectAppOfficer);
+    });
+
+    it('should create/fetch model (admin)', async () => {
         const user = await userFactory(RolesCodeValue.admin);
         expect(user).not.equal(undefined);
         if (user) {
@@ -95,6 +122,7 @@ describe('Test Login Data Model', () => {
         expect(dbSession.user.email).to.equal(userSession.user.email);
 
         // Checking currentSession relationship of user
+        UserDataController.shared.setCurrentSession(dbSession.user, dbSession);
         const currentSession: UserSession = await UserDataController.shared.getCurrentSession(dbSession.user);
         expect(currentSession).not.equal(undefined);
         expect(currentSession.session_id).to.equal(dbSession.session_id);
@@ -114,12 +142,12 @@ describe('Test Login Data Model', () => {
         await SessionActivityController.shared.saveInDB(sessionActivity);
 
         // Fetch
-        const fetchValues: SessionActivity = await SessionActivityController.shared.findById(sessionActivity.activity_id);
+        const fetchValues: SessionActivity = await SessionActivityController.shared.findById(sessionActivity.user_session_activity_id);
 
         // Test
         expect(fetchValues.session.session_id).to.eql(sessionActivity.session.session_id);
         expect(fetchValues.info).to.equal(sessionActivity.info);
-        expect(fetchValues.code).to.eql(sessionActivity.code);
+        expect(fetchValues.activityCode).to.eql(sessionActivity.activityCode);
 
         // Remove
         const session = sessionActivity.session;
@@ -129,6 +157,18 @@ describe('Test Login Data Model', () => {
         await UserDataController.shared.remove(user);
 
         // done();
+    });
+
+    it('should create and fetch user with Inspect App Admin/ officer', async () => {
+        const test = async (code: RolesCodeValue) => {
+            const user: User = await userFactory(code);
+            should().exist(user);
+            expect(user.roles[0].roleCode).to.be.equal(code);
+            await UserDataController.shared.remove(user);
+        };
+
+        await test(RolesCodeValue.inspectAppAdmin);
+        await test(RolesCodeValue.inspectAppOfficer);
     });
 });
 

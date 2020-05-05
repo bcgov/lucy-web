@@ -1,0 +1,81 @@
+<div class="section-title-text">
+  All Users
+</div>
+<hr class="section-divider" />
+
+<div *ngIf="hasUsers">
+  <table mat-table [dataSource]="userDataSource">
+
+    <!--Username Column -->
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef class="table-first-column">
+          Username
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.username}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>
+          Name
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>
+          Email
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.email}} </td>
+    </ng-container>
+
+    <!-- Role Column -->
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef>
+          Role
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.role}} </td>
+    </ng-container>
+
+    <!-- Action column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let item">
+        <button mat-stroked-button id="custom-popper-action" (click)="onUserAction(item)" [disabled]="disableEdit(item)" [ngClass]="{'action-button': !disableEdit(item)}">
+          Actions
+        </button>
+        <mat-card *ngIf="showUserPopper(item)" class="popper" id="custom-popper" (clickAway)="onClickAway()">
+          <div class="popper-container">
+            <p class="popper-header">User Actions</p>
+            <hr class="popper-header-divider" />
+            <mat-form-field class="popper-dropdown" *ngIf="isAdmin">
+              <mat-label>Role</mat-label>
+              <mat-select [(ngModel)]="getUserRole" (selectionChange)="changeUserRole($event)" [disabled]="!isAdmin">
+                <mat-option *ngFor="let role of roles" [value]="role.role">
+                  {{role.role}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="popper-status-container">
+              <p class="account-status">Account Active</p>
+              <mat-slide-toggle color="primary" [checked]="getUserStatus" (change)="changeUserStatus($event)"></mat-slide-toggle>
+            </div>
+            <hr class="popper-footer-divider" />
+            <button mat-raised-button color="primary" class="popper-footer-button" disabled>
+              Remove User
+            </button>
+          </div>
+        </mat-card>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="usersColumns" class="table-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: usersColumns"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div *ngIf="!hasUsers">
+  There are currently no users
+</div>

@@ -1,0 +1,151 @@
+version: '1.0'
+description: Schemas definition of Code tables related to Chemical Treatments
+externalTables: []
+schemas: 
+  ## --
+  PesticideEmployerCodeSchema:
+    name: pesticide_employer_code
+    description: 'Table to store contractor/employer information chemical treatment service providers.'
+    displayLayout:
+      displayLabel: '#(businessName)'
+      header:
+        key: PesticideEmployerCodeSchema
+        default: 'Pesticide Employer Code'
+      fields:
+        - header:
+            key: 'PesticideEmployerCode.name'
+            default: 'Pesticide Employer Code'
+          key: businessName
+    columns:
+      id:
+        name: pesticide_employer_code_id
+        comment: Auto generated primary key. This is auto incremental field
+        definition: SERIAL PRIMARY KEY
+      registrationNumber:
+        name: registration_number
+        comment: Registration number associated with employer
+        definition: INT NOT NULL UNIQUE
+      businessName:
+        name: business_name
+        comment: Name of the employer
+        definition: VARCHAR(100) NOT NULL
+      licenceExpiryDate:
+        name: licence_expiry_date
+        comment: Date of expiry of license
+        definition: DATE NOT NULL
+  ## --
+  ## -- ProjectManagementCode
+  ProjectManagementPlanCodeSchema:
+    name: project_management_plan_code
+    description: 'A Pest Management Plan is a treatment plan ID number, which is required for any herbicide treatment on public lands. The PMP Number is required for verifying which herbicidal and chemical treatments are safe and allowable within a specific area.
+    
+    The Province is divided into a number of zones that allow for and regulate what can be apply on the landscape. The PMP or Pest Management Plan is a document that provides the regulations for a 5 year period. The PMP number (dropdown) is required for each treatment record.'
+    baseScheme: RecordSchema
+    meta:
+      resource: true
+      baseModel: Record
+    displayLayout:
+      displayLabel: '#(pmpNumber)'
+      header:
+        key: ProjectManagementCodeSchema
+        default: 'Project Management Code'
+      fields: 
+        - header:
+            key: ProjectManagementCodeSchema.pmpNumber
+            default: 'Project Management Number'
+          key: pmpNumber
+        - header:
+            key: ProjectManagementCodeSchema.description
+            default: 'Project Management Code Description'
+          key: description
+    columns:
+      id:
+        name: project_management_plan_code_id
+        comment: Auto generated primary key. This is auto incremental field
+        definition: SERIAL PRIMARY KEY
+      pmpNumber:
+        name: pmp_number
+        comment: Unique number associated with Plan
+        definition: VARCHAR(50) NOT NULL UNIQUE
+      description:
+        name: description
+        comment: Description of plan
+        definition: VARCHAR(50) NOT NULL
+      pmpHolder:
+        name: pmp_holder
+        comment: Holder of plan
+        definition: VARCHAR(50) NOT NULL
+      startDate:
+        name: legal_start_date
+        comment: Legal start date of plan
+        definition: DATE NOT NULL
+      endDate:
+        name: legal_end_date
+        comment: Legal end data of plan
+        definition: DATE NOT NULL
+  ## --
+  ## --
+  ChemicalTreatmentEmployeeSchema:
+    name: chemical_treatment_employee
+    description: The contractor employee who applied chemical treatment.
+    baseScheme: RecordSchema
+    meta: 
+      baseModel: Record
+      resource: true
+    displayLayout: 
+      displayLabel: '#(firstName) #(lastName) - #(certificate)'
+    columns:
+      id:
+        name: chemical_treatment_employee_id
+        comment: Auto generated primary key. This is auto incremental field
+        definition: SERIAL PRIMARY KEY
+      certificate:
+        name: certificate
+        comment: Certificate number associated with employee
+        definition: VARCHAR(20) NOT NULL
+      firstName:
+        name: first_name
+        comment: First name of the employee
+        definition: VARCHAR(99) NOT NULL
+      lastName:
+        name: last_name
+        comment: Last name of the employee
+        definition: VARCHAR(99) NOT NULL
+  ## --
+  ## --
+  ChemicalTreatmentMethodCodeSchema:
+    name: chemical_treatment_method
+    description: The method used to apply the chemical to the treatment area.
+    baseScheme: RecordSchema
+    meta: 
+      baseModel: Record
+      resource: true
+    displayLayout: 
+      displayLabel: '#(treatmentMethodDescription)'
+      header:
+        key: ChemicalTreatmentMethodCodeSchema
+        default: 'Chemical Treatment Method Code'
+      fields:
+        - header:
+            key: 'ChemicalTreatmentMethodCode.name'
+            default: 'Chemical Treatment Method Code'
+          key: treatmentMethodCode
+    columns:
+      id:
+        name: chemical_treatment_method_id
+        comment: Auto generated primary key. This is auto incremental field
+        definition: SERIAL PRIMARY KEY
+      treatmentMethodCode:
+        name: treatment_method_code
+        comment: The 3-letter code used to identify the treatment method
+        definition: VARCHAR(3) NOT NULL
+      treatmentMethodDescription:
+        name: treatment_method_description
+        comment: The name of the treatment method as it should be displayed to users
+        definition: VARCHAR(30) NOT NULL
+    imports:
+      init:
+        fileName: ChemicalMethodCode.csv
+        allColumns: true
+  ## --
+## --------------

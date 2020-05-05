@@ -1,0 +1,59 @@
+<div class="modal-content-container">
+  <p class="text modal-header-text">User Access Request</p>
+  <hr class="section-divider" />
+  <div class="content content-container">
+    <i class="material-icons account-icon">account_circle</i>
+    <p class="text text-name">{{ userInfo('firstName') }} {{ userInfo('lastName') }}</p>
+  
+    <div class="role-container">
+      <i class="material-icons-outlined role-icon">info</i>
+      <p class="text role-text">{{ getCurrentRole() }}</p>
+    </div>
+
+    <div *ngIf="!isAdmin" class="new-role-container">
+      <p class="text text=header">New Role:</p>
+      <p class="text text-body">{{ roleToDisplay }}</p>
+    </div>
+  </div>
+
+  <p class="text text-header">Access Request Reason:</p>
+  <p class="text text-body">{{ userInfo('requestNote') }}</p>
+
+  <p class="text text-header">Add Request Response:</p>
+
+  <label for="response" class="label">
+    <p class="text text-label">Request Response</p>
+  </label>
+  <textarea class="form-control" rows="3" id="response" [(ngModel)]="approverNote"></textarea>
+
+  <div class="content status-container">
+    <div *ngIf="isAdmin">
+      <mat-form-field>
+        <mat-label>Role</mat-label>
+        <mat-select [(ngModel)]="roleToDisplay" [disabled]="canEdit">
+          <mat-option *ngFor="let role of roles" [value]="role.role">
+            {{role.role}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="content">
+      <p class="account-status">Account Active</p>
+      <mat-slide-toggle color="primary" [checked]="userStatus" (change)="changeUserStatus($event)"></mat-slide-toggle>
+    </div>
+  </div>
+  
+  <hr class="section-divider" />
+  <div class="modal-action-container">
+    <div class="modal-action">
+      <button mat-stroked-button color="primary" class="modal-action-button" (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+    <div class="modal-action">
+      <button mat-raised-button color="primary" class="modal-action-button" (click)="updateAccess()">
+        Update Access
+      </button>
+    </div>
+  </div>
+</div>

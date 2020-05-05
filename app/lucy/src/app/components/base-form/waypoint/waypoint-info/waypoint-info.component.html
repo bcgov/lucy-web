@@ -1,0 +1,66 @@
+<div class="content">
+  <!-- Section 1 -->
+  <h3 class="section-header">
+    What is a Way-point?
+  </h3>
+  <div class="section-content">
+    This tool allows the user to define an observation by generating a path (of a defined width/offset value)
+    and captures an area along a linear corridor. This is usually used to mark  observations of invasive species
+    that occur along roads and rivers. It can be used to properly define the area spatially.
+  </div>
+  <div class="section-content">
+    The interface allows the user to enter points based on their UTM location i.e. Easting and Northing values.
+  </div>
+  <div class="section-content">
+    Upon completion, the user clicks to proceed and generate a map. A buffer is created and displayed on a map.
+  </div>
+
+  <!-- Section 2 -->
+  <h3 class="section-header">
+    Please note:
+  </h3>
+  <div class="section-content">
+    - Points must be sequential to generate a map that is exactly as recorded on ground.
+  </div>
+  <div class="section-content">
+    <p>
+      - Minimum of 2 points are required to create a linear way-point path.
+    </p>
+    <p>
+      - Maximum of 20 points can be recorded.
+    </p>
+  </div>
+  <div class="section-content">
+    <p>
+      - The width or offset value is recorded meters. It is applied to either side of the linear path. (e.g. offset = 2 meters , total width = 4 meters.)
+    </p>
+    <p>
+      - Offset value can range between 1 meter to 20 metres.
+    </p>
+  </div>
+  <div class="section-content">
+    <p>
+      - Maximum distance between 2 points is 200 meters.
+    </p>
+    <p>
+      - Minimum distance between 2 points is 1 meter. 
+    </p>
+  </div>
+  <div class="section-content">
+    <p>
+      - Maximum length of the entire plot is 3800 meters. 
+    </p>
+    <p>
+      - Minimum length of the entire plot is 1 meter.
+    </p>
+  </div>
+
+</div>
+<hr class="modal-divider" />
+<div class="modal-action-container">
+  <div class="modal-action">
+    <button mat-stroked-button color="primary" class="modal-action-button" (click)="onBack()">
+      Back
+    </button>
+  </div>
+</div>

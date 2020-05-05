@@ -23,8 +23,18 @@ import { Application } from 'express';
 import { accountRoute,
     requestAccessRoutes,
     observationRoute,
-    mechanicalTreatmentRoute
+    mechanicalTreatmentRoute,
+    CodeTableRouteController,
+    WatercraftRiskAssessmentRouteController,
+    WaterBodyRouteController,
+    ObserverWorkflowRouteController,
+    MusselsAppCodesRouteController,
+    chemicalTreatmentRoute,
+    mechanicalMonitorRoute,
+    UploadRouteController,
 } from '../modules';
+import { LocationRouteController } from '../modules/location';
+import { BCGeoDataRouteController } from '../modules/bcGeoData';
 import { defaultRoute, miscellaneousRouter } from '../modules';
 
 /**
@@ -43,6 +53,36 @@ export const routes = (app: Application) => {
 
     // Mechanical Treatment
     app.use('/api/treatment/mechanical', mechanicalTreatmentRoute());
+
+    // Chemical Treatment
+    app.use('/api/treatment/chemical', chemicalTreatmentRoute());
+
+    // Mechanical Monitor
+    app.use('/api/monitor/mechanical', mechanicalMonitorRoute());
+
+    // Codes
+    app.use('/api/codes', CodeTableRouteController.shared.router);
+
+    // Watercraft Risk Assessment
+    app.use('/api/mussels/wra', WatercraftRiskAssessmentRouteController.shared.router);
+
+    // Water body
+    app.use('/api/mussels/water-body', WaterBodyRouteController.shared.router);
+
+    // Observer Workflow
+    app.use('/api/mussels/workflow', ObserverWorkflowRouteController.shared.router);
+
+    // Mussels App Codes
+    app.use('/api/mussels/codes', MusselsAppCodesRouteController.shared.router);
+
+    // Location
+    app.use('/api/location', LocationRouteController.shared.router);
+
+    // BC Data Warehouse
+    app.use('/api/bcgeodata', BCGeoDataRouteController.shared.router);
+
+    // Uploads
+    app.use('/api/uploads', UploadRouteController.shared.router);
 
     // Miscellaneous
     app.use('/api/misc', miscellaneousRouter());

@@ -1,0 +1,65 @@
+<div class="section-title-text">
+  {{ isAdmin ? 'Pending Access Requests' : 'New Users' }}
+  <span *ngIf="hasRequests" class="user-count">
+    {{ requestLength() }}
+  </span>
+</div>
+<hr class="section-divider" />
+
+<div *ngIf="hasRequests">
+  <table mat-table [dataSource]="requestDataSource">
+
+    <!--Username Column -->
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef class="table-first-column">
+          Username
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.username}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>
+          Name
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+    </ng-container>
+
+    <!-- Requested role Column -->
+    <ng-container matColumnDef="roleRequested">
+      <th mat-header-cell *matHeaderCellDef>
+          Requested Role
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.roleRequested}} </td>
+    </ng-container>
+
+    <!-- Reason Column -->
+    <ng-container matColumnDef="reason">
+      <th mat-header-cell *matHeaderCellDef>
+          Reason
+      </th>
+      <td mat-cell *matCellDef="let item"> {{item.reason}} </td>
+    </ng-container>
+
+    <!-- Action column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let item">
+        <button mat-raised-button color="primary" id="custom-modal-action" (click)="onRespondAction(item)" [disabled]="disableRespond(item)">
+          Respond
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="requestUsersColumns" class="table-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: requestUsersColumns"></tr>
+  </table>
+</div>
+
+<div *ngIf="!hasRequests">
+  There are currently no new requests
+</div>
+
+<app-modal *ngIf="showModal" (onBackdropClick)="onModalClose()" [align]="'center'">
+  <app-request-modal [roles]="roles" [request]="selectedRequest" [isAdmin]="isAdmin" (onModalClose)="onModalClose($event)"></app-request-modal>
+</app-modal>

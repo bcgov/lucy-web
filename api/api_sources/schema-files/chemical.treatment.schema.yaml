@@ -1,0 +1,425 @@
+version: '1.0'
+description: Schema model for ChemicalTreatmentSchema
+externalTables:
+  - name: application_user
+    schema: UserSchema
+    description: Application user table
+  - name: species_agency_code
+    description: Species agency code table
+    schema: SpeciesAgencyCodeSchema
+  - name: pesticide_employer_code
+    schema: PesticideEmployerCodeSchema
+  - name: project_management_code
+    schema: ProjectManagementCodeSchema
+  - name: project_management_plan_code
+    schema: ProjectManagementPlanCodeSchema
+  - name: chemical_treatment_employee
+    schema: ChemicalTreatmentEmployeeSchema
+  - name: chemical_treatment_method
+    schema: ChemicalTreatmentMethodCodeSchema
+  - name: wind_direction_code
+    schema: WindDirectionCodesSchema
+includes:
+  - spaceGeom.schema.yaml
+schemas:
+  ## -- ChemicalTreatmentSchema
+  ChemicalTreatmentSchema:
+    name: chemical_treatment
+    description: 'An application of a herbicide. Various herbicides are used for spot treatments of weeds in British Columbia. The herbicide selected should depend on the target weed species and environmental factors. Application rate will be dictated by the size and accessibility of the infestation, its proximity to wells and other water, and the potential impacts of the application on non-target vegetation. Some herbicides have residual effects and persist in the soil in an active state for some time after application. Other herbicides become inactive once they contact soil. The residual activity of a herbicide varies with rate of application, soil properties, and climate, and its impact on non-target vegetation should be carefully considered.
+    
+    To types of herbicide formats: granular and liquid. IAPP allows for liquid particulars only. Lucy will need to cover off both.' 
+    baseSchema: RecordSchema
+    meta:
+      baseModel: Record
+      resource: true
+      api: /treatment/chemical
+      base: /api
+    ## -- DisplayLayout
+    displayLayout: 
+      displayLabel: 'Chemical Treatment #(date)'
+    ## --
+    # -- layout
+    layout: 
+      title: 
+        key: 'chemicalTreatment' 
+        default: 'Chemical Treatment'
+      sections:
+        - title:
+            key: 'chemicalTreatment.details.title'
+            default: Location And Treatment Details
+          groups:
+            - title: 
+                key: '' 
+                default: Location and Geometry
+              fields: 
+                - spaceGeom
+              style: {}
+            ## -- group {Location}
+            - title:
+                key: ''
+                default: Applicator Information
+              fields: 
+                - firstApplicator
+                - secondApplicator
+                - pesticideEmployer
+              style: {}
+            ## -- group {Applicator Info}
+            - title:
+                key: ''
+                default: Treatment Details
+              fields: 
+                - primaryPaperFileReference
+                - secondaryPaperFileReference
+                - date
+                - pup
+                - speciesAgency
+                - pmp
+              style: {}  
+            ## -- group { Treatment Details }
+        # -- section {Location}
+        ## Section: Method and application
+        - title: 
+            key: 'chemicalTreatment.details.title'
+            default: 'Chemical Treatment Details'
+          groups:
+            ## Group Treatment Advance details
+            - title:
+                key: ''
+                default: Treatment Method and Application
+              fields:
+                - methodCode
+                - temperature
+                - humidity
+                - windSpeed
+                - windDirection
+              style: {}
+            ## -- group {Advance details}
+            ## HerbicideMix subsection is only viewable in Create mode
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - mixDeliveryRate
+                - tankMixes
+              style:
+                custom: {
+                  formComponent: HerbicideMix
+                }
+            ## SpeciesTreated subsection is only viewable in Create mode    
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - speciesObservations
+              style: 
+                custom: {
+                  formComponent: SpeciesTreated
+                }
+            ## TreatmentDetails subsection is only viewable in View mode
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - mixDeliveryRate
+                - tankMixes
+                - speciesObservations
+              style:
+                custom: {
+                  formComponent: TreatmentDetails
+                }
+            ## -- group
+        ## Comments section
+        - title:
+            key: ''
+            default: 'Comments'
+          groups:
+            - title:
+                key: ''
+                default: ''
+              fields:
+                - additionalComments
+              style: {}
+        ## -- end Section
+    # --
+    ## -- computedFields
+    computedFields: 
+      calculatedArea:
+        header:
+          key: calculatedArea
+          default: 'Total Calculated Area'
+        suffix: 'm²'
+        computationRules:
+          - name: Calculate Area
+            keys:
+              - plotWidth
+              - plotLength
+            method: calculateArea
+    ## --
+    ## Relations
+    relations: 
+      tankMixes:
+        header:
+          key: 'chemicalTreatment.tankMixes'
+          default: Herbicide Mix
+        description: 
+          key: 'chemicalTreatment.tankMixes.description'
+          default: 'Herbicide mix used for chemical treatment'
+        type: array
+        relationshipType: one-to-many
+        schema: HerbicideTankMixSchema
+        meta: 
+          embedded: true
+      speciesObservations:
+        header:
+          key: 'chemicalTreatment.speciesObservations'
+          default: Invasive Species
+        description: 
+          key: 'chemicalTreatment.speciesObservations.description'
+          default: 'Species treated'
+        type: array
+        relationshipType: one-to-many
+        schema: ObservationChemicalTreatmentSchema
+        meta: 
+          embedded: true
+    ## -- Columns
+    columns: 
+      ## Data Columns
+      id: 
+        name: chemical_treatment_id
+        comment: 'Auto generated primary key. This is auto incremental field'
+        definition: SERIAL PRIMARY KEY
+      date:
+        name: chemical_treatment_date
+        comment: 'Date of the treatment'
+        definition: DATE NOT NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'date' 
+            default: 'Date'
+          classes:
+            - none
+      primaryPaperFileReference:
+        name: chemical_treatment_primary_paper_file_ref
+        comment: 'Primary paper file Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'primaryPaperFileReference' 
+            default: 'Primary Paper File Reference'
+          classes:
+            - none
+      secondaryPaperFileReference:
+        name: chemical_treatment_secondary_paper_file_ref
+        comment: 'Secondary paper file Paper file reference associated with treatment'
+        definition: VARCHAR(100) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'secondaryPaperFileReference' 
+            default: 'Secondary Paper File Reference'
+          classes:
+            - none
+      pup:
+        name: pesticide_use_permit 
+        comment: Use permit code of pesticide usage. This is free form information
+        definition: VARCHAR(60) NULL
+        meta: {}
+        layout:
+          header: 
+            key: 'pup' 
+            default: 'PUP'
+          classes:
+            - none
+      temperature:
+        name: temperature
+        comment: The recorded air temperature at the site of the treatment area at the time of treatment, in degrees Celsius
+        definition: SMALLINT NULL
+        meta: {}
+        verification:
+          minimumValue: 10
+          maximumValue: 30
+        layout:
+          header:
+            key: 'temperature'
+            default: 'Temperature'
+          suffix: '°C'
+          classes:
+            - col-3
+      humidity:
+        name: humidity
+        comment: The recorded air humidity at the site of the treatment area at the time of treatment, as a percentage
+        definition: SMALLINT NULL
+        meta: {}
+        verification:
+          minimumValue: 0
+          maximumValue: 100
+        layout:
+          header:
+            key: 'humidity'
+            default: 'Humidity'
+          suffix: '%'
+          classes:
+            - col-3
+      windSpeed:
+        name: wind_speed
+        comment: The recorded wind speed at the site of the treatment area at the time of treatment, in km/h
+        definition: NUMERIC(4,1) NULL
+        meta: {}
+        verification:
+          minimumValue: 0
+          maximumValue: 15
+        layout:
+          header:
+            key: 'windSpeed'
+            default: 'Wind Speed'
+          suffix: 'km/h'
+          classes:
+            - col-3
+      ## Relation Column
+      speciesAgency:
+        name: 'species_agency_code_id'
+        comment: Foreign key reference to Species Agency Code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'speciesAgency' 
+            default:  'Species Agency'
+          classes:
+            - none
+      pesticideEmployer:
+        name: pesticide_employer_code_id
+        comment: Foreign key reference to Pesticide employer table
+        definition: INT NULL
+        foreignTable: pesticide_employer_code
+        refColumn: pesticide_employer_code_id
+        deleteCascade: false
+        meta: {}
+        layout:
+          header: 
+            key: 'pesticideEmployer' 
+            default:  'Pesticide Employer Code'
+          classes:
+            - none
+      pmp:
+        name: project_management_plan_code_id
+        comment: 'Foreign key reference to Project management plan code table'
+        definition: INT NULL
+        foreignTable: project_management_plan_code
+        refColumn: project_management_plan_code_id
+        meta: {}
+        layout:
+          header: 
+            key: 'pmp' 
+            default:  'Project Management Plan'
+          classes:
+            - none
+      firstApplicator:
+        name: first_applicator_chemical_treatment_employee_id
+        comment: Foreign key reference to Chemical treatment employee table
+        definition: INT NULL
+        foreignTable: chemical_treatment_employee
+        refColumn: chemical_treatment_employee_id
+        meta: {}
+        layout:
+          header: 
+            key: 'chemicalTreatment.firstApplicator' 
+            default:  'First Applicator'
+          classes:
+            - none
+      secondApplicator:
+        name: second_applicator_chemical_treatment_employee_id
+        comment: Foreign key reference to Chemical treatment employee table
+        definition: INT NULL
+        foreignTable: chemical_treatment_employee
+        refColumn: chemical_treatment_employee_id
+        meta: {}
+        layout:
+          header: 
+            key: 'chemicalTreatment.secondApplicator' 
+            default:  'Second Applicator'
+          classes:
+            - none
+      # -- End Columns
+    ## -- End: Columns
+    ## -- Versions
+    versions: 
+      - name: codes ## This version name should be unique
+        id: '20191125'
+        info: 'Adding chemical treatment method and wind direction speed code tables reference to chemical treatment'
+        columns:
+          windDirection:
+            name: wind_direction_code_id
+            comment: 'Foreign key reference to WindDirectionSchema'
+            definition: INT NULL
+            foreignTable: wind_direction_code
+            refColumn: wind_direction_code_id
+            meta: {}
+            layout:
+              header: 
+                key: 'chemicalTreatment.windDirection' 
+                default:  'Wind direction'
+              classes:
+                - col-3
+          methodCode:
+            name: chemical_treatment_method_id
+            comment: 'Foreign key reference to Chemical Treatment Method codes'
+            definition: INT NULL
+            foreignTable: chemical_treatment_method
+            refColumn: chemical_treatment_method_id
+            meta: {}
+            layout:
+              header: 
+                key: 'chemicalTreatment.methodCode' 
+                default:  'Chemical Treatment Method'
+              classes:
+                - col-12
+        ## -- end Columns
+      - name: addCommentsColumn
+        id: '20191129'
+        info: 'Adding new column to chemical treatment to capture optional free-form comments'
+        columns:
+          additionalComments:
+            name: additional_comments
+            comment: 'Free-form comments added by chemical treatment provider'
+            definition: VARCHAR(500) NULL
+            meta: {}
+            required: false
+            layout:
+              header:
+                key: 'chemicalTreatment.additionalComments'
+                default: 'Additional Comments'
+              classes:
+                - col-12
+      - name: addMixDeliveryRateColumn
+        id: '20191219'
+        info: 'Adding calibrated mix delivery rate to chemical treatment'
+        columns:
+          mixDeliveryRate:
+            name: mix_delivery_rate
+            comment: 'Delivery rate of herbicide tank mix in L/ha'
+            definition: INT NULL
+            meta: {}
+            required: true 
+            layout:
+              header:
+                key: 'chemicalTreatment.mixDeliveryRate'
+                default: 'Mix Delivery Rate (calibrated)'
+              classes:
+                - col-12
+    ## -- End: Versions
+    ## -- CopyFrom
+    # Copy Columns, version from other schema
+    copyFrom:
+      # Key: SpaceGeomModelSchema
+      SpaceGeomModelSchema:
+        versions:
+          - spaceGeom
+      # -- SpaceGeomModelSchema
+    ## -- End - CopyFrom
+  ## --
