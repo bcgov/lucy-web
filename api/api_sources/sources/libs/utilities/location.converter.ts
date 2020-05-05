@@ -56,6 +56,11 @@ export class LocationConverter {
   public static e6 = Math.pow(LocationConverter.e, 6);
   public static e7 = Math.pow(LocationConverter.e, 7);
 
+  /**
+   * @description Convert latitude/ longitude project to UTM
+   * @param lat latitude value
+   * @param long longitude value
+   */
   public static convertLatLongCoordinateToUTM(
     lat: number,
     long: number
@@ -124,6 +129,11 @@ export class LocationConverter {
     return JSON.parse(JSON.stringify(hexRules));
   }
 
+  /**
+   * @description Check if the provided lat/long values is inside BC or not
+   * @param latitude latitude value
+   * @param longitude longitude value
+   */
   public static isInsideBC(latitude: number, longitude: number): boolean {
     const boundry = this.getBCAlbersBoundry();
     const albers = this.latLongCoordinateToAlbers(latitude, longitude);
@@ -218,6 +228,12 @@ export class LocationConverter {
     return this.toRadian(angleP);
   }
 
+  /**
+   * @description Convert UTM to lat/long
+   * @param x eastings value
+   * @param y northings value
+   * @param zone zone value
+   */
   public static convertUTMToLatLongCoordinate(
     x: number,
     y: number,
@@ -320,7 +336,13 @@ export class LocationConverter {
     };
   }
 
-  public static latLongCoordinateToAlbers(
+
+  /**
+   * @description Convert latitude/ longitude to Albers
+   * @param latitude latitude value
+   * @param longitude longitude value
+   */
+  static latLongCoordinateToAlbers(
     latitude: number,
     longitude: number
   ): PointTuple {
@@ -382,6 +404,11 @@ export class LocationConverter {
     };
   }
 
+  /**
+   * @description Convert Albers to lat/long
+   * @param x albersX value
+   * @param y albersY value
+   */
   public static albersToLatLongCoordinate(x: number, y: number): GeoLocation {
     const a = this.b;
     const e2 = 2 * (1 / 298.257222101) - Math.pow(1 / 298.257222101, 2);
