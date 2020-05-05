@@ -24,8 +24,8 @@
  */
 
 import { expect } from 'chai';
-import { GeoLocation } from "./geoMap.utility";
-import { UTMCoordinate, LocationConverter } from "./location.converter";
+import { GeoLocation } from './geoMap.utility';
+import { UTMCoordinate, LocationConverter } from './location.converter';
 
 const insideOutsideTestData = require('./resources/insideOutsideTest.json');
 const hexTestData = require('./resources/bcHexTest.json');
@@ -41,7 +41,7 @@ describe('Test for Location Converter Utility', () => {
         const expectedZone = 11;
 
         const result = LocationConverter.convertLatLongCoordinateToUTM(latitude, longitude) as UTMCoordinate;
-        
+
         expect(result.eastings.toFixed()).to.be.equal(expectedEastings.toFixed());
         expect(result.northings.toFixed()).to.be.equal(expectedNorthings.toFixed());
         expect(result.zone).to.be.equal(expectedZone);
@@ -64,7 +64,7 @@ describe('Test for Location Converter Utility', () => {
                 invalidDataCount++;
             }
         }
-        
+
         expect(validDataCount).to.be.equal(expectedValidDataCount);
         expect(invalidDataCount).to.be.equal(expectedInvalidDataCount);
     });
@@ -137,9 +137,9 @@ describe('Test for Location Converter Utility', () => {
                 invalidDataCount++;
             }
         }
-        
+
         expect(validDataCount).to.be.equal(expectedValidDataCount);
         expect(invalidDataCount).to.be.equal(expectedInvalidDataCount);
     });
-    
+
 });

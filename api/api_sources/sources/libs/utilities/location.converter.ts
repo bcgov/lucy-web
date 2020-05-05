@@ -1,4 +1,4 @@
-import { PointTuple, GeoLocation } from "./geoMap.utility";
+import { PointTuple, GeoLocation } from './geoMap.utility';
 
 /**
  *  Copyright © 2019 Province of British Columbia
