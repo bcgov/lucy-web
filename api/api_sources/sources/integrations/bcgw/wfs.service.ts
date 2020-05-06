@@ -7,7 +7,7 @@
 import * as assert from 'assert';
 import * as axios from 'axios';
 import { PointTuple, getHTTPReqQueryString } from '../../libs/utilities';
-import { GeoMapUtility, GeoLocation, BaseLogger, DefaultLogger } from '../../libs/utilities';
+import { LocationConverter, GeoMapUtility, GeoLocation, BaseLogger, DefaultLogger } from '../../libs/utilities';
 
 export const  WFSBasicConfig = {
     SERVICE: 'WFS',
@@ -63,7 +63,7 @@ export class WFSService {
         featureConfig: object = WFSFeatureConfig,
         logger: BaseLogger = DefaultLogger): Promise<any> {
         // Get web mercator for location
-        const point: PointTuple = GeoMapUtility.longitudeLatitudeCoordinateToAlbers(location.latitude, location.longitude);
+        const point: PointTuple = LocationConverter.latLongCoordinateToAlbers(location.latitude, location.longitude);
         // Creating config for query
         const config = {
             typeName: typeName
