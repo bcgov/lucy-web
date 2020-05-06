@@ -71,6 +71,7 @@ export * from './countryProvince';
 export * from './adultMusselsLocation';
 export * from './previousAISKnowledgeSource';
 export * from './previousInspectionSource';
+export * from './seed';
 
 /**
  * Controllers
@@ -98,4 +99,5 @@ export * from './controllers/mechanicalMonitor.controller';
 export * from './controllers/efficacyCode.controller';
 export * from './controllers/highRiskAssessment.controller';
 export * from './controllers/watercraftJourney.controller';
+export * from './controllers/seed.controller';
 // ----------------------------------------------------------------------------------------------------------------
