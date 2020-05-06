@@ -79,6 +79,15 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   municipalitiesLayerGroup?;
   regionalDistrictsLayerGroup?;
   wellsLayerGroup?;
+
+  // Lottie Animation
+  public lottieConfig: Object;
+  private anim: any;
+  private animationSpeed = 1;
+  showLoadingWells = false;
+  showLoadingRegionaldistricts = false;
+  showLoadingMunicipalities = false;
+  /////////////////
   
 
   // Group close markers or always show individually
@@ -223,7 +232,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   @Output() centerPointChanged = new EventEmitter<MapPreviewPoint>();
 
   ////////////// Class Functions //////////////
-  constructor(private bcDataCatalogueService: BcDataCatalogueService) { }
+  constructor(private bcDataCatalogueService: BcDataCatalogueService) { 
+    this.setupLoadingIcon()
+  }
 
   ngOnInit() {
   }
@@ -318,21 +329,21 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
 
   //Layers
   switchShowWells() {
-    this.showWells = !this.showWells
+    this.showWells = !this.showWells;
     if (this.showWells) {
       // show
       // will show depending on zoom
     } else {
       // remove
-      this.removeWells()
+      this.removeWells();
     }
   }
 
   switchShowRegionaldistricts() {
-    this.showRegionaldistricts = !this.showRegionaldistricts
+    this.showRegionaldistricts = !this.showRegionaldistricts;
     if (this.showRegionaldistricts) {
       // show
-      this.addRegionalDistrictsLayerToMap()
+      this.addRegionalDistrictsLayerToMap();
     } else {
       // remove
       this.removeRegionaldistricts()
@@ -340,13 +351,13 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   }
 
   switchMunicipalities() {
-    this.showMunicipalities = !this.showMunicipalities
+    this.showMunicipalities = !this.showMunicipalities;
     if (this.showMunicipalities) {
       // show
-      this.addMunicipalitiesLayerToMap()
+      this.addMunicipalitiesLayerToMap();
     } else {
       // remove
-      this.removeMunicipalities()
+      this.removeMunicipalities();
     }
   }
 
@@ -372,8 +383,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   }
   
   private async addMunicipalitiesLayerToMap() {
+    this.showLoadingMunicipalities = true;
     this.removeMunicipalities();
-    
     const municipalitiesLayerGroup = L.layerGroup();
     const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
     L.geoJSON(municipalitiesGeoJSON, {
@@ -388,11 +399,12 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     }).addTo(municipalitiesLayerGroup);
     municipalitiesLayerGroup.addTo(this.map);
     this.municipalitiesLayerGroup = municipalitiesLayerGroup
+    this.showLoadingMunicipalities = false;
   }
 
   private async addRegionalDistrictsLayerToMap() {
+    this.showLoadingRegionaldistricts = true;
     this.removeRegionaldistricts();
-    
     const regionalDistrictsLayerGroup = L.layerGroup();
     const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
     L.geoJSON(regionalDistrictsGeoJSON, {
@@ -407,6 +419,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     }).addTo(regionalDistrictsLayerGroup);
     regionalDistrictsLayerGroup.addTo(this.map);
     this.regionalDistrictsLayerGroup = regionalDistrictsLayerGroup
+    this.showLoadingRegionaldistricts = false;
   }
 
   private async addWellsLayerToMap(bbox: number[]) {
@@ -726,5 +739,38 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   get bcGeoJSON(): any {
     const obj = JSON.parse(JSON.stringify(bcgeojson)).default;
     return obj;
+  }
+
+
+  // Lottie Loading animation
+  setupLoadingIcon() {
+    this.lottieConfig = {
+      path: 'https://assets3.lottiefiles.com/datafiles/fPx4vaZrul2Fvg9/data.json',
+      // path: 'src/assets/loading.json',
+      renderer: 'canvas',
+      autoplay: true,
+      loop: true
+    };
+  }
+
+  handleAnimation(anim: any) {
+    this.anim = anim;
+  }
+
+  stopLoadingAnimation() {
+    this.anim.stop();
+  }
+
+  playLoadingAnimation() {
+    this.anim.play();
+  }
+
+  pauseLoadingAnimation() {
+    this.anim.pause();
+  }
+
+  setSpeedOfLoadingAnimation(speed: number) {
+    this.animationSpeed = speed;
+    this.anim.setSpeed(speed);
   }
 }
