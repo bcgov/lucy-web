@@ -229,6 +229,17 @@ schemas:
             refColumn: observer_workflow_id
             meta: {}
       ## -- end: workflow
+      ## -- version: numberOfPeopleInParty
+      - name: 'numberOfPeopleInParty'
+        id: '20200426'
+        info: 'Adding new column numberOfPeopleInParty'
+        columns:
+          numberOfPeopleInParty:
+            name: number_of_people_in_party
+            comment: Number of peoples in inspected boats
+            definition: INT NULL DEFAULT 1
+            meta: {}
+      ## -- end: numberOfPeopleInParty
     ## -- end version
   ## --
 

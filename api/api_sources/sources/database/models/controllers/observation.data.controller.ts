@@ -30,6 +30,31 @@ export class ObservationController extends RecordController<Observation> {
         return this.sharedInstance<Observation>(Observation, ObservationSchema) as ObservationController;
     }
 
+    get exportKeyMapper(): {[key: string]: string} {
+		return {
+            'spaceGeom.id': 'location.id',
+            'spaceGeom.latitude': 'location.latitude',
+            'spaceGeom.longitude': 'location.longitude',
+            'spaceGeom.hexId': 'location.hexId',
+            'spaceGeom.subHexId': 'location.subHexId',
+            'spaceGeom.metaData': 'location.metaData',
+            'spaceGeom.geometry': 'location.geometry',
+            'spaceGeom.inputGeometry': 'location.inputGeometry',
+            'spaceGeom.inputGeometry.attributes.area.width': 'location.area.width',
+            'spaceGeom.inputGeometry.attributes.area.length': 'location.area.length',
+            'spaceGeom.inputGeometry.attributes.geomId': 'location.geomId'
+        };
+	}
+
+	get exportKeyPriorities(): {[key: string]: number} {
+        return {
+			id: 5,
+			date: 4,
+            observerFirstName: 3,
+            observerLastName: 2
+        };
+    }
+
     public async findById(id: number): Promise<Observation> {
         const item: Observation = await super.findById(id) as Observation;
         if (item) {
@@ -41,7 +66,7 @@ export class ObservationController extends RecordController<Observation> {
                 });
                 for (let i = 0; i < newMts.length; i++) {
                     const mtFull = await newMts[i];
-                    delete(mtFull.observation);
+                    delete(mtFull.observations);
                     newItems.push(mtFull);
                 }
                 item.mechanicalTreatments = newItems;

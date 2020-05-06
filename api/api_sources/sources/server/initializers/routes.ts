@@ -34,6 +34,7 @@ import { accountRoute,
     UploadRouteController,
 } from '../modules';
 import { LocationRouteController } from '../modules/location';
+import { BCGeoDataRouteController } from '../modules/bcGeoData';
 import { defaultRoute, miscellaneousRouter } from '../modules';
 
 /**
@@ -76,6 +77,9 @@ export const routes = (app: Application) => {
 
     // Location
     app.use('/api/location', LocationRouteController.shared.router);
+
+    // BC Data Warehouse
+    app.use('/api/bcgeodata', BCGeoDataRouteController.shared.router);
 
     // Uploads
     app.use('/api/uploads', UploadRouteController.shared.router);

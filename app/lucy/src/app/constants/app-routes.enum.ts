@@ -35,9 +35,9 @@ export enum AppRoutes {
     ViewChemicalTreatment = 'view/chemical/:id',
     EditChemicalTreatment = 'edit/chemical/:id',
   
-    AddMechanicalTreatment = 'create/mechnical',
-    ViewMechanicalTreatment = 'view/mechnical/:id',
-    EditMechanicalTreatment = 'edit/mechnical/:id',
+    AddMechanicalTreatment = 'create/mechanical',
+    ViewMechanicalTreatment = 'view/mechanical/:id',
+    EditMechanicalTreatment = 'edit/mechanical/:id',
     
     AddMechanicalMonitor = 'create/monitor/mechanical',
     ViewMechanicalMonitor = 'view/monitor/mechanical/:id',

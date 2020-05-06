@@ -83,6 +83,7 @@ export interface WatercraftRiskAssessmentSpec {
 	previousInspectionSource: PreviousInspectionSource;
 	provinceOfResidence: string;
 	countryOfResidence: string;
+	numberOfPeopleInParty: number;
 }
 // -- End: WatercraftRiskAssessmentSpec --
 
@@ -126,6 +127,7 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	previousInspectionSource?: PreviousInspectionSource;
 	provinceOfResidence?: string;
 	countryOfResidence?: string;
+	numberOfPeopleInParty?: number;
 }
 // -- End: WatercraftRiskAssessmentUpdateSpec --
 
@@ -384,6 +386,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.countryOfResidence})
 	@ModelProperty({type: PropertyType.string})
 	countryOfResidence: string;
+
+    /**
+	 * @description Getter/Setter property for column {number_of_people_in_party}
+	 */
+	@Column({name: WatercraftRiskAssessmentSchema.columns.numberOfPeopleInParty, transformer: new IntTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	numberOfPeopleInParty: number;
 
 	/**
 	 * @description Getter/Setter property for column {observer_workflow_id}

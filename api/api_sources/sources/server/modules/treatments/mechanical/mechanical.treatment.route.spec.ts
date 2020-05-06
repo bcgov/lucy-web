@@ -43,6 +43,7 @@ import {
     RequestFactory,
     mechanicalTreatmentFactory,
     destroyMechanicalTreatment,
+    observationFactory,
     Destroyer
 } from '../../../../database/factory';
 import {
@@ -53,7 +54,6 @@ import {
 } from '../../../../database/models';
 import { viewerToken } from '../../../../test-helpers/token';
 import { MechanicalTreatmentSchema } from '../../../../database/database-schema';
-// import { request } from 'http';
 
 
 describe('Test for mechanical treatment', () => {
@@ -70,6 +70,8 @@ describe('Test for mechanical treatment', () => {
         const createReq = RequestFactory<MechanicalTreatmentSpec>(create, {
             schema: MechanicalTreatmentSchema.shared
         });
+        const obs = await observationFactory();
+        createReq.observations = [obs.observation_id];
         await testRequest(SharedExpressApp.app , {
             url: '/api/treatment/mechanical/',
             type: HttpMethodType.post,
@@ -81,7 +83,6 @@ describe('Test for mechanical treatment', () => {
             // console.dir(resp.body);
             await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.mechanical_treatment_id);
-                should().exist(data.species);
                 should().exist(data.speciesAgency);
                 should().exist(data.mechanicalMethod);
                 should().exist(data.mechanicalDisposalMethod);
@@ -89,9 +90,7 @@ describe('Test for mechanical treatment', () => {
                 should().exist(data.rootRemoval);
                 should().exist(data.issue);
                 should().exist(data.providerContractor);
-                expect(data.observation.observation_id).to.be.equal(create.observation.observation_id);
-                expect(data.species.species_id)
-                .to.be.equal(create.species.species_id);
+                expect(data.observations.length).to.be.greaterThan(0);
                 expect(data.speciesAgency.species_agency_code_id)
                 .to.be.equal(create.speciesAgency.species_agency_code_id);
                 expect(data.mechanicalMethod.mechanical_method_code_id)
@@ -107,8 +106,34 @@ describe('Test for mechanical treatment', () => {
                 .to.be.equal(create.providerContractor.treatment_provider_contractor_id);
                 expect(data.date).to.be.equal(create.date);
                 await MechanicalTreatmentController.shared.removeById(data.mechanical_treatment_id);
+                await ObservationController.shared.remove(obs);
             });
-            await ObservationController.shared.remove(create.observation);
+        });
+    });
+
+    it('should create mechanical treatment for multiple observations', async () => {
+        const create = await mechanicalTreatmentCreateSpecFactory();
+        const createReq = RequestFactory<MechanicalTreatmentSpec>(create, {
+            schema: MechanicalTreatmentSchema.shared
+        });
+        const obs1 = await observationFactory();
+        const obs2 = await observationFactory();
+        createReq.observations = [obs1.observation_id, obs2.observation_id];
+        await testRequest(SharedExpressApp.app , {
+            url: '/api/treatment/mechanical/',
+            type: HttpMethodType.post,
+            expect: 201,
+            auth: AuthType.admin,
+            send: createReq
+        })
+        .then(async (resp) => {
+            // console.dir(resp.body);
+            await verifySuccessBody(resp.body, async (data: any) => {
+                expect(data.observations.length).to.be.equal(2);
+                await MechanicalTreatmentController.shared.removeById(data.mechanical_treatment_id);
+                await ObservationController.shared.remove(obs1);
+                await ObservationController.shared.remove(obs2);
+            });
         });
     });
 
@@ -129,7 +154,6 @@ describe('Test for mechanical treatment', () => {
         })
         .then(async (resp) => {
             await verifyErrorBody(resp.body);
-            await ObservationController.shared.remove(create.observation);
         });
     });
 
@@ -172,10 +196,8 @@ describe('Test for mechanical treatment', () => {
     it('should update mechanical treatment for {admin}', async () => {
         const mt = await mechanicalTreatmentFactory();
         const create = await mechanicalTreatmentCreateSpecFactory();
-        delete create.species;
-        await ObservationController.shared.remove(create.observation);
-        delete create.observation;
         delete create.applicatorLastName;
+        delete create.speciesAgency;
         const updateReq = RequestFactory<MechanicalTreatmentUpdateSpec>(create, {
             schema: MechanicalTreatmentSchema.shared
         });
@@ -190,9 +212,7 @@ describe('Test for mechanical treatment', () => {
             await verifySuccessBody(resp.body, async (data: any) => {
                 should().exist(data.mechanical_treatment_id);
                 expect(data.mechanical_treatment_id).to.be.equal(mt.mechanical_treatment_id);
-                expect(data.observation.observation_id).to.be.equal(mt.observation.observation_id);
-                expect(data.species.species_id).to.be.equal(mt.species.species_id);
-                expect(data.speciesAgency.species_agency_code_id).to.be.equal(updateReq.speciesAgency);
+                expect(data.speciesAgency.species_agency_code_id).to.be.equal(mt.speciesAgency.species_agency_code_id);
                 expect(data.mechanicalMethod.mechanical_method_code_id).to.be.equal(updateReq.mechanicalMethod);
                 expect(data.date).to.be.equal(create.date);
             });

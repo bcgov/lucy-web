@@ -22,25 +22,6 @@
 declare var window: any;
 export class AppConstants {
 
-    // SSO
-    static SSOConstants = {
-        SSO_CLIENT_ID : `invasives-bc`,
-        SSO_BASE_URL : `https://sso-dev.pathfinder.gov.bc.ca`,
-        SSO_REALM_NAME : `dfmlcg7z`,
-        SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
-    };
-
-    // API
-    static API_baseURL = 'http://localhost:80/api';
-
-    // Default Config
-    static CONFIG = {
-        apiHost: 'localhost',
-        changeVersion: 'NA',
-        env: 'dev',
-        version: 'NA'
-    };
-
     // Mussles App
     static get API_WatercraftAssessment_Export(): string { return `${AppConstants.API_baseURL}/mussels/wra/export`;}
     static get API_Shift_Export(): string { return `${AppConstants.API_baseURL}/mussels/workflow/export`;}
@@ -60,30 +41,72 @@ export class AppConstants {
 
     // Observation
     static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }
+    static get API_observation_Export(): string { return `${AppConstants.API_observation}/export`; }
     static get API_observationSpecies(): string { return `${AppConstants.API_baseURL}/observation/species`; }
-    static API_observationWith(id: number): string {
-        return `${AppConstants.API_baseURL}/observation/${id}`; }
-    static API_observationAt(lat: number, long: number): string {
-        return `${AppConstants.API_baseURL}/observation?lat=${lat}&long=${long}`;
-    }
 
     // Form Config Mechanical Monitoring
     static get API_mechanicalMonitor(): string { return `${AppConstants.API_baseURL}/monitor/mechanical/config`; }
-    static API_mechanicalMonitorWith(id: number): string {
-        return `${AppConstants.API_baseURL}/monitor/mechanical/${id}`;
-    }
 
     // Code Tables
     static get API_CodeTables(): string { return `${AppConstants.API_baseURL}/codes`; }
 
     // Mechanical Treatment
     static get API_mechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical`; }
-    static API_mechanicalTreatmentWith(id: number): string {
-        return `${AppConstants.API_baseURL}/treatment/mechanical/${id}`;
-   }
 
    // Chemical Treatment
    static get API_chemicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/chemical`; }
+
+    // API Reference data
+    static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
+
+    // SSO
+    static SSOConstants = {
+        SSO_CLIENT_ID : `invasives-bc`,
+        SSO_BASE_URL : `https://sso-dev.pathfinder.gov.bc.ca`,
+        SSO_REALM_NAME : `dfmlcg7z`,
+        SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
+    };
+
+    // API
+    static API_baseURL = 'http://localhost:80/api';
+
+    // Default Config
+    static CONFIG = {
+        apiHost: 'localhost',
+        changeVersion: 'NA',
+        env: 'dev',
+        version: 'NA'
+    };
+
+    // ---------- BC Data Catalogue -------------
+    static bcDataCatalogue_baseURL = `/bcgeodata`;
+    // type name for BC Municipalities boundaries feature layer from BC Data Catalogue
+    static bcDataCatalogue_municipalitiesTypeName = `WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP`;
+    static API_bcDataCatalogue_getLayer(typename: string): string {
+        return `${AppConstants.API_baseURL}${AppConstants.bcDataCatalogue_baseURL}?typeName=${typename}`;
+    }
+    static API_bcDataCatalogue_getMunicipalities(): string {
+        return `${AppConstants.API_baseURL}/bcgeodata/municipalities`;
+    }
+    static API_bcDataCatalogue_getRegionalDistricts(): string {
+        return `${AppConstants.API_baseURL}/bcgeodata/regional-districts`;
+    }
+    static API_bcDataCatalogue_getWells(bbox: string): string {
+        return `${AppConstants.API_baseURL}/bcgeodata/wells?bbox=${bbox}`;
+    }
+    // ------------------------------------------
+
+    static API_observationWith(id: number): string {
+        return `${AppConstants.API_baseURL}/observation/${id}`; }
+    static API_observationAt(lat: number, long: number): string {
+        return `${AppConstants.API_baseURL}/observation?lat=${lat}&long=${long}`;
+    }
+    static API_mechanicalMonitorWith(id: number): string {
+        return `${AppConstants.API_baseURL}/monitor/mechanical/${id}`;
+    }
+    static API_mechanicalTreatmentWith(id: number): string {
+        return `${AppConstants.API_baseURL}/treatment/mechanical/${id}`;
+   }
    static API_chemicalTreatmentWith(id: number): string {
        return `${AppConstants.API_baseURL}/treatment/chemical/${id}`;
    }
@@ -113,14 +136,10 @@ export class AppConstants {
         return `${AppConstants.API_baseURL}/request-access/${id}`;
     }
 
-    // API Reference data
-    static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
-
     // BC Government Wearhouse
     static API_BCGW_wellProximity(latitude: number, longitude: number): string {
         return `${AppConstants.API_baseURL}/location/gwells-data?latitude=${latitude}&longitude=${longitude}`;
     }
-
 }
 
 

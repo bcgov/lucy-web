@@ -24,11 +24,11 @@ schemas:
         - header:
             key: 'latitude'
             default: 'Latitude'
-          key: lat
+          key: spaceGeom.latitude
         - header:
             key: 'longitude'
             default: 'Longitude'
-          key: long
+          key: spaceGeom.longitude
         - header:
             key: 'date'
             default: 'Date'
@@ -60,6 +60,11 @@ schemas:
                 default: Location Description  
               fields:
                 - accessDescription
+            - title:
+                key: 'comment'
+                default: Comment
+              fields:
+                - generalComment
             # End-group(Geometry)
             - title: 
                 key: 'observerInformation' 
@@ -126,8 +131,10 @@ schemas:
           key: 'observation.mechanicalTreatments.description'
           default: 'Mechanical treatments performed on observation'
         type: array
-        relationshipType: one-to-many
+        relationshipType: many-to-many
         schema: MechanicalTreatmentSchema
+        meta:
+          skipValidation: true
     # End - Relation
     columns: 
       # -- Regular Columns
@@ -210,6 +217,17 @@ schemas:
           regx:
             re: '^[a-zA-Z0-9]+'
             flag: 'gm'
+      generalComment:
+        name: 'general_comment'
+        comment: 'General comment associated with observation'
+        definition: VARCHAR(500) NULL
+        required: true
+        layout:
+          header:
+            key: 'observation.generalComment'
+            default: 'General Comment'
+          classes:
+            - none
       # --
       # -- Indicators --
       legacySiteIndicator:

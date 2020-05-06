@@ -19,7 +19,7 @@
 /**
  * Imports
  */
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, AfterLoad, ManyToMany } from 'typeorm';
 import { Record } from './generic.data.models';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObservationTypeCode } from './observationType.code';
@@ -48,7 +48,7 @@ import {
     SlopeCodeSchema,
     AspectCodeSchema,
     ProposedActionCodeSchema,
-  SpaceGeomSchema
+	SpaceGeomSchema
 } from '../database-schema';
 import { NumericTransformer, DateTransformer } from '../../libs/transformer';
 import { MechanicalTreatment } from './mechanical.treatment';
@@ -61,6 +61,7 @@ export interface ObservationCreateModel {
 	observerLastName: string;
 	sampleIdentifier?: string;
 	rangeUnitNumber: string;
+	generalComment: string;
 	legacySiteIndicator: boolean;
 	edrrIndicator: boolean;
 	researchIndicator: boolean;
@@ -94,6 +95,7 @@ export interface ObservationUpdateModel {
 	observerLastName?: string;
 	sampleIdentifier?: string;
 	rangeUnitNumber?: string;
+	generalComment?: string;
 	legacySiteIndicator?: boolean;
 	edrrIndicator?: boolean;
 	researchIndicator?: boolean;
@@ -166,6 +168,13 @@ export class Observation extends Record implements ObservationCreateModel {
 	@Column({ name: ObservationSchema.columns.rangeUnitNumber, nullable: true})
 	@ModelProperty({type: PropertyType.string})
 	rangeUnitNumber: string;
+
+	/**
+	 * @description Getter/Setter property for column {general_comment}
+	 */
+	@Column({ name: ObservationSchema.columns.generalComment})
+	@ModelProperty({type: PropertyType.string})
+	generalComment: string;
 
 	/**
 	 * @description Getter/Setter property for column {legacy_site_ind}
@@ -320,13 +329,15 @@ export class Observation extends Record implements ObservationCreateModel {
 	@ModelProperty({type: PropertyType.object})
 	spaceGeom: SpaceGeom;
 
-    // Calculated Properties
-    @OneToMany(
-        type => MechanicalTreatment,
-        mechanicalTreatment => mechanicalTreatment.observation
-    )
-    mechanicalTreatmentsFetcher: Promise<MechanicalTreatment[]>;
-    @ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
+	/**
+	 * @description ManyToMany relationship
+	 */
+	@ManyToMany(
+		type => MechanicalTreatment,
+		mechanicalTreatment => mechanicalTreatment.observations
+	)
+	mechanicalTreatmentsFetcher: Promise<MechanicalTreatment[]>;
+	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/MechanicalTreatment'})
     mechanicalTreatments?: MechanicalTreatment[];
 
     /**
