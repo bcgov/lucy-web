@@ -74,17 +74,6 @@ describe('Test for Geo Map Utility', () => {
         expect(Math.round(d * 100) / 100).to.be.equal(3.27);
     });
 
-    it('should covert lat/lon to BC Albers', () => {
-        const loc: GeoLocation = {
-            latitude: 48.424578999999994,
-            longitude: -123.36466990000001
-        };
-
-        const point: PointTuple = GeoMapUtility.longitudeLatitudeCoordinateToAlbers(loc.latitude, loc.longitude);
-        expect(Math.round(point.x * 100) / 100).to.be.equal(1195412.61);
-        expect(Math.round(point.y * 100) / 100).to.be.equal(382390.94);
-    });
-
     it('should return new location with given offset distance', () => {
         const loc: GeoLocation = {
             latitude: 51.00000000,
