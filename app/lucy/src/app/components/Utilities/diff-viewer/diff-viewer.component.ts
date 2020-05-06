@@ -52,16 +52,25 @@ export class DiffViewerComponent implements OnInit {
       ([key, value]) => {
         const before = this.diffObject.originalObject[key];
         const isJson = typeof before === typeof {};
+        const isArray = Array.isArray(before);
         const valueStr = `${value}`;
         const prettyKey = (key.replace(/([A-Z])/g, ` $1`)).charAt(0).toUpperCase() + (key.replace(/([A-Z])/g, ` $1`)).slice(1);
-        if (isJson) {
+        if (isArray) {
+          _changes.push({
+            name: key,
+            // Create a "pretty name" from camelCase keys
+            prettyName: prettyKey,
+            before: before.toString(),
+            after: valueStr,
+          });
+        } else if (isJson) {
           this.handleRecursiveChanges(_changes, key, prettyKey, before, value);
         } else {
           _changes.push({
             name: key,
             // Create a "pretty name" from camelCase keys
             prettyName: prettyKey,
-            before: before,
+            before,
             after: valueStr,
           });
         }

@@ -26,8 +26,7 @@ import { adminToken, viewerToken } from '../../../../test-helpers/token';
 import { verifySuccessBody, verifyErrorBody, commonTestSetupAction, commonTestTearDownAction, testRequest, AuthType, HttpMethodType} from '../../../../test-helpers/testHelpers';
 import {
     ObservationController,
-    Observation,
-    MechanicalTreatmentSpec
+    Observation
 } from '../../../../database/models';
 import {
     observationFactory,
@@ -132,7 +131,7 @@ describe('Test for observation routes', () => {
 
     it('should return observation with {id} and MechanicalTreatment', async () => {
         const mt = await mechanicalTreatmentFactory();
-        const obs = mt.observation;
+        const obs = mt.observations[0];
         await testRequest(SharedExpressApp.app , {
             type: HttpMethodType.get,
             url: `/api/observation/${obs.observation_id}`,
@@ -142,9 +141,6 @@ describe('Test for observation routes', () => {
             await verifySuccessBody(resp.body, async data => {
                 expect(data.observation_id).to.be.equal(obs.observation_id);
                 expect(data.mechanicalTreatments.length).to.be.equal(1);
-                // Check species prop of fetched obj
-                const mt0: MechanicalTreatmentSpec = data.mechanicalTreatments[0];
-                should().exist(mt0.species);
             });
             await destroyMechanicalTreatment(mt);
         });
@@ -341,6 +337,19 @@ describe('Test for observation routes', () => {
                 expect(filtered.length).to.be.greaterThan(0);
                 await Destroyer(ObservationController.shared)(obs);
             });
+        });
+    });
+
+    it(`should export all the observations`, async () => {
+        const observation = await ModelFactory(ObservationController.shared)();
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/observation/export',
+            expect: 200,
+            auth: AuthType.inspectAdmin
+        }).then(async resp => {
+            await verifySuccessBody(resp.body);
+            await Destroyer(ObservationController.shared)(observation);
         });
     });
 });

@@ -35,13 +35,14 @@ export interface InputConfig {
     suffix: string;
     verification: any;
     meta: any;
-    cssClasses: string;
+    classNames: any;
     codeTable: string;
     codeTableMeta: {};
     displayKey: string;
     condition: string;
     value?: any;
     dropdown?: any;
+    multiple?: boolean;
     embeddedFields?: {[key: string]: InputConfig};
 }
 

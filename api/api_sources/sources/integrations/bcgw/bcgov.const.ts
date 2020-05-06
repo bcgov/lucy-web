@@ -24,7 +24,9 @@
  * @description Available features set
  */
 export const BCGWFeatures = {
-    well: 'WHSE_WATER_MANAGEMENT.GW_WATER_WELLS_WRBC_SVW'
+    well: 'WHSE_WATER_MANAGEMENT.GW_WATER_WELLS_WRBC_SVW',
+    municipality: 'WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP',
+    regionalDistrict: 'WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_REGIONAL_DISTRICTS_SP',
 };
 
 /**

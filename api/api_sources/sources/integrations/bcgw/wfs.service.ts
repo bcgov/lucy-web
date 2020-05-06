@@ -7,7 +7,7 @@
 import * as assert from 'assert';
 import * as axios from 'axios';
 import { PointTuple, getHTTPReqQueryString } from '../../libs/utilities';
-import { GeoMapUtility, GeoLocation, BaseLogger, DefaultLogger } from '../../libs/utilities';
+import { LocationConverter, GeoMapUtility, GeoLocation, BaseLogger, DefaultLogger } from '../../libs/utilities';
 
 export const  WFSBasicConfig = {
     SERVICE: 'WFS',
@@ -63,7 +63,7 @@ export class WFSService {
         featureConfig: object = WFSFeatureConfig,
         logger: BaseLogger = DefaultLogger): Promise<any> {
         // Get web mercator for location
-        const point: PointTuple = GeoMapUtility.longitudeLatitudeCoordinateToAlbers(location.latitude, location.longitude);
+        const point: PointTuple = LocationConverter.latLongCoordinateToAlbers(location.latitude, location.longitude);
         // Creating config for query
         const config = {
             typeName: typeName
@@ -129,6 +129,60 @@ export class WFSService {
         } else {
             logger.error(`WFSService: getNearest: No feature return form url ${baseURL}`);
             return result.features[0];
+        }
+    }
+
+    async getLayer(typeName: string,
+                   baseURL: string = url,
+                   featureConfig: object = WFSFeatureConfig,
+                   logger: BaseLogger = DefaultLogger): Promise<any> {
+        // Creating config for query
+        const config = {
+            typeName: typeName
+        };
+        const finalConfig = { ...featureConfig, ...config};
+        // Query string
+        const query = getHTTPReqQueryString(finalConfig);
+        const finalURL = `${baseURL}${query}`;
+        try {
+            const result: axios.AxiosResponse = await axios.default.get(finalURL);
+            if (result.data) {
+                return result.data;
+            } else {
+                logger.error(`WFSService: getLayer: Empty response`);
+                throw new Error(`WFSService: getLayer: Empty response`);
+            }
+        } catch (excp) {
+            logger.error(`WFSService: getLayer: received exception => ${excp}`);
+            logger.info(`WFSService: getLayer: url: ${finalURL}`);
+            throw excp;
+        }
+    }
+
+    async getLayerInBoundingBox(typeName: string,
+                                bbox: string,
+                                baseURL: string = url,
+                                featureConfig: object = WFSFeatureConfig,
+                                logger: BaseLogger = DefaultLogger): Promise<any> {
+        const config = {
+            typeName: typeName
+        };
+        const finalConfig = { ...featureConfig, ...config};
+        // Query string
+        const query = getHTTPReqQueryString(finalConfig);
+        const finalURL = `${baseURL}${query}&bbox=${encodeURIComponent(bbox)},epsg:4326`;
+        try {
+            const result: axios.AxiosResponse = await axios.default.get(finalURL);
+            if (result.data) {
+                return result.data;
+            } else {
+                logger.error(`WFSService: getLayerInBoundingBox: Empty response`);
+                throw new Error(`WFSService: getLayerInBoundingBox: Empty response`);
+            }
+        } catch (excp) {
+            logger.error(`WFSService: getLayerInBoundaryBox: received exception => ${excp}`);
+            logger.info(`WFSService: getLayerInBoundingBox: url: ${finalURL}`);
+            throw excp;
         }
     }
 }

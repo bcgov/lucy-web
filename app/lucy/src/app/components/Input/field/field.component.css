@@ -34,6 +34,10 @@
     width: 100% !important;
 }
 
+.input-header-text {
+    margin: 0;
+}
+
 .input-group {
     background-color: rgba(51, 51, 51, 0.08);
 }
@@ -51,4 +55,26 @@
     padding-left: 0pt;
     padding-right: 1pt;
     padding-top: 2pt;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
+    border: none;
+    padding: 8px 0 !important;
+    width: auto !important;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    padding: 2px 8px !important;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-wrapper {
+    padding-bottom: 8px !important;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-underline {
+    bottom: 8px !important;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-subscript-wrapper {
+    padding-top: 8px !important;
 }

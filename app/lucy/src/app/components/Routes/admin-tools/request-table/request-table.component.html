@@ -45,7 +45,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let item">
-        <button mat-raised-button color="primary" id="custom-modal-action" (click)="onRespondAction(item)">
+        <button mat-raised-button color="primary" id="custom-modal-action" (click)="onRespondAction(item)" [disabled]="disableRespond(item)">
           Respond
         </button>
       </td>
@@ -60,6 +60,6 @@
   There are currently no new requests
 </div>
 
-<app-modal *ngIf="showModal" (onBackdropClick)="onModalClose()">
+<app-modal *ngIf="showModal" (onBackdropClick)="onModalClose()" [align]="'center'">
   <app-request-modal [roles]="roles" [request]="selectedRequest" [isAdmin]="isAdmin" (onModalClose)="onModalClose($event)"></app-request-modal>
 </app-modal>
