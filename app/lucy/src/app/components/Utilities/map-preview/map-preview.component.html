@@ -5,14 +5,33 @@
         <div id="toggles">
             <div class="container">
                 <div class="row">
-                    <div class="col-2 mx-1 d-flex justify-content-center" [ngClass]="showWells ? 'toggle-on' : 'toggle-off'" (click)="switchShowWells()">
-                        Wells
+                    <div class="col-2 mx-1 d-flex justify-content-center"
+                        [ngClass]="showWells ? 'toggle-on' : 'toggle-off'">
+                        <div class="clickable" (click)="switchShowWells()">
+                            Wells
+                        </div>
                     </div>
-                    <div class="col-5 mx-1 d-flex justify-content-center" [ngClass]="showRegionaldistricts ? 'toggle-on' : 'toggle-off'" (click)="switchShowRegionaldistricts()">
-                        Regional districts
+                    <div class="col-5 mx-1 d-flex justify-content-center"
+                        [ngClass]="showRegionaldistricts ? 'toggle-on' : 'toggle-off'">
+                        <div class="clickable" (click)="switchShowRegionaldistricts()">
+                            Regional districts
+                        </div>
+                        <div class="toggle-loading" *ngIf="showLoadingRegionaldistricts">
+                            <lottie-animation-view [options]="lottieConfig" [width]="30" [height]="30"
+                                (animCreated)="handleAnimation($event)">
+                            </lottie-animation-view>
+                        </div>
                     </div>
-                    <div class="col-4 mx-1 d-flex justify-content-center" [ngClass]="showMunicipalities ? 'toggle-on' : 'toggle-off'" (click)="switchMunicipalities()">
-                        Municipalities
+                    <div class="col-4 mx-1 d-flex justify-content-center"
+                        [ngClass]="showMunicipalities ? 'toggle-on' : 'toggle-off'">
+                        <div class="clickable" (click)="switchMunicipalities()">
+                            Municipalities
+                        </div>
+                        <div class="toggle-loading" *ngIf="showLoadingMunicipalities">
+                            <lottie-animation-view [options]="lottieConfig" [width]="30" [height]="30"
+                                (animCreated)="handleAnimation($event)">
+                            </lottie-animation-view>
+                        </div>
                     </div>
                 </div>
             </div>
