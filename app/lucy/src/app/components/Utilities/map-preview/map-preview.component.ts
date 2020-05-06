@@ -276,7 +276,7 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     this.map = L.map(this.mapId).setView([center.latitude, center.latitude], center.zoom);
     this.markerGroup = L.layerGroup().addTo(this.map);
     this.leafletDrawLayerGroup = L.layerGroup().addTo(this.map);
-    this.initMapWithGoogleSatellite();
+    this.initMapWithBCGW();
     // this.initWithOpenStreet();
     this.map.on('zoom', () => {
       if ((this.map.getZoom() >= 16) && this.showWells) {
@@ -311,8 +311,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   }
 
   private initMapWithBCGW() {
-    // Use Google tiles
-    L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+    // BCGW tiles
+    L.tileLayer('https://maps.gov.bc.ca/arcgis/rest/services/province/roads_wm/MapServer/tile/{z}/{y}/{x}', {
       // attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'.
       preferCanvas: true,
       key: this.makeid(10)
