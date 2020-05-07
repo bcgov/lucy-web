@@ -10,7 +10,15 @@ import AppConfig from '../../AppConfig';
 import { User } from '../../database/models';
 
 export class SeedRunner {
-    public static async seedDb(schemaName: string, schema: BaseSchema, options: SeedOptions, creator: User) {
+    public static async seedDb(schemaName: string, schema: BaseSchema, tag: string, options: SeedOptions, creator: User) {
+        const isImported = await this.checkSeedStatus(tag);
+
+        // Skip if the seed file is imported already
+        if (isImported) {
+            console.log(`[SEED - ${schemaName}]: SKIPPED`);
+            return;
+        }
+
         const currentEnv = AppConfig.getCurrentEnv();
         const environmentsToSeed = options.environments || [];
         environmentsToSeed.push('local');
@@ -19,14 +27,16 @@ export class SeedRunner {
         if (environmentsToSeed.includes(currentEnv)) {
             const csv = new GenericCSV(getCSVDataFilePath(options.fileName));
             const csvData = await csv.load();
-            console.log(`[SEED - ${schemaName}]: CSV LOADED SUCCESSFULLY`);
 
             if (csvData.length > 0) {
-                console.log(`[SEED - ${schemaName}]: MAPPING DATA WITH SCHEMA`);
+                // Mapping data to match the schema
                 const mappedData = await this.mapDataWithSchema(schema, csvData, creator, options);
 
-                console.log(`[SEED - ${schemaName}]: STORING DATA IN DB`);
+                // Store the mapped data into the database
                 await this.storeDataIntoDB(schemaName, mappedData, creator);
+
+                // Add an entry to the seed table for this seed operation
+                await this.updateSeedTable(schemaName, tag, creator);
 
                 console.log(`[SEED - ${schemaName}]: SUCCESS`);
             } else {
@@ -37,16 +47,39 @@ export class SeedRunner {
         }
     }
 
+    static async checkSeedStatus(tag: string): Promise<boolean> {
+        const con: BaseDataController = await controllerForSchemaName('SeedSchema');
+        const existingSeed = await con.fetchOne({ reference: tag });
+        return !!existingSeed;
+    }
+
+    static async updateSeedTable(seedTarget: string, reference: string, creator: User) {
+        const con: BaseDataController = await controllerForSchemaName('SeedSchema');
+        const data = { seedTarget, reference };
+
+        if (con) {
+            con.createNewObject(data, creator);
+        } else {
+            console.log(`Controller not defined for schema: SeedSchema`);
+        }
+    }
+
     public static async storeDataIntoDB(schemaName: string, mappedData: any[], creator: User) {
         const con: BaseDataController = await controllerForSchemaName(schemaName);
 
-        if (con) {
-            for (const data of mappedData) {
-                await con.createNewObject(data, creator);
+        try {
+            if (con) {
+                for (const data of mappedData) {
+                    await con.createNewObject(data, creator);
+                }
+            } else {
+                console.log(`Controller not defined for schema: ${schemaName}`);
             }
-        } else {
-            console.log(`Controller not defined for schema: ${schemaName}`);
+        } catch(err) {
+            console.log(`[SEED - ${schemaName}]: FAILED`);
+            console.log(err);
         }
+
     }
 
     public static async mapDataWithSchema(schema: BaseSchema, data: any[], creator: User, options?: SeedOptions) {

@@ -14,10 +14,13 @@ import { UserDataController } from '../sources/database/models';
                 const schemaClass = schema[key];
                 const schemaObj: BaseSchema = new schemaClass();
                 const batchOptions = schemaObj.table.batchImportOptions;
-    
-                for (const options of batchOptions) {
-                    console.log(`[SEED - ${key}]: IN PROGRESS`);
-                    await SeedRunner.seedDb(key, schemaObj, options, creator);
+
+                for (const tag in batchOptions) {
+                    if(batchOptions.hasOwnProperty(tag)) {
+                        const seedOptions = batchOptions[tag];
+                        console.log(`[SEED - ${key}]: IN PROGRESS`);
+                        await SeedRunner.seedDb(key, schemaObj, tag, seedOptions, creator);
+                    }
                 }
             }
         }
