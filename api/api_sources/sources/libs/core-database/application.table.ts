@@ -125,7 +125,7 @@ export class ApplicationTable {
     modelName?: string;
     versions: TableVersion[] = [];
     importOptions: {[key: string]: CSVImportOptions} = {};
-    batchImportOptions: SeedOptions[] = [];
+    batchImportOptions: {[key: string]: SeedOptions} = {};
     viewColumn = 'id';
     columVersions: {[key: string]: ApplicationTableColumn[]} = {};
     initialSqlCommands: SqlInfo[] = [];
