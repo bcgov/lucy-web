@@ -384,10 +384,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   
   private async addMunicipalitiesLayerToMap() {
     this.showLoadingMunicipalities = true;
-    this.removeMunicipalities();
-    const municipalitiesLayerGroup = L.layerGroup();
     const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
     this.removeMunicipalities();
+    const municipalitiesLayerGroup = L.layerGroup();
     L.geoJSON(municipalitiesGeoJSON, {
       style: {
         color: '#fcec03',
@@ -405,10 +404,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
 
   private async addRegionalDistrictsLayerToMap() {
     this.showLoadingRegionaldistricts = true;
-    this.removeRegionaldistricts();
-    const regionalDistrictsLayerGroup = L.layerGroup();
     const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
     this.removeRegionaldistricts();
+    const regionalDistrictsLayerGroup = L.layerGroup();
     L.geoJSON(regionalDistrictsGeoJSON, {
       style: {
         color: '#03fc07',
