@@ -79,7 +79,7 @@ export interface CSVImportOptions {
 
 export interface GroupFieldOptions {
     key: string;
-    fields: any;
+    fields: {[key: string]: string};
 }
 
 export interface SeedOptions {
