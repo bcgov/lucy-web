@@ -25,22 +25,27 @@ export class SeedRunner {
 
         // Seed the data only if the current environment is either local or included in options
         if (environmentsToSeed.includes(currentEnv)) {
-            const csv = new GenericCSV(getCSVDataFilePath(options.fileName));
-            const csvData = await csv.load();
-
-            if (csvData.length > 0) {
-                // Mapping data to match the schema
-                const mappedData = await this.mapDataWithSchema(schema, csvData, creator, options);
-
-                // Store the mapped data into the database
-                await this.storeDataIntoDB(schemaName, mappedData, creator);
-
-                // Add an entry to the seed table for this seed operation
-                await this.updateSeedTable(schemaName, tag, creator);
-
-                console.log(`[SEED - ${schemaName}]: SUCCESS`);
-            } else {
-                console.log(`[SEED - ${schemaName}]: NO DATA TO SEED`);
+            try {
+                const csv = new GenericCSV(getCSVDataFilePath(options.fileName));
+                const csvData = await csv.load();
+    
+                if (csvData.length > 0) {
+                    // Mapping data to match the schema
+                    const mappedData = await this.mapDataWithSchema(schema, csvData, creator, options);
+    
+                    // Store the mapped data into the database
+                    await this.storeDataIntoDB(schemaName, mappedData, creator);
+    
+                    // Add an entry to the seed table for this seed operation
+                    await this.updateSeedTable(schemaName, tag, creator);
+    
+                    console.log(`[SEED - ${schemaName}]: SUCCESS`);
+                } else {
+                    console.log(`[SEED - ${schemaName}]: NO DATA TO SEED`);
+                }
+            } catch (err) {
+                console.log(`[SEED - ${schemaName}]: FAILED`);
+                console.log(err);
             }
         } else {
             console.log(`[SEED - ${schemaName}]: SKIPPED FOR CURRENT ENVIRONMENT`);
@@ -49,35 +54,37 @@ export class SeedRunner {
 
     static async checkSeedStatus(tag: string): Promise<boolean> {
         const con: BaseDataController = await controllerForSchemaName('SeedSchema');
-        const existingSeed = await con.fetchOne({ reference: tag });
-        return !!existingSeed;
+        if (con) {
+            const existingSeed = await con.fetchOne({ reference: tag });
+            return !!existingSeed;
+        } else {
+            throw new Error(`Controller not defined for schema: SeedSchema`);
+        }
     }
 
     static async updateSeedTable(seedTarget: string, reference: string, creator: User) {
         const con: BaseDataController = await controllerForSchemaName('SeedSchema');
-        const data = { seedTarget, reference };
+        const data = {
+            seedTarget,
+            reference
+        };
 
         if (con) {
             con.createNewObject(data, creator);
         } else {
-            console.log(`Controller not defined for schema: SeedSchema`);
+            throw new Error(`Controller not defined for schema: SeedSchema`);
         }
     }
 
     public static async storeDataIntoDB(schemaName: string, mappedData: any[], creator: User) {
         const con: BaseDataController = await controllerForSchemaName(schemaName);
 
-        try {
-            if (con) {
-                for (const data of mappedData) {
-                    await con.createNewObject(data, creator);
-                }
-            } else {
-                console.log(`Controller not defined for schema: ${schemaName}`);
+        if (con) {
+            for (const data of mappedData) {
+                await con.createNewObject(data, creator);
             }
-        } catch(err) {
-            console.log(`[SEED - ${schemaName}]: FAILED`);
-            console.log(err);
+        } else {
+            throw new Error(`Controller not defined for schema: ${schemaName}`);
         }
 
     }
@@ -144,13 +151,13 @@ export class SeedRunner {
                                                     dataObj[field] = await con.createNewObject(spaceGeomObj, creator);
                                                     break;
                                                 default:
-                                                    console.log('Embedded column needs to be handled');
+                                                    throw new Error('Embedded column needs to be handled');
                                             }
                                         } else {
                                             dataObj[field] = +value;
                                         }
                                     } else {
-                                        console.log(`No controller defined for the schema: ${columnData.refSchema}`);
+                                        throw new Error(`No controller defined for the schema: ${columnData.refSchema}`);
                                     }
                                 } else if (columnData.definition && typeof value === typeof '1') {
                                     const columnType = columnData.definition.split(' ')[0];

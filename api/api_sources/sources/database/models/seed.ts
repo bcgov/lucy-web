@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { SeedSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { BaseModel } from './baseModel';
+import { Record } from './generic.data.models';
 
 /** Interface **/
 /**
@@ -36,7 +36,7 @@ export interface SeedUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: SeedSchema.dbTable} )
-export class Seed extends BaseModel implements SeedSpec {
+export class Seed extends Record implements SeedSpec {
 
 	/**
 	 * Class Properties
