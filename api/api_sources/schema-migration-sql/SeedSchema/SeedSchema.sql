@@ -3,7 +3,7 @@
         
 CREATE TABLE app_seed_table ();
 ALTER TABLE app_seed_table ADD COLUMN seed_id SERIAL PRIMARY KEY;
-ALTER TABLE app_seed_table ADD COLUMN reference VARCHAR(30) NOT NULL;
+ALTER TABLE app_seed_table ADD COLUMN reference VARCHAR(30) NOT NULL UNIQUE;
 ALTER TABLE app_seed_table ADD COLUMN seed_target VARCHAR(100) NOT NULL;
 
 

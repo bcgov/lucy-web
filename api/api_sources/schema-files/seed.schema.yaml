@@ -12,7 +12,7 @@ schemas:
       reference:
         name: reference
         comment: Reference to the seed file
-        definition: VARCHAR(30) NOT NULL
+        definition: VARCHAR(30) NOT NULL UNIQUE
       seedTarget:
         name: seed_target
         comment: Name of the target schema
