@@ -278,11 +278,11 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     this.leafletDrawLayerGroup = L.layerGroup().addTo(this.map);
     this.initMapWithBCGW();
     // this.initWithOpenStreet();
+    this.addBcDataCatalogueLayersToMap();
     this.map.on('zoom', () => {
       if ((this.map.getZoom() >= 16) && this.showWells) {
         this.addWellsLayerToMap(this.map.getBounds());
       }
-      this.addBcDataCatalogueLayersToMap();
     });
   }
 
@@ -384,9 +384,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   
   private async addMunicipalitiesLayerToMap() {
     this.showLoadingMunicipalities = true;
+    const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
     this.removeMunicipalities();
     const municipalitiesLayerGroup = L.layerGroup();
-    const municipalitiesGeoJSON = await this.bcDataCatalogueService.getMunicipalitiesDataLayer();
     L.geoJSON(municipalitiesGeoJSON, {
       style: {
         color: '#fcec03',
@@ -404,9 +404,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
 
   private async addRegionalDistrictsLayerToMap() {
     this.showLoadingRegionaldistricts = true;
+    const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
     this.removeRegionaldistricts();
     const regionalDistrictsLayerGroup = L.layerGroup();
-    const regionalDistrictsGeoJSON = await this.bcDataCatalogueService.getRegionalDistrictsDataLayer();
     L.geoJSON(regionalDistrictsGeoJSON, {
       style: {
         color: '#03fc07',

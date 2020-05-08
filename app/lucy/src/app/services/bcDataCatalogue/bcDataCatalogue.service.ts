@@ -31,6 +31,9 @@ import { AppConstants } from 'src/app/constants';
 })
 export class BcDataCatalogueService {
 
+  cachedMunicipalitiesDataLayer: any;
+  cachedRegionalDistrictsDataLayer: any;
+
   constructor(private api: ApiService) { }
 
   /**
@@ -52,30 +55,38 @@ export class BcDataCatalogueService {
   }
 
   public async getMunicipalitiesDataLayer(): Promise<any | null> {
-      const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_bcDataCatalogue_getMunicipalities(), null);
-      if (response.success) {
-          return response.response;
-      } else {
-          return null;
-      }
+    if (this.cachedMunicipalitiesDataLayer) {
+      return this.cachedMunicipalitiesDataLayer;
+    }
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_bcDataCatalogue_getMunicipalities(), null);
+    if (response.success) {
+      this.cachedMunicipalitiesDataLayer = response.response
+      return response.response;
+    } else {
+      return null;
+    }
   }
 
   public async getRegionalDistrictsDataLayer(): Promise<any | null> {
-      const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_bcDataCatalogue_getRegionalDistricts(), null);
-      if (response.success) {
-          return response.response;
-      } else {
-          return null;
-      }
+    if (this.cachedRegionalDistrictsDataLayer) {
+      return this.cachedRegionalDistrictsDataLayer
+    }
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_bcDataCatalogue_getRegionalDistricts(), null);
+    if (response.success) {
+      this.cachedRegionalDistrictsDataLayer = response.response
+      return response.response;
+    } else {
+      return null;
+    }
   }
 
   public async getWellsDataLayer(bbox: any): Promise<any | null> {
-      const bboxString = `${bbox._southWest.lng},${bbox._southWest.lat},${bbox._northEast.lng},${bbox._northEast.lat}`;
-      const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_bcDataCatalogue_getWells(bboxString), null);
-      if (response.success) {
-          return response.response;
-      } else {
-          return null;
-      }
+    const bboxString = `${bbox._southWest.lng},${bbox._southWest.lat},${bbox._northEast.lng},${bbox._northEast.lat}`;
+    const response = await this.api.request(APIRequestMethod.GET, AppConstants.API_bcDataCatalogue_getWells(bboxString), null);
+    if (response.success) {
+      return response.response;
+    } else {
+      return null;
+    }
   }
 }
