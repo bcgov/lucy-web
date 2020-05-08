@@ -473,6 +473,7 @@ schemas:
           - spaceGeom
       # -- SpaceGeomModelSchema
     ## -- End - CopyFrom
+    ## -- BatchImport
     batchImport:
       ObservationSeed:
         fileName: ObservationSeed.csv
@@ -488,4 +489,5 @@ schemas:
               obs_lat: latitude
               obs_lon: longitude
               radius: radius
+    ## -- End - BatchImport
   # --

@@ -28,17 +28,17 @@ export class SeedRunner {
             try {
                 const csv = new GenericCSV(getCSVDataFilePath(options.fileName));
                 const csvData = await csv.load();
-    
+
                 if (csvData.length > 0) {
                     // Mapping data to match the schema
                     const mappedData = await this.mapDataWithSchema(schema, csvData, creator, options);
-    
+
                     // Store the mapped data into the database
                     await this.storeDataIntoDB(schemaName, mappedData, creator);
-    
+
                     // Add an entry to the seed table for this seed operation
                     await this.updateSeedTable(schemaName, tag, creator);
-    
+
                     console.log(`[SEED - ${schemaName}]: SUCCESS`);
                 } else {
                     console.log(`[SEED - ${schemaName}]: NO DATA TO SEED`);
