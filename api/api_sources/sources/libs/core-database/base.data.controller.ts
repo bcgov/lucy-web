@@ -315,7 +315,7 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
         }
 
         if (this.schema.columnsDefinition['hexId'] && obj.latitude && obj.longitude) {
-            const hexIds = await LocationConverter.getHexId(obj.latitude, obj.longitude);
+            const hexIds = await LocationConverter.getHexId(obj.longitude, obj.latitude);
             obj['hexId'] = hexIds.cc;
         }
 
