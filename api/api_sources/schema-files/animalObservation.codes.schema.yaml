@@ -16,6 +16,10 @@ schemas:
         name: life_stage_code
         comment: Code value for the life stages
         definition: VARCHAR(10) NOT NULL UNIQUE
+    imports:
+      init:
+        fileName: LifeStageCode.csv
+        allColumns: true
   BehaviourCodeSchema:
     name: behaviour_code
     description: This is a list of all the different behaviours for a species
@@ -29,3 +33,7 @@ schemas:
         name: behaviour_code
         comment: Code value for the behaviours
         definition: VARCHAR(10) NOT NULL UNIQUE
+    imports:
+      init:
+        fileName: BehaviourCode.csv
+        allColumns: true
