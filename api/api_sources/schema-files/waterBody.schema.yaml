@@ -69,6 +69,10 @@ schemas:
         fileName: WaterBody.csv
         allColumnsExcept: 
           - active
+      ocean:
+        fileName: WaterBodyOcean.csv
+        allColumnsExcept: 
+          - active
   ## --    
 
 
