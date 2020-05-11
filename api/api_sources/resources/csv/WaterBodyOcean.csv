@@ -1,0 +1,7 @@
+water_body_name,water_body_longitude,water_body_latitude,country_code,province_code,closest_city,distance
+Ocean Pacific BC,-123.33000,49.00000,CAN,BC,Vancouver,10
+Ocean Pacific USA,-123.00000,48.25000,USA,WA,Seattle,10
+Ocean Arctic NWT,-132.50000,70.00000,CAN,NT,Tuktoyaktuk,10
+Ocean Hudson Bay,-94.00000,59.00000,CAN,MB,Churchill,10
+Ocean Atlantic Canada,-52.00000,47.00000,CAN,NL,St Johns,10
+Ocean Atlantic USA,-73.00000,40.00000,USA,NY,New York,10
