@@ -1,9 +1,9 @@
 version: 1.0
 description: Schema file for table animal_observation
 externalTables:
-  - name: species
-    description: Species table
-    schema: SpeciesSchema
+  - name: animal_species
+    description: Animal Species table
+    schema: AnimalSpeciesSchema
 includes:
   - observation.codes.schema.yaml
   - animalObservation.codes.schema.yaml
@@ -14,7 +14,7 @@ schemas:
     description: An observation record created for an animal species
     baseSchema: RecordSchema
     meta:
-      baseModel: RecordSchema
+      baseModel: Record
       resource: true
       api: /observation/animal
     displayLayout: {}

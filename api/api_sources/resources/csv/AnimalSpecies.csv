@@ -1,4 +1,4 @@
-InvAnimal_ID,Species_Common,Species_Scientific,Class
+animal_id,species_common,species_scientific,class
 1,American black duck,Anas rubripes,Birds
 2,American bullfrog,Lithobates catesbeiana,Amphibians and Reptiles
 3,American shad,Alosa sapidissima,Fish
@@ -30,7 +30,7 @@ InvAnimal_ID,Species_Common,Species_Scientific,Class
 29,Common carp,Cyprinus carpio,Fish
 30,Common wall lizard,Podarcis muralis,Amphibians and Reptiles
 31,Compound sea squirt,Didemnum vexillum,Other Invertebrates
-32,Conrad’s false mussel,Mytilopsis leucophaeata ,Other Invertebrates
+32,Conradï¿½s false mussel,Mytilopsis leucophaeata ,Other Invertebrates
 33,Drumming katydid,Meconema thalassinum,Insects and Spiders
 34,Eastern cottontail rabbit,Sylvilagus floridanus,Mammals
 35,Eastern fox squirrel,Sciurus niger,Mammals

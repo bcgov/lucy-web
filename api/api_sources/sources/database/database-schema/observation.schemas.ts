@@ -72,6 +72,37 @@ export class SpeciesSchema extends RecordTableSchema {
 }
 
 /**
+ * @description DB Schema for Animal Species
+ */
+export class AnimalSpeciesSchema extends RecordTableSchema {
+    private _dataSqlPath = 'AnimalSpeciesData.sql';
+    get schemaFilePath(): string {
+        return getYAMLFilePath('species.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+
+    csvData(): Promise<any> {
+        const csvData = new SpeciesCSVData();
+        return csvData.load();
+    }
+
+    entryString(input?: string, context?: string): string {
+        return 'species_common, species_scientific, class';
+    }
+
+    async createDataEntry() {
+        await super.createDataEntry();
+    }
+
+    dataSQLPath(): string {
+        return this._dataSqlPath;
+    }
+}
+
+/**
  * @description DB Schema for JurisdictionCode
  */
 export class JurisdictionCodeSchema extends CodeTableSchema {
@@ -214,5 +245,34 @@ export class AspectCodeSchema extends ObservationCodeTable {
  * @description DB Schema for Proposed action
  */
 export class ProposedActionCodeSchema extends ObservationCodeTable {}
+
+/**
+ * @description Base DB Schema for animal observation
+ */
+export class AnimalObservationSchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('animalObservation.schema.yaml');
+    }
+}
+
+/**
+ * @description Base DB Schema for all animal observation code tables
+ */
+export class AnimalObservationCodeTable extends CodeTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('animalObservation.codes.schema.yaml');
+    }
+}
+
+/**
+ * @description DB Schema for Animal Observation Life stage code
+ */
+export class LifeStageCodeSchema extends AnimalObservationCodeTable {}
+
+/**
+ * @description DB Schema for Animal Observation Behaviour code
+ */
+export class BehaviourCodeSchema extends AnimalObservationCodeTable {}
+
 
 // -----------------------------------------------------------------------------------------
