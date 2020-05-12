@@ -72,6 +72,8 @@ export * from './adultMusselsLocation';
 export * from './previousAISKnowledgeSource';
 export * from './previousInspectionSource';
 export * from './seed';
+export * from './lifeStageCode';
+export * from './behaviourCode';
 
 /**
  * Controllers
