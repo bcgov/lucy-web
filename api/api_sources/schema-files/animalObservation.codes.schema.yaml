@@ -19,7 +19,8 @@ schemas:
     imports:
       init:
         fileName: LifeStageCode.csv
-        allColumns: true
+        allColumnsExcept:
+          - activeIndicator
   BehaviourCodeSchema:
     name: behaviour_code
     description: This is a list of all the different behaviours for a species
@@ -36,4 +37,5 @@ schemas:
     imports:
       init:
         fileName: BehaviourCode.csv
-        allColumns: true
+        allColumnsExcept:
+          - activeIndicator
