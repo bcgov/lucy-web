@@ -13,13 +13,13 @@ export class SeedSchema1588201708197 extends AppDBMigrator implements MigrationI
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         this.log('[START]', 'UP');
-        await queryRunner.query(this.seedSchema.migrationSQL);
+        await this.runQuerySqlFiles(this.upMigrations(), queryRunner);
         this.log('[END]', 'UP');
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[START]', 'DOWN');
-        await queryRunner.query(this.seedSchema.dropTable());
+        await this.runQuerySqlFiles(this.downMigrations(), queryRunner);
         this.log('[END]', 'DOWN');
     }
 
