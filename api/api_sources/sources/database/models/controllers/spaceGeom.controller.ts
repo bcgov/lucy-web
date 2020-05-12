@@ -39,5 +39,26 @@ export class SpaceGeomController extends RecordController<SpaceGeom> {
         await this.updateObj<SpaceGeom>(existing, update);
         return existing;
 	}
+
+	schemaDataMapper(data: any) {
+        const { latitude, longitude, radius, geomId, length, width, metaData } = data;
+        return ({
+            latitude,
+            longitude,
+            inputGeometry: {
+                attributes: {
+                    geomId: geomId || 1,
+                    area: {
+                        ...(radius && { radius: parseInt(radius, 10) }),
+                        ...(length && { length: parseInt(length, 10) }),
+                        ...(width && { width: parseInt(width, 10) }),
+                    }
+                },
+                geoJSON: {}
+            },
+            metaData: metaData || 'NONE',
+            geometry: geomId || 1
+        });
+    }
 }
 // ----------------
