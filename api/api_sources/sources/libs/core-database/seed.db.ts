@@ -147,7 +147,7 @@ export class SeedRunner {
                                         if (unWrap(columnData.meta, {}).embedded) {
                                             switch (field) {
                                                 case 'spaceGeom':
-                                                    const spaceGeomObj = await this.createSpaceGeomObject(value);
+                                                    const spaceGeomObj = await con.schemaDataMapper(value);
                                                     dataObj[field] = await con.createNewObject(spaceGeomObj, creator);
                                                     break;
                                                 default:
@@ -186,26 +186,5 @@ export class SeedRunner {
         }
 
         return mappedData;
-    }
-
-    public static createSpaceGeomObject(data: any) {
-        const { latitude, longitude, radius, geomId, length, width, metaData } = data;
-        return ({
-            latitude,
-            longitude,
-            inputGeometry: {
-                attributes: {
-                    geomId: geomId || 1,
-                    area: {
-                        ...(radius && { radius: parseInt(radius, 10) }),
-                        ...(length && { length: parseInt(length, 10) }),
-                        ...(width && { width: parseInt(width, 10) }),
-                    }
-                },
-                geoJSON: {}
-            },
-            metaData: metaData || 'NONE',
-            geometry: geomId || 1
-        });
     }
 }

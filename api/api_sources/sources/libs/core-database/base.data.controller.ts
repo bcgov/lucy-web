@@ -61,6 +61,7 @@ export interface BaseDataController {
     validate(data: any): boolean;
     export(): Promise<any>;
     processForExport(data: any): any;
+    schemaDataMapper(data: any): any;
 }
 
 
@@ -432,7 +433,14 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 			result.push(TableExporter.dataFlattening(this.schemaObject, flat, this.exportKeyMapper, this.exportKeyPriorities));
 		}
 		return result;
-	}
+    }
+
+    /**
+	 * @description Mapper to map an object with the schema
+	 */
+    schemaDataMapper(data: any) {
+        throw new Error('BaseDataModelController: Subclass must override');
+    }
 
     validate(data: any): boolean {
         let result = true;
