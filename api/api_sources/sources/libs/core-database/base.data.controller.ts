@@ -34,7 +34,6 @@ import { DataController } from '../../database/data.model.controller';
 import { unWrap, flatJSON } from '../utilities';
 import { DataFieldDefinition } from './application.column';
 import { TableExporter } from './table.exporter';
-import { LocationConverter } from '../utilities/location.converter';
 
 export interface ControllerMetaData {
     modelName: string;
@@ -312,11 +311,6 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
                     }
                 }
             }
-        }
-
-        if (this.schema.columnsDefinition['hexId'] && obj.latitude && obj.longitude) {
-            const hexIds = await LocationConverter.getHexId(obj.longitude, obj.latitude);
-            obj['hexId'] = hexIds.cc;
         }
 
         // Create New Obj
