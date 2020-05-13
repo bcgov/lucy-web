@@ -58,6 +58,7 @@ pipeline {
                 echo "Deploying Postgress DB"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=dev"
             }
         }
         stage('Test API (Dev)') {
@@ -98,6 +99,8 @@ pipeline {
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=dev --backup=true"
                 echo "Running DB Migration [STATIC]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev --type=static"
+                echo "Running DB Seed Job [STATIC]"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=dev --type=static"
             }
         }
         stage('Deploy (Dev) API/APP [Static]') {
@@ -132,6 +135,8 @@ pipeline {
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=test --backup=true"
                 echo "Running DB Migration [TEST]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=test --type=static"
+                echo "Running DB Seed Job [TEST]"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=test --type=static"
             }
         }
         stage('Deploy (TEST) API/APP') {

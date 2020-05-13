@@ -12,6 +12,7 @@
     "clean": "node clean.js",
     "pre-deploy": "node pre.deploy.js",
     "setup": "node setup.js",
+    "seed": "node seed.js",
     "deploy": "node deploy.js",
     "deploy-tools": "node deploytools.js",
     "deploy-db-backup": "node deploy.db.backup.js",

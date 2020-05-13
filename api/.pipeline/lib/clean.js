@@ -36,8 +36,10 @@ module.exports = (settings)=>{
           const newOC = new OpenShiftClientX(Object.assign({'namespace':phases[k].namespace}, options));
           const podName1 = `${phases[k].name}${phases[k].suffix}-setup`;
           const podName2 = `${phases[k].name}${phases[k].suffix}-test`;
+          const podName3 = `${phases[k].name}${phases[k].suffix}-seed`;
           checkAndClean(`pod/${podName1}`, newOC);
           checkAndClean(`pod/${podName2}`, newOC);
+          checkAndClean(`pod/${podName3}`, newOC);
         }
         
         oc.raw('delete', ['all'], {selector:`app=${phase.instance},env-id=${phase.changeId},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, wait:'true', namespace:phase.namespace})
