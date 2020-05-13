@@ -75,6 +75,7 @@ export * from './seed';
 export * from './lifeStageCode';
 export * from './behaviourCode';
 export * from './animalSpecies';
+export * from './animalObservation';
 
 /**
  * Controllers
