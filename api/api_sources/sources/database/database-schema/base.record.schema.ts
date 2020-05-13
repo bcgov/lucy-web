@@ -58,8 +58,8 @@ export class CodeTableSchema extends RecordTableSchema {
     constructor() {
         super();
         // Creating Code description
-        if (!this.table.columnsDefinition.description) {
-            this.table.columnsDefinition.description = createColumn(
+        if (!this.table.initialColumns.description) {
+            this.table.initialColumns.description = createColumn(
                 {name: CodeTableSchema.codeColumns.description,
                     comment: 'Description of code',
                     definition: 'VARCHAR(100) NULL',
@@ -67,8 +67,8 @@ export class CodeTableSchema extends RecordTableSchema {
                 });
         }
         // Creating Code active indicator
-        if (!this.table.columnsDefinition.activeIndicator) {
-            this.table.columnsDefinition.activeIndicator = createColumn(
+        if (!this.table.initialColumns.activeIndicator) {
+            this.table.initialColumns.activeIndicator = createColumn(
                 {name: CodeTableSchema.codeColumns.activeIndicator,
                     comment: 'Indicator to check active status of code',
                     definition: 'BOOLEAN NOT NULL DEFAULT TRUE',

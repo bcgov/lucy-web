@@ -142,13 +142,13 @@ export class ApplicationTable {
     }
 
     get columns(): {[key: string]: string} {
-        if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
+        if (this._columnNames && _.keys(this._columnNames) === _.keys(this.initialColumns)) {
             return this._columnNames;
         }
         const names: {[key: string]: string} = {};
-        for (const k in this.columnsDefinition) {
-            if (this.columnsDefinition.hasOwnProperty(k)) {
-                const col: ApplicationTableColumn = this.columnsDefinition[k];
+        for (const k in this.initialColumns) {
+            if (this.initialColumns.hasOwnProperty(k)) {
+                const col: ApplicationTableColumn = this.initialColumns[k];
                 names[k] = col.name;
             }
         }
@@ -171,7 +171,7 @@ export class ApplicationTable {
     public createCommentsForTable(): string {
         let commentForColumns = ``;
         for (const key in this.initialColumns) {
-            if (this.columnsDefinition.hasOwnProperty(key)) {
+            if (this.initialColumns.hasOwnProperty(key)) {
                 const column: ApplicationTableColumn = this.initialColumns[key];
                 commentForColumns = commentForColumns + `COMMENT ON COLUMN ${this.name}.${column.name} IS '${column.comment}';\n`;
             }
