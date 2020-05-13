@@ -338,6 +338,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     if (this.showWells) {
       // show
       // will show depending on zoom
+      if (this.map.getZoom() >= this.zoomlevelToTriggerWells) {
+        this.addWellsLayerToMap(this.map.getBounds());
+      }
     } else {
       // remove
       this.removeWells();
