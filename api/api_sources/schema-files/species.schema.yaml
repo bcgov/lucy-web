@@ -76,4 +76,10 @@ schemas:
         name: species_class
         comment: The class that the species belongs to
         definition: VARCHAR(100) NOT NULL
+    imports:
+      init:
+        fileName: AnimalSpecies.csv
+        allColumns: true
+        ignoreDataColumns:
+          - animal_id
   ## --

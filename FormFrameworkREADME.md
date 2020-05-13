@@ -168,7 +168,7 @@ imports:
     allColumns: true
 ```
 
-The "init" label serves as a version name for the import. Updated versions of the source file can be added later by appending a new version name (and a modified CSV file) to the list of imports. The `allColumns:` property indicates that every column in the source CSV file should be imported into the DB. If this is not desired, specific columns from the CSV file can be selected for import into the DB by replacing "allColumns" with `entryColumns:` and listing the names of the columns to be imported.
+  The "init" label serves as a version name for the import. Updated versions of the source file can be added later by appending a new version name (and a modified CSV file) to the list of imports. The `allColumns:` property indicates that every column in the schema should be imported into the DB. If this is not desired, specific columns can be selected for import into the DB by replacing "allColumns" with `entryColumns:` and listing the names of the columns to be imported. To ignore certain columns from the CSV file, list them under the `ignoreDataColumns`
 
 3. Run the schema-manager script to generate a new SQL file that will insert the CSV data into the schema's table in the DB. To run this script, execute `ts-node api/api_sources/scripts/schema.manager.ts -s \<SchemaName> -m` from the command line.
 
