@@ -44,6 +44,13 @@ class AppConfiguration {
     }
 
     /**
+     * @description Return current environment
+     */
+    public getCurrentEnv = (): string => {
+        return process.env.ENVIRONMENT;
+    }
+
+    /**
      * @description Retry delay
      */
     public get retryDelay(): number {

@@ -34,7 +34,6 @@ import { DataController } from '../../database/data.model.controller';
 import { unWrap, flatJSON } from '../utilities';
 import { DataFieldDefinition } from './application.column';
 import { TableExporter } from './table.exporter';
-import { LocationConverter } from '../utilities/location.converter';
 
 export interface ControllerMetaData {
     modelName: string;
@@ -62,6 +61,7 @@ export interface BaseDataController {
     validate(data: any): boolean;
     export(): Promise<any>;
     processForExport(data: any): any;
+    schemaDataMapper(data: any): any;
 }
 
 
@@ -314,11 +314,6 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
             }
         }
 
-        if (this.schema.columnsDefinition['hexId'] && obj.latitude && obj.longitude) {
-            const hexIds = await LocationConverter.getHexId(obj.latitude, obj.longitude);
-            obj['hexId'] = hexIds.cc;
-        }
-
         // Create New Obj
         // Get idKey
         if (obj[this.idKey]) {
@@ -438,7 +433,14 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 			result.push(TableExporter.dataFlattening(this.schemaObject, flat, this.exportKeyMapper, this.exportKeyPriorities));
 		}
 		return result;
-	}
+    }
+
+    /**
+	 * @description Mapper to map an object with the schema
+	 */
+    schemaDataMapper(data: any) {
+        throw new Error('BaseDataModelController: Subclass must override');
+    }
 
     validate(data: any): boolean {
         let result = true;
