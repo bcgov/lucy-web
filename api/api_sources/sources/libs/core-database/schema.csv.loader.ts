@@ -130,6 +130,7 @@ export class SchemaCSVLoader {
     async _generateSQL(schema: BaseSchema, options: CSVImportOptions): Promise<string> {
         // Get keys
         let keys: string[] = options.entryColumns;
+        let ignoreDataColumns: string[] = options.ignoreDataColumns || [];
         const columnNames: string[] = [];
         // Check keys are present in columnDef
         const schemaKeys: string[] = Object.keys(schema.table.initialColumns);
@@ -164,6 +165,16 @@ export class SchemaCSVLoader {
             data = await csv.load(transformer);
         } else {
             data = await csv.load();
+        }
+
+        if (ignoreDataColumns.length) {
+            data = data.map(item => {
+                for (const key of ignoreDataColumns) {
+                    delete item[key];
+                }
+
+                return item;
+            });
         }
 
         // Check data

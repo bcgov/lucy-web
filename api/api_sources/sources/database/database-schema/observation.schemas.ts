@@ -75,30 +75,12 @@ export class SpeciesSchema extends RecordTableSchema {
  * @description DB Schema for Animal Species
  */
 export class AnimalSpeciesSchema extends RecordTableSchema {
-    private _dataSqlPath = 'AnimalSpeciesData.sql';
     get schemaFilePath(): string {
         return getYAMLFilePath('species.schema.yaml');
     }
 
     get hasDefaultValues(): boolean {
         return true;
-    }
-
-    csvData(): Promise<any> {
-        const csvData = new SpeciesCSVData();
-        return csvData.load();
-    }
-
-    entryString(input?: string, context?: string): string {
-        return 'species_common, species_scientific, class';
-    }
-
-    async createDataEntry() {
-        await super.createDataEntry();
-    }
-
-    dataSQLPath(): string {
-        return this._dataSqlPath;
     }
 }
 
