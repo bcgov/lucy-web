@@ -60,11 +60,11 @@ schemas:
       # --
       # -- Code Table Relations --
       species:
-        name: species_id
+        name: animal_species_id
         comment: Foreign key reference to animal species table 
         definition: INT NULL
         foreignTable: animal_species
-        refColumn: species_id
+        refColumn: animal_species_id
         deleteCascade: true
       speciesAgency:
         name: species_agency_code_id
