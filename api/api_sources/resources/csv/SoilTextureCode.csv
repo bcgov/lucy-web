@@ -3,3 +3,4 @@ C  ,Coarse (Sand / cobbles / gravel - water drains quickly)
 F  ,Fine (Clay - compact soil that holds water)
 M  ,Medium (Loamy / silty soil - water takes longer to drain)
 O  ,Organic (Dark soil with organic material)
+N  ,None
