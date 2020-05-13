@@ -74,6 +74,9 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   showWells = true;
   showRegionaldistricts = true;
   showMunicipalities = true;
+  // Minimum zoom level to trigger wells showing
+  // Zooming out from this causes the wells markers to hide
+  zoomlevelToTriggerWells = 14;
 
   // Layers
   municipalitiesLayerGroup?;
@@ -280,8 +283,10 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
     // this.initWithOpenStreet();
     this.addBcDataCatalogueLayersToMap();
     this.map.on('zoom', () => {
-      if ((this.map.getZoom() >= 16) && this.showWells) {
+      if ((this.map.getZoom() >= this.zoomlevelToTriggerWells) && this.showWells) {
         this.addWellsLayerToMap(this.map.getBounds());
+      } else {
+        this.removeWells();
       }
     });
   }
