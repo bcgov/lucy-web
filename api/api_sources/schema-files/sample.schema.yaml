@@ -149,6 +149,23 @@ schemas:
           - address
       # --
     # -- end Imports
+    ## -- BatchImport
+    batchImport:
+      ObservationSeed:
+        fileName: ObservationSeed.csv
+        environments: 
+          - test
+        allColumnsExcept: 
+          - observation_id
+        mapper:
+          observation_comment: general_comment
+        groupFields:
+          - key: spaceGeom
+            fields:
+              obs_lat: latitude
+              obs_lon: longitude
+              radius: radius
+    ## -- End - BatchImport
   ## -- end Schema
   ## --
   CopySchema:
