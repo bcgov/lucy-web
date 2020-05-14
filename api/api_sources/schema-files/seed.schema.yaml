@@ -1,0 +1,21 @@
+version: '1.0'
+description: Schema file for table seed
+schemas:
+  SeedSchema:
+    name: app_seed_table
+    description: Table to store seed entries
+    columns:
+      id:
+        name: seed_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      reference:
+        name: reference
+        comment: Reference to the seed file
+        definition: VARCHAR(30) NOT NULL UNIQUE
+      seedTarget:
+        name: seed_target
+        comment: Name of the target schema
+        definition: VARCHAR(100) NOT NULL
+    versions: []
+    fields: {}
