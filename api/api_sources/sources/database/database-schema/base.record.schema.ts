@@ -20,6 +20,7 @@
 import { BaseTableSchema, createColumn } from '../applicationSchemaInterface';
 import { UserSchema } from './login.schema';
 import { CodeCSVData } from '../pre.load';
+import { ApplicationTableColumn } from '../../libs/core-database';
 
 export class RecordTableSchema extends BaseTableSchema {
     static get auditColumns(): {[key: string]: string} {
@@ -55,10 +56,27 @@ export class CodeTableSchema extends RecordTableSchema {
         };
     }
 
+    additionalColumns(): {[key: string]: ApplicationTableColumn} {
+        const existing = super.additionalColumns();
+        return {
+             ...existing,
+            ...{
+            description: createColumn({name: CodeTableSchema.codeColumns.description,
+                comment: 'Description of code',
+                definition: 'VARCHAR(100) NULL',
+                examples: []
+            }),
+            activeIndicator: createColumn({name: CodeTableSchema.codeColumns.activeIndicator,
+                comment: 'Indicator to check active status of code',
+                definition: 'BOOLEAN NOT NULL DEFAULT TRUE',
+                examples: []
+            })
+        }};
+    }
     constructor() {
         super();
         // Creating Code description
-        if (!this.table.initialColumns.description) {
+        /*if (!this.table.initialColumns.description) {
             this.table.initialColumns.description = createColumn(
                 {name: CodeTableSchema.codeColumns.description,
                     comment: 'Description of code',
@@ -74,7 +92,7 @@ export class CodeTableSchema extends RecordTableSchema {
                     definition: 'BOOLEAN NOT NULL DEFAULT TRUE',
                     examples: []
                 });
-        }
+        }*/
     }
 
     entryString() {
