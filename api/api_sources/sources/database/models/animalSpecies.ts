@@ -4,6 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { AnimalSpeciesSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { BaseModel } from './baseModel';
+import { DataModelController } from '../data.model.controller';
 
 /** Interface **/
 /**
@@ -72,3 +73,21 @@ export class AnimalSpecies extends BaseModel implements AnimalSpeciesSpec {
 	speciesClass: string;
 
 }
+
+
+// ** AnimalSpeciesController ** //
+
+
+/**
+ * @description Data Model Controller Class for AnimalSpeciesSchema and AnimalSpecies
+ */
+export class AnimalSpeciesController extends DataModelController<AnimalSpecies> {
+	/**
+	* @description Getter for shared instance
+	*/
+	public static get shared(): AnimalSpeciesController {
+		return this.sharedInstance<AnimalSpecies>(AnimalSpecies, AnimalSpeciesSchema) as AnimalSpeciesController;
+	}
+}
+
+// -------------------------------------

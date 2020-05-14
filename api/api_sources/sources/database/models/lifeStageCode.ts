@@ -4,6 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { LifeStageCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { BaseModel } from './baseModel';
+import { DataModelController } from '../data.model.controller';
 
 /** Interface **/
 /**
@@ -72,3 +73,20 @@ export class LifeStageCode extends BaseModel implements LifeStageCodeSpec {
 	activeIndicator: boolean;
 
 }
+
+// ** LifeStageCodeController ** //
+
+
+/**
+ * @description Data Model Controller Class for LifeStageCodeSchema and LifeStageCode
+ */
+export class LifeStageCodeController extends DataModelController<LifeStageCode> {
+	/**
+	* @description Getter for shared instance
+	*/
+	public static get shared(): LifeStageCodeController {
+		return this.sharedInstance<LifeStageCode>(LifeStageCode, LifeStageCodeSchema) as LifeStageCodeController;
+	}
+}
+
+// -------------------------------------

@@ -4,6 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BehaviourCodeSchema } from '../database-schema';
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { BaseModel } from './baseModel';
+import { DataModelController } from '../data.model.controller';
 
 /** Interface **/
 /**
@@ -72,3 +73,21 @@ export class BehaviourCode extends BaseModel implements BehaviourCodeSpec {
 	activeIndicator: boolean;
 
 }
+
+
+// ** BehaviourCodeController ** //
+
+
+/**
+ * @description Data Model Controller Class for BehaviourCodeSchema and BehaviourCode
+ */
+export class BehaviourCodeController extends DataModelController<BehaviourCode> {
+	/**
+	* @description Getter for shared instance
+	*/
+	public static get shared(): BehaviourCodeController {
+		return this.sharedInstance<BehaviourCode>(BehaviourCode, BehaviourCodeSchema) as BehaviourCodeController;
+	}
+}
+
+// -------------------------------------
