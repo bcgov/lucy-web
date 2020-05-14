@@ -143,13 +143,13 @@ export class ApplicationTable {
     }
 
     get columns(): {[key: string]: string} {
-        if (this._columnNames && _.keys(this._columnNames) === _.keys(this.initialColumns)) {
+        if (this._columnNames && _.keys(this._columnNames) === _.keys(this.columnsDefinition)) {
             return this._columnNames;
         }
         const names: {[key: string]: string} = {};
-        for (const k in this.initialColumns) {
-            if (this.initialColumns.hasOwnProperty(k)) {
-                const col: ApplicationTableColumn = this.initialColumns[k];
+        for (const k in this.columnsDefinition) {
+            if (this.columnsDefinition.hasOwnProperty(k)) {
+                const col: ApplicationTableColumn = this.columnsDefinition[k];
                 names[k] = col.name;
             }
         }

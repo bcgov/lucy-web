@@ -58,9 +58,7 @@ export class CodeTableSchema extends RecordTableSchema {
 
     additionalColumns(): {[key: string]: ApplicationTableColumn} {
         const existing = super.additionalColumns();
-        return {
-             ...existing,
-            ...{
+        const newColumns = {
             description: createColumn({name: CodeTableSchema.codeColumns.description,
                 comment: 'Description of code',
                 definition: 'VARCHAR(100) NULL',
@@ -71,28 +69,13 @@ export class CodeTableSchema extends RecordTableSchema {
                 definition: 'BOOLEAN NOT NULL DEFAULT TRUE',
                 examples: []
             })
-        }};
+        };
+
+        return {...existing, ...newColumns};
     }
+
     constructor() {
         super();
-        // Creating Code description
-        /*if (!this.table.initialColumns.description) {
-            this.table.initialColumns.description = createColumn(
-                {name: CodeTableSchema.codeColumns.description,
-                    comment: 'Description of code',
-                    definition: 'VARCHAR(100) NULL',
-                    examples: []
-                });
-        }
-        // Creating Code active indicator
-        if (!this.table.initialColumns.activeIndicator) {
-            this.table.initialColumns.activeIndicator = createColumn(
-                {name: CodeTableSchema.codeColumns.activeIndicator,
-                    comment: 'Indicator to check active status of code',
-                    definition: 'BOOLEAN NOT NULL DEFAULT TRUE',
-                    examples: []
-                });
-        }*/
     }
 
     entryString() {
