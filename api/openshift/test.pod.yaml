@@ -68,7 +68,7 @@ objects:
       - container-entrypoint
       - bash
       - "-c"
-      - "npm run remote:test"
+      - "npm run remote:test-temp" # TODO: Change this back to npm run remote:test once the sonarqube upgrade is done
       resources:
         limits:
           cpu: '1'
