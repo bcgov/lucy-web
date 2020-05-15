@@ -11,72 +11,6 @@ def sonarGetStatus (jsonPayload) {
   return jsonSlurper.parseText(jsonPayload).projectStatus.status
 }
 
-def nodejsSonarqube() {
-    _openshift(env.STAGE_NAME, TOOLSPROJECT) {
-        String sonarLabel = "sonarqube-runner-${UUID.randomUUID().toString()}";
-        podTemplate(
-            label: sonarLabel,
-            name: sonarLabel,
-            serviceAccount: 'jenkins',
-            cloud: 'openshift',
-            slaveConnectTimeout: 300,
-            containers: [
-              containerTemplate(
-                name: 'jnlp',
-                image: 'registry.access.redhat.com/openshift3/jenkins-agent-nodejs-8-rhel7:v3.11.161',
-                resourceRequestCpu: '500m',
-                resourceLimitCpu: '1000m',
-                resourceRequestMemory: '2Gi',
-                resourceLimitMemory: '2Gi',
-                workingDir: '/tmp',
-                command: '',
-                args: '${computer.jnlpmac} ${computer.name}',
-              )
-            ]
-        ) {
-            node(sonarLabel) {
-                checkout scm
-                def SONARQUBE_PROJECT_KEYS = ['invasives-app', 'invasives-api']
-                dir('.jenkins/sonarqube/sonar-runner') {
-                    run_sonarqube_scan(SONARQUBE_PROJECT_KEYS)
-                }
-                echo "All Sonarqube scans complete"
-            }
-        }
-        return true
-    }
-}
-
-@NonCPS
-def run_sonarqube_scan(project_keys) {
-    project_keys.each {pk ->
-        try {
-            def SONARQUBE_URL = ${SONARQUBE_URL}
-            def SONARQUBE_STATUS_URL = "${SONARQUBE_URL}/api/qualitygates/project_status?projectKey='${pk}'"
-            // run scan
-            sh "npm install typescript"
-            sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey='${pk}' -Dsonar.verbose=true --stacktrace --info")
-            sleep(30)
-            // check if sonarqube passed
-            sh "oc extract secret/sonarqube-status-urls --to=${env.WORKSPACE}/sonar-runner --confirm"
-            SONARQUBE_STATUS_JSON = sh(returnStdout: true, script: "curl -w '%{http_code}' '${SONARQUBE_STATUS_URL}'")
-            SONARQUBE_STATUS = sonarGetStatus (SONARQUBE_STATUS_JSON)
-            if ( "${SONARQUBE_STATUS}" == "ERROR") {
-                echo "Sonarqube scan ${pk} failed"
-                currentBuild.result = 'FAILURE'
-                exit 1
-            } else {
-                echo "Sonarqube scan ${pk} passed"
-            }
-        } catch (error) {
-            echo ${error}
-            throw error
-        } finally {
-            echo "Sonarqube scan ${pk} complete"
-        }
-    }
-}
-
 pipeline {
     agent none
     options {
@@ -192,7 +126,24 @@ pipeline {
             steps {
                 script {
                     echo "Running Sonarqube"
-                    def result = nodejsSonarqube()
+                    checkout scm
+                    dir('.jenkins/sonarqube/sonar-runner') {
+                        sh "npm install typescript"
+                        sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey=invasives-app -Dsonar.verbose=true --stacktrace --info")
+                        sleep(30)
+                        sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey=invasives-api -Dsonar.verbose=true --stacktrace --info")
+                        sleep(30)
+                        sh "oc extract secret/sonarqube-status-urls --to=${env.WORKSPACE}/sonar-runner --confirm"
+                        SONARQUBE_STATUS_JSON = sh(returnStdout: true, script: "curl -w '%{http_code}' '${SONARQUBE_STATUS_URL}'")
+                        SONARQUBE_STATUS = sonarGetStatus (SONARQUBE_STATUS_JSON)
+                        if ( "${SONARQUBE_STATUS}" == "ERROR") {
+                            echo "Sonarqube scan failed"
+                            currentBuild.result = 'FAILURE'
+                            exit 1
+                        } else {
+                            echo "Sonarqube scan passed"
+                        }
+                    }
                 }
             }
         }
