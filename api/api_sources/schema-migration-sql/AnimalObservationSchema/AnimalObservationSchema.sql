@@ -3,7 +3,6 @@
         
 CREATE TABLE animal_observation ();
 ALTER TABLE animal_observation ADD COLUMN animal_observation_id SERIAL PRIMARY KEY;
-ALTER TABLE animal_observation ADD COLUMN observation_date DATE NULL;
 ALTER TABLE animal_observation ADD COLUMN observation_timestamp TIMESTAMP NOT NULL;
 ALTER TABLE animal_observation ADD COLUMN observer_first_name VARCHAR(100) NULL;
 ALTER TABLE animal_observation ADD COLUMN observer_last_name VARCHAR(100) NULL;
@@ -14,6 +13,7 @@ ALTER TABLE animal_observation ADD COLUMN animal_species_id INT NULL REFERENCES 
 ALTER TABLE animal_observation ADD COLUMN species_agency_code_id INT NULL REFERENCES species_agency_code(species_agency_code_id) ON DELETE SET NULL;
 ALTER TABLE animal_observation ADD COLUMN life_stage_code_id INT NULL REFERENCES life_stage_code(life_stage_code_id) ON DELETE CASCADE;
 ALTER TABLE animal_observation ADD COLUMN behaviour_code_id INT NULL REFERENCES behaviour_code(behaviour_code_id) ON DELETE CASCADE;
+ALTER TABLE animal_observation ADD COLUMN space_geom_id INT NULL REFERENCES space_geom(space_geom_id) ON DELETE SET NULL;
 
 
         
@@ -22,7 +22,6 @@ ALTER TABLE animal_observation ADD COLUMN behaviour_code_id INT NULL REFERENCES 
         
 COMMENT ON TABLE animal_observation IS 'An observation record created for an animal species';
 COMMENT ON COLUMN animal_observation.animal_observation_id IS 'Auto generated sequential primary key column.';
-COMMENT ON COLUMN animal_observation.observation_date IS 'The Observation Date is the date that the invasive species occurrence was observed by the submitter.';
 COMMENT ON COLUMN animal_observation.observation_timestamp IS 'Date and time of the observation record';
 COMMENT ON COLUMN animal_observation.observer_first_name IS 'First name of the observer';
 COMMENT ON COLUMN animal_observation.observer_last_name IS 'Last name of the observer';
@@ -33,6 +32,7 @@ COMMENT ON COLUMN animal_observation.animal_species_id IS 'Foreign key reference
 COMMENT ON COLUMN animal_observation.species_agency_code_id IS 'Foreign key reference to Species Agency code table';
 COMMENT ON COLUMN animal_observation.life_stage_code_id IS 'Foreign key reference to Life stage code table';
 COMMENT ON COLUMN animal_observation.behaviour_code_id IS 'Foreign key reference to Behaviour code table';
+COMMENT ON COLUMN animal_observation.space_geom_id IS 'Spatial and Geometry reference data associated with record. Foreign key reference to space_geom table';
 
 
         

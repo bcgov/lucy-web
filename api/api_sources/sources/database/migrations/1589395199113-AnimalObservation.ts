@@ -2,7 +2,7 @@ import {MigrationInterface, QueryRunner} from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
 import { AnimalSpeciesSchema, LifeStageCodeSchema, BehaviourCodeSchema, AnimalObservationSchema } from '../database-schema';
 
-export class AnimalObservationCode1589395199113 extends AppDBMigrator implements MigrationInterface {
+export class AnimalObservation1589395199113 extends AppDBMigrator implements MigrationInterface {
     animalSpeciesSchema: AnimalSpeciesSchema;
     lifeStageCodeSchema: LifeStageCodeSchema;
     behaviourCodeSchema: BehaviourCodeSchema;
