@@ -134,10 +134,10 @@ deploy-remote-app:
 	@echo "+\n++ Make: Deploying APP with ref = $$PR and env=$$ENV"
 	@cd ../app/.pipeline && DEBUG=* npm run deploy -- --pr=$$PR --env=$$ENV --type=static
 sonarqube:
-	@echo "+\n Make: Sonarqube analysis"
+	@echo "+\n Make: Sonarqube analysis with OWASP ZAP scan"
 	@mkdir -p ~/.docker-vol/sonarqube/data
 	@mkdir -p ~/.docker-vol/sonarqube/logs
-	@docker run -d --name sonarqube -p 9090:9000 -v ~/.docker-vol/sonarqube/data:/opt/sonarqube/data -v ~/.docker-vol/sonarqube/logs:/opt/sonarqube/logs sonarqube || echo "Sonar Container is already exists" && docker start sonarqube || "Sonar Container is running"
+	@docker run -d --name sonarqube -p 9090:9000 -v ~/.docker-vol/sonarqube/data:/opt/sonarqube/data -v ~/.docker-vol/sonarqube/logs:/opt/sonarqube/logs sonarqube org.sonarsource.owasp/sonar-zap-plugin || echo "Sonar Container is already exists" && docker start sonarqube || "Sonar Container is running"
 	@echo "\n\n Waiting for sonarqube to start .... (90 sec)"
 	@sleep 30
 	@echo "Waiting .... (60 sec)"
