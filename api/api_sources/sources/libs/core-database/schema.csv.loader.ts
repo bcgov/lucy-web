@@ -133,14 +133,14 @@ export class SchemaCSVLoader {
         const ignoreDataColumns: string[] = options.ignoreDataColumns || [];
         const columnNames: string[] = [];
         // Check keys are present in columnDef
-        const schemaKeys: string[] = Object.keys(schema.table.initialColumns);
+        const schemaKeys: string[] = Object.keys(schema.table.columnsDefinition);
 
         // Checking entry for all columns or not
         if (options.allColumns) {
-            keys = Object.keys(schema.table.initialColumns).filter( k => k !== 'id');
+            keys = Object.keys(schema.table.columnsDefinition).filter( k => k !== 'id');
         } else if (options.allColumnsExcept) {
             const exceptionColumn: string[] = options.allColumnsExcept || [];
-            keys = Object.keys(schema.table.initialColumns).filter( k => k !== 'id' && !exceptionColumn.includes(k));
+            keys = Object.keys(schema.table.columnsDefinition).filter( k => k !== 'id' && !exceptionColumn.includes(k));
         }
 
         // Check keys are included or not

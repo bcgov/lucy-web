@@ -172,7 +172,7 @@ export class ApplicationTable {
     public createCommentsForTable(): string {
         let commentForColumns = ``;
         for (const key in this.initialColumns) {
-            if (this.initialColumns.hasOwnProperty(key)) {
+            if (this.columnsDefinition.hasOwnProperty(key)) {
                 const column: ApplicationTableColumn = this.initialColumns[key];
                 commentForColumns = commentForColumns + `COMMENT ON COLUMN ${this.name}.${column.name} IS '${column.comment}';\n`;
             }
