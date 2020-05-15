@@ -47,7 +47,7 @@ def nodejsSonarqube() {
                         SONARQUBE_STATUS_JSON = sh(returnStdout: true, script: "curl -w '%{http_code}' '${SONARQUBE_STATUS_URL}'")
                         SONARQUBE_STATUS = sonarGetStatus (SONARQUBE_STATUS_JSON)
 
-                        if ( "${SONARQUBE_STATUS" == "ERROR") {
+                        if ( "${SONARQUBE_STATUS}" == "ERROR") {
                             echo "Sonarqube scan failed"
                             currentBuild.result = 'FAILURE'
                             exit 1
