@@ -55,12 +55,12 @@ def run_sonarqube_scan(project_keys) {
             def SONARQUBE_STATUS_URL = "${SONARQUBE_URL}/api/qualitygates/project_status?projectKey='${pk}'"
             // run scan
             sh "npm install typescript"
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey='${pk}' -Dsonar.verbose=true --stacktrace --info"
-            sleep(3
+            sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey='${pk}' -Dsonar.verbose=true --stacktrace --info")
+            sleep(30)
             // check if sonarqube passed
             sh "oc extract secret/sonarqube-status-urls --to=${env.WORKSPACE}/sonar-runner --confirm"
             SONARQUBE_STATUS_JSON = sh(returnStdout: true, script: "curl -w '%{http_code}' '${SONARQUBE_STATUS_URL}'")
-            SONARQUBE_STATUS = sonarGetStatus (SONARQUBE_STATUS_JSO
+            SONARQUBE_STATUS = sonarGetStatus (SONARQUBE_STATUS_JSON)
             if ( "${SONARQUBE_STATUS}" == "ERROR") {
                 echo "Sonarqube scan ${pk} failed"
                 currentBuild.result = 'FAILURE'
