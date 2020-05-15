@@ -27,10 +27,6 @@ schemas:
         name: animal_observation_id
         comment: Auto generated sequential primary key column.
         definition: SERIAL PRIMARY KEY
-      date:
-        name: observation_date
-        comment: The Observation Date is the date that the invasive species occurrence was observed by the submitter.
-        definition: DATE NULL
       timestamp:
         name: observation_timestamp
         comment: Date and time of the observation record
@@ -53,7 +49,7 @@ schemas:
         definition: VARCHAR(500) NULL
       # --
       # -- Indicators --
-      specimenAvailable:
+      specimenAvailableIndicator:
         name: specimen_available_ind
         comment: This is an indicator used to indicate whether the specimen is available or not.
         definition: BOOLEAN NOT NULL DEFAULT FALSE
@@ -87,16 +83,13 @@ schemas:
         foreignTable: behaviour_code
         refColumn: behaviour_code_id
         deleteCascade: true
+      spaceGeom:
+        name: space_geom_id
+        comment: Spatial and Geometry reference data associated with record. Foreign key reference to space_geom table
+        definition: INT NULL
+        foreignTable: space_geom
+        refColumn: space_geom_id
+        required: true
+        meta:
+          embedded: true
     ## End - Columns
-    ## -- CopyFrom
-    # Copy Columns, version from other schema
-    copyFrom:
-      # Key: SpaceGeomModelSchema
-      SpaceGeomModelSchema:
-        versions:
-          - spaceGeom
-      # -- SpaceGeomModelSchema
-    ## -- End - CopyFrom
-      
-    versions: []
-    fields: {}
