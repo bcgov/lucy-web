@@ -542,6 +542,10 @@ export class FormService {
     numberOfFields: number,
     isTextAreaField: boolean
   ): string {
+    if (!classNames) {
+      return "";
+    }
+
     let result = classNames;
     // If column is specified (from config) dont add
     if (classNames.indexOf('col') === -1) {
@@ -572,10 +576,12 @@ export class FormService {
     return result;
   }
 
-  private generataClassNames(classNameData: string[]) {
+  private generateClassNames(classNameData: string[]) {
     let className = '';
     for (const name of classNameData) {
-      className = name + ` `;
+      if (name !== 'none') {
+        className = name + ` `;
+      }
     }
     return className.trim();
   }
@@ -587,15 +593,21 @@ export class FormService {
       edit: '',
       common: ''
     };
+    if (!classData) {
+      return classes;
+    }
+
     for (const item of classData) {
       if (item.mode === 'create') {
-        classes['create'] = classes['create'] + this.generataClassNames(item.classNames);
+        classes['create'] = classes['create'] + this.generateClassNames(item.classNames);
       } else if (item.mode === 'view') {
-        classes['view'] = classes['view'] + this.generataClassNames(item.classNames);
+        classes['view'] = classes['view'] + this.generateClassNames(item.classNames);
       } else if (item.mode === 'edit') {
-        classes['edit'] = classes['edit'] + this.generataClassNames(item.classNames);
+        classes['edit'] = classes['edit'] + this.generateClassNames(item.classNames);
       } else {
-        classes['common'] = classes['common'] + this.generataClassNames(item);
+        if (item !== 'none') {
+          classes['common'] = classes['common'] + ` ` + item;
+        }
       }
     }
     return classes;
