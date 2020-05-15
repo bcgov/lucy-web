@@ -128,7 +128,7 @@ pipeline {
                     echo "Running Sonarqube"
                     checkout scm
                     dir('.jenkins/sonarqube/sonar-runner') {
-                        sh "npm install typescript"
+                        // sh "npm install typescript"
                         sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey=invasives-app -Dsonar.verbose=true --stacktrace --info")
                         sleep(30)
                         sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey=invasives-api -Dsonar.verbose=true --stacktrace --info")
