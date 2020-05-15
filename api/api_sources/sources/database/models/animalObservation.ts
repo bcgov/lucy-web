@@ -11,7 +11,7 @@ import {
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { DateTransformer, IntTransformer } from '../../libs/transformer';
+import { IntTransformer } from '../../libs/transformer';
 import {
 	AnimalSpecies,
 	SpeciesAgencyCode,
@@ -27,13 +27,12 @@ import { Record } from './generic.data.models';
  * @description AnimalObservation create interface
  */
 export interface AnimalObservationSpec {
-	date: string;
 	timestamp: string;
 	observerFirstName: string;
 	observerLastName: string;
 	numberOfIndividuals: number;
 	comments: string;
-	specimenAvailable: boolean;
+	specimenAvailableIndicator: boolean;
 	species: AnimalSpecies;
 	speciesAgency: SpeciesAgencyCode;
 	lifeStage: LifeStageCode;
@@ -48,13 +47,12 @@ export interface AnimalObservationSpec {
  * @description AnimalObservation update interface
  */
 export interface AnimalObservationUpdateSpec {
-	date?: string;
 	timestamp?: string;
 	observerFirstName?: string;
 	observerLastName?: string;
 	numberOfIndividuals?: number;
 	comments?: string;
-	specimenAvailable?: boolean;
+	specimenAvailableIndicator?: boolean;
 	species?: AnimalSpecies;
 	speciesAgency?: SpeciesAgencyCode;
 	lifeStage?: LifeStageCode;
@@ -84,13 +82,6 @@ export class AnimalObservation extends Record implements AnimalObservationSpec {
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
 	animal_observation_id: number;
-
-	/**
-	 * @description Getter/Setter property for column {observation_date}
-	 */
-	@Column({name: AnimalObservationSchema.columns.date, transformer: new DateTransformer()})
-	@ModelProperty({type: PropertyType.string})
-	date: string;
 
 	/**
 	 * @description Getter/Setter property for column {observation_timestamp}
@@ -130,12 +121,12 @@ export class AnimalObservation extends Record implements AnimalObservationSpec {
 	/**
 	 * @description Getter/Setter property for column {specimen_available_ind}
 	 */
-	@Column({ name: AnimalObservationSchema.columns.specimenAvailable})
+	@Column({ name: AnimalObservationSchema.columns.specimenAvailableIndicator})
 	@ModelProperty({type: PropertyType.boolean})
-	specimenAvailable: boolean;
+	specimenAvailableIndicator: boolean;
 
 	/**
-	 * @description Getter/Setter property for column {species_id}
+	 * @description Getter/Setter property for column {animal_species_id}
 	 */
 	@ManyToOne( type => AnimalSpecies, { eager: true})
 	@JoinColumn({ name: AnimalObservationSchema.columns.species, referencedColumnName: AnimalSpeciesSchema.pk})
