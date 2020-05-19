@@ -1,0 +1,5 @@
+behaviour_code, description
+U, Unknown
+M, Moving
+R, Resting
+D, Deceased
