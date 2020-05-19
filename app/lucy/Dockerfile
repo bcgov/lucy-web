@@ -31,7 +31,7 @@ COPY ./ .
 RUN npm run build-prod
 
 # RUN Sonar Analysis
-RUN npm run sonar-analysis
+# RUN npm run sonar-analysis //TODO: Uncomment this once the sonarqube properties are updated
 
 EXPOSE 3030
 
