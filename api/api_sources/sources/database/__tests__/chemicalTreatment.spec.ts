@@ -346,19 +346,6 @@ describe('Test Chemical Treatment', () => {
         await Destroyer(HerbicideTankMixController.shared)(obj);
     });
 
-    it('should fetch tank mix for treatment', async () => {
-        const obj: HerbicideTankMix = await ModelFactory(HerbicideTankMixController.shared)();
-        should().exist(obj);
-        should().exist(obj.chemicalTreatment);
-
-        // Now fetch chemical treatment
-        const ch: ChemicalTreatment = await ChemicalTreatmentController.shared.findById(obj.chemicalTreatment.chemical_treatment_id);
-        should().exist(ch);
-        should().exist(ch.tankMixes);
-        expect(ch.tankMixes.length).to.be.greaterThan(0);
-        await Destroyer(HerbicideTankMixController.shared)(obj);
-    });
-
     it('should allow multiple tank mixes to be associated with the same treatment', async () => {
         const user = await userFactory();
         const treatment: ChemicalTreatment = await ModelFactory(ChemicalTreatmentController.shared)();
