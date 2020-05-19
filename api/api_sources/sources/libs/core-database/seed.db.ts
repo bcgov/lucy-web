@@ -15,7 +15,7 @@ export class SeedRunner {
 
         // Skip if the seed file is imported already
         if (isImported) {
-            console.log(`[SEED - ${schemaName}]: SKIPPED`);
+            console.log(`[SEED - ${schemaName}]: IMPORTED ALREADY`);
             return;
         }
 
@@ -25,6 +25,7 @@ export class SeedRunner {
 
         // Seed the data only if the current environment is either local or included in options
         if (environmentsToSeed.includes(currentEnv)) {
+            console.log(`[SEED - ${schemaName}]: IN PROGRESS`);
             try {
                 const csv = new GenericCSV(getCSVDataFilePath(options.fileName));
                 const csvData = await csv.load();
@@ -45,7 +46,7 @@ export class SeedRunner {
                 }
             } catch (err) {
                 console.log(`[SEED - ${schemaName}]: FAILED`);
-                console.log(err);
+                throw err;
             }
         } else {
             console.log(`[SEED - ${schemaName}]: SKIPPED FOR CURRENT ENVIRONMENT`);
