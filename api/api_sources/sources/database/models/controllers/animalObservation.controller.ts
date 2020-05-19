@@ -40,7 +40,7 @@ export class AnimalObservationController extends RecordController<AnimalObservat
             observerLastName: 2
         };
 	}
-	
+
 	async search(param: string): Promise<AnimalObservation[]> {
         const keyword = `%${param}%`;
         const items = await this.repo.createQueryBuilder('animal_observation')
