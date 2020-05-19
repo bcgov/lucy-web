@@ -35,7 +35,7 @@ export class AnimalObservationController extends RecordController<AnimalObservat
 	get exportKeyPriorities(): {[key: string]: number} {
         return {
 			id: 5,
-			date: 4,
+			timestamp: 4,
             observerFirstName: 3,
             observerLastName: 2
         };
