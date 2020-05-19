@@ -196,7 +196,7 @@ describe('Test for animal observation routes', () => {
                 should().exist(body.species);
                 should().exist(body.lifeStage);
                 should().exist(body.behaviour);
-                expect(body.specimenAvailableIndicator).to.be.equal(obs.specimenAvailableIndicator);
+                expect(body.specimenAvailableIndicator).to.be.equal(false);
             });
             await destroyAnimalObservation(obs);
         });
