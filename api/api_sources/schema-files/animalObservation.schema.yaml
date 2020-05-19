@@ -1,0 +1,95 @@
+version: 1.0
+description: Schema file for table animal_observation
+externalTables:
+  - name: animal_species
+    description: Animal Species table
+    schema: AnimalSpeciesSchema
+includes:
+  - observation.codes.schema.yaml
+  - animalObservation.codes.schema.yaml
+  - spaceGeom.schema.yaml
+schemas:
+  AnimalObservationSchema:
+    name: animal_observation
+    description: An observation record created for an animal species
+    baseSchema: RecordSchema
+    meta:
+      baseModel: Record
+      resource: true
+      api: /observation/animal
+    displayLayout: {}
+    layout: {}
+    computedFields: {}
+    relations: {}
+    columns:
+      # -- Regular Columns
+      id:
+        name: animal_observation_id
+        comment: Auto generated sequential primary key column.
+        definition: SERIAL PRIMARY KEY
+      timestamp:
+        name: observation_timestamp
+        comment: Date and time of the observation record
+        definition: TIMESTAMP NOT NULL
+      observerFirstName: 
+        name: observer_first_name
+        comment: First name of the observer
+        definition: VARCHAR(100) NULL
+      observerLastName:
+        name: observer_last_name
+        comment: Last name of the observer
+        definition: VARCHAR(100) NULL
+      numberOfIndividuals:
+        name: number_of_individuals
+        comment: The count of observers
+        definition: INT NOT NULL
+      comments:
+        name: comments
+        comment: Free-form comments added by the observer
+        definition: VARCHAR(500) NULL
+      # --
+      # -- Indicators --
+      specimenAvailableIndicator:
+        name: specimen_available_ind
+        comment: This is an indicator used to indicate whether the specimen is available or not.
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
+      # --
+      # -- Code Table Relations --
+      species:
+        name: animal_species_id
+        comment: Foreign key reference to animal species table 
+        definition: INT NULL
+        foreignTable: animal_species
+        refColumn: animal_species_id
+        deleteCascade: true
+      speciesAgency:
+        name: species_agency_code_id
+        comment: Foreign key reference to Species Agency code table 
+        definition: INT NULL
+        foreignTable: species_agency_code
+        refColumn: species_agency_code_id
+        deleteCascade: false
+      lifeStage:
+        name: life_stage_code_id
+        comment: Foreign key reference to Life stage code table 
+        definition: INT NULL
+        foreignTable: life_stage_code
+        refColumn: life_stage_code_id
+        deleteCascade: true
+      behaviour:
+        name: behaviour_code_id
+        comment: Foreign key reference to Behaviour code table
+        definition: INT NULL
+        foreignTable: behaviour_code
+        refColumn: behaviour_code_id
+        deleteCascade: true
+      spaceGeom:
+        name: space_geom_id
+        comment: Spatial and Geometry reference data associated with record. Foreign key reference to space_geom table
+        definition: INT NULL
+        foreignTable: space_geom
+        refColumn: space_geom_id
+        required: true
+        meta:
+          embedded: true
+    ## End - Columns

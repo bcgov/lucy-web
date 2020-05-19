@@ -1,0 +1,41 @@
+version: 1.0
+description: Schema file for table animal_observation_codes
+externalTables: []
+includes: []
+schemas:
+  LifeStageCodeSchema:
+    name: life_stage_code
+    description: This is a list of all the different life stages for a species
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: life_stage_code_id
+        comment: Auto generated primary key
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: life_stage_code
+        comment: Code value for the life stages
+        definition: VARCHAR(10) NOT NULL UNIQUE
+    imports:
+      init:
+        fileName: LifeStageCode.csv
+        allColumnsExcept:
+          - activeIndicator
+  BehaviourCodeSchema:
+    name: behaviour_code
+    description: This is a list of all the different behaviours for a species
+    baseSchema: CodeTableSchema
+    columns: 
+      id: 
+        name: behaviour_code_id
+        comment: Auto generated primary key
+        definition: SERIAL PRIMARY KEY
+      code:
+        name: behaviour_code
+        comment: Code value for the behaviours
+        definition: VARCHAR(10) NOT NULL UNIQUE
+    imports:
+      init:
+        fileName: BehaviourCode.csv
+        allColumnsExcept:
+          - activeIndicator

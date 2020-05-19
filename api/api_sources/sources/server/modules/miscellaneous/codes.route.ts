@@ -41,7 +41,10 @@ import {
     ProjectManagementPlanCodeController,
     ChemicalTreatmentMethodCodeController,
     WindDirectionCodesController,
-    HerbicideController
+    HerbicideController,
+    LifeStageCodeController,
+    BehaviourCodeController,
+    AnimalSpeciesController
 } from '../../../database/models';
 import { DataController } from '../../../database/data.model.controller';
 import { ChemicalTreatmentEmployeeController } from '../../../database/models/controllers/chemicalTreatmentEmployee.controller';
@@ -91,6 +94,9 @@ export class CodeTableRouteController extends SecureRouteController<any> {
         await this.addCodes(WindDirectionCodesController.shared);
         await this.addCodes(HerbicideController.shared);
         await this.addCodes(EfficacyCodeController.shared);
+        await this.addCodes(LifeStageCodeController.shared);
+        await this.addCodes(BehaviourCodeController.shared);
+        await this.addCodes(AnimalSpeciesController.shared);
         return this.codeTableObj;
     }
 
