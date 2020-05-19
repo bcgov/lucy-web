@@ -104,4 +104,5 @@ export * from './controllers/efficacyCode.controller';
 export * from './controllers/highRiskAssessment.controller';
 export * from './controllers/watercraftJourney.controller';
 export * from './controllers/seed.controller';
+export * from './controllers/animalObservation.controller';
 // ----------------------------------------------------------------------------------------------------------------
