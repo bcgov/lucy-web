@@ -20,6 +20,7 @@
 import { BaseTableSchema, createColumn } from '../applicationSchemaInterface';
 import { UserSchema } from './login.schema';
 import { CodeCSVData } from '../pre.load';
+import { ApplicationTableColumn } from '../../libs/core-database';
 
 export class RecordTableSchema extends BaseTableSchema {
     static get auditColumns(): {[key: string]: string} {
@@ -55,26 +56,26 @@ export class CodeTableSchema extends RecordTableSchema {
         };
     }
 
+    additionalColumns(): {[key: string]: ApplicationTableColumn} {
+        const existing = super.additionalColumns();
+        const newColumns = {
+            description: createColumn({name: CodeTableSchema.codeColumns.description,
+                comment: 'Description of code',
+                definition: 'VARCHAR(100) NULL',
+                examples: []
+            }),
+            activeIndicator: createColumn({name: CodeTableSchema.codeColumns.activeIndicator,
+                comment: 'Indicator to check active status of code',
+                definition: 'BOOLEAN NOT NULL DEFAULT TRUE',
+                examples: []
+            })
+        };
+
+        return {...existing, ...newColumns};
+    }
+
     constructor() {
         super();
-        // Creating Code description
-        if (!this.table.columnsDefinition.description) {
-            this.table.columnsDefinition.description = createColumn(
-                {name: CodeTableSchema.codeColumns.description,
-                    comment: 'Description of code',
-                    definition: 'VARCHAR(100) NULL',
-                    examples: []
-                });
-        }
-        // Creating Code active indicator
-        if (!this.table.columnsDefinition.activeIndicator) {
-            this.table.columnsDefinition.activeIndicator = createColumn(
-                {name: CodeTableSchema.codeColumns.activeIndicator,
-                    comment: 'Indicator to check active status of code',
-                    definition: 'BOOLEAN NOT NULL DEFAULT TRUE',
-                    examples: []
-                });
-        }
     }
 
     entryString() {

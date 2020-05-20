@@ -75,6 +75,7 @@ export interface CSVImportOptions {
     transformer?: string;
     allColumns?: boolean;
     allColumnsExcept?: string[];
+    ignoreDataColumns?: string[];
 }
 
 export interface GroupFieldOptions {
