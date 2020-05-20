@@ -49,7 +49,7 @@
     },
     "migrationInfo" : {
         "dev": {
-            "type": "normal",
+            "type": "refresh",
             "cleanup": "none",
             "dbSeed": "yes"
         },
