@@ -36,10 +36,10 @@ export class AnimalObservationCode1589395199113 extends AppDBMigrator implements
 
     public async down(queryRunner: QueryRunner): Promise<any> {
         this.log('[START]', 'UP');
+        await queryRunner.query(this.animalObservationSchema.dropTable());
         await queryRunner.query(this.animalSpeciesSchema.dropTable());
         await queryRunner.query(this.lifeStageCodeSchema.dropTable());
         await queryRunner.query(this.behaviourCodeSchema.dropTable());
-        await queryRunner.query(this.animalObservationSchema.dropTable());
         this.log('[END]', 'UP');
     }
 
