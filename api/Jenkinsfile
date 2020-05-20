@@ -129,9 +129,9 @@ pipeline {
                     checkout scm
                     dir('.jenkins/sonarqube/sonar-runner') {
                         // sh "npm install typescript"
-                        sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey=invasives-app -Dsonar.verbose=true --stacktrace --info")
+                        sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=https://sonarqube-8ecbmv-tools.pathfinder.gov.bc.ca -Dsonar.projectKey=invasives-app -Dsonar.verbose=true --stacktrace --info")
                         sleep(30)
-                        sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey=invasives-api -Dsonar.verbose=true --stacktrace --info")
+                        sh(returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=https://sonarqube-8ecbmv-tools.pathfinder.gov.bc.ca -Dsonar.projectKey=invasives-api -Dsonar.verbose=true --stacktrace --info")
                         sleep(30)
                         sh "oc extract secret/sonarqube-status-urls --to=${env.WORKSPACE}/sonar-runner --confirm"
                         SONARQUBE_STATUS_JSON = sh(returnStdout: true, script: "curl -w '%{http_code}' '${SONARQUBE_STATUS_URL}'")
