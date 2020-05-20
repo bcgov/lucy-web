@@ -238,6 +238,7 @@ schemas:
             name: number_of_people_in_party
             comment: Number of peoples in inspected boats
             definition: INT NULL DEFAULT 1
+            required: false
             meta: {}
       ## -- end: numberOfPeopleInParty
     ## -- end version
