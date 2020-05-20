@@ -280,7 +280,7 @@ export class BaseDataModelController<T extends ObjectLiteral> implements BaseDat
 
         for (const key in o) {
             if (obj.hasOwnProperty(key) && update.hasOwnProperty(key)) {
-                if (update[key] && typeof obj[key] === typeof update[key]) {
+                if ((update[key] !== null || update[key] !== undefined) && typeof obj[key] === typeof update[key]) {
                     o[key as keyof T] = update[key];
                 }
             }

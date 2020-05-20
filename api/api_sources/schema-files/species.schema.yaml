@@ -55,4 +55,31 @@ schemas:
         name: latin_name
         comment: 'Latin or scientific name of the species'
         definition: VARCHAR(100) NOT NULL
+  AnimalSpeciesSchema:
+    name: animal_species
+    description: The list of all the animal species
+    baseSchema: RecordSchema
+    columns: 
+      id: 
+        name: animal_species_id
+        comment: Auto generated primary key
+        definition: SERIAL PRIMARY KEY
+      commonName:
+        name: common_name
+        comment: Common or popular name of the species
+        definition: VARCHAR(100) NOT NULL
+      scientificName:
+        name: scientific_name
+        comment: Scientific name of the species
+        definition: VARCHAR(100) NOT NULL
+      speciesClass:
+        name: species_class
+        comment: The class that the species belongs to
+        definition: VARCHAR(100) NOT NULL
+    imports:
+      init:
+        fileName: AnimalSpecies.csv
+        allColumns: true
+        ignoreDataColumns:
+          - animal_id
   ## --

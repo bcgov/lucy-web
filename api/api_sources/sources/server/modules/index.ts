@@ -11,5 +11,6 @@ export * from './watercraftObservation';
 export * from './location';
 export * from './monitor/mechanical';
 export * from './bcGeoData/bcGeoData.route';
+export * from './animal-observation';
 // --------------------------------------
 
