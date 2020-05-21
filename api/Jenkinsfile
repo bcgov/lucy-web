@@ -134,6 +134,9 @@ pipeline {
     options {
         disableResume()
     }
+    environment {
+        TOOLSPROJECT = "8ecbmv-tools"
+    }
     stages {
         stage('Build') {
             parallel {
