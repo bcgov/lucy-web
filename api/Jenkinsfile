@@ -11,6 +11,124 @@ def sonarGetStatus (jsonPayload) {
   return jsonSlurper.parseText(jsonPayload).projectStatus.status
 }
 
+/*
+ * takes in a sonarqube status json payload
+ * and returns the date string
+ */
+def sonarGetDate (jsonPayload) {
+  def jsonSlurper = new JsonSlurper()
+  return jsonSlurper.parseText(jsonPayload).projectStatus.periods[0].date
+}
+
+boolean sonarqubeReportComplete ( String oldDate, String sonarqubeStatusUrl, def iterations = 6 ) {
+  def oldSonarqubeReportDate = oldDate
+  def newSonarqubeReportDate = sonarGetDate ( sh ( returnStdout: true, script: "curl -w '%{http_code}' '${sonarqubeStatusUrl}'" ) )
+  int delay = 0
+
+  for (int i=0; i<iterations; i++) {
+    echo "waiting for sonarqube report, iterator is: ${i}, max iterator is: ${iterations} \n Old Date: ${oldSonarqubeReportDate} \n New Date: ${newSonarqubeReportDate}"
+    if (oldSonarqubeReportDate != newSonarqubeReportDate) {
+      echo "sonarqube report complete"
+      return true
+    } else {
+      delay = (1<<i) // exponential backoff
+      sleep(delay)
+      newSonarqubeReportDate = sonarGetDate ( sh ( returnStdout: true, script: "curl -w '%{http_code}' '${sonarqubeStatusUrl}'" ) )
+    }
+  }
+  return false
+}
+
+// copied from https://github.com/bcgov/eagle-admin/blob/e39641c9701158725c66a7fb725581ce666d4c55/Jenkinsfile-demo
+def nodejsSonarqube () {
+  _openshift(env.STAGE_NAME, TOOLSPROJECT) {
+    String sonarLabel = "sonarqube-runner-${UUID.randomUUID().toString()}";
+    podTemplate(
+      label: sonarLabel,
+      name: sonarLabel,
+      serviceAccount: 'jenkins',
+      cloud: 'openshift',
+      slaveConnectTimeout: 300,
+      containers: [
+        containerTemplate(
+          name: 'jnlp',
+          image: 'registry.access.redhat.com/openshift3/jenkins-agent-nodejs-8-rhel7:v3.11.161',
+          resourceRequestCpu: '500m',
+          resourceLimitCpu: '1000m',
+          resourceRequestMemory: '2Gi',
+          resourceLimitMemory: '2Gi',
+          workingDir: '/tmp',
+          command: '',
+          args: '${computer.jnlpmac} ${computer.name}',
+        )
+      ]
+    ) {
+      node(sonarLabel) {
+        checkout scm
+        dir('sonar-runner') {
+          try {
+            // get sonarqube url
+            def SONARQUBE_URL = getUrlFromRoute('sonarqube').trim()
+            echo "${SONARQUBE_URL}"
+
+            // sonarqube report link
+            def SONARQUBE_STATUS_URL = "${SONARQUBE_URL}/api/qualitygates/project_status?projectKey='invasives-api'"
+
+            boolean firstScan = false;
+
+            def OLD_SONAR_DATE
+
+            try {
+              // get old sonar report date
+              def OLD_SONAR_DATE_JSON = sh(returnStdout: true, script: "curl -w '%{http_code}' '${SONARQUBE_STATUS_URL}'")
+              OLD_SONAR_DATE = sonarGetDate (OLD_SONAR_DATE_JSON)
+            } catch (error) {
+              firstScan = true
+            }
+
+            // run scan
+            sh "npm install typescript"
+            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.projectKey='invasives-api' -Dsonar.projectName='Invasives-API' -Dsonar.verbose=true --stacktrace --info"
+
+            if ( !firstScan ) {
+              // wiat for report to be updated
+              if ( !sonarqubeReportComplete ( OLD_SONAR_DATE, SONARQUBE_STATUS_URL ) ) {
+                echo "sonarqube report failed to complete, or timed out"
+                currentBuild.result = "FAILURE"
+              }
+            } else {
+              sleep (30)
+            }
+
+            // check if sonarqube passed
+            sh("oc extract secret/sonarqube-status-urls --to=${env.WORKSPACE}/sonar-runner --confirm")
+
+            SONARQUBE_STATUS_JSON = sh(returnStdout: true, script: "curl -w '%{http_code}' '${SONARQUBE_STATUS_URL}'")
+            SONARQUBE_STATUS = sonarGetStatus (SONARQUBE_STATUS_JSON)
+
+            if ( "${SONARQUBE_STATUS}" == "ERROR") {
+              echo "Scan Failed"
+              echo "Sonarqube Scan Failed"
+              currentBuild.result = 'FAILURE'
+              exit 1
+            } else {
+              echo "Sonarqube Scan Passed"
+            }
+
+          } catch (error) {
+
+            echo ${error}
+            throw error
+          } finally {
+            echo "Sonarqube Scan Complete"
+          }
+        }
+      }
+    }
+    return true
+  }
+}
+
 pipeline {
     agent none
     options {
@@ -91,16 +209,7 @@ pipeline {
             steps {
                 script {
                     echo "Running Sonarqube"
-                    sh (
-                        returnStdout: true,
-                        script: ".jenkins/sonarqube/sonar-runner/gradlew sonarqube --stacktrace --info \
-                            -Dsonar.verbose=true \
-                            -Dsonar.host.url=https://sonarqube-8ecbmv-tools.pathfinder.gov.bc.ca \
-                            -Dsonar.projectName='Invasives-API' \
-                            -Dsonar.projectKey=invasives-api \
-                            -Dsonar.projectBaseDir=api \
-                            -Dsonar.sources=sources"
-                    )
+                    def result = nodejsSonarqube()
                 }
             }
         }
