@@ -91,18 +91,16 @@ pipeline {
             steps {
                 script {
                     echo "Running Sonarqube"
-                    dir('.jenkins/sonarqube/sonar-runner') {
-                        sh (
-                            returnStdout: true,
-                            script: "./gradlew sonarqube --stacktrace --info \
-                                -Dsonar.verbose=true \
-                                -Dsonar.host.url=https://sonarqube-8ecbmv-tools.pathfinder.gov.bc.ca \
-                                -Dsonar.projectName='Invasives-API' \
-                                -Dsonar.projectKey=invasives-api \
-                                -Dsonar.projectBaseDir=api \
-                                -Dsonar.sources=sources"
-                        )
-                    }
+                    sh (
+                        returnStdout: true,
+                        script: ".jenkins/sonarqube/sonar-runner/gradlew sonarqube --stacktrace --info \
+                            -Dsonar.verbose=true \
+                            -Dsonar.host.url=https://sonarqube-8ecbmv-tools.pathfinder.gov.bc.ca \
+                            -Dsonar.projectName='Invasives-API' \
+                            -Dsonar.projectKey=invasives-api \
+                            -Dsonar.projectBaseDir=api \
+                            -Dsonar.sources=sources"
+                    )
                 }
             }
         }
