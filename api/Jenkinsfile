@@ -114,7 +114,7 @@ pipeline {
                     agent { label 'build' }
                     steps {
                         echo "Build API image from [dev] branch"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev --type=static"
                     }
 
                 }
@@ -122,7 +122,7 @@ pipeline {
                     agent { label 'build' }
                     steps {
                         echo "Build APP image from [dev] branch"
-                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev"
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev --type=static"
                     }
                 }
             }
@@ -137,7 +137,7 @@ pipeline {
             steps {
                 // Postgress 
                 echo "Deploying Postgress [STATIC/DEV]"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
                 // Backup
                 echo "Deploying backup app [STATIC]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=dev --type=static"
@@ -194,7 +194,7 @@ pipeline {
                     steps {
                         // Postgress 
                         echo "Deploying Postgress [STATIC/DEV]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=test --type=static"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
                         // Backup
                         echo "Deploying backup app [STATIC]"
                         sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=test --type=static"
