@@ -102,6 +102,34 @@ The starting point for a new form is the schema's .yaml file, which specifies th
 
   Either of these can be used. It is recommended that if a dependent schema is one of multiple schemas within the same .yaml file, `externalTables` makes the dependency to the specific schema more explicit. However, if the .yaml file contains only the dependent schema and no others, using `includes` is a quicker way to refer to the schema.
 
+  10. (**Optional**). If the current schema needs a bunch of data to be seeded initially, it can be done by including the following option in the yaml file.
+
+  ```yaml
+  batchImport:
+    ObservationSeed:
+      fileName: ObservationSeed.csv
+      environments: 
+        - test
+      allColumnsExcept: 
+        - observation_id
+      mapper:
+        observation_comment: general_comment
+      groupFields:
+        - key: spaceGeom
+          fields:
+            obs_lat: latitude
+            obs_lon: longitude
+            radius: radius
+  ```
+  Some options take precendence over the other, the script first process the `allColumnsExcept`, then the `mapper` is executed and finally it groups the fields mentioned in `groupField`. Fill in the options as mentioned in the example above. 
+
+  - `fileName` - The name of the CSV file to load
+  - `environments` - List of environments where the import should happen - dev, test, prod
+  - `allColumnsExcept` - The fields mentioned here are not processed during import
+  - `mapper` - The key/value pairs to map the existing column value to a different field
+  - `groupFields` - Group the `fields` mentioned with a new `key`
+
+
 ### 2. Create the handler for the schema
 The handler is used to match the schema class in Typescript to the schema's .yaml config file.
 
@@ -131,7 +159,7 @@ get hasDefaultValues(): boolean {
 ### 4. (Optional) Import data from CSV
 1. If the new schema is for a record, this step can be skipped. However, if the new schema is for a code table, at this point we must integrate the CSV file for the source data with the schema. First, add the CSV file to the repo in the `api/api_sources/resources/csv/` directory.
 
-1. In the schema's .yaml config file, point to the source CSV file by adding the following code snippet at the first child level within the schema:
+2. In the schema's .yaml config file, point to the source CSV file by adding the following code snippet at the first child level within the schema:
 
 ```yaml
 imports:
@@ -140,9 +168,9 @@ imports:
     allColumns: true
 ```
 
-  The "init" label serves as a version name for the import. Updated versions of the source file can be added later by appending a new version name (and a modified CSV file) to the list of imports. The `allColumns:` property indicates that every column in the source CSV file should be imported into the DB. If this is not desired, specific columns from the CSV file can be selected for import into the DB by replacing "allColumns" with `entryColumns:` and listing the names of the columns to be imported.
+  The "init" label serves as a version name for the import. Updated versions of the source file can be added later by appending a new version name (and a modified CSV file) to the list of imports. The `allColumns:` property indicates that every column in the schema should be imported into the DB. If this is not desired, specific columns can be selected for import into the DB by replacing "allColumns" with `entryColumns:` and listing the names of the columns to be imported. To ignore certain columns from the CSV file, list them under the `ignoreDataColumns`
 
-  3. Run the schema-manager script to generate a new SQL file that will insert the CSV data into the schema's table in the DB. To run this script, execute `ts-node api/api_sources/scripts/schema.manager.ts -s \<SchemaName> -m` from the command line.
+3. Run the schema-manager script to generate a new SQL file that will insert the CSV data into the schema's table in the DB. To run this script, execute `ts-node api/api_sources/scripts/schema.manager.ts -s \<SchemaName> -m` from the command line.
 
 
 ### 5. Create SQL migration file using TypeORM script
