@@ -19,7 +19,7 @@ module.exports = (settings)=>{
       'SUFFIX': phases[phase].suffix,
       'VERSION': phases[phase].tag,
       'SOURCE_REPOSITORY_URL': oc.git.http_url,
-      'SOURCE_REPOSITORY_REF': staticBranches.includes(changeId) ? changeId : oc.git.ref
+      'SOURCE_REPOSITORY_REF': phases[phase].branch || oc.git.ref
     }
   }));
 
