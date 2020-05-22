@@ -1,3 +1,4 @@
+def IS_DEV_APPROVED = 'no'
 pipeline {
     agent none
     options {
@@ -93,9 +94,12 @@ pipeline {
             }
             steps {
                 script {
-                    def IS_DEV_APPROVED = input(message: "Deploy to Dev/Test?", ok: "yes", parameters: [string(name: 'IS_APPROVED', defaultValue: 'yes', description: 'Deploy to Dev/Test?')])
-                    if (IS_DEV_APPROVED != 'yes') {
+                    def USER_CHOICE = input(message: "Deploy to Dev/Test?", ok: "yes", parameters: [string(name: 'IS_APPROVED', defaultValue: 'yes', description: 'Deploy to Dev/Test?')])
+                    if (USER_CHOICE != 'yes') {
                         echo "Dev Deployment is not approved"
+                        IS_DEV_APPROVED = 'no'
+                    } else {
+                        IS_DEV_APPROVED = 'yes'
                     }
                     echo "Build/Deploy to Dev/Test"
                 }
