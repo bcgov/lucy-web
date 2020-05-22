@@ -83,7 +83,8 @@ pipeline {
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
             }
         }
-        stage('Pre-Deploy (Dev) [Static]') {
+        stage('Deploy to Dev/Test') {
+            // This stage will deploy to dev enviroment 
             agent {
                 label 'deploy'
             }
@@ -91,66 +92,123 @@ pipeline {
                 environment name : 'CHANGE_TARGET', value: 'dev'
             }
             steps {
-                echo "Deploying Postgress [STATIC] ..."
+                script {
+                    def IS_DEV_APPROVED = input(message: "Deploy to Dev/Test?", ok: "yes", parameters: [string(name: 'IS_APPROVED', defaultValue: 'yes', description: 'Deploy to Dev/Test?')])
+                    if (IS_DEV_APPROVED != 'yes') {
+                        echo "Dev Deployment is not approved"
+                    }
+                    echo "Build/Deploy to Dev/Test"
+                }
+            }
+        }
+        stage('Buid For Dev/Test') {
+            when {
+                expression { return IS_DEV_APPROVED == 'yes'}
+            }
+            parallel {
+                stage('Build Dev/Test API') {
+                    agent { label 'build' }
+                    steps {
+                        echo "Build API image from [dev] branch"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev"
+                    }
+
+                }
+                stage('Build Dev/Test APP') {
+                    agent { label 'build' }
+                    steps {
+                        echo "Build APP image from [dev] branch"
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev"
+                    }
+                }
+            }
+        }
+        stage('Deploy Dev') {
+            agent {
+                label 'deploy'
+            }
+            when {
+                expression { return IS_DEV_APPROVED == 'yes'}
+            }
+            steps {
+                // Postgress 
+                echo "Deploying Postgress [STATIC/DEV]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                // Backup
                 echo "Deploying backup app [STATIC]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=dev --type=static"
                 echo "Running DB Backup Job [STATIC]"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=dev --backup=true"
+                // Migration
                 echo "Running DB Migration [STATIC]"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
                 echo "Running DB Seed Job [STATIC]"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=dev --type=static"
-            }
-        }
-        stage('Deploy (Dev) API/APP [Static]') {
-            agent {
-                label 'deploy'
-            }
-            when {
-                environment name : 'CHANGE_TARGET', value: 'dev'
-            }
-            steps {
-                echo "Deploying API [dev] ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                // Seed
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
+                // API
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
+                // Tools
                 echo "Deploying dev tools ..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static"
+                // App
                 echo "Deploying APP[dev] ..."
-                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static"
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
             }
         }
-        stage('Pre-Deploy (Test)') {
+        stage('Deploy Test') {
             agent {
                 label 'deploy'
             }
             when {
-                environment name : 'CHANGE_TARGET', value: 'staging'
+                expression { return IS_DEV_APPROVED == 'yes'}
             }
-            steps {
-                echo "Deploying Postgress [TEST] ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=test --type=static"
-                echo "Deploying backup of app [TEST]"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=test --type=static"
-                echo "Running DB Backup Job [TEST]"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=test --backup=true"
-                echo "Running DB Migration [TEST]"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=test --type=static"
-                echo "Running DB Seed Job [TEST]"
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=test --type=static"
-            }
-        }
-        stage('Deploy (TEST) API/APP') {
-            agent { label 'deploy' }
-            when {
-                environment name : 'CHANGE_TARGET', value: 'staging'
-            }
-            steps {
-                echo "Deploying in [TEST] [API]..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static"
-                echo "Deploying in [TEST] [APP]..."
-                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static"
-                echo "Deploying dev tools [TEST] ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=test --type=static"
+            parallel {
+                stage('Merging with staging branch'){
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: 'github-account', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                            sh """
+                                # Update master with latest changes from develop
+                                git checkout staging
+                                git fetch
+                                git merge --squash origin/dev
+                                git commit -m "Merge branch develop into staging"
+                                git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/bcgov/lucy-web.git
+
+                                # Update the HEAD on develop to be the same as staging
+                                git checkout dev
+                                git fetch
+                                git merge -s ours -m "Updating develop with staging" origin/master
+                                git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/bcgov/lucy-web.git
+                            """
+                        }
+                    }
+                }
+                stage('Deploy to test env') {
+                    steps {
+                        // Postgress 
+                        echo "Deploying Postgress [STATIC/DEV]"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=test --type=static"
+                        // Backup
+                        echo "Deploying backup app [STATIC]"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=test --type=static"
+                        echo "Running DB Backup Job [STATIC]"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=test --backup=true"
+                        // Migration
+                        echo "Running DB Migration [STATIC]"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        echo "Running DB Seed Job [STATIC]"
+                        // Seed
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        // API
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        // Tools
+                        echo "Deploying dev tools ..."
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=test --type=static"
+                        // App
+                        echo "Deploying APP[dev] ..."
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                    }
+                }
             }
         }
         stage('Deploy (PROD) API/APP') {
