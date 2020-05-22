@@ -156,13 +156,13 @@ pipeline {
             }
         }
         stage('Deploy Test') {
-            agent {
-                label 'deploy'
-            }
             when {
                 expression { return IS_DEV_APPROVED == 'yes'}
             }
             parallel {
+                agent {
+                    label 'deploy'
+                }
                 stage('Merging with staging branch'){
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'github-account', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
@@ -184,6 +184,9 @@ pipeline {
                     }
                 }
                 stage('Deploy to test env') {
+                    agent {
+                        label 'deploy'
+                    }
                     steps {
                         // Postgress 
                         echo "Deploying Postgress [STATIC/DEV]"
