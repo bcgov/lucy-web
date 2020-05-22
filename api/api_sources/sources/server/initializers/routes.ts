@@ -32,6 +32,7 @@ import { accountRoute,
     chemicalTreatmentRoute,
     mechanicalMonitorRoute,
     UploadRouteController,
+    animalObservationRoute,
 } from '../modules';
 import { LocationRouteController } from '../modules/location';
 import { BCGeoDataRouteController } from '../modules/bcGeoData';
@@ -50,6 +51,9 @@ export const routes = (app: Application) => {
 
     // Observation
     app.use('/api/observation', observationRoute());
+
+    // Animal Observation
+    app.use('/api/animal-observation', animalObservationRoute());
 
     // Mechanical Treatment
     app.use('/api/treatment/mechanical', mechanicalTreatmentRoute());

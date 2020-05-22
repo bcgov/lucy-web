@@ -29,5 +29,7 @@ export * from './treatmentCodesFactory';
 export * from './helper';
 export * from './treatmentProviderFactory';
 export * from './monitorFactory';
+export * from './animalObservationFactory';
+export * from './animalObservationCodesFactory';
 // ----------------------------------------------------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 /**
  * Imports
  */
-import { should } from 'chai';
+import { should, expect } from 'chai';
 import { SharedExpressApp } from '../../../initializers';
 import {
     commonTestSetupAction,
@@ -12,6 +12,7 @@ import {
     AuthType,
     verifyErrorBody
 } from '../../../../test-helpers/testHelpers';
+import { it } from 'mocha';
 /**
  * Test Function
  */
@@ -51,6 +52,27 @@ describe(`Test for ${resourceName}`, () => {
             expect: 401,
         }).then(async resp => {
             await verifyErrorBody(resp.body);
+        });
+    });
+
+    // Ticket #489: Additional stations fields
+    it('should return additional stations (#498)', async () => {
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/mussels/codes',
+            expect: 200,
+            auth: AuthType.viewer
+        }).then(async resp => {
+            await verifySuccessBody(resp.body, async (data: any) => {
+                should().exist(data.stations);
+                const stations: string[] = data.stations as string[];
+                const filter = stations.filter( item => (
+                    item === 'Fraser Valley Roving' ||
+                    item === 'Sumas border' ||
+                    item === 'Aldergrove border')
+                );
+                expect(filter.length).to.be.equal(3);
+            });
         });
     });
 });
