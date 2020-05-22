@@ -160,10 +160,10 @@ pipeline {
                 expression { return IS_DEV_APPROVED == 'yes'}
             }
             parallel {
-                agent {
-                    label 'deploy'
-                }
                 stage('Merging with staging branch'){
+                    agent {
+                        label 'deploy'
+                    }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'github-account', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                             sh """
