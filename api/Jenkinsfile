@@ -15,7 +15,7 @@ def _openshift(String name, String project, Closure body) {
             isDone=true
             echo "Completed Stage '${name}'"
           } catch (error) {
-            echo ${error}
+            echo "${error}"
             def inputAction = input(
               message: "This step (${name}) has failed. See related messages:",
               ok: 'Confirm',
