@@ -7,7 +7,7 @@ The purpose of this document is to capture all the major pieces used in the back
 
 * [Folder Structure](#folder-structure)
 * [Schema](#schema)
-* [Data Controller](#data-controller)
+* [Data Controller](#generic-data-model-controller)
 * [Route Controller](#route-controller)
 
 ----
@@ -15,12 +15,12 @@ The purpose of this document is to capture all the major pieces used in the back
 ## Folder structure
 The content related to the backend application are placed under the folder `api`. The following is the list of important pieces along with its purpose
 
-- `.docker` - Contains all the docker related items in here
+- `.docker` - Contains all the docker files for local development
 - `.pipeline` - Includes the scripts which are required for the pipeline related activities
 - `openshift` - This folder contains the yaml files for all the pods used in the application
 - `env_config` - The environment variables required for local development
 - `api_sources`
-  - `.build` - contains the docker files for build
+  - `.build` - contains the docker files for local deployment
   - `resources` - Source of truth for all the resources such as csv, json and favicon which are used throughout the app
   - `schema-files` - Directory where all the schema files are stored in yaml format
   - `schema-migration-sql` - Contains all the SQL files needed to be run as a migration for differenct schemas
@@ -75,11 +75,9 @@ BaseSchema is at the top of the inheritance tree and has the following variables
     - `importOptions` - contains the options to import data through migration. For ex, inserting data for code tables
     - `batchImportOptions` - contains the options to seed the table without a migration, used ideally for large data imports
     - `initialSqlCommands` - List of sql commands that need to be run initially
-  - `joinTables` - Variable to hold the table definitions related to join
 
 2. Variables/methods that a subclass should override
   - `csvFieldTransformer` - should return an object for transforming the csv fields
-  - `entryString` - specify the entry fields for csv
   - `csvData` - subclass must load the csv file and return data
   - `additionalColumns` - specify the columns that need to be added in addition to the columns specified in the schema yaml file
   - `createAuditColumns` - subclass must define the audit fields that need to be added
@@ -115,7 +113,7 @@ All the static tables where a user will not do any CRUD should extend this schem
   - description
   - activeIndicator
 
-## Data Controller
+## Generic Data Model Controller
 BaseDataModelController implements a list of methods defined in BaseDataController which could be used by the subclasses to perform certain database operations
 
 1. Variables/methods that a subclass should override
@@ -127,7 +125,7 @@ BaseDataModelController implements a list of methods defined in BaseDataControll
 
 2. Variables/methods common to all the subclasses
   - `schema` - Table variable from the BaseSchema
-  - `schemaObject` - An instance of BaseSchema
+  - `schemaObject` - An instance of a specific schema object
   - `findById` - To find a record by ID
   - `fetchOne` - Find a record matching the query
   - `remove` - Remove a particular record from the table
@@ -136,9 +134,9 @@ BaseDataModelController implements a list of methods defined in BaseDataControll
   - `create` - create a new model object for the entity
   - `saveInDB` - To store a record in the table
   - `random` - fetch a random record from the table
-  - `createNewObject` - create a new object and store it in the table
-  - `updateObject` - Update an existing record
-  - `checkObject` - Check the object passed and then either find/create/update a record and return it
+  - `createNewObject` - create a new object and save it in the table
+  - `updateObject` - Update an existing record and save it in the table
+  - `checkObject` - Validate an object w.r.t corresponding schema
   - `getIdValue` - Get the value of ID field from the object
   - `validate` - Validate the given data
   - `export` - Function to export all the records
