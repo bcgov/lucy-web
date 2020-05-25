@@ -2,6 +2,41 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import java.util.regex.Pattern
 
+// copied from https://github.com/bcgov/eagle-admin/blob/e39641c9701158725c66a7fb725581ce666d4c55/Jenkinsfile-demo
+def _openshift(String name, String project, Closure body) {
+  script {
+    openshift.withCluster() {
+      openshift.withProject(project) {
+        echo "Running Stage '${name}'"
+        waitUntil {
+          boolean isDone=false
+          try {
+            body()
+            isDone=true
+            echo "Completed Stage '${name}'"
+          } catch (error) {
+            echo "${stackTraceAsString(error)}"
+            def inputAction = input(
+              message: "This step (${name}) has failed. See related messages:",
+              ok: 'Confirm',
+              parameters: [
+                choice(
+                  name: 'action',
+                  choices: 'Re-run\nIgnore',
+                  description: 'What would you like to do?'
+                )
+              ]
+            )
+            if ('Ignore'.equalsIgnoreCase(inputAction)) {
+              isDone=true
+            }
+          }
+          return isDone
+        }
+      }
+    }
+  }
+}
 /*
  * takes in a sonarqube status json payload
  * and returns the status string
