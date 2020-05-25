@@ -67,7 +67,7 @@ def nodejsSonarqube () {
     podTemplate(
       label: sonarLabel,
       name: sonarLabel,
-      serviceAccount: 'jenkins',
+      serviceAccount: 'jenkins-prod',
       cloud: 'openshift',
       slaveConnectTimeout: 300,
       containers: [
