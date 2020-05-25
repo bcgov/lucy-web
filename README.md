@@ -87,6 +87,7 @@ This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Container
 * [Server Readme](api/README.md)
 * [Form Framework Tool Readme](FormFrameworkREADME.md)
 * [Jenkins Readme](.jenkins/README.md)
+* [Pipeline](PIPELINE.md)
 * Our database is documented using [SchemaSpy](http://schemaspy.org/)
 
 ## Requirements
