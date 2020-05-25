@@ -360,7 +360,7 @@ A Many-to-Many relationship requires a pivot table which has a reference to the 
 ### Overall Structure
 The structure of a form page consists of a **header/nav-bar**, a **side menu** for navigation with the page, and the **main body** of the form. The overall appearance of the screen is as follows:
 
-![main-overview](doc-images/main_overview.png)
+![main-overview](documentation/images/main_overview.png)
 
 ### Header/Nav-bar
 
@@ -380,7 +380,7 @@ On the right side of the header is a location for 1-2 buttons. Which buttons are
 - if inReviewMode === False, the user is in the process of writing data to edit an existing record. As in FormMode.Create, only the "Submit" button is displayed.
 - if inReviewMode === True, the "Commit" and "Make Changes" buttons are displayed. The behaviour of these buttons matches that described in FormMode.Create
 
-![header](doc-images/header.png)
+![header](documentation/images/header.png)
 
 ### Basic Form Structure
 
@@ -388,11 +388,11 @@ There can be 1-n sections in the form body. The title of each section (specified
 
 Within each section there can be 1-m subsections. Subsection titles are set in the config file, but are entirely optional.
 
-![basic-form-structure](doc-images/form_structure.png)
+![basic-form-structure](documentation/images/form_structure.png)
 
 Each subsection may contain 1-p fields. There are 8 different field types built into the framework tool
 
-![fields](doc-images/fields.png)
+![fields](documentation/images/fields.png)
 
 ## Front-End keywords glossary
 
