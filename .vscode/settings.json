@@ -28,5 +28,8 @@
 	],
 	"[typescript]": {
 		"editor.tabSize": 4
-	}
+	},
+	"cSpell.ignoreWords": [
+		"invasives"
+	]
 }
