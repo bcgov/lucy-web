@@ -4,6 +4,7 @@ One of the benefits of the Form Framework tool is that it allows simple coupling
 ----
 ## Table of Contents
 
+* [Setup for Local development](#setup-for-local-development)
 * [Step-by-Step Guide to Create a New Form](#step-by-step-guide-to-create-a-new-form)
 * [Modifying an Existing Schema](#modifying-an-existing-schema)
 * [Adding a Pivot table Schema](#adding-a-pivot-table-schema)
@@ -11,6 +12,28 @@ One of the benefits of the Form Framework tool is that it allows simple coupling
 * [Front-End keywords glossary](#front-end-keywords-glossary)
 * [Back-End keywords glossary](#back-end-keywords-glossary)
 ----
+
+## Setup for Local development
+Install the following to run the application locally
+  1. Node 10+
+  2. Docker
+  3. Postgres
+  4. GNU make (for windows)
+
+After installation, follow the instructions below to start local development
+  1. To install all the dependencies, go to the following folder from the root directory and run either `npm install` or `npm ci`
+      - `api/api_sources` - Installs the packages required by the backend node application
+      - `app/lucy` - To install the packages needed for the angular application
+  2. Navigate to `api` directory and run either of the following
+      - `make local-debug` - To run the application with logs
+      - `make local` - To start the application in the background and hide the logs
+
+Note:
+
+To run any command which is related to pipeline, install the dependencies from the following folders
+  - `api/.pipeline`
+  - `app/.pipeline`
+  - `.jenkins/.pipeline`
 
 ## Step-by-Step Guide to Create a New Form
 
