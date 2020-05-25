@@ -153,7 +153,7 @@ pipeline {
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
                 // Tools
                 echo "Deploying dev tools ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static"
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static --pr=${CHANGE_ID}"
                 // App
                 echo "Deploying APP[dev] ..."
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
@@ -173,16 +173,16 @@ pipeline {
                             sh """
                                 # Update staging with latest changes from develop
                                 git fetch
-                                git checkout staging
+                                git checkout master
                                 git fetch
                                 git merge --squash origin/dev
-                                git commit -m "Merge branch develop into staging"
+                                git commit -m "Merge branch dev into master"
                                 git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/bcgov/lucy-web.git
 
                                 # Update the HEAD on develop to be the same as staging
                                 git checkout dev
                                 git fetch
-                                git merge -s ours -m "Updating develop with staging" origin/staging
+                                git merge -s ours -m "Updating develop with staging" origin/master
                                 git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/bcgov/lucy-web.git
                             """
                         }
@@ -211,7 +211,7 @@ pipeline {
                         sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
                         // Tools
                         echo "Deploying dev tools ..."
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=test --type=static"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=test --type=static --pr=${CHANGE_ID}"
                         // App
                         echo "Deploying APP[dev] ..."
                         sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
@@ -244,17 +244,9 @@ pipeline {
                     echo "Deploying in [PROD] [APP]..."
                     sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod --type=static"
                     echo "Deploying dev tools [PROD] ..."
-                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=prod --type=static"
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=prod --type=static --pr=${CHANGE_ID}"
                 } 
             }
-            /*input {
-                message "Should we continue with deployment to TEST?"
-                ok "Yes!"
-            }
-            steps {
-                echo "Deploying ..."
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
-            }*/
         }
         stage('Acceptance') {
             agent { label 'deploy' }
