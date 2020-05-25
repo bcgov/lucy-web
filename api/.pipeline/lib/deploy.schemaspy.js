@@ -43,7 +43,8 @@ module.exports = (settings) => {
       'VERSION': phases[phase].tag,
       'APPLICATION_DOMAIN': host,
       'BACKEND_HOST': phases[phase].host,
-      'DB_HOST': `${phases[phase].name}-postgresql${phases[phase].suffix}`
+      'DB_HOST': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
+      'CHANGE_ID': phases.build.changeId || '0'
     }
   }))
   
