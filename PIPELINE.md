@@ -20,11 +20,11 @@ Invasives BC automatic Jenkins pipeline check code integrity (Continuous integra
 
 ## Various Pipeline Stages
 
-### BUILD
+### BUILD (CI)
 
 Build Stage build application from Pull Request(PR) source branch. This is a parallel collection of **Build API** and **Build APP** stages.  
 
-### Test Stages
+### Test Stages (CI)
 
 #### Pre-deploy Stage
 
@@ -38,11 +38,11 @@ Pre-deploy stages, setup Database for testing. This stage includes process like
 
 Run tests with SonarQube Analysis.
 
-### BUILD DEV/Test
+### BUILD DEV/Test (CD)
 
 This is manually accepted stage, mainly create static dev branch build images for deployment. This and __Deploy Dev__ and __Deploy Test__ stages will invoke if PR target is dev branch.
 
-### Deploy Dev
+### Deploy Dev (CD)
 
 Deploy static dev branch images to dev env. Steps are
 
@@ -54,7 +54,7 @@ Deploy static dev branch images to dev env. Steps are
 6. Deploy Tools (SchemaSpy).
 7. Deploy APP.
 
-### Deploy Test
+### Deploy Test (CD)
 
 Deploy static dev branch images to test env. Steps are
 
@@ -66,7 +66,7 @@ Deploy static dev branch images to test env. Steps are
 6. Deploy Tools (SchemaSpy).
 7. Deploy APP.
 
-### Deploy Prod
+### Deploy Prod (CD)
 
 This is a manually accepted stage. This stage deploy with creation of Pull Request with **prod** as target branch. __Deploy Prod__ stage will deploy Pull Request specific image to production env. Steps are
 
@@ -78,3 +78,23 @@ This is a manually accepted stage. This stage deploy with creation of Pull Reque
 6. Deploy APP.
 
 __**N.B: Standard process of production deployment is to create a Pull Request with dev as source branch and prod as target branch**__
+
+## Note for Pull Request Owner
+
+Followings are responsibility of Pull Request (PR) owners
+
+* Make sure all CI stages should run with success.
+* Merge Pull Request before accepting any deployment stages (except prod deployment).
+* Deployment of Dev/Test/Prod Env.
+* **Acceptance for cleaning stag**.
+* If any continuos deployment process fail,
+    1. Reopen PR.
+    2. Fix issue.
+    3. Ask for fresh review.
+
+## Note for Pull Request Reviewer
+
+Followings are responsibility of Pull Request (PR) reviewer
+
+* Review code under Code Review Guideline
+* Before accepting any PR, make sure all CI stages (BUILD CI, Test CI) executed successfully.
