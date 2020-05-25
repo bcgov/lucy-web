@@ -10,6 +10,7 @@ This is the application source code for the Restful API of the invasive species 
 * [Installing Node and NPM](#installing-node-and-npm)
 * [Running the Application](#Running-the-Application)
 * [Closing the Application](#closing-the-application)
+* [Schema documentation](Schema.md)
 * [Deployment to OpenShift](#Deployment-to-OpenShift)
 * [Clean Remote Instance of the application](#Clean-Remote-Instance-of-the-application)
 * [Running Tests and SonarQube Analysis](#Running-Tests-and-SonarQube-Analysis)
