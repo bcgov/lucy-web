@@ -21,7 +21,7 @@
  */
 import * as assert from 'assert';
 import { Request, Response, Router} from 'express';
-import { SecureRouteController, BaseRoutController, RouteHandler, inspectAppAdminRoute, errorBody } from '../../core';
+import { SecureRouteController, BaseRouteController, RouteHandler, inspectAppAdminRoute, errorBody } from '../../core';
 import { UserDataController, User, RoleCodeController, RolesCode, AccountStatus } from '../../../database/models';
 import { userMessagesRoute } from './messages.route';
 import { unWrap, LogProvider } from '../../../libs/utilities';
@@ -53,7 +53,7 @@ const checkAdmin = (provider: LogProvider) => async (req: any, res: any, next: a
 /**
  * @description Route controller to fetch all routes
  */
-class RolesRouteController extends BaseRoutController<RoleCodeController> {
+class RolesRouteController extends BaseRouteController<RoleCodeController> {
     constructor() {
         super();
         this.dataController = RoleCodeController.shared;

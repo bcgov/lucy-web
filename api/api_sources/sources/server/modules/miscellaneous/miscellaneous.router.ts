@@ -24,7 +24,7 @@
  */
 import * as express from 'express';
 import * as assert from 'assert';
-import { errorBody, BaseRoutController, RouteHandler, Route, HTTPMethod} from '../../core';
+import { errorBody, BaseRouteController, RouteHandler, Route, HTTPMethod} from '../../core';
 import { testIdr1Token, testIdr3Token, viewerToken } from '../../../test-helpers/token';
 import { check } from 'express-validator';
 
@@ -51,7 +51,7 @@ const tokens = {
 /**
  * @description MiscellaneousRoute route controller
  */
-export class MiscellaneousRouteController extends BaseRoutController<any> {
+export class MiscellaneousRouteController extends BaseRouteController<any> {
     static get shared(): MiscellaneousRouteController {
         return this.sharedInstance<MiscellaneousRouteController>() as MiscellaneousRouteController;
     }
