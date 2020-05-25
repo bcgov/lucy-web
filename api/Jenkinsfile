@@ -16,20 +16,6 @@ def _openshift(String name, String project, Closure body) {
             echo "Completed Stage '${name}'"
           } catch (error) {
             echo "${error}"
-            def inputAction = input(
-              message: "This step (${name}) has failed. See related messages:",
-              ok: 'Confirm',
-              parameters: [
-                choice(
-                  name: 'action',
-                  choices: 'Re-run\nIgnore',
-                  description: 'What would you like to do?'
-                )
-              ]
-            )
-            if ('Ignore'.equalsIgnoreCase(inputAction)) {
-              isDone=true
-            }
           }
           return isDone
         }
