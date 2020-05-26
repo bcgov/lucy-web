@@ -27,6 +27,12 @@ After installation, follow the instructions below to start local development
   2. Navigate to `api` directory and run either of the following
       - `make local-debug` - To run the application with logs
       - `make local` - To start the application in the background and hide the logs
+  3. Other handy make commands:
+      - `make api` - Shell into the api container. Local api container is customized with all development related CLI tools. Using api container shell is recommended.
+      - `make database` - To shell into the database container. As an additional step, the schema needs to be set by running the command given below before running any queries
+        ```ts
+        SET SCHEMA 'invasivesbc'
+        ```
 
 Note:
 
