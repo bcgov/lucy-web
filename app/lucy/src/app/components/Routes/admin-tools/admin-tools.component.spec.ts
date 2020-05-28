@@ -16,7 +16,7 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatToolbarModule } from '@angular/material';
+import { MatToolbarModule, MatTableModule } from '@angular/material';
 import { AdminToolsComponent } from './admin-tools.component';
 import { RequestTableComponent } from 'src/app/components/Routes/admin-tools/request-table/request-table.component';
 import { UserTableComponent } from 'src/app/components/Routes/admin-tools/user-table/user-table.component';
@@ -35,7 +35,7 @@ describe('AdminToolsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ RouterTestingModule, FormsModule, MatToolbarModule, NgbModule, HttpClientModule ],
+      imports: [ RouterTestingModule, FormsModule, MatToolbarModule, MatTableModule, NgbModule, HttpClientModule ],
       declarations: [ AdminToolsComponent, UserTableComponent, RequestTableComponent, RequestModalComponent ],
       providers: [ UserService, CookieService ],
       schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]
