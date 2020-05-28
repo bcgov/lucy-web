@@ -37,7 +37,7 @@
                 <div class="waypoint-row animated fadeIn animationDuration">
                     <p>{{ j+1 }}</p>
                     <div class="waypoint-input-container">
-                        <app-waypoint-text-entry [point]=wec.point [mode]=mode [showLatLong]="showLatLong" (pointChanged)="pointChanged($event,j)"></app-waypoint-text-entry>
+                        <app-waypoint-text-entry [point]=wec.point [showLatLong]="showLatLong" (pointChanged)="pointChanged($event,j)"></app-waypoint-text-entry>
                     </div>
                     <div class="waypoint-action-container">
                         <i class="material-icons-outlined clear-icon" (click)="removeWaypoint(j)">maximize</i>

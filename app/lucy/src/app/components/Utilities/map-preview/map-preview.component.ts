@@ -88,8 +88,8 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
   private anim: any;
   private animationSpeed = 1;
   showLoadingWells = false;
-  showLoadingRegionaldistricts = false;
-  showLoadingMunicipalities = false;
+  showLoadingRegionaldistricts = true;
+  showLoadingMunicipalities = true;
   /////////////////
   
 

@@ -65,6 +65,7 @@ export class RequestModalComponent implements OnInit {
 
   @Input() set request(selectedRequest: AccessRequest) {
     this._request = selectedRequest;
+    this.selectedRole = selectedRequest.requestedAccessCode.role;
   }
 
   get approverNote() {
@@ -107,6 +108,7 @@ export class RequestModalComponent implements OnInit {
   }
 
   getCurrentRole(): string {
+    if (!this.request) return '';
     return this.userService.getUserAccessCode(this.request.requester).role;
   }
 
@@ -138,7 +140,7 @@ export class RequestModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.selectedRole = this.request.requestedAccessCode.role;
+    
   }
   
 
