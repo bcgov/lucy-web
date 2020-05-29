@@ -46,7 +46,7 @@ def nodejsSonarqube () {
       label: sonarLabel,
       name: sonarLabel,
       serviceAccount: 'jenkins-prod',
-    //   cloud: 'openshift',
+      cloud: 'openshift',
       slaveConnectTimeout: 300,
       containers: [
         containerTemplate(
@@ -131,9 +131,6 @@ pipeline {
     agent none
     options {
         disableResume()
-    }
-    environment {
-        TOOLSPROJECT = "8ecbmv-tools"
     }
     stages {
         stage('Build') {
