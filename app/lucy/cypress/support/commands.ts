@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 // Cypress.Commands.add("guiLogin", (user: string) => {
 Cypress.Commands.add('svcClientLogin', () => {
-  Cypress.log({ name: 'KeyClock Login' });
+  Cypress.log({ name: 'KeyCloak Login' });
   const authBaseUrl = Cypress.env('authUrl');
   const realm = Cypress.env('authRealm');
   const client_id = Cypress.env('authClientId');
@@ -50,7 +50,7 @@ Cypress.Commands.add('svcClientLogin', () => {
 });
 
 Cypress.Commands.add('svcClientLogout', () => {
-  Cypress.log({ name: 'KeyClock Logout' });
+  Cypress.log({ name: 'KeyCloak Logout' });
   const authBaseUrl = Cypress.env('auth_base_url');
   const realm = Cypress.env('auth_realm');
 
