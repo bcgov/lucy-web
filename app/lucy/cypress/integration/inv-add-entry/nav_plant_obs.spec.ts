@@ -29,7 +29,7 @@ describe('/add', () => {
     cy.get('.mat-calendar-previous-button').click();
     cy.get('.mat-calendar-body-cell').contains('1').click();
 
-    cy.get('#mat-input-7').focus;
+    cy.get('#mat-input-7').focus();
     cy.get('#mat-input-7')
       .type(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.{enter}
     `);
