@@ -2,6 +2,8 @@
 
 https://bcdevexchange.org/projects/prj-invasive-species
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_lucy-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web)
+
 ## Introduction
 
 Invasive species are non-native plants and animals whose introduction and spread in British Columbia cause significant economic, social or environmental damage. This application tracks the observation, treatment, and monitoring of invasive species in the Province of British Columbia.
