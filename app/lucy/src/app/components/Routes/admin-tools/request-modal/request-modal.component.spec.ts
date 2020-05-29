@@ -18,6 +18,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RequestModalComponent } from './request-modal.component';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule, MatInputModule, MatSelectModule, MatSlideToggleModule } from '@angular/material';
+import { HttpClientModule } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { RouterModule } from '@angular/router';
 
 describe('RequestModalComponent', () => {
   let component: RequestModalComponent;
@@ -25,7 +30,17 @@ describe('RequestModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestModalComponent ]
+      imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        HttpClientModule,
+        RouterModule.forRoot([])
+      ],
+      declarations: [ RequestModalComponent ],
+      providers: [ CookieService ]
     })
     .compileComponents();
   }));
