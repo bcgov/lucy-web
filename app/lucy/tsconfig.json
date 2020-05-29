@@ -12,8 +12,10 @@
     "importHelpers": true,
     "target": "es5",
     "resolveJsonModule": true,
+    "types": ["cypress"],
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "./cypress/typings"
     ],
     "lib": [
       "es2018",

@@ -35,6 +35,10 @@ _app_data
 chrome-profiler-events.json
 speed-measure-plugin.json
 
+# Cypress
+# cypress.env.json // TODO: Might want to add this
+cypress/results
+
 # IDEs and editors
 /.idea
 .project
