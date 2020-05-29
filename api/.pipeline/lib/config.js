@@ -1,7 +1,7 @@
 'use strict';
 const options= require('pipeline-cli').Util.parseArguments();
 const config = require('../../../.config/config.json');
-const changeId = options.pr || 'dev'; //aka pull-request or brach to process
+const changeId = options.pr || `${Math.floor(Date.now() * 1000)}`; //aka pull-request or brach to process
 const version = config.version || '1.0.0';
 const name = (config.module || {}).api || 'lucy-api';
 const staticBranches = config.staticBranches || [];
@@ -9,11 +9,14 @@ const staticUrlsAPI = config.staticUrlsAPI || {};
 const deployType = options.type || '';
 
 const isStaticDeployment = () => {
-  return staticBranches.includes(changeId) || deployType === 'static';
+  return deployType === 'static';
 };
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
+const isProduction = () => options.env === 'prod';
 const defaultHost = 'invasivebc-8ecbmv-api.pathfinder.gov.bc.ca';
+const branch = isStaticDeployment() && !isProduction() ? options.branch : undefined;
+const tag = isStaticDeployment() && !isProduction() ? `build-${version}-${changeId}-${branch}` : `build-${version}-${changeId}`;
 
 const phases = {
   build: {
@@ -24,7 +27,8 @@ const phases = {
     suffix: `-build-${changeId}`  ,
     instance: `${name}-build-${changeId}`  ,
     version:`${version}-${changeId}`,
-    tag:`build-${version}-${changeId}`
+    tag: tag,
+    branch: branch
   },
   dev: {
     namespace:'8ecbmv-dev', 

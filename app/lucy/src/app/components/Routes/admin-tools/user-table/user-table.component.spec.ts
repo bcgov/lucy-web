@@ -18,6 +18,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserTableComponent } from './user-table.component';
+import {
+  MatTableModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule,
+  MatSlideToggleModule, MatCardModule, MatPaginatorModule
+} from '@angular/material';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { RouterModule } from '@angular/router';
 
 describe('UserTableComponent', () => {
   let component: UserTableComponent;
@@ -25,7 +33,21 @@ describe('UserTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserTableComponent ]
+      imports: [
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        MatPaginatorModule,
+        HttpClientModule,
+        RouterModule.forRoot([])
+      ],
+      declarations: [ UserTableComponent ],
+      providers: [ CookieService ]
     })
     .compileComponents();
   }));
