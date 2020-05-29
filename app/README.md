@@ -44,3 +44,18 @@ Run `npm run sonar-analysis` to see output from [SonarQube](https://www.sonarqub
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+## Cypress
+Cypress is a frontend testing tool built for the modern web. It comes with a lot of built-in features to support cross browser testing, snapshots, etc. See the documentation for more about [Cypress](https://docs.cypress.io/guides/overview/why-cypress.html#In-a-nutshell)
+
+With Cypress, it is easy to do all the following
+- Unit tests
+- E2E tests
+- Integration tests
+
+All the test related files are kept under the folder `app/lucy/cypress`. The folder structure is as follows
+- `fixtures` - to store all the fixtures(resources) that are required for testing
+- `integration` - test cases for each module are kept in this directory
+- `plugins` - to load all the plugins and also a good place to modify env variable values dynamically based on the different environments
+- `support` - additional content to support/extend the capabilities of Cypress
+- `typings` - contains all the typings
