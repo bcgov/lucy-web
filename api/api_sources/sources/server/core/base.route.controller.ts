@@ -117,7 +117,7 @@ export interface RouteConfig {
  * 3. Common Error handling
  * 4. Common Message Wrapping
  * 5. Created for sub classing only
- * @export class BaseRoutController<DataController>
+ * @export class BaseRouteController<DataController>
  */
 
 export class RouteController {
@@ -410,13 +410,13 @@ export class RouteController {
     }
 }
 
-export class BaseRoutController<Controller extends DataController> extends RouteController {
+export class BaseRouteController<Controller extends DataController> extends RouteController {
     // DataController
     protected dataController: Controller;
     /**
      * @description Getter for share instance
      */
-    static sharedInstance<Controller>(): BaseRoutController<DataController> {
+    static sharedInstance<Controller>(): BaseRouteController<DataController> {
         return (this._sharedInstance || (this._sharedInstance = new this()));
     }
 }
@@ -425,7 +425,7 @@ export class BaseRoutController<Controller extends DataController> extends Route
  * @description This is generic route controller to handle secure routes. Created for sub classing.
  * @export class SecureRouteController
  */
-export class SecureRouteController<T extends DataController> extends BaseRoutController<T> {
+export class SecureRouteController<T extends DataController> extends BaseRouteController<T> {
     get isSecure(): boolean {
         return true;
     }

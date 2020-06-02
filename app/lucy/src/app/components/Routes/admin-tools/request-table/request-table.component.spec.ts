@@ -18,6 +18,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RequestTableComponent } from './request-table.component';
+import { MatTableModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatSlideToggleModule } from '@angular/material';
+import { ModalComponent } from 'src/app/components/Utilities/modal/modal.component';
+import { RequestModalComponent } from '../request-modal/request-modal.component';
+import { FormsModule } from '@angular/forms';
 
 describe('RequestTableComponent', () => {
   let component: RequestTableComponent;
@@ -25,7 +29,15 @@ describe('RequestTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestTableComponent ]
+      imports: [
+        MatTableModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule
+      ],
+      declarations: [ RequestTableComponent, ModalComponent, RequestModalComponent ]
     })
     .compileComponents();
   }));
