@@ -4,6 +4,7 @@ One of the benefits of the Form Framework tool is that it allows simple coupling
 ----
 ## Table of Contents
 
+* [Setup for Local development](#setup-for-local-development)
 * [Step-by-Step Guide to Create a New Form](#step-by-step-guide-to-create-a-new-form)
 * [Modifying an Existing Schema](#modifying-an-existing-schema)
 * [Adding a Pivot table Schema](#adding-a-pivot-table-schema)
@@ -11,6 +12,34 @@ One of the benefits of the Form Framework tool is that it allows simple coupling
 * [Front-End keywords glossary](#front-end-keywords-glossary)
 * [Back-End keywords glossary](#back-end-keywords-glossary)
 ----
+
+## Setup for Local development
+Install the following to run the application locally
+  1. Node 10+
+  2. Docker
+  3. Postgres
+  4. GNU make (for windows)
+
+After installation, follow the instructions below to start local development
+  1. To install all the dependencies, go to the following folder from the root directory and run either `npm install` or `npm ci`
+      - `api/api_sources` - Installs the packages required by the backend node application
+      - `app/lucy` - To install the packages needed for the angular application
+  2. Navigate to `api` directory and run either of the following
+      - `make local-debug` - To run the application with logs
+      - `make local` - To start the application in the background and hide the logs
+  3. Other handy make commands:
+      - `make api` - Shell into the api container. Local api container is customized with all development related CLI tools. Using api container shell is recommended.
+      - `make database` - To shell into the database container. As an additional step, the schema needs to be set by running the command given below before running any queries
+        ```ts
+        SET SCHEMA 'invasivesbc'
+        ```
+
+Note:
+
+To run any command which is related to pipeline, install the dependencies from the following folders
+  - `api/.pipeline`
+  - `app/.pipeline`
+  - `.jenkins/.pipeline`
 
 ## Step-by-Step Guide to Create a New Form
 
@@ -360,7 +389,7 @@ A Many-to-Many relationship requires a pivot table which has a reference to the 
 ### Overall Structure
 The structure of a form page consists of a **header/nav-bar**, a **side menu** for navigation with the page, and the **main body** of the form. The overall appearance of the screen is as follows:
 
-![main-overview](doc-images/main_overview.png)
+![main-overview](documentation/images/main_overview.png)
 
 ### Header/Nav-bar
 
@@ -380,7 +409,7 @@ On the right side of the header is a location for 1-2 buttons. Which buttons are
 - if inReviewMode === False, the user is in the process of writing data to edit an existing record. As in FormMode.Create, only the "Submit" button is displayed.
 - if inReviewMode === True, the "Commit" and "Make Changes" buttons are displayed. The behaviour of these buttons matches that described in FormMode.Create
 
-![header](doc-images/header.png)
+![header](documentation/images/header.png)
 
 ### Basic Form Structure
 
@@ -388,11 +417,11 @@ There can be 1-n sections in the form body. The title of each section (specified
 
 Within each section there can be 1-m subsections. Subsection titles are set in the config file, but are entirely optional.
 
-![basic-form-structure](doc-images/form_structure.png)
+![basic-form-structure](documentation/images/form_structure.png)
 
 Each subsection may contain 1-p fields. There are 8 different field types built into the framework tool
 
-![fields](doc-images/fields.png)
+![fields](documentation/images/fields.png)
 
 ## Front-End keywords glossary
 

@@ -18,6 +18,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapPreviewComponent } from './map-preview.component';
+import { LottieAnimationViewModule } from 'ng-lottie';
+import { HttpClientModule } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { RouterModule } from '@angular/router';
 
 describe('MapPreviewComponent', () => {
   let component: MapPreviewComponent;
@@ -25,7 +29,13 @@ describe('MapPreviewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapPreviewComponent ]
+      imports: [
+        LottieAnimationViewModule.forRoot(),
+        HttpClientModule,
+        RouterModule.forRoot([])
+      ],
+      declarations: [ MapPreviewComponent ],
+      providers: [ CookieService ]
     })
     .compileComponents();
   }));

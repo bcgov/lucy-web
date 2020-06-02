@@ -121,6 +121,8 @@ objects:
                 key: database-password
           - name: DATABASE_SCHEMA
             value: "${DATABASE_SCHEMA}"
+          - name: CHANGE_ID
+            value: "${CHANGE_ID}"
           resources:
             requests:
               cpu: ${CPU_REQUEST}
@@ -186,3 +188,6 @@ parameters:
 - name: DATABASE_SCHEMA
   description: Application Schema name
   value: invasivesbc
+- name: CHANGE_ID
+  description: Change Id or Pull request information
+  value: '0'

@@ -12,8 +12,9 @@ const staticUrlsAPI = config.staticUrlsAPI || {};
 const deployType = options.type || '';
 
 const isStaticDeployment = () => {
-  return staticBranches.includes(changeId) || deployType === 'static';
+  return  deployType === 'static';
 };
+const isProduction = () => options.env === 'prod';
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
@@ -21,6 +22,9 @@ const defaultHostAPI = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca'
 
 // Get SSO_Info
 const sso = config.sso;
+
+const branch = isStaticDeployment() && !isProduction() ? options.branch : undefined;
+const tag = isStaticDeployment() && !isProduction() ? `build-${version}-${changeId}-${branch}` : `build-${version}-${changeId}`;
 
 const phases = {
   build: {
@@ -31,8 +35,9 @@ const phases = {
     suffix: `-build-${changeId}`  , 
     instance: `${name}-build-${changeId}`  , 
     version:`${version}-${changeId}`, 
-    tag:`build-${version}-${changeId}`,
-    env: 'build'
+    tag: tag,
+    env: 'build',
+    branch: branch
   },
   dev: {
     namespace:'8ecbmv-dev'    , 

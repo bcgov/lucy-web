@@ -41,11 +41,13 @@ export class TreatmentDetailsComponent implements OnInit {
 
     async ngOnInit() {
         this.config = await this.formService.getFormConfigForCurrentRoute();
-        this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
-        if (this.treatment !== undefined) {
-          this.responseBody = this.treatment;
+        if (this.config) {
+          this.treatment = await this.formService.getObjectWithId(this.config.api, this.config.objectId);
+          if (this.treatment !== undefined) {
+            this.responseBody = this.treatment;
+          }
+          this.compileSpeciesHerbicidesList();
         }
-        this.compileSpeciesHerbicidesList();
     }
 
     async compileSpeciesHerbicidesList() {
