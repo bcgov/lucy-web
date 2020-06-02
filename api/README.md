@@ -16,6 +16,7 @@ This is the application source code for the Restful API of the invasive species 
 * [Running Tests and SonarQube Analysis](#Running-Tests-and-SonarQube-Analysis)
 * [SchemaSpy](#SchemaSpy)
 * [Database Backup and Restoration](#Database-Backup-and-Restoration)
+* [Cloud Script: Change User role](#Cloud-Script:-Change-user-role)
 
 -----
 
@@ -117,3 +118,24 @@ To re-generate database documentation using SchemaSpy, run `make schema-spy-run`
 ### Restore Database
 
   Please check **Restore** section of README.md of [Schedular Application](https://github.com/BCDevOps/backup-container)
+
+## Cloud Script: Change user role
+
+A cloud script __scripts/admin.ops.ts__ is added.
+**Usage Local** :
+
+  1. Shell into api container ( cd /api, make api)
+
+  2. Run __ts-node scripts/admin.ops.ts -e #UserEmail -r #RoleCode__. Options:
+    - e | email : User email
+    - i | idr : User idr
+    - b | bcid : User bcid
+    - r | role : User new role (ADM, DAV, DAE, I_OFFICER, I_ADM)  
+
+**Usage Remote** :
+
+    - Open terminal of any remote deployment pod. Then run cmd
+
+    - In terminal login into OpenShift project. Run __oc exec <POD_ID> -c ts-node scripts/admin.ops.ts -e #UserEmail -r #RoleCod__
+
+    - In terminal login into OpenShift project. Shell into remote pod container oc rsh. Then run cmd
