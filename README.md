@@ -174,4 +174,4 @@ On the command line, run `make close-local` or type `<Ctrl> + C`.
     See the License for the specific language governing permissions and
     limitations under the License.
 
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=bcgov_ppr)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web)
