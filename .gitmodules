@@ -1,3 +1,0 @@
-[submodule ".jenkins/sonarqube"]
-	path = .jenkins/sonarqube
-	url = https://github.com/BCDevOps/sonarqube
