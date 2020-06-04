@@ -16,7 +16,7 @@ Invasives BC automatic Jenkins pipeline check code integrity (Continuous integra
 
 * Accept cleaning of PR related assets from OpenShift.
 
-![FlowDiagram](doc-images/Pipeline.png)
+![FlowDiagram](documentation/images/Pipeline.png)
 
 ## Various Pipeline Stages
 
