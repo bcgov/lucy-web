@@ -99,7 +99,7 @@
         <div class="col-12">
             <div *ngIf="!multiline" class="container input-group form-control view view-field-background">
                 <!-- If field has suffix -->
-                <input *ngIf="hasSuffix" class="col-8" type="text" [(ngModel)]="value" readonly />
+                <input *ngIf="hasSuffix" class="col-8" type="text" [(ngModel)]="value" [attr.id]="fieldId" readonly />
                 <span *ngIf="hasSuffix" class="input-group-addon col-4">{{ suffix }}</span>
                 <!-- If field has no suffix -->
                 <input *ngIf="!hasSuffix" class="col-12" type="text" [(ngModel)]="value" readonly />
