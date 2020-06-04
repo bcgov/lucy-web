@@ -25,7 +25,8 @@
         "remote:test": "npm run test:all && npm run sonar-analysis",
         "remote:test-temp": "npm run test:all",
         "test:no-server": "TEST_RUN=yes ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --exclude './sources/server/**/*.spec.ts' --timeout 8000",
-        "test:server": "ts-mocha --recursive --require source-map-support/register './sources/server/**/*.spec.ts' --timeout 8000"
+        "test:server": "ts-mocha --recursive --require source-map-support/register './sources/server/**/*.spec.ts' --timeout 8000",
+        "coverage": "nyc npm run test:all"
     },
     "author": "Pushan Mitra",
     "license": "MIT",
