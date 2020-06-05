@@ -1,6 +1,7 @@
 {
     "all": true,
-    "cache": true,
+    "cache": false,
+    "check-coverage": true,
     "exclude": [
         "coverage",
         "**/editor.js",
