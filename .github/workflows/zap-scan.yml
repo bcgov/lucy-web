@@ -20,5 +20,5 @@ jobs:
         # ZAP Scan must be able to log an issue, otherwise it will fail
         uses: zaproxy/action-baseline@v0.3.0
         with:
-          - target: "https://dev-invasivesbc.pathfinder.gov.bc.ca"
-          - node-version: 12
+          target: "https://dev-invasivesbc.pathfinder.gov.bc.ca"
+          node-version: 12
