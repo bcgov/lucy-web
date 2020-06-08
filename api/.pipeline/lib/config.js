@@ -1,7 +1,7 @@
 'use strict';
 const options= require('pipeline-cli').Util.parseArguments();
 const config = require('../../../.config/config.json');
-const changeId = options.pr || `${Math.floor(Date.now() * 1000)}`; //aka pull-request or brach to process
+const changeId = options.pr || `${Math.floor((Date.now() * 1000)) / 60.0}`; //aka pull-request or brach to process
 const version = config.version || '1.0.0';
 const name = (config.module || {}).api || 'lucy-api';
 const staticBranches = config.staticBranches || [];
