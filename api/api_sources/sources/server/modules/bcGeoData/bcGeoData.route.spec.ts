@@ -31,7 +31,7 @@ import { SharedExpressApp } from '../../initializers';
 import { viewerToken } from '../../../test-helpers/token';
 import { commonTestSetupAction, commonTestTearDownAction, verifySuccessBody } from '../../../test-helpers/testHelpers';
 
-describe('Test for bcGeoData routes', () => {
+describe.skip('Test for bcGeoData routes', () => {
     before(async () => {
         await commonTestSetupAction();
         await SharedExpressApp.initExpress();
