@@ -257,5 +257,14 @@ pipeline {
                  sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=dev"
             }
         }
+        stage('Check Branch') {
+            agent { label 'deploy' }
+            when {
+                branch 'dev'
+            }
+            steps {
+                echo "Branch trigger ${CHANGE_ID}"
+            }
+        }
     }
 }
