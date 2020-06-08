@@ -221,6 +221,7 @@ export class LocationInputComponent implements OnInit {
     if (this.showX && this.showY) {
       this.areaCalculator = this.calculatePlot;
       this.headerXDimension = AreaFieldTitle.WIDTH;
+      this.headerYDimension = AreaFieldTitle.LENGTH;
     } else if (this.showX && !this.showY) {
       this.areaCalculator = this.calculatePoint;
       this.headerXDimension = AreaFieldTitle.RADIUS;
@@ -573,16 +574,20 @@ export class LocationInputComponent implements OnInit {
         this._existingValue.geometry = geomID;
       }
       if (geomID === 1) {
-        this.showY = true;
+        this.showY = false;
+        this.showX = true;
         this.y = '';
+        this.waypointGeometryTypeSelected = false;
       } else if (geomID === 4 || geomID === 5) {
         this.showX = false;
         this.showY = false;
         this.x = '';
         this.y = '';
+        this.waypointGeometryTypeSelected = true;
       } else {
         this.showX = true;
         this.showY = true;
+        this.waypointGeometryTypeSelected = false;
       }
       this.setGeometryData();
     }
