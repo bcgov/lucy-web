@@ -13,7 +13,7 @@ describe('/inventory', () => {
         });
         cy.viewport('macbook-15');
 
-        /// Check constent structure
+        /// Check content structure
         // Should have basic search
         cy.get('#mat-input-0').invoke('attr', 'placeholder').should('contain', 'Enter your search here');
         // Should have advanced search
@@ -55,7 +55,7 @@ describe('/inventory', () => {
 
         // Search
         cy.get('[placeholder="Enter your search here"]').first().type('spotted{enter}');
-        cy.wait(2000);
+        cy.wait(5000);
         cy.get('table').get('.mat-row').each($el => {
             cy.wrap($el).should('contain', 'Spotted knapweed');
         });
