@@ -208,7 +208,6 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   classNames(field: any): string {
     const classes = field.classNames;
     if (!classes) return '';
-
     if (this.mode === FormMode.Create) {
       return classes.create + ` ` + field.classNames.common;
     } else if (this.mode === FormMode.Edit) {
