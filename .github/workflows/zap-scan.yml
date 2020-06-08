@@ -19,5 +19,7 @@ jobs:
         if: github.event.pull_request.state == 'open'
         # ZAP Scan must be able to log an issue, otherwise it will fail
         uses: zaproxy/action-baseline@v0.3.0
+        uses: actions/setup-node@v1
         with:
           target: "https://dev-invasivesbc.pathfinder.gov.bc.ca"
+          node-version: 12
