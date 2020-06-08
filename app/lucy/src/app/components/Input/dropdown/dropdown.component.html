@@ -10,12 +10,12 @@
     <!-- https://stackblitz.com/edit/mat-select-search -->
 </div>
 
-<div *ngIf="readonly && !multiple">
+<div *ngIf="readonly && !multiple" id="{{fieldId}}">
     <app-field [mode]="mode" [header]="fieldHeader" [value]="selectedItemName">
     </app-field>
 </div>
 
-<div *ngIf="readonly && multiple">
+<div *ngIf="readonly && multiple" id="{{fieldId}}">
     <div class="col-12" *ngIf="fieldHeader">
         <label class="field-header">{{ fieldHeader }}</label>
     </div>
