@@ -485,6 +485,8 @@ export class FormService {
       fieldHeaders[newField.key] = newField.header;
 
       // Add Bootstrap column size
+      // TODO: Verify this is happening
+      console.log(newField.classNames)
       newField.classNames.common = this.addColumnClass(
         newField.classNames.common,
         i,
@@ -829,6 +831,7 @@ export class FormService {
       }
     }
 
+    //// TODO: Review this, it may be overriding styles
     const classNames = this.generateClassWithModes(field.layout.classes);
 
     // BEGIN Tweak verification object received.
@@ -868,7 +871,7 @@ export class FormService {
         suffix: field.suffix,
         verification: verification,
         meta: field.meta,
-        classNames,
+        classNames: classNames,
         codeTable: codeTable,
         codeTableMeta: codeTableMeta,
         displayKey: codeTableDisplayKey,
