@@ -21,6 +21,5 @@
       "es2018",
       "dom"
     ],
-    "skipLibCheck": true,
   }
 }

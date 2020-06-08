@@ -21,4 +21,3 @@ jobs:
         uses: zaproxy/action-baseline@v0.3.0
         with:
           target: "https://dev-invasivesbc.pathfinder.gov.bc.ca"
-          node-version: 12
