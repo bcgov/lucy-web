@@ -57,72 +57,54 @@ describe('Add or create observation', () => {
     cy.get('[placeholder="Observer Last Name"]').type(`${testValues.lastName}{enter}`);
 
     // Species
-    cy
-      .get('#species')
-      .find('[aria-label="Species"]').type(`${testValues.species}{enter}`, { force: true });
+    cy.get('#species').find('[aria-label="Species"]').type(`${testValues.species}{enter}`, { force: true });
 
     // Agency
-    cy
-      .get('#completedOnBehalfOf')
-      .find('[aria-label="Completed on Behalf of"]').type('Parks Canada{enter}', { force: true });
+    cy.get('#completedOnBehalfOf').find('[aria-label="Completed on Behalf of"]').type('Parks Canada{enter}', { force: true });
 
     // Jurisdiction
-    cy
-      .get('#jurisdiction')
-      .find('[aria-label="Jurisdiction"]').type('Ministry of Forests{enter}', { force: true });
+    cy.get('#jurisdiction').find('[aria-label="Jurisdiction"]').type('Ministry of Forests{enter}', { force: true });
 
 
     // Observation Type
-    cy
-      .get('#observationType')
+    cy.get('#observationType')
       .find('[aria-label="Observation Type"]').type('Cursory{enter}', { force: true });
 
     // Species Density
-    cy
-      .get('#speciesDensity')
-      .find('[aria-label="Species Density"]').type('Cursory{enter}', { force: true });
+    cy.get('#speciesDensity').find('[aria-label="Species Density"]').type('2-5 plants per{enter}', { force: true });
 
     // Species Distribution
-    cy
-      .get('#speciesDistribution')
-      .find('[aria-label="Species Distribution"]').type('Cursory{enter}', { force: true });
+    cy.get('#speciesDistribution')
+      .find('[aria-label="Species Distribution"]').type('rare individual{enter}', { force: true });
 
     // Soil texture
-    cy.get('#soilTexture')
-      .find('[aria-label="Soil Texture"]').type('Cursory{enter}', { force: true });
+    cy.get('#soilTexture').find('[aria-label="Soil Texture"]').type('Coarse{enter}', { force: true });
 
     // Specific Use code
-    cy.get('#specificUseCode')
-      .find('[aria-label="Specific Use Code"]').type('grav{enter}', { force: true });
+    cy.get('#specificUseCode').find('[aria-label="Specific Use Code"]').type('Gravel{enter}', { force: true });
 
     // Slope code
-    cy.get('#slopeCode')
-      .find('[aria-label="Slope Code"]').type('f{enter}', { force: true });
+    cy.get('#slopeCode').find('[aria-label="Slope Code"]').type('Nearly flat 1-4{enter}', { force: true });
 
     // Proposed Action
-    cy.get('#proposedAction')
-      .find('[aria-label="Proposed Action"]').type('f{enter}', { force: true });
+    cy.get('#proposedAction').find('[aria-label="Proposed Action"]').type('Chemical monitoring{enter}', { force: true });
 
 
     // Proposed Action
-    cy.get('#aspectCode')
-      .find('[aria-label="Aspect Code"]').type('f{enter}', { force: true });
+    cy.get('#aspectCode').find('[aria-label="Aspect Code"]').type('East facing{enter}', { force: true });
 
     // CheckBoxes
-    cy.get('#legacySiteIndicator')
-      .find('input[type="checkbox"]').check({ force: true });
+    cy.get('#legacySiteIndicator').find('input[type="checkbox"]').check({ force: true });
 
     // cy.get('#mat-checkbox-5-input').check({ force: true }); // Check checkbox element
 
 
 
     // Range Unit Number
-    cy.get('#rangeUnitNumber')
-      .find('[placeholder="Range Unit Number"]').type('11X1{enter}', { force: true });
+    cy.get('#rangeUnitNumber').find('[placeholder="Range Unit Number"]').type('11X1{enter}', { force: true });
 
     // Sample Identifier
-    cy.get('#sampleIdentifier')
-      .find('[placeholder="Sample Identifier"]').type('1NCC345{enter}', { force: true });
+    cy.get('#sampleIdentifier').find('[placeholder="Sample Identifier"]').type('1NCC345{enter}', { force: true });
 
 
     // Reviewing
