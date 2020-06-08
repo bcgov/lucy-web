@@ -11,13 +11,16 @@ jobs:
     name: Run Zap Baseline scan
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v2
-      #   with:
-      #     ref: dev
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: dev
       - name: ZAP scan
         if: github.event.pull_request.state == 'open'
         # ZAP Scan must be able to log an issue, otherwise it will fail
         uses: zaproxy/action-baseline@v0.3.0
+        continue-on-error: true
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
           target: "https://dev-invasivesbc.pathfinder.gov.bc.ca"
