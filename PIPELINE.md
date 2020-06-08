@@ -38,6 +38,14 @@ Pre-deploy stages, setup Database for testing. This stage includes process like
 
 Run tests with SonarQube Analysis.
 
+#### Security Scan
+
+Whenever a new PR is created or a new commit is pushed to an existing PR, a dynamic security scan will be performed on the DEV environment (https://dev-invasivesbc.pathfinder.gov.bc.ca/) using OWASP Zap's baseline scan. The results of the scan will be displayed on the PR's page in GitHub.
+
+OWASP Zap and GitHub Actions will automatically create a new Issue for any security vulnerabilities discovered during the scan.
+
+* Note that currently the GitHub Action zap-scan (https://github.com/bcgov/lucy-web/blob/dev/.github/workflows/zap-scan.yml) is configured to `continue-on-error: true` due to a bug in GitHub Actions regarding import of the `octokit/rest` package. This line can be removed once GitHub fixes the bug. In the meantime, it should not affect the actual output of the Zap scan.*
+
 ### BUILD DEV/Test (CD)
 
 This is manually accepted stage, mainly create static dev branch build images for deployment. This and __Deploy Dev__ and __Deploy Test__ stages will invoke if PR target is dev branch.
