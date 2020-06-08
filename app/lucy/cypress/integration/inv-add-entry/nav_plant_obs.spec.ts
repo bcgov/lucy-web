@@ -88,34 +88,28 @@ describe('Add or create observation', () => {
       .find('[aria-label="Species Distribution"]').type('Cursory{enter}', { force: true });
 
     // Soil texture
-    cy
-      .get('#soilTexture')
+    cy.get('#soilTexture')
       .find('[aria-label="Soil Texture"]').type('Cursory{enter}', { force: true });
 
     // Specific Use code
-    cy
-      .get('#specificUseCode')
+    cy.get('#specificUseCode')
       .find('[aria-label="Specific Use Code"]').type('grav{enter}', { force: true });
 
     // Slope code
-    cy
-      .get('#slopeCode')
+    cy.get('#slopeCode')
       .find('[aria-label="Slope Code"]').type('f{enter}', { force: true });
 
     // Proposed Action
-    cy
-      .get('#proposedAction')
+    cy.get('#proposedAction')
       .find('[aria-label="Proposed Action"]').type('f{enter}', { force: true });
 
 
     // Proposed Action
-    cy
-      .get('#aspectCode')
+    cy.get('#aspectCode')
       .find('[aria-label="Aspect Code"]').type('f{enter}', { force: true });
 
     // CheckBoxes
-    cy
-      .get('#legacySiteIndicator')
+    cy.get('#legacySiteIndicator')
       .find('input[type="checkbox"]').check({ force: true });
 
     // cy.get('#mat-checkbox-5-input').check({ force: true }); // Check checkbox element
@@ -123,13 +117,11 @@ describe('Add or create observation', () => {
 
 
     // Range Unit Number
-    cy
-      .get('#rangeUnitNumber')
+    cy.get('#rangeUnitNumber')
       .find('[placeholder="Range Unit Number"]').type('11X1{enter}', { force: true });
 
     // Sample Identifier
-    cy
-      .get('#sampleIdentifier')
+    cy.get('#sampleIdentifier')
       .find('[placeholder="Sample Identifier"]').type('1NCC345{enter}', { force: true });
 
 
