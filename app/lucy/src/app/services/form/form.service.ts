@@ -868,7 +868,7 @@ export class FormService {
         suffix: field.suffix,
         verification: verification,
         meta: field.meta,
-        classNames,
+        classNames: classNames,
         codeTable: codeTable,
         codeTableMeta: codeTableMeta,
         displayKey: codeTableDisplayKey,
