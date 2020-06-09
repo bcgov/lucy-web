@@ -1,7 +1,7 @@
 'use strict';
 const options= require('pipeline-cli').Util.parseArguments()
 const config = require('../../../.config/config.json');
-const changeId = options.pr || 'dev' //aka pull-request
+const changeId = options.pr || `${Math.floor((Date.now() * 1000)) / 60.0}` //aka pull-request
 const version = config.version || '1.0.0';
 const name = (config.module || {}).app || 'lucy-app';
 const apiName = (config.module || {}).api || 'lucy-api';

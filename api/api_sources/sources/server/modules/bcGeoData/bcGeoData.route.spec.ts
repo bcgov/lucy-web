@@ -31,6 +31,7 @@ import { SharedExpressApp } from '../../initializers';
 import { viewerToken } from '../../../test-helpers/token';
 import { commonTestSetupAction, commonTestTearDownAction, verifySuccessBody } from '../../../test-helpers/testHelpers';
 
+// TODO: remove skip once openmaps.gov.bc.ca is back up and running properly
 describe.skip('Test for bcGeoData routes', () => {
     before(async () => {
         await commonTestSetupAction();
