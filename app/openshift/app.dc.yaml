@@ -171,6 +171,22 @@ objects:
     wildcardPolicy: None
   status:
     ingress: null
+- apiVersion: autoscaling/v1
+  kind: HorizontalPodAutoscaler
+  metadata:
+    annotations: {}
+    creationTimestamp: null
+    labels: {}
+    name: ${NAME}${SUFFIX}
+  spec:
+    maxReplicas: "${{REPLICA_MAX}}"
+    minReplicas: "${{REPLICAS}}"
+    scaleTargetRef:
+      apiVersion: v1
+      kind: DeploymentConfig
+      name: ${NAME}${SUFFIX}
+    cpuUtilization:
+      targetPercentage: 95
 kind: Template
 metadata:
   resourceVersion: ""
@@ -225,4 +241,7 @@ parameters:
   description: Realm identifier or name
   value: dfmlcg7z
 - name: REPLICAS
+  value: '1'
+- name: REPLICA_MAX
+  required: true
   value: '1'
