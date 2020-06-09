@@ -10,7 +10,7 @@ def BRANCH_ACTION = 'no'
 def NOW = LocalDateTime.now()
 
 // Def BUILD ID
-def BUILD_NUMBER = 0
+def BUILD_NUMBER = BUILD_ID
 // InvasivesBC Pipeline
 pipeline {
     agent none
@@ -35,10 +35,6 @@ pipeline {
                     BUILD_NUMBER = "${TIME_TAG}${BUILD_ID}"
                 }
                 echo "BUILD NUMBER ${BUILD_NUMBER}"
-                script {
-                    currentBuild.result = 'ABORTED'
-                    error('Fail for testing')
-                }
             }
 
         }
@@ -141,7 +137,7 @@ pipeline {
                     agent { label 'build' }
                     steps {
                         echo "Build API image from [dev] branch"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${NOW} --branch=dev --type=static"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${BUILD_NUMBER} --branch=dev --type=static"
                     }
 
                 }
@@ -149,7 +145,7 @@ pipeline {
                     agent { label 'build' }
                     steps {
                         echo "Build APP image from [dev] branch"
-                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${NOW} --branch=dev --type=static"
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${BUILD_NUMBER} --branch=dev --type=static"
                     }
                 }
             }
@@ -167,27 +163,27 @@ pipeline {
                     steps {
                         // Postgress 
                         echo "Deploying Postgress [DEV]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${BUILD_NUMBER} --env=dev --type=static --branch=dev"
                         // Backup
                         echo "Deploying backup app [DEV]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=dev --type=static"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${BUILD_NUMBER} --env=dev --type=static"
                         echo "Running DB Backup Job [DEV]"
                         sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=dev --backup=true"
                         // Migration
                         echo "Running DB Migration [DEV]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${BUILD_NUMBER} --env=dev --type=static --branch=dev"
                         // Seed
                         echo "Running DB Seed Job [DEV]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${BUILD_NUMBER} --env=dev --type=static --branch=dev"
                         // API
                         echo "Deploying API [DEV] ..."
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${BUILD_NUMBER} --env=dev --type=static --branch=dev"
                         // Tools
                         echo "Deploying dev tools [DEV] ..."
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static --pr=${CHANGE_ID}"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=dev --type=static --pr=${BUILD_NUMBER}"
                         // App
                         echo "Deploying APP [DEV] ..."
-                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev --type=static --branch=dev"
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${BUILD_NUMBER} --env=dev --type=static --branch=dev"
                     }
                 }
                 stage('Deploy Test [CD]') {
@@ -197,27 +193,27 @@ pipeline {
                     steps {
                         // Postgress 
                         echo "Deploying Postgress [STATIC/TEST]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${BUILD_NUMBER} --env=test --type=static --branch=dev"
                         // Backup
                         echo "Deploying backup app [STATIC | TEST]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${CHANGE_ID} --env=test --type=static"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-db-backup -- --pr=${BUILD_NUMBER} --env=test --type=static"
                         echo "Running DB Backup Job [STATIC | TEST]"
                         sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run backup -- --env=test --backup=true"
                         // Migration
                         echo "Running DB Migration [TEST]"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${BUILD_NUMBER} --env=test --type=static --branch=dev"
                         echo "Running DB Seed Job [TEST]"
                         // Seed
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${BUILD_NUMBER} --env=test --type=static --branch=dev"
                         // API
                         echo "Deploying API [TEST] ..."
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${BUILD_NUMBER} --env=test --type=static --branch=dev"
                         // Tools
                         echo "Deploying dev tools [TEST] ..."
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=test --type=static --pr=${CHANGE_ID}"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --env=test --type=static --pr=${BUILD_NUMBER}"
                         // App
                         echo "Deploying APP [TEST] ..."
-                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=test --type=static --branch=dev"
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${BUILD_NUMBER} --env=test --type=static --branch=dev"
                     }
                 }
             }
@@ -259,7 +255,7 @@ pipeline {
             }
         }
         // Pipeline: Clean stage
-        stage('Acceptance') {
+        stage('Acceptance Pull Request') {
             agent { label 'deploy' }
             input {
                 message "Should we continue with cleanup?"
@@ -275,6 +271,24 @@ pipeline {
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=build"
                 // Clean App deployment Dev
                  sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=dev"
+                
+               
+            }
+        }
+        stage ("Acceptance Branch") {
+            agent { label 'deploy' }
+            when {
+                expression { return BUILD_NUMBER == BUILD_ID}
+            }
+            input {
+                message "Should we continue with cleanup?"
+                ok "Yes!"
+            }
+            steps {
+                // Clean API Build for Build
+                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${BUILD_NUMBER} --env=build"
+                // Clean App Build
+                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${BUILD_NUMBER} --env=build"
             }
         }
     }
