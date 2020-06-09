@@ -118,6 +118,12 @@ clean-remote:
 	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
 	@echo "+\n++ Cleaning App {Deploy}"
 	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+clean-build:
+	@echo "+\n++ Make: Clean Remote Build with pr=$$PR"
+	@echo "+\n Cleaning API {Build}"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
+	@echo "+\n++ Cleaning App {Build}"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
 build-remote-api:
 	@echo "+\n++ Make: Building API with ref = $$PR"
 	@cd ./.pipeline && DEBUG=* npm run build -- --pr=$$PR
