@@ -48,6 +48,7 @@ describe('/inventory', () => {
                 // Set istest 3 back to Officer Mussel Inspect App if needed
                 cy.wait(1000);
                 if (!isViewer) {
+                    // Find the element again
                     cy.get('table').get('.mat-row').each($ell => {
                         if ($ell.text().includes('istest3@idir')) {
                             cy.wait(1000);
