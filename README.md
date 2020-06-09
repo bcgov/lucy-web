@@ -2,6 +2,8 @@
 
 https://bcdevexchange.org/projects/prj-invasive-species
 
+![ZAP Baseline Scan](https://github.com/bcgov/lucy-web/workflows/ZAP%20Baseline%20Scan/badge.svg)
+
 ## Introduction
 
 Invasive species are non-native plants and animals whose introduction and spread in British Columbia cause significant economic, social or environmental damage. This application tracks the observation, treatment, and monitoring of invasive species in the Province of British Columbia.
