@@ -73,7 +73,6 @@ describe('/inventory', () => {
                         }
                     });
                 }
-                return;
             } else if ($el.text().includes('cypress')) {
                 // Admins shouldn't be able to change their own access
                 cy.wrap($el).get('button').should('be.disabled');
