@@ -24,15 +24,50 @@ describe('/inventory', () => {
             cy.wrap($el).should('contain', 'Actions');
         });
 
-        cy.get('table').get('.mat-row').contains('Action').click();
         cy.wait(1000);
-        cy.get('#custom-popper').contains('mat-select').click();
 
-        // popper-dropdown
-
-        // Actions button should show a dialog
-
-        // Actions dialog should contain a "roles" dropdown
+        // Should be able to change user role
+        cy.get('table').get('.mat-row').each($el => {
+            // Change istest 3 role
+            if ($el.text().includes('istest3@idir')) {
+                const element = cy.wrap($el);
+                const isViewer = $el.text().includes('Data Viewer');
+                element.contains('Action').click();
+                cy.get('.popper-dropdown').click();
+                // Change role base on current role
+                if (isViewer) {
+                    cy.get('.mat-option-text').contains('Officer Mussel Inspect App').click();
+                } else {
+                    cy.get('.mat-option-text').contains('Data Viewer').click();
+                }
+                cy.wait(1000);
+                // should show a toast message
+                cy.get('.toast-container').should('be.visible');
+                // close message
+                cy.get('.material-icons').contains('close').click();
+                // Set istest 3 back to Officer Mussel Inspect App if needed
+                cy.wait(1000);
+                if (!isViewer) {
+                    cy.get('table').get('.mat-row').each($ell => {
+                        if ($ell.text().includes('istest3@idir')) {
+                            cy.wait(1000);
+                            cy.wrap($ell).contains('Action').click();
+                            cy.wait(1000);
+                            cy.get('.popper-dropdown').click();
+                            cy.wait(1000);
+                            cy.get('.mat-option-text').contains('Officer Mussel Inspect App').click();
+                            cy.wait(1000);
+                            // verify
+                            cy.get('.toast-container').should('be.visible');
+                        }
+                    });
+                }
+                return;
+            } else if ($el.text().includes('cypress')) {
+                // Admins shouldn't be able to change their own access
+                cy.wrap($el).get('button').should('be.disabled');
+            }
+        });
 
         // Should have side menu with the following elements
         cy.get('.side-menu').should('contain', 'User Management');
