@@ -43,7 +43,8 @@ const phases = {
     env: 'dev',
     certificateURL: config.certificateURL.dev,
     migrationInfo: config.migrationInfo.dev,
-    replicas: 1
+    replicas: 1,
+    maxReplicas: 2
   },
   test: {
     namespace:'8ecbmv-test',
@@ -59,7 +60,8 @@ const phases = {
     env: 'test',
     certificateURL: config.certificateURL.test,
     migrationInfo: config.migrationInfo.test,
-    replicas: 3
+    replicas: 3,
+    maxReplicas: 5
   },
   prod: {
     namespace:'8ecbmv-prod'    , 
@@ -75,7 +77,8 @@ const phases = {
     env: 'prod',
     certificateURL: config.certificateURL.prod,
     migrationInfo: config.migrationInfo.prod,
-    replicas: 3
+    replicas: 3,
+    maxReplicas: 6
   }
 };
 
