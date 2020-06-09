@@ -35,9 +35,12 @@ pipeline {
                     BUILD_NUMBER = "${TIME_TAG}${BUILD_ID}"
                 }
                 echo "BUILD NUMBER ${BUILD_NUMBER}"
-                currentBuild.result = 'ABORTED'
-                error('Fail for testing')
+                script {
+                    currentBuild.result = 'ABORTED'
+                    error('Fail for testing')
+                }
             }
+
         }
         // CI: Build Pull Request Head 
         stage('Build [CI]') {
