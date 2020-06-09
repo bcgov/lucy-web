@@ -7,6 +7,15 @@ pipeline {
         disableResume()
     }
     stages {
+        stage('Check Branch') {
+            agent { label 'deploy' }
+            when {
+                branch 'dev'
+            }
+            steps {
+                echo "Branch trigger ${CHANGE_ID}"
+            }
+        }
         // CI: Build Pull Request Head 
         stage('Build [CI]') {
             parallel {
