@@ -16,6 +16,8 @@ pipeline {
                 branch 'dev'
             }
             steps {
+                echo "Dev"
+                sh 'printenv'
                 echo "Dev Branch trigger ${CHANGE_ID}"
                 script {
                     BRANCH_ACTION = 'yes'
