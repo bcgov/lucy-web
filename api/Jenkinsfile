@@ -288,10 +288,6 @@ pipeline {
             when {
                 expression { return BUILD_NUMBER != BUILD_ID}
             }
-            input {
-                message "Should we continue with cleanup?"
-                ok "Yes!"
-            }
             steps {
                 // Clean API Build for Build
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${BUILD_NUMBER} --env=build"
