@@ -7,6 +7,15 @@ pipeline {
         disableResume()
     }
     stages {
+        stage('Check Branch') {
+            agent { label 'deploy' }
+            when {
+                branch 'dev'
+            }
+            steps {
+                echo "Branch trigger ${CHANGE_ID}"
+            }
+        }
         // CI: Build Pull Request Head 
         stage('Build [CI]') {
             parallel {
@@ -255,15 +264,6 @@ pipeline {
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=build"
                 // Clean App deployment Dev
                  sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=dev"
-            }
-        }
-        stage('Check Branch') {
-            agent { label 'deploy' }
-            when {
-                branch 'dev'
-            }
-            steps {
-                echo "Branch trigger ${CHANGE_ID}"
             }
         }
     }
