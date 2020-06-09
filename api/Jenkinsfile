@@ -33,6 +33,11 @@ pipeline {
                     IS_DEV_APPROVED = 'yes'
                     def TIME_TAG = NOW.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")) 
                     BUILD_NUMBER = "${TIME_TAG}${BUILD_ID}"
+                    
+                }
+                echo "Aborting all running jobs ..."
+                script {
+                    abortAllPreviousBuildInProgress(currentBuild)
                 }
                 echo "BUILD NUMBER ${BUILD_NUMBER}"
             }
