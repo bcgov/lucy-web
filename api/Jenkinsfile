@@ -1,5 +1,7 @@
 // Pipeline variable: Variable store of user selection of confirmation of Dev/Test Deployment
 def IS_DEV_APPROVED = 'no'
+// Variable Branch
+def BRANCH_ACTION = 'no'
 // InvasivesBC Pipeline
 pipeline {
     agent none
@@ -7,17 +9,24 @@ pipeline {
         disableResume()
     }
     stages {
-        stage('Check Branch') {
+        stage('Check Branch Action') {
             agent { label 'deploy' }
             when {
                 branch 'dev'
             }
             steps {
-                echo "Branch trigger ${CHANGE_ID}"
+                echo "Dev Branch trigger ${CHANGE_ID}"
+                script {
+                    BRANCH_ACTION = 'yes'
+                    IS_DEV_APPROVED = 'yes'
+                }
             }
         }
         // CI: Build Pull Request Head 
         stage('Build [CI]') {
+            when {
+                expression { return BRANCH_ACTION == 'no'}
+            }
             parallel {
                 stage('Build API [CI]') {
                     agent { label 'build' }
@@ -66,6 +75,9 @@ pipeline {
         }
         // CI: Deploy and setup database for testing
         stage('Pre Deploy (Dev) [CI]') {
+            when {
+                expression { return BRANCH_ACTION == 'no'}
+            }
             agent { label 'deploy' }
             steps {
                 echo "Deploying Postgress DB [PR]"
@@ -76,6 +88,9 @@ pipeline {
         }
         // CI: Pull Request test stage
         stage('Test API (Dev) [CI]') {
+            when {
+                expression { return BRANCH_ACTION == 'no'}
+            }
             agent { label 'deploy' }
             steps {
                 echo "Testing app [PR]"
@@ -84,40 +99,16 @@ pipeline {
         }
         // CI: Deployment of PR image to dev env
         stage('Deploy (DEV/PR ENV) API and App [CI]') {
-            agent { label 'deploy' }
             when {
-                expression {
-                    return env.CHANGE_TARGET != 'dev' && env.CHANGE_TARGET != 'staging' && env.CHANGE_TARGET != 'prod';
-                }
+                expression { return BRANCH_ACTION == 'no'}
             }
+            agent { label 'deploy' }
             steps {
                 echo "Deploying API for  [PR] ${CHANGE_ID}..."
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --pr=${CHANGE_ID} --env=dev"
                 echo "Deploying APP for [PR] ${CHANGE_ID}..."
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
-            }
-        }
-        // CD: Get confirmation for Dev and test deployment
-        stage('Deploy to Dev/Test [CD]') {
-            // This stage will deploy to dev enviroment 
-            agent {
-                label 'deploy'
-            }
-            when {
-                environment name : 'CHANGE_TARGET', value: 'dev'
-            }
-            steps {
-                script {
-                    def USER_CHOICE = input(message: "Deploy to Dev/Test?", ok: "yes", parameters: [string(name: 'IS_APPROVED', defaultValue: 'yes', description: 'Deploy to Dev/Test?')])
-                    if (USER_CHOICE != 'yes') {
-                        echo "Dev Deployment is not approved"
-                        IS_DEV_APPROVED = 'no'
-                    } else {
-                        IS_DEV_APPROVED = 'yes'
-                    }
-                    echo "Build/Deploy to Dev/Test"
-                }
             }
         }
         // CD: Build image from dev branch
