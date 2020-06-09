@@ -9,6 +9,7 @@ pipeline {
         disableResume()
     }
     stages {
+        // CI: Checking branch specific action or not
         stage('Check Branch Action') {
             agent { label 'deploy' }
             when {
