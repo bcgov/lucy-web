@@ -1,7 +1,16 @@
+// Imports
+import java.time.*
+import java.time.format.DateTimeFormatter
+
 // Pipeline variable: Variable store of user selection of confirmation of Dev/Test Deployment
 def IS_DEV_APPROVED = 'no'
 // Variable Branch
 def BRANCH_ACTION = 'no'
+// CurrentTime
+def NOW = LocalDateTime.now()
+
+// Def BUILD ID
+def BUILD_NUMBER = 0
 // InvasivesBC Pipeline
 pipeline {
     agent none
@@ -18,11 +27,16 @@ pipeline {
             steps {
                 echo "Dev"
                 sh 'printenv'
-                echo "Dev Branch trigger ${CHANGE_ID}"
+                echo "Dev Branch trigger ${NOW}"
                 script {
                     BRANCH_ACTION = 'yes'
                     IS_DEV_APPROVED = 'yes'
+                    def TIME_TAG = NOW.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")) 
+                    BUILD_NUMBER = "${TIME_TAG}${BUILD_ID}"
                 }
+                echo "BUILD NUMBER ${BUILD_NUMBER}"
+                currentBuild.result = 'ABORTED'
+                error('Fail for testing')
             }
         }
         // CI: Build Pull Request Head 
@@ -124,7 +138,7 @@ pipeline {
                     agent { label 'build' }
                     steps {
                         echo "Build API image from [dev] branch"
-                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev --type=static"
+                        sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${NOW} --branch=dev --type=static"
                     }
 
                 }
@@ -132,7 +146,7 @@ pipeline {
                     agent { label 'build' }
                     steps {
                         echo "Build APP image from [dev] branch"
-                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${CHANGE_ID} --branch=dev --type=static"
+                        sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run build -- --pr=${NOW} --branch=dev --type=static"
                     }
                 }
             }
