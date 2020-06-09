@@ -52,7 +52,8 @@ const phases = {
     apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
     env: 'dev',
     sso: sso.dev,
-    replicas: 1
+    replicas: 1,
+    maxReplicas: 3
   },
   test: {
     namespace:'8ecbmv-test'    , 
@@ -67,7 +68,8 @@ const phases = {
     apiHost: staticUrlsAPI['staging'] || defaultHostAPI,
     env: 'test',
     sso: sso.test,
-    replicas: 3
+    replicas: 3,
+    maxReplicas: 5
   },
   prod: {
     namespace:'8ecbmv-prod'    , 
@@ -82,7 +84,8 @@ const phases = {
     apiHost: staticUrlsAPI['prod'] || defaultHostAPI,
     env: 'prod',
     sso: sso.prod,
-    replicas: 3
+    replicas: 3,
+    maxReplicas: 8
   }
 };
 

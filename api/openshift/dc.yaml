@@ -35,11 +35,11 @@ objects:
         timeoutSeconds: 600
       resources: 
         limits:
-          cpu: 750m
-          memory: 2Gi
+          cpu: ${CPU_LIMIT}
+          memory: ${MEMORY_LIMIT}
         requests:
-          cpu: 500m
-          memory: 1Gi
+          cpu: ${CPU_REQ}
+          memory: ${MEMORY_REQ}
       type: Rolling
     template:
       metadata:
@@ -225,6 +225,22 @@ objects:
     wildcardPolicy: None
   status:
     ingress: null
+- apiVersion: autoscaling/v1
+  kind: HorizontalPodAutoscaler
+  metadata:
+    annotations: {}
+    creationTimestamp: null
+    labels: {}
+    name: ${NAME}${SUFFIX}
+  spec:
+    maxReplicas: "${{REPLICA_MAX}}"
+    minReplicas: "${{REPLICAS}}"
+    scaleTargetRef:
+      apiVersion: v1
+      kind: DeploymentConfig
+      name: ${NAME}${SUFFIX}
+    cpuUtilization:
+      targetPercentage: 95
 kind: Template
 metadata:
   resourceVersion: ""
@@ -279,3 +295,6 @@ parameters:
   value: 'yes'
 - name: MAILER_INFO
   value: 'invasivesbc-mailer'
+- name: REPLICA_MAX
+  required: true
+  value: '1'
