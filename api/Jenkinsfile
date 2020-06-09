@@ -262,6 +262,9 @@ pipeline {
         // Pipeline: Clean stage
         stage('Acceptance Pull Request') {
             agent { label 'deploy' }
+            when {
+                expression { return BUILD_NUMBER == BUILD_ID}
+            }
             input {
                 message "Should we continue with cleanup?"
                 ok "Yes!"
@@ -283,7 +286,7 @@ pipeline {
         stage ("Acceptance Branch") {
             agent { label 'deploy' }
             when {
-                expression { return BUILD_NUMBER == BUILD_ID}
+                expression { return BUILD_NUMBER != BUILD_ID}
             }
             input {
                 message "Should we continue with cleanup?"
