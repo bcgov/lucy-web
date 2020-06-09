@@ -24,7 +24,17 @@ describe('/inventory', () => {
             cy.wrap($el).should('contain', 'Actions');
         });
 
-        cy.wait(1000);
+        // Should have side menu with the following elements
+        cy.get('.side-menu').should('contain', 'User Management');
+        cy.get('.side-menu').should('contain', 'Content Management');
+
+        // Should have Manage data section
+        cy.get('.section-title-text').should('contain', 'Manage Data');
+
+        // Should show Access requests
+        cy.get('.section-title-text').should('contain', 'Pending Access Requests');
+
+        /// Check interactions
 
         // Should be able to change user role
         cy.get('table').get('.mat-row').each($el => {
@@ -69,16 +79,5 @@ describe('/inventory', () => {
                 cy.wrap($el).get('button').should('be.disabled');
             }
         });
-
-        // Should have side menu with the following elements
-        cy.get('.side-menu').should('contain', 'User Management');
-        cy.get('.side-menu').should('contain', 'Content Management');
-
-        // Should have Manage data section
-        cy.get('.section-title-text').should('contain', 'Manage Data');
-
-        // Should show Access requests
-        cy.get('.section-title-text').should('contain', 'Pending Access Requests');
-
     });
 });
