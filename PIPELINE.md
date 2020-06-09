@@ -2,7 +2,7 @@
 
 Invasives BC automatic Jenkins pipeline check code integrity (Continuous integration) and perform deployment to various environment (Continuous deployment).  
   
-## Steps
+## Pull Request with Continuous Integration
 
 * Create Pull Request in GitHub.
 
@@ -10,11 +10,21 @@ Invasives BC automatic Jenkins pipeline check code integrity (Continuous integra
 
 * Merge Pull Request in GitHub.
 
-* Accept Dev/Test Deployment in Jenkins.
+* Accept cleaning of PR related assets of OpenShift in Jenkins **Acceptance Pull Request** stage.
 
-* Accept Prod Deployment in Jenkins.
+## Branch Action for Continuous Deployment
 
-* Accept cleaning of PR related assets from OpenShift.
+Any changes like Push or Merge to dev branch triggers a build and deployment to Dev/Test Environment.
+
+## Continuous Production Deployment
+
+* Create Pull Request with target branch as **prod** (conventionally source branch will be __dev__).
+
+* Automatic pipeline continuous integration stages (Build and Test) will invoke. CI stages check integrity of new code, must finish with success.
+
+* Manually accept Prod deployment in Jenkins **Deploy (PROD) API/APP [CD]** stage.
+
+* Accept cleaning of PR related assets of OpenShift in Jenkins **Acceptance Pull Request** stage.
 
 ![FlowDiagram](documentation/images/Pipeline.png)
 
@@ -86,6 +96,22 @@ This is a manually accepted stage. This stage deploy with creation of Pull Reque
 6. Deploy APP.
 
 __**N.B: Standard process of production deployment is to create a Pull Request with dev as source branch and prod as target branch**__
+
+### Acceptance Branch
+
+This is automatic pipeline stage to clean unused asset for Branch action.
+
+1. Clean API build config from tool namespace.
+2. Clean APP build config from tool namespace.
+
+### Acceptance Pull Request
+
+This is manually accepted step to clean all PR related assets.
+
+1. Clean API build config from tool namespace.
+2. Clean APP build config from tool namespace.
+3. Clean Pull Request related API deployment.
+4. Clean Pull Request related APP deployment
 
 ## Note for Pull Request Owner
 
