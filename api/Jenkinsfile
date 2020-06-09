@@ -259,30 +259,7 @@ pipeline {
                 } 
             }
         }
-        // Pipeline: Clean stage
-        stage('Acceptance Pull Request') {
-            agent { label 'deploy' }
-            when {
-                expression { return BUILD_NUMBER == BUILD_ID}
-            }
-            input {
-                message "Should we continue with cleanup?"
-                ok "Yes!"
-            }
-            steps {
-                echo "Acceptance of PR ${CHANGE_ID} ..."
-                // Clean API Build 
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=build"
-                // Clean API deployment Dev
-                sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=dev"
-                // Clean App Build
-                sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=build"
-                // Clean App deployment Dev
-                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=dev"
-                
-               
-            }
-        }
+        // Pipeline: Clean stage For Branch
         stage ("Acceptance Branch") {
             agent { label 'deploy' }
             when {
@@ -293,6 +270,32 @@ pipeline {
                 sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${BUILD_NUMBER} --env=build"
                 // Clean App Build
                 sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${BUILD_NUMBER} --env=build"
+            }
+        }
+        // Pipeline: Clean stage for PR
+        stage('Acceptance Pull Request') {
+            agent { label 'deploy' }
+            when {
+                expression { return BUILD_NUMBER == BUILD_ID}
+            }
+            steps {
+                script {
+                    def DO_CLEAN = input(message: "Should we continue with Pull Request assest?", ok: "yes", parameters: [string(name: 'DO_CLEAN', defaultValue: 'yes', description: 'Clean Pull Request assest?')])
+                    if (DO_CLEAN != 'yes') {
+                        currentBuild.result = "ABORTED"
+                        error "User cancelled cleanup"
+                    }
+
+                    echo "Acceptance of PR ${CHANGE_ID}. Cleaning..."
+                    // Clean API Build 
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=build"
+                    // Clean API deployment Dev
+                    sh "cd api/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=dev"
+                    // Clean App Build
+                    sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=build"
+                    // Clean App deployment Dev
+                    sh "cd app/.pipeline && ./npmw ci && DEBUG=* ./npmw run clean -- --pr=${CHANGE_ID} --env=dev"
+                }
             }
         }
     }
