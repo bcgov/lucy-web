@@ -35,7 +35,8 @@ describe('Add or create observation', () => {
     // Example of expected error message
     // cy.get('.mat-error').should('contain', 'Must be between 48 and 61');
 
-    cy.get('#geometryType').type('Point - Small area circle{enter}');
+    cy.get('#geometryType').type('Plot - Length x Area{enter}');
+    cy.wait(1000);
     cy.get('[placeholder="Width"]').type('100{enter}', {force : true});
     // since InvasivesBC auto-generates the form, it's better to select on Label
     // rather than auto-generated ID field (example above)
