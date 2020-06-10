@@ -28,6 +28,6 @@ jobs:
         shell: bash
         run: npm run-script test:all
       - name: SonarCloud scan
-        uses: sonarsource/sonarcloud-github-action@dev
+        uses: sonarsource/sonarcloud-github-action@master
         env:
           SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
