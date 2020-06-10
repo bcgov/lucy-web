@@ -26,6 +26,7 @@ jobs:
           npm run-script build
       - name: Run unit tests
         shell: bash
+        continue-on-error: true
         run: npm run-script test:all
       - name: SonarCloud scan
         uses: sonarsource/sonarcloud-github-action@master
