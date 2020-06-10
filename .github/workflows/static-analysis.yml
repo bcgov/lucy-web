@@ -7,6 +7,9 @@ jobs:
     name: Unit Test, Coverage & SonarCloud
     if: github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api/api_sources/
     steps:
       - name: Checkout repo (dev)
         uses: actions/checkout@v2
@@ -19,7 +22,6 @@ jobs:
           node-version: 10.16
       - name: npm install, build
         run: |
-          working-directory: ./api/api_sources/
           npm install
           npm build
       - name: Run unit tests
