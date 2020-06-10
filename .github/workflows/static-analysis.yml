@@ -24,22 +24,10 @@ jobs:
         run: |
           npm install
           npm run-script build
-      # - name: Run unit tests
-      #   shell: bash
-      #   run: npm run-script test:all
+      - name: Run unit tests
+        shell: bash
+        run: npm run-script test:all
       - name: SonarCloud scan
-        # uses: sonarsource/sonarcloud-github-action@dev
+        uses: sonarsource/sonarcloud-github-action@dev
         env:
           SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
-        run: |
-          echo "---Installing sonar-scanner---"
-          export SONAR_SCANNER_VERSION=4.2.0.1873
-          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
-          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
-          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-          export PATH=$SONAR_SCANNER_HOME/bin:$PATH
-          export SONAR_SCANNER_OPTS="-server"
-          echo "---Run tests with coverage---"
-          TEST_RUN=yes nyc --reporter=lcov --reporter=cobertura --report-dir=coverage-reports/ ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 60000
-          echo "---Run sonar-scanner---"
-          sonar-scanner -Dsonar.login="$SONARCLOUD_TOKEN"
