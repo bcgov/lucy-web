@@ -13,6 +13,14 @@ jobs:
         with:
           # For sonar-scanner to work properly we can't use a shallow fetch
           fetch-depth: 0
+      - name: Use Node.js 
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+      - name: npm install, build
+        run: |
+          npm install
+          npm build
       - name: Run unit tests
         shell: bash
         run: TEST_RUN=yes ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 60000
