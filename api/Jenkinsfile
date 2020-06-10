@@ -35,10 +35,6 @@ pipeline {
                     BUILD_NUMBER = "${TIME_TAG}${BUILD_ID}"
                     
                 }
-                echo "Aborting all running jobs ..."
-                script {
-                    abortAllPreviousBuildInProgress(currentBuild)
-                }
                 echo "BUILD NUMBER ${BUILD_NUMBER}"
             }
 
