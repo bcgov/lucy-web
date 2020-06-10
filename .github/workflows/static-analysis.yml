@@ -19,11 +19,12 @@ jobs:
           node-version: 10.16
       - name: npm install, build
         run: |
+          working-directory: ./api/api_sources/
           npm install
           npm build
       - name: Run unit tests
         shell: bash
-        run: TEST_RUN=yes ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 60000
+        run: npm test:all
       - name: SonarCloud scan
         # uses: sonarsource/sonarcloud-github-action@dev
         env:
