@@ -11,9 +11,9 @@ jobs:
         with:
           # For sonar-scanner to work properly we can't use a shallow fetch
           fetch-depth: 0
-      - name: Run unit tests with coverage
+      - name: Run unit tests
         shell: bash
-        run:
+        run: TEST_RUN=yes ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 60000
       - name: SonarCloud scan
         # uses: sonarsource/sonarcloud-github-action@dev
         env:
