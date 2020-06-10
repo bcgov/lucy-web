@@ -23,10 +23,10 @@ jobs:
       - name: npm install, build
         run: |
           npm install
-          npm build
+          npm run-script build
       - name: Run unit tests
         shell: bash
-        run: npm test:all
+        run: npm run-script test:all
       - name: SonarCloud scan
         # uses: sonarsource/sonarcloud-github-action@dev
         env:
