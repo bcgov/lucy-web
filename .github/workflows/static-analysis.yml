@@ -24,10 +24,12 @@ jobs:
         run: |
           npm install
           npm run-script build
-      - name: Run unit tests
+      - name: Run unit tests & prep coverage report for SonarCloud
         shell: bash
         continue-on-error: true
-        run: npm run-script test:coverage
+        run: | # need to adjust filepaths in lcov.info to match folder structure in Github's Docker container
+          npm run-script test:coverage
+          sed -i 's+/home/runner/work/lucy-web/lucy-web+/github/workspace+g' coverage/lcov.info
       - name: SonarCloud scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
