@@ -1,6 +1,9 @@
+# This workflow is currently in DRAFT mode. Shouldn't be run as part of pipeline
+# until GitHub Actions has been implemented for building & deploying to OpenShift.
 name: Static Analysis
 
-on: [pull_request]
+# TODO: Uncomment this. 
+#on: [pull_request]
 
 jobs:
   coverage:
