@@ -1,0 +1,2159 @@
+water_body_name,water_body_longitude,water_body_latitude,country_code,province_code,closest_city,distance
+Ocean Pacific CAN BC,-130.571,54.215,CAN,BC,Prince Rupert,10
+Ocean Pacific CAN BC,-123.321,48.339,CAN,BC,Victoria Vancouver Island,10
+Ocean Pacific CAN BC,-123.886,49.253,CAN,BC,Nanaimo Vancouver Island,10
+Ocean Pacific CAN BC,-127.444,50.76,CAN,BC,Port Hardy Vancouver Island,10
+Ocean Pacific CAN BC,-128.633,52.026,CAN,BC,Bella Coola,10
+Ocean Pacific CAN BC,-132.104,54.096,CAN,BC,Haida Gwaii,10
+Ocean Atlantic CAN NL,-52.422,47.575,CAN,NL,St Johns,10
+Ocean Atlantic CAN NL,-58.774,49.192,CAN,NL,Corner Brook,10
+Ocean Atlantic CAN NS,-63.347,44.494,CAN,NS,Halifax,10
+Ocean Atlantic CAN PEI,-63.236,46.018,CAN,PE,Charlottown,10
+Ocean Atlantic CAN QB,-70.441,47.275,CAN,QC,Quebec City,10
+Ocean Arctic CAN YT,-138.115,69.284,CAN,YT,Whitefish station,10
+Ocean Gulf of Mexico MEX,-96.173,20.097,MEX,DF,Mexico City,10
+Ocean Gulf of Mexico MEX,-99.985,16.723,MEX,GR,Acapulco,10
+Ocean Gulf of Mexico MEX,-86.489,21.206,MEX,QR,Cancun,10
+Ocean Pacific USA AK,-150.768,61.043,USA,AK,Anchorage,10
+Ocean Gulf of Mexico USA AL,-87.992,30.314,USA,AL,Mobile,10
+Ocean Pacific USA CA,-122.751,37.665,USA,CA,San Francisco,10
+Ocean Pacific USA CA,-118.592,33.809,USA,CA,Los Angeles,10
+Ocean Pacific USA CA,-117.261,32.571,USA,CA,San Diego,10
+Ocean Atlantic USA CT,-72.618,41.156,USA,CT,Hartford,10
+Ocean Atlantic USA FL,-79.954,25.781,USA,FL,Miami,10
+Ocean Gulf of Mexico USA FL,-82.845,27.679,USA,FL,Tampa,10
+Ocean Gulf of Mexico USA LA,-90.133,30.131,USA,LA,New Orleans,10
+Ocean Atlantic USA MA,-70.587,42.323,USA,MA,Boston,10
+Ocean Atlantic USA MD,-76.346,39.061,USA,MD,Baltimore,10
+Ocean Atlantic USA ME,-70.035,43.553,USA,ME,Portland,10
+Ocean Atlantic USA NC,-77.445,34.083,USA,NC,Wilmington,10
+Ocean Pacific USA OR,-124.296,46.044,USA,OR,Portland,10
+Ocean Atlantic USA PA,-74.195,39.361,USA,PA,Philadelphia,10
+Ocean Atlantic USA RI,-71.361,41.361,USA,RI,Providence,10
+Ocean Atlantic USA SC,-79.814,32.512,USA,SC,Charleston,10
+Ocean Gulf of Mexico USA TX,-94.514,29.31,USA,TX,Houston,10
+Ocean Atlantic USA VA,-75.637,36.886,USA,VA,Virginia Beach,10
+Whitefish Lake,-114.3645,48.4325,USA,MT,Whitefish,2
+Carson Pegasus Lake,-115.6506,54.2982,CAN,AB,Whitecourt,17
+Cascade Ponds,-115.5302,51.2135,CAN,AB,Banff,3
+Castle River,-114.3352,49.4021,CAN,AB,Beaver Mines,11
+Crowsnest River,-114.6391,49.6331,CAN,AB,Blairmore,3
+Elbow River,-114.5785,50.9434,CAN,AB,Bragg Creek,1
+Kananaskis River,-115.1163,51.0761,CAN,AB,Kananaskis,1
+Peace River near Peace River AB,-117.2898,56.2215,CAN,AB,Peace River,1
+Pincher Creek,-113.9582,49.488,CAN,AB,Pincher Creek,1
+Waterton River,-113.3509,49.4218,CAN,AB,Cardston,20
+Bow River,-113.9319,50.8406,CAN,AB,Calgary,2
+Carbondale River,-114.4125,49.4484,CAN,AB,Beaver Mines,2
+49 Lake,-110.89087,56.30573,CAN,AB,Cheecham,2.7
+A La Peche Lake,-118.82888,53.79717,CAN,AB,Muskeg River,18.3
+Abraham Lake,-116.44325,52.21872,CAN,AB,Saskatchewan River Crossing,34.1
+Acadia Valley Reservoir,-110.2564,51.11299,CAN,AB,Acadia Valley,5.9
+Adamson Lake,-112.92595,53.6145,CAN,AB,Sandy Beach,9.5
+Adolphus Lake,-119.11802,53.17065,CAN,AB,Decoigne,59.1
+Adrian Lake,-113.14422,53.11171,CAN,AB,Hay Lakes,11.1
+African Lake,-110.16972,54.43498,CAN,AB,Cold Lake,1.7
+Agar Lake,-110.15798,58.21972,CAN,AB,Jackfish,49.6
+Agnes Lake,-114.96827,54.91388,CAN,AB,Swan Hills,35.4
+Agnes Lake,-112.52487,55.80785,CAN,AB,Pelican Portage,6.8
+Aguhway Lake,-113.62809,56.90461,CAN,AB,Chipewyan Lake,10.2
+AH Lake,-112.58048,57.76031,CAN,AB,Bitumount,69.5
+Akasu Lake,-111.8294,53.50531,CAN,AB,Lavoy,5.9
+Alba Lake,-110.4357,52.77078,CAN,AB,Edgerton,2
+Albert Lake,-110.45023,53.1665,CAN,AB,Paradise Valley,18.1
+Albright Lake,-119.81998,55.48914,CAN,AB,Demmitt,6.1
+Alderson Lake,-113.97513,49.02961,CAN,AB,Waterton Park,5.1
+Alexander Lake,-110.48411,59.6246,CAN,AB,Hay Camp,56.4
+Algar Lake,-112.29091,56.31474,CAN,AB,Mariana Lake,43.6
+Alice Lake,-111.55855,53.23626,CAN,AB,Minburn,15.6
+Alix Lake,-113.19711,52.39313,CAN,AB,Alix,1.4
+Alkali Lake,-111.76685,53.54807,CAN,AB,Lavoy,12.1
+Allan Lake,-116.06145,54.93899,CAN,AB,Driftpile,47.9
+Allday Lake,-111.45388,54.18618,CAN,AB,Mallaig,6.6
+Allison Lake,-114.60324,49.67215,CAN,AB,Sentinel,4.5
+Alma Lake,-110.40011,53.77972,CAN,AB,Frog Lake,5.9
+Alpha Lake,-115.2538,53.77295,CAN,AB,Ronan,7.3
+Alvena Lake,-110.19498,52.67841,CAN,AB,Chauvin,4
+Amadou Lake,-112.90669,55.37164,CAN,AB,Calling Lake,25.4
+Amethyst Lakes,-118.27409,52.70014,CAN,AB,Geikie,18.5
+Amisk Lake,-112.63628,54.59751,CAN,AB,Caslan,8.9
+Anderson Lake,-119.24554,55.33923,CAN,AB,Poplar Hill,4
+Andrew Lake,-110.11542,59.89582,CAN,AB,Fitzgerald,83.2
+Angle Lake,-110.97552,53.73778,CAN,AB,Derwent,9.8
+Angling Lake,-110.32797,54.20085,CAN,AB,Beaverdam,1.3
+Annabel Lake,-116.72045,53.53201,CAN,AB,Hornbeck,2.7
+Annette Lake,-118.04808,52.9019,CAN,AB,Jasper Park Lodge,1.9
+Ansell Lake,-113.10154,54.50565,CAN,AB,Kinikinik,10.9
+Antler Lake,-113.37697,57.54852,CAN,AB,Chipewyan Lake,67.9
+Antler Lake,-112.98192,53.49581,CAN,AB,Uncas,2.7
+Antoine Lake,-112.08472,54.76529,CAN,AB,Lac La Biche Mission,6.5
+Arcand Lake,-110.78849,53.10598,CAN,AB,Wildmere,4.1
+Arch Lake,-110.63421,59.86116,CAN,AB,Fitzgerald,54.2
+Archer Lake,-110.34137,58.11005,CAN,AB,Jackfish,48.1
+Archie Lake,-115.0771,54.68779,CAN,AB,Swan Hills,21.1
+Arm Lake,-110.58862,52.74685,CAN,AB,Heath,6
+Armitages Lake,-110.41365,51.28036,CAN,AB,Benton Station,8.8
+Armstrong Lake,-113.64548,54.38969,CAN,AB,Analta,3.9
+Arnault Lake,-114.7364,53.70478,CAN,AB,Lake Isle,6.4
+Arrowhead Lake,-113.63413,59.68631,CAN,AB,Jackfish River,87.7
+Arthur Lake,-114.64755,53.76623,CAN,AB,Cherhill,6.2
+Arthur Lake,-113.1525,54.5319,CAN,AB,Kinikinik,11.1
+Artisinn Lake,-115.36619,56.09507,CAN,AB,Atikameg,26.6
+Ash Lake,-116.14966,54.19247,CAN,AB,Windfall,4.1
+Ashland Reservoir,-114.40822,53.14748,CAN,AB,Keystone,1.7
+Ashton Lake,-110.41397,59.83589,CAN,AB,Fitzgerald,66.6
+Aster Lake,-115.21091,50.57837,CAN,AB,Kovach,39.5
+Astotin Lake,-112.85383,53.679,CAN,AB,Sandy Beach,1.7
+Atihk Sakahikun,-115.48383,58.73898,CAN,AB,John DOr Prairie,33.3
+Audet Lake,-110.91009,57.64829,CAN,AB,Point Brule,48.6
+Auger Lake,-112.52081,54.72127,CAN,AB,Frains,7.7
+Azure Lake,-119.00175,53.45776,CAN,AB,Grande Cache,48.5
+Badger Lake,-112.45916,50.38889,CAN,AB,Lomond,13.6
+Bailey Lake,-110.17021,59.94589,CAN,AB,Fitzgerald,80.6
+Bailey Lakes,-112.8904,53.55252,CAN,AB,North Cooking Lake,10.6
+Baird Lake,-114.40814,54.33951,CAN,AB,Neerlandia,3
+Baker Lake,-110.12026,56.43448,CAN,AB,Christina Crossing,28.5
+Baker Lake,-116.04023,51.49143,CAN,AB,Lake Louise,12.2
+Baker Lake,-110.25035,53.03463,CAN,AB,Paradise Valley,3
+Balmoral Lake,-114.75316,51.10083,CAN,AB,Cheneka,9.1
+Banana Lake,-113.83838,54.72017,CAN,AB,Sylvan Glen,18.6
+Bangs Lake,-111.03288,54.15554,CAN,AB,Rife,3.5
+Baptiste Lake,-113.55401,54.75537,CAN,AB,Baptiste Lake,2
+Barbara Lake,-110.86723,54.52862,CAN,AB,Iron River,10.1
+Barber Lake,-110.86066,58.1043,CAN,AB,Point Brule,29.6
+Bard Lake,-114.02609,53.81796,CAN,AB,Stettin,3.6
+Bare Creek Reservoir,-110.4025,49.43916,CAN,AB,Bain,18.4
+Baril Lake,-111.68234,58.76662,CAN,AB,Sweetgrass Landing,22.4
+Barnett Lake,-113.74513,52.48878,CAN,AB,College Heights,0.8
+Barnett Lake,-113.2316,51.07047,CAN,AB,Hamlet,10.1
+Barreyre Lake,-110.68921,54.27608,CAN,AB,Durlingville,2.3
+Barrier Lake,-115.06425,51.02375,CAN,AB,Lac des Arcs,7.2
+Barrow Lake,-111.21551,59.25239,CAN,AB,Hay Camp,33.5
+Bartman Reservoir,-111.45623,51.10499,CAN,AB,Pollockville,9.4
+Barton Lake,-114.5638,54.03503,CAN,AB,Stewartfield,1.4
+Base Lake,-111.84236,55.64926,CAN,AB,Mariana Lake,35.6
+Baseline Lake,-113.23427,56.68006,CAN,AB,Chipewyan Lake,32.4
+Baseline Lake,-115.9131,54.23412,CAN,AB,Whitecourt,18.1
+Bassano Reservoir,-112.5452,50.75777,CAN,AB,Bassano,6.3
+Basset Lake,-118.48482,58.32031,CAN,AB,Assumption,43.8
+Bat Lake,-114.95859,56.29518,CAN,AB,Red Earth Creek,33.9
+Bates Lake,-110.02297,54.20576,CAN,AB,Cherry Grove,17.1
+Battle Lake,-114.1839,52.96729,CAN,AB,Battle Lake,4.2
+Batty Lake,-111.60912,54.10422,CAN,AB,Ashmont,3.9
+Bauers Lake,-111.04902,53.2843,CAN,AB,Claysmore,6.8
+Baxter Lakes,-110.70778,52.89214,CAN,AB,Greenshields,11.6
+Baxter Lakes,-110.73406,52.92842,CAN,AB,Hope Valley,11
+Bayard Lake,-112.39796,57.77009,CAN,AB,Bitumount,61.9
+Bayonet Lake,-110.30441,59.92849,CAN,AB,Fitzgerald,72.9
+Beacon Lake,-118.27091,52.54032,CAN,AB,Geikie,36.3
+Bear Bait Lake,-110.71249,58.17967,CAN,AB,Jackfish,29.2
+Bear Lake,-118.98841,55.25529,CAN,AB,Bear Lake,2.9
+Bear Lake,-114.8725,54.22449,CAN,AB,Moose Wallow,5.9
+Bear Lake,-116.15152,53.744,CAN,AB,Pioneer,3
+Bear Lake,-110.22542,54.02127,CAN,AB,Sputinow,11.7
+Bear River Reservoir,-118.81434,55.17727,CAN,AB,Grande Prairie,1.4
+Bearhills Lake,-113.61705,52.93719,CAN,AB,Brightview,2.1
+Bearspaw Reservoir,-114.30116,51.12171,CAN,AB,Bearspaw,1.9
+Beartrap Lake,-110.5385,54.20403,CAN,AB,Muriel Lake,4.2
+Beatty Lake,-118.04641,59.86334,CAN,AB,Steen River,55.8
+Beaudry Lakes,-114.46855,50.39557,CAN,AB,Pekisko,22.2
+Beaumaris Facility Stormwater Pond,-113.50923,53.61715,CAN,AB,Campbell,5.5
+Beauvais Lake,-114.10003,49.40908,CAN,AB,Beaver Mines,8.8
+Beauvallon Lake,-111.35232,53.66128,CAN,AB,Beauvallon,0.9
+Beauvert Lake,-118.05958,52.88246,CAN,AB,Jasper Park Lodge,0.4
+Beaver Lake,-111.82857,54.71116,CAN,AB,Beaver Lake,7.5
+Beaver Lake,-114.78869,52.00632,CAN,AB,Crammond,8.5
+Beaver Lake,-117.72511,52.86665,CAN,AB,Jasper Park Lodge,22.4
+Beaver Lake,-111.60107,56.98029,CAN,AB,Mildred Lake,5.9
+Beaver Mines Lake,-114.2965,49.37277,CAN,AB,Beaver Mines,11.8
+Beaverdam Lake,-113.60667,49.08461,CAN,AB,Mountain View,5.6
+Beaverhill Lake,-112.47102,53.49738,CAN,AB,Mundare,13.7
+Beaverhill Lake,-112.51924,53.36944,CAN,AB,Shonts,5.6
+Beaverhill Lake,-112.53897,53.44623,CAN,AB,Tofield,11.9
+Behan Lake,-111.56347,55.28874,CAN,AB,Philomena,13
+Bell Lake,-114.00702,53.65062,CAN,AB,Calahoo,7.6
+Bellis Beach Lake,-112.1526,54.10079,CAN,AB,Bellis,4.7
+Bellrose Lake,-116.24121,55.09424,CAN,AB,Arcadia,34.8
+Bellshill Lake,-111.557,52.60235,CAN,AB,Bellshill,3.2
+Beltz Lake,-112.58348,52.20922,CAN,AB,Sabine,1.7
+Belyea Lake,-110.03334,59.51491,CAN,AB,Hay Camp,80.8
+Benaman Slough,-113.86971,51.16113,CAN,AB,Rocky View,5.6
+Bennett Lake,-110.0651,53.8695,CAN,AB,Sputinow,13.2
+Bennett Lake,-112.98922,53.53079,CAN,AB,Uncas,4.7
+Bens Lake,-111.85574,53.67439,CAN,AB,Kaleland,6.9
+Bentley Lake,-111.05267,54.04482,CAN,AB,St Edouard,7.4
+Bentz Lake,-114.84628,51.78888,CAN,AB,Bearberry,9
+Berry Creek Reservoir,-111.62487,51.2686,CAN,AB,Sunnynook,4.1
+Berry Lake,-114.74478,55.93927,CAN,AB,Wabasca-Desmarais,55.8
+Bertha Lake,-113.94316,49.02352,CAN,AB,Waterton Park,3.8
+Beryl Lake,-118.13067,52.64833,CAN,AB,Wynd,23.7
+Beta Lake,-115.58591,53.73525,CAN,AB,Hattonford,9.2
+Bethel Lake,-119.96015,55.60799,CAN,AB,Demmitt,17.4
+Betty Lake,-111.02764,52.8405,CAN,AB,Fabyan,5.1
+Beyette Lake,-114.18328,54.58622,CAN,AB,Kilsyth,2
+Big Chief Lake,-111.64013,55.24034,CAN,AB,Philomena,7.4
+Big Island Lake,-112.51113,57.6119,CAN,AB,Bitumount,57.4
+Big Island Lake,-113.19705,53.48808,CAN,AB,Wyeclif,4
+Big Johnson Lake,-112.58361,54.65359,CAN,AB,Caslan,5.3
+Big Lake,-113.71513,53.59936,CAN,AB,Cannell,6.3
+Big Muskeg Lake,-112.11231,55.17154,CAN,AB,Avenir,18.1
+Big Slough,-113.19306,58.83681,CAN,AB,Big Slough,2.7
+Big Snuff Lake,-110.29197,57.40514,CAN,AB,Bitumount,81.2
+Bigelow Reservoir,-113.47439,51.89747,CAN,AB,Highland Ranch,8.1
+Bingo Lake,-118.32113,56.1695,CAN,AB,Bluesky,11.8
+Biollo Lake,-112.06345,54.6745,CAN,AB,Venice,6
+Birch Lake,-114.52926,53.75642,CAN,AB,Alexis,2.9
+Birch Lake,-113.60099,54.36329,CAN,AB,Analta,1.8
+Birch Lake,-110.3916,56.38572,CAN,AB,Christina Crossing,14.7
+Birch Lake,-113.75777,58.91518,CAN,AB,Garden Creek,24.6
+Birch Lake,-111.57593,53.32431,CAN,AB,Innisfree,7.1
+Birch Lake,-117.15398,54.78327,CAN,AB,Little Smoky,5.2
+Birch Lake,-111.65666,53.3046,CAN,AB,Ranfurly,11.5
+Birch Lake,-114.85537,52.01211,CAN,AB,Ricinus,10.4
+Birch Lake,-110.02177,54.03133,CAN,AB,Sputinow,19.6
+Birch Lakes,-112.74154,57.60473,CAN,AB,Bitumount,69.8
+Birkland Lake,-111.92339,54.77915,CAN,AB,Beaver Lake,2.3
+Birston Lake,-114.21695,54.57794,CAN,AB,Kilsyth,4.3
+Bisbing Lake,-119.64085,55.25861,CAN,AB,Goodfare,4.8
+Bison Lake,-116.16791,57.20313,CAN,AB,Bison Lake,2.5
+Bisonhead Lake,-119.1415,58.79855,CAN,AB,Habay,24.5
+Bisset Lake,-114.22609,54.93448,CAN,AB,Chisholm,4.6
+Bistcho Lake,-118.79538,59.7438,CAN,AB,Steen River,92.3
+Bittern Lake,-113.07117,53.04873,CAN,AB,Bittern Lake,4.6
+Black Duck Lake,-118.44799,56.18583,CAN,AB,Gage,6.3
+Black Duck Lake,-111.50041,54.82153,CAN,AB,Tweedie,20
+Black Nugget Mine Pit,-112.53255,53.21778,CAN,AB,Dodds,1.5
+Blackbird Lake,-111.7246,54.75703,CAN,AB,Barnegat,7.6
+Blackett Lake,-111.56382,54.72971,CAN,AB,Snug Cove,17.3
+Blackfalds Lake,-113.72056,52.38723,CAN,AB,Farrant,2.2
+Blackfoot Lake,-112.79934,53.52437,CAN,AB,Deville,11.3
+Blanche Lake,-111.31269,58.3892,CAN,AB,Embarras Portage,11.7
+Blanchet Lake,-113.16066,56.68921,CAN,AB,Chipewyan Lake,33.8
+Bleak Lake,-113.46824,54.67197,CAN,AB,Lincoln,2.8
+Blefgen Lake,-113.8867,54.85094,CAN,AB,Chisholm,19.2
+Blindtrail Lake,-114.7934,52.80811,CAN,AB,Buck Lake,16
+Blizzard Lake,-113.76298,50.76714,CAN,AB,Gladys,6.2
+Blood Indian Creek Reservoir,-111.20791,51.24918,CAN,AB,Big Stone,5.3
+Bloomfield Lake,-114.22665,52.9312,CAN,AB,Battle Lake,7.7
+Blue Berry Lake 1,-110.79845,58.12744,CAN,AB,Jackfish,33.2
+Blue Berry Lake 2,-110.78945,58.14992,CAN,AB,Jackfish,30.8
+Blue Berry Lake 3,-110.76506,58.1519,CAN,AB,Jackfish,31
+Blue Berry Lake 4,-110.74502,58.14951,CAN,AB,Jackfish,31.6
+Blue Berry Lake 6,-110.79248,58.11279,CAN,AB,Point Brule,33.7
+Blue Lake,-117.7988,53.48038,CAN,AB,Old Entrance,13.4
+Blue Lake,-116.45829,54.98152,CAN,AB,Sweathouse Creek,27.3
+Bluet Lake,-110.56381,53.98965,CAN,AB,Lindbergh,13.4
+Boag Lake,-113.21848,53.51834,CAN,AB,Wyeclif,1.5
+Bobier Lake,-113.17914,54.54858,CAN,AB,Colinton,9.3
+Bocquene Lake,-111.08565,59.47453,CAN,AB,Hay Camp,22.2
+Boggy Lake,-114.79242,51.59808,CAN,AB,Water Valley,16.2
+Bohn Lake,-110.67353,55.90212,CAN,AB,Pingle,15.2
+Bolloque Lake,-113.68369,54.52004,CAN,AB,Meadowbrook,3.3
+Bonavista Lake,-114.05173,50.94176,CAN,AB,Midnapore,2.8
+Bonnie Lake,-111.86122,54.15229,CAN,AB,Vilna,5.5
+Boog Lake,-114.22345,54.39343,CAN,AB,Vega,10
+Boom Lake,-116.09536,51.26295,CAN,AB,Eldon,7.7
+Boomerang Lake,-117.73772,54.21141,CAN,AB,Fox Creek,63.7
+Boone Lake,-119.42782,55.57408,CAN,AB,Homestead,7.9
+Borden Lake,-110.56243,53.85805,CAN,AB,Middle Creek,3.6
+Border Lake,-110.72209,52.62889,CAN,AB,Buffalo View,5.1
+Boucan Lake,-111.22489,54.01556,CAN,AB,St Paul,5.3
+Boudin Lake,-110.29916,59.69397,CAN,AB,Hay Camp,68.3
+Boundary Lake,-119.99448,56.33336,CAN,AB,Cherry Point,16.4
+Boundary Lake,-114.93298,51.21485,CAN,AB,Morley,7.6
+Boundary Lake,-119.9962,54.62404,CAN,AB,Sylvester,46
+Bourque Lake,-110.54339,54.67285,CAN,AB,Happy Hollow,19.1
+Bow Lake,-116.45679,51.66912,CAN,AB,Lake Louise,33.2
+Bowden Lake,-114.06806,51.93654,CAN,AB,Bowden,2.3
+Bowen Lake,-110.17218,58.24282,CAN,AB,Jackfish,47.7
+Bowesman Lake,-117.7636,56.68763,CAN,AB,Dixonville,17.7
+Bowhay Lake,-113.65226,59.42752,CAN,AB,Jackfish River,64.7
+Brabant Lake,-113.15705,59.61869,CAN,AB,Peace Point,67.8
+Brainard Lake,-119.75406,55.39801,CAN,AB,Brainard,1.5
+Brander Lake,-110.04588,58.44081,CAN,AB,Jackfish,50.8
+Brant Lake,-113.52482,50.53039,CAN,AB,Eltham,6.1
+Bray Lake,-112.96289,53.32345,CAN,AB,Lindbrook,13.1
+Brayet Lake,-111.89145,54.62882,CAN,AB,Normandeau,11.7
+Brazeau Lake,-117.06532,52.40991,CAN,AB,Saskatchewan River Crossing,53.1
+Brazeau Reservoir,-115.63013,52.9527,CAN,AB,Brazeau Dam,3.7
+Breland Lake,-111.23931,54.03072,CAN,AB,St Paul,5.6
+Brereton Lake,-113.83527,54.81235,CAN,AB,Lahaieville,17.4
+Bretona Pond,-113.32142,53.44249,CAN,AB,Bretona,1
+Bridge Lakes,-113.45002,54.19069,CAN,AB,Anton Lake,5.8
+Bridge Lakes,-113.47619,54.18545,CAN,AB,Halfway Lake,6.5
+Briker Lake,-110.27872,53.03882,CAN,AB,Paradise Valley,1.3
+Brintnell Lake,-114.71371,55.80511,CAN,AB,Widewater,52.7
+Brock Lake,-110.43768,59.77861,CAN,AB,Hay Camp,64.3
+Brock Lake,-114.84291,53.81434,CAN,AB,Stanger,4.7
+Brodick Lake,-112.43487,54.20412,CAN,AB,Smoky Lake,9.9
+Brokenleg Lake,-115.06908,51.18567,CAN,AB,Ozada,8.6
+Brown Lake,-111.63255,54.72108,CAN,AB,Barnegat,14.8
+Bruce Lake,-114.24075,54.94225,CAN,AB,Chisholm,5.9
+Bruce Lake,-110.96899,52.38276,CAN,AB,Craigmillar,9.1
+Brule Lake,-117.85242,53.28513,CAN,AB,Brule,1.1
+Brutus Lake,-111.01291,57.97704,CAN,AB,Point Brule,19.8
+Bryant Lake,-110.24993,59.30572,CAN,AB,Hay Camp,73
+Bryson Lake,-111.38924,53.31451,CAN,AB,Minburn,1.7
+Buchan Lake,-114.94027,59.99314,CAN,AB,Indian Cabins,117.5
+Buchanan Lake,-113.75868,58.58866,CAN,AB,Garden Creek,14.7
+Buck Lake,-114.76278,52.98531,CAN,AB,Buck Lake,3.8
+Buckinghorse Lake,-113.89617,53.14927,CAN,AB,Glen Park,5.1
+Buffalo Lake,-112.89591,52.48362,CAN,AB,Bashaw,12.1
+Buffalo Lake,-118.97434,55.37981,CAN,AB,Buffalo Lake,3.1
+Buffalo Lake,-112.47689,54.51203,CAN,AB,Caslan,13.4
+Buffalo Lake,-111.83403,55.12258,CAN,AB,Pitlochrie,13.1
+Bulldog Lake,-111.31826,56.20046,CAN,AB,Kinosis,26.6
+Bullshead Reservoir,-110.50627,49.67815,CAN,AB,Tothill,7.3
+Bunder Lake,-111.7076,54.28542,CAN,AB,Boyne Lake,5.6
+Burdett Lake,-111.56047,49.80218,CAN,AB,Burdett,4
+Burke Lake,-113.14009,53.46575,CAN,AB,Cooking Lake,6.2
+Burnstick Lake,-114.88378,51.98687,CAN,AB,Ricinus,11.8
+Burnt Lake,-110.42827,54.80671,CAN,AB,Bank Bay,29.1
+Burnt Lake,-112.31248,54.68929,CAN,AB,Noral,5.1
+Burnt Lakes,-113.93033,57.29045,CAN,AB,Chipewyan Lake,47.7
+Burrison Lake,-113.67202,59.1383,CAN,AB,Big Slough,45.7
+Burstall Lake,-110.19258,59.34478,CAN,AB,Hay Camp,74.7
+Busby Lake,-118.14625,53.36907,CAN,AB,Shale Banks,15.3
+Bush Lake,-119.35219,55.28234,CAN,AB,Poplar Hill,7.5
+Bushy Head Lake,-110.90974,52.84094,CAN,AB,Wainwright,3.6
+By The Lake Park,-113.40669,52.97647,CAN,AB,Wetaskiwin,2.1
+Byers Lake,-111.52208,52.67498,CAN,AB,Lougheed,7.8
+Cabin Lake,-111.18018,51.03573,CAN,AB,Cabin Lake,4.5
+Cabin Lake,-110.23436,53.67358,CAN,AB,Tulliby Lake,5.8
+Cache Lake,-112.10102,54.90205,CAN,AB,Lac La Biche Mission,8.7
+Cache Lake,-117.80061,53.48955,CAN,AB,Old Entrance,14.4
+Cache Lake,-111.91265,54.93439,CAN,AB,Owl River,5.6
+Cache Lake,-111.77911,54.09996,CAN,AB,Spedden,5.5
+Cadotte Lake,-116.39294,56.44418,CAN,AB,Cadotte Lake,2.7
+Cairn Lakes,-117.15866,52.70504,CAN,AB,Grave Flats,25.4
+Cairns Lake,-110.76502,53.09557,CAN,AB,Wildmere,5.9
+Calahoo Lake,-119.95989,54.85732,CAN,AB,Sylvester,23.5
+Calder Lake,-111.14249,53.93577,CAN,AB,St Edouard,6.3
+Calder Lake,-114.70147,55.87808,CAN,AB,Wabasca-Desmarais,54
+Caldron Lake,-116.56425,51.69615,CAN,AB,Saskatchewan River Crossing,33.4
+Caledonia Lake,-118.16188,52.86715,CAN,AB,Wynd,2
+Calling Lake,-113.3077,55.24241,CAN,AB,Calling Lake,7.7
+Calumet Lake,-111.76677,57.41642,CAN,AB,Bitumount,7.9
+Cameron Lake,-110.66837,53.60306,CAN,AB,Clandonald,4.6
+Cameron Lake,-114.05049,49.00814,CAN,AB,Waterton Park,11.1
+Cameron Lakes,-114.02962,53.63448,CAN,AB,Bilby,9.2
+Camp Lake,-113.08197,54.5256,CAN,AB,Kinikinik,8.4
+Camp Lake,-111.53074,53.12643,CAN,AB,Philips,11.7
+Camp Lake,-111.47976,53.97669,CAN,AB,St Brides,4.4
+Campbell Lake,-110.74136,53.50258,CAN,AB,Clandonald,7.9
+Campbell Lake,-110.5383,56.64202,CAN,AB,Lenarthur,34.6
+Camping Lakes,-113.10668,54.84739,CAN,AB,Big Coulee,11.8
+Camsell Lake,-110.18428,59.90635,CAN,AB,Fitzgerald,79.5
+Canalta Slough,-112.16069,51.04164,CAN,AB,Gem,10.3
+Canoe Lake,-111.01884,56.45888,CAN,AB,Anzac,1.5
+Canoe Lake,-110.37687,54.96379,CAN,AB,Behan,34.9
+Canoe Lake,-113.12513,54.62141,CAN,AB,Kinikinik,8.2
+Canyon Lake,-113.82224,50.04963,CAN,AB,Lyndon,4.4
+Captain Eyre Lake,-110.71467,52.29952,CAN,AB,Cousins,9.6
+Cardiff Park Pond,-113.58494,53.76379,CAN,AB,Cardiff,1.4
+Cardinal Lake,-111.66542,54.57763,CAN,AB,Normandeau,4.3
+Cardinal Lake,-111.33196,54.04433,CAN,AB,St Paul,6.2
+Cardinal Lake,-117.73509,56.24077,CAN,AB,Warrensville,8.5
+Carey Lake,-111.54959,54.05124,CAN,AB,St Brides,6.5
+Caribou Horn Lake,-110.98002,56.52376,CAN,AB,Lenarthur,4.7
+Caribou Lake,-110.86487,55.08669,CAN,AB,Behan,34.9
+Caribou Lake,-116.08022,59.06857,CAN,AB,Boyer,68.3
+Caribou Lake,-115.34103,54.40139,CAN,AB,Lone Pine,18.1
+Caribou Lake,-111.94522,55.49205,CAN,AB,Margie,38.9
+Carmon Lake,-116.80619,56.35203,CAN,AB,Three Creeks,17.1
+Carrier Lake,-111.54767,53.08533,CAN,AB,Philips,7.4
+Carroll Lakes,-111.66366,54.12162,CAN,AB,Spedden,4.5
+Carrot Lake,-113.3962,56.97527,CAN,AB,Chipewyan Lake,6.1
+Cattail Lake,-110.37065,57.39294,CAN,AB,Bitumount,76.4
+Cattail Lake,-117.70479,55.35187,CAN,AB,Whitemud Creek,22.1
+Cavan Lake,-110.40601,49.93504,CAN,AB,Irvine,9.5
+Cavell Lake,-118.06132,52.69807,CAN,AB,Wynd,18.8
+Cawes Lake,-113.43803,53.38722,CAN,AB,Beaumont,4.1
+Celestine Lake,-118.04743,53.18723,CAN,AB,Devona,5.2
+Chain Lake,-110.0081,59.64041,CAN,AB,Hay Camp,83.1
+Chain Lakes,-113.44339,52.58701,CAN,AB,Clive,12.4
+Chain Lakes,-119.93628,55.40062,CAN,AB,Demmitt,6.6
+Chain Lakes,-112.15103,51.8031,CAN,AB,Dowling Lake,3.1
+Chain Lakes,-113.51248,54.9865,CAN,AB,Grosmont,14
+Chain Lakes,-111.20067,56.21433,CAN,AB,Kinosis,19.9
+Chain Lakes,-113.46136,52.60908,CAN,AB,Ponoka,10.9
+Chain Lakes Reservoir,-114.20855,50.24071,CAN,AB,Pekisko,21.6
+Chain Ponds,-117.92379,58.01206,CAN,AB,Keg River,25.2
+Chain Ponds,-117.98735,58.09967,CAN,AB,Paddle Prairie,34.5
+Chalk Lake,-118.24855,52.52479,CAN,AB,Geikie,38
+Chalmers Lake,-118.19852,56.27353,CAN,AB,Deer Hill,9.2
+Chandler Lake,-110.15006,54.11333,CAN,AB,Beaverdam,14.2
+Chappell Lake,-111.57104,54.18144,CAN,AB,Ashmont,5.8
+Chappice Lake,-110.36578,50.16539,CAN,AB,Bowmanton,10.7
+Charles Lake,-110.56267,59.83386,CAN,AB,Fitzgerald,58.3
+Charlotte Lake,-110.64333,54.25809,CAN,AB,Durlingville,2.6
+Charron Lake,-112.50446,54.84914,CAN,AB,Atmore,4.4
+Chatwin Lake,-110.84193,54.24819,CAN,AB,Fresnoy,2.7
+Cheecham Lake,-110.78646,56.28006,CAN,AB,Cheecham,5.4
+Chephren Lake,-116.65619,51.83247,CAN,AB,Saskatchewan River Crossing,16.9
+Cherry Lake,-110.03945,54.35204,CAN,AB,Cherry Grove,2.4
+Cherry Lake,-110.09722,59.74216,CAN,AB,Hay Camp,80.6
+Chester Lake,-110.1714,53.7507,CAN,AB,Tulliby Lake,3.9
+Chestermere Lake,-113.81789,51.03349,CAN,AB,Chestermere,0.1
+Chickakoo Lake,-114.07357,53.61889,CAN,AB,Beach Corner,9.2
+Chickenhill Lake,-111.0941,54.09789,CAN,AB,Flat Lake,4.8
+Child Lake,-116.58995,58.49486,CAN,AB,Rocky Lane,18.8
+Chin Lakes,-112.21819,49.62775,CAN,AB,Wrentham,13
+Chiniki Lake,-114.92446,51.09974,CAN,AB,Ozada,5.4
+Chinook Lake,-119.93191,54.62887,CAN,AB,Sylvester,43.8
+Chip Lake,-115.38514,53.65512,CAN,AB,Granada,5
+Chipewyan Lake,-113.45697,56.95599,CAN,AB,Chipewyan Lake,2
+Chota Lake,-111.70199,54.31199,CAN,AB,McRae,4.9
+Christina Lake,-110.68133,56.38288,CAN,AB,Cheecham,16.2
+Christina Lake,-110.90461,55.62234,CAN,AB,Conklin,11
+Christopher Lake,-110.25002,53.76708,CAN,AB,Tulliby Lake,7.1
+Chrome Lake,-118.23746,52.66434,CAN,AB,Geikie,22.6
+Chrystina Lake,-115.19208,54.78747,CAN,AB,Swan Hills,15.6
+Cinderella Lake,-110.1689,59.87203,CAN,AB,Fitzgerald,80.2
+Cirque Lake,-116.63267,51.80754,CAN,AB,Saskatchewan River Crossing,20.1
+Cladonia Lake,-115.03686,59.32521,CAN,AB,John DOr Prairie,92.4
+Clairmont Lake,-118.76131,55.25669,CAN,AB,Grande Prairie,9.8
+Clark Lake,-110.75107,52.27853,CAN,AB,Cousins,9.9
+Clark Lake,-116.68135,54.25057,CAN,AB,Fox Creek,17.9
+Clarke Lake,-110.33235,53.14204,CAN,AB,Paradise Valley,12.4
+Claude Lake,-111.90815,54.793,CAN,AB,Beaver Lake,3.6
+Clayton Lake,-112.27263,58.05933,CAN,AB,Kenny Woods,53.1
+Clear Lake,-112.11916,57.73267,CAN,AB,Bitumount,47.7
+Clear Lake,-112.13345,51.78363,CAN,AB,Dowling Lake,3.4
+Clear Lake,-110.60285,52.76613,CAN,AB,Heath,3.8
+Clear Lake,-113.41386,50.14495,CAN,AB,Pulteney,15.5
+Clear Lake,-114.32102,53.56033,CAN,AB,Smithfield,1.9
+Clear Lake,-114.78643,54.22663,CAN,AB,Tiger Lily,5.1
+Clearwater Lake,-113.65602,56.86441,CAN,AB,Chipewyan Lake,13.9
+Clearwater Lake,-116.14899,51.77409,CAN,AB,Lake Louise,38.8
+Clement Lake,-111.76741,51.96746,CAN,AB,Sullivan Lake,7.5
+Clyde Lake,-111.47143,55.31131,CAN,AB,Margie,16.2
+Coal Lake,-113.28094,53.06824,CAN,AB,Gwynne,10.6
+Coal Lake,-113.35041,53.14452,CAN,AB,Millet,9.8
+Coates Lake,-110.05163,51.76858,CAN,AB,Compeer,10.4
+Cochrane Lake,-114.48962,51.2497,CAN,AB,Cochrane,5
+Cochrane Lake,-113.61667,49.32823,CAN,AB,Hill Spring,3.9
+Cockscomb Lake,-111.11977,59.54209,CAN,AB,Hay Camp,19.6
+Coffey Lake,-111.40659,57.6531,CAN,AB,Bitumount,32.9
+Cold Lake,-110.10458,54.54186,CAN,AB,Bank Bay,9
+Cold Lake,-112.69662,52.31649,CAN,AB,Stettler,1
+Cole Lake,-111.78881,54.39433,CAN,AB,McRae,6.5
+Coleman Lake,-111.87159,51.44492,CAN,AB,Rose Lynn,13.8
+Coleman Lake,-116.94898,52.13122,CAN,AB,Saskatchewan River Crossing,22.3
+Colette Lake,-110.09261,52.69203,CAN,AB,Chauvin,3.3
+Colin Lake,-110.13994,59.56897,CAN,AB,Hay Camp,74.9
+Collins Lake,-110.33412,59.97162,CAN,AB,Fitzgerald,71.9
+Comoy Lake,-118.66629,53.17443,CAN,AB,Shale Banks,31.4
+Conibear Lake,-113.28045,59.59281,CAN,AB,Peace Point,70
+Conn Lake,-111.11231,54.52342,CAN,AB,Truman,9.3
+Consolation Lakes,-116.15201,51.31548,CAN,AB,Eldon,8.7
+Contracosta Lake,-111.57435,51.68975,CAN,AB,Richdale,9.1
+Cooking Lake,-113.03363,53.42935,CAN,AB,Cooking Lake,6.2
+Corn Lake,-113.97046,56.64401,CAN,AB,Peerless Lake,37.1
+Corner Lake,-112.56462,54.58575,CAN,AB,Caslan,6.1
+Corner Lake,-114.58228,53.77935,CAN,AB,Glenevis,4.4
+Corner Lake,-110.90459,54.67429,CAN,AB,Iron River,25.9
+Cornwall Lake,-110.59214,59.59737,CAN,AB,Hay Camp,49.9
+Corrigall Lake,-112.6561,55.22881,CAN,AB,Wandering River,12.1
+Cottage Lake,-114.17702,53.51096,CAN,AB,Spring Lake,3
+Cotton Lake,-110.70967,52.63614,CAN,AB,Buffalo View,6.3
+Cow Lake,-114.96493,51.37401,CAN,AB,Benchlands,15
+Cow Lake,-115.01434,52.27232,CAN,AB,Congresbury,5.4
+Cow Lake,-111.65461,55.22143,CAN,AB,Philomena,5.7
+Cowoki Lake,-111.69946,50.58259,CAN,AB,Bantry,10.1
+Cowper Lake,-110.44525,55.90087,CAN,AB,Pingle,29.4
+Cox Pond,-111.62523,53.11094,CAN,AB,Philips,8.1
+Coyote Lake,-114.54102,53.2639,CAN,AB,Lindale,8
+Cpr Reservoir,-112.60237,49.83089,CAN,AB,Tempest,10.9
+Cranberry Lake,-111.58702,57.58635,CAN,AB,Bitumount,22.5
+Cranberry Lake,-114.80478,52.8009,CAN,AB,Buck Lake,16.9
+Cranberry Lake,-115.07374,56.2347,CAN,AB,Red Earth Creek,36.4
+Crane Lake,-110.52319,54.51726,CAN,AB,Happy Hollow,2.4
+Crane Lake,-112.00389,59.22053,CAN,AB,Peace Point,27.4
+Cranes Lake,-114.27247,53.98766,CAN,AB,Belvedere,5
+Craven Lake,-117.61055,56.42073,CAN,AB,Chinook Valley,7.3
+Cravets Lake,-111.58156,53.35962,CAN,AB,Innisfree,4.2
+Crawford Lake,-110.17772,54.38687,CAN,AB,Beaver Crossing,3.5
+Crawling Valley Reservoir,-112.35634,50.90031,CAN,AB,Gem,13
+Creighton Lake,-119.42104,59.94846,CAN,AB,Steen River,131.1
+Cressday Reservoir,-110.26819,49.24098,CAN,AB,Cressday,1
+Crestomere Lake,-113.92065,52.67389,CAN,AB,Crestomere,0.7
+Cricket Lake,-112.69948,54.55408,CAN,AB,Boyle,8
+Crimson Lake,-115.0379,52.45941,CAN,AB,Crimson Lake,1.4
+Crooked Lake,-110.23744,57.49781,CAN,AB,Bitumount,85.2
+Crooked Lake,-117.24896,54.44301,CAN,AB,Fox Creek,29.1
+Crooked Lake,-113.54458,54.9146,CAN,AB,Grosmont,5.7
+Cross Coulee Reservoir,-112.5895,49.39182,CAN,AB,Raymond,9.6
+Cross Lake,-111.71841,54.52009,CAN,AB,Briareville,6.3
+Crosscut Lake,-112.25591,54.68053,CAN,AB,Hylo,2.9
+Crossing Lake,-110.97983,52.80741,CAN,AB,Fabyan,8.3
+Crow Indian Lake,-111.72026,49.37193,CAN,AB,Legend,14.8
+Crow Lake,-112.15628,55.8,CAN,AB,Mariana Lake,19.2
+Crowsnest Lake,-114.63748,49.63227,CAN,AB,Hazell,2
+Crummy Lake,-117.2067,57.17244,CAN,AB,Hawk Hills,15.5
+Crypt Lake,-113.84067,49.00138,CAN,AB,Waterton Park,7.7
+Crystal Lake,-118.76792,55.19181,CAN,AB,Grande Prairie,2.9
+Crystal Lake,-111.4341,53.3497,CAN,AB,Minburn,6
+Cub Lakes,-118.06938,56.85161,CAN,AB,North Star,27.6
+Cucumber Lake,-112.10105,53.89274,CAN,AB,Desjarlais,5
+Currant Lake,-110.39556,51.84261,CAN,AB,Kirriemuir,10.6
+Currie Lake,-110.74147,58.05314,CAN,AB,Point Brule,35.3
+Cushing Lake,-110.43712,54.05944,CAN,AB,Holyoke,11.8
+Cut Bank Lake,-113.51518,53.67939,CAN,AB,Lancaster Park,1.8
+Cutbank Lake,-119.7608,55.71699,CAN,AB,Bay Tree,15.1
+Cutbank Lake,-119.12258,55.25971,CAN,AB,Lake Saskatoon,3.5
+Cutting Lake,-111.95766,50.61829,CAN,AB,Brooks,7.2
+Cygnet Lake,-114.01839,52.29293,CAN,AB,Prevo,4.7
+Dabbs Lake,-111.47592,54.76562,CAN,AB,Snug Cove,16.2
+Dagmar Lake,-111.44326,58.42138,CAN,AB,Embarras Portage,3.6
+Dakin Lake,-112.57352,54.77617,CAN,AB,Frains,4.3
+Dalemead Lake,-113.62832,50.91801,CAN,AB,Dalemead,4.9
+Daly Lake,-110.8391,59.62228,CAN,AB,Hay Camp,36.9
+Dancing Lake,-113.91977,54.99736,CAN,AB,Ranch,10.3
+Dapp Lake,-113.60796,54.34239,CAN,AB,Analta,2
+Darwin Lake,-111.01615,59.30829,CAN,AB,Hay Camp,35
+Davey Lake,-113.76299,51.93736,CAN,AB,Horseshoe Lake,2
+David Lake,-110.61069,52.58129,CAN,AB,Buffalo View,11.1
+David Thompson Lake,-116.83019,51.8484,CAN,AB,Saskatchewan River Crossing,15.2
+Davidson Lake,-113.24017,58.95061,CAN,AB,Big Slough,14.7
+Dawes Lake,-111.90657,56.33058,CAN,AB,Mariana Lake,42.5
+Dawson Lake,-113.39591,51.13506,CAN,AB,Ardenode,2.2
+Dawson Lake,-110.45742,59.88176,CAN,AB,Fitzgerald,64.1
+Day Lake,-110.08431,54.15533,CAN,AB,Beaverdam,15.4
+De Manville Lake,-110.192,59.38847,CAN,AB,Hay Camp,73.6
+Dead Calf Lake,-113.21546,56.78673,CAN,AB,Chipewyan Lake,23.2
+Deadhorse Lake,-112.66946,51.06371,CAN,AB,Hussar,2.6
+Deadman Lake,-114.01394,53.86611,CAN,AB,Stettin,5.6
+Deadmans Lake,-110.5567,52.23061,CAN,AB,Cousins,4.8
+Dechaine Lake,-114.10098,53.84318,CAN,AB,Stettin,2.1
+Deep Lake,-114.28154,54.6783,CAN,AB,Flatbush,8.1
+Deep Lake,-119.07802,55.2485,CAN,AB,Lake Saskatoon,3.8
+Deep Lake,-113.70621,55.41839,CAN,AB,Moose Portage,23.8
+Deep Lake,-119.02217,56.70311,CAN,AB,Worsley,22.9
+Deer Lake,-110.61182,53.54587,CAN,AB,Clandonald,7.3
+Delburne Lakes,-113.22284,52.21097,CAN,AB,Delburne,1.6
+Delorme Lake,-114.34907,55.08788,CAN,AB,Spurfield,16.4
+Delusion Lakes,-111.22665,52.7898,CAN,AB,Saville Farm,5.3
+Demay Lake,-112.70074,53.12301,CAN,AB,Demay,3.9
+Denning Lake,-111.44507,54.21396,CAN,AB,Mallaig,5.5
+Desert Lake Reservoir,-112.4542,49.22546,CAN,AB,McNab,18.2
+Desmaw Lake,-111.98058,54.50556,CAN,AB,Kikino,10
+Deveber Lake,-119.68351,53.7161,CAN,AB,Grande Cache,41.7
+Devil Lake,-116.78428,58.37394,CAN,AB,High Level,25.7
+Devils Lake,-111.05562,54.2144,CAN,AB,Rife,4.9
+Devon Lakes,-116.25448,51.72909,CAN,AB,Lake Louise,34.2
+Devonia Lake,-110.13453,53.23646,CAN,AB,Blackfoot,6.4
+Dianne Lakes,-111.60873,57.9083,CAN,AB,Point Brule,20.3
+Diaper Lake,-113.34984,56.43876,CAN,AB,Chipewyan Lake,56.3
+Diaper Lakes,-113.58194,57.51464,CAN,AB,Chipewyan Lake,64.2
+Dick Lake,-114.07821,52.77094,CAN,AB,Homeglen,3.3
+Dickins Lake,-119.93844,59.6968,CAN,AB,Habay,120.8
+Dickson Lake,-119.86774,55.51546,CAN,AB,Demmitt,6.9
+Dickson Trout Pond,-114.31013,52.01101,CAN,AB,Dickson,5.1
+Dillberry Lake,-110.00585,52.57676,CAN,AB,Killarney Lake,4.6
+Dimsdale Lake,-119.00435,55.15281,CAN,AB,Dimsdale,1.3
+Dinner Lake,-110.70429,56.28516,CAN,AB,Cheecham,10.5
+Dipping Vat Lake,-113.61469,49.28415,CAN,AB,Hill Spring,1.1
+Disappointment Lake,-110.78099,59.41917,CAN,AB,Hay Camp,40.4
+Dishpan Lake,-110.55302,50.59469,CAN,AB,Cavendish,25.5
+Dixon Lake,-110.74886,52.59185,CAN,AB,Buffalo View,1.7
+Dodds Lake,-113.95549,52.03431,CAN,AB,Innisfail,0.8
+Dodgson Lake,-114.73899,54.08879,CAN,AB,Roselea,2.1
+Dog Lake,-113.52974,57.5037,CAN,AB,Chipewyan Lake,62.7
+Dolberg Lake,-115.05354,54.15759,CAN,AB,Moose Wallow,8.1
+Dolcy Lake,-110.46907,52.64895,CAN,AB,Dunn,10.7
+Dolly Lakes,-118.63489,53.29418,CAN,AB,Shale Banks,29.2
+Dolo Lake,-111.14044,53.94759,CAN,AB,St Edouard,5
+Donald Lake,-118.08775,53.98673,CAN,AB,Muskeg River,37.2
+Donaldson Lake,-116.23511,57.68461,CAN,AB,Buffalo Head Prairie,41.3
+Donovan Lake,-111.23671,59.99621,CAN,AB,Fitzgerald,25.4
+Dore Lake,-111.93879,54.74072,CAN,AB,Beaver Lake,2.9
+Dore Lake,-111.08356,58.77588,CAN,AB,Fort Chipewyan,8.1
+Dorothy Lake,-118.23095,52.88319,CAN,AB,Geikie,3
+Doskoch Lake,-111.56245,53.32974,CAN,AB,Innisfree,6.2
+Douglas Lake,-110.19254,51.71395,CAN,AB,Esther,5.8
+Douglas Lake,-115.94171,51.54189,CAN,AB,Lake Louise,21
+Dowling Lake,-112.0159,51.72867,CAN,AB,Watts,9
+Doze Lake,-110.01078,59.86205,CAN,AB,Fitzgerald,89
+Dragon Lake,-110.09901,51.69025,CAN,AB,Calthorpe,4.9
+Dreamers Lake,-118.44612,55.69466,CAN,AB,Wanham,5.2
+Driedmeat Lake,-112.77246,52.86898,CAN,AB,Viewpoint,3.5
+Driftwood Lake,-117.46279,56.61874,CAN,AB,Deadwood,13.6
+Driftwood Lake,-114.21458,56.41719,CAN,AB,Trout Lake,21.6
+Driftwood Ranch Lake,-119.77481,55.24121,CAN,AB,Goodfare,4.1
+Drink Lake,-111.80295,54.42655,CAN,AB,Briareville,5.5
+Drummond Lake,-115.98713,51.58795,CAN,AB,Lake Louise,22.5
+Drygrass Lake,-112.75747,53.58797,CAN,AB,Sandy Beach,11
+Drysdale Lake,-111.25474,54.0436,CAN,AB,St Paul,6.3
+Duchesneau Lake,-111.25569,53.97003,CAN,AB,St Paul,3.7
+Duck Lake,-113.06288,57.19393,CAN,AB,Chipewyan Lake,37.6
+Duck Lake,-118.95591,58.75242,CAN,AB,Habay,15.1
+Duck Lake,-113.94651,54.64602,CAN,AB,Sylvan Glen,10.2
+Duckpond Lake,-110.58018,52.64574,CAN,AB,Buffalo View,14.2
+Duggans Lake,-113.44767,54.21711,CAN,AB,Anton Lake,8.1
+Dumbell Lake,-110.22778,59.97332,CAN,AB,Fitzgerald,77.8
+Dunn Lake,-117.68563,53.65478,CAN,AB,Pedley,26.4
+Dussault Lake,-114.82254,53.63136,CAN,AB,Magnolia,3.4
+Dusty Lake,-112.49,53.13122,CAN,AB,Round Hill,10.1
+Dyke Lake,-110.28369,53.77168,CAN,AB,Tulliby Lake,8.9
+Dymott Lake,-110.51135,52.81122,CAN,AB,Heath,6.1
+Eagle Lake,-115.46212,51.72662,CAN,AB,Bearberry,39.7
+Eagle Lake,-110.36187,59.83251,CAN,AB,Fitzgerald,69.5
+Eagle Lake,-113.32007,50.99502,CAN,AB,Namaka,4.5
+Eaglenest Lake,-112.15119,57.77265,CAN,AB,Bitumount,52.4
+Earlie Lake,-110.42467,53.18248,CAN,AB,Paradise Valley,18.7
+East Berry Reservoir,-111.40922,51.27037,CAN,AB,Carolside,16.3
+East Croker Lake,-116.5953,55.30542,CAN,AB,High Prairie,15.5
+East Jackson Lake,-110.89932,57.95804,CAN,AB,Point Brule,26.8
+East Lake,-110.99432,53.27147,CAN,AB,Claysmore,8.4
+East Pit Lake,-114.47383,53.58496,CAN,AB,Langford Park,2.8
+East Sawmill Lake,-112.75261,53.48386,CAN,AB,Lindbrook,10.4
+East Twin Lake,-114.34377,52.9471,CAN,AB,Knob Hill,4.7
+East Twin Lake,-114.51385,56.85649,CAN,AB,Peerless Lake,21
+Easy Lake,-110.7936,50.51644,CAN,AB,Buffalo,33.6
+Economy Lake,-118.25934,54.91242,CAN,AB,Goodwin,34
+Eddy Lake,-112.893,53.62538,CAN,AB,Sandy Beach,7.2
+Eden Lake,-114.15447,53.58061,CAN,AB,Manly Corner,4.6
+Edith Lake,-118.03944,52.91212,CAN,AB,Jasper Park Lodge,3.1
+Edith Lake,-115.38258,54.80173,CAN,AB,Swan Hills,9.5
+Edna Lake,-110.32731,56.43142,CAN,AB,Christina Crossing,20.8
+Edna Lake,-118.03619,53.07543,CAN,AB,Snaring,2.8
+Edward Lake,-110.56886,54.4463,CAN,AB,Happy Hollow,6.3
+Edwards Lake,-111.2549,55.50035,CAN,AB,Devenish,5.4
+Edwards Lake,-110.60476,58.25373,CAN,AB,Jackfish,25.9
+Edwards Lake,-111.24017,57.99094,CAN,AB,Point Brule,6.7
+Egg Lake,-111.40843,56.0665,CAN,AB,Pingle,34.8
+Egypt Lake,-115.9033,51.1001,CAN,AB,Sawback,15.6
+Election Lake,-111.86605,54.57385,CAN,AB,Normandeau,8.7
+Elinor Lake,-111.6564,54.66396,CAN,AB,Normandeau,10.6
+Elizabeth Lake,-113.52494,57.19873,CAN,AB,Chipewyan Lake,28.9
+Elk Lake,-112.57028,58.07455,CAN,AB,Kenny Woods,70.4
+Elkwater Lake,-110.29601,49.66749,CAN,AB,Elkwater,1.3
+Ellenwood Lake,-118.29676,55.00774,CAN,AB,Goodwin,24.2
+Ells Lake,-110.53865,59.67172,CAN,AB,Hay Camp,54.7
+Elsa Lake,-118.61512,59.46168,CAN,AB,Slavey Creek,70.2
+Emerald Lake,-112.75651,53.63566,CAN,AB,Sandy Beach,6.7
+Emerald Lake,-115.61895,54.3322,CAN,AB,Whitecourt,21.7
+Emerson Lakes,-117.11796,53.72603,CAN,AB,Obed,20.8
+Emslie Lake,-114.1968,54.55446,CAN,AB,Kilsyth,5
+End Lake,-110.24665,53.71121,CAN,AB,Tulliby Lake,4.1
+Engstrom Lake,-110.90725,56.19537,CAN,AB,Quigley,7
+Epaulette Lake,-116.71112,51.87719,CAN,AB,Saskatchewan River Crossing,11.1
+Epler Lake,-110.12597,58.42757,CAN,AB,Jackfish,46.1
+Equisetum Lake,-114.69853,56.71732,CAN,AB,Peerless Lake,9.1
+Erickson Lake,-114.7744,54.50053,CAN,AB,Doris,10
+Ericksons Lake,-112.64287,52.70454,CAN,AB,Meeting Creek,6.5
+Ernest Lake,-110.79872,53.08064,CAN,AB,Auburndale,4.7
+Ernestina Lake,-110.44785,54.24399,CAN,AB,Ardmore,10
+Erskine Lake,-112.89093,52.30539,CAN,AB,Erskine,1.9
+Esk Lake,-117.94877,59.96648,CAN,AB,Indian Cabins,52.1
+Estridge Lake,-110.41837,52.84621,CAN,AB,Prospect Valley,8.7
+Eta Lake,-115.64235,53.3893,CAN,AB,Cynthia,18.8
+Ethel Lake,-110.34979,54.53164,CAN,AB,Ethel Lake,4.1
+Ethel Lake,-114.87154,53.78141,CAN,AB,Stanger,3.5
+Ethel Lake,-115.05802,54.77965,CAN,AB,Swan Hills,23.1
+Eva Lake,-115.18428,58.91534,CAN,AB,John DOr Prairie,46.7
+Evelyn Lakes,-117.72981,52.66454,CAN,AB,Jasper Park Lodge,33.1
+Ewing Lake,-112.86503,52.16498,CAN,AB,Fenn,8.4
+Exxon Lease,-118.91004,58.53046,CAN,AB,Assumption,22.8
+Fairfax Lake,-116.57731,52.97135,CAN,AB,Pembina Forks,5
+Farrell Lake,-114.77157,55.97062,CAN,AB,Atikameg,55.1
+Farrell Lake,-112.2644,51.8616,CAN,AB,Heart Lake,5.5
+Fawcett Lake,-113.95001,55.29999,CAN,AB,Moose Portage,8.9
+Felix Lake,-111.23513,54.00238,CAN,AB,St Paul,4.1
+Ferguson Lake,-118.81921,55.26541,CAN,AB,Bredin,7.2
+Fickle Lake,-116.78001,53.44941,CAN,AB,Weald,7.8
+Field Lake,-111.9921,54.72765,CAN,AB,Lac La Biche,4.8
+Fifteen Lake,-114.49855,53.14287,CAN,AB,Breton,4.2
+Fighting Lake,-113.55427,56.5961,CAN,AB,Chipewyan Lake,38.6
+Figure Eight Lake,-117.90569,56.30221,CAN,AB,Last Lake,10.4
+Figure Lake,-112.60615,54.43123,CAN,AB,Ellscott,20.7
+Fincastle Lake,-111.98108,49.82883,CAN,AB,Fincastle,2.7
+First Lake,-111.27046,58.00825,CAN,AB,Point Brule,4.3
+Fish Lake,-119.46296,56.72078,CAN,AB,Clear Prairie,17.5
+Fish Lake,-115.24471,54.20537,CAN,AB,Corbett Creek,6.2
+Fish Lake,-111.35492,52.67921,CAN,AB,Hardisty,3.4
+Fish Lake,-114.00686,49.33925,CAN,AB,Pecten,3.9
+Fish Lakes,-116.19854,51.64225,CAN,AB,Lake Louise,24.2
+Fishing Lake,-110.22118,53.90088,CAN,AB,Sputinow,2.6
+Flag Lake,-111.49197,52.55991,CAN,AB,Bellshill,3.2
+Flagon Lake,-110.0066,59.87557,CAN,AB,Fitzgerald,89.3
+Flat Cabin Lake,-110.97962,57.91002,CAN,AB,Point Brule,24.5
+Flat Lake,-111.18477,54.08907,CAN,AB,Flat Lake,4.4
+Flatgrass Lake,-112.62486,59.78765,CAN,AB,Fitzgerald,57.6
+Fleeinghorse Lake,-110.19816,52.33781,CAN,AB,Provost,4.8
+Fleming Lake,-115.43615,58.77049,CAN,AB,John DOr Prairie,34.8
+Fletcher Lake,-110.83001,59.11917,CAN,AB,Fort Chipewyan,48.8
+Floatingstone Lake,-111.63178,54.22745,CAN,AB,Boyne Lake,3.2
+Flood Lake,-117.81318,56.49925,CAN,AB,Smithmill,3.3
+Florence Lake,-110.36504,59.27375,CAN,AB,Hay Camp,68.3
+Florida Lake,-114.7863,55.16398,CAN,AB,Slave Lake,13.2
+Flyingcamp Lake,-112.25298,54.78813,CAN,AB,Plamondon,8.9
+Flyingshot Lake,-118.86317,55.14016,CAN,AB,Grande Prairie,5.5
+Flyingshot Lake,-112.84223,53.5491,CAN,AB,North Cooking Lake,11.7
+Foley Lake,-114.79479,54.62531,CAN,AB,Timeu,18.9
+Footner Lake,-117.18131,58.61511,CAN,AB,Footner Lake,1.1
+Forestburg Reservoir,-112.14489,52.4753,CAN,AB,Cordel,2.5
+Fork Lake,-111.58498,54.47221,CAN,AB,Fork Lake,2.4
+Formby Lake,-110.02713,56.25103,CAN,AB,Christina Crossing,26.6
+Forster Reservoir,-111.77051,50.98579,CAN,AB,Gold Spur,7
+Forsyth Lake,-110.89775,54.33394,CAN,AB,Franchere,11.4
+Forty Mile Coulee Reservoir,-111.39238,49.64393,CAN,AB,Maleb,12.3
+Foster Lake,-115.9832,55.78528,CAN,AB,Gift Lake,15.2
+Foster Pond,-114.43885,52.65439,CAN,AB,Lavesta,7.9
+Fowel Lake,-119.65419,55.19484,CAN,AB,Hayfield,3.7
+Fox Lake,-114.40517,58.43343,CAN,AB,Fox Lake,8.6
+Fox Lake,-111.99676,51.65965,CAN,AB,Hanna,5.2
+Foxall Lakes,-112.94139,52.19653,CAN,AB,Oberlin,10
+Francis Lake,-113.78582,54.70587,CAN,AB,Baptiste Lake,16.4
+Francis Lake,-111.56773,54.96112,CAN,AB,Imperial Mills,11.4
+Frank Lake,-113.71218,50.55779,CAN,AB,Blackie,8.2
+Frank Lake,-113.14833,54.55237,CAN,AB,Kinikinik,9.7
+Frank Lake,-116.90115,55.8997,CAN,AB,Springburn,4
+Frederick Lake,-114.7293,51.0937,CAN,AB,Cheneka,10.2
+Freeman Lake,-115.54161,54.69194,CAN,AB,Swan Hills,9.4
+French Lake,-112.72423,58.63674,CAN,AB,Big Slough,32.4
+Frenchman Lake,-111.44612,54.53875,CAN,AB,Helina,6.8
+Frezie Lake,-110.95273,58.42612,CAN,AB,Jackfish,2.2
+Frog Lake,-114.52598,53.17518,CAN,AB,Alsike,4.5
+Frog Lake,-117.11543,54.78158,CAN,AB,Little Smoky,6.3
+Frog Lake,-110.33344,53.92239,CAN,AB,Sputinow,5.5
+Funell Lake,-119.62582,55.18788,CAN,AB,Hayfield,2
+Fyten Reservoir,-113.3321,51.54705,CAN,AB,Swalwell,1.5
+Gadois Lake,-110.59813,53.94661,CAN,AB,Lindbergh,8.2
+Gadsby Lake,-113.23349,52.53974,CAN,AB,Tristram,6
+Gambling Lake,-112.87909,53.32835,CAN,AB,Lindbrook,8.9
+Gap Lake,-115.23392,51.05462,CAN,AB,Gap,2.5
+Gap Lake,-115.83099,52.33047,CAN,AB,Saunders,16
+Gardiner Lakes,-112.51174,57.5285,CAN,AB,Bitumount,54.1
+Garfield Lake,-117.52305,56.39221,CAN,AB,Leddy,3.1
+Garner Lake,-111.73114,54.19886,CAN,AB,Boyne Lake,5.6
+Garnier Lakes,-110.58344,54.01989,CAN,AB,Holyoke,11.4
+Garnier Lakes,-110.53671,53.96966,CAN,AB,Lindbergh,12.8
+Garson Lake,-110.04096,56.31415,CAN,AB,Christina Crossing,26.4
+Garson Lake,-110.07589,53.72409,CAN,AB,Tulliby Lake,7.2
+Gas Plant Lake,-114.75858,51.98614,CAN,AB,Crammond,7.7
+Gat Lake,-110.79982,52.67962,CAN,AB,Park Farm,0.3
+Gedeon Lake,-110.97578,53.80285,CAN,AB,Northern Valley,10
+Geikie Lake,-110.19844,59.89727,CAN,AB,Fitzgerald,78.6
+Genesee Lake,-114.34918,53.3503,CAN,AB,Genesee,1.5
+Geneva Lake,-111.1846,53.49802,CAN,AB,Mannville,17.5
+George Lake,-114.08248,53.95975,CAN,AB,Arvilla,6.3
+Geraldine Lakes,-117.94885,52.57048,CAN,AB,Wynd,34.6
+Gerry Lake,-118.27132,56.29778,CAN,AB,Deer Hill,4.8
+Ghost Lake,-114.76047,51.19897,CAN,AB,Cheneka,1.9
+Ghost Lake,-113.61021,54.88702,CAN,AB,Grosmont,3.8
+Ghost Lakes,-115.23875,51.26362,CAN,AB,Harvie Heights,18.5
+Gibbs Lake,-111.49496,53.38091,CAN,AB,Innisfree,2.4
+Gift Lake,-115.86018,55.88804,CAN,AB,Gift Lake,3
+Gilbert Lake,-113.16911,54.50675,CAN,AB,Meanook,12.8
+Gillespie Lake,-110.17831,52.42441,CAN,AB,Green Glade,7.8
+Gilroy Lake,-115.69129,54.69875,CAN,AB,Swan Hills,18.7
+Gipsy Lake,-110.23842,56.42593,CAN,AB,Christina Crossing,23
+Giroux Lake,-116.95733,54.61456,CAN,AB,Little Smoky,19.9
+Glacier Lake,-116.861,51.92092,CAN,AB,Saskatchewan River Crossing,9.9
+Gladu Lake,-113.90518,53.64548,CAN,AB,Villeneuve,6.3
+Gleichen Town Reservoir,-113.06959,50.87999,CAN,AB,Gleichen,1.9
+Gleniffer Lake,-114.27304,52.02524,CAN,AB,Dickson,4.2
+Glenmore Reservoir,-114.11834,50.98473,CAN,AB,Starlight,4.3
+Glover Lake,-111.31672,55.49123,CAN,AB,Margie,6.4
+Goat Lake,-115.85843,51.44682,CAN,AB,Eldon,18.5
+Goat Pond,-115.40192,51.01514,CAN,AB,Canmore,7.9
+Godfrey Lake,-111.71924,52.01721,CAN,AB,Sullivan Lake,9.8
+Godin Lake,-114.04754,56.09521,CAN,AB,Wabasca-Desmarais,18.8
+Gods Lake,-114.28999,56.81814,CAN,AB,Peerless Lake,23.9
+Gogo Lake,-111.04107,57.88073,CAN,AB,Point Brule,23.5
+Golden Lake,-116.38397,56.54881,CAN,AB,Cadotte Lake,9.1
+Goldeye Lake,-116.19222,52.44921,CAN,AB,Nordegg,8.3
+Goldfish Lake,-110.81072,58.08529,CAN,AB,Point Brule,31.8
+Goldschmidt Lake,-110.75483,59.89352,CAN,AB,Fitzgerald,47.6
+Gong Lake,-117.58746,52.38755,CAN,AB,Jasper Park Lodge,63.9
+Good Lake,-111.54275,54.14929,CAN,AB,Ashmont,2.8
+Goodfish Lake,-111.81831,54.28112,CAN,AB,Goodfish Lake,1.7
+Goodfish Lake,-114.73558,56.70121,CAN,AB,Peerless Lake,10.4
+Goodridge Lake,-114.24477,54.4296,CAN,AB,Vega,9.2
+Goodwin Lake,-111.66112,55.41758,CAN,AB,Margie,20.6
+Goodwin Lake,-115.90693,54.08577,CAN,AB,Whitecourt,15.8
+Goose Lake,-117.54981,54.97262,CAN,AB,Calais,11.1
+Goose Lake,-115.13167,54.31636,CAN,AB,Lone Pine,1.6
+Goose Lake,-113.86084,49.42791,CAN,AB,Pincher Creek,8.9
+Goose Lake,-112.81189,53.56516,CAN,AB,Sandy Beach,12.6
+Gooseberry Lake,-110.73699,52.11695,CAN,AB,Neutral Valley,6.4
+Goosegrass Lake,-114.40871,56.87205,CAN,AB,Peerless Lake,24.6
+Goosequill Lake,-113.15966,52.05818,CAN,AB,Lousana,6.4
+Gordon Lake,-110.44756,56.50672,CAN,AB,Christina Crossing,27.6
+Gosling Lake,-114.76536,52.8003,CAN,AB,Buck Lake,16.8
+Gough Lake,-112.44536,52.04594,CAN,AB,Leo,6
+Governor Lake,-110.1263,59.63861,CAN,AB,Hay Camp,76.5
+Graham Lake,-114.5392,56.56527,CAN,AB,Trout Lake,7.3
+Grande Cache Lake,-119.04569,53.90356,CAN,AB,Grande Cache,5.1
+Grandeur Lake,-111.78867,54.51167,CAN,AB,Briareville,4.6
+Grandview Lake,-114.19659,53.49332,CAN,AB,Carvel,4.3
+Grass Lake,-111.46338,52.60607,CAN,AB,Bellshill,5.2
+Grassy Island Lake,-110.32947,51.82898,CAN,AB,Kirriemuir,10.5
+Grassy Lake,-113.82112,54.74945,CAN,AB,Lahaieville,17.4
+Grassy Lake,-117.51607,54.81953,CAN,AB,Little Smoky,23.4
+Grassy Lake,-110.19989,48.99895,CAN,AB,Wild Horse,1.2
+Graveyard Lake,-117.80515,53.49552,CAN,AB,Old Entrance,15.1
+Grayling Lake,-110.89785,57.91213,CAN,AB,Point Brule,28.7
+Greasy Lake,-110.53074,52.86191,CAN,AB,Heath,8.3
+Greenan Lake,-110.0364,50.44838,CAN,AB,Hilda,3.5
+Greens Lake,-110.23366,51.36092,CAN,AB,Sibbald,6.5
+Greenstreet Lake,-111.54693,54.19204,CAN,AB,Ashmont,7.1
+Gregg Lake,-117.79763,53.53897,CAN,AB,Old Entrance,19.6
+Gregory Lake,-112.64949,54.22169,CAN,AB,Barich,4.8
+Grenier Lake,-112.52078,54.79708,CAN,AB,Atmore,3.1
+Grew Lake,-113.21231,56.90779,CAN,AB,Chipewyan Lake,16.2
+Grist Lake,-110.47178,55.37754,CAN,AB,Behan,11.6
+Grose Lake,-112.94318,52.32761,CAN,AB,Erskine,4.4
+Gull Lake,-113.99996,52.53795,CAN,AB,Bentley,8.7
+Gull Lake,-116.12724,58.43493,CAN,AB,Boyer,4.5
+Gummer Lake,-118.99458,55.36713,CAN,AB,Buffalo Lake,2
+Gun Club Reservoir,-111.9173,50.60975,CAN,AB,Brooks,5
+Guy Lake,-114.0892,53.86995,CAN,AB,Stettin,4.3
+Hackmatack Lake,-119.66516,55.1862,CAN,AB,Hayfield,3.6
+Haiduk Lake,-115.94183,51.11932,CAN,AB,Massive,15.7
+Haig Lake,-116.09642,56.90234,CAN,AB,Bison Lake,31.9
+Hair Lake,-110.10291,59.69202,CAN,AB,Hay Camp,78.9
+Haley Lake,-113.69226,54.11204,CAN,AB,Clyde,5
+Halfmoon Lake,-113.09425,53.46092,CAN,AB,Cooking Lake,5.8
+Halfmoon Lake,-113.34796,54.06034,CAN,AB,Waugh,4.9
+Halfway Lake,-113.51876,54.15266,CAN,AB,Halfway Lake,4.6
+Halfway Lake,-116.78465,55.38455,CAN,AB,Triangle,6.7
+Hamilton Lake,-111.9568,54.06931,CAN,AB,Vilna,5.8
+Hamlin Lake,-111.67163,54.62566,CAN,AB,Normandeau,6.4
+Handhills Lake,-112.1237,51.48699,CAN,AB,Lawsonburg,2.5
+Hanmore Lake,-112.5262,54.29725,CAN,AB,Barich,14.5
+Hansen Lake,-110.22365,54.92553,CAN,AB,Bank Bay,39.5
+Hansman Lake,-110.40045,52.40511,CAN,AB,Cadogan,10.1
+Happy Hollow Lake,-110.52571,54.53628,CAN,AB,Happy Hollow,4.2
+Hardisty Lake,-111.32438,52.66847,CAN,AB,Hardisty,1.5
+Harker Lake,-110.24439,59.98965,CAN,AB,Fitzgerald,77.2
+Harmatten Reservoir,-114.4768,51.67268,CAN,AB,Shantz,1.8
+Harold Lake,-110.58553,54.47109,CAN,AB,Happy Hollow,4.1
+Harold Lakes,-110.20954,53.06406,CAN,AB,Paradise Valley,6.7
+Harvey Lake,-118.45034,53.15581,CAN,AB,Shale Banks,18.6
+Harwood Lake,-110.37508,58.06504,CAN,AB,Jackfish,50.6
+Hasse Lake,-114.17425,53.48716,CAN,AB,Spring Lake,4.4
+Hastings Lake,-112.91117,53.41748,CAN,AB,Deville,3.4
+Hat Lake,-110.33394,57.43284,CAN,AB,Bitumount,78.8
+Hatcher Lake,-114.40344,54.84329,CAN,AB,Tieland,15.1
+Hatfield Lake,-113.03075,52.57796,CAN,AB,Bashaw,4.1
+Hattie Lake,-111.57428,52.97345,CAN,AB,Kinsella,4.5
+Haunted Lakes,-113.15821,52.40563,CAN,AB,Alix,1.6
+Hawkins Lake,-115.79547,55.99571,CAN,AB,Atikameg,12.5
+Hay Lake,-119.41571,55.28615,CAN,AB,Albright,5.6
+Hay Lake,-118.5133,56.15674,CAN,AB,Gage,2.1
+Hay Lake,-118.78653,58.8349,CAN,AB,Habay,5
+Hays Lake,-111.94368,50.08534,CAN,AB,Grantham,5.2
+Hbog Pond,-116.54537,53.56735,CAN,AB,Ansell,1.7
+Heart Lake,-111.49092,55.03219,CAN,AB,Pitlochrie,14.9
+Hebephrenic (Jackfish) Lake,-114.24357,56.81695,CAN,AB,Peerless Lake,25.9
+Hector Lake,-116.36274,51.58566,CAN,AB,Lake Louise,21.8
+Helen Lake,-117.8293,56.5419,CAN,AB,Clear Hills,4
+Helena Lake,-111.59794,54.68039,CAN,AB,Normandeau,14.1
+Helene Lake,-110.07035,58.17313,CAN,AB,Jackfish,56.6
+Helina Lake,-111.44815,54.49789,CAN,AB,Helina,3.4
+Helliwell Lake,-113.62697,54.24121,CAN,AB,Nestow,2
+Helmer Reservoir,-111.98312,51.64923,CAN,AB,Hanna,4
+Henderson Lake,-112.79744,49.68783,CAN,AB,Lethbridge,3.3
+Henderson Lake,-119.09824,55.34467,CAN,AB,Niobe,2.4
+Heningers Reservoir,-111.56276,49.20783,CAN,AB,Aden,28
+Henson Lake,-110.22599,59.92364,CAN,AB,Fitzgerald,77.3
+Heritage Lake,-113.66644,53.79963,CAN,AB,Morinville,1.5
+Hermit Lake,-118.96432,55.20513,CAN,AB,Hermit Lake,3
+Hibernia Lake,-118.14345,52.87118,CAN,AB,Wynd,1.3
+Hidden Lake,-110.64123,53.35284,CAN,AB,Borradaile,4
+Hidden Lake,-115.18604,50.60769,CAN,AB,Kovach,36.2
+Hidden Lake,-116.10872,51.48464,CAN,AB,Lake Louise,8.3
+High Hill Lake,-110.61757,56.88223,CAN,AB,Draper,45.4
+Highbank Lake,-110.73898,54.55832,CAN,AB,La Corey,12.9
+Hilda Lake,-110.43001,54.52099,CAN,AB,Ethel Lake,5.2
+Hilltop Lake,-119.03804,55.52038,CAN,AB,Northmark,12.7
+Hind Lake,-110.61563,53.2102,CAN,AB,Wildmere,15.3
+Hobden Lake,-111.0011,53.93292,CAN,AB,Elk Point,7.5
+Hobo Lake,-114.72536,51.11546,CAN,AB,Cheneka,8
+Hollow Lake,-112.75136,54.25375,CAN,AB,Hollow Lake,2.4
+Holmes Lake,-110.21642,59.89627,CAN,AB,Fitzgerald,77.6
+Home Oil Reservoir,-115.43715,54.8223,CAN,AB,Swan Hills,12
+Honey Lake,-111.76673,54.64546,CAN,AB,Normandeau,7.7
+Honeymoon Lake,-113.59189,52.08882,CAN,AB,Pine Lake,7.9
+Hook Lake,-110.50093,56.04247,CAN,AB,Christina Crossing,24.2
+Hook Lake,-111.00933,53.90298,CAN,AB,Elk Point,7.1
+Hook Lake,-111.0562,54.44924,CAN,AB,Iron River,9.6
+Hooker Lake,-110.85867,59.54755,CAN,AB,Hay Camp,34.3
+Hoople Lake,-114.96623,53.52371,CAN,AB,Moon Lake,7.9
+Hope Lake,-112.66105,54.65823,CAN,AB,Caslan,10.1
+Hope Lake,-114.79613,53.88894,CAN,AB,Lisburn,3.9
+Hopeful Lake,-110.15524,57.39587,CAN,AB,Bitumount,89.3
+Horberg Lake,-110.0354,59.91545,CAN,AB,Fitzgerald,87.8
+Horne Lake,-111.55897,54.63527,CAN,AB,Normandeau,12.7
+Hornpile Lake,-111.12428,54.09516,CAN,AB,Flat Lake,3.7
+Horse Lake,-114.46522,53.75351,CAN,AB,Alexis,1.5
+Horse Lake,-119.7127,55.35291,CAN,AB,Brainard,4.3
+Horse Lake,-113.60671,56.83918,CAN,AB,Chipewyan Lake,13.9
+Horse Lake,-110.93359,56.30339,CAN,AB,Kinosis,3.5
+Horse Lake,-119.71346,55.33263,CAN,AB,Lymburn,4.5
+Horse Lake,-111.94695,56.14194,CAN,AB,Mariana Lake,21.4
+Horse Lake,-112.35253,54.87505,CAN,AB,Plamondon,2.9
+Horsefly Lake Reservoir,-112.07484,49.72569,CAN,AB,Taber,8.5
+Horseshoe Lake,-114.2451,54.61605,CAN,AB,Kilsyth,6.5
+Horseshoe Lake,-113.78376,54.49023,CAN,AB,Meadowbrook,8
+Horseshoe Lake,-110.7397,52.35987,CAN,AB,Metiskow,9
+Horseshoe Ponds,-114.24231,52.48861,CAN,AB,Gilby,10.8
+Horsetail Lake,-113.40434,56.06318,CAN,AB,Sandy Lake,27.7
+Hoselaw Lake,-110.93595,54.11699,CAN,AB,Hoselaw,7.6
+Hotte Lake,-116.13263,58.96019,CAN,AB,Boyer,56.4
+Houcher Lake,-110.82179,52.39775,CAN,AB,Czar,6.4
+Howard Lake,-113.98768,55.35062,CAN,AB,Moose Portage,15
+Howie Lake,-113.48397,54.9318,CAN,AB,Grosmont,9.1
+Huard Lake,-113.32408,53.0183,CAN,AB,Wetaskiwin,6.5
+Hubbles Lake,-114.09083,53.56413,CAN,AB,Beach Corner,3.2
+Hubert Lake,-114.19225,54.54205,CAN,AB,Kilsyth,6
+Hudson Bay Lake,-114.24616,49.62886,CAN,AB,Lundbreck,7.7
+Hudsons Bay Lake,-110.61808,52.73641,CAN,AB,Heath,7.2
+Hughenden Lake,-111.00956,52.52068,CAN,AB,Hughenden,3.1
+Hughes Lake,-118.91256,55.19823,CAN,AB,Hermit Lake,6.2
+Hummock Lake,-113.18358,52.0547,CAN,AB,Lousana,6.5
+Hunt Lake,-112.05165,51.94048,CAN,AB,Endiang,7.5
+Hunts Lake,-115.34916,55.10976,CAN,AB,Kinuso,25.3
+Huppie Lake,-111.81641,54.55321,CAN,AB,Normandeau,6.2
+Hutch Lake,-117.29031,58.74002,CAN,AB,Hutch Lake,1.7
+Hutton Lake,-110.18687,59.8592,CAN,AB,Fitzgerald,79.2
+Hyway Ponds,-115.22263,51.05263,CAN,AB,Dead Mans Flats,3.2
+Ice Lake,-114.62521,53.86983,CAN,AB,Pembridge,5.6
+Indian Lake,-110.98775,53.39313,CAN,AB,Claysmore,6.1
+Indian Lake,-112.82472,50.70917,CAN,AB,Shouldice,10.5
+Inkster Lake,-110.01377,59.90661,CAN,AB,Fitzgerald,88.9
+Innis Lake,-114.21223,51.77132,CAN,AB,Minaret,6.3
+Iosegun Lake,-116.85055,54.47428,CAN,AB,Fox Creek,9.3
+Ipiatik Lake,-111.05773,55.28868,CAN,AB,Margie,24
+Ironwood Lake,-111.51894,54.60173,CAN,AB,Rich Lake,12.3
+Iroquois Lakes,-116.629,55.46433,CAN,AB,Aggie,1.6
+Iroquois Lakes,-116.69774,55.45139,CAN,AB,Triangle,2.5
+Isabella Lake,-116.42271,51.79637,CAN,AB,Saskatchewan River Crossing,29.7
+Isadores Lake,-111.60446,57.23348,CAN,AB,Fort MacKay,5.8
+Isidore Lake,-113.74518,59.36761,CAN,AB,Jackfish River,63.9
+Island Lake,-112.43076,54.33072,CAN,AB,Barich,21
+Island Lake,-113.27173,56.76681,CAN,AB,Chipewyan Lake,22.9
+Island Lake,-114.68506,49.6269,CAN,AB,Crowsnest,0.7
+Island Lake,-115.00618,54.6067,CAN,AB,Freeman River,25.9
+Island Lake,-113.53068,54.84552,CAN,AB,Grosmont,3.1
+Island Lake,-111.21336,56.28882,CAN,AB,Kinosis,16.5
+Island Lake,-113.49636,55.88859,CAN,AB,Sandy Lake,9.6
+Island Lake,-110.13056,53.92253,CAN,AB,Sputinow,7.8
+Isle Lake,-114.73067,53.62466,CAN,AB,Lake Isle,2.9
+Islet Lake,-112.82937,53.4589,CAN,AB,Deville,5.6
+Jack Fish Lake,-111.29708,53.59452,CAN,AB,Beauvallon,8.5
+Jack Fish Lake,-114.24717,53.48377,CAN,AB,Mewassin,4.8
+Jackfish Lake,-113.09494,54.81052,CAN,AB,Amber Valley,13.7
+Jackfish Lake,-115.56699,52.50376,CAN,AB,Ancona,6.1
+Jackfish Lake,-119.5987,55.57714,CAN,AB,Homestead,16.1
+Jackfish Lake,-117.9356,54.74344,CAN,AB,Sturgeon Heights,41.9
+Jackfish Lake,-116.17495,53.51499,CAN,AB,Wolf Creek,14.7
+Jackfish Lakes,-113.77575,59.46636,CAN,AB,Jackfish River,72.7
+Jackpine Lake,-116.56637,56.91168,CAN,AB,Bison Lake,40.3
+Jacks,-110.20034,58.00737,CAN,AB,Jackfish,62.1
+Jackson Lake,-110.93042,57.96013,CAN,AB,Point Brule,25
+Jackson Lake,-111.54871,54.80931,CAN,AB,Tweedie,17.8
+Jacques Lake,-117.74945,52.92922,CAN,AB,Jasper Park Lodge,21.2
+James Lake,-110.01902,52.76758,CAN,AB,Chauvin,11.6
+Jamieson Lake,-111.88449,50.60921,CAN,AB,Brooks,4.7
+Jamieson Lake,-110.90902,52.75041,CAN,AB,Wainwright,9.9
+Jarvis Bay,-112.99425,52.54687,CAN,AB,Bashaw,4.3
+Jarvis Lake,-117.79981,53.45782,CAN,AB,Old Entrance,11.2
+Jaz,-110.71199,58.19603,CAN,AB,Jackfish,27.6
+Jean Lake,-113.76558,57.49011,CAN,AB,Chipewyan Lake,63.6
+Jenkins Lake,-113.60339,54.91729,CAN,AB,Grosmont,6.4
+Jensen Reservoir,-112.89772,49.31402,CAN,AB,Magrath,10.7
+Jeremie Lake,-111.90189,54.65018,CAN,AB,Beaver Lake,12.3
+Jerome Lake,-110.71208,54.06387,CAN,AB,Kehewin Cree Nation,8.2
+Jerry Lake,-116.77105,54.55402,CAN,AB,Fox Creek,17.9
+Jessie Lake,-110.73482,54.25299,CAN,AB,Bonnyville,1.6
+Jessie Lake,-114.97291,54.89149,CAN,AB,Swan Hills,33.7
+Joachim Lakes,-118.44472,53.9173,CAN,AB,Muskeg River,13.2
+Job Lake,-116.85192,52.36737,CAN,AB,Saskatchewan River Crossing,44.3
+Joes Lake,-110.72122,56.38453,CAN,AB,Cheecham,14.6
+John Lake,-110.03867,53.73732,CAN,AB,Tulliby Lake,9.9
+Johnnys Lake,-114.2949,53.53212,CAN,AB,Smithfield,5.4
+Johnson Lake,-115.48338,51.19599,CAN,AB,Anthracite,0.8
+Johnson Lake,-112.86658,58.3424,CAN,AB,Big Slough,56.4
+Johnson Lake,-111.89071,50.59404,CAN,AB,Brooks,3
+Johnson Lake,-110.05085,59.76495,CAN,AB,Hay Camp,83.9
+Johnson Lake,-117.60799,59.94201,CAN,AB,Indian Cabins,33
+Johnson Lake,-110.38887,57.65969,CAN,AB,Point Brule,69.1
+Johnson Reservoir,-111.80812,50.34032,CAN,AB,Rolling Hills,13
+Joker Lake,-115.93359,56.49668,CAN,AB,Little Buffalo,12.5
+Jones Lake,-119.00301,55.39118,CAN,AB,Buffalo Lake,2.2
+Jordan Lake,-112.83803,53.63438,CAN,AB,Sandy Beach,4.9
+Joseph Lake,-113.07177,53.2913,CAN,AB,New Sarepta,5.3
+Jpm-1 Compensation Lake,-111.39225,57.30044,CAN,AB,Bitumount,18
+Julien Lake,-111.28852,54.03309,CAN,AB,St Paul,4.5
+Jumbo Lake,-110.4844,55.42535,CAN,AB,Behan,16.9
+Kaduk Lake,-112.12225,54.22891,CAN,AB,Bellis,9.7
+Kakenokamaksik Lake,-113.46629,57.60872,CAN,AB,Chipewyan Lake,74.3
+Kakina Lake,-114.16366,53.85692,CAN,AB,Sion,3.8
+Kakut Lake,-118.52849,55.62882,CAN,AB,Manir,11.2
+Kamisak Lake,-119.75094,55.16377,CAN,AB,Leighmore,7.2
+Kamistikowik Lake,-113.52755,56.15475,CAN,AB,Wabasca-Desmarais,29
+Karr Lake,-118.25422,54.53764,CAN,AB,Grovedale,66.9
+Kathleen Lake,-116.12343,53.85896,CAN,AB,Shining Bank,9.8
+Kathryn Lake,-114.90808,54.74513,CAN,AB,Swan Hills,31.8
+Kearl Lake,-111.23879,57.29207,CAN,AB,Fort MacKay,25
+Keenex Coulee Reservoir,-113.18444,49.9232,CAN,AB,Nobleford,10.3
+Keephills Pond Lake,-114.46999,53.46688,CAN,AB,Highvale,4
+Keeping Lake,-119.93534,55.46118,CAN,AB,Demmitt,2.5
+Kehiwin Lake,-110.90704,54.06046,CAN,AB,Kehewin Cree Nation,5.5
+Keho Lake,-113.00082,49.94977,CAN,AB,Barons,7.9
+Keith Lake,-111.09676,57.91846,CAN,AB,Point Brule,18.3
+Keith Lake,-111.13608,54.53675,CAN,AB,Truman,9.7
+Keivers Lake,-113.55561,51.68816,CAN,AB,Allingham,3.2
+Kelly Lake,-114.81653,53.87299,CAN,AB,Lisburn,2.6
+Kenilworth Lake,-110.52137,53.33064,CAN,AB,Islay,7.1
+Kennedy Lake,-113.26884,59.44683,CAN,AB,Jackfish River,54.8
+Kerns Lake,-111.07321,53.31319,CAN,AB,Claysmore,4.6
+Kerr Lake,-112.06164,54.52076,CAN,AB,Kikino,8.8
+Kesler Lake,-113.93747,49.18329,CAN,AB,Twin Butte,10.7
+Kettle Lake,-114.06264,53.62098,CAN,AB,Beach Corner,9.6
+Kia Nea Lake,-117.77833,53.27045,CAN,AB,Brule,6.1
+Kidney Lake,-115.31791,54.49052,CAN,AB,Lone Pine,24.4
+Kidney Lake,-114.52352,56.77994,CAN,AB,Peerless Lake,12.5
+Killarney Lake,-110.09428,52.58533,CAN,AB,Killarney Lake,1.6
+Kilome Lake,-114.16941,59.9161,CAN,AB,Jackfish River,125.4
+Kilsyth Lake,-114.12211,54.6079,CAN,AB,Kilsyth,2.7
+Kimiwan Lake,-116.9168,55.75322,CAN,AB,Roxana,4.3
+Kimowin Lake,-110.07984,56.19454,CAN,AB,Christina Crossing,24.4
+Kimura Lake,-113.24009,53.95363,CAN,AB,Opal,4.4
+King Lake,-114.19306,54.5611,CAN,AB,Kilsyth,4.2
+Kinky Lake,-117.78327,53.28089,CAN,AB,Brule,5.7
+Kinnaird Lake,-111.52007,54.7747,CAN,AB,Snug Cove,18.7
+Kinokamau Lake,-113.62792,53.57769,CAN,AB,Cannell,2.1
+Kinosis Lake,-111.01551,56.33157,CAN,AB,Kinosis,3.6
+Kinosiu Lake,-112.28997,54.72246,CAN,AB,Hylo,7.1
+Kipeecheechagum Lake,-113.38861,56.93108,CAN,AB,Chipewyan Lake,5.2
+Kipp Lake,-114.48774,54.15254,CAN,AB,Barrhead,6.5
+Kirby Lake,-110.76864,55.47194,CAN,AB,Conklin,26.3
+Kircaldy Reservoir,-112.51893,49.21225,CAN,AB,McNab,22.5
+Kirkpatrick Lake,-111.3041,51.86992,CAN,AB,Ensleigh,11.9
+Kiskatinaw Lake,-111.00435,56.54032,CAN,AB,Lenarthur,4.2
+Kitsim Reservoir,-112.06666,50.44462,CAN,AB,Rainier,8.7
+Kitto Lake,-114.70213,53.33907,CAN,AB,Northleigh,7.2
+Kitty Lake,-110.82849,53.29706,CAN,AB,Vermilion,6.6
+Klaudts Reservoir,-110.90747,49.9726,CAN,AB,Seven Persons,10.9
+Klein Lake,-115.34723,51.61865,CAN,AB,Bearberry,39.2
+Konah Lake,-111.85072,54.60696,CAN,AB,Normandeau,8.3
+Krause Lake,-115.42998,54.68388,CAN,AB,Swan Hills,4.1
+Kress Lake,-111.14302,57.98071,CAN,AB,Point Brule,12.4
+Ksituan Lake,-119.41359,55.80213,CAN,AB,Gordondale,9
+La Glace Lake,-119.23947,55.38546,CAN,AB,La Glace,5.7
+Labyrinth Lake,-113.19669,53.11687,CAN,AB,Hay Lakes,12.9
+Lac Bellevue,-111.33468,53.81145,CAN,AB,Lac Bellevue,3.4
+Lac Berard,-111.4315,53.8935,CAN,AB,Lafond,2.3
+Lac Brosseau,-111.65502,53.84023,CAN,AB,Brosseau,5.8
+Lac Canard,-111.35123,53.88242,CAN,AB,Lac Bellevue,4.5
+Lac Cote,-111.00519,53.6437,CAN,AB,Derwent,2.6
+Lac Cyr,-111.45373,53.92144,CAN,AB,Lafond,3.6
+Lac Delorme,-111.15056,53.89624,CAN,AB,Lake Eliza,9.5
+Lac Deroches,-111.53663,53.04726,CAN,AB,Kinsella,5.3
+Lac Des Arcs,-115.1834,51.05492,CAN,AB,Exshaw,1.6
+Lac Des Roches,-117.38136,53.05712,CAN,AB,Luscar,1.6
+Lac Dufrance,-110.07908,53.77217,CAN,AB,Tulliby Lake,9.3
+Lac Dufresne,-110.86536,53.89249,CAN,AB,Elk Point,2.5
+Lac Emilien,-111.11894,53.54622,CAN,AB,Myrnam,14.8
+Lac Flammand,-111.09201,53.90785,CAN,AB,St Edouard,9.4
+Lac Hivon,-111.08988,53.59956,CAN,AB,Slawa,9.9
+Lac La Biche,-112.0755,54.86523,CAN,AB,Lac La Biche Mission,4.7
+Lac La Nonne,-114.32158,53.93983,CAN,AB,Lac la Nonne,3.2
+Lac Lacroix,-111.85182,54.65833,CAN,AB,Normandeau,11.7
+Lac Letendre,-111.57076,53.08296,CAN,AB,Philips,6.2
+Lac Loranger,-111.51551,53.14398,CAN,AB,Philips,13.9
+Lac Magloire,-117.17287,55.8712,CAN,AB,Jean Cata,9.1
+Lac Patenaude,-110.0853,53.75741,CAN,AB,Tulliby Lake,8
+Lac Poitras,-111.50905,53.85873,CAN,AB,Lafond,4.4
+Lac Saint Cyr,-111.19147,53.89681,CAN,AB,Lake Eliza,9.7
+Lac Sante,-111.55757,53.84127,CAN,AB,Foisy,5.8
+Lac Ste. Anne,-114.42621,53.70915,CAN,AB,Lac Ste Anne,2.3
+Lacombe Lake,-113.7982,52.42776,CAN,AB,Jackson,2.2
+Lagoon Lake,-112.03125,54.89928,CAN,AB,Lac La Biche Mission,9.3
+Lake 75,-110.87765,55.50281,CAN,AB,Conklin,19.1
+Lake Athabasca,-110.48248,58.90375,CAN,AB,Fort Chipewyan,44.2
+Lake Claire,-112.08459,58.58876,CAN,AB,Embarras Portage,38.5
+Lake Dene,-113.33314,58.38902,CAN,AB,Little Fishery,37.5
+Lake Eighteen,-114.7257,54.09588,CAN,AB,Roselea,3.2
+Lake Eliza,-111.18794,53.80746,CAN,AB,Lake Eliza,1.7
+Lake Ernie,-114.86514,52.37406,CAN,AB,Otway,3.6
+Lake Fallow,-117.68129,55.27965,CAN,AB,Crooked Creek,17.9
+Lake George,-118.54933,56.2287,CAN,AB,Hines Creek,4
+Lake Gloria,-115.6049,50.8646,CAN,AB,Canmore,29.4
+Lake Gray,-113.96071,54.83909,CAN,AB,Tieland,15.4
+Lake Katherine,-116.39171,51.68646,CAN,AB,Lake Louise,32.5
+Lake Louise,-116.22714,51.41181,CAN,AB,Lake Louise,3.6
+Lake Margaret,-116.37548,51.57909,CAN,AB,Lake Louise,21.8
+Lake May,-119.99113,59.91879,CAN,AB,Habay,143.1
+Lake Merlin,-116.11036,51.51212,CAN,AB,Lake Louise,10.8
+Lake Minnewanka,-115.38948,51.25604,CAN,AB,Anthracite,10.1
+Lake Newell,-111.94,50.43186,CAN,AB,Rainier,12.9
+Lake Of Falls,-116.62835,52.08444,CAN,AB,Saskatchewan River Crossing,14.6
+Lake St. Germain,-117.48745,56.39144,CAN,AB,Leddy,3.7
+Lake Tourangeau,-116.44836,58.20136,CAN,AB,La CrÃªte,2.8
+Lakeview Lake,-113.90676,54.48116,CAN,AB,Jarvie,6
+Landon Lake,-110.82961,53.72477,CAN,AB,Northern Valley,8.7
+Landry Lake,-110.62324,54.20813,CAN,AB,Muriel Lake,1.4
+Landslide Lake,-116.55333,52.08153,CAN,AB,Saskatchewan River Crossing,17.7
+Lane Lake,-112.14628,59.47987,CAN,AB,Hay Camp,38.7
+Lane Lake,-110.91142,54.71119,CAN,AB,Snug Cove,28.7
+Lang Lake,-111.42088,53.33965,CAN,AB,Minburn,4.6
+Larocque Lake,-110.82532,58.10017,CAN,AB,Point Brule,31.4
+Larry Lake,-112.95137,53.28805,CAN,AB,Hay Lakes,12.4
+Last Lake,-118.01008,56.2401,CAN,AB,Last Lake,3.1
+Last Lake,-114.13695,56.88395,CAN,AB,Peerless Lake,35.7
+Lathom Lake,-112.2963,50.71248,CAN,AB,Lathom,2.7
+Laurent Lake,-113.97376,55.92164,CAN,AB,Wabasca-Desmarais,9.2
+Laurier Lake,-110.52165,53.86069,CAN,AB,Middle Creek,5.7
+Lawrence Lake,-113.70481,54.99266,CAN,AB,Ranch,15.1
+Lawson Lake,-110.75768,53.31957,CAN,AB,Borradaile,4.8
+Lawson Lake,-115.26602,50.67743,CAN,AB,Kovach,28.8
+Lazar Lake,-113.97303,57.48869,CAN,AB,Chipewyan Lake,68
+Leah Lake,-116.85639,52.33932,CAN,AB,Saskatchewan River Crossing,41.3
+Leane Lake,-110.06001,52.56442,CAN,AB,Killarney Lake,1.7
+Lebeaus Lake,-113.74197,54.2469,CAN,AB,Halach,5.7
+Leddy Lake,-117.45951,56.39832,CAN,AB,Leddy,5.4
+Leduc Reservoir,-113.56726,53.26062,CAN,AB,Leduc,1.6
+Lee Lake,-114.24585,49.54226,CAN,AB,Burmis,3.5
+Leech Lake,-115.25665,54.11074,CAN,AB,Lombell,4.8
+Legend Lake,-112.92979,57.40607,CAN,AB,Chipewyan Lake,61.3
+Leggo Lake,-110.63648,59.74073,CAN,AB,Hay Camp,52.4
+Leicester Lake,-111.86234,54.7792,CAN,AB,Barnegat,2.7
+Leland Lakes,-111.00984,59.92415,CAN,AB,Fitzgerald,33.9
+Leman Lake,-115.42062,50.75053,CAN,AB,Kovach,25.6
+Leming Lake,-110.50114,54.59448,CAN,AB,Happy Hollow,10.8
+Lemiseau Lake,-112.4842,55.11017,CAN,AB,Amesbury,3.3
+Lessard Lake,-114.65179,53.78512,CAN,AB,Cherhill,4.1
+Lesser Slave Lake,-115.40334,55.43776,CAN,AB,Kinuso,11.9
+Letour Lake,-114.68588,53.33404,CAN,AB,Berrymoor,7.9
+Levering Lake,-113.15565,53.2369,CAN,AB,New Sarepta,4.2
+Lightbulb Lake,-116.32442,54.86981,CAN,AB,Sweathouse Creek,39
+Lillabo Lake,-110.01697,58.87713,CAN,AB,Fort Chipewyan,68.2
+Lillian Lake,-111.73397,57.43382,CAN,AB,Bitumount,7.4
+Lily Lake,-114.66546,53.70692,CAN,AB,Darwell,6.3
+Lily Lake,-113.37688,53.94842,CAN,AB,Fedorah,4.6
+Lily Lake,-114.50277,54.30977,CAN,AB,Neerlandia,8.2
+Lime Kiln Lake,-113.9737,49.41501,CAN,AB,Pincher Creek,8
+Limestone Lake,-112.50843,53.88778,CAN,AB,Wostok,6
+Limon Lake,-111.33671,58.42323,CAN,AB,Embarras Portage,8.8
+Line Lake,-110.39801,57.72974,CAN,AB,Point Brule,64.4
+Lineham Lakes,-114.07295,49.07769,CAN,AB,Waterton Park,11.9
+Lingrell Lake,-119.82352,54.73033,CAN,AB,Sylvester,30.9
+Linton Lake,-116.48018,58.17035,CAN,AB,La CrÃªte,4.5
+Lister Lake,-110.15166,59.71136,CAN,AB,Hay Camp,76.8
+Little Bear Lake,-110.29953,54.55183,CAN,AB,Bank Bay,4.7
+Little Bear Lake,-111.4526,55.10174,CAN,AB,Philomena,13.2
+Little Beaver Lake,-112.02804,55.1689,CAN,AB,Avenir,21.5
+Little Beaver Lake,-112.97912,52.76943,CAN,AB,Ferintosh,0.6
+Little Beaver Lake,-112.31192,54.59361,CAN,AB,Noral,7.3
+Little Blue Lake,-116.4392,54.9717,CAN,AB,Sweathouse Creek,28.6
+Little Bow Lake Reservoir,-112.6753,50.19446,CAN,AB,Travers,10.1
+Little Buffalo Lake,-116.13336,56.43019,CAN,AB,Little Buffalo,1.8
+Little Crooked Lake,-117.26749,54.48349,CAN,AB,Little Smoky,29
+Little Fish Lake,-112.2302,51.37527,CAN,AB,Lonebutte,6.4
+Little Fish Lake,-111.59436,55.46179,CAN,AB,Margie,16.6
+Little Garner Lake,-111.70702,54.22622,CAN,AB,Boyne Lake,2.3
+Little Goose Lake,-117.61519,54.97525,CAN,AB,Calais,11.8
+Little Horse Lake,-115.75388,55.85108,CAN,AB,Gift Lake,5.1
+Little Island Lake,-113.91824,57.25989,CAN,AB,Chipewyan Lake,44.6
+Little Island Lake,-114.72324,53.73944,CAN,AB,Stanger,7.4
+Little Johnson Lake,-112.55669,54.64002,CAN,AB,Caslan,3.1
+Little Johnson Lake,-117.53878,59.91933,CAN,AB,Indian Cabins,28.7
+Little Lake,-119.08186,55.19991,CAN,AB,Lake Saskatoon,4.3
+Little Long Lake,-110.10216,54.38557,CAN,AB,Cherry Grove,3.7
+Little Loon Lake,-115.4421,56.3779,CAN,AB,Loon Lake,18.1
+Little Mcleod Lake,-115.63045,54.31326,CAN,AB,Whitecourt,19.5
+Little Mere Lake,-114.07224,53.62715,CAN,AB,Bilby,8.9
+Little Muskeg Lake,-112.0782,55.17743,CAN,AB,Avenir,19.9
+Little Musreau Lake,-118.66837,54.54657,CAN,AB,Grovedale,54.9
+Little Perch Lake,-111.30367,53.88254,CAN,AB,Lac Bellevue,5.1
+Little Puskwaskau Lake,-117.27724,55.14014,CAN,AB,Valleyview,8.3
+Little Rat Lake,-116.48745,54.96049,CAN,AB,Sweathouse Creek,25.8
+Little Rock Island Lake,-110.2442,54.05722,CAN,AB,Sputinow,15.6
+Little Sandy Lake,-113.43387,55.89426,CAN,AB,Sandy Lake,8.9
+Little Tawayik Lake,-112.88588,53.57794,CAN,AB,Sandy Beach,11.7
+Livingstone Lake,-111.00357,53.24471,CAN,AB,Claysmore,11.2
+Liza Lake,-110.80304,54.28154,CAN,AB,Bonnyville,4.5
+Lloyd Lake,-114.1597,50.87225,CAN,AB,Otter,8.3
+Lobe Lake,-110.37429,57.41234,CAN,AB,Bitumount,76.2
+Lodge Lake,-112.44253,54.71978,CAN,AB,Noral,9.1
+Lofty Lake,-112.48181,54.72295,CAN,AB,Frains,10
+Logan Lake,-110.40532,59.95938,CAN,AB,Fitzgerald,67.8
+Logan Lake,-111.36466,55.08294,CAN,AB,Philomena,19
+Lone Pine Lake,-112.06473,54.42915,CAN,AB,Kikino,2.5
+Lonepine Lake,-112.56316,52.23144,CAN,AB,Sabine,4.1
+Lonesome Lake,-112.28846,50.36861,CAN,AB,Bow City,8.6
+Long 90,-114.18713,56.85086,CAN,AB,Peerless Lake,31
+Long End Lake,-114.37789,54.58858,CAN,AB,Kilsyth,14.4
+Long Island Lake,-113.79222,54.4588,CAN,AB,Meadowbrook,9.4
+Long Lake,-110.97263,56.40954,CAN,AB,Anzac,5.8
+Long Lake,-115.83311,56.04821,CAN,AB,Atikameg,18.5
+Long Lake,-117.56329,54.90034,CAN,AB,Calais,19.1
+Long Lake,-110.85824,56.31443,CAN,AB,Cheecham,3.6
+Long Lake,-113.3036,54.63642,CAN,AB,Colinton,3.7
+Long Lake,-112.75137,54.44491,CAN,AB,Ellscott,11.6
+Long Lake,-110.0179,52.47316,CAN,AB,Green Glade,9.1
+Long Lake,-113.64962,54.57787,CAN,AB,Meadowbrook,9.4
+Long Lake,-113.66285,55.19626,CAN,AB,Moose Portage,14.4
+Long Lake,-118.81688,54.40573,CAN,AB,Muskeg River,55.1
+Long Lake,-114.6397,56.72313,CAN,AB,Peerless Lake,7
+Long Lake,-116.2007,53.79308,CAN,AB,Pioneer,7.6
+Long Lake,-113.85485,53.0572,CAN,AB,Pipestone,4
+Long Lake,-111.03202,57.96332,CAN,AB,Point Brule,19.2
+Long Lake,-113.07753,55.77797,CAN,AB,Sandy Lake,21.5
+Long Lake,-110.15465,53.86959,CAN,AB,Sputinow,8.2
+Long Pump Reservoir,-111.92067,50.64771,CAN,AB,Brooks,9.1
+Longhurst Lake,-114.00889,53.45754,CAN,AB,Holborn,4.6
+Longs Lake,-112.16312,49.02212,CAN,AB,Coutts,15
+Looking Back Lake,-113.14766,53.31908,CAN,AB,New Sarepta,5
+Loon Lake,-115.4312,56.52978,CAN,AB,Loon Lake,2.5
+Loon Lake,-113.19749,59.60802,CAN,AB,Peace Point,68.2
+Loon Pond,-110.01868,58.89553,CAN,AB,Fort Chipewyan,68.7
+Loseman Lake,-110.43072,54.90363,CAN,AB,Bank Bay,39.1
+Lost Lake,-112.30477,50.14828,CAN,AB,Enchant,8.7
+Lost Lake,-111.01117,57.95511,CAN,AB,Point Brule,20.7
+Lost Magician,-111.04985,54.69914,CAN,AB,Snug Cove,19.8
+Lostpoint Lake,-113.28101,53.87723,CAN,AB,Coronado,1.5
+Lottie Lake,-111.59011,54.06173,CAN,AB,Ashmont,7.6
+Lougheed Lake,-111.40565,52.83824,CAN,AB,Jarrow,11.4
+Louis Lake,-115.12593,52.41218,CAN,AB,Ferrier,6
+Louis Lake,-113.08657,53.1752,CAN,AB,Hay Lakes,3.1
+Louis Lake,-110.78974,53.71347,CAN,AB,Northern Valley,10.2
+Louisiana 13 Pond,-111.55869,50.4748,CAN,AB,Tilley,7.2
+Louisiana Lakes,-111.59265,50.51846,CAN,AB,Tilley,8.5
+Loutit Lake,-110.85684,58.98025,CAN,AB,Fort Chipewyan,34.3
+Low Water Lake,-113.95836,53.80369,CAN,AB,RiviÃ¨re Qui Barre,8.2
+Lowden Lake,-112.69539,52.14552,CAN,AB,Fenn,3.7
+Lowe Lake,-119.17828,55.32661,CAN,AB,Niobe,6.4
+Lowen Lake,-119.62466,55.19432,CAN,AB,Hayfield,2.7
+Lower Heart Reservoir,-116.62969,55.69074,CAN,AB,Heart River,13
+Lower Herb Lake,-111.03263,57.91324,CAN,AB,Point Brule,21.7
+Lower Kananaskis Lake,-115.13424,50.65206,CAN,AB,Kovach,31.6
+Lower Mann Lake,-111.51557,54.17509,CAN,AB,Ashmont,6.1
+Lower Pierre Greys Lake,-118.60656,53.91042,CAN,AB,Muskeg River,2.8
+Lower Therien Lake,-111.36605,53.93274,CAN,AB,St Paul,8.1
+Lower Waterton Lake,-113.85282,49.09259,CAN,AB,Waterton Park,6.4
+Lower Wildhorse Lake,-117.79352,53.26975,CAN,AB,Brule,5.2
+Loyalist Creek Reservoir,-111.00288,51.97028,CAN,AB,Loyalist,3.7
+Lubicon Lake,-115.95148,56.37699,CAN,AB,Lubicon Lake,5.4
+Lucia Lake,-110.49193,52.9115,CAN,AB,Hope Valley,8.7
+Lucky Lake,-112.61411,54.35123,CAN,AB,Hollow Lake,16.4
+Lucky Lake,-115.00088,54.29108,CAN,AB,Lone Pine,7.6
+Luellen Lake,-115.91731,51.33982,CAN,AB,Castle Junction,7.9
+Lumba Lake,-111.70623,54.47868,CAN,AB,BriÃ¨reville,4.1
+Luscar Lake,-117.41173,53.05891,CAN,AB,Luscar,1.2
+Lyle Lake,-112.50257,55.22334,CAN,AB,Wandering River,3.5
+Lylich Lake,-114.58257,55.73095,CAN,AB,Wagner,49
+Lynch Lakes,-113.9571,49.40109,CAN,AB,Pincher Creek,9.4
+Lynx Lake,-111.89948,54.93458,CAN,AB,Owl River,5.5
+Lynx Lake,-112.07008,59.32486,CAN,AB,Peace Point,30.8
+Macbeth Lake,-110.07124,54.05682,CAN,AB,Sputinow,19.5
+Machesis Lake,-116.58596,58.32488,CAN,AB,La Crate,18.5
+Macintosh Lake,-115.03578,54.30354,CAN,AB,Lone Pine,5.1
+Macklin Lake,-112.02998,49.04332,CAN,AB,Coutts,6.9
+Magee Lake,-113.38122,52.55939,CAN,AB,Clive,10.4
+Mahigun Lake,-113.22884,57.43668,CAN,AB,Chipewyan Lake,57.1
+Majeau Lake,-114.42646,53.91032,CAN,AB,Lake Majeau,5.8
+Majors Lake,-111.17229,51.12623,CAN,AB,Cabin Lake,8
+Majors Lake,-113.5947,54.83017,CAN,AB,Lahaieville,3.9
+Makewin Lake,-113.72071,54.49123,CAN,AB,Meadowbrook,3.9
+Maligne Lake,-117.53686,52.66224,CAN,AB,Mountain Park,34.7
+Maloney Lake,-110.41979,54.48622,CAN,AB,Ethel Lake,3.8
+Mamawi Lake,-111.49547,58.61635,CAN,AB,Quatre Fourches,10.7
+Manatokan Lake,-110.949,54.46504,CAN,AB,Iron River,3.7
+Manawan Lake,-113.69003,53.90104,CAN,AB,Peavey,4.1
+Mandy Lake,-112.97882,53.29914,CAN,AB,New Sarepta,11.4
+Mandys Lake,-110.73694,58.13982,CAN,AB,Jackfish,32.8
+Margaret Lake,-115.39298,58.95501,CAN,AB,John DOr Prairie,53
+Margaret Lake,-113.92676,49.26181,CAN,AB,Twin Butte,5
+Marguerite Lake,-110.7507,54.6164,CAN,AB,Happy Hollow,18.3
+Marguerite Lake,-114.16118,50.37815,CAN,AB,Pekisko,6.1
+Maria Lake,-114.5576,56.4641,CAN,AB,Trout Lake,4.3
+Mariana Lake,-112.02474,55.95152,CAN,AB,Mariana Lake,0.6
+Marie Lake,-110.30139,54.62895,CAN,AB,Bank Bay,7.8
+Marie Lake,-118.87704,53.48014,CAN,AB,Grande Cache,48.1
+Marigold Lake,-115.62756,54.67154,CAN,AB,Swan Hills,15.4
+Marion Lake,-112.45835,52.20017,CAN,AB,Hackett,6.7
+Marna Lake,-114.09551,49.43299,CAN,AB,Beaver Mines,7.8
+Marr Lake,-113.85544,49.32209,CAN,AB,Drywood,5.8
+Marten Lakes,-114.54236,55.61263,CAN,AB,Overlea,38.6
+Marten Lakes,-114.57697,55.60521,CAN,AB,Slave Lake,37.9
+Marten Lakes,-114.61463,55.59472,CAN,AB,Wagner,35.5
+Martin Lake,-116.13668,51.7934,CAN,AB,Lake Louise,41
+Martin Lake,-119.56675,55.44112,CAN,AB,Valhalla,8.3
+Marvel Lake,-115.55853,50.87676,CAN,AB,Kovach,25.9
+Mary Gregg Lake,-117.45422,53.11253,CAN,AB,Luscar,6.3
+Mary Lake,-110.18222,56.45984,CAN,AB,Christina Crossing,28.1
+Mary Lake,-113.21922,49.0182,CAN,AB,Kimball,6.4
+Mastin Lake,-113.15385,54.51719,CAN,AB,Kinikinik,12.2
+Matchayaw Lake,-114.09949,53.71025,CAN,AB,Bilby,0.7
+Matthews Lake,-111.63699,54.64913,CAN,AB,Normandeau,9.8
+Maude Lake,-115.29353,50.68942,CAN,AB,Kovach,27.9
+Maurice Lake,-111.87089,54.63373,CAN,AB,Normandeau,10.8
+Maurice Lake,-116.77639,55.44969,CAN,AB,Triangle,4.1
+Maxwell Lake,-114.5101,54.11291,CAN,AB,Mosside,6.7
+Maxwell Lake,-111.96688,57.87088,CAN,AB,Point Brule,40.7
+May Lake,-110.3919,54.71679,CAN,AB,Bank Bay,19.1
+Mayatan Lake,-114.30297,53.48532,CAN,AB,Mewassin,3.5
+Mcalpine Creek Reservoir,-110.15791,49.70756,CAN,AB,Elkwater,10.3
+Mcbernie Lake,-112.00827,54.67594,CAN,AB,Venice,9.3
+Mcbride Lake,-113.47189,49.56882,CAN,AB,Ardenville,2.8
+Mcbride Reservoir,-111.36421,51.32807,CAN,AB,Big Stone,18.4
+Mccafferty Lake,-110.52625,52.65569,CAN,AB,Edgerton,12.3
+Mccarthy Lake,-112.02847,54.72523,CAN,AB,Lac La Biche,5.9
+Mcclelland Lake,-111.33025,57.48495,CAN,AB,Bitumount,21.8
+Mcconachie Lake,-114.76469,55.83555,CAN,AB,Widewater,54.8
+Mccowan Lake,-110.15267,59.94659,CAN,AB,Fitzgerald,81.6
+Mccullough Lake,-111.61997,54.19619,CAN,AB,Boyne Lake,6
+Mcdonald Lake,-113.94881,51.19253,CAN,AB,Rocky View,0.9
+Mcdougall Lake,-110.47626,54.59004,CAN,AB,Happy Hollow,10.9
+Mcfadden Lake,-113.14857,53.40837,CAN,AB,Cooking Lake,1.8
+Mcgrane Lagoon,-112.0343,54.81495,CAN,AB,Lac La Biche Mission,3.8
+Mcgregor Lake,-112.83392,50.31429,CAN,AB,Armada,12.5
+Mcgregor Lake,-115.84203,52.61481,CAN,AB,Harlech,13.8
+Mcgregor Lake,-112.87597,50.48796,CAN,AB,Pageant,2
+Mcguffin Lake,-111.58129,54.77414,CAN,AB,Barnegat,15.9
+Mcinnes Lake,-110.41873,59.70578,CAN,AB,Hay Camp,62.2
+Mckay Lake,-111.55723,52.67493,CAN,AB,Lougheed,7.8
+Mclaren Lake,-110.68739,52.28741,CAN,AB,Cousins,7.4
+Mclarens Reservoir,-112.45103,51.83988,CAN,AB,Stonelaw,3.8
+Mclelland Lake,-111.26374,59.72908,CAN,AB,Fitzgerald,24.1
+Mclennan Lake,-110.03821,58.219,CAN,AB,Jackfish,56
+Mcleod Lake,-114.11148,55.97772,CAN,AB,Wabasca-Desmarais,16.3
+Mcleod Lake,-115.65448,54.29728,CAN,AB,Whitecourt,17.5
+Mcmillan Lake,-114.47374,55.7744,CAN,AB,Wabasca-Desmarais,44.4
+Mcmillan Lake,-112.66862,55.43058,CAN,AB,Wandering River,28.9
+Mcmullen Lake,-114.0914,55.84047,CAN,AB,Wabasca-Desmarais,20.6
+Mcnaught Lake,-119.45104,55.14632,CAN,AB,Halcourt,6.1
+Mcneil Lake,-112.42851,59.5433,CAN,AB,Peace Point,46.3
+Meadows Lake,-116.58178,52.91784,CAN,AB,Pembina Forks,8.6
+Medallion Lakes,-119.98806,54.35891,CAN,AB,Sylvester,73.5
+Medicine Lake,-117.75804,52.85496,CAN,AB,Jasper Park Lodge,20.4
+Medicine Lake,-114.74266,52.74479,CAN,AB,Willesden Green,12.9
+Meekwap Lake,-116.6276,54.66128,CAN,AB,Fox Creek,31.9
+Meinsinger Lake,-114.25082,50.26609,CAN,AB,Pekisko,19.6
+Mellstrom Lake,-111.88481,54.51858,CAN,AB,Briareville,9.1
+Mercredi Lake,-110.70406,59.93614,CAN,AB,Fitzgerald,51
+Mere Lake,-114.10129,53.62252,CAN,AB,Beach Corner,9.1
+Meridian Lake,-110.01218,53.78894,CAN,AB,Tulliby Lake,14
+Meridian Lakes,-114.82918,59.59246,CAN,AB,Garden Creek,112.6
+Merryweather Lake,-113.35266,59.34993,CAN,AB,Jackfish River,47.5
+Meyer Lake,-113.57438,54.97765,CAN,AB,Grosmont,12.6
+Michael Lake,-112.3865,57.78461,CAN,AB,Bitumount,62.5
+Michaud Lake,-114.90061,53.78445,CAN,AB,Stanger,5.4
+Michel Lake,-110.67895,54.05352,CAN,AB,Holyoke,9.9
+Michel Lake,-115.64388,54.62269,CAN,AB,Swan Hills,18.8
+Michele Creek Reservoir,-110.37254,49.531,CAN,AB,Eagle Butte,9.3
+Michele Lakes,-116.75296,52.06922,CAN,AB,Saskatchewan River Crossing,10.5
+Michichi Reservoir,-112.52986,51.5823,CAN,AB,Michichi,0.4
+Mickel Lake,-113.08244,54.54047,CAN,AB,Kinikinik,7.1
+Middle Creek Reservoir,-110.004,49.39476,CAN,AB,Cressday,24.6
+Middle Pierre Greys Lake,-118.5887,53.90135,CAN,AB,Muskeg River,4.3
+Middle Waterton Lake,-113.87637,49.05706,CAN,AB,Waterton Park,2.8
+Mikwan Lake,-113.18485,52.09188,CAN,AB,Lousana,2.4
+Mildred Lake,-111.58393,57.05045,CAN,AB,Mildred Lake,2.1
+Mile 07 Lake,-112.01527,55.0214,CAN,AB,Avenir,17.1
+Milk River Lake,-110.23123,49.02748,CAN,AB,Wild Horse,3.2
+Milk River Ridge Reservoir,-112.57349,49.36903,CAN,AB,Raymond,12.4
+Mill Lake,-111.86337,54.93549,CAN,AB,Owl River,5.7
+Millers Lake,-116.7685,53.56004,CAN,AB,Marlboro,1.9
+Milne Lake,-115.94571,55.68634,CAN,AB,Salt Prairie,8.6
+Miltons Lake,-111.18873,56.43761,CAN,AB,Anzac,9.5
+Minelli Lake,-115.80715,53.05801,CAN,AB,Brazeau Dam,17.9
+Ministik Lake,-113.01639,53.33967,CAN,AB,Cooking Lake,10.6
+Mink Lake,-115.5972,56.02193,CAN,AB,Atikameg,12.2
+Mink Lake,-114.22792,53.52191,CAN,AB,Carvel,1.5
+Mink Lake,-113.29183,56.90726,CAN,AB,Chipewyan Lake,11.6
+Mink Lake,-113.66585,58.39825,CAN,AB,Fifth Meridian,34.3
+Mink Lake 1,-115.69328,56.09978,CAN,AB,Atikameg,20.5
+Minnie Lake,-111.10395,54.28553,CAN,AB,Franchere,5.1
+Minnow Lake,-116.03986,53.35723,CAN,AB,Carrot Creek,30.3
+Minor Lakes,-111.49076,50.37008,CAN,AB,Alderson,14.2
+Minor Lakes,-111.5083,50.37277,CAN,AB,Tilley,13.6
+Miquelon Lakes,-112.9123,53.25601,CAN,AB,Hay Lakes,11.7
+Mirror Bay,-113.07173,52.45731,CAN,AB,Mirror,2.4
+Missawawi Lake,-112.19527,54.72667,CAN,AB,Venice,4.4
+Missing Lake,-113.10772,53.14551,CAN,AB,Hay Lakes,6.6
+Mistaya Lake,-116.59733,51.79398,CAN,AB,Saskatchewan River Crossing,22.5
+Mistehae Lake,-114.31073,55.92667,CAN,AB,Wabasca-Desmarais,29
+Mitchell Lake,-115.00744,52.21644,CAN,AB,Congresbury,3.4
+Mitchell Lake,-110.64865,53.90174,CAN,AB,Lindbergh,2.2
+Mitsue Lake,-114.6119,55.24793,CAN,AB,Mitsue,1.5
+Moab Lake,-117.95913,52.66157,CAN,AB,Wynd,25.1
+Moat Lake,-118.32464,52.72302,CAN,AB,Geikie,16.4
+Mona Lake,-117.67446,52.73674,CAN,AB,Jasper Park Lodge,30.6
+Mons Lake,-112.35994,54.18892,CAN,AB,Edwand,7.5
+Mons Lake,-115.77273,54.59394,CAN,AB,Swan Hills,27.5
+Montagnais Lake,-111.33252,54.02613,CAN,AB,St Paul,4.4
+Montagneuse Lake,-118.46106,56.50459,CAN,AB,Eureka River,18.5
+Montambeault Lake,-111.27312,52.34047,CAN,AB,Silver Heights,4
+Moon Lake,-114.97282,53.4527,CAN,AB,Moon Lake,0.7
+Moonshine Lake,-110.10587,54.01491,CAN,AB,Sputinow,14.4
+Moonshine Lake,-119.22632,55.88647,CAN,AB,Whitburn,2.5
+Moose Lake,-114.367,58.22889,CAN,AB,Fox Lake,28.4
+Moose Lake,-110.91772,54.24887,CAN,AB,Fresnoy,7.4
+Moose Lake,-117.38884,54.79426,CAN,AB,Little Smoky,14.8
+Moose Lake,-116.64618,52.97337,CAN,AB,Pembina Forks,1.2
+Moose Lake,-111.76932,55.14323,CAN,AB,Philomena,10.4
+Moosehills Lake,-110.81261,53.93206,CAN,AB,Muriel,3
+Moosehorn Lake,-118.13021,53.35979,CAN,AB,Shale Banks,14.6
+Moraine Lake,-116.18506,51.32153,CAN,AB,Eldon,11
+Morningstar Lake,-116.73512,53.63684,CAN,AB,Marlboro,9.9
+Morse Lake,-115.4603,54.6984,CAN,AB,Swan Hills,4.3
+Moses Lake,-111.65812,53.4359,CAN,AB,Ranfurly,3.5
+Mosquito Lake,-115.00592,54.32887,CAN,AB,Topland,5.8
+Moss Lake,-111.8821,54.39016,CAN,AB,McRae,11.5
+Moss Lake,-112.82477,53.65531,CAN,AB,Sandy Beach,2.5
+Mott Lake,-110.91385,52.8127,CAN,AB,Wainwright,4.4
+Mountain Lake,-117.7135,55.44971,CAN,AB,Whitemud Creek,18.9
+Mud Lake,-115.06136,54.14724,CAN,AB,Connor Creek,7.2
+Mud Lake,-113.48881,54.89794,CAN,AB,Grosmont,6.1
+Mud Lake,-115.3094,50.79375,CAN,AB,Kovach,17.3
+Mud Lake,-113.53611,49.75416,CAN,AB,Nolan,1.7
+Mud Lake,-112.84983,53.59751,CAN,AB,Sandy Beach,9
+Muddyshore Lake,-117.82652,55.42475,CAN,AB,DeBolt,25.7
+Mudhen Lake,-110.00396,52.53834,CAN,AB,Killarney Lake,6.4
+Mudspring Lake,-112.77887,51.8328,CAN,AB,Rumsey,4.5
+Muir Lake,-115.99243,55.66432,CAN,AB,Salt Prairie,4.9
+Muir Lake,-113.95724,53.62462,CAN,AB,Spruce Grove,8.7
+Mulligan Lake,-119.1243,55.3717,CAN,AB,La Glace,3.9
+Mummy Lake,-115.91347,51.0896,CAN,AB,Sawback,16.8
+Munro Lake,-111.65165,54.54308,CAN,AB,Rich Lake,4.5
+Munyass Lake,-113.52928,54.49798,CAN,AB,Meadowbrook,8.5
+Murchison Lake,-110.2451,59.92365,CAN,AB,Fitzgerald,76.2
+Muriel Lake,-110.67764,54.14487,CAN,AB,Gurneyville,5.2
+Murray Lake,-110.95999,49.78943,CAN,AB,Seven Persons,10.2
+Murrys Lake,-110.75927,54.16848,CAN,AB,Gurneyville,3.2
+Mushroom Lake,-110.49805,52.87181,CAN,AB,Heath,10.5
+Muskeg Lake,-110.77252,56.32324,CAN,AB,Cheecham,7.6
+Muskeg Lake,-113.65206,57.10397,CAN,AB,Chipewyan Lake,21.2
+Muskeg Lake,-113.71458,54.36746,CAN,AB,Halcreek,4.7
+Muskeg Lake,-111.63347,55.46022,CAN,AB,Margie,19
+Muskeg Lake,-110.96905,57.99937,CAN,AB,Point Brule,21.9
+Muskeg Lake,-114.6915,55.32264,CAN,AB,Slave Lake,6.7
+Muskeg Lake,-114.30339,53.61126,CAN,AB,Smithfield,5.3
+Muskeg Lakes,-116.83288,55.39718,CAN,AB,Little Smoky,4.7
+Muskiki Lake,-116.87374,52.8508,CAN,AB,Grave Flats,4.5
+Muskrat Lake,-113.42463,57.48167,CAN,AB,Chipewyan Lake,60.3
+Muskwa Lake,-114.63878,56.15191,CAN,AB,Trout Lake,39.2
+Musreau Lake,-118.61893,54.54297,CAN,AB,Grovedale,56.1
+Mustus Lake,-116.39175,58.14856,CAN,AB,La CrÃªte,4.3
+Myers Lake,-111.25291,59.69015,CAN,AB,Hay Camp,21.9
+Mylake,-110.62043,58.3208,CAN,AB,Jackfish,20.5
+Mylonite Lake,-110.33105,59.81431,CAN,AB,Hay Camp,71.4
+Myr Lake,-111.30973,53.80515,CAN,AB,Lac Bellevue,4.6
+Myriad Lake,-113.20837,53.09551,CAN,AB,Gwynne,12.1
+Mystery Lake,-117.67238,53.14865,CAN,AB,Miette Hotsprings,6.8
+Mystic Lake,-113.35375,54.38291,CAN,AB,Rochester,7
+Nadeau Lake,-111.78554,54.58135,CAN,AB,Normandeau,3.5
+Nakamun Lake,-114.2063,53.88574,CAN,AB,Sion,3.7
+Namaka Lake,-113.22355,50.93901,CAN,AB,Namaka,5.3
+Namur Lake,-112.6865,57.4183,CAN,AB,Bitumount,62.4
+Nanuche Lake,-114.04836,58.29758,CAN,AB,Fox Lake,34.2
+Napoleon Lake,-113.97342,52.02933,CAN,AB,Innisfail,1.6
+Narrow Lake,-113.61793,54.61694,CAN,AB,Lincoln,9.5
+Nash Lake,-113.4359,59.26654,CAN,AB,Jackfish River,43.3
+Nash Lake,-110.70554,58.0904,CAN,AB,Point Brule,38
+Nelson Lake,-114.25517,54.52253,CAN,AB,Kilsyth,10.1
+Nelson Lake,-113.38655,52.6707,CAN,AB,Ponoka,13.1
+Net Lake,-110.76703,58.12988,CAN,AB,Jackfish,33.3
+Neutral Hills Lake B2,-110.96066,52.09409,CAN,AB,Neutral Valley,11.1
+Newton Lake,-114.18907,53.99564,CAN,AB,Dunstable,5.3
+Ney Lake,-110.01822,59.76328,CAN,AB,Hay Camp,85.6
+Nicot Lake,-112.10897,54.92104,CAN,AB,Lac La Biche Mission,10.9
+Nier Lakes,-114.1814,51.40756,CAN,AB,Nier,1.2
+Niggli Lake,-110.02667,59.89359,CAN,AB,Fitzgerald,88.2
+Nikik Lake,-113.58809,57.12245,CAN,AB,Chipewyan Lake,21.4
+Nina Lake,-117.29762,57.42062,CAN,AB,Kemp River,18.1
+Nipisi Lake,-114.97442,55.77915,CAN,AB,Atikameg,45
+Nisbet Lake,-110.22978,55.36438,CAN,AB,Behan,15.9
+Nixon Lake,-112.36193,55.2208,CAN,AB,Wandering River,7.7
+No Outlet Lake,-114.39471,53.79746,CAN,AB,Rich Valley,6.4
+Noel Lake,-115.04753,54.35324,CAN,AB,Topland,6.5
+Nora Lake,-110.5669,56.48331,CAN,AB,Christina Crossing,25.9
+Norberg Lake,-111.58711,54.27308,CAN,AB,Boyne Lake,7
+Nordegg Lake,-116.21382,52.55677,CAN,AB,Nordegg,13.4
+Norman Lake,-114.19056,54.55009,CAN,AB,Kilsyth,5.2
+Normandeau Lake,-111.69113,54.57053,CAN,AB,Normandeau,2.8
+Normandin Lake,-110.73162,52.73546,CAN,AB,Greenshields,6.9
+Normandin Lake,-110.72268,52.72793,CAN,AB,Park Farm,7.8
+North Buck Lake,-112.55536,54.6836,CAN,AB,Caslan,6.5
+North Deserters Lake,-115.24144,52.77374,CAN,AB,Baptiste River,13.4
+North Keeping Lake,-119.94283,55.49286,CAN,AB,Demmitt,5.1
+North Lake,-114.06,53.62813,CAN,AB,Bilby,9
+North Outlet Lake,-114.37139,53.77702,CAN,AB,Gunn,5.9
+North Sand Lake,-118.91183,58.71531,CAN,AB,Assumption,13.1
+North Wabasca Lake,-113.91279,56.04295,CAN,AB,Wabasca-Desmarais,9.3
+North Watchusk Lake,-110.3541,56.21409,CAN,AB,Christina Crossing,8.1
+Nose Lake,-119.6059,54.53969,CAN,AB,Sylvester,50.9
+Oakland Lake,-111.83862,51.3763,CAN,AB,Rose Lynn,12.1
+Oakley Lake,-111.6214,57.65843,CAN,AB,Bitumount,30.3
+Obed Lake,-117.14162,53.56438,CAN,AB,Hargwen,3.8
+Octopus Lake,-116.67402,53.53739,CAN,AB,Hornbeck,1.8
+Odisque Lake,-113.58425,57.15993,CAN,AB,Chipewyan Lake,25.3
+Old Womans Coulee Reservoir,-113.92485,50.52708,CAN,AB,Azure,4.8
+Oldman Lake,-114.54156,53.87645,CAN,AB,Ballantine,4.8
+Oldman Reservoir,-114.04505,49.60197,CAN,AB,Cowley,4.1
+Ole Lake,-119.8943,56.31682,CAN,AB,Bear Canyon,12
+Oliva Lake,-111.59728,53.07778,CAN,AB,Philips,4.8
+Oliver Lake,-113.0174,53.29472,CAN,AB,New Sarepta,8.8
+Olympic Lake,-111.99538,54.52275,CAN,AB,Kikino,10.8
+One Week Lake,-110.33366,59.8806,CAN,AB,Fitzgerald,71
+Onetree Reservoir,-111.82617,50.60987,CAN,AB,Brooks,6.8
+Onion Lake,-110.14947,53.76989,CAN,AB,Tulliby Lake,6.4
+Ooho Lake,-111.47496,56.1672,CAN,AB,Kinosis,36.8
+Open Creek Reservoir,-114.72854,52.64827,CAN,AB,Willesden Green,11.2
+Ord Lake,-113.40043,53.24085,CAN,AB,Rolly View,5.7
+Orloff Lake,-113.50922,55.38001,CAN,AB,Calling Lake,27
+Osborne Lake,-110.88186,54.50315,CAN,AB,Iron River,7.1
+Osi Lake,-113.57403,57.18678,CAN,AB,Chipewyan Lake,28.1
+Osland Lakes,-119.46565,57.26853,CAN,AB,Clear Prairie,78.1
+Oster Lake,-112.91302,53.62855,CAN,AB,Sandy Beach,7.8
+Otasan Lake,-112.38053,57.7035,CAN,AB,Bitumount,56.2
+Otauwau Lake,-115.01836,55.02816,CAN,AB,Slave Lake,32.3
+Otter Lake,-113.41899,56.49676,CAN,AB,Chipewyan Lake,49.4
+Otter Lake,-111.56603,58.55072,CAN,AB,Embarras Portage,12.5
+Otter Lake,-113.59416,55.3529,CAN,AB,Moose Portage,22.9
+Otter Lakes,-116.08741,56.73299,CAN,AB,Marten River,25.6
+Otter Lakes,-110.19878,57.26845,CAN,AB,Tar Island,81.4
+Outlet Lake,-111.91929,54.72719,CAN,AB,Beaver Lake,3.7
+Outline Lake,-111.81166,54.6695,CAN,AB,Normandeau,11.2
+Outpost Lake,-113.4567,49.01149,CAN,AB,Carway,5.8
+Owl Lake,-119.81428,57.17621,CAN,AB,Clear Prairie,70
+Owl Lake,-115.53247,50.86214,CAN,AB,Kovach,24.6
+Owlseye Lake,-111.37991,54.05666,CAN,AB,Owlseye,3.9
+Oxbow Lake,-112.94631,53.59771,CAN,AB,Sandy Beach,11.8
+Oxford Facility Stormwater Pond,-113.55137,53.62104,CAN,AB,Campbell,3.4
+Paddle River Reservoir,-115.09051,53.88204,CAN,AB,Padstow,5
+Pakowki Lake,-111.07416,49.38005,CAN,AB,Gahern,6.8
+Pans Lake,-110.33882,59.76833,CAN,AB,Hay Camp,68.9
+Panther Lake,-115.86939,51.46429,CAN,AB,Eldon,19.6
+Park Lake,-112.92429,49.80967,CAN,AB,Whitney,4.3
+Parker Lake,-114.62222,55.08516,CAN,AB,Mitsue,19.6
+Parlby Lake,-113.2237,52.43752,CAN,AB,Alix,5.1
+Parr Reservoir,-111.90092,52.23002,CAN,AB,Castor,1.2
+Parsons Lake,-110.77137,52.75533,CAN,AB,Greenshields,4.3
+Parting Lake,-114.8117,54.03094,CAN,AB,Glenister,2.5
+Partridge Lake,-114.21645,54.42418,CAN,AB,Vega,10.8
+Pasatchaw Lakes,-110.0894,53.50512,CAN,AB,Alcurve,1.7
+Pastecho Lake,-114.40871,55.93199,CAN,AB,Wabasca-Desmarais,35
+Paterson Lake,-110.45042,53.78745,CAN,AB,Heinsburg,5.2
+Patricia Lake,-118.1032,52.90426,CAN,AB,Jasper,3.2
+Patterson Lake,-110.11622,58.22585,CAN,AB,Jackfish,51.5
+Paul Lake,-113.94895,55.27112,CAN,AB,Moose Portage,6.3
+Paul Lake,-112.9006,53.63586,CAN,AB,Sandy Beach,6.7
+Paxton Lake,-110.70428,58.26214,CAN,AB,Jackfish,21.4
+Payne Lake,-113.65542,49.11093,CAN,AB,Mountain View,5
+Peanut Lake,-114.35246,54.01712,CAN,AB,Belvedere,3.6
+Peanut Lake,-116.16632,53.73608,CAN,AB,Pioneer,4.3
+Pear Lake,-113.19617,54.67276,CAN,AB,Colinton,6.9
+Pearce Lake,-112.64379,52.71201,CAN,AB,Meeting Creek,6.8
+Pearl Lake,-112.09774,51.76617,CAN,AB,Dowling Lake,6.2
+Pearson Lake,-111.41337,53.31683,CAN,AB,Minburn,3.3
+Pearson Lake,-111.23668,57.95805,CAN,AB,Point Brule,9.3
+Peavine Lake,-119.00184,53.91837,CAN,AB,Grande Cache,8.4
+Peerless Lake,-114.65668,56.63774,CAN,AB,Peerless Lake,6.2
+Peleck Lakes,-111.90586,54.02226,CAN,AB,Stry,3.5
+Pelican Lake,-110.40065,52.89281,CAN,AB,Prospect Valley,8.3
+Pelican Lake,-113.24949,55.79793,CAN,AB,Sandy Lake,10.6
+Pelican Lake,-117.66773,55.02978,CAN,AB,Sturgeon Heights,6.6
+Peninsula Lake,-111.48447,52.85923,CAN,AB,Jarrow,10.9
+Pennington Lake,-113.91803,52.14147,CAN,AB,Penhold,3.1
+Peno Lake,-112.69448,53.94111,CAN,AB,Peno,3.5
+Pentland Lake,-116.04825,55.81272,CAN,AB,Gift Lake,16.6
+Peppers Lake,-117.7225,53.44348,CAN,AB,Entrance,8.1
+Peppers Lake,-115.70574,52.03893,CAN,AB,Strachan,46.3
+Percy Lake,-111.4113,53.20103,CAN,AB,Minburn,13.1
+Pert Lake,-118.03949,59.67716,CAN,AB,Steen River,49.3
+Pete Lake,-117.76624,55.36314,CAN,AB,DeBolt,22.5
+Peter Lake,-113.99732,55.28541,CAN,AB,Moose Portage,9.6
+Peters Lake,-110.02342,59.48778,CAN,AB,Hay Camp,81.5
+Peterson Lake,-110.78547,52.65245,CAN,AB,Park Farm,3.2
+Petite Lake,-117.70267,53.65576,CAN,AB,Pedley,27.2
+Peyto Lake,-116.52191,51.72416,CAN,AB,Saskatchewan River Crossing,31.8
+Phyllis Lake,-114.96787,52.10086,CAN,AB,Ricinus,2.1
+Piche Lake,-111.59374,55.03536,CAN,AB,Pitlochrie,8.4
+Picture Butte Reservoir,-112.78039,49.886,CAN,AB,Picture Butte,1
+Pierre Lake,-112.07424,59.36579,CAN,AB,Peace Point,34.1
+Pierre Lake,-119.56974,54.71324,CAN,AB,Sylvester,32.2
+Pigeon Lake,-114.05964,53.02441,CAN,AB,Lakedell,4.8
+Pilling Lake,-113.29426,49.0894,CAN,AB,Aetna,6.3
+Pine Coulee Reservoir,-113.7433,50.1618,CAN,AB,Stavely,7.2
+Pine Lake,-112.23641,59.54276,CAN,AB,Hay Camp,43.5
+Pine Lake,-113.09254,54.56408,CAN,AB,Kinikinik,5.9
+Pine Lake,-113.44082,52.08754,CAN,AB,Pine Lake,3.8
+Pinehurst Lake,-111.41688,54.6564,CAN,AB,Snug Cove,5.1
+Pinto Lake,-116.86332,52.12416,CAN,AB,Saskatchewan River Crossing,18.5
+Piper Lake,-110.63058,52.32647,CAN,AB,Cairns,6.2
+Pitchimi Lake,-114.77853,59.00818,CAN,AB,Fifth Meridian,59.7
+Plain Lake,-111.69823,53.60555,CAN,AB,Musidora,12
+Pleasant Lake,-115.46572,54.23808,CAN,AB,Blue Ridge,13.8
+Plover Lake,-110.32484,53.26846,CAN,AB,Kitscoty,8.2
+Plover Lake,-111.38114,51.49359,CAN,AB,Scotfield,7.6
+Plum Lake,-113.04115,54.56981,CAN,AB,Kinikinik,2.9
+Plunger Lake,-114.83661,54.21305,CAN,AB,Tiger Lily,5.3
+Pluvius Lake,-117.60735,56.57241,CAN,AB,Dixonville,5.5
+Polly Lake,-110.13422,51.63775,CAN,AB,Calthorpe,2.5
+Ponita Lake,-119.84105,55.50904,CAN,AB,Demmitt,6.9
+Poplar Creek Reservoir,-111.50421,56.93032,CAN,AB,Tar Island,10.1
+Poplar Creek Reservoir,-114.4144,53.05798,CAN,AB,Wenham Valley,4.9
+Poplar Lake,-110.60796,57.99786,CAN,AB,Point Brule,43.1
+Porcupine Lake,-116.4782,51.87823,CAN,AB,Saskatchewan River Crossing,21.2
+Portage Lake,-113.15807,58.94983,CAN,AB,Big Slough,13.6
+Porter Lake,-110.30944,52.79898,CAN,AB,Prospect Valley,6.7
+Postill Lake,-112.89683,52.22748,CAN,AB,Oberlin,6.3
+Potts Lake,-110.43578,59.74253,CAN,AB,Hay Camp,62.8
+Potts Lake,-114.68004,51.18049,CAN,AB,Radnor,3.9
+Powder Lake,-112.45084,54.75692,CAN,AB,Atmore,9.4
+Powell Lake,-119.80952,55.37994,CAN,AB,Lymburn,4.1
+Prairie Lake,-113.4645,57.31151,CAN,AB,Chipewyan Lake,41.3
+Prairie Lake,-110.02645,53.82681,CAN,AB,Tulliby Lake,16.1
+Preble Lake,-113.45879,59.97869,CAN,AB,Fitzgerald,104.1
+Prefontaine Lake,-114.85486,53.79847,CAN,AB,Stanger,3.6
+Preston Lake,-119.9186,55.37182,CAN,AB,Lymburn,9.2
+Price Lake,-113.43371,54.53004,CAN,AB,Perryvale,7.6
+Primrose Lake,-110.02514,54.79273,CAN,AB,Bank Bay,28.1
+Princess Lake,-118.06998,53.18874,CAN,AB,Devona,6.3
+Pruden Lake,-111.91518,54.62797,CAN,AB,Normandeau,13
+Ptarmigan Lake,-119.60795,53.53423,CAN,AB,Grande Cache,50.8
+Ptarmigan Lake,-116.0761,51.48372,CAN,AB,Lake Louise,9.7
+Pullar Lake,-111.43212,54.62422,CAN,AB,Snug Cove,6.2
+Purdy Lake,-110.42666,58.42938,CAN,AB,Jackfish,28.6
+Pushup Lake,-111.29516,56.18529,CAN,AB,Kinosis,26.5
+Puskwaskau Lake,-117.65224,55.25206,CAN,AB,Clarkson Valley,15.8
+Pyramid Lake,-118.09561,52.92301,CAN,AB,Jasper Park Lodge,4.8
+Pythagoras Lake,-110.22269,59.98276,CAN,AB,Fitzgerald,78.2
+Quitting Lake,-114.35068,56.67856,CAN,AB,Peerless Lake,13.7
+Rabbit Lake,-114.82755,51.33365,CAN,AB,Benchlands,5.7
+Rabbit Lake,-112.9483,57.03245,CAN,AB,Chipewyan Lake,33.4
+Radial Lake,-115.22521,52.46431,CAN,AB,Horburg,7.1
+Raft Lake,-110.01455,56.41845,CAN,AB,Christina Crossing,32.6
+Raft Lake,-110.70307,53.62651,CAN,AB,Clandonald,6.1
+Rainbow Lake,-119.28323,58.28208,CAN,AB,Rainbow Lake,25.7
+Rainy Lake,-110.80235,52.7576,CAN,AB,Greenshields,4.7
+Randall Lake,-115.02784,55.99148,CAN,AB,Atikameg,39.7
+Raspberry Lake,-116.74486,54.44702,CAN,AB,Fox Creek,7.1
+Rat Lake,-114.77525,52.94929,CAN,AB,Buck Lake,0.3
+Rat Lake,-117.00021,59.87541,CAN,AB,Indian Cabins,2.1
+Rat Lake,-111.38876,55.44148,CAN,AB,Margie,3.4
+Rat Lake,-118.78253,54.44108,CAN,AB,Muskeg River,58.5
+Rattail Lake,-112.08707,55.13801,CAN,AB,Avenir,16.4
+Rattlesnake Lake,-111.06064,49.97888,CAN,AB,Whitla,10.9
+Raup Lake,-111.98814,59.706,CAN,AB,Fitzgerald,27.5
+Rawson Lake,-115.15388,50.5917,CAN,AB,Kovach,38.1
+Ray Lake,-119.88194,55.43463,CAN,AB,Demmitt,2.5
+Ray Lake,-119.12542,56.66016,CAN,AB,Marina,17
+Raymond Reservoir,-112.66471,49.41012,CAN,AB,Raymond,6.1
+Raymond Sugar Factory Reservoir,-112.64532,49.4834,CAN,AB,Raymond,2.3
+Red Deer Lake,-110.41248,50.32085,CAN,AB,Bowmanton,12.1
+Red Deer Lake,-112.97385,52.66069,CAN,AB,Dorenlee,4.8
+Red Deer Lake,-113.07155,52.72471,CAN,AB,Ferintosh,8.1
+Red Deer Lakes,-116.05302,51.54126,CAN,AB,Lake Louise,15.6
+Redoubt Lake,-116.07299,51.47303,CAN,AB,Lake Louise,9.2
+Redspring Lake,-110.07966,54.10699,CAN,AB,Beaverdam,18.2
+Reed Lake,-111.76315,54.24973,CAN,AB,Boyne Lake,5.7
+Reed Lake,-112.81007,49.17252,CAN,AB,Del Bonita,16
+Reesor Lake,-110.10607,49.66515,CAN,AB,Elkwater,12.6
+Reflection Lake,-116.27029,53.68293,CAN,AB,Wolf Creek,5
+Reflex Lakes,-110.01364,52.66386,CAN,AB,Chauvin,9.2
+Reid Lake,-114.2101,54.5746,CAN,AB,Kilsyth,4.1
+Reids Pond,-110.19178,54.25251,CAN,AB,Beaverdam,9.5
+Reita Lake,-110.42522,54.1391,CAN,AB,Beaverdam,10.3
+Release Lake,-110.75933,58.09321,CAN,AB,Point Brule,35
+Rene Lake,-110.01921,58.02653,CAN,AB,Jackfish,68.4
+Ribstone Lake,-110.64363,52.7652,CAN,AB,Heath,4.9
+Rich Lake,-111.54185,54.53389,CAN,AB,Rich Lake,5.7
+Richardson Lake,-111.07282,58.39487,CAN,AB,Jackfish,9.4
+Richmond Lake,-114.58727,54.05737,CAN,AB,Mosside,1.3
+Rider Lake,-112.7651,52.5405,CAN,AB,Donalda,13.8
+Rink Lake,-118.58881,52.90268,CAN,AB,Decoigne,14.6
+River Bend Golf Course Pond,-113.78728,52.31958,CAN,AB,Labuma,2
+Robertson Lake,-112.99641,59.45621,CAN,AB,Peace Point,48
+Roche Lake,-114.90357,54.76496,CAN,AB,Swan Hills,32.4
+Rochester Lake,-113.31497,54.38745,CAN,AB,Rochester,9.6
+Rock Island Lake,-113.38347,55.4945,CAN,AB,Calling Lake,33.3
+Rock Island Lake,-110.13055,53.8458,CAN,AB,Sputinow,11.1
+Rock Lake,-112.00777,50.687,CAN,AB,Duchess,8.7
+Rock Lake,-118.26514,53.46031,CAN,AB,Shale Banks,25.2
+Rockbound Lake,-115.93173,51.31409,CAN,AB,Castle Junction,5.1
+Rockeling Bay,-112.80075,52.55777,CAN,AB,Bashaw,11.8
+Rocky Island Lake,-115.12893,59.13238,CAN,AB,John DOr Prairie,70.8
+Rod Lake,-113.26262,56.93053,CAN,AB,Chipewyan Lake,12.8
+Roderick Lake,-110.15907,59.49606,CAN,AB,Hay Camp,73.8
+Rolling Hills Reservoir,-111.91079,50.36048,CAN,AB,Rainier,12.9
+Romeo Lake,-114.87961,54.05059,CAN,AB,Glenister,2.7
+Romeo Lake,-114.9587,51.23533,CAN,AB,Morley,10.5
+Romeril Reservoir,-113.54399,49.13404,CAN,AB,Mountain View,3.8
+Ronald Lake,-111.66981,57.97149,CAN,AB,Berdinskies,20
+Roseland Lake,-111.74446,54.72545,CAN,AB,Barnegat,9.1
+Rosinan Lake,-111.15022,53.91359,CAN,AB,St Edouard,8.9
+Ross Lake,-110.48731,53.82618,CAN,AB,Frog Lake,4.7
+Ross Lake,-112.92393,49.15,CAN,AB,Jefferson,13.8
+Rossbear Lake,-115.7723,57.34226,CAN,AB,Bison Lake,27.8
+Rough Lake,-110.79291,52.74008,CAN,AB,Greenshields,6.3
+Rouleau Lake,-113.69886,49.41797,CAN,AB,Springridge,5.7
+Round Lake,-110.72452,52.07114,CAN,AB,Consort,7.8
+Round Lake,-113.31434,52.18824,CAN,AB,Delburne,5.5
+Round Lake,-112.71097,52.12329,CAN,AB,Fenn,3.1
+Round Lake,-111.94803,56.77164,CAN,AB,Fort McMurray,35
+Round Lake,-114.89136,53.61471,CAN,AB,Magnolia,1.8
+Round Lake,-114.56217,56.75096,CAN,AB,Peerless Lake,8.9
+Rowan Lake,-110.13276,58.86814,CAN,AB,Fort Chipewyan,61.5
+Rowan Lake,-116.63167,53.48702,CAN,AB,McLeod River,1.4
+Royemma Lake,-110.12611,55.48185,CAN,AB,Behan,29.7
+Ruis Lake,-113.80654,58.42485,CAN,AB,Fifth Meridian,27.6
+Rundle Pond,-115.38869,51.08191,CAN,AB,Canmore,1.4
+Running Lake,-119.0338,56.66966,CAN,AB,Worsley,19.1
+Rush Lake,-110.64768,49.68648,CAN,AB,Tothill,15.1
+Rush Lake,-113.14249,49.1892,CAN,AB,Woolford,1.7
+Russell Lake,-115.84714,57.05895,CAN,AB,Bison Lake,22.6
+Rustys Lake,-110.54651,58.33675,CAN,AB,Jackfish,23.5
+Ruth Lake,-111.55087,56.98027,CAN,AB,Mildred Lake,6.6
+Rutledge Lake,-110.22253,59.83715,CAN,AB,Fitzgerald,77.3
+Ryan Lake,-111.07663,59.18003,CAN,AB,Hay Camp,44.3
+Saddle Lake,-111.65693,54.01235,CAN,AB,Saddle Lake,5.4
+Sakayo Lake,-112.2496,54.79969,CAN,AB,Plamondon,8.1
+Saline Lake,-111.52651,57.08025,CAN,AB,Mildred Lake,6.9
+Salt Lake,-110.25598,51.63434,CAN,AB,Esther,5.4
+Salters Lake,-114.19094,53.69048,CAN,AB,Onoway,1.3
+Sam Lake,-110.25947,50.14822,CAN,AB,Bowmanton,18.2
+Samson Lake,-113.22753,52.74484,CAN,AB,Malmo,4.6
+San Francisco Lake,-112.13342,50.59348,CAN,AB,Cassils,6.4
+Sand Hill Lake,-118.5786,56.16077,CAN,AB,Gage,5.3
+Sand Lake,-118.9516,58.70032,CAN,AB,Assumption,15.3
+Sand Lake,-112.36118,57.65092,CAN,AB,Bitumount,51.8
+Sander Lake,-114.17697,55.93915,CAN,AB,Wabasca-Desmarais,20.6
+Sandhill Lake,-112.50872,54.76852,CAN,AB,Atmore,6.2
+Sandy Bottom Lake,-113.81315,54.98453,CAN,AB,Ranch,12
+Sandy Lake,-112.09207,54.98149,CAN,AB,Avenir,13.7
+Sandy Lake,-111.00061,52.80965,CAN,AB,Fabyan,8.1
+Sandy Lake,-114.03417,53.77434,CAN,AB,Noyes Crossing,6.7
+Sandy Lake,-113.38904,55.83296,CAN,AB,Sandy Lake,2.7
+Sandy Lake,-114.05325,53.81031,CAN,AB,Stettin,2.8
+Sang Lake,-116.15102,53.56388,CAN,AB,Wolf Creek,10.6
+Sapphire Lake,-111.03174,54.69988,CAN,AB,Snug Cove,20.9
+Sara Lake,-114.22308,54.63077,CAN,AB,Kilsyth,6.2
+Sarah Lake,-115.38088,54.6553,CAN,AB,Swan Hills,7
+Saskatoon Lake,-119.09138,55.21755,CAN,AB,Lake Saskatoon,2.6
+Saturday Lake,-112.67268,54.39857,CAN,AB,Alpen Siding,18.6
+Saturday Night Lake,-118.17979,52.89372,CAN,AB,Wynd,4.7
+Saunders Lake,-113.46713,53.27756,CAN,AB,Leduc,5.4
+Savouye Lake,-111.91785,54.88148,CAN,AB,Owl River,2.1
+Sawback Lake,-115.76855,51.34922,CAN,AB,Castle Mountain,13.6
+Sawle Lake,-114.90872,55.98245,CAN,AB,Atikameg,46.8
+Sawmill Pond,-115.5059,57.91173,CAN,AB,Buffalo Head Prairie,52.1
+Sawn Lake,-115.9078,56.98176,CAN,AB,Bison Lake,26.8
+Scarab Lake,-115.91647,51.09885,CAN,AB,Massive,16.4
+Schaefer Lake,-114.34064,53.50693,CAN,AB,Mewassin,6.5
+Scheltens Lake,-110.06809,55.08168,CAN,AB,Behan,31.5
+Schneider Lake,-111.74566,52.51546,CAN,AB,Alliance,9.4
+Schroeder Lake,-113.58058,52.16731,CAN,AB,Hillsdown,5.6
+Schuler Lake,-110.09865,50.33134,CAN,AB,Schuler,0.6
+Schultz Lake,-111.6542,52.49315,CAN,AB,Alliance,11
+Schultz Lake,-113.3388,53.26159,CAN,AB,Rolly View,1.8
+Scooter Lake,-113.32618,56.78352,CAN,AB,Chipewyan Lake,19.6
+Scope Lake,-111.82894,50.06111,CAN,AB,Hays,4.8
+Scot Lake,-110.68941,58.31436,CAN,AB,Jackfish,17.7
+Scots Lake,-111.62038,50.35758,CAN,AB,Tilley,10.8
+Scott Lake,-110.51493,52.27654,CAN,AB,Cadogan,6.5
+Scovil Lake,-111.17366,53.01627,CAN,AB,Irma,12.2
+Seal Lake,-116.14757,56.13017,CAN,AB,Lubicon Lake,31.8
+Section B,-119.20899,58.74498,CAN,AB,Rainbow Lake,28.9
+Sederholm Lake,-110.09186,59.82763,CAN,AB,Hay Camp,84.2
+Sedgewick Lake,-111.68881,52.79577,CAN,AB,Sedgewick,2.4
+Sedmentation Basin,-111.51243,57.03072,CAN,AB,Tar Island,3
+Seibert Lake,-111.31096,54.72788,CAN,AB,Snug Cove,9.8
+Seiu Lake,-112.39939,51.14689,CAN,AB,Trefoil,15.2
+Selwyn Lake,-110.49465,59.96252,CAN,AB,Fitzgerald,62.9
+Semo Lake,-115.00324,58.84328,CAN,AB,John DOr Prairie,39.5
+September Lake,-113.76622,54.79421,CAN,AB,Lahaieville,12.9
+Seven Persons Lake,-110.9052,49.8598,CAN,AB,Seven Persons,1.6
+Severn Creek Reservoir,-112.95629,51.20828,CAN,AB,Redland,9.7
+Shadow Lake,-115.96723,51.15957,CAN,AB,Castle Mountain,12
+Shalka Lake,-111.97474,53.83563,CAN,AB,Hairy Hill,8
+Shallow Lake,-114.35504,54.51415,CAN,AB,Vega,12.8
+Shanks Lake,-112.71878,49.06873,CAN,AB,Del Bonita,6.8
+Shanks Lake,-116.1694,52.4567,CAN,AB,Nordegg,6.6
+Shaw Lake,-111.64837,54.76605,CAN,AB,Barnegat,11.8
+Shays Reservoir,-111.68004,50.04039,CAN,AB,Ronalane,6.8
+Shell Reservoir 1,-115.87024,54.62757,CAN,AB,Swan Hills,31.7
+Shell Reservoir 2,-115.86924,54.66574,CAN,AB,Swan Hills,30.6
+Shelly Lake,-115.67877,54.66782,CAN,AB,Swan Hills,18.6
+Shemeluk Lake,-112.42214,54.21317,CAN,AB,Smoky Lake,11.1
+Sherburne Lake,-111.77263,49.75802,CAN,AB,Antonio,7.2
+Sherlock Lake,-110.00243,52.78328,CAN,AB,Chauvin,13.7
+Sherring Lake,-112.01936,54.54143,CAN,AB,Kikino,11.8
+Sherritt Lake,-111.8883,54.07665,CAN,AB,Vilna,4.9
+Shiningbank Lake,-116.02736,53.86518,CAN,AB,Shining Bank,4.1
+Shirley Lake,-112.90757,53.64278,CAN,AB,Sandy Beach,6.5
+Shoal Lake,-114.44827,54.26012,CAN,AB,Bloomsbury,5.8
+Shoal Lake,-114.93601,56.20701,CAN,AB,Trout Lake,40.9
+Shooting Lake,-112.34377,52.18305,CAN,AB,Hackett,8.1
+Shorncliffe Lake,-110.88211,52.47749,CAN,AB,Czar,4.4
+Shortt Lake,-110.22836,56.48612,CAN,AB,Christina Crossing,29
+Shunda Lake,-116.15031,52.45157,CAN,AB,Nordegg,5.5
+Shuster Lake,-110.60886,52.74106,CAN,AB,Heath,6.6
+Sick Hill Lake,-113.41493,57.17582,CAN,AB,Chipewyan Lake,26.4
+Side Lake,-111.18694,55.50266,CAN,AB,Devenish,3.5
+Side Lake,-117.91644,54.86224,CAN,AB,Sturgeon Heights,29.5
+Sides Lake,-117.0155,54.16754,CAN,AB,Fox Creek,28.6
+Simmo Lake,-110.72704,53.89278,CAN,AB,Lindbergh,3.6
+Simon Lakes,-116.63245,56.47716,CAN,AB,Simon Lakes,0.5
+Sinclair Lake,-110.65692,54.72589,CAN,AB,Happy Hollow,25.9
+Sinkhole Lake,-115.27446,53.32981,CAN,AB,Easyford,9.7
+Sinking Lake,-110.77469,54.14141,CAN,AB,Gurneyville,1.2
+Sinking Lake,-110.83985,54.15309,CAN,AB,Hoselaw,4.6
+Sisib Lake,-112.96821,53.41027,CAN,AB,Deville,5.6
+Sittingstone Lake,-112.92122,52.57223,CAN,AB,Bashaw,3.5
+Skaro Lake,-112.7146,53.9249,CAN,AB,Peno,4.1
+Skeleton Lake,-112.72338,54.6199,CAN,AB,Boyle,6.3
+Skeleton Lake,-115.93076,51.61259,CAN,AB,Lake Louise,27.1
+Skinny Lake,-117.53616,59.93259,CAN,AB,Indian Cabins,28.9
+Skukum Lake,-112.07714,54.92482,CAN,AB,Lac La Biche Mission,11.3
+Skunk Lake,-114.3541,56.85428,CAN,AB,Peerless Lake,24.4
+Slacks Slough,-113.80979,52.196,CAN,AB,Tuttle,2.7
+Slims Lake,-119.36049,56.51345,CAN,AB,Clear Prairie,11.6
+Slough 4,-118.743,58.79148,CAN,AB,Habay,2.4
+Slough 7,-119.25608,58.70184,CAN,AB,Rainbow Lake,23.5
+Slough Lake,-113.36171,56.75589,CAN,AB,Chipewyan Lake,21.6
+Slug Lake,-113.68244,57.62997,CAN,AB,Chipewyan Lake,77.7
+Small Sandy Lake,-111.59658,57.6572,CAN,AB,Bitumount,30.2
+Smith Lake,-111.54711,54.07179,CAN,AB,Abilene,5.7
+Smith Reservoir,-110.06219,51.10219,CAN,AB,Arneson,9.4
+Smoke Lake,-116.93959,54.36286,CAN,AB,Fox Creek,9.3
+Smoky Lake,-112.67635,54.17015,CAN,AB,Barich,3.4
+Smoky Lake,-112.60627,54.13174,CAN,AB,Warspite,4.5
+Snail Lake,-111.3616,54.08385,CAN,AB,Owlseye,5.3
+Snake Lake,-111.55927,54.763,CAN,AB,Barnegat,17.5
+Snake Lake,-114.14721,59.67892,CAN,AB,Jackfish River,104.2
+Snake Lake,-112.75337,51.94874,CAN,AB,Scollard,5.7
+Snipe Lake,-116.77509,55.12879,CAN,AB,Sunset House,8.2
+Snowshoe Lake,-119.96897,57.15941,CAN,AB,Clear Prairie,71.2
+Soars Lake,-110.1498,54.15079,CAN,AB,Beaverdam,11.7
+Sock Lake,-119.99262,57.59526,CAN,AB,Rainbow Lake,106.9
+Soda Lake,-112.07991,53.76955,CAN,AB,Norma,6.4
+Soldan Lake,-114.14423,53.59189,CAN,AB,Manly Corner,5.6
+Sorenson Lake,-111.44478,51.76613,CAN,AB,Spondin,14.9
+Sounding Creek Reservoir,-110.69595,51.57926,CAN,AB,Sedalia,10.9
+South Brutus Lake,-111.00354,57.96461,CAN,AB,Point Brule,20.7
+South Farrell Lake,-114.74558,55.96142,CAN,AB,Wabasca-Desmarais,55.7
+South Sundance Lake,-116.98007,53.72218,CAN,AB,Medicine Lodge,20.4
+South Wabasca Lake,-113.7421,55.90156,CAN,AB,Wabasca Desmarais,9.9
+South Watchusk Lake,-110.3039,56.17077,CAN,AB,Christina Crossing,13.6
+South Whitemud Lake,-118.85861,56.65383,CAN,AB,Worsley,23.5
+Southesk Lake,-117.20089,52.64194,CAN,AB,Mountain Park,32.4
+Sowka Lake,-112.58582,54.23365,CAN,AB,Barich,6.5
+Spankie Lake,-111.72145,54.71834,CAN,AB,Barnegat,10.7
+Spawn Lake,-118.48622,59.99236,CAN,AB,Indian Cabins,82.1
+Spencer Lake,-111.27659,54.79828,CAN,AB,Snug Cove,17.9
+Spider Lake,-110.20984,59.77288,CAN,AB,Hay Camp,75.8
+Spiers Lake,-112.23202,51.90888,CAN,AB,Heart Lake,1.9
+Split Lakes,-110.19895,59.8817,CAN,AB,Fitzgerald,78.5
+Spoon Lake,-113.05763,57.05441,CAN,AB,Chipewyan Lake,28.2
+Spotted Horse Lake,-113.87506,54.92129,CAN,AB,Ranch,18.4
+Spray Lakes Reservoir,-115.35721,50.9182,CAN,AB,Kovach,11.1
+Spring Lake,-110.78698,58.09449,CAN,AB,Point Brule,33.4
+Spring Lake,-114.13964,53.51728,CAN,AB,Spring Lake,0.5
+Spring Lake,-119.58391,55.51334,CAN,AB,Valhalla,11.9
+Spruce Coulee Reservoir,-110.18144,49.67412,CAN,AB,Elkwater,7.4
+Spruce Island Lake,-113.78813,54.50282,CAN,AB,Meadowbrook,8.3
+Spruce Island Lake,-112.87949,53.63087,CAN,AB,Sandy Beach,6.2
+Spruce Lake,-111.91827,56.80001,CAN,AB,Mildred Lake,32.3
+Spur Lake,-110.19414,59.93824,CAN,AB,Fitzgerald,79.2
+Square Lake,-112.47137,59.06563,CAN,AB,Peace Point,6.9
+Square Lake,-110.34732,54.05036,CAN,AB,Sputinow,16.2
+Square Lake,-111.83798,54.91346,CAN,AB,Tweedie,4.2
+St. Agnes Lake,-110.23003,59.68116,CAN,AB,Hay Camp,71.7
+St. Ives Lake,-110.23628,53.46099,CAN,AB,Streamstown,5.3
+St. Lawrence Lake,-110.0273,52.34667,CAN,AB,Hayter,5.6
+St. Mary Reservoir,-113.19634,49.32229,CAN,AB,Raley,3.7
+St. Patrick Lakes,-110.5936,52.79387,CAN,AB,Heath,0.8
+St. Pierre Lake,-110.72139,54.0625,CAN,AB,Kehewin Cree Nation,7.6
+St. Thomas Lake,-114.40022,53.76966,CAN,AB,Gunn,6
+Stafford Lake,-111.88614,50.58082,CAN,AB,Brooks,1.6
+Stafford Reservoir,-112.41949,49.70979,CAN,AB,Chin,6.2
+Standish Lake,-111.07406,54.85916,CAN,AB,Snug Cove,29.6
+Stanley Lake,-113.0563,54.52984,CAN,AB,Kinikinik,7.2
+Star Lake,-114.27264,53.5103,CAN,AB,Carvel,4.7
+Starland Reservoir,-112.8238,51.8084,CAN,AB,Rumsey,3.9
+Stebbing Lake,-111.00894,54.42546,CAN,AB,Iron River,6.7
+Steele Lake,-113.77275,54.65039,CAN,AB,Sylvan Glen,13.4
+Steepbank Lake,-111.5748,55.4776,CAN,AB,Margie,15.8
+Stevenson Lake,-110.50187,52.84196,CAN,AB,Heath,8.1
+Stewart Lake,-113.69758,51.71995,CAN,AB,Allingham,7.3
+Still Lake,-110.60209,53.24354,CAN,AB,Borradaile,13.1
+Stobart Lake,-113.18518,50.90666,CAN,AB,Stobart,3.3
+Stomach Lake,-113.40127,56.88914,CAN,AB,Chipewyan Lake,7.2
+Stone Lake,-113.04677,57.22097,CAN,AB,Chipewyan Lake,40.5
+Stone Lake,-115.28465,54.46629,CAN,AB,Lone Pine,21
+Stonehill Lake,-112.23563,50.25788,CAN,AB,Scandia,13.6
+Stoney Lake,-113.31124,57.59435,CAN,AB,Chipewyan Lake,73.4
+Stoney Lake,-111.13624,56.27276,CAN,AB,Kinosis,12.8
+Stoney Lake,-111.08765,53.86358,CAN,AB,Lake Eliza,7.7
+Stony Woman Lake,-117.786,54.90185,CAN,AB,Sturgeon Heights,22
+Stouffers Lake,-110.10956,54.77649,CAN,AB,Bank Bay,24.3
+Stove Lake,-112.91921,53.3342,CAN,AB,Lindbrook,10.1
+Stovel Lake,-113.20541,58.64026,CAN,AB,Big Slough,21
+Stronach Lake,-112.75404,54.55052,CAN,AB,Boyle,5.5
+Strubel Lake,-115.00144,52.20403,CAN,AB,Congresbury,4
+Stump Lake,-117.2266,55.15268,CAN,AB,Valleyview,10.3
+Sturgeon Lake,-117.53578,55.10613,CAN,AB,Calais,3.8
+Sturgis Lake,-111.30751,53.31687,CAN,AB,Minburn,3.8
+Sucker Lake,-110.8631,56.41973,CAN,AB,Anzac,11.1
+Sucker Lake,-116.94023,53.57474,CAN,AB,Medicine Lodge,6.2
+Sucker Lake,-111.86245,55.1761,CAN,AB,Philomena,15.7
+Sullivan Lake,-110.77719,53.30016,CAN,AB,Borradaile,7.2
+Sullivan Lake,-111.97915,51.95497,CAN,AB,Scapa,9.1
+Sullivan Lake,-112.0036,52.02826,CAN,AB,Sullivan Lake,10.2
+Sulphur Lake,-118.31936,56.70604,CAN,AB,Clear Hills,32
+Summerside Lake,-113.47214,53.41756,CAN,AB,Beaumont,8.2
+Sundance Lake,-116.97521,53.72924,CAN,AB,Medicine Lodge,21.3
+Sunday Lake,-111.24405,55.44462,CAN,AB,Margie,5.9
+Sunny Lake,-110.70008,53.25816,CAN,AB,Borradaile,9.7
+Sunset Lake,-115.72535,53.73517,CAN,AB,Hattonford,4.5
+Sunset Lake,-111.09513,53.67112,CAN,AB,Slawa,2.5
+Sunwapta Lake,-117.23625,52.21399,CAN,AB,Saskatchewan River Crossing,42.8
+Surette Lake,-116.68553,58.3448,CAN,AB,La CrÃªte,23.9
+Surmont Lake,-111.17858,56.30566,CAN,AB,Kinosis,13.9
+Surprise Lake,-117.6244,52.79477,CAN,AB,Mountain Park,28
+Sutherland Lake,-110.29685,53.25985,CAN,AB,Blackfoot,8.8
+Sutton Lake,-116.08672,55.78858,CAN,AB,Salt Prairie,15.9
+Swan Lake,-113.25926,56.71401,CAN,AB,Chipewyan Lake,28.3
+Swan Lake,-117.81404,55.05968,CAN,AB,Clarkson Valley,8
+Swan Lake,-116.81825,59.98091,CAN,AB,Indian Cabins,17.5
+Swan Lake,-115.17896,52.11947,CAN,AB,Strachan,16
+Swartz Lake,-115.65125,54.6785,CAN,AB,Swan Hills,16.6
+Sweetheart Lake,-111.42598,56.23814,CAN,AB,Kinosis,30.7
+Swift Lake,-110.80522,52.65345,CAN,AB,Park Farm,2.8
+Swinnerton Lake,-110.21114,59.95098,CAN,AB,Fitzgerald,78.4
+Sylvan Lake,-114.15873,52.35764,CAN,AB,Sylvan Lake,6.8
+Taber Lake,-112.09419,49.80344,CAN,AB,Taber,4.6
+Taerum Lake,-113.86979,58.58416,CAN,AB,Fifth Meridian,10.7
+Tailor Lake,-113.32551,54.51178,CAN,AB,Perryvale,6.3
+Talbot Lake,-115.733,57.46346,CAN,AB,Bison Lake,39
+Talbot Lake,-117.99522,53.09952,CAN,AB,Devona,5.6
+Tamarack Lake,-110.11646,55.22665,CAN,AB,Behan,20.5
+Tamarack Lake,-114.29039,53.87243,CAN,AB,Nakamun,3
+Tamarack Lake,-115.71737,54.70182,CAN,AB,Swan Hills,20.3
+Tanglefoot Lake,-113.18895,52.44495,CAN,AB,Alix,5
+Tank Lake,-116.162,53.57279,CAN,AB,Wolf Creek,9.4
+Tarp Lake,-110.56611,59.16984,CAN,AB,Fort Chipewyan,61
+Tattum Lake,-114.19686,54.58296,CAN,AB,Kilsyth,2.9
+Tawakwato Lake,-112.20297,54.68721,CAN,AB,Hylo,1.2
+Tawatinaw Lake,-113.47685,54.33923,CAN,AB,Rochester,3.8
+Tawayik Lake,-112.87978,53.6011,CAN,AB,Sandy Beach,9.2
+Taylor Lake,-116.09639,51.29561,CAN,AB,Eldon,5.4
+Taylor Lake,-113.41438,54.11882,CAN,AB,Halfway Lake,3.4
+Tea Lakes,-115.01891,54.79777,CAN,AB,Swan Hills,26.2
+Teal Lake,-114.68942,51.98335,CAN,AB,Crammond,5.2
+Teepee Lake,-110.35821,53.23935,CAN,AB,Kitscoty,11.5
+Telephone Lake,-110.45258,57.17799,CAN,AB,Tar Island,63.8
+Telford Lake,-113.52005,53.26564,CAN,AB,Leduc,1.7
+Tent Lake,-111.86949,54.59621,CAN,AB,Normandeau,9.1
+Tepee Lake,-111.90134,54.92679,CAN,AB,Owl River,4.6
+Tepee Lake,-113.98333,56.4145,CAN,AB,Trout Lake,35.1
+Test Lake,-110.40389,57.41723,CAN,AB,Bitumount,74.5
+Thin Lake,-111.03084,54.20564,CAN,AB,Rife,3.2
+Thoben Lake,-111.246,53.8803,CAN,AB,Lac Bellevue,7.5
+Thomas Lake,-111.30439,53.90146,CAN,AB,Lac Bellevue,7
+Thomas Lake,-111.69928,53.11033,CAN,AB,Viking,5.4
+Thompson Lakes,-110.22647,54.15289,CAN,AB,Beaverdam,7.6
+Thornbury Lake,-111.63332,55.63185,CAN,AB,Margie,28.8
+Three Isle Lake,-115.2778,50.63016,CAN,AB,Kovach,34.2
+Thultue Lake,-113.64659,59.61707,CAN,AB,Jackfish River,81.4
+Thunder Lake,-116.68906,52.85114,CAN,AB,Pembina Forks,15
+Thunder Lake,-114.75835,54.12896,CAN,AB,Roselea,5.6
+Thurston Lake,-118.11127,59.92745,CAN,AB,Indian Cabins,60.4
+Tie Camp Lake,-116.22101,53.76963,CAN,AB,Pioneer,7.7
+Tiger Lily Lake,-114.74221,54.14429,CAN,AB,Tiger Lily,4.7
+Tilley B Reservoir,-111.6447,50.55559,CAN,AB,Bantry,9.3
+Tilley Slough,-111.63383,50.50171,CAN,AB,Tilley,5.7
+Timko Lake (Bantry Reservoir),-111.73272,50.47582,CAN,AB,Bantry,2
+Tit Willow Lake,-110.77394,52.67408,CAN,AB,Park Farm,2.1
+Toad Lake,-114.22547,53.78188,CAN,AB,Glenford,4.5
+Togo Lake,-111.13065,51.4578,CAN,AB,Youngstown,9.6
+Tompkins Lake,-111.80012,54.36281,CAN,AB,McRae,5.6
+Toodles Lake,-111.84321,54.7662,CAN,AB,Barnegat,3.1
+Topaz Lake,-118.8502,53.38821,CAN,AB,Shale Banks,46
+Touchwood Lake,-111.40066,54.82356,CAN,AB,Snug Cove,20.5
+Town Lake,-114.40038,52.92736,CAN,AB,Town Lake,0.6
+Trail Lake,-111.93477,54.62268,CAN,AB,Normandeau,13.9
+Trans Alta Cooling Pond - Wabamun Lake,-114.54031,53.48751,CAN,AB,Highvale,4.9
+Trap Lake,-119.96455,54.62045,CAN,AB,Sylvester,45.5
+Trapeze Lake,-112.32581,54.63183,CAN,AB,Noral,3.2
+Trappers Lake,-112.96106,53.61817,CAN,AB,Sandy Beach,11
+Travers Reservoir,-112.81575,50.20836,CAN,AB,Travers,18.9
+Treasure Loch,-110.41718,59.92994,CAN,AB,Fitzgerald,66.7
+Tremblay Lake,-112.19771,54.76195,CAN,AB,Venice,7.8
+Triangle Lake,-110.2501,58.88315,CAN,AB,Fort Chipewyan,55.6
+Trident Lake,-116.11313,51.79882,CAN,AB,Lake Louise,41.8
+Trowel Lake,-113.09447,53.16202,CAN,AB,Hay Lakes,4.6
+Truman Lake,-113.49486,54.26571,CAN,AB,Tawatinaw,3.7
+Tucker Lake,-110.60545,54.53423,CAN,AB,Happy Hollow,5.2
+Tulabi Lake,-110.20361,53.75188,CAN,AB,Tulliby Lake,4.1
+Tulip Lake,-111.13862,59.90444,CAN,AB,Fitzgerald,26.5
+Turquoise Lake,-116.38979,51.5726,CAN,AB,Lake Louise,21.9
+Turtle Lake,-110.59051,59.38181,CAN,AB,Hay Camp,52
+Twin Island Lake,-113.15804,53.47525,CAN,AB,Wyeclif,6.9
+Twin Lake,-115.5712,56.11727,CAN,AB,Atikameg,22.8
+Twin Lake,-110.49079,53.35059,CAN,AB,Islay,5.8
+Twin Lake,-112.95567,55.58305,CAN,AB,Pelican Portage,31.5
+Twin Lake,-111.88757,55.0383,CAN,AB,Pitlochrie,10.5
+Twin Lakes,-110.53117,52.38012,CAN,AB,Cairns,4.2
+Twin Lakes,-115.98362,51.21183,CAN,AB,Castle Junction,7.7
+Twin Lakes,-115.98042,51.20159,CAN,AB,Castle Mountain,8.4
+Twin Lakes,-115.17177,54.21891,CAN,AB,Corbett Creek,4.5
+Twin Lakes,-115.0006,52.41487,CAN,AB,Crimson Lake,4.1
+Twin Lakes,-117.54372,57.44098,CAN,AB,Kemp River,11.8
+Twin Lakes,-111.19017,56.26932,CAN,AB,Kinosis,16
+Twin Lakes,-111.12918,57.84328,CAN,AB,Point Brule,23.4
+Twin Lakes,-114.78702,54.05724,CAN,AB,Roselea,2.8
+Twin Lakes,-119.58781,55.00212,CAN,AB,Sylvester,6
+Twin Valley Reservoir,-113.4226,50.24704,CAN,AB,Kirkcaldy,16.4
+Twintree Lake,-119.10182,53.38352,CAN,AB,Grande Cache,56.1
+Two Hills Lake,-110.12884,53.74281,CAN,AB,Tulliby Lake,4.7
+Two Jack Lake,-115.49572,51.2289,CAN,AB,Bankhead,3.6
+Two Lakes,-117.71995,55.30132,CAN,AB,Crooked Creek,18.1
+Two Lakes,-119.78047,54.35321,CAN,AB,Grande Cache,67.3
+Two Lakes,-119.75513,54.37992,CAN,AB,Sylvester,68.6
+Two Round Lakes,-111.10711,57.78979,CAN,AB,Point Brule,29.2
+Tyler Lake,-110.33161,53.35368,CAN,AB,Kitscoty,1.3
+Tyne Lake,-110.10515,58.43341,CAN,AB,Jackfish,47.4
+Tyrrell Lake,-112.27347,49.3896,CAN,AB,McNab,4.6
+Underwood Lake,-110.41688,55.29174,CAN,AB,Behan,1.8
+Updike Lake,-119.80311,55.44157,CAN,AB,Demmitt,6.1
+Upland Lake,-112.79143,59.66425,CAN,AB,Peace Point,62.8
+Upper Heart Reservoir,-116.49637,55.71689,CAN,AB,Leicester,5.7
+Upper Herb Lake,-111.0075,57.91737,CAN,AB,Point Brule,22.7
+Upper Kananaskis Lake,-115.15533,50.61835,CAN,AB,Kovach,35.2
+Upper Mann Lake,-111.51249,54.14265,CAN,AB,Ashmont,3.9
+Upper Pierre Greys Lakes,-118.58571,53.90854,CAN,AB,Muskeg River,4.2
+Upper Therien Lake,-111.29248,53.96559,CAN,AB,St Paul,3
+Upper Waterton Lake,-113.90258,49.02523,CAN,AB,Waterton Park,3.1
+Upper Wildhorse Lake,-117.8014,53.27146,CAN,AB,Brule,4.6
+Uswell Slough,-119.08923,55.18994,CAN,AB,Lake Saskatoon,4.9
+Utikuma Lake,-115.40477,55.8701,CAN,AB,Atikameg,16.2
+Utikumasis Lake,-115.69535,55.90962,CAN,AB,Atikameg,2.9
+V Lake,-110.16657,58.04972,CAN,AB,Jackfish,60.2
+Valhalla Lake,-119.45146,55.37918,CAN,AB,Valhalla Centre,5.2
+Valley Lake,-112.98923,52.59824,CAN,AB,Bashaw,2.1
+Valley Lake,-112.68374,54.3355,CAN,AB,Hollow Lake,12.4
+Vandersteene Lake,-114.44261,56.60171,CAN,AB,Peerless Lake,11.2
+Vegreville Trout Pond,-112.05833,53.47392,CAN,AB,Vegreville,2.4
+Verdigris Lake,-112.03024,49.24645,CAN,AB,Milk River,11.5
+Vermilion Lake,-114.96036,59.91547,CAN,AB,Indian Cabins,115.8
+Vermilion Lakes,-111.49567,53.65317,CAN,AB,Morecambe,2.1
+Vermilion Lakes,-111.54858,53.67259,CAN,AB,Musidora,3
+Vermilion Lakes,-111.79635,53.6966,CAN,AB,Two Hills,3.8
+Vermilion Park Lake,-110.88945,53.36786,CAN,AB,Vermilion,2.8
+Vernon Lake,-111.4735,52.95038,CAN,AB,Jarrow,5.3
+Victor Lake,-119.09012,53.88216,CAN,AB,Grande Cache,2
+Victor Lake,-112.0451,54.41771,CAN,AB,Kikino,4.3
+Victoria Lake,-112.22161,51.78483,CAN,AB,Dowling Lake,2.6
+Vincent Lake,-111.33901,54.11287,CAN,AB,St Vincent,6
+Wabamun Lake,-114.51714,53.48976,CAN,AB,Highvale,4.9
+Wabamun Lake,-114.58302,53.54482,CAN,AB,Sundance,1.8
+Wabasso Lakes,-118.02028,52.82237,CAN,AB,Jasper,7.5
+Wadlin Lake,-115.60295,57.73521,CAN,AB,Buffalo Head Prairie,56.4
+Wagner Reservoir,-110.63468,49.95168,CAN,AB,Roytal,3.9
+Wakomao Lake,-113.5517,54.15947,CAN,AB,Clyde,6.5
+Wallaby Lake,-110.69403,52.61798,CAN,AB,Buffalo View,5.9
+Wallingtons Lake,-110.7781,53.13774,CAN,AB,Wildmere,2.3
+Wally Lake,-119.3122,59.43548,CAN,AB,Habay,77.6
+Walter Lake,-112.93788,53.53019,CAN,AB,Uncas,6.9
+Wanisan Lake,-112.91385,53.47003,CAN,AB,North Cooking Lake,1.9
+Wappau Lake,-111.58842,55.50287,CAN,AB,Margie,17.6
+Ward Lake,-114.18372,54.5309,CAN,AB,Fawcett,5.8
+Ward Lake,-112.557,54.7328,CAN,AB,Frains,5.1
+Wasagamu Lakes,-110.32698,53.83169,CAN,AB,Frog Lake,5.9
+Wash Lake,-110.20538,53.77496,CAN,AB,Tulliby Lake,6.6
+Wat Lake,-112.95392,53.3557,CAN,AB,Deville,10.7
+Watchman Lake,-117.24274,52.0514,CAN,AB,Saskatchewan River Crossing,35.1
+Watelet Lake,-113.69283,53.04327,CAN,AB,Patience,4.6
+Water Hen Lake,-117.76798,55.37843,CAN,AB,DeBolt,23.6
+Waterfowl Lakes,-116.63435,51.85002,CAN,AB,Saskatchewan River Crossing,15.8
+Water-Lily Lake,-112.56022,57.65602,CAN,AB,Bitumount,62.3
+Waterton Reservoir,-113.68127,49.30194,CAN,AB,Hill Spring,4.4
+Watridge Lake,-115.42796,50.85055,CAN,AB,Kovach,18.4
+Watt Lake,-111.93189,53.74677,CAN,AB,Hairy Hill,3.6
+Watt Lake,-111.93291,53.70386,CAN,AB,Kaleland,6
+Waugh Lake,-110.01694,59.80685,CAN,AB,Hay Camp,87.2
+Wavy Lake,-112.06723,52.85692,CAN,AB,Strome,5.1
+Wayetenaw Lake,-111.86182,54.32242,CAN,AB,Goodfish Lake,4.7
+Weaver Lake,-114.05815,55.97225,CAN,AB,Wabasca-Desmarais,13
+Webster Lake,-116.07652,55.77508,CAN,AB,Salt Prairie,14.3
+Weekes Lake,-110.017,59.71946,CAN,AB,Hay Camp,84.3
+Weeks Lake,-110.94282,53.17668,CAN,AB,Wildmere,9.6
+Wells Lake,-110.20435,59.99873,CAN,AB,Fitzgerald,79.5
+Welstead Lake,-111.82142,58.32213,CAN,AB,Embarras Portage,24.3
+Wembley Marsh,-119.12445,55.15944,CAN,AB,Wembley,1.4
+Wentzel Lake,-114.46777,59.03096,CAN,AB,Garden Creek,49.5
+West Croker Lake,-116.61727,55.30284,CAN,AB,Triangle,15.8
+West Lake,-110.73223,52.24341,CAN,AB,Lloyds Hill,6.9
+West Lake,-110.74608,53.65493,CAN,AB,Rusylvia,7.9
+West Lake 2,-110.73799,53.66624,CAN,AB,Rusylvia,9.1
+West Sawmill Lake,-112.77039,53.47953,CAN,AB,Lindbrook,9.6
+West Twin Lake,-114.55091,56.85435,CAN,AB,Peerless Lake,20.5
+West Twin Lake,-114.36472,52.94969,CAN,AB,Town Lake,3.8
+Weston Lake,-112.1837,49.33599,CAN,AB,Warner,6.2
+Westover Lake,-114.73951,51.11233,CAN,AB,Cheneka,8
+Whale Lake,-110.9262,57.98109,CAN,AB,Point Brule,24.7
+Whaleback Lake,-110.36297,59.70083,CAN,AB,Hay Camp,65
+Whiskey Jack Lake,-111.88676,56.81093,CAN,AB,Mildred Lake,30.2
+Whiskyjack Lake,-111.47481,54.1479,CAN,AB,Abilene,4.5
+Whistwow Lake,-113.47012,56.7292,CAN,AB,Chipewyan Lake,23.5
+White Cow Lake,-113.3408,56.66628,CAN,AB,Chipewyan Lake,31.5
+White Horse Lake,-110.48864,50.66447,CAN,AB,Cavendish,17
+Whitebrush Lake,-112.86391,52.61086,CAN,AB,Bashaw,7.8
+Whitefish Lake,-111.89904,54.36761,CAN,AB,Goodfish Lake,10
+Whitemans Pond,-115.41283,51.06865,CAN,AB,Canmore,3.5
+Whitemud Lake,-112.73023,54.33079,CAN,AB,Hollow Lake,10.8
+Whitemud Lake,-116.81109,53.55712,CAN,AB,Marlboro,1
+Whitewater Lake,-111.79437,52.85953,CAN,AB,Killam,8.8
+Whitford Lake,-112.25129,53.85748,CAN,AB,Whitford,2.9
+Whitham Lake,-119.7159,55.41816,CAN,AB,Brainard,3.6
+Whitney Lake,-110.5523,53.83759,CAN,AB,Middle Creek,2.7
+Whyetnow Lake,-113.30585,57.49207,CAN,AB,Chipewyan Lake,62.2
+Wiau Lake,-111.30983,55.40865,CAN,AB,Margie,3.4
+Wilkins Lake,-111.08752,52.60288,CAN,AB,Amisk,4.6
+William Smith Lake,-110.18578,59.8987,CAN,AB,Fitzgerald,79.3
+Willow Lake,-111.13743,56.45992,CAN,AB,Anzac,6.4
+Willow Lake,-110.20557,54.26138,CAN,AB,Beaverdam,9.4
+Willow Lake,-110.76181,52.68669,CAN,AB,Park Farm,3
+Willowbend Reservoir,-111.71648,51.62651,CAN,AB,Alness,3.2
+Wilson Lake,-119.04584,54.92519,CAN,AB,Wapiti,7.9
+Winagami Lake,-116.75027,55.63697,CAN,AB,Kathleen,5.7
+Windfall Lake,-112.35563,54.66797,CAN,AB,Noral,1.7
+Windfall Lake,-114.7458,54.71841,CAN,AB,Timeu,25.9
+Windsor Creek 1 Pond,-119.86689,55.17433,CAN,AB,Mount Valley,10.2
+Windsor Lake,-113.09355,52.5959,CAN,AB,Bashaw,8.4
+Windy Lake,-110.58887,53.26795,CAN,AB,Borradaile,11.4
+Windy Lake,-112.59555,54.59776,CAN,AB,Caslan,6.6
+Winefred Lake,-110.53714,55.49228,CAN,AB,Behan,25
+Winnifred Lake,-110.40228,59.22985,CAN,AB,Hay Camp,68.6
+Wizard Lake,-113.87481,53.11178,CAN,AB,Pipestone,8.4
+Wolf Lake,-116.05442,53.21007,CAN,AB,Brazeau Dam,41.3
+Wolf Lake,-110.95999,54.69368,CAN,AB,Snug Cove,25.2
+Wolfe Lake,-119.19065,55.43136,CAN,AB,La Glace,3.9
+Wood Buffalo Lake,-113.12867,56.32141,CAN,AB,Sandy Lake,59.1
+Wood Lake,-113.10454,52.2051,CAN,AB,Delburne,8.9
+Wood Lake,-114.43889,52.42887,CAN,AB,Gilby,4.9
+Wood Lake,-118.72571,55.15537,CAN,AB,Grande Prairie,4.8
+Woodenpan Lake,-113.1589,53.46174,CAN,AB,Cooking Lake,6.1
+Woodman Lake,-110.47277,59.5368,CAN,AB,Hay Camp,56
+Worry Lake,-111.48102,54.21929,CAN,AB,Mallaig,7.9
+Wylie Lake,-110.37582,59.32764,CAN,AB,Hay Camp,65.4
+Yagraw Lake,-112.24331,54.77609,CAN,AB,Plamondon,10.3
+Yellow Lake,-111.50823,49.74561,CAN,AB,Burdett,9.9
+Yellowhead Lake,-114.80259,51.95753,CAN,AB,James River Bridge,11.4
+Yoke Lake,-119.6712,55.22036,CAN,AB,Goodfare,5.1
+Zama Lake,-119.09758,58.73313,CAN,AB,Habay,23.5
+Zeer Lake,-111.68824,54.52774,CAN,AB,Rich Lake,5
+Zeta Lake,-115.72999,53.1675,CAN,AB,Brazeau Dam,24
+Zigadenus Lake,-116.08396,51.50014,CAN,AB,Lake Louise,10.7
+Zigzag Lake,-113.7165,57.2221,CAN,AB,Chipewyan Lake,34.6
