@@ -46,8 +46,8 @@ services:
   depends_on:
     - db
     - app_dependency
-  restart: always
-  command: ["npm", "run", "hotload"]
+  restart: 'no'
+  command: ["npm", "run", "git:test"]
 # Application Local Database Container and service
  db:
   image: ${PROJECT_NAME}-${TAG}-postgress-img
