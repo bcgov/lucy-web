@@ -26,7 +26,7 @@ export class WaterBodyJune20201591902653132 extends AppDBMigrator implements Mig
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-        this.log('[STAR]', 'DOWN');
+        this.log('[START]', 'DOWN');
         this.log('[END]', 'DOWN');
     }
 
