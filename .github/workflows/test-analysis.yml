@@ -14,7 +14,7 @@ jobs:
         working-directory: ./api/
     env:
       API_PORT: 7070
-      ENVIRONMENT: local
+      ENVIRONMENT: dev
       PROJECT_NAME: invasivesbc
       TAG: dev
       APP_PORT: 3033
@@ -51,6 +51,8 @@ jobs:
         run: docker-compose -f docker-compose.yml build && docker-compose -f docker-compose.yml up
       - name: Check 
         run: docker ps -a
+      - name: Check localhost
+        run: 'curl -f "http://localhost/api/misc/version"' 
   ## End test job
           
 
