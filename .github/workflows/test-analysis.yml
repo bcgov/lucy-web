@@ -54,7 +54,7 @@ jobs:
       - name: Check 
         run: docker ps -a
       - name: Run Tests
-        run: docker exec -it app_api npm run test:all
+        run: docker exec -it invasivesbc-dev-api npm run test:all
   ## End test job
           
 
