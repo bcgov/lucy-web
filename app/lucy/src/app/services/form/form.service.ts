@@ -653,7 +653,7 @@ export class FormService {
       type: relationField.type,
       verification: relationField.verification,
       meta: codeTableMeta,
-      classNames,
+      classNames: classNames,
       codeTable: relationField.refSchema.modelName,
       displayKey: codeTableDisplayKey,
       condition: '',
