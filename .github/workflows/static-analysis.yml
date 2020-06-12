@@ -1,0 +1,39 @@
+# This workflow is currently in DRAFT mode. Shouldn't be run as part of pipeline
+# until GitHub Actions has been implemented for building & deploying to OpenShift.
+name: Static Analysis
+
+# TODO: Uncomment this. 
+#on: [pull_request]
+
+jobs:
+  coverage:
+    name: Unit Test, Coverage & SonarCloud
+    if: github.event.pull_request.state == 'open'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api/api_sources/
+    steps:
+      - name: Checkout repo (dev)
+        uses: actions/checkout@v2
+        with:
+          # For sonar-scanner to work properly we can't use a shallow fetch
+          fetch-depth: 0
+      - name: Use Node.js 
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+      - name: npm install, build
+        run: |
+          npm install
+          npm run-script build
+      - name: Run unit tests & prep coverage report for SonarCloud
+        shell: bash
+        continue-on-error: true
+        run: | # need to adjust filepaths in lcov.info to match folder structure in Github's Docker container
+          npm run-script test:coverage
+          sed -i 's+/home/runner/work/lucy-web/lucy-web+/github/workspace+g' api/api_sources/coverage/lcov.info
+      - name: SonarCloud scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
