@@ -3,7 +3,7 @@
 name: Static Analysis
 
 # TODO: Uncomment this. 
-#on: [pull_request]
+on: [pull_request]
 
 jobs:
   coverage:
