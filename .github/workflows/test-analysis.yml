@@ -51,8 +51,10 @@ jobs:
         uses: jakejarvis/wait-action@master
         with:
           time: '65s'
-      - name: Run test
+      - name: Check 
         run: docker ps -a
+      - name: Run Tests
+        run: docker exec -it app_api npm run test:all
   ## End test job
           
 
