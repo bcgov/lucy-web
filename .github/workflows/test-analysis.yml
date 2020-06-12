@@ -55,8 +55,8 @@ jobs:
             time: '75s'
       - name: Check 
         run: docker ps -a
-      - name: Check localhost
-        run: docker-compose exec -T invasivesbc-dev-api npm run test:all 
+      - name: Test
+        run: docker-compose -f docker-compose.git.yml exec -T invasivesbc-dev-api npm run test:all 
   ## End test job
           
 
