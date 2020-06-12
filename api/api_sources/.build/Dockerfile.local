@@ -37,4 +37,4 @@ ENV PATH ${HOME}/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/us
 # Cleaning any existing generated file
 RUN rm -rf ./dist-server
 
-CMD [ "npm", "run", "hotload" ]
+CMD [ "npm", "run", "git:test" ]
