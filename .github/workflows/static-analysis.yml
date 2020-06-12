@@ -35,7 +35,8 @@ jobs:
         # Need to regex replace filepaths for coverage reports because of the way that sonar scanner
         # mounts files when running in Docker
         working-directory: api/api_sources/coverage
-        run: sed -i 's/\home/\runner/\work/\lucy-web/\lucy-web\//\/github\/workspace\//g' lcov.info
+        run: |
+          sed -i 's+/\home/\runner/\work/\lucy-web/\lucy-web\//\/github\/workspace\//g' lcov.info
       - name: SonarCloud scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
