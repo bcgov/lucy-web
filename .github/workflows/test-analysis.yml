@@ -56,7 +56,14 @@ jobs:
       - name: Check 
         run: docker ps -a
       - name: Test
-        run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all 
+        run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all
+      - name: Cypress Test
+        uses: cypress-io/github-action@v1
+        env:
+          host: 'http://localhost:3033'
+        with:
+          env: 'username=cypress,password=${{ secrets.CYPRESS_TEST_PASSWORD }},authRealm=dfmlcg7z,authClientId=invasives-bc,authUrl=https://sso-dev.pathfinder.gov.bc.ca/auth'
+          project: '../app/cypress-e2e/'
   ## End test job
           
 
