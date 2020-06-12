@@ -42,7 +42,13 @@ jobs:
           # For sonar-scanner to work properly we can't use a shallow fetch
           fetch-depth: 0
       - name: Docker build and run
-        run: make test
+        run: docker-compose -f docker-compose.yml build && docker-compose -f docker-compose.yml up -d 
+      - name: Sleep for 65 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '65s'
+      - name: Run test
+        run: docker-compose exec app_api npm run test:all
   ## End test job
           
 
