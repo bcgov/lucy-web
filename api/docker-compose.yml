@@ -48,6 +48,11 @@ services:
     - app_dependency
   restart: 'no'
   command: ["npm", "run", "git:test"]
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost/api/misc/version"]
+    interval: 30s
+    timeout: 10s
+    retries: 5
 # Application Local Database Container and service
  db:
   image: ${PROJECT_NAME}-${TAG}-postgress-img
