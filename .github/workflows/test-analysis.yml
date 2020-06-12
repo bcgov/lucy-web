@@ -56,7 +56,7 @@ jobs:
       - name: Check 
         run: docker ps -a
       - name: Test
-        run: docker-compose -f docker-compose.git.yml exec -T invasivesbc-dev-api npm run test:all 
+        run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all 
   ## End test job
           
 
