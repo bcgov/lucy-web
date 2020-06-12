@@ -52,7 +52,7 @@ jobs:
         with:
           time: '65s'
       - name: Run test
-        run: docker-compose exec app_api npm run test:all
+        run: docker ps -a
   ## End test job
           
 
