@@ -37,7 +37,7 @@ services:
   depends_on:
     - db
   restart: 'no'
-  command: ["npm", "run", "git:test"]
+  command: ["npm", "run", "git:run"]
   healthcheck:
     test: ["CMD", "curl", "-f", "http://localhost/api/misc/version"]
     interval: 30s
