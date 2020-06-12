@@ -1,7 +1,6 @@
 FROM node:11.0.0
 
 RUN apt-get update
-RUN apt-get install -y curl
 RUN npm install -g npm
 
 # Create app directory
@@ -9,14 +8,13 @@ RUN npm install -g npm
 ENV HOME_ROOT=/opt/app-root
 ENV HOME=/opt/app-root/src
 
+RUN mkdir -p $HOME
+
 # Create DIR Structure
 # Temp File Structure
 RUN mkdir -p ${HOME_ROOT}/temp
 # Issue Files
 RUN mkdir -p ${HOME_ROOT}/temp/uploads/issues
-
-# Source DIR
-RUN mkdir -p $HOME
 
 WORKDIR $HOME_ROOT
 
@@ -25,17 +23,30 @@ WORKDIR $HOME
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
+COPY ./package*.json ./
 
-# Bundle app source
-COPY ./ .
+# If you are building your code for production
+# RUN npm install --only=production
+RUN npm set progress=false && npm ci
 
-# Cleaning any existing generated file
-
+VOLUME ${HOME}/node_modules
 
 VOLUME ${HOME}
 ENV PATH ${HOME}/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
-# Cleaning any existing generated file
+# Bundle app source
+COPY ./ .
+
+# Remove build dir
 RUN rm -rf ./dist-server
 
-CMD [ "npm", "run", "hotload" ]
+# Lint
+RUN npm run test:lint
+
+# Build
+RUN npm run build
+
+# Entrypoint 
+CMD [ "npm", "run", "git:run" ]
+
+
