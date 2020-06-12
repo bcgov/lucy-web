@@ -39,6 +39,8 @@ jobs:
       APP_EMAIL_SENDER_PWD: ${{secrets.EMAIL_PWD}}
       APP_EMAIL_TEST_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
       APP_REPORT_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+      # Docker Compose 
+      COMPOSE_INTERACTIVE_NO_CLI: 1
     steps:
       - uses: actions/checkout@v1
         name: Checkout latest head
