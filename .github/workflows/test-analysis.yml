@@ -49,6 +49,10 @@ jobs:
           fetch-depth: 0
       - name: Docker build and run
         run: docker-compose -f docker-compose.yml build && docker-compose -f docker-compose.yml up
+      - name: Sleep for 75 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+            time: '75s'
       - name: Check 
         run: docker ps -a
       - name: Check localhost
