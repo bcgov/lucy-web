@@ -1,0 +1,49 @@
+# Test and Run static analysis of API code
+name: Test And analysis
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+jobs:
+  test:
+    name: Test and Sonar Analysis of API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api/
+    env:
+      API_PORT: 7070
+      ENVIRONMENT: local
+      # ------------------------------------------------------------------------------
+      # Postgres Database
+      # ------------------------------------------------------------------------------
+      DB_HOST: db
+      DB_USER: lucy
+      DB_PASS: lucy
+      DB_PORT: 5432
+      DB_DATABASE: lucy
+      # ------------------------------------------------------------------------------
+      # AUTH URL
+      # ------------------------------------------------------------------------------
+      APP_CERTIFICATE_URL: ${{ secrets.AUTH_URL }}
+      APP_CERTIFICATE_URL_TEST: ${{ secrets.AUTH_URL }}
+      # ------------------------------------------------------------------------------
+      # EMAIL
+      # ------------------------------------------------------------------------------
+      APP_EMAIL_SENDER: ${{secrets.EMAIL_SENDER}}
+      APP_EMAIL_SENDER_PWD: ${{secrets.EMAIL_PWD}}
+      APP_EMAIL_TEST_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+      APP_REPORT_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout latest head
+        with:
+          # For sonar-scanner to work properly we can't use a shallow fetch
+          fetch-depth: 0
+      - name: Docker build and run
+        run: make test
+  ## End test job
+          
+
+
