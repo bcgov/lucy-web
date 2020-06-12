@@ -3,7 +3,7 @@ name: Test And analysis
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize, closed]
+    types: [opened, reopened, synchronize]
 
 jobs:
   test:
@@ -15,6 +15,10 @@ jobs:
     env:
       API_PORT: 7070
       ENVIRONMENT: local
+      PROJECT_NAME: invasivesbc
+      TAG: dev
+      APP_PORT: 3033
+      VERSION: '0.1.1'
       # ------------------------------------------------------------------------------
       # Postgres Database
       # ------------------------------------------------------------------------------
