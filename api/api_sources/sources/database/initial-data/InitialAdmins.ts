@@ -64,6 +64,15 @@ export const InitialUsers = [
         additionalInitDataInfo: {
             roles: [2]
         }
+    },
+    {
+        email: 'shayegh@me.com',
+        preferred_username: 'cypress',
+        first_name: 'test',
+        last_name: 'cypress',
+        additionalInitDataInfo: {
+            roles: [1]
+        }
     }
 ];
 
