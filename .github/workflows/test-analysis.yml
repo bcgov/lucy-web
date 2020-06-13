@@ -109,6 +109,7 @@ jobs:
         uses: cypress-io/github-action@v1
         env:
           host: 'http://localhost:3033'
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         with:
           env: 'username=cypress,password=${{ secrets.CYPRESS_TEST_PASSWORD }},authRealm=dfmlcg7z,authClientId=invasives-bc,authUrl=https://sso-dev.pathfinder.gov.bc.ca/auth'
           working-directory: './app/cypress-e2e'
