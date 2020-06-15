@@ -63,13 +63,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with: 
           projectBaseDir: './api/api_sources/'
-      - name: Sonar Analysis APP
-        uses: sonarsource/sonarcloud-github-action@master
-        continue-on-error: true
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with: 
-          projectBaseDir: './app/lucy/'
   ## End test job
   e2e:
     name: Cypress e2e test
