@@ -22,6 +22,7 @@ jobs:
           export PATH=$PATH_TO_OC
       - name: Login into OpenShift
         run: |
+          export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
       - name: Build API Images
         working-directory: './api/.pipeline/'
@@ -68,7 +69,7 @@ jobs:
       - name: Login into OpenShift
         run: |
           export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.DEV_SA_TOKEN }}
+          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
       - name: Deploy API dc
         working-directory: './api/.pipeline/'
         run: |
