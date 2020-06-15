@@ -1,0 +1,75 @@
+# Test Deploy On OpensShift
+name: Deploy on OpensShift
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  buildAPI:
+    name: Build API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install OpenShift
+        run: |
+          cd $HOME
+          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
+          chmod +x oc
+          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
+          export PATH=$PATH_TO_OC
+      - name: Login into OpenShift
+        run: |
+          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+      - name: Build API Images
+        working-directory: './api/.pipeline/'
+        run: |
+          ./npmw ci && DEBUG=* ./npmw run build -- --pr=${{ github.event.number }}"
+  buildAPP:
+    name: Build App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install OpenShift
+        run: |
+          cd $HOME
+          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
+          chmod +x oc
+          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
+          export PATH=$PATH_TO_OC
+      - name: Login into OpenShift
+        run: |
+          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+      - name: Build API Images
+        working-directory: './app/.pipeline/'
+        run: |
+          ./npmw ci && DEBUG=* ./npmw run build -- --pr=${{ github.event.number }}"
+  deploy:
+    name: Deploy App and API
+    runs-on: ubuntu-latest
+    needs: 
+      - buildAPI
+      - buildAPP
+    steps:
+      - name: Install OpenShift
+        run: |
+          cd $HOME
+          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
+          chmod +x oc
+          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
+          export PATH=$PATH_TO_OC
+      - name: Login into OpenShift
+        run: |
+          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.DEV_SA_TOKEN }}
+      - name: Deploy API dc
+        working-directory: './api/.pipeline/'
+        run: |
+          ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run test -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --pr=${{ github.event.number }} --env=dev"
+      - name: Deploy App
+        working-directory: './app/.pipeline'
+        run: |
+          /npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev"

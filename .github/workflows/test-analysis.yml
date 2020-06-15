@@ -56,6 +56,9 @@ jobs:
       - name: Test
         working-directory: './api/'
         run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all && docker-compose -f docker-compose.git.yml down -v
+      - name: Check Coverage files
+        working-directory: './api/api_sources'
+        run: ls
       - name: Sonar Analysis API
         uses: sonarsource/sonarcloud-github-action@master
         continue-on-error: true
