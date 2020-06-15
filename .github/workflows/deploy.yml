@@ -38,13 +38,14 @@ jobs:
           cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-          export PATH=$PATH_TO_OC
       - name: Login into OpenShift
         run: |
+          export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
       - name: Build API Images
         working-directory: './app/.pipeline/'
         run: |
+          export PATH=$PATH_TO_OC
           ./npmw ci && DEBUG=* ./npmw run build -- --pr=${{ github.event.number }}"
   deploy:
     name: Deploy App and API
@@ -61,15 +62,17 @@ jobs:
           cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-          export PATH=$PATH_TO_OC
       - name: Login into OpenShift
         run: |
+          export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.DEV_SA_TOKEN }}
       - name: Deploy API dc
         working-directory: './api/.pipeline/'
         run: |
+          export PATH=$PATH_TO_OC
           ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run test -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --pr=${{ github.event.number }} --env=dev"
       - name: Deploy App
         working-directory: './app/.pipeline'
         run: |
-          /npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev"
+          export PATH=$PATH_TO_OC
+          ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev"
