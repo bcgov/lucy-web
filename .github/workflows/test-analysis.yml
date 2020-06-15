@@ -58,12 +58,14 @@ jobs:
         run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all && docker-compose -f docker-compose.git.yml down -v
       - name: Sonar Analysis API
         uses: sonarsource/sonarcloud-github-action@master
+        continue-on-error: true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with: 
           projectBaseDir: './api/api_sources/'
       - name: Sonar Analysis APP
         uses: sonarsource/sonarcloud-github-action@master
+        continue-on-error: true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with: 
