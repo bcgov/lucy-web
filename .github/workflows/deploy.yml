@@ -27,7 +27,7 @@ jobs:
       - name: Build API Images
         working-directory: './api/.pipeline/'
         run: |
-          ./npmw ci && DEBUG=* ./npmw run build -- --pr=${{ github.event.number }}"
+          ./npmw ci && DEBUG=* ./npmw run build -- --pr=${{ github.event.number }}
   buildAPP:
     name: Build App
     runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
         working-directory: './app/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
-          ./npmw ci && DEBUG=* ./npmw run build -- --pr=${{ github.event.number }}"
+          ./npmw ci && DEBUG=* ./npmw run build -- --pr=${{ github.event.number }}
   deploy:
     name: Deploy App and API
     runs-on: ubuntu-latest
@@ -74,9 +74,14 @@ jobs:
         working-directory: './api/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
-          ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run test -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev" && ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --pr=${{ github.event.number }} --env=dev"
+          ./npmw ci && DEBUG=* ./npmw run pre-deploy -- --pr=${{ github.event.number }} --env=dev  
+          ./npmw ci && DEBUG=* ./npmw run setup -- --pr=${{ github.event.number }} --env=dev  
+          ./npmw ci && DEBUG=* ./npmw run seed -- --pr=${{ github.event.number }} --env=dev 
+          ./npmw ci && DEBUG=* ./npmw run test -- --pr=${{ github.event.number }} --env=dev 
+          ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev 
+          ./npmw ci && DEBUG=* ./npmw run deploy-tools -- --pr=${{ github.event.number }} --env=dev
       - name: Deploy App
         working-directory: './app/.pipeline'
         run: |
           export PATH=$PATH_TO_OC
-          ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev"
+          ./npmw ci && DEBUG=* ./npmw run deploy -- --pr=${{ github.event.number }} --env=dev
