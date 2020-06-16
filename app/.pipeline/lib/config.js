@@ -26,6 +26,27 @@ const sso = config.sso;
 const branch = isStaticDeployment() && !isProduction() ? options.branch : undefined;
 const tag = isStaticDeployment() && !isProduction() ? `build-${version}-${changeId}-${branch}` : `build-${version}-${changeId}`;
 
+const processOptions = (options) => {
+  const result = { ...options };
+  // Check git
+  if (!result.git.url.includes('.git')) {
+    result.git.url = `${result.git.url}.git`
+  }
+  if (!result.git.http_url.includes('.git')) {
+    result.git.http_url = `${result.git.http_url}.git`
+  }
+
+  // Fixing repo
+  if (result.git.repository.includes('/')) {
+    const last = result.git.repository.split('/').pop();
+    const final = last.split('.')[0];
+    result.git.repository = final;
+  }
+  return result;
+};
+
+const finalOptions = processOptions(options);
+
 const phases = {
   build: {
     namespace:'8ecbmv-tools'    ,
@@ -95,4 +116,4 @@ process.on('unhandledRejection', (reason) => {
   process.exit(1);
 });
 
-module.exports = exports = {phases, options, staticBranches};
+module.exports = exports = {phases, finalOptions, staticBranches};
