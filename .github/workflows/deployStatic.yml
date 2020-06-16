@@ -3,7 +3,7 @@ name: Static Deploy on OpensShift
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, closed]
     branches:
       - dev
       - prod

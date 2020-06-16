@@ -61,7 +61,7 @@ jobs:
         continue-on-error: true
         working-directory: api/api_sources/coverage
         run: | 
-          sed -i 's+/\home/\runner/\work/\lucy-web/\lucy-web\//\/github\/workspace\//g' lcov.info
+          sed -i 's+/home/runner/work/lucy-web/lucy-web+/github/workspace+g' lcov.info
       - name: Sonar Analysis API
         uses: sonarsource/sonarcloud-github-action@master
         continue-on-error: true
