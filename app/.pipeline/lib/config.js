@@ -1,5 +1,5 @@
 'use strict';
-const options= require('pipeline-cli').Util.parseArguments()
+let options= require('pipeline-cli').Util.parseArguments()
 const config = require('../../../.config/config.json');
 const changeId = options.pr || `${Math.floor((Date.now() * 1000)) / 60.0}` //aka pull-request
 const version = config.version || '1.0.0';
@@ -14,7 +14,7 @@ const deployType = options.type || '';
 const isStaticDeployment = () => {
   return  deployType === 'static';
 };
-const isProduction = () => options.env === 'prod';
+const isProduction = () => false;
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
@@ -25,6 +25,27 @@ const sso = config.sso;
 
 const branch = isStaticDeployment() && !isProduction() ? options.branch : undefined;
 const tag = isStaticDeployment() && !isProduction() ? `build-${version}-${changeId}-${branch}` : `build-${version}-${changeId}`;
+
+const processOptions = (options) => {
+  const result = { ...options };
+  // Check git
+  if (!result.git.url.includes('.git')) {
+    result.git.url = `${result.git.url}.git`
+  }
+  if (!result.git.http_url.includes('.git')) {
+    result.git.http_url = `${result.git.http_url}.git`
+  }
+
+  // Fixing repo
+  if (result.git.repository.includes('/')) {
+    const last = result.git.repository.split('/').pop();
+    const final = last.split('.')[0];
+    result.git.repository = final;
+  }
+  return result;
+};
+
+options = processOptions(options);
 
 const phases = {
   build: {
