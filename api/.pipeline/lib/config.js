@@ -1,5 +1,5 @@
 'use strict';
-const options= require('pipeline-cli').Util.parseArguments();
+let options= require('pipeline-cli').Util.parseArguments();
 
 const config = require('../../../.config/config.json');
 const changeId = options.pr || `${Math.floor((Date.now() * 1000)) / 60.0}`; //aka pull-request or brach to process
@@ -20,7 +20,7 @@ const branch = isStaticDeployment() && !isProduction() ? options.branch : undefi
 const tag = isStaticDeployment() && !isProduction() ? `build-${version}-${changeId}-${branch}` : `build-${version}-${changeId}`;
 
 const processOptions = (options) => {
-  const result = { ...options };
+  const result = options;
   // Check git
   if (!result.git.url.includes('.git')) {
     result.git.url = `${result.git.url}.git`
@@ -35,11 +35,10 @@ const processOptions = (options) => {
     const final = last.split('.')[0];
     result.git.repository = final;
   }
-  console.dir(result);
   return result;
 };
 
-const finalOptions = processOptions(options);
+options = processOptions(options);
 
 const phases = {
   build: {
@@ -111,4 +110,4 @@ process.on('unhandledRejection', (reason) => {
   process.exit(1);
 });
 
-module.exports = exports = {phases, finalOptions, staticBranches};
+module.exports = exports = {phases, options, staticBranches};

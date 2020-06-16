@@ -1,5 +1,5 @@
 'use strict';
-const options= require('pipeline-cli').Util.parseArguments()
+let options= require('pipeline-cli').Util.parseArguments()
 const config = require('../../../.config/config.json');
 const changeId = options.pr || `${Math.floor((Date.now() * 1000)) / 60.0}` //aka pull-request
 const version = config.version || '1.0.0';
@@ -45,7 +45,7 @@ const processOptions = (options) => {
   return result;
 };
 
-const finalOptions = processOptions(options);
+options = processOptions(options);
 
 const phases = {
   build: {
@@ -116,4 +116,4 @@ process.on('unhandledRejection', (reason) => {
   process.exit(1);
 });
 
-module.exports = exports = {phases, finalOptions, staticBranches};
+module.exports = exports = {phases, options, staticBranches};
