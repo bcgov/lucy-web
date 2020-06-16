@@ -1,0 +1,17 @@
+# Test Deploy On OpensShift
+name: Deploy on OpensShift
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+jobs:
+  checkEnv:
+    name: Check Env variables
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Env Vars
+        run: |
+          printenv
+    #end steps
+  #end checkEnv
+# --
