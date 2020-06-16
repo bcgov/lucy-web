@@ -1,9 +1,12 @@
 # Test Deploy On OpensShift
-name: Deploy on OpensShift
+name: Static Deploy on OpensShift
 
 on:
   pull_request:
     types: [opened, reopened, synchronize]
+    branches:
+      - dev
+      - prod
 jobs:
   checkEnv:
     name: Check Env variables
@@ -12,6 +15,9 @@ jobs:
       - name: Print Env Vars
         run: |
           printenv
+          echo ${{ github.base_ref }}
+          echo $GITHUB_BASE_REF
+          echo $GITHUB_HEAD_REF
     #end steps
   #end checkEnv
 # --
