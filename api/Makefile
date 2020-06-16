@@ -32,6 +32,8 @@ local-debug: | setup-local close-local build-local run-debug
 
 schema-spy: | close-local build-local run-local wait-for-app schema-spy-run
 
+test: | setup-local close-local build-local run-local wait-for-app test-local close-local
+
 deploy-remote: | remote-build remote-deploy
 deploy-api: | build-remote-api deploy-remote-api
 deploy-app: | build-remote-app deploy-remote-app
@@ -89,6 +91,10 @@ clean-local: ## -- Target : Closes and clean local development containers.
 	@echo "+\n++ Make: Closing and cleaning local container ...\n+"
 	@docker-compose -f docker-compose.yml down -v
 	@rm -rf ./_app_data
+
+test-local: ## -- Test API: Locally
+	@echo "\n++ Test API locally ... \n+"
+	@docker-compose exec app_api npm run test:all
 
 pod:
 	@echo "+\n++ Make: Creating Pod ...\n+"
@@ -195,4 +201,4 @@ schema-spy-run:
 
 wait-for-app:
 	@echo "Waiting 30 sec for app to start"
-	sleep 30
+	sleep 60

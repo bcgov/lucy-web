@@ -1,0 +1,133 @@
+# Test and Run static analysis of API code
+name: Test And analysis
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  test:
+    name: Test and Sonar Analysis of API
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == false}}
+    env:
+      API_PORT: 7070
+      ENVIRONMENT: dev
+      PROJECT_NAME: invasivesbc
+      TAG: dev
+      APP_PORT: 3033
+      VERSION: '0.1.1'
+      # ------------------------------------------------------------------------------
+      # Postgres Database
+      # ------------------------------------------------------------------------------
+      DB_HOST: db
+      DB_USER: lucy
+      DB_PASS: lucy
+      DB_PORT: 5432
+      DB_DATABASE: lucy
+      # ------------------------------------------------------------------------------
+      # AUTH URL
+      # ------------------------------------------------------------------------------
+      APP_CERTIFICATE_URL: ${{ secrets.AUTH_URL }}
+      APP_CERTIFICATE_URL_TEST: ${{ secrets.AUTH_URL }}
+      # ------------------------------------------------------------------------------
+      # EMAIL
+      # ------------------------------------------------------------------------------
+      APP_EMAIL_SENDER: ${{secrets.EMAIL_SENDER}}
+      APP_EMAIL_SENDER_PWD: ${{secrets.EMAIL_PWD}}
+      APP_EMAIL_TEST_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+      APP_REPORT_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+      # Docker Compose 
+      COMPOSE_INTERACTIVE_NO_CLI: 1
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout latest head
+        with:
+          # For sonar-scanner to work properly we can't use a shallow fetch
+          fetch-depth: 0
+      - name: Docker build and run
+        working-directory: './api/'
+        run: docker-compose -f docker-compose.git.yml build && docker-compose -f docker-compose.git.yml up -d
+      - name: Sleep for 75 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+            time: '75s'
+      - name: Check 
+        run: docker ps -a
+      - name: Test
+        working-directory: './api/'
+        run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all && docker-compose -f docker-compose.git.yml down -v
+      - name: Fix Coverage file path
+        continue-on-error: true
+        working-directory: api/api_sources/coverage
+        run: | 
+          sed -i 's+/\home/\runner/\work/\lucy-web/\lucy-web\//\/github\/workspace\//g' lcov.info
+      - name: Sonar Analysis API
+        uses: sonarsource/sonarcloud-github-action@master
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with: 
+          projectBaseDir: './api/api_sources/'
+  ## End test job
+  e2e:
+    name: Cypress e2e test
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == false}}
+    defaults:
+      run: 
+        working-directory: './app/cypress-e2e'
+    env: 
+      API_PORT: 7070
+      ENVIRONMENT: dev
+      PROJECT_NAME: invasivesbc
+      TAG: dev
+      APP_PORT: 3033
+      VERSION: '0.1.1'
+      # ------------------------------------------------------------------------------
+      # Postgres Database
+      # ------------------------------------------------------------------------------
+      DB_HOST: db
+      DB_USER: lucy
+      DB_PASS: lucy
+      DB_PORT: 5432
+      DB_DATABASE: lucy
+      # ------------------------------------------------------------------------------
+      # AUTH URL
+      # ------------------------------------------------------------------------------
+      APP_CERTIFICATE_URL: ${{ secrets.AUTH_URL }}
+      APP_CERTIFICATE_URL_TEST: ${{ secrets.AUTH_URL }}
+      # ------------------------------------------------------------------------------
+      # EMAIL
+      # ------------------------------------------------------------------------------
+      APP_EMAIL_SENDER: ${{secrets.EMAIL_SENDER}}
+      APP_EMAIL_SENDER_PWD: ${{secrets.EMAIL_PWD}}
+      APP_EMAIL_TEST_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+      APP_REPORT_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+      # Docker Compose 
+      COMPOSE_INTERACTIVE_NO_CLI: 1
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout latest head
+        with:
+          # For sonar-scanner to work properly we can't use a shallow fetch
+          fetch-depth: 0
+      - name: Docker build and run
+        working-directory: './api/'
+        run: docker-compose -f docker-compose.git.yml build && docker-compose -f docker-compose.git.yml up -d
+      - name: Sleep for 75 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+            time: '75s'
+      - name: Cypress Test
+        uses: cypress-io/github-action@v1
+        env:
+          host: 'http://localhost:3033'
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        with:
+          env: 'username=cypress,password=${{ secrets.CYPRESS_TEST_PASSWORD }},authRealm=dfmlcg7z,authClientId=invasives-bc,authUrl=https://sso-dev.pathfinder.gov.bc.ca/auth'
+          working-directory: './app/cypress-e2e'
+          record: true
+          
+
+

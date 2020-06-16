@@ -1,0 +1,6 @@
+cypress.env.json
+node_modules
+.vscode
+.eslintrc.json
+.prettierrc
+cypress/fixtures/users/user.json
