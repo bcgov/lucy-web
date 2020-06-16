@@ -14,7 +14,7 @@ const isStaticDeployment = () => {
 };
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
-const isProduction = () => options.env === 'prod';
+const isProduction = () => false;
 const defaultHost = 'invasivebc-8ecbmv-api.pathfinder.gov.bc.ca';
 const branch = isStaticDeployment() && !isProduction() ? options.branch : undefined;
 const tag = isStaticDeployment() && !isProduction() ? `build-${version}-${changeId}-${branch}` : `build-${version}-${changeId}`;
