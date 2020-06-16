@@ -9,7 +9,13 @@ jobs:
   buildAPI:
     name: Build API
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == false}}
     steps:
+      - name: Print Target Branch details
+        env:
+          TARGET: ${{ github.event.pull_request.head.sha }}
+        run: |
+          echo "$TARGET"
       - uses: actions/checkout@v1
       - name: Use Node.js 
         uses: actions/setup-node@v1
@@ -34,9 +40,11 @@ jobs:
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=${{ github.event.number }}
+  # End buildAPI
   buildAPP:
     name: Build App
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == false}}
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js 
@@ -61,9 +69,11 @@ jobs:
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=${{ github.event.number }}
+  # End buildAPP
   deploy:
     name: Deploy App and API
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == false}}
     needs: 
       - buildAPI
       - buildAPP
@@ -85,7 +95,7 @@ jobs:
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
-      - name: Deploy API dc
+      - name: Deploy API
         working-directory: './api/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
@@ -102,3 +112,42 @@ jobs:
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
+  # End deploy
+  clean:
+    name: Clean PR based deployment
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true}}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+      - name: Install OpenShift
+        run: |
+          cd $HOME
+          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
+          chmod +x oc
+          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
+          export PATH=$PATH_TO_OC
+      - name: Login into OpenShift
+        run: |
+          export PATH=$PATH_TO_OC
+          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+      - name: Clean API Deployment
+        working-directory: './api/.pipeline/'
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=build
+          DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=dev
+      - name: Clean APP Deployment
+        working-directory: './app/.pipeline/'
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=build
+          DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=dev
+  # End clean
