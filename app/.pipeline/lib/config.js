@@ -14,7 +14,7 @@ const deployType = options.type || '';
 const isStaticDeployment = () => {
   return  deployType === 'static';
 };
-const isProduction = () => options.env === 'prod';
+const isProduction = () => false;
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
