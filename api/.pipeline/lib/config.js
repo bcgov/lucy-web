@@ -1,5 +1,6 @@
 'use strict';
 const options= require('pipeline-cli').Util.parseArguments();
+console.dir(options);
 const config = require('../../../.config/config.json');
 const changeId = options.pr || `${Math.floor((Date.now() * 1000)) / 60.0}`; //aka pull-request or brach to process
 const version = config.version || '1.0.0';
