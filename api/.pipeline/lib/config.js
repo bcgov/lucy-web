@@ -35,6 +35,7 @@ const processOptions = (options) => {
     const final = last.split('.')[0];
     result.git.repository = final;
   }
+  console.dir(result);
   return result;
 };
 
