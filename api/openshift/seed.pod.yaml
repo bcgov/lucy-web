@@ -75,17 +75,17 @@ objects:
         valueFrom:
           secretKeyRef:
             key: database-user
-            name: ${NAME}${SUFFIX}
+            name: ${DB_SERVICE_NAME}
       - name: DB_PASS
         valueFrom:
           secretKeyRef:
             key: database-password
-            name: ${NAME}${SUFFIX}
+            name: ${DB_SERVICE_NAME}
       - name: DB_DATABASE
         valueFrom:
           secretKeyRef:
             key: database-name
-            name: ${NAME}${SUFFIX}
+            name: ${DB_SERVICE_NAME}
       - name: DB_PORT
         value: "5432"
       - name: APP_CERTIFICATE_URL
@@ -101,15 +101,3 @@ objects:
     activeDeadlineSeconds: 900
     dnsPolicy: ClusterFirst
   status: {}
-- apiVersion: v1
-  stringData:
-    database-name: ""
-    database-password: ""
-    database-user: ""
-  kind: Secret
-  metadata:
-    annotations:
-      as-copy-of: ${DB_SERVICE_NAME}
-    creationTimestamp: null
-    name: ${NAME}${SUFFIX}
-  type: Opaque
