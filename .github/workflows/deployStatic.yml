@@ -3,7 +3,7 @@ name: Static Deploy on OpensShift
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, closed]
     branches:
       - dev
       - prod
@@ -48,7 +48,7 @@ jobs:
         working-directory: './api/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
-          npm ci{
+          npm ci
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
   # End buildAPI
   buildAPP:
@@ -216,7 +216,56 @@ jobs:
   clean:
     name: Clean PR based deployment
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.merged == true && (github.base_ref == 'dev' || github.base_ref == 'prod') }}
+    if: ${{ github.event.pull_request.merged == true && github.base_ref == 'dev'  }}
+    needs: 
+      - buildAPI
+      - buildAPP
+      - deployDev
+      - deployTest
+    env:
+      BUILD_ID: ${{ github.event.number }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+      - name: Install OpenShift
+        run: |
+          cd $HOME
+          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
+          chmod +x oc
+          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
+          export PATH=$PATH_TO_OC
+      - name: Login into OpenShift
+        run: |
+          export PATH=$PATH_TO_OC
+          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+      - name: Clean API Deployment
+        working-directory: './api/.pipeline/'
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+      - name: Clean APP Deployment
+        working-directory: './app/.pipeline/'
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+  # End clean
+  cleanProd:
+    name: Clean PR based deployment for Production Env
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true && github.base_ref == 'prod' }}
+    needs: 
+      - buildAPI
+      - buildAPP
+      - deployProd
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
