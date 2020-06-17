@@ -48,7 +48,7 @@ jobs:
         working-directory: './api/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
-          npm ci{
+          npm ci
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
   # End buildAPI
   buildAPP:
