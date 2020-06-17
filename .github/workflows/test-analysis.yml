@@ -59,7 +59,7 @@ jobs:
         run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all && docker-compose -f docker-compose.git.yml down -v
       - name: Change permission for coverage report path
         run: |
-          chmod -R 777 /api/api_sources/coverage
+          chmod 777 ./api/api_sources/coverage
         continue-on-error: true
       - name: Fix Coverage file path
         continue-on-error: true
