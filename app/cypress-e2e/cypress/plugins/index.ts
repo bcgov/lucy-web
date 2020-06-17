@@ -22,10 +22,10 @@ module.exports = (on, config) => {
   config.defaultCommandTimeout = 10000;
 
   // TODO: add logic to use the urls based on the current environment
-  config.baseUrl = 'https://dev-invasivesbc.pathfinder.gov.bc.ca';
-  config.env.authUrl = 'https://sso-dev.pathfinder.gov.bc.ca/auth';
+  // https://dev-invasivesbc.pathfinder.gov.bc.ca
+  config.baseUrl = process.env.host || "http://localhost:3033";
   config.env.ENVIRONMENT = 'dev';
 
   // return config
   return config;
-}
+};

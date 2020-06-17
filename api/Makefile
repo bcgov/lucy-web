@@ -32,6 +32,8 @@ local-debug: | setup-local close-local build-local run-debug
 
 schema-spy: | close-local build-local run-local wait-for-app schema-spy-run
 
+test: | setup-local close-local build-local run-local wait-for-app test-local close-local
+
 deploy-remote: | remote-build remote-deploy
 deploy-api: | build-remote-api deploy-remote-api
 deploy-app: | build-remote-app deploy-remote-app
@@ -90,6 +92,10 @@ clean-local: ## -- Target : Closes and clean local development containers.
 	@docker-compose -f docker-compose.yml down -v
 	@rm -rf ./_app_data
 
+test-local: ## -- Test API: Locally
+	@echo "\n++ Test API locally ... \n+"
+	@docker-compose exec app_api npm run test:all
+
 pod:
 	@echo "+\n++ Make: Creating Pod ...\n+"
 	@oc new-app  -e POSTGRESQL_USER=$(DB_USER) -e POSTGRESQL_PASSWORD=$(DB_PASS) -e POSTGRESQL_DATABASE=$(DB_DATABASE) centos/postgresql-95-centos7
@@ -118,6 +124,12 @@ clean-remote:
 	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
 	@echo "+\n++ Cleaning App {Deploy}"
 	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=$$ENV
+clean-build:
+	@echo "+\n++ Make: Clean Remote Build with pr=$$PR"
+	@echo "+\n Cleaning API {Build}"
+	@cd ./.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
+	@echo "+\n++ Cleaning App {Build}"
+	@cd ../app/.pipeline && DEBUG=* npm run clean -- --pr=$$PR --env=build
 build-remote-api:
 	@echo "+\n++ Make: Building API with ref = $$PR"
 	@cd ./.pipeline && DEBUG=* npm run build -- --pr=$$PR
@@ -189,4 +201,4 @@ schema-spy-run:
 
 wait-for-app:
 	@echo "Waiting 30 sec for app to start"
-	sleep 30
+	sleep 60

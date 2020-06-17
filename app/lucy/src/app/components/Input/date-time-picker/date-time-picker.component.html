@@ -12,6 +12,6 @@
         </div>
     </mat-form-field>
 </div>
-<div *ngIf="readonly">
+<div *ngIf="readonly" id="{{fieldId}}">
     <app-field [mode]="mode" [header]="header" [value]="dateTimeAsString"></app-field>
 </div>

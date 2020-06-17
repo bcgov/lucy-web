@@ -47,7 +47,7 @@ describe('Test DBMigrator class', () => {
         expect(tm.isSQLFileHandled(schema.migrationFiles['test'], schema.className)).to.be.equal(true);
     });
 
-    it('should migrator run query', async () => {
+    it.skip('should migrator run query', async () => {
         const dryRun = process.env.ENVIRONMENT === 'local' ? false : true;
         const tm = new TestMigrator();
         let r = await tm.runQuerySqlFiles(tm.upMigrations(), new TestQuery(), dryRun);

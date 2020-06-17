@@ -21,7 +21,7 @@ export class ExportOcean1587060374156 extends AppDBMigrator implements Migration
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-        this.log('[STAR]', 'DOWN');
+        this.log('[START]', 'DOWN');
         this.log('[END]', 'DOWN');
     }
 

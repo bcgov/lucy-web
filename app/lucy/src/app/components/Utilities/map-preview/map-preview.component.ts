@@ -482,11 +482,16 @@ export class MapPreviewComponent implements OnInit, AfterViewInit, AfterViewChec
           }
         }
       }).bindTooltip(function (layer) {
-        switch (layer.feature.geometry.type) {
-          case 'Polygon': return `<html>Offset: ${layer.feature.properties.offset}m<br>
-              Area: ${layer.feature.properties.area.toFixed(1)}m²<br>
-              Length: ${layer.feature.properties.length.toFixed(1)}m</html>`;
-          case 'Point': return `<html>${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}</html>`;
+        // Fixing undefined issue
+        if (layer && layer.features) {
+          switch (layer.feature.geometry.type) {
+            case 'Polygon':
+              const length: number = layer.feature.properties ?  layer.feature.properties.length : 0;
+              return `<html>Offset: ${layer.feature.properties.offset}m<br>
+                Area: ${layer.feature.properties.area.toFixed(1)}m²<br>
+                Length: ${length.toFixed(1)}m</html>`;
+            case 'Point': return `<html>${layer.feature.geometry.coordinates[1]}, ${layer.feature.geometry.coordinates[0]}</html>`;
+          }
         }
       })
       .addTo(this.map);

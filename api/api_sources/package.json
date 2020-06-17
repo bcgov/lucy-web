@@ -12,6 +12,7 @@
         "hotload": "npm run test:lint && npm run build && npm run migration && npm run seed-db && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
         "watch": "gulp watch",
         "test:all": "TEST_RUN=yes nyc ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 60000",
+        "git:run": "npm run migration && npm run seed-db && NODE_ENV=dev-docker ./node_modules/.bin/nodemon sources/index.ts --exec ts-node",
         "migration": "ts-node scripts/run.migrations.ts",
         "seed-db": "ts-node scripts/seed.data.ts",
         "migration-refresh": "ts-node scripts/refresh-migration.ts",
@@ -25,7 +26,8 @@
         "remote:test": "npm run test:all && npm run sonar-analysis",
         "remote:test-temp": "npm run test:all",
         "test:no-server": "TEST_RUN=yes ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --exclude './sources/server/**/*.spec.ts' --timeout 8000",
-        "test:server": "ts-mocha --recursive --require source-map-support/register './sources/server/**/*.spec.ts' --timeout 8000"
+        "test:server": "ts-mocha --recursive --require source-map-support/register './sources/server/**/*.spec.ts' --timeout 8000",
+        "test:coverage": "TEST_RUN=yes nyc --reporter=lcov --report-dir=coverage/ ts-mocha --recursive --require source-map-support/register './sources/**/*.spec.ts' --timeout 60000"
     },
     "author": "Pushan Mitra",
     "license": "MIT",
