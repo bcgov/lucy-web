@@ -1,12 +1,19 @@
 'use strict'
 
-require('dotenv').config();
+// Configuring env for local test
+if (!process.env.REMOTE) {
+    require('dotenv').config();
+}
+
+// Required Items
 const querystring = require('querystring');
 const assert = require('assert');
 const axios = require('axios');
 
+// Token
 var token = null;
 
+// Getting token from auth service
 const getToken = async () => {
     // Getting auth details from env
     const authUrl = process.env.AUTH_URL;
@@ -74,11 +81,18 @@ async function beforeRequestHandler(req, context, ee, next) {
     }
 };
 
+/**
+ * Placeholder for beforeScenarioHandler
+ * @param {*} context 
+ * @param {*} ee 
+ * @param {*} next 
+ */
 async function beforeScenarioHandler(context, ee, next) {
     //Change your function name and add your logic here.
     //For more information, check: https://artillery.io/docs/http-reference/#function-signatures
 };
 
+// Exporting
 module.exports = {
     beforeRequestHandler: beforeRequestHandler,
     beforeScenarioHandler: beforeScenarioHandler

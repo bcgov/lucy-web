@@ -60,8 +60,8 @@ objects:
             secretKeyRef:
               key: client_id
               name: ${TEST_USER_SECRET}
-        - name: ENV
-          value: oc
+        - name: REMOTE
+          value: yes
     restartPolicy: Never
     activeDeadlineSeconds: 900
     dnsPolicy: ClusterFirst
