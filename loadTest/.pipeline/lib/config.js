@@ -39,4 +39,4 @@ process.on('unhandledRejection', (reason) => {
   process.exit(1);
 });
 
-module.exports = exports = {phases, options, staticBranches};
+module.exports = exports = {phases, options};
