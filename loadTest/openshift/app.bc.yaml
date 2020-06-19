@@ -20,7 +20,7 @@ parameters:
   value: '1.0'
 - name: SOURCE_CONTEXT_DIR
   required: true
-  value: loadTest
+  value: loadTest/app
 - name: SOURCE_REPOSITORY_URL
   required: true
   value: https://github.com/bcgov/lucy-web
