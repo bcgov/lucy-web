@@ -3,11 +3,5 @@
   "pluginsFile": "./cypress/plugins/index.ts",
   "screenshotsFolder": "./cypress/results/screenshots",
   "videosFolder": "./cypress/results/videos",
-  "projectId": "un3pv5",
-  "username": "cypress",
-  "password": "Qwer1234",
-  "authRealm": "dfmlcg7z",
-  "authClientId": "invasives-bc",
-  "host": "http://localhost:4200",
-  "authUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+  "projectId": "un3pv5"
 }
