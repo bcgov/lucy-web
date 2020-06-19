@@ -1,0 +1,18 @@
+config:
+  target: 'https://api-test-invasivesbc.pathfinder.gov.bc.ca/api'
+  phases:
+    - duration: 1
+      arrivalRate: 10
+      name: "API test"
+  processor: "./testProcessor.js"
+scenarios:
+  - name: Read observation
+    # beforeScenario: ['beforeScenarioHandler']
+    flow:
+      - get:
+          beforeRequest: ["beforeRequestHandler"]
+          url: "{{ url }}"
+          headers:
+            Authorization: Bearer {{ token }}
+  # For more information: https://artillery.io/docs/script-reference/
+# For more information: https://artillery.io/docs/script-reference/
