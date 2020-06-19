@@ -4,7 +4,7 @@ const changeId = options.pr || `${Math.floor((Date.now() * 1000)) / 60.0}` //aka
 const version = '1.0.0';
 const name = 'invasivesbc-load-test';
 const branch = options.branch;
-const tag = `build-${version}-${changeId}-${branch}`;
+const tag = `build-${version}-${branch}`;
 
 const phases = {
   build: {
@@ -12,9 +12,9 @@ const phases = {
     name: `${name}`, 
     phase: 'build'  , 
     changeId:changeId, 
-    suffix: `-build-${changeId}`  , 
-    instance: `${name}-build-${changeId}`  , 
-    version:`${version}-${changeId}`, 
+    suffix: `-build-${branch}`  , 
+    instance: `${name}-build-${branch}`  , 
+    version:`${version}`, 
     tag: tag,
     env: 'build',
     branch: branch
@@ -24,10 +24,10 @@ const phases = {
     name: `${name}`, 
     phase: 'dev'  , 
     changeId: changeId, 
-    suffix: `-dev-${branch}-${changeId}`  , 
-    instance: `${name}-dev-${changeId}`  , 
-    version:`${version}-${changeId}`, 
-    tag:`dev-${version}-${changeId}`, 
+    suffix: `-dev-${branch}`  , 
+    instance: `${name}-dev-${branch}`  , 
+    version:`${version}`, 
+    tag:`dev-${version}-${branch}`, 
     replicas: 1,
     maxReplicas: 1
   }
