@@ -1,0 +1,68 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: test
+parameters:
+- name: IMAGE
+  description: 'Image for pod'
+  required: true
+- name: NAME
+  value: invasivesbc-api
+- name: SUFFIX
+  value: "-dev"
+- name: VERSION
+  description: Version of the application
+  value: "1.0.0"
+- name: CHANGE_ID
+  description: Change id of the project. This will help to pull image stream
+  required: true
+  value: "0"
+- name: AUTH_URL
+  description: Auth URL
+  value: "https://sso-test.pathfinder.gov.bc.ca/auth/realms"
+- name: RELAM
+  description: Auth Realm
+  value: dfmlcg7z
+- name: TEST_USER_SECRET
+  description: Secret of test user profile
+  value: invasivesbc-load-test-user
+objects:
+- kind: Pod
+  metadata:
+    name: myapp
+    labels:
+      name: myapp
+  spec:
+    containers:
+    - name: ${NAME}
+      image: ${IMAGE}
+      resources:
+        limits:
+          memory: "1Gi"
+          cpu: "1000m"
+      env:
+        - name: AUTH_URL
+          value: ${AUTH_URL}
+        - name: RELAM
+          value: ${RELAM}
+        - name: TEST_USER
+          valueFrom:
+            secretKeyRef:
+              key: user
+              name: ${TEST_USER_SECRET}
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: ${TEST_USER_SECRET}
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: client_id
+              name: ${TEST_USER_SECRET}
+        - name: ENV
+          value: oc
+    restartPolicy: Never
+    activeDeadlineSeconds: 900
+    dnsPolicy: ClusterFirst
+  status: {}
