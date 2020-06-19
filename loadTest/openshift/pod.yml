@@ -20,7 +20,7 @@ parameters:
 - name: AUTH_URL
   description: Auth URL
   value: "https://sso-test.pathfinder.gov.bc.ca/auth/realms"
-- name: RELAM
+- name: REALM
   description: Auth Realm
   value: dfmlcg7z
 - name: TEST_USER_SECRET
@@ -28,14 +28,19 @@ parameters:
   value: invasivesbc-load-test-user
 objects:
 - kind: Pod
+  apiVersion: v1
   metadata:
-    name: myapp
-    labels:
-      name: myapp
+    name: ${NAME}
+    labels: {}
   spec:
     containers:
-    - name: ${NAME}
+    - name: run
       image: ${IMAGE}
+      command:
+      - container-entrypoint
+      - bash
+      - "-c"
+      - "/usr/bin/tail -f /dev/null"
       resources:
         limits:
           memory: "1Gi"
@@ -43,8 +48,8 @@ objects:
       env:
         - name: AUTH_URL
           value: ${AUTH_URL}
-        - name: RELAM
-          value: ${RELAM}
+        - name: REALM
+          value: ${REALM}
         - name: TEST_USER
           valueFrom:
             secretKeyRef:
@@ -61,7 +66,7 @@ objects:
               key: client_id
               name: ${TEST_USER_SECRET}
         - name: REMOTE
-          value: yes
+          value: 'yes'
     restartPolicy: Never
     activeDeadlineSeconds: 900
     dnsPolicy: ClusterFirst

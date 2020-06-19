@@ -21,7 +21,6 @@ module.exports = (settings)=>{
     }
   }));
 
-  oc.applyRecommendedLabels(objects, phases[phase].name, phase, phases[phase].changeId, phases[phase].instance)
-  console.log(`${JSON.stringify(objects, null, 2)}`);
+  oc.applyRecommendedLabels(objects, phases[phase].name, phase, phases[phase].branch, phases[phase].instance)
   oc.applyAndBuild(objects)
 }
