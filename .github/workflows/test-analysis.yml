@@ -56,7 +56,7 @@ jobs:
         run: docker ps -a
       - name: Test
         working-directory: './api/'
-        run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all && docker-compose -f docker-compose.git.yml down -v
+        run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all
       - name: Change permission for coverage report path
         run: |
           chmod 777 ./api/api_sources/coverage
