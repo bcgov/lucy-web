@@ -55,26 +55,25 @@ objects:
           image: ${IMAGE}
           command: ["make",  "${TEST_NAME}", "${ARG_LIST}"]
           env:
-            env:
-              - name: AUTH_URL
-                value: ${AUTH_URL}
-              - name: REALM
-                value: ${REALM}
-              - name: TEST_USER
-                valueFrom:
-                  secretKeyRef:
-                    key: user
-                    name: ${TEST_USER_SECRET}
-              - name: PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    key: password
-                    name: ${TEST_USER_SECRET}
-              - name: CLIENT_ID
-                valueFrom:
-                  secretKeyRef:
-                    key: client_id
-                    name: ${TEST_USER_SECRET}
-              - name: REMOTE
-                value: 'yes'
+            - name: AUTH_URL
+              value: ${AUTH_URL}
+            - name: REALM
+              value: ${REALM}
+            - name: TEST_USER
+              valueFrom:
+                secretKeyRef:
+                  key: user
+                  name: ${TEST_USER_SECRET}
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: ${TEST_USER_SECRET}
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: client_id
+                  name: ${TEST_USER_SECRET}
+            - name: REMOTE
+              value: 'yes'
         restartPolicy: OnFailure
