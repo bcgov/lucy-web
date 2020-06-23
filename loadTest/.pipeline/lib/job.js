@@ -13,6 +13,9 @@ module.exports = (settings) => {
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
   var objects = []
   var is = [];
+
+  console.log(`The Options are => ${JSON.stringify(options, null, 2)}`);
+  console.log(`Arguments for test: ${options.arg}`);
   
   // The deployment of your cool app goes here ▼▼▼
   const isName = `${phases[phase].name}`
