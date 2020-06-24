@@ -107,6 +107,8 @@ export class RouterService {
         return AppRoutes.AddChemicalTreatment;
       case `monitor/mechanical`:
         return AppRoutes.AddMechanicalMonitor;
+      case 'animal/observation':
+        return AppRoutes.AddAnimalObservation;
       default:
         return AppRoutes.Error;
     }
@@ -125,6 +127,8 @@ export class RouterService {
         return AppRoutes.EditChemicalTreatment;
       case 'monitor/mechanical':
         return AppRoutes.EditMechanicalMonitor;
+      case 'animal/observation':
+        return AppRoutes.EditAnimalObservation;
       default:
         return AppRoutes.Error;
     }
@@ -143,6 +147,8 @@ export class RouterService {
         return AppRoutes.ViewChemicalTreatment;
       case 'monitor/mechanical':
         return AppRoutes.ViewMechanicalMonitor;
+      case 'animal/observation':
+        return AppRoutes.ViewAnimalObservation;
       default:
         return AppRoutes.Error;
     }
@@ -203,6 +209,8 @@ export class RouterService {
         return AppRoutes.ViewChemicalTreatment;
       case AppConstants.API_mechanicalMonitor:
         return AppRoutes.ViewMechanicalMonitor;
+      case AppConstants.API_Form_Animal_Observation:
+        return AppRoutes.ViewAnimalObservation;
       default:
         console.log(`${api} does not have a route`);
     }
@@ -226,7 +234,7 @@ export class RouterService {
       this.alert.showConfirmation(`Are you sure?`, 'If you leave this page, your changes will be lost', `Leave Page`, `Stay`)
       : true;
   }
-  
+
   /**
    * Store current route in session.
    */
