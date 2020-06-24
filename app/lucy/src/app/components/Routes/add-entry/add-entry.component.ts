@@ -48,6 +48,10 @@ export class AddEntryComponent implements OnInit {
     this.routerService.navigateTo(AppRoutes.AddObservation);
   }
 
+  createAnimalObservation() {
+    this.routerService.navigateTo(AppRoutes.AddAnimalObservation);
+  }
+
   uploadFile() {
 
   }

@@ -71,7 +71,7 @@ export class AdminToolsComponent implements OnInit, AfterViewInit {
 
   requestLength(): number {
     return this.requests.length;
-  }  
+  }
 
   constructor(
     private roleService: RolesService,
