@@ -151,8 +151,6 @@ export class FormService {
    * returns UI configuration based on current route
    */
   public async getFormConfigForCurrentRoute(): Promise<any> {
-    console.log('**HERE');
-    console.log(this.router.current);
     if (
       this.router.current === AppRoutes.ViewObservation ||
       this.router.current === AppRoutes.EditObservation
