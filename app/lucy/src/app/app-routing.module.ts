@@ -57,6 +57,10 @@ const routes: Routes = [
   { path: AppRoutes.ViewObservation , component: BaseFormComponent},
   { path: AppRoutes.EditObservation , component: BaseFormComponent},
   //
+  { path: AppRoutes.AddAnimalObservation , component: BaseFormComponent},
+  { path: AppRoutes.ViewAnimalObservation , component: BaseFormComponent},
+  { path: AppRoutes.EditAnimalObservation , component: BaseFormComponent},
+  //
   { path: AppRoutes.base , component: BaseFormComponent},
   { path: AppRoutes.Inventory , component: InventoryComponent},
   { path: AppRoutes.Error , component: ErrorComponent},
