@@ -15,7 +15,10 @@ module.exports = (settings) => {
   var is = [];
 
   console.log(`The Options are => ${JSON.stringify(options, null, 2)}`);
-  console.log(`Arguments for test: ${options.arg}`);
+  console.log(`Rate: ${options.rate}`);
+  console.log(`Duration: ${options.duration}`);
+  console.log(`URL: ${options.url || 'NA'}`)
+  console.log(`No of pods: ${options.pods}`);
   
   // The deployment of your cool app goes here ▼▼▼
   const isName = `${phases[phase].name}`
@@ -55,8 +58,10 @@ module.exports = (settings) => {
         'VERSION': phases[phase].tag,
         'IMAGE': imageStream.image.dockerImageReference,
         'TEST_NAME': options.test || 'load-test-app',
-        'ARG_LIST': options.arg || 'D=5 R=10',
-        'NO_OF_PODS': options.pods || '2'
+        'NO_OF_PODS': options.pods || '2',
+        'RATE': options.rate,
+        'DURATION': options.duration,
+        'TEST_URL': options.url || "/"
       }
   }))
   checkAndClean(`job/${podName}`, oc);
