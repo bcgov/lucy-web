@@ -90,7 +90,8 @@ export interface FormSubmissionResult {
  * add cases for the new routes added in STEP-1)
  * 7) Add to function in this class -> editCurrent() to
  * add case for new view route to be able to switch to edit mode.
- * 8) * Optional: If new Code tables were introduced: Add support in:
+ * 8) Go to router.service.ts -> add new routes to resolveViewRoute(), resolveEditRoute() and resolveCreateRoute()
+ * 9) * Optional: If new Code tables were introduced: Add support in:
  *  - codeTable service
  *  - dropdown service
  *  - dropdownfor() function in this class.
@@ -118,6 +119,15 @@ export class FormService {
    */
   public async getObservationUIConfig(): Promise<any> {
     const serverConfig = await this.getObservationServerConfig();
+    return await this.createUIConfig(serverConfig);
+  }
+
+   /**
+   * returns UI configuration for Animal Observations
+   */
+  public async getAnimalObservationUIConfig(): Promise<any> {
+    console.log("Getting Animal Observation");
+    const serverConfig = await this.getAnimalObservationServerConfig();
     return await this.createUIConfig(serverConfig);
   }
 
@@ -155,6 +165,22 @@ export class FormService {
     } else if (this.router.current === AppRoutes.AddObservation) {
       //// Observation Create route ////
       const configFile = await this.getObservationUIConfig();
+      return configFile;
+
+    } else if (
+      /// Animal Observation View And Edit routes ////
+      this.router.current === AppRoutes.ViewAnimalObservation ||
+      this.router.current === AppRoutes.EditAnimalObservation
+      ) {
+        const configFile = await this.getAnimalObservationUIConfig();
+        const observation = await this.getObjectWithId(
+          configFile.api,
+          this.router.routeId
+        );
+        return await this.getUIConfigFrom(configFile, observation);
+    } else if (this.router.current === AppRoutes.AddAnimalObservation) {
+      //// Animal Observation Create route ////
+      const configFile = await this.getAnimalObservationUIConfig();
       return configFile;
     } else if (
       this.router.current === AppRoutes.ViewMechanicalTreatment ||
@@ -276,6 +302,32 @@ export class FormService {
     }
   }
 
+  /**
+   * Fetch and return configuration json for Observation page
+   */
+  private async getAnimalObservationServerConfig(): Promise<FormConfig> {
+    const response = await this.api.request(
+      APIRequestMethod.GET,
+      AppConstants.API_Form_Animal_Observation,
+      undefined
+    );
+    if (response.success) {
+      const modelName = response.response[`modelName`];
+      if (modelName) {
+        return response.response;
+      } else {
+        console.log(
+          `Got a response, but something is off - modelName is missing`
+        );
+        console.dir(response);
+        return undefined;
+      }
+    } else {
+      console.dir(response);
+      return undefined;
+    }
+  }
+
   private async getChemicalTreatmentServerConfig(): Promise<FormConfig> {
     const response = await this.api.request(
       APIRequestMethod.GET,
@@ -337,13 +389,18 @@ export class FormService {
     const fields = serverConfig.fields;
     const computedFields = serverConfig.computedFields;
     const relations = serverConfig.relations;
+
+    let title = `Error: Add title in server Layouts`;
+    if  (serverConfig.layout.title) {
+      title = serverConfig.layout.title.default;
+    }
     let requiredFieldKeys: string[] = [];
     let dropdownFieldKeys: string[] = [];
     let fieldHeaders: {} = {};
     const configObject: UIConfigObject = {
       api: serverConfig.meta.api,
       idKey: serverConfig.idKey,
-      title: serverConfig.layout.title.default,
+      title: title,
       sections: [],
       requiredFieldKeys: [],
       dropdownFieldKeys: [],
@@ -1685,6 +1742,14 @@ export class FormService {
           this.router.routeId
         );
       }
+
+      case AppRoutes.ViewAnimalObservation: {
+        return this.router.navigateTo(
+          AppRoutes.EditAnimalObservation,
+          this.router.routeId
+        );
+      }
+
       case AppRoutes.ViewChemicalTreatment: {
         return this.router.navigateTo(
           AppRoutes.EditChemicalTreatment,
