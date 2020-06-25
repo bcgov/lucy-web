@@ -51,7 +51,7 @@ objects:
   metadata:
     name: ${NAME}
   spec:
-    parallelism: "${{NO_OF_PODS}}"
+    parallelism: 2
     completions: 1    
     activeDeadlineSeconds: 1800 
     backoffLimit: 6   
@@ -62,7 +62,7 @@ objects:
         containers:
         - name: run
           image: ${IMAGE}
-          command: ["make",  "${TEST_NAME}", "D=${{DURATION}}", "R=${{RATE}}", "URL=${URL}"]
+          command: ["make",  "${TEST_NAME}", "D=${DURATION}", "R=${RATE}", "TEST_URL=${TEST_URL}"]
           env:
             - name: AUTH_URL
               value: ${AUTH_URL}
