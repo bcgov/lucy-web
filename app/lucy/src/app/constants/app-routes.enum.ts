@@ -34,11 +34,11 @@ export enum AppRoutes {
     AddChemicalTreatment = 'create/chemical',
     ViewChemicalTreatment = 'view/chemical/:id',
     EditChemicalTreatment = 'edit/chemical/:id',
-  
+
     AddMechanicalTreatment = 'create/mechanical',
     ViewMechanicalTreatment = 'view/mechanical/:id',
     EditMechanicalTreatment = 'edit/mechanical/:id',
-    
+
     AddMechanicalMonitor = 'create/monitor/mechanical',
     ViewMechanicalMonitor = 'view/monitor/mechanical/:id',
     EditMechanicalMonitor = 'edit/monitor/mechanical/:id',
@@ -46,6 +46,10 @@ export enum AppRoutes {
     AddObservation = 'create/observation',
     ViewObservation = 'view/observation/:id',
     EditObservation = 'edit/observation/:id',
+
+    AddAnimalObservation = 'create/animal/observation',
+    ViewAnimalObservation = 'view/animal/observation/:id',
+    EditAnimalObservation = 'edit/animal/observation/:id',
 
     base = 'base',
 }
