@@ -33,9 +33,18 @@ parameters:
 - name: TEST_NAME
   description: Name of the test should run
   required: true
-- name: ARG_LIST
-  description: Argument list
+- name: DURATION
+  description: Duration of the test
   required: true
+  value: '2'
+- name: RATE
+  description: Rate of the request per second
+  required: true
+  value: '200'
+- name: TEST_URL
+  description: Relative test url for API test
+  required: true
+  value: '/'
 objects: 
 - apiVersion: batch/v1
   kind: Job
@@ -53,7 +62,7 @@ objects:
         containers:
         - name: run
           image: ${IMAGE}
-          command: ["make",  "${TEST_NAME}", "${ARG_LIST}"]
+          command: ["make",  "${TEST_NAME}", "D=${{DURATION}}", "R=${{RATE}}", "URL=${URL}"]
           env:
             - name: AUTH_URL
               value: ${AUTH_URL}
