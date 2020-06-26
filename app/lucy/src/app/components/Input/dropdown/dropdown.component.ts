@@ -46,6 +46,7 @@ export class DropdownComponent implements OnInit {
   @Input() multiple = false;
   // Optional Input
   @Input() editable = true;
+  @Input() dataCy;
   actionButtons: AlertModalButton[];
   emitter: EventEmitter<boolean>;
 
