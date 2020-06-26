@@ -36,8 +36,12 @@ export class AppConstants {
     static get API_Form_MechanicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/mechanical/config`; }
     // Form Config Observation
     static get API_Form_Observation(): string { return `${AppConstants.API_baseURL}/observation/config`; }
-     // Form Config Chemical
-     static get API_Form_ChemicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/chemical/config`; }
+
+    // Form Config Animal Observation
+    static get API_Form_Animal_Observation(): string { return `${AppConstants.API_baseURL}/animal-observation/config`; }
+
+    // Form Config Chemical
+    static get API_Form_ChemicalTreatment(): string { return `${AppConstants.API_baseURL}/treatment/chemical/config`; }
 
     // Observation
     static get API_observation(): string { return `${AppConstants.API_baseURL}/observation`; }
