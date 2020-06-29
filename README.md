@@ -80,6 +80,7 @@ This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Container
     app/                       - Angular Client Application codebase
     └── openshift              - OpenShift deployment specific files
     CODE-OF-CONDUCT.md         - Code of Conduct
+    loadTest                   - Load test application
     CONTRIBUTING.md            - Contributing Guidelines
     LICENSE                    - License
 
@@ -91,6 +92,7 @@ This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Container
 * [Jenkins Readme](.jenkins/README.md)
 * [Pipeline](PIPELINE.md)
 * Our database is documented using [SchemaSpy](http://schemaspy.org/)
+* [Load Test](loadTest/README.md)
 
 ## Requirements
 
