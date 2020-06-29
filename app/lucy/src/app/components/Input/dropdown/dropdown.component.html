@@ -1,5 +1,5 @@
 <div *ngIf="!readonly" class="col-12 field d-inline-block animated" id="{{fieldId}}">
-    <mat-form-field>
+    <mat-form-field [attr.data-cy]="dataCy">
         <mat-select [formControl]="optionCtrl" placeholder="{{fieldHeader}}" [ngModel]="selectedItemName" [multiple]="multiple" (selectionChange)="selected($event)">
             <app-mat-select-search [formControl]="optionFilterCtrl"></app-mat-select-search>
             <mat-option *ngFor="let item of filteredItems; let i = index" [value]="item.name">
@@ -11,7 +11,7 @@
 </div>
 
 <div *ngIf="readonly && !multiple" id="{{fieldId}}">
-    <app-field [mode]="mode" [header]="fieldHeader" [value]="selectedItemName">
+    <app-field [mode]="mode" [header]="fieldHeader" [value]="selectedItemName" [attr.data-cy]="dataCy">
     </app-field>
 </div>
 
@@ -20,7 +20,7 @@
         <label class="field-header">{{ fieldHeader }}</label>
     </div>
     <div *ngFor="let name of selectedItemName">
-        <app-field [mode]="mode" [value]="name">
+        <app-field [mode]="mode" [value]="name" [attr.data-cy]="dataCy">
         </app-field>
     </div>
 </div>

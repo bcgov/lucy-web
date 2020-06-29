@@ -44,17 +44,17 @@
             <div class="container">
                 <div *ngFor="let h of tankMixes; let i = index" [ngClass]="{ 'row full-width': true, 'animated fadeInLeft animationDuration': h.showAnimation }">
                     <div class="col-5 zeroPadding">
-                        <app-dropdown [mode]="mode" [fieldHeader]="h.herbicide.displayLabel" [items]="herbicideDropdowns" (selectionChanged)="updateHerbicide($event, i)">
+                        <app-dropdown [mode]="mode" [dataCy]="'herbicide-'+(i+1)" [fieldHeader]="h.herbicide.displayLabel" [items]="herbicideDropdowns" (selectionChanged)="updateHerbicide($event, i)">
                         </app-dropdown>
                     </div>
                     <div class="col-3 zeroPadding">
-                        <app-field [mode]="mode" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)" [showFocus]="showFocus(i)"></app-field>
+                        <app-field [mode]="mode" [dataCy]="'application-rate-'+(i+1)" [verification]="applicationRateVerification" [suffix]="h.herbicide.applicationUnits" [value]="h.applicationRate" (valueChanged)="applicationRateChanged($event, h)" [showFocus]="showFocus(i)"></app-field>
                     </div>
                     <div class="col-3 zeroPadding">
-                        <app-field [mode]="mode" [verification]="amountUsedVerification" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
+                        <app-field [mode]="mode" [dataCy]="'amount-used-'+(i+1)" [verification]="amountUsedVerification" suffix="L" [value]="h.amountUsed" (valueChanged)="amountUsedChanged($event, h)"></app-field>
                     </div>
                     <div class="col-1 zeroPadding" style="margin-bottom: 0pt; text-align: right;">
-                        <button class="btn button-empty" (click)="removeHerbicide(h)">
+                        <button class="btn button-empty" (click)="removeHerbicide(h)" [attr.data-cy]="'delete-herbicide-'+(i+1)">
                             <mat-icon style="color: #CDCED2;">delete</mat-icon>
                         </button>
                     </div>
@@ -73,13 +73,13 @@
             <div style="display: inline-flex;">
                 <div class="row full-width animated fadeIn animationDuration">
                     <div class="col-5 zeroPadding">
-                        <app-dropdown [mode]="mode" [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)"></app-dropdown>
+                        <app-dropdown [mode]="mode" [dataCy]="'herbicide-new'" [items]="herbicideDropdowns" (selectionChanged)="herbicideChanged($event)"></app-dropdown>
                     </div>
                     <div class="col-3 zeroPadding">
-                        <app-field type="number" [mode]="mode" suffix="L/ha"></app-field>
+                        <app-field type="number" [mode]="mode" [dataCy]="'application-rate-new'" suffix="L/ha"></app-field>
                     </div>
                     <div class="col-3 zeroPadding">
-                        <app-field type="number" [mode]="mode" suffix="L"></app-field>
+                        <app-field type="number" [mode]="mode" [dataCy]="'amount-used-new'" suffix="L"></app-field>
                     </div>
                     <div class="col-1 zeroPadding" style="margin-bottom: 0pt; text-align: right;">
                         <button class="btn button-empty" (click)="removeEmptyRow()">

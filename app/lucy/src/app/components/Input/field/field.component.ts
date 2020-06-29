@@ -60,6 +60,8 @@ export class FieldComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @Input() showFocus: boolean;
   // mat-form-field appearance
   @Input() appearance = 'legacy';
+  // Optional data-cy id for Cypress E2E testing
+  @Input() dataCy;
 
   ///// Verification
   private _verification: any;
