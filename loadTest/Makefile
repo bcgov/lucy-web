@@ -1,5 +1,7 @@
 # Make File to run various comment
-
+setup-local:
+	@echo "+\n Setting up local env for load test ... \n+"
+	@cd ./app && npm ci
 deploy-remote: 
 	@echo "+\n Deploying Load Test Pod in Env = $$ENV and Branch = $$BRANCH...\n+"
 	@cd ./.pipeline && DEBUG=* npm run deploy -- --env=$$ENV --branch=$$BRANCH
