@@ -7,7 +7,6 @@ module.exports = (settings) => {
   const phases = settings.phases
   const options= settings.options
   const phase = options.env
-  // const changeId = phases[phase].changeId
   const branch = options.branch;
   const oc= new OpenShiftClientX(Object.assign({'namespace':phases[phase].namespace}, options));
   const templatesLocalBaseUrl =oc.toFileUrl(path.resolve(__dirname, '../../openshift'))
