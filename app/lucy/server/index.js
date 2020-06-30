@@ -37,7 +37,6 @@ const responseOptions = {
         res.set('X-XSS-Protection', '1; mode=block');
         res.set('Cache-Control', 'max-age=31536000, private, no-cache, no-store, must-revalidate');
         res.set('Pragma', 'no-cache');
-        res.set('Content-Type', 'text/html; charset=utf-8');
     }
 };
 
