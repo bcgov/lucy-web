@@ -1,5 +1,5 @@
 # Test Deploy On OpensShift
-name: Deploy on OpensShift
+name: Deploy on OpensShift and Zap Scan
 
 on:
   pull_request:
@@ -112,6 +112,16 @@ jobs:
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
+      - name: Wait For server to start
+        uses: jakejarvis/wait-action@master
+        with:
+            time: '260s'
+      - name: Run Zap Scan
+        uses: zaproxy/action-baseline@v0.3.0
+        continue-on-error: true
+        with:
+          docker_name: 'owasp/zap2docker-stable'
+          target: "https://invasivesbc-app-${{  github.event.number }}-8ecbmv-dev.pathfinder.gov.bc.ca"
   # End deploy
   clean:
     name: Clean PR based deployment
