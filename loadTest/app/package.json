@@ -1,0 +1,32 @@
+{
+  "name": "invasivesbc-loadtest",
+  "version": "0.0.1",
+  "description": "Load test application for invasives bc web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/lucy-web.git"
+  },
+  "keywords": [
+    "test",
+    "load-test",
+    "invasivesbc",
+    "pefromance"
+  ],
+  "author": "Pushan Mitra",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bcgov/lucy-web/issues"
+  },
+  "homepage": "https://github.com/bcgov/lucy-web#readme",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "artillery": "^1.6.0",
+    "axios": "^0.19.2"
+  }
+}
