@@ -78,4 +78,24 @@ schemas:
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       # End: Booleans
     ## --
+    versions:
+      ## -- version: temporaryApiChanges
+      - name: 'temporaryApiChanges'
+        id: '20200720'
+        info: 'Temporary change to make station optional so that prod users can submit shifts stuck in limbo'
+        schemaChanges: 
+          - comment: Make station name optional - temporary
+            type: update
+            existingKey: station
+            column:
+              name: station
+              required: false
+          - comment: Make location optional - temporary
+            type: update
+            existingKey: location
+            column:
+              name: location
+              required: false
+      ## -- end: temporaryApiChanges
+    ## -- end version
   ## --
