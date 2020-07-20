@@ -260,6 +260,7 @@ schemas:
             column:
               name: timestamp
               definition: TIMESTAMP NULL
+              comment: 'Date and time of watercraft observation.'
               required: false
       ## -- end version urgentApiFixes
     ## -- end version
