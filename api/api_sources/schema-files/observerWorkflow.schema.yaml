@@ -90,12 +90,14 @@ schemas:
             column:
               name: station
               required: false
+              comment: 'Station name'
           - comment: Make location optional - temporary
             type: update
             existingKey: location
             column:
               name: location
               required: false
+              comment: 'Location name'
       ## -- end: temporaryApiChanges
     ## -- end version
   ## --
