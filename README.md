@@ -1,8 +1,7 @@
 # Invasive Species BC
 
 https://bcdevexchange.org/projects/prj-invasive-species
-
-![ZAP Baseline Scan](https://github.com/bcgov/lucy-web/workflows/ZAP%20Baseline%20Scan/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_lucy-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web) ![ZAP Baseline Scan](https://github.com/bcgov/lucy-web/workflows/ZAP%20Baseline%20Scan/badge.svg)
 
 ## Introduction
 
@@ -159,6 +158,9 @@ Go to http://localhost:3033/
 *Quit the App:*
 
 On the command line, run `make close-local` or type `<Ctrl> + C`.
+
+## Acknowledgements
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web)
 
 ## License
 
