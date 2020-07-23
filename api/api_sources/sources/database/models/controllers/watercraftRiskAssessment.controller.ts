@@ -118,7 +118,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 
 		// Handle Shift Details
 		const workflow = data.workflow;
-		result.stationName = workflow.station;
+		result.stationName = workflow.station || '';
 		result.shiftDate = `${workflow.date}`;
 		result.shiftStartTime = `${workflow.startTime}`;
 		result.shiftEndTime = `${workflow.endTime}`;
