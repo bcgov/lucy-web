@@ -221,7 +221,7 @@ jobs:
       - buildAPI
       - buildAPP
       - deployDev
-      - deployTest
+      # - deployTest
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
