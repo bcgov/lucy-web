@@ -33,7 +33,7 @@ describe('Add or create mechanical monitoring record', () => {
 
     // Clicking add mechanical monitoring button
     cy.contains('button', 'Invasive Plant Monitoring (Mechanical)').click();
-    cy.wait(2000);
+    cy.wait(10000);
     cy.url().should('contain', '/create/monitor/mechanical');
 
     // Select mechanical treatment to monitor
