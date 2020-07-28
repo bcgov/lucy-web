@@ -82,12 +82,12 @@ FROM watercraft_risk_assessment wra
 --joins for previous journey water bodies
 LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 1) as pwj_1 ON wra.watercraft_risk_assessment_id = pwj_1.watercraft_risk_assessment_id and pwj_1.row_number = 1
 LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 1) as pwj_2 ON wra.watercraft_risk_assessment_id = pwj_2.watercraft_risk_assessment_id and pwj_2.row_number = 2
-LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 1) as pwj_3 ON wra.watercraft_risk_assessment_id = pwj_3.watercraft_risk_assessment_id and pwj_3.row_number = 2
+LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 1) as pwj_3 ON wra.watercraft_risk_assessment_id = pwj_3.watercraft_risk_assessment_id and pwj_3.row_number = 3
 
 --joins for destination journey water bodies
 LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 2) as dwj_1 ON wra.watercraft_risk_assessment_id = dwj_1.watercraft_risk_assessment_id and dwj_1.row_number = 1
 LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 2) as dwj_2 ON wra.watercraft_risk_assessment_id = dwj_2.watercraft_risk_assessment_id and dwj_2.row_number = 2
-LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 2) as dwj_3 ON wra.watercraft_risk_assessment_id = dwj_3.watercraft_risk_assessment_id and dwj_3.row_number = 2
+LEFT JOIN (select watercraft_journey_id, water_body_id, watercraft_risk_assessment_id, row_number() over (order by watercraft_journey_id asc) from watercraft_journey where journey_type = 2) as dwj_3 ON wra.watercraft_risk_assessment_id = dwj_3.watercraft_risk_assessment_id and dwj_3.row_number = 3
 
 LEFT JOIN observer_workflow ow ON ow.observer_workflow_id = wra.observer_workflow_id
 LEFT JOIN application_user au ON au.user_id = ow.created_by_user_id
