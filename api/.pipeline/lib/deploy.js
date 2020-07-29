@@ -27,10 +27,10 @@ module.exports = (settings) => {
       'DB_SEED': phases[phase].migrationInfo.dbSeed,
       'REPLICAS': phases[phase].replicas || 1,
       'REPLICA_MAX': phases[phase].maxReplicas || 1,
-      'CPU_REQ': 250,
-      'MEMORY_REQ': 256,
-      'CPU_LIMIT' : 250,
-      'MEMORY_LIMIT': 256
+      'CPU_REQ': '512m',
+      'MEMORY_REQ': '512Mi',
+      'CPU_LIMIT' : '1',
+      'MEMORY_LIMIT': '1Gi'
     }
   }))
   
