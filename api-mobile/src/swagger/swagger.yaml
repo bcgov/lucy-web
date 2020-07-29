@@ -1,0 +1,845 @@
+swagger: '2.0' # npm library `swagger-tools` does not yet support 3.0
+
+info:
+  version: '0.0.0'
+  title: lucy-api-mobile
+  description: API for lucy mobile.
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost:3002
+basePath: /api
+
+tags:
+  - name: activity
+    description: |
+      Activity endpoints
+      An activity is a parent classification that contains Observations, Treatments, and Monitoring 'activities'
+  - name: observation
+    description: Observation activity endpoints
+  - name: treatment
+    description: Treatment activity endpoints
+  - name: monitor
+    description: Monitor activity endpoints
+  - name: plant
+    description: Plant endpoints
+  - name: animal
+    description: Animal endpoints
+  - name: code
+    description: Code endpoints
+
+externalDocs:
+  description: Visit GitHub to find out more about this API
+  url: 'https://github.com/bcgov/lucy-web.git'
+
+schemes:
+  - http
+  - https
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: |
+      To access the authenticated api routes, a valid JWT token must be present in the 'Authorization' header.
+      The 'Authorization' header value must be of the form: `Bearer xxxxxx.yyyyyyy.zzzzzz`
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  # Activity Routes
+
+  /activity:
+    x-swagger-router-controller: activity-controller
+    options:
+      tags:
+        - activity
+      summary: Pre-flight request
+      description: Options on authenticated activity route
+      operationId: authenticatedOptions
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - activity
+      summary: Create a new activity
+      description: Create a new activity
+      operationId: authenticatedPost
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - ADM # admin
+        - DAE # data editor
+        - SUP # super user
+      parameters:
+        - in: body
+          required: true
+          name: postBody
+          schema:
+            $ref: '#/definitions/ActivityPostBody'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/ActivityResponse'
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+
+  # Observation/Plant Routes
+
+  /observation/plant:
+    x-swagger-router-controller: observation-plant-controller
+    options:
+      tags:
+        - observation
+        - plant
+      summary: Pre-flight request
+      description: Options on authenticated plant observation route
+      operationId: authenticatedOptions
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - observation
+        - plant
+      summary: Pre-flight request
+      description: Get all plant observations
+      operationId: authenticatedGet_All
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - ADM # admin
+        - DAV # data viewer
+        - DAE # data editor
+        - SUP # super user
+      responses:
+        '200':
+          description: Fetched observation with id
+          schema:
+            $ref: '#/definitions/ObservationPlantResponse'
+        '422':
+          description: Validation error - no observation with id
+          schema:
+            $ref: '#/definitions/Error'
+
+  /observation/plant/{observationId}:
+    x-swagger-router-controller: observation-plant-controller
+    options:
+      tags:
+        - observation
+        - plant
+      summary: Pre-flight request
+      description: Options on authenticated plant observation route
+      operationId: authenticatedOptions
+      parameters:
+        - in: path
+          required: true
+          name: observationId
+          type: number
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - observation
+        - plant
+      summary: Pre-flight request
+      description: Get a single plant observation based on its id (observation id)
+      operationId: authenticatedGet_One
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - ADM # admin
+        - DAV # data viewer
+        - DAE # data editor
+        - SUP # super user
+      parameters:
+        - in: path
+          required: true
+          name: observationId
+          type: number
+      responses:
+        '200':
+          description: Fetched observation with id
+          schema:
+            $ref: '#/definitions/ObservationPlantResponse'
+        '422':
+          description: Validation error - no observation with id
+          schema:
+            $ref: '#/definitions/Error'
+
+  # Code Routes
+
+  /code/observation/plant:
+    x-swagger-router-controller: code-controller
+    options:
+      tags:
+        - code
+        - observation
+      summary: Pre-flight request
+      description: Options on authenticated observation code route
+      operationId: authenticatedOptions
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - code
+      summary: Get all observation code values
+      description: API to get all observation code values
+      operationId: authenticatedGet_ObservationPlant
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - ADM # admin
+        - DAV # data viewer
+        - DAE # data editor
+        - SUP # super user
+      responses:
+        '200':
+          description: Fetched code values
+          schema:
+            $ref: '#/definitions/ObservationCodeResponse'
+        '401':
+          description: Unauthorized user
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  # Misc definitions
+  Error:
+    description: |
+      Error response object.
+      Returned in the non-200 responses for all routes.
+    required:
+      - message
+      - errors
+    properties:
+      message:
+        type: string
+      errors:
+        type: array
+        items:
+          type: string
+
+  # Activity Definitions
+
+  ActivityPostBody:
+    description: Activity post body object.
+    type: object
+    required:
+      - type
+      - subType
+      - date
+      - locationAndGeometry
+      - data
+    properties:
+      type:
+        type: string
+      subType:
+        type: string
+      date:
+        type: string
+        description: Date in YYYY-MM-DD format
+      locationAndGeometry:
+        type: object
+      data:
+        type: object
+
+  ActivityResponse:
+    description: Activity response object.
+    type: object
+    required:
+      - type
+      - subType
+      - date
+      - locationAndGeometry
+      - data
+    properties:
+      type:
+        type: string
+      subType:
+        type: string
+      date:
+        type: string
+        description: Date in YYYY-MM-DD format
+      locationAndGeometry:
+        type: object
+      data:
+        type: object
+
+  # Observation Plant Definitions
+
+  ObservationPlantResponse:
+    description: |
+      Observation plant response object.
+      Returned in the 200 responses for all `/observation/plant/*` routes.
+    type: object
+    required:
+      - observation_id
+      - observation_date
+      - access_description
+      - observer_first_name
+      - observer_last_name
+      - sample_identifier
+      - range_unit_number
+      - general_comment
+      - legacy_site_ind
+      - early_detection_rapid_resp_ind
+      - research_detection_ind
+      - sample_taken_ind
+      - well_ind
+      - special_care_ind
+      - biological_ind
+      - aquatic_ind
+      - species_id
+      - jurisdiction_code_id
+      - species_density_code_id
+      - species_distribution_code_id
+      - observation_type_code_id
+      - species_agency_code_id
+      - soil_texture_code_id
+      - specific_use_code_id
+      - observation_slope_code_id
+      - observation_aspect_code_id
+      - observation_proposed_action_code_id
+      - created_at
+      - updated_at
+      - updated_by_user_id
+      - created_by_user_id
+      - space_geom_id
+      - hex_id
+      - hex_sub_id
+      - total_area
+      - negative_occurance_ind
+      - paper_id_primary
+      - paper_id_secondary
+      - elevation_meters
+      - well_proximity
+      - well_tag
+      - observation_geometry_code_id
+      - photo_indicator
+      - flowering
+      - bec_zone
+      - riso
+      - ipma
+      - ownership
+      - regional_district
+      - flnro_district
+      - moti_district
+      - raw_longitude
+      - raw_latitude
+      - raw_utm_zone
+      - raw_utm_easting
+      - raw_utm_northing
+      - raw_albers_x
+      - raw_albers_y
+    properties:
+      observation_id:
+        type: number
+      observation_date:
+        type: string
+      access_description:
+        type: string
+      observer_first_name:
+        type: string
+      observer_last_name:
+        type: string
+      sample_identifier:
+        type: string
+      range_unit_number:
+        type: string
+      general_comment:
+        type: string
+      legacy_site_ind:
+        type: boolean
+      early_detection_rapid_resp_ind:
+        type: boolean
+      research_detection_ind:
+        type: boolean
+      sample_taken_ind:
+        type: boolean
+      well_ind:
+        type: boolean
+      special_care_ind:
+        type: boolean
+      biological_ind:
+        type: boolean
+      aquatic_ind:
+        type: boolean
+      species_id:
+        type: object
+      jurisdiction_code_id:
+        type: object
+      species_density_code_id:
+        type: object
+      species_distribution_code_id:
+        type: object
+      observation_type_code_id:
+        type: object
+      species_agency_code_id:
+        type: object
+      soil_texture_code_id:
+        type: object
+      specific_use_code_id:
+        type: object
+      observation_slope_code_id:
+        type: object
+      observation_aspect_code_id:
+        type: object
+      observation_proposed_action_code_id:
+        type: object
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      updated_by_user_id:
+        type: number
+      created_by_user_id:
+        type: number
+      space_geom_id:
+        type: number
+      hex_id:
+        type: number
+      hex_sub_id:
+        type: number
+      total_area:
+        type: number
+      negative_occurance_ind:
+        type: boolean
+      paper_id_primary:
+        type: string
+      paper_id_secondary:
+        type: string
+      elevation_meters:
+        type: number
+      well_proximity:
+        type: number
+      well_tag:
+        type: number
+      observation_geometry_code_id:
+        type: object
+      photo_indicator:
+        type: boolean
+      flowering:
+        type: boolean
+      bec_zone:
+        type: string
+      riso:
+        type: string
+      ipma:
+        type: string
+      ownership:
+        type: string
+      regional_district:
+        type: string
+      flnro_district:
+        type: string
+      moti_district:
+        type: string
+      raw_longitude:
+        type: number
+      raw_latitude:
+        type: number
+      raw_utm_zone:
+        type: number
+      raw_utm_easting:
+        type: number
+      raw_utm_northing:
+        type: number
+      raw_albers_x:
+        type: number
+      raw_albers_y:
+        type: number
+
+  # Observation Code Definitions
+
+  ObservationCodeResponse:
+    required:
+      - message
+      - data
+    properties:
+      message:
+        type: string
+      data:
+        type: object
+        $ref: '#/definitions/ObservationCode'
+
+  ObservationCode:
+    description: Observation code tables.
+    required:
+      - observation_aspect_code
+      - jurisdiction_code
+      - observation_geometry_code
+      - observation_type_code
+      - observation_proposed_action_code
+      - observation_slope_code
+      - soil_texture_code
+      - species_agency_code
+      - species_density_code
+      - species_distribution_code
+      - species
+      - specific_use_code
+    properties:
+      observation_aspect_code:
+        type: array
+        items:
+          $ref: '#/definitions/AspectCode'
+      jurisdiction_code:
+        type: array
+        items:
+          $ref: '#/definitions/JurisdictionCode'
+      observation_geometry_code:
+        type: array
+        items:
+          $ref: '#/definitions/ObservationGeometryCode'
+      observation_type_code:
+        type: array
+        items:
+          $ref: '#/definitions/ObservationTypeCode'
+      observation_proposed_action_code:
+        type: array
+        items:
+          $ref: '#/definitions/ProposedActionCode'
+      observation_slope_code:
+        type: array
+        items:
+          $ref: '#/definitions/SlopeCode'
+      soil_texture_code:
+        type: array
+        items:
+          $ref: '#/definitions/SoilTextureCode'
+      species:
+        type: array
+        items:
+          $ref: '#/definitions/Species'
+      species_density_code:
+        type: array
+        items:
+          $ref: '#/definitions/SpeciesDensityCode'
+      species_distribution_code:
+        type: array
+        items:
+          $ref: '#/definitions/SpeciesDistributionCode'
+      species_agency_code:
+        type: array
+        items:
+          $ref: '#/definitions/SpeciesAgencyCode'
+      specific_use_code:
+        type: array
+        items:
+          $ref: '#/definitions/SpecificUseCode'
+
+  # Code Definitions
+
+  AspectCode:
+    type: object
+    required:
+      - observation_aspect_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_aspect_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  JurisdictionCode:
+    type: object
+    required:
+      - jurisdiction_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      jurisdiction_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  ObservationGeometryCode:
+    type: object
+    required:
+      - observation_geometry_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_geometry_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  ObservationTypeCode:
+    type: object
+    required:
+      - observation_type_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_type_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  ProposedActionCode:
+    type: object
+    required:
+      - observation_proposed_action_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_proposed_action_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  SlopeCode:
+    type: object
+    required:
+      - observation_slope_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      observation_slope_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  SoilTextureCode:
+    type: object
+    required:
+      - soil_texture_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      soil_texture_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  Species:
+    type: object
+    required:
+      - species_id
+      - mapCode
+      - earlyDetection
+      - containmentSpecies
+      - containmentSpacialRef
+      - species
+      - genus
+      - commonName
+      - latinName
+      - updateAt
+      - createdAt
+    properties:
+      species_id:
+        type: number
+      mapCode:
+        type: string
+      earlyDetection:
+        type: boolean
+      containmentSpecies:
+        type: number
+      containmentSpacialRef:
+        type: number
+      species:
+        type: string
+      genus:
+        type: string
+      commonName:
+        type: string
+      latinName:
+        type: string
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  SpeciesDensityCode:
+    type: object
+    required:
+      - species_density_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_density_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  SpeciesDistributionCode:
+    type: object
+    required:
+      - species_distribution_code_id
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_distribution_code_id:
+        type: number
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  SpeciesAgencyCode:
+    type: object
+    required:
+      - species_agency_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      species_agency_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
+
+  SpecificUseCode:
+    type: object
+    required:
+      - specific_use_code_id
+      - code
+      - description
+      - activeIndicator
+      - updateAt
+      - createdAt
+    properties:
+      specific_use_code_id:
+        type: number
+      code:
+        type: string
+      description:
+        type: string
+      activeIndicator:
+        type: boolean
+      updateAt:
+        type: string
+      createdAt:
+        type: string
