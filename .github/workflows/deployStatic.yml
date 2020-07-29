@@ -75,7 +75,7 @@ jobs:
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
-      - name: Build API Images
+      - name: Build APP Images
         working-directory: './app/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
@@ -212,7 +212,7 @@ jobs:
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
-  # End deployDev
+  # End deployProd
   clean:
     name: Clean PR based deployment
     runs-on: ubuntu-latest
