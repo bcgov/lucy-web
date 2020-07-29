@@ -26,7 +26,7 @@ module.exports = (settings) => {
       'DB_CLEAN_UP': phases[phase].migrationInfo.cleanup,
       'DB_SEED': phases[phase].migrationInfo.dbSeed,
       'REPLICAS': phases[phase].replicas || 1,
-      'REPLICA_MAX': phases[phase].maxReplicas || 2
+      'REPLICA_MAX': phases[phase].maxReplicas || 1
     }
   }))
   
