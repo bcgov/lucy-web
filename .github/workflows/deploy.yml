@@ -63,7 +63,7 @@ jobs:
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
-      - name: Build API Images
+      - name: Build APP Images
         working-directory: './app/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
