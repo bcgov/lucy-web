@@ -168,7 +168,7 @@ jobs:
         run: |
           export PATH=$PATH_TO_OC
           npm ci
-          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
   # End deployTest
   deployProd:
     name: Deploy App and API in PROD
