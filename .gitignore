@@ -6,4 +6,4 @@ swagger/
 **/.scannerwork/
 **/.node-*/
 .bash_history
-
+.env
