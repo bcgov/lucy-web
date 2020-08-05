@@ -241,28 +241,6 @@ schemas:
             required: false
             meta: {}
       ## -- end: numberOfPeopleInParty
-      ## -- version: urgentApiFixes
-      - name: 'urgentApiFixes'
-        id: '20200720'
-        info: 'Increasing max char limit for generalComments field, making timestamp optional. Changes needed as temporary measure to accommodate problems in prod.'
-        schemaChanges:
-          - comment: Increasing max char limit for generalComments field
-            type: update
-            existingKey: generalComment
-            column:
-              name: general_comment
-              definition: VARCHAR(1000) NULL
-              comment: 'General comment associated with assessment'
-              required: false
-          - comment: Temporarily making timestamp optional
-            type: update
-            existingKey: timestamp
-            column:
-              name: timestamp
-              definition: TIMESTAMP NULL
-              comment: 'Date and time of watercraft observation.'
-              required: false
-      ## -- end version urgentApiFixes
     ## -- end version
   ## --
 
