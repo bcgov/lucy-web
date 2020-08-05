@@ -3,6 +3,15 @@
 -- ## Info: None
 -- ## Adding New Columns ## --
 
+/*select *
+from observation
+order by observation_id desc
+limit 1;*/
+
+/*select *
+from observation_geometry_code
+limit 1;*/
+
 -- ## Adding Column hex_id on table observation
 ALTER TABLE observation ADD COLUMN hex_id BIGINT NULL;
 COMMENT ON COLUMN observation.hex_id IS 'Calculated from the geometry (albers)';
