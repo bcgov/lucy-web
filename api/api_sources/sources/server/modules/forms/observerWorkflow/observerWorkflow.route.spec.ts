@@ -30,39 +30,39 @@ describe(`Test for ${resourceName}`, () => {
     });
 
     // Test1: Create
-    it.skip(`should create ${resourceName}`, async () => {
+    it(`should create ${resourceName}`, async () => {
         await ExpressResourceTest.testCreate(SharedExpressApp.app, {
             auth: AuthType.admin
         }, controller);
     });
 
     // Test2: Update
-    it.skip(`should update ${resourceName}`, async () => {
+    it(`should update ${resourceName}`, async () => {
         await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.admin}, controller);
     });
 
     // Test3: Get Single
-    it.skip(`should get ${resourceName} {single}`, async () => {
+    it(`should get ${resourceName} {single}`, async () => {
         await ExpressResourceTest.testGetSingle(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
     });
 
     // Test3: Get Single
-    it.skip(`should get ${resourceName} {all}`, async () => {
+    it(`should get ${resourceName} {all}`, async () => {
         await ExpressResourceTest.testGetAll(SharedExpressApp.app, { auth: AuthType.viewer}, controller);
     });
 
     // Test4: Success To Create For Viewer
-    it.skip(`should create ${resourceName} for { Inspect app officer}`, async () => {
+    it(`should create ${resourceName} for { Inspect app officer}`, async () => {
         await ExpressResourceTest.testCreate(SharedExpressApp.app, { auth: AuthType.inspectAdmin, expect: 201}, controller);
     });
 
     // Test5: Success to create for Viewer
-    it.skip(`should update ${resourceName} for {viewer}`, async () => {
+    it(`should update ${resourceName} for {viewer}`, async () => {
         await ExpressResourceTest.testUpdate(SharedExpressApp.app, { auth: AuthType.inspectOfficer, expect: 200}, controller);
     });
 
     // Test6: Export
-    it.skip(`should export ${resourceName} for {inspect app admin}`, async () => {
+    it(`should export ${resourceName} for {inspect app admin}`, async () => {
         // Create Model
         const model = await ModelFactory(ObserverWorkflowController.shared)();
         await testRequest(SharedExpressApp.app, {
