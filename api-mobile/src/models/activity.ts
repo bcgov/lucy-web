@@ -1,5 +1,5 @@
 /**
- * activity post body.
+ * Activity post body.
  *
  * @export
  * @class ActivityPostBody

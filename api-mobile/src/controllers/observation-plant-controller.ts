@@ -1,10 +1,11 @@
 'use strict';
 
-import { sendResponse } from '../utils/query-actions';
+import { ParameterizedQuery } from '../queries/query-types';
 import { getDBConnection } from '../database/db';
 import { getAllObservationPlantSQL, getSingleObservationPlantSQL } from '../queries/observation-queries';
-
 import { getLogger } from '../utils/logger';
+import { sendResponse } from '../utils/query-actions';
+
 const defaultLog = getLogger('observation-plant-controller');
 
 /**
@@ -63,7 +64,13 @@ exports.authenticatedGet_One = async function (args: any, res: any, next: any) {
     return sendResponse(res, 503);
   }
 
-  const response = await connection.query(getSingleObservationPlantSQL(observationId));
+  const parameterizedQuery: ParameterizedQuery = getSingleObservationPlantSQL(observationId);
+
+  if (!parameterizedQuery) {
+    return sendResponse(res, 400);
+  }
+
+  const response = await connection.query(parameterizedQuery.sql, parameterizedQuery.values);
 
   const result = (response && response.rowCount && response.rows[0]) || null;
 

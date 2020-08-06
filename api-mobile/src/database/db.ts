@@ -7,7 +7,6 @@ const defaultLog = getLogger('db');
 
 const DB_HOST: string = process.env.DB_HOST || 'localhost';
 const DB_PORT: number = Number(process.env.DB_PORT) || 5432;
-// const DB_CONNECTION: string = process.env.DB_CONNECTION || '';
 const DB_USERNAME: string = process.env.DB_USER || 'lucy';
 const DB_PASSWORD: string = process.env.DB_PASS || 'lucy';
 const DB_DATABASE: string = process.env.DB_DATABASE || 'lucy';
@@ -49,8 +48,8 @@ export const getDBConnection = async function (): Promise<PoolClient> {
   try {
     client = await pool.connect();
 
-    await client.query(`SET search_path TO ${DB_SCHEMA}, public;`);
-    await client.query(`SET SCHEMA '${DB_SCHEMA}';`);
+    await client.query(`SET search_path TO ${client.escapeLiteral(DB_SCHEMA)}, public;`);
+    await client.query(`SET SCHEMA ${client.escapeLiteral(DB_SCHEMA)};`);
   } catch (error) {
     defaultLog.error({ label: 'getDBConnection', message: 'error', error });
     throw error;

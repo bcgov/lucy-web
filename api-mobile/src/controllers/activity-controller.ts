@@ -5,6 +5,7 @@ import { ActivityPostBody } from '../models/activity';
 import { postActivitySQL } from '../queries/activity-queries';
 import { getLogger } from '../utils/logger';
 import { sendResponse } from '../utils/query-actions';
+import { ParameterizedQuery } from '../queries/query-types';
 
 const defaultLog = getLogger('observation-controller');
 
@@ -40,7 +41,13 @@ exports.authenticatedPost = async function (args: any, res: any, next: any) {
     return sendResponse(res, 503);
   }
 
-  const response = await connection.query(postActivitySQL(sanitizedActivityData));
+  const parameterizedQuery: ParameterizedQuery = postActivitySQL(sanitizedActivityData);
+
+  if (!parameterizedQuery) {
+    return sendResponse(res, 400);
+  }
+
+  const response = await connection.query(parameterizedQuery.sql, parameterizedQuery.values);
 
   const result = (response && response.rows && response.rows[0]) || null;
 

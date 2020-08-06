@@ -1,3 +1,5 @@
+import { ParameterizedQuery } from './query-types';
+
 /**
  * SQL query to fetch all plant observations.
  *
@@ -11,5 +13,14 @@ export const getAllObservationPlantSQL = (): string => `SELECT * FROM observatio
  * @param {string} observationId observation primary key
  * @returns {string} sql query string
  */
-export const getSingleObservationPlantSQL = (observationId: string): string =>
-  `SELECT * FROM observation WHERE observation_id = ${observationId};`;
+export const getSingleObservationPlantSQL = (observationId: string): ParameterizedQuery => {
+  if (!observationId) {
+    return null;
+  }
+
+  const sql = 'SELECT * FROM observation WHERE observation_id = $1;';
+
+  const values = [observationId];
+
+  return { sql, values };
+};
