@@ -21,7 +21,7 @@ ALTER TABLE activity_incoming_data ADD COLUMN sub_type VARCHAR(20) NULL;
 COMMENT ON COLUMN activity_incoming_data.sub_type IS 'Sub Type of record';
 CREATE index sub_type_idx on activity_incoming_data (sub_type);
 
-ALTER TABLE activity_incoming_data ADD COLUMN received_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE activity_incoming_data ADD COLUMN received_timestamp timestamp NOT NULL DEFAULT NOW();
 COMMENT ON COLUMN activity_incoming_data.received_timestamp IS 'The date and time data was received and inserted into the database.';
 
 ALTER TABLE activity_incoming_data ADD COLUMN geom geometry(GeometryCollection,3005);
@@ -29,5 +29,5 @@ COMMENT ON COLUMN activity_incoming_data.geom IS 'Geometry collection in Albers 
 CREATE index activity_incoming_data_gist on activity_incoming_data using gist ("geom");
 
 ALTER TABLE activity_incoming_data ADD COLUMN activity_payload JSONB;
-COMMENT ON COLUMN activity_incoming_data.activity_payload IS 'Raw data upload.';
+COMMENT ON COLUMN activity_incoming_data.activity_payload IS 'Raw data upload in compressed JSON format.';
 
