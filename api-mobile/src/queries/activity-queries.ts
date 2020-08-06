@@ -12,5 +12,5 @@ export const postActivitySQL = (activityData: ActivityPostBody): string =>
   '(type, sub_type, date, location_and_geometry, data) VALUES ' +
   `('${activityData.type}', '${activityData.subType}', '${activityData.date}', '${JSON.stringify(
     activityData.locationAndGeometry
-  )}', '${JSON.stringify(activityData.data)}')` +
+  )}', '${JSON.stringify(activityData)}') ` +
   'RETURNING *';

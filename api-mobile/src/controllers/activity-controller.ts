@@ -40,9 +40,7 @@ exports.authenticatedPost = async function (args: any, res: any, next: any) {
     return sendResponse(res, 503);
   }
 
-  const sql = postActivitySQL(sanitizedActivityData);
-
-  const response = await connection.query(sql);
+  const response = await connection.query(postActivitySQL(sanitizedActivityData));
 
   const result = (response && response.rows && response.rows[0]) || null;
 
