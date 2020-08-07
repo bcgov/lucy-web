@@ -9,10 +9,10 @@ import { getLogger } from './logger';
 const defaultLog = getLogger('auth-utils');
 
 const APP_CERTIFICATE_ISSUER =
-  process.env.APP_CERTIFICATE_ISSUER || 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z';
+  process.env.APP_CERTIFICATE_ISSUER || 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z';
 const APP_CERTIFICATE_URL =
   process.env.APP_CERTIFICATE_URL ||
-  'https://sso-test.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs';
+  'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs';
 
 const TOKEN_IGNORE_EXPIRATION: boolean =
   process.env.TOKEN_IGNORE_EXPIRATION === 'true' ||
