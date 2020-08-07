@@ -7,11 +7,11 @@ COMMENT ON TABLE activity_incoming_data IS 'Store all incoming data if valid. Al
 ALTER TABLE activity_incoming_data ADD COLUMN activity_incoming_data_id SERIAL PRIMARY KEY;
 COMMENT ON COLUMN activity_incoming_data.activity_incoming_data_id IS 'Auto generated primary key';
 
-ALTER TABLE activity_incoming_data ADD COLUMN activity_id VARCHAR(20) NOT NULL CHECK (record_id > 0);
+ALTER TABLE activity_incoming_data ADD COLUMN activity_id INTEGER NOT NULL CHECK (activity_id > 0);
 COMMENT ON COLUMN activity_incoming_data.activity_id IS 'Unique record number. Can occur multiple times with record updates.';
 
 ALTER TABLE activity_incoming_data ADD COLUMN version INTEGER NULL;
-COMMENT ON COLUMN activity_incoming_data.record_id IS 'Indicative of the version for each unique record. Calculated server side.';
+COMMENT ON COLUMN activity_incoming_data.version IS 'Indicative of the version for each unique record. Calculated server side.';
 
 ALTER TABLE activity_incoming_data ADD COLUMN type VARCHAR(20) NULL;
 COMMENT ON COLUMN activity_incoming_data.type IS 'Type of record';
@@ -24,7 +24,7 @@ CREATE index sub_type_idx on activity_incoming_data (sub_type);
 ALTER TABLE activity_incoming_data ADD COLUMN received_timestamp timestamp NOT NULL DEFAULT NOW();
 COMMENT ON COLUMN activity_incoming_data.received_timestamp IS 'The date and time data was received and inserted into the database.';
 
-ALTER TABLE activity_incoming_data ADD COLUMN geom geometry(GeometryCollection,3005) CHECK (st_isValid(geom));
+ALTER TABLE activity_incoming_data ADD COLUMN geom geometry(GeometryCollection,4326) CHECK (st_isValid(geom));
 COMMENT ON COLUMN activity_incoming_data.geom IS 'Geometry collection in Albers projection.';
 CREATE index activity_incoming_data_gist on activity_incoming_data using gist ("geom");
 
