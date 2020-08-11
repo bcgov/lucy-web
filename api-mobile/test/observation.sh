@@ -1,5 +1,3 @@
-echo $1
-curl --location --request POST 'localhost:3002/api/activity' \
--d @./observation-fake.json
+curl -X POST -d @./observation-fake.json "localhost:3002/api/activity" \
+--header "Content-Type: application/json" \
 --header 'Authorization: Bearer '${1} \
---header 'Content-Type: application/json' \
