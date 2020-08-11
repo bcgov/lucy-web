@@ -267,6 +267,29 @@ definitions:
         description: Date in YYYY-MM-DD format
       locationAndGeometry:
         type: object
+        properties:
+          anchorPointY:
+            type: integer
+          anchorPointX:
+            type: integer
+          area:
+            type: integer
+          geometry:
+            type: object
+          jurisdiction:
+            type: string
+          agency:
+            type: string
+          observer1FirstName:
+            type: string
+          observer1LastName:
+            type: string
+          locationComment:
+            type: string
+          generalComment:
+            type: string
+          photoTaken:
+            type: boolean
       data:
         type: object
 
