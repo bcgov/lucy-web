@@ -125,6 +125,18 @@ Supported log properties:
 
 # Testing
 
+- To access the API without logging in to the front end, you can manually add a user this way:
+```
+$ make database
+$ psql
+psql_prompt: insert into application_user (first_name, last_name, email,preferred_username) values ('micheal', 'wells', 'micheal.w
+.wells@bananasInPajamas.ca','officialUserName@idir');
+
+psql_prompt: insert into user_role (user_id, role_code_id) values (8
+,3);
+```
+
+
 ## Info
 
 ### Technolgies used
