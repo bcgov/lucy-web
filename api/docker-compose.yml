@@ -110,7 +110,7 @@ services:
 networks:
  local-network:
   driver: bridge
-  name: ${PROJECT_NAME}-${TAG}-network
+  #  name: ${PROJECT_NAME}-${TAG}-network
 volumes:
   postgres:
     name: ${PROJECT_NAME}-${TAG}-vol-postgres
