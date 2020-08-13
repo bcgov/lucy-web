@@ -265,6 +265,8 @@ definitions:
       date:
         type: string
         description: Date in YYYY-MM-DD format
+      deviceRequestUID:
+        type: string
       locationAndGeometry:
         type: object
         properties:
