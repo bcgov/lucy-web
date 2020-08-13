@@ -68,7 +68,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   constructor(private userService: UserService, private router: RouterService, private alertService: AlertService, private loadingService: LoadingService, private roleService: RolesService, private ssoService: SsoService) {
     this.lottieConfig = {
-      path: 'https://assets3.lottiefiles.com/datafiles/cS8pm9FZK13Qo6e/data.json',
+      //path: 'https://assets3.lottiefiles.com/datafiles/cS8pm9FZK13Qo6e/data.json',
+      path: '../../../../assets/cS8pm9FZK13Qo6e_data.json',
       renderer: 'canvas',
       autoplay: true,
       loop: false
