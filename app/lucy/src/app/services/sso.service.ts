@@ -448,8 +448,8 @@ export class SsoService {
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
     const expieryDateUTC = expieryDate.toUTCString();
-    this.cookieService.set(this.accessTokenCookie, token, expieryDate);
-    this.cookieService.set(this.accessTokenExpieryCookie, expieryDateUTC, expieryDate);
+    this.cookieService.set(this.accessTokenCookie, token, expieryDate, null, null, true, 'None');
+    this.cookieService.set(this.accessTokenExpieryCookie, expieryDateUTC, expieryDate, null, null, true, 'None');
     this.beginTokenRefreshTimer();
   }
 
@@ -462,8 +462,8 @@ export class SsoService {
     const tokenExpieryInSconds = Date.now() + (expiery * 1000);
     const expieryDate = new Date(tokenExpieryInSconds);
     const expieryDateUTC = expieryDate.toUTCString();
-    this.cookieService.set(this.refreshTokenCookie, token, expieryDate);
-    this.cookieService.set(this.refreshTokenExpieryCookie, expieryDateUTC, expieryDate);
+    this.cookieService.set(this.refreshTokenCookie, token, expieryDate, null, null, true, 'None');
+    this.cookieService.set(this.refreshTokenExpieryCookie, expieryDateUTC, expieryDate, null, null, true, 'None');
     this.beginRefreshExpieryTimer();
   }
 
