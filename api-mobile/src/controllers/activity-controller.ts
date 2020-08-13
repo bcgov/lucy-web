@@ -6,6 +6,9 @@ import { postActivitySQL } from '../queries/activity-queries';
 import { getLogger } from '../utils/logger';
 import { sendResponse } from '../utils/query-actions';
 import { ParameterizedQuery } from '../queries/query-types';
+import * as SwaggerValidator from 'swagger-object-validator';
+
+
 
 const defaultLog = getLogger('observation-controller');
 
@@ -29,7 +32,14 @@ exports.authenticatedOptions = async function (args: any, res: any, next: any) {
  * @returns response containing the newly created activity record.
  */
 exports.authenticatedPost = async function (args: any, res: any, next: any) {
+  try {
+
   defaultLog.debug({ label: 'authenticatedPost', message: 'params', arguments: args.swagger.params });
+  let validator = new SwaggerValidator.Handler('./src/swagger/swagger.yaml')
+
+  validator.validateModel(args.swagger.params.postBody.value, 'ActivityPostBody', (err:any, result: any ) => {
+      console.log(result.humanReadable());
+  });
 
   const data: ActivityPostBody = args.swagger.params.postBody.value;
 
@@ -54,4 +64,7 @@ exports.authenticatedPost = async function (args: any, res: any, next: any) {
   connection.release();
 
   return sendResponse(res, 200, result);
+  } catch (error) {
+    console.log(error.message)
+    }
 };
