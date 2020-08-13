@@ -90,7 +90,8 @@ export class BaseFormComponent implements OnInit, AfterViewChecked {
   public lottieConfig: Object;
   private anim: any;
   private animationSpeed = 1;
-  private formLoadingIcon = 'https://assets7.lottiefiles.com/datafiles/AX0rqrGV5ahKpWr/data.json';
+  // private formLoadingIcon = 'https://assets7.lottiefiles.com/datafiles/AX0rqrGV5ahKpWr/data.json';
+  private formLoadingIcon = '../../../assets/AX0rqrGV5ahKpWr_data.json';
   /////////////////
 
   /**
