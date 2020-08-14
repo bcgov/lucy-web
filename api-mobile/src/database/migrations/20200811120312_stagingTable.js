@@ -2,6 +2,8 @@
 exports.up = async (knex) => {
 	await knex.raw(` 
 
+		set search_path = invasivesbc,public;
+		
 -- ### Creating Table: activity_incoming_data ### --
 
 
