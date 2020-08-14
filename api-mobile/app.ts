@@ -40,11 +40,12 @@ if (API_HOSTNAME !== 'localhost:3002') {
   swaggerConfig.schemes = ['https'];
 }
 
+
 swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   // add base swagger route handling middleware
   app.use(middleware.swaggerMetadata());
 
-  app.use(middleware.swaggerValidator({ validateResponse: false }));
+//  app.use(middleware.swaggerValidator({ validateResponse: false }));
 
   // add swagger security for authenticated routes
   app.use(
