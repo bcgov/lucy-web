@@ -13,7 +13,7 @@ COMMENT ON TABLE activity_incoming_data IS 'Store all incoming data if valid. Al
 ALTER TABLE activity_incoming_data ADD COLUMN activity_incoming_data_id SERIAL PRIMARY KEY;
 COMMENT ON COLUMN activity_incoming_data.activity_incoming_data_id IS 'Auto generated primary key';
 
-ALTER TABLE activity_incoming_data ADD COLUMN activity_id INTEGER NOT NULL CHECK (activity_id > 0);
+ALTER TABLE activity_incoming_data ADD COLUMN activity_id SERIAL ;
 COMMENT ON COLUMN activity_incoming_data.activity_id IS 'Unique record number. Can occur multiple times with record updates.';
 
 ALTER TABLE activity_incoming_data ADD COLUMN version INTEGER NULL;
