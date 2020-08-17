@@ -252,19 +252,21 @@ definitions:
     description: Activity post body object.
     type: object
     required:
-      - type
-      - subType
+      - activityType
+      - activityTypeData
+      - activitySubType
+      - activitySubTypeData
       - date
       - locationAndGeometry
-      - data
     properties:
-      type:
+      activityType:
         type: string
-      subType:
+      activitySubType:
         type: string
       date:
         type: string
         description: Date in YYYY-MM-DD format
+        format: date
       deviceRequestUID:
         type: string
       locationAndGeometry:
@@ -292,29 +294,28 @@ definitions:
             type: string
           photoTaken:
             type: boolean
-      data:
+      activityTypeData:
+        type: object
+      activitySubTypeData:
         type: object
 
   ActivityResponse:
     description: Activity response object.
     type: object
     required:
-      - type
-      - subType
+      - activityType
+      - activitySubType
       - date
       - locationAndGeometry
-      - data
     properties:
-      type:
+      activityType:
         type: string
-      subType:
+      activitySubType:
         type: string
       date:
         type: string
         description: Date in YYYY-MM-DD format
       locationAndGeometry:
-        type: object
-      data:
         type: object
 
   # Observation Plant Definitions

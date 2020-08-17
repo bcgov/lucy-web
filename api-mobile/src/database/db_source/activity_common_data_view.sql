@@ -13,6 +13,10 @@ select
 'banana' as business_area,
 'banana' as jurisdiction,
 'banana' as agency
+'banana' as created_at,
+'banana' as updated_at,
+'banana' as updated_by_user_id,
+'banana' as created_by_user_id,
 
 from activity_incoming_data
 )
