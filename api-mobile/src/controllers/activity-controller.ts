@@ -3,12 +3,10 @@
 import { getDBConnection } from '../database/db';
 import { ActivityPostBody } from '../models/activity';
 import { postActivitySQL } from '../queries/activity-queries';
+import { ParameterizedQuery } from '../queries/query-types';
 import { getLogger } from '../utils/logger';
 import { sendResponse } from '../utils/query-actions';
-import { ParameterizedQuery } from '../queries/query-types';
-import * as SwaggerValidator from 'swagger-object-validator';
-
-
+import { validateSwaggerObject } from '../utils/controller-utils';
 
 const defaultLog = getLogger('observation-controller');
 
@@ -33,38 +31,44 @@ exports.authenticatedOptions = async function (args: any, res: any, next: any) {
  */
 exports.authenticatedPost = async function (args: any, res: any, next: any) {
   try {
+    defaultLog.debug({ label: 'authenticatedPost', message: 'params', arguments: args.swagger.params });
 
-  defaultLog.debug({ label: 'authenticatedPost', message: 'params', arguments: args.swagger.params });
-  let validator = new SwaggerValidator.Handler('./src/swagger/swagger.yaml')
+    const validationResult = await validateSwaggerObject(args.swagger.params.postBody.value, 'ActivityPostBody');
 
-  validator.validateModel(args.swagger.params.postBody.value, 'ActivityPostBody', (err:any, result: any ) => {
-      console.log(result.humanReadable());
-  });
-
-  const data: ActivityPostBody = args.swagger.params.postBody.value;
-
-  const sanitizedActivityData = new ActivityPostBody(data);
-
-  const connection = await getDBConnection();
-
-  if (!connection) {
-    return sendResponse(res, 503);
-  }
-
-  const parameterizedQuery: ParameterizedQuery = postActivitySQL(sanitizedActivityData);
-
-  if (!parameterizedQuery) {
-    return sendResponse(res, 400);
-  }
-
-  const response = await connection.query(parameterizedQuery.sql, parameterizedQuery.values);
-
-  const result = (response && response.rows && response.rows[0]) || null;
-
-  connection.release();
-
-  return sendResponse(res, 200, result);
-  } catch (error) {
-    console.log(error.message)
+    if (validationResult.errors) {
+      defaultLog.warn({
+        label: 'authenticatedPost',
+        message: validationResult.message,
+        'post body params were invalid': validationResult.errors
+      });
+      return sendResponse(res, 400, { 'post body params were invalid': validationResult.errors });
     }
+
+    const data: ActivityPostBody = args.swagger.params.postBody.value;
+
+    const sanitizedActivityData = new ActivityPostBody(data);
+
+    const connection = await getDBConnection();
+
+    if (!connection) {
+      return sendResponse(res, 503);
+    }
+
+    const parameterizedQuery: ParameterizedQuery = postActivitySQL(sanitizedActivityData);
+
+    if (!parameterizedQuery) {
+      return sendResponse(res, 400);
+    }
+
+    const response = await connection.query(parameterizedQuery.sql, parameterizedQuery.values);
+
+    const result = (response && response.rows && response.rows[0]) || null;
+
+    connection.release();
+
+    return sendResponse(res, 200, result);
+  } catch (error) {
+    defaultLog.error({ label: 'authenticatedPost', message: 'unexpected error', error });
+    return sendResponse(res, 500);
+  }
 };
