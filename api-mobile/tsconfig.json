@@ -5,6 +5,7 @@
     "lib": ["es2018"],
     "moduleResolution": "node",
     "sourceMap": true,
+    "allowJs": false,
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {

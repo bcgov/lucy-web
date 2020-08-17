@@ -19,12 +19,7 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
     'VALUES ($1, $2, $3, $4) ' +
     'RETURNING *;';
 
-  const values = [
-    activityData.type,
-    activityData.subType,
-    activityData.date,
-    activityData
-  ];
+  const values = [activityData.type, activityData.subType, activityData.date, activityData];
 
   return { sql, values };
 };

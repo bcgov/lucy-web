@@ -16,7 +16,7 @@ const APP_CERTIFICATE_URL =
 
 const TOKEN_IGNORE_EXPIRATION: boolean =
   process.env.TOKEN_IGNORE_EXPIRATION === 'true' ||
-  process.env.NODE_ENV === 'dev' ||
+  process.env.NODE_ENV === 'development' ||
   process.env.DB_HOST === 'localhost' ||
   false;
 
