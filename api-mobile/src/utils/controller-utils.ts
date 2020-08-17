@@ -1,6 +1,5 @@
-import { Handler, ValidationErrorType } from 'swagger-object-validator';
+import { Handler, ValidationErrorType, IValidatorConfig } from 'swagger-object-validator';
 
-const validator = new Handler('./src/swagger/swagger.yaml');
 
 export interface IValidateSwaggerObjectErrors {
   // overall error message
@@ -21,8 +20,12 @@ export interface IValidateSwaggerObjectErrors {
  */
 export const validateSwaggerObject = async function (
   swaggerParamsObject: any,
-  swaggerDefinitionName: string
+  swaggerDefinitionName: string,
+  swaggerValidatorConfig: IValidatorConfig,
+  swaggerFilePath: string
 ): Promise<IValidateSwaggerObjectErrors> {
+const validator = new Handler(swaggerFilePath, swaggerValidatorConfig);
+//const validator = new Handler('./src/swagger/swagger.yaml');
   const validationResult = await validator.validateModel(swaggerParamsObject, swaggerDefinitionName);
 
   if (validationResult.errors && validationResult.errors.length) {
