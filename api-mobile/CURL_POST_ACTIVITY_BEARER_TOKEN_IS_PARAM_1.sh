@@ -10,14 +10,13 @@ curl --location --request POST 'localhost:3002/api/activity' \
     "locationAndGeometry": {
         "test": "banana"
     },
-    "data": { 
-      "ObservationData": {
+    "activityTypeData": { 
           "date": "12-2020-21",
           "key activity species name": "bla"
       },
-      "InvasiveTerrestrialPlantObservation":{
+      "activitySubTypeData": { 
         "pokyness": 11,
         "smells": "ok"
         }
-      }
-}'
+ }
+'

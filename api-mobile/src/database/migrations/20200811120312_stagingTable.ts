@@ -19,11 +19,11 @@ exports.up = async (knex: Knex) => {
     ALTER TABLE activity_incoming_data ADD COLUMN version INTEGER NULL;
     COMMENT ON COLUMN activity_incoming_data.version IS 'Indicative of the version for each unique record. Calculated server side.';
 
-    ALTER TABLE activity_incoming_data ADD COLUMN type VARCHAR(200) NULL;
+    ALTER TABLE activity_incoming_data ADD COLUMN activity_type VARCHAR(200) NULL;
     COMMENT ON COLUMN activity_incoming_data.type IS 'Type of record';
     CREATE index type_idx on activity_incoming_data (type);
 
-    ALTER TABLE activity_incoming_data ADD COLUMN sub_type VARCHAR(200) NULL;
+    ALTER TABLE activity_incoming_data ADD COLUMN activity_sub_type VARCHAR(200) NULL;
     COMMENT ON COLUMN activity_incoming_data.sub_type IS 'Sub Type of record';
     CREATE index sub_type_idx on activity_incoming_data (sub_type);
 

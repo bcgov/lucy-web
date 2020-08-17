@@ -5,17 +5,19 @@
  * @class ActivityPostBody
  */
 export class ActivityPostBody {
-  type: string;
-  subType: string;
+  activityType: string;
+  activitySubType: string;
   date: string;
   locationAndGeometry: object;
-  data: object;
+  activityTypeData: object;
+  activitySubTypeData: object;
 
   constructor(obj?: any) {
-    this.type = (obj && obj.type) || null;
-    this.subType = (obj && obj.subType) || null;
+    this.activityType = (obj && obj.type) || null;
+    this.activitySubType = (obj && obj.subType) || null;
     this.date = (obj && obj.date) || null;
     this.locationAndGeometry = (obj && obj.locationAndGeometry) || null;
-    this.data = (obj && obj.data) || null;
+    this.activityTypeData = (obj && obj.data) || null;
+    this.activitySubTypeData = (obj && obj.data) || null;
   }
 }

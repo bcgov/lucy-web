@@ -16,5 +16,6 @@ select
 'banana' as sample_label_number
 
 from activity_incoming_data
+where activity_incoming_data.activity_type = 'Observation'
 )
 COMMENT ON VIEW observation_common_fields_view IS 'View on fields common to all types of observations, with table activity_incoming_data as source.';
