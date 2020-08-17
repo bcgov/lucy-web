@@ -37,6 +37,16 @@ exports.up = async (knex: Knex) => {
 
     ALTER TABLE activity_incoming_data ADD COLUMN activity_payload JSONB;
     COMMENT ON COLUMN activity_incoming_data.activity_payload IS 'Raw data upload in compressed JSON format.';
+
+
+    ALTER TABLE activity_incoming_data ADD COLUMN activity_type_data JSONB;
+    COMMENT ON COLUMN activity_incoming_data.activity_type_data IS 'Raw data upload in compressed JSON format.';
+
+    ALTER TABLE activity_incoming_data ADD COLUMN activity_sub_type_data JSONB;
+    COMMENT ON COLUMN activity_incoming_data.activity_sub_type_data IS 'Raw data upload in compressed JSON format.';
+
+
+
   `);
 
 };

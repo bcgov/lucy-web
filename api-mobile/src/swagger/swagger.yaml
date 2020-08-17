@@ -294,9 +294,9 @@ definitions:
             type: string
           photoTaken:
             type: boolean
-      activity_type_data:
+      activityTypeData:
         type: object
-      activity_subtype_data:
+      activitySubTypeData:
         type: object
 
   ActivityResponse:
@@ -307,18 +307,15 @@ definitions:
       - activitySubType
       - date
       - locationAndGeometry
-      - activityData
     properties:
-      type:
+      activityType:
         type: string
-      subType:
+      activitySubType:
         type: string
       date:
         type: string
         description: Date in YYYY-MM-DD format
       locationAndGeometry:
-        type: object
-      data:
         type: object
 
   # Observation Plant Definitions
