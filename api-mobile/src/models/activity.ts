@@ -9,6 +9,7 @@ export class ActivityPostBody {
   activitySubType: string;
   date: string;
   locationAndGeometry: object;
+  activityPostBody: object;
   activityTypeData: object;
   activitySubTypeData: object;
 
@@ -17,6 +18,7 @@ export class ActivityPostBody {
     this.activitySubType = (obj && obj.subType) || null;
     this.date = (obj && obj.date) || null;
     this.locationAndGeometry = (obj && obj.locationAndGeometry) || null;
+    this.activityPostBody = null;
     this.activityTypeData = (obj && obj.data) || null;
     this.activitySubTypeData = (obj && obj.data) || null;
   }

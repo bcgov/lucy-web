@@ -47,6 +47,7 @@ exports.authenticatedPost = async function (args: any, res: any, next: any) {
     const data: ActivityPostBody = args.swagger.params.postBody.value;
 
     const sanitizedActivityData = new ActivityPostBody(data);
+    sanitizedActivityData.activityPostBody = args.swagger.params.postBody.value;
 
     const connection = await getDBConnection();
 

@@ -15,11 +15,11 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
 
   const sql =
     'INSERT INTO activity_incoming_data ' +
-    '(type, sub_type, received_timestamp, activity_type_data, activity_sub_type_data) ' +
-    'VALUES ($1, $2, $3, $4, $5) ' +
+    '(type, sub_type, received_timestamp, activity_payload, activity_type_data, activity_sub_type_data) ' +
+    'VALUES ($1, $2, $3, $4, $5, $6) ' +
     'RETURNING *;';
 
-  const values = [activityData.activityType, activityData.activitySubType, activityData.date, activityData.activityTypeData, activityData.activitySubTypeData];
+  const values = [activityData.activityType, activityData.activitySubType, activityData.date, activityData.activityPostBody, activityData.activityTypeData, activityData.activitySubTypeData];
 
   return { sql, values };
 };
