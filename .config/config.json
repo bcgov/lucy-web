@@ -12,7 +12,8 @@
     "olderVersions": [],
     "module": {
         "app": "invasivesbc-app",
-        "api": "invasivesbc-api"
+        "api": "invasivesbc-api",
+        "api-mobile": "invasivesbc-api-mobile"
     },
     "staticBranches": ["dev", "staging", "prod"],
     "staticUrls": {
@@ -24,6 +25,11 @@
         "dev": "api-dev-invasivesbc.pathfinder.gov.bc.ca",
         "staging": "api-test-invasivesbc.pathfinder.gov.bc.ca",
         "prod": "api-invasivesbc.pathfinder.gov.bc.ca"
+    },
+    "staticUrlsAPIMobile": {
+        "dev": "api-mobile-dev-invasivesbc.pathfinder.gov.bc.ca",
+        "staging": "api-mobile-test-invasivesbc.pathfinder.gov.bc.ca",
+        "prod": "api-mobile-invasivesbc.pathfinder.gov.bc.ca"
     },
     "certificateURL": {
         "dev": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
