@@ -1,4 +1,5 @@
-# Test Deploy On OpensShift
+# Static Deploy On OpensShift
+# Builds and Deploys merged PR's to persistent pods/services/routes/etc in the OpenShift Dev environment.
 name: Static Deploy on OpensShift
 
 on:
@@ -7,18 +8,21 @@ on:
     branches:
       - dev
       - prod
+
 jobs:
+  # Print variables for logging and debugging purposes
   checkEnv:
     name: Check Env variables
     runs-on: ubuntu-latest
     steps:
       - name: Print Env Vars
         run: |
-          echo ${{ github.base_ref }}
-          echo $GITHUB_BASE_REF
-          echo $GITHUB_HEAD_REF
-    #end steps
-  #end checkEnv
+          echo Git Base Ref: ${{ github.base_ref }}
+          echo Git Build ID: ${{ github.event.number }}
+          echo Git Pull Request Ref: ${{ github.event.pull_request.head.sha }}
+          echo OC CLI Version: $(oc version)
+
+  # Build the API
   buildAPI:
     name: Build API Static
     runs-on: ubuntu-latest
@@ -26,31 +30,64 @@ jobs:
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-          export PATH=$PATH_TO_OC
-      - name: Login into OpenShift
-        run: |
-          export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Build the api images
       - name: Build API Images
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
-  # End buildAPI
+
+  # Build the `api-mobile` API
+  # Note: This job relies on setup (database, etc) executed as part of the previous `buildAPI` job
+  buildAPIMobile:
+    name: Build "api-mobile" Static
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true}} # Only run when the PR is merged
+    env:
+      BUILD_ID: ${{ github.event.number }}
+    needs:
+      - buildAPI
+    steps:
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Build the api-mobile images
+      - name: Build API Mobile Images
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          npm ci
+          DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
+
+  # Build the web frontend app
   buildAPP:
     name: Build App Static
     runs-on: ubuntu-latest
@@ -58,248 +95,294 @@ jobs:
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-      - name: Login into OpenShift
-        run: |
-          export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Build the app images
       - name: Build APP Images
-        working-directory: './app/.pipeline/'
+        working-directory: "./app/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
   # End buildAPP
+
+  # Deploy App, API, and API-MOBILE images in Dev
   deployDev:
-    name: Deploy App and API in DEV
+    name: Deploy App, API, and API-MOBILE to DEV environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref != 'prod'}}
     env:
       BUILD_ID: ${{ github.event.number }}
-    needs: 
+    needs:
       - buildAPI
+      - buildAPIMobile
       - buildAPP
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-      - name: Login into OpenShift
-        run: |
-          export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Deploy the api
       - name: Deploy API
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run seed -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
-      - name: Deploy App
-        working-directory: './app/.pipeline'
+
+      # Deploy the api-mobile
+      - name: Deploy API Mobile
+        working-directory: "./api-mobile/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
+
+      # Deploy the app
+      - name: Deploy App
+        working-directory: "./app/.pipeline"
+        run: |
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
-  # End deployDev
+
+  # Deploy App, API, and API-MOBILE images in Test
   deployTest:
-    name: Deploy App and API in TEST
+    name: Deploy App, API, and API-MOBILE to TEST environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref != 'prod'}}
     env:
       BUILD_ID: ${{ github.event.number }}
-    needs: 
+    needs:
       - buildAPI
+      - buildAPIMobile
       - buildAPP
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-      - name: Login into OpenShift
-        run: |
-          export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Deploy the api
       - name: Deploy API
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run seed -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-      - name: Deploy App
-        working-directory: './app/.pipeline'
+
+      # Deploy the api-mobile
+      - name: Deploy API Mobile
+        working-directory: "./api-mobile/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
+
+      # Deploy the app
+      - name: Deploy App
+        working-directory: "./app/.pipeline"
+        run: |
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-  # End deployTest
+
+  # Deploy App, API, and API-MOBILE images in Prod
   deployProd:
-    name: Deploy App and API in PROD
+    name: Deploy App, API, and API-MOBILE to PROD environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref == 'prod'}}
     env:
       BUILD_ID: ${{ github.event.number }}
-    needs: 
+    needs:
       - buildAPI
+      - buildAPIMobile
       - buildAPP
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-      - name: Login into OpenShift
-        run: |
-          export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Deploy the api
       - name: Deploy API
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
-      - name: Deploy App
-        working-directory: './app/.pipeline'
+
+      # Deploy the api-mobile
+      - name: Deploy API Mobile
+        working-directory: "./api-mobile/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+
+      # Deploy the app
+      - name: Deploy App
+        working-directory: "./app/.pipeline"
+        run: |
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
-  # End deployProd
+
+  # Deploy App, API, and API-MOBILE images and related build/deployment artifacts
   clean:
-    name: Clean PR based deployment
+    name: Clean Deployment Artifacts for App, API, and API-MOBILE in DEV and Test environments
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref == 'dev'  }}
-    needs: 
+    needs:
       - buildAPI
+      - buildAPIMobile
       - buildAPP
       - deployDev
       - deployTest
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-          export PATH=$PATH_TO_OC
-      - name: Login into OpenShift
-        run: |
-          export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Clean the api deployment artifacts
       - name: Clean API Deployment
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the api-mobile deployment artifacts
+      - name: Clean API Mobile Deployment
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          npm ci
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the app deployment artifacts
       - name: Clean APP Deployment
-        working-directory: './app/.pipeline/'
+        working-directory: "./app/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
-  # End clean
+
+  # Clean App, API, and API-MOBILE images and related build/deployment artifacts
   cleanProd:
-    name: Clean PR based deployment for Production Env
+    name: Clean Deployment Artifacts for App, API, and API-MOBILE in PROD environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref == 'prod' }}
-    needs: 
+    needs:
       - buildAPI
+      - buildAPIMobile
       - buildAPP
       - deployProd
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-          export PATH=$PATH_TO_OC
-      - name: Login into OpenShift
-        run: |
-          export PATH=$PATH_TO_OC
-          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Clean the api deployment artifacts
       - name: Clean API Deployment
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the api-mobile deployment artifacts
+      - name: Clean API Mobile Deployment
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          npm ci
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the app deployment artifacts
       - name: Clean APP Deployment
-        working-directory: './app/.pipeline/'
+        working-directory: "./app/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
-  # End clean
-# --

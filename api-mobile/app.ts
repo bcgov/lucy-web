@@ -11,7 +11,7 @@ const defaultLog = getLogger('app');
 
 import { authenticate } from './src/utils/auth-utils';
 
-const API_HOSTNAME = process.env.API_HOSTNAME || 'localhost:3002';
+const HOST = process.env.API_HOST || 'localhost:3002';
 
 // Get initial express app
 const app: express.Express = express();
@@ -32,13 +32,8 @@ app.use(function (req: any, res: any, next: any) {
   next();
 });
 
-// Overwrite swagger to set the hostname based on current environment
-swaggerConfig.host = API_HOSTNAME;
-
-// Overwrite swagger to only allow 'https' when not running locally
-if (API_HOSTNAME !== 'localhost:3002') {
-  swaggerConfig.schemes = ['https'];
-}
+// Overwrite swagger to set the host based on current environment
+swaggerConfig.host = HOST;
 
 swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   // add base swagger route handling middleware
@@ -67,7 +62,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   // start api
   try {
     app.listen(3002, '0.0.0.0', function () {
-      defaultLog.info({ label: 'start api', message: 'started api-mobile on port 3002' });
+      defaultLog.info({ label: 'start api', message: `started api-mobile on ${HOST}` });
     });
   } catch (error) {
     defaultLog.error({ label: 'start api', message: 'error', error });
