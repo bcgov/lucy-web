@@ -15,12 +15,12 @@ export class ActivityPostBody {
   activitySubTypeData: object;
 
   constructor(obj?: any) {
-    this.activityType = (obj && obj.type) || null;
-    this.activitySubType = (obj && obj.subType) || null;
+    this.activityType = (obj && obj.activityType) || null;
+    this.activitySubType = (obj && obj.activitySubType) || null;
     this.date = (obj && obj.date) || null;
     this.locationAndGeometry = (obj && obj.locationAndGeometry) || null;
     this.activityPostBody = null;
-    this.activityTypeData = (obj && obj.data) || null;
-    this.activitySubTypeData = (obj && obj.data) || null;
+    this.activityTypeData = (obj && obj.activityTypeData) || null;
+    this.activitySubTypeData = (obj && obj.activitySubTypeData) || null;
   }
 }
