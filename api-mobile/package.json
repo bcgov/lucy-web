@@ -10,6 +10,9 @@
   },
   "scripts": {
     "start": "ts-node app",
+    "clean": "gulp clean",
+    "build": "gulp build",
+    "migrations": "knex migrate:latest",
     "test": "ts-mocha --timeout 60000",
     "lint": "eslint . --ignore-pattern 'node_modules' --ext .ts",
     "lint-fix": "eslint . --fix --ignore-pattern 'node_modules' --ext .ts"
@@ -45,6 +48,7 @@
     "@types/body-parser": "~1.19.0",
     "@types/chai": "~4.2.12",
     "@types/express": "~4.17.0",
+    "@types/gulp": "~4.0.6",
     "@types/jsonwebtoken": "~8.5.0",
     "@types/memory-cache": "~0.2.1",
     "@types/mocha": "~8.0.1",
@@ -55,14 +59,16 @@
     "@typescript-eslint/parser": "~3.7.1",
     "chai": "~4.2.0",
     "database-cleaner": "~1.3.0",
+    "del": "~5.1.0",
     "dotenv": "~8.2.0",
     "eslint-config-prettier": "~6.11.0",
     "eslint-plugin-prettier": "~3.1.4",
     "eslint": "~7.5.0",
     "factory-girl": "~5.0.4",
+    "gulp-typescript": "~5.0.1",
+    "gulp": "~4.0.2",
     "mocha": "~8.1.1",
     "nock": "~13.0.3",
-    "npm-run-all": "~4.1.5",
     "prettier": "~2.0.5",
     "supertest": "~4.0.2"
   }

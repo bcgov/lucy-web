@@ -1,4 +1,5 @@
-# Test Deploy On OpensShift
+# PR Based Deploy On OpensShift
+# Builds and Deploys unmerged PR's to temporary pods/services/routes/etc in the OpenShift Dev environment.
 name: Deploy on OpensShift
 
 on:
@@ -15,9 +16,9 @@ jobs:
         env:
           TARGET: ${{ github.event.pull_request.head.sha }}
         run: |
-          echo "$TARGET"
+          echo TARGET=$TARGET
       - uses: actions/checkout@v1
-      - name: Use Node.js 
+      - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
@@ -30,24 +31,78 @@ jobs:
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
           export PATH=$PATH_TO_OC
-      - name: Login into OpenShift
+      - name: Log in to OpenShift
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
       - name: Build API Images
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=${{ github.event.number }}
   # End buildAPI
+
+  # Build the `api-mobile` API
+  # Note: This job relies on setup (database, etc) executed as part of the previous `buildAPI` job
+  buildAPIMobile:
+    name: Build "api-mobile"
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == false }} # Only run when the PR is opened/updated
+    steps:
+      # Print variables for logging and debugging purposes
+      - name: Print Target Branch Details
+        env:
+          TARGET: ${{ github.event.pull_request.head.sha }}
+        run: |
+          echo TARGET=$TARGET
+
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.16
+
+      # Install the OpenShift CLI - for `oc` commands
+      # TODO OpenShift CLI is now available by default in `ubuntu-lates`? If so, this step would not be needed
+      - name: Install OpenShift CLI
+        run: |
+          cd $HOME
+          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
+          chmod +x oc
+          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
+          export PATH=$PATH_TO_OC
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: |
+          export PATH=$PATH_TO_OC
+          oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Build the api-mobile images via execution of `oc` commands/scripts
+      - name: Build API Mobile Images
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run build -- --pr=${{ github.event.number }}
+  # End buildAPIMobile
+
   buildAPP:
     name: Build App
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == false}}
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js 
+      - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
@@ -59,30 +114,39 @@ jobs:
           cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-      - name: Login into OpenShift
+      - name: Log in to OpenShift
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
       - name: Build APP Images
-        working-directory: './app/.pipeline/'
+        working-directory: "./app/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=${{ github.event.number }}
   # End buildAPP
+
   deploy:
-    name: Deploy App and API
+    name: Deploy App, API, and API-MOBILE
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == false}}
-    needs: 
+    needs:
       - buildAPI
+      - buildAPIMobile
       - buildAPP
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
+
+      # Install the OpenShift CLI - for `oc` commands
+      # TODO OpenShift CLI is now available by default in `ubuntu-lates`? If so, this step would not be needed
       - name: Install OpenShift
         run: |
           cd $HOME
@@ -91,38 +155,65 @@ jobs:
           cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-      - name: Login into OpenShift
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Deploy the api via execution of `oc` commands/scripts
       - name: Deploy API
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
-          DEBUG=* npm run pre-deploy -- --pr=${{ github.event.number }} --env=dev  
-          DEBUG=* npm run setup -- --pr=${{ github.event.number }} --env=dev  
-          DEBUG=* npm run seed -- --pr=${{ github.event.number }} --env=dev 
-          DEBUG=* npm run test -- --pr=${{ github.event.number }} --env=dev 
-          DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev 
+          DEBUG=* npm run pre-deploy -- --pr=${{ github.event.number }} --env=dev
+          DEBUG=* npm run setup -- --pr=${{ github.event.number }} --env=dev
+          DEBUG=* npm run seed -- --pr=${{ github.event.number }} --env=dev
+          DEBUG=* npm run test -- --pr=${{ github.event.number }} --env=dev
+          DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
           DEBUG=* npm run deploy-tools -- --pr=${{ github.event.number }} --env=dev
+
+      # Deploy the api-mobile via execution of `oc` commands/scripts
+      - name: Deploy API Mobile
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run setup -- --pr=${{ github.event.number }} --env=dev
+          # TODO disable test while there are no tests to run. Test command (see test.pod.yaml) will need updating.
+          # DEBUG=* npm run test -- --pr=${{ github.event.number }} --env=dev
+          DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
+
+      # Deploy the app via execution of `oc` commands/scripts
       - name: Deploy App
-        working-directory: './app/.pipeline'
+        working-directory: "./app/.pipeline"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
   # End deploy
+
   clean:
-    name: Clean PR based deployment
+    name: Clean Deployment Artifacts for App, API, and API-MOBILE
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && (github.base_ref != 'dev' && github.base_ref != 'prod') }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
+      - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
+
+      # Install the OpenShift CLI - for `oc` commands
+      # TODO OpenShift CLI is now available by default in `ubuntu-lates`? If so, this step would not be needed
       - name: Install OpenShift
         run: |
           cd $HOME
@@ -132,19 +223,36 @@ jobs:
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
           export PATH=$PATH_TO_OC
-      - name: Login into OpenShift
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Clean the api deployment artifacts via execution of `oc` commands/scripts
       - name: Clean API Deployment
-        working-directory: './api/.pipeline/'
+        working-directory: "./api/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=build
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=dev
+
+      # Clean the api-mobile deployment artifacts via execution of `oc` commands/scripts
+      - name: Clean API Mobile Deployment
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=build
+          DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=dev
+
+      # Clean the app deployment artifacts via execution of `oc` commands/scripts
       - name: Clean APP Deployment
-        working-directory: './app/.pipeline/'
+        working-directory: "./app/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
