@@ -15,7 +15,7 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
 
   const sql =
     'INSERT INTO activity_incoming_data ' +
-    '(type, sub_type, received_timestamp, activity_payload, activity_type_data, activity_sub_type_data) ' +
+    '(activity_type, activity_sub_type, received_timestamp, activity_payload, activity_type_data, activity_sub_type_data) ' +
     'VALUES ($1, $2, $3, $4, $5, $6) ' +
     'RETURNING *;';
 
