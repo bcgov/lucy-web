@@ -10,6 +10,7 @@ export class ActivityPostBody {
   date: string;
   locationAndGeometry: object;
   activityPostBody: object;
+  activityResponseBody: object;
   activityTypeData: object;
   activitySubTypeData: object;
 

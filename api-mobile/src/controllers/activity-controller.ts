@@ -7,6 +7,7 @@ import { ParameterizedQuery } from '../queries/query-types';
 import { getLogger } from '../utils/logger';
 import { sendResponse } from '../utils/query-actions';
 import { validateSwaggerObject } from '../utils/controller-utils';
+import { ValidationErrorType, IValidatorConfig } from 'swagger-object-validator';
 
 const defaultLog = getLogger('observation-controller');
 
@@ -33,7 +34,16 @@ exports.authenticatedPost = async function (args: any, res: any, next: any) {
   try {
     defaultLog.debug({ label: 'authenticatedPost', message: 'params', arguments: args.swagger.params });
 
-    const validationResult = await validateSwaggerObject(args.swagger.params.postBody.value, 'ActivityPostBody');
+
+    let config: IValidatorConfig = {
+      ignoreError: (error: { errorType: ValidationErrorType; trace: { stepName: string; }[]; }, value: string, schema: { type: string; }, spec: any) => {
+        // ignore type mismatches on Pet/id when a certain value occures
+        return error.errorType === ValidationErrorType.ADDITIONAL_PROPERTY
+          && error.trace[0].stepName.includes('activityTypeData')
+      }
+  };
+
+    const validationResult = await validateSwaggerObject(args.swagger.params.postBody.value, 'ActivityPostBody', config, './src/swagger/swagger.yaml' );
 
     if (validationResult.errors) {
       defaultLog.warn({
