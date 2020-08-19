@@ -1,16 +1,18 @@
-swagger: '2.0' # npm library `swagger-tools` does not yet support 3.0
+swagger: "2.0" # npm library `swagger-tools` does not yet support 3.0
 
 info:
-  version: '0.0.0'
+  version: "0.0.0"
   title: lucy-api-mobile
   description: API for lucy mobile.
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: localhost:3002
 basePath: /api
 
 tags:
+  - name: misc
+    description: Miscellaneous endpoints
   - name: activity
     description: |
       Activity endpoints
@@ -30,7 +32,7 @@ tags:
 
 externalDocs:
   description: Visit GitHub to find out more about this API
-  url: 'https://github.com/bcgov/lucy-web.git'
+  url: "https://github.com/bcgov/lucy-web.git"
 
 schemes:
   - http
@@ -51,6 +53,31 @@ produces:
   - application/json
 
 paths:
+  # Misc routes
+
+  /misc/version:
+    x-swagger-router-controller: misc-controller
+    options:
+      tags:
+        - misc
+      summary: Pre-flight request
+      description: Options on public version route
+      operationId: publicOptions
+      responses:
+        "200":
+          description: Success
+    get:
+      tags:
+        - misc
+      summary: Pre-flight request
+      description: Get api version information
+      operationId: publicGet
+      responses:
+        "200":
+          description: Fetched api version information
+          schema:
+            $ref: "#/definitions/VersionResponse"
+
   # Activity Routes
 
   /activity:
@@ -62,12 +89,12 @@ paths:
       description: Options on authenticated activity route
       operationId: authenticatedOptions
       responses:
-        '200':
+        "200":
           description: Success
-        '401':
+        "401":
           description: Unauthorized user
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
     post:
       tags:
         - activity
@@ -85,16 +112,16 @@ paths:
           required: true
           name: postBody
           schema:
-            $ref: '#/definitions/ActivityPostBody'
+            $ref: "#/definitions/ActivityPostBody"
       responses:
-        '201':
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/ActivityResponse'
-        '401':
+            $ref: "#/definitions/ActivityResponse"
+        "401":
           description: Unauthorized user
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
 
   # Observation/Plant Routes
 
@@ -108,12 +135,12 @@ paths:
       description: Options on authenticated plant observation route
       operationId: authenticatedOptions
       responses:
-        '200':
+        "200":
           description: Success
-        '401':
+        "401":
           description: Unauthorized user
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
     get:
       tags:
         - observation
@@ -129,14 +156,14 @@ paths:
         - DAE # data editor
         - SUP # super user
       responses:
-        '200':
+        "200":
           description: Fetched observation with id
           schema:
-            $ref: '#/definitions/ObservationPlantResponse'
-        '422':
+            $ref: "#/definitions/ObservationPlantResponse"
+        "422":
           description: Validation error - no observation with id
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
 
   /observation/plant/{observationId}:
     x-swagger-router-controller: observation-plant-controller
@@ -153,12 +180,12 @@ paths:
           name: observationId
           type: number
       responses:
-        '200':
+        "200":
           description: Success
-        '401':
+        "401":
           description: Unauthorized user
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
     get:
       tags:
         - observation
@@ -179,14 +206,14 @@ paths:
           name: observationId
           type: number
       responses:
-        '200':
+        "200":
           description: Fetched observation with id
           schema:
-            $ref: '#/definitions/ObservationPlantResponse'
-        '422':
+            $ref: "#/definitions/ObservationPlantResponse"
+        "422":
           description: Validation error - no observation with id
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
 
   # Code Routes
 
@@ -200,12 +227,12 @@ paths:
       description: Options on authenticated observation code route
       operationId: authenticatedOptions
       responses:
-        '200':
+        "200":
           description: Success
-        '401':
+        "401":
           description: Unauthorized user
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
     get:
       tags:
         - code
@@ -220,17 +247,18 @@ paths:
         - DAE # data editor
         - SUP # super user
       responses:
-        '200':
+        "200":
           description: Fetched code values
           schema:
-            $ref: '#/definitions/ObservationCodeResponse'
-        '401':
+            $ref: "#/definitions/ObservationCodeResponse"
+        "401":
           description: Unauthorized user
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
 
 definitions:
   # Misc definitions
+
   Error:
     description: |
       Error response object.
@@ -245,6 +273,18 @@ definitions:
         type: array
         items:
           type: string
+
+  VersionResponse:
+    description: Version response object.
+    required:
+      - version
+      - environment
+    properties:
+      version:
+        type: string
+      environment:
+        type: string
+
 
   # Activity Definitions
 
@@ -513,7 +553,7 @@ definitions:
         type: string
       data:
         type: object
-        $ref: '#/definitions/ObservationCode'
+        $ref: "#/definitions/ObservationCode"
 
   ObservationCode:
     description: Observation code tables.
@@ -534,51 +574,51 @@ definitions:
       observation_aspect_code:
         type: array
         items:
-          $ref: '#/definitions/AspectCode'
+          $ref: "#/definitions/AspectCode"
       jurisdiction_code:
         type: array
         items:
-          $ref: '#/definitions/JurisdictionCode'
+          $ref: "#/definitions/JurisdictionCode"
       observation_geometry_code:
         type: array
         items:
-          $ref: '#/definitions/ObservationGeometryCode'
+          $ref: "#/definitions/ObservationGeometryCode"
       observation_type_code:
         type: array
         items:
-          $ref: '#/definitions/ObservationTypeCode'
+          $ref: "#/definitions/ObservationTypeCode"
       observation_proposed_action_code:
         type: array
         items:
-          $ref: '#/definitions/ProposedActionCode'
+          $ref: "#/definitions/ProposedActionCode"
       observation_slope_code:
         type: array
         items:
-          $ref: '#/definitions/SlopeCode'
+          $ref: "#/definitions/SlopeCode"
       soil_texture_code:
         type: array
         items:
-          $ref: '#/definitions/SoilTextureCode'
+          $ref: "#/definitions/SoilTextureCode"
       species:
         type: array
         items:
-          $ref: '#/definitions/Species'
+          $ref: "#/definitions/Species"
       species_density_code:
         type: array
         items:
-          $ref: '#/definitions/SpeciesDensityCode'
+          $ref: "#/definitions/SpeciesDensityCode"
       species_distribution_code:
         type: array
         items:
-          $ref: '#/definitions/SpeciesDistributionCode'
+          $ref: "#/definitions/SpeciesDistributionCode"
       species_agency_code:
         type: array
         items:
-          $ref: '#/definitions/SpeciesAgencyCode'
+          $ref: "#/definitions/SpeciesAgencyCode"
       specific_use_code:
         type: array
         items:
-          $ref: '#/definitions/SpecificUseCode'
+          $ref: "#/definitions/SpecificUseCode"
 
   # Code Definitions
 
