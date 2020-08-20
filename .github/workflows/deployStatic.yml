@@ -96,7 +96,7 @@ jobs:
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
       # Build the api-mobile images via execution of `oc` commands/scripts
-      - name: Build API Images
+      - name: Build API Mobile Images
         working-directory: "./api-mobile/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
@@ -264,11 +264,8 @@ jobs:
         run: |
           export PATH=$PATH_TO_OC
           npm ci
-          DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run seed -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
 
       # Deploy the app via execution of `oc` commands/scripts
       - name: Deploy App
@@ -290,11 +287,18 @@ jobs:
       - buildAPIMobile
       - buildAPP
     steps:
-      - uses: actions/checkout@v1
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
+
+      # Install the OpenShift CLI - for `oc` commands
+      # TODO OpenShift CLI is now available by default in `ubuntu-lates`? If so, this step would not be needed
       - name: Install OpenShift
         run: |
           cd $HOME
@@ -303,10 +307,16 @@ jobs:
           cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Deploy the api via execution of `oc` commands/scripts
       - name: Deploy API
         working-directory: "./api/.pipeline/"
         run: |
@@ -316,6 +326,17 @@ jobs:
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+
+      # Deploy the api-mobile via execution of `oc` commands/scripts
+      - name: Deploy API Mobile
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+
+      # Deploy the app via execution of `oc` commands/scripts
       - name: Deploy App
         working-directory: "./app/.pipeline"
         run: |
@@ -337,11 +358,18 @@ jobs:
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v1
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
+
+      # Install the OpenShift CLI - for `oc` commands
+      # TODO OpenShift CLI is now available by default in `ubuntu-lates`? If so, this step would not be needed
       - name: Install OpenShift
         run: |
           cd $HOME
@@ -351,10 +379,16 @@ jobs:
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
           export PATH=$PATH_TO_OC
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Clean the api deployment artifacts via execution of `oc` commands/scripts
       - name: Clean API Deployment
         working-directory: "./api/.pipeline/"
         run: |
@@ -362,6 +396,17 @@ jobs:
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the api-mobile deployment artifacts via execution of `oc` commands/scripts
+      - name: Clean API Mobile Deployment
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the app deployment artifacts via execution of `oc` commands/scripts
       - name: Clean APP Deployment
         working-directory: "./app/.pipeline/"
         run: |
@@ -383,11 +428,18 @@ jobs:
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v1
+      # Checkout the PR branch
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+
+      # Install Node - for `node` and `npm` commands
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
+
+      # Install the OpenShift CLI - for `oc` commands
+      # TODO OpenShift CLI is now available by default in `ubuntu-lates`? If so, this step would not be needed
       - name: Install OpenShift
         run: |
           cd $HOME
@@ -397,10 +449,16 @@ jobs:
           chmod +x oc
           echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
           export PATH=$PATH_TO_OC
+
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+
+      # Clean the api deployment artifacts via execution of `oc` commands/scripts
       - name: Clean API Deployment
         working-directory: "./api/.pipeline/"
         run: |
@@ -408,6 +466,17 @@ jobs:
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the api-mobile deployment artifacts via execution of `oc` commands/scripts
+      - name: Clean API Mobile Deployment
+        working-directory: "./api-mobile/.pipeline/"
+        run: |
+          export PATH=$PATH_TO_OC
+          npm ci
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
+          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
+
+      # Clean the app deployment artifacts via execution of `oc` commands/scripts
       - name: Clean APP Deployment
         working-directory: "./app/.pipeline/"
         run: |

@@ -7,11 +7,10 @@
     "node": ">=8"
   },
   "scripts": {
-    "build": "node build.js",
-    "pre-deploy": "node pre.deploy.js",
+    "build": "node api.build.js",
+    "deploy": "node api.deploy.js",
+    "test": "node api.test.js",
     "setup": "node setup.js",
-    "test": "node test.js",
-    "deploy": "node deploy.js",
     "clean": "node clean.js"
   },
   "repository": {

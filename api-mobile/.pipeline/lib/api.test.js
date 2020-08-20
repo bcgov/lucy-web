@@ -1,16 +1,24 @@
 'use strict';
 const { OpenShiftClientX } = require('pipeline-cli');
 const path = require('path');
-const wait = require('./wait');
-const checkAndClean = require('./checkAndClean');
+const wait = require('../utils/wait');
+const checkAndClean = require('../utils/checkAndClean');
 
+/**
+ * Run a pod to execute tests.
+ *
+ * @param {*} settings
+ */
 module.exports = settings => {
   const phases = settings.phases;
   const options = settings.options;
   const phase = options.env;
-  const changeId = phases[phase].changeId;
+
   const oc = new OpenShiftClientX(Object.assign({ namespace: phases[phase].namespace }, options));
+
+  const changeId = phases[phase].changeId;
   const templatesLocalBaseUrl = oc.toFileUrl(path.resolve(__dirname, '../../openshift'));
+
   let objects = [];
 
   const instance = `${phases[phase].name}-${changeId}`;
@@ -23,10 +31,11 @@ module.exports = settings => {
     process.exit(0);
   }
   const imageStream = data[0];
+
   const podName = `${phases[phase].name}${phases[phase].suffix}-test`;
 
   objects.push(
-    ...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/test.pod.yaml`, {
+    ...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/api.test.yaml`, {
       param: {
         NAME: podName,
         SUFFIX: phases[phase].suffix,
@@ -42,7 +51,9 @@ module.exports = settings => {
     })
   );
   checkAndClean(`pod/${podName}`, oc);
+
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, `${changeId}`, instance);
   oc.applyAndDeploy(objects, phases[phase].instance);
+
   wait(`pod/${podName}`, settings, 35);
 };

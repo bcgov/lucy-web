@@ -1,7 +1,13 @@
 'use strict';
 const { OpenShiftClientX } = require('pipeline-cli');
-const checkAndClean = require('./checkAndClean');
+const checkAndClean = require('../utils/checkAndClean');
 
+
+/**
+ * Run OC commands to clean all build and deployment artifacts (pods, etc).
+ *
+ * @param {*} settings
+ */
 module.exports = settings => {
   const phases = settings.phases;
   const options = settings.options;
@@ -56,10 +62,10 @@ module.exports = settings => {
     // Cleaning other pods
     if (phase !== 'build') {
       const newOC = new OpenShiftClientX(Object.assign({ namespace: phases[phase].namespace }, options));
-      const podName1 = `${phases[phase].name}${phases[phase].suffix}-setup`;
-      // const podName2 = `${phases[phase].name}${phases[phase].suffix}-test`;
-      checkAndClean(`pod/${podName1}`, newOC);
-      // checkAndClean(`pod/${podName2}`, newOC);
+      const setupPod = `${phases[phase].name}${phases[phase].suffix}-setup`;
+      // const testPod = `${phases[phase].name}${phases[phase].suffix}-test`;
+      checkAndClean(`pod/${setupPod}`, newOC);
+      // checkAndClean(`pod/${testPod}`, newOC);
     }
 
     oc.raw('delete', ['all'], {

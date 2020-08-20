@@ -12,7 +12,8 @@
     "start": "ts-node app",
     "clean": "gulp clean",
     "build": "gulp build",
-    "migrations": "knex migrate:latest",
+    "migrate:latest": "knex migrate:latest",
+    "migrate:rollback:all": "knex migrate:rollback --all",
     "test": "ts-mocha --timeout 60000",
     "lint": "eslint . --ignore-pattern 'node_modules' --ext .ts",
     "lint-fix": "eslint . --fix --ignore-pattern 'node_modules' --ext .ts"

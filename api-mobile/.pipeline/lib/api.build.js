@@ -2,14 +2,22 @@
 const { OpenShiftClientX } = require('pipeline-cli');
 const path = require('path');
 
+/**
+ * Run a pod to build the api image stream.
+ *
+ * @param {*} settings
+ */
 module.exports = settings => {
   const phases = settings.phases;
   const options = settings.options;
-  const oc = new OpenShiftClientX(Object.assign({ namespace: phases.build.namespace }, options));
   const phase = 'build';
-  const objects = [];
-  const templatesLocalBaseUrl = oc.toFileUrl(path.resolve(__dirname, '../../openshift'));
+
+  const oc = new OpenShiftClientX(Object.assign({ namespace: phases.build.namespace }, options));
+
   const changeId = phases[phase].changeId;
+  const templatesLocalBaseUrl = oc.toFileUrl(path.resolve(__dirname, '../../openshift'));
+
+  const objects = [];
 
   objects.push(
     ...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/api.bc.yaml`, {
@@ -24,6 +32,5 @@ module.exports = settings => {
   );
 
   oc.applyRecommendedLabels(objects, phases[phase].name, phase, changeId, phases[phase].instance);
-
   oc.applyAndBuild(objects);
 };
