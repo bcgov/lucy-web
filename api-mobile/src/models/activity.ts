@@ -13,6 +13,7 @@ export class ActivityPostBody {
   activityResponseBody: object;
   activityTypeData: object;
   activitySubTypeData: object;
+  geom: object;
 
   constructor(obj?: any) {
     this.activityType = (obj && obj.activityType) || null;
@@ -22,5 +23,6 @@ export class ActivityPostBody {
     this.activityPostBody = null;
     this.activityTypeData = (obj && obj.activityTypeData) || null;
     this.activitySubTypeData = (obj && obj.activitySubTypeData) || null;
+    this.geom = (obj && obj.geom) || null;
   }
 }
