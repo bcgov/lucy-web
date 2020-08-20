@@ -28,7 +28,8 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
       $3,
       $4,
       $5,
-      $6
+      $6,
+      ST_Transform(ST_GeomFromGeoJSON($7),3005)
     )
     RETURNING
       activity_incoming_data_id
