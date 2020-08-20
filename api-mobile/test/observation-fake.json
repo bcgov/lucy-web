@@ -1,6 +1,6 @@
 {
     "data": {
-        "ObservationData": {
+        "activityData": {
             "access_description": "Quos dolor blanditiis perferendis. Nesciunt ipsum reprehenderit. Numquam quasi exercitationem et ut quis ex facere eius. Exercitationem voluptatem ducimus quo dolor saepe ut est. Et porro animi labore alias.",
             "aquatic_ind": true,
             "bec_zone": null,
@@ -72,6 +72,7 @@
             "properties": {}
         }]
     },
-    "subType": "Invasive Terrestrial Plant",
-    "type": "Observation"
+    "activitySubType": "Invasive Terrestrial Plant",
+    "activityType": "Observation",
+    "deviceRequestUID": "84dc813c-e307-11ea-87d0-0242ac130003"
 }
