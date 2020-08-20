@@ -116,26 +116,26 @@ objects:
                 requests:
                   cpu: ${CPU_REQ}
                   memory: ${MEMORY_REQ}
-              # readinessProbe:
-              #   failureThreshold: 10
-              #   httpGet:
-              #     path: /api/misc/version
-              #     port: 3002
-              #     scheme: HTTP
-              #   initialDelaySeconds: 140
-              #   periodSeconds: 30
-              #   successThreshold: 1
-              #   timeoutSeconds: 20
-              # livenessProbe:
-              #   failureThreshold: 10
-              #   httpGet:
-              #     path: /api/misc/version
-              #     port: 3002
-              #     scheme: HTTP
-              #   initialDelaySeconds: 90
-              #   periodSeconds: 30
-              #   successThreshold: 1
-              #   timeoutSeconds: 20
+              readinessProbe:
+                failureThreshold: 10
+                httpGet:
+                  path: /api/misc/version
+                  port: 3002
+                  scheme: HTTPS
+                initialDelaySeconds: 140
+                periodSeconds: 30
+                successThreshold: 1
+                timeoutSeconds: 20
+              livenessProbe:
+                failureThreshold: 10
+                httpGet:
+                  path: /api/misc/version
+                  port: 3002
+                  scheme: HTTPS
+                initialDelaySeconds: 90
+                periodSeconds: 30
+                successThreshold: 1
+                timeoutSeconds: 20
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
               volumeMounts:

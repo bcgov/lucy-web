@@ -4,7 +4,7 @@ exports.up = async (knex: Knex) => {
 	await knex.raw(`
     set schema 'invasivesbc';
     set search_path = invasivesbc,public;
-    
+
 
     -- ### Creating Table: activity_incoming_data ### --
 
@@ -56,6 +56,6 @@ exports.down = async (knex: Knex) => {
     set search_path = invasivesbc,public;
     set schema 'invasivesbc';
 
-    drop table activity_incoming_data
+    drop table if exists activity_incoming_data;
   `);
 };

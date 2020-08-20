@@ -65,6 +65,9 @@ const phases = {
       (isStaticDeployment && (staticUrlsAPIMobile.dev || defaultHost)) ||
       `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
     env: 'dev',
+    // normal migration is 'update' (IE: run only new migrations), but during PR based deployments, new migrations may
+    // need updating as part of the PR.  In this case, 'refresh' the migrations (IE: rollback migrations and re-run)
+    migrationType: isStaticDeployment && 'update' || 'refresh',
     certificateURL: config.certificateURL.dev,
     migrationInfo: config.migrationInfo.dev,
     replicas: 1,

@@ -2,7 +2,7 @@ import * as Knex from "knex";
 
 
 export async function up(knex: Knex): Promise<void> {
-	
+
 	await knex.raw(`
 	    set schema 'invasivesbc';
 	    set search_path = invasivesbc,public;
@@ -35,7 +35,7 @@ COMMENT ON VIEW observation_common_fields_view IS 'View on fields common to all 
 
 
     `)
-    
+
 }
 
 
@@ -43,7 +43,7 @@ export async function down(knex: Knex): Promise<void> {
 	await knex.raw(`
 		    set schema 'invasivesbc';
 		    set search_path = invasivesbc,public;
-		    drop view observation_common_fields_view;
+		    drop view if exists observation_common_fields_view;
 	    `)
 }
 

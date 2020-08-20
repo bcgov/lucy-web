@@ -18,9 +18,7 @@ jobs:
           echo github.base_ref=${{ github.base_ref }}
           echo GITHUB_BASE_REF=$GITHUB_BASE_REF
           echo GITHUB_HEAD_REF=$GITHUB_HEAD_REF
-  #end steps
 
-  #end checkEnv
   buildAPI:
     name: Build API Static
     runs-on: ubuntu-latest
@@ -52,7 +50,6 @@ jobs:
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
-  # End buildAPI
 
   # Build the `api-mobile` API
   # Note: This job relies on setup (database, etc) executed as part of the previous `buildAPI` job
@@ -95,14 +92,13 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Build the api-mobile images via execution of `oc` commands/scripts
+      # Build the api-mobile images
       - name: Build API Mobile Images
         working-directory: "./api-mobile/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
-  # End buildAPIMobile
 
   buildAPP:
     name: Build App Static
@@ -176,7 +172,7 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Deploy the api via execution of `oc` commands/scripts
+      # Deploy the api
       - name: Deploy API
         working-directory: "./api/.pipeline/"
         run: |
@@ -188,7 +184,7 @@ jobs:
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the api-mobile via execution of `oc` commands/scripts
+      # Deploy the api-mobile
       - name: Deploy API Mobile
         working-directory: "./api-mobile/.pipeline/"
         run: |
@@ -197,14 +193,13 @@ jobs:
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the app via execution of `oc` commands/scripts
+      # Deploy the app
       - name: Deploy App
         working-directory: "./app/.pipeline"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
-  # End deployDev
 
   deployTest:
     name: Deploy App, API, and API-MOBILE to TEST environment
@@ -246,7 +241,7 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Deploy the api via execution of `oc` commands/scripts
+      # Deploy the api
       - name: Deploy API
         working-directory: "./api/.pipeline/"
         run: |
@@ -258,7 +253,7 @@ jobs:
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the api-mobile via execution of `oc` commands/scripts
+      # Deploy the api-mobile
       - name: Deploy API Mobile
         working-directory: "./api-mobile/.pipeline/"
         run: |
@@ -267,14 +262,13 @@ jobs:
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the app via execution of `oc` commands/scripts
+      # Deploy the app
       - name: Deploy App
         working-directory: "./app/.pipeline"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-  # End deployTest
 
   deployProd:
     name: Deploy App, API, and API-MOBILE to PROD environment
@@ -316,7 +310,7 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Deploy the api via execution of `oc` commands/scripts
+      # Deploy the api
       - name: Deploy API
         working-directory: "./api/.pipeline/"
         run: |
@@ -327,7 +321,7 @@ jobs:
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the api-mobile via execution of `oc` commands/scripts
+      # Deploy the api-mobile
       - name: Deploy API Mobile
         working-directory: "./api-mobile/.pipeline/"
         run: |
@@ -336,14 +330,13 @@ jobs:
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the app via execution of `oc` commands/scripts
+      # Deploy the app
       - name: Deploy App
         working-directory: "./app/.pipeline"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
-  # End deployProd
 
   clean:
     name: Clean Deployment Artifacts for App, API, and API-MOBILE in DEV and Test environments
@@ -388,7 +381,7 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Clean the api deployment artifacts via execution of `oc` commands/scripts
+      # Clean the api deployment artifacts
       - name: Clean API Deployment
         working-directory: "./api/.pipeline/"
         run: |
@@ -397,7 +390,7 @@ jobs:
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
 
-      # Clean the api-mobile deployment artifacts via execution of `oc` commands/scripts
+      # Clean the api-mobile deployment artifacts
       - name: Clean API Mobile Deployment
         working-directory: "./api-mobile/.pipeline/"
         run: |
@@ -406,7 +399,7 @@ jobs:
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
 
-      # Clean the app deployment artifacts via execution of `oc` commands/scripts
+      # Clean the app deployment artifacts
       - name: Clean APP Deployment
         working-directory: "./app/.pipeline/"
         run: |
@@ -414,7 +407,6 @@ jobs:
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
-  # End clean
 
   cleanProd:
     name: Clean Deployment Artifacts for App, API, and API-MOBILE in PROD environment
@@ -458,7 +450,7 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Clean the api deployment artifacts via execution of `oc` commands/scripts
+      # Clean the api deployment artifacts
       - name: Clean API Deployment
         working-directory: "./api/.pipeline/"
         run: |
@@ -467,7 +459,7 @@ jobs:
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
 
-      # Clean the api-mobile deployment artifacts via execution of `oc` commands/scripts
+      # Clean the api-mobile deployment artifacts
       - name: Clean API Mobile Deployment
         working-directory: "./api-mobile/.pipeline/"
         run: |
@@ -476,7 +468,7 @@ jobs:
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
 
-      # Clean the app deployment artifacts via execution of `oc` commands/scripts
+      # Clean the app deployment artifacts
       - name: Clean APP Deployment
         working-directory: "./app/.pipeline/"
         run: |
@@ -484,4 +476,3 @@ jobs:
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
-  # End clean

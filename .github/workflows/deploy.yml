@@ -16,32 +16,28 @@ jobs:
         env:
           TARGET: ${{ github.event.pull_request.head.sha }}
         run: |
+          echo '1=================================================='
           echo TARGET=$TARGET
+          echo '2=================================================='
+          echo HOME=$HOME
+          echo '3=================================================='
+          oc version
+          echo '4=================================================='
+          echo PATH=$PATH 
+          echo '5=================================================='
       - uses: actions/checkout@v1
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - name: Install OpenShift
-        run: |
-          cd $HOME
-          curl -LO https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          tar -xf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-          cd openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit
-          chmod +x oc
-          echo "::set-env name=PATH_TO_OC::$PATH:$(pwd)"
-          export PATH=$PATH_TO_OC
       - name: Log in to OpenShift
         run: |
-          export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
       - name: Build API Images
         working-directory: "./api/.pipeline/"
         run: |
-          export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=${{ github.event.number }}
-  # End buildAPI
 
   # Build the `api-mobile` API
   # Note: This job relies on setup (database, etc) executed as part of the previous `buildAPI` job
@@ -87,14 +83,13 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Build the api-mobile images via execution of `oc` commands/scripts
+      # Build the api-mobile images
       - name: Build API Mobile Images
         working-directory: "./api-mobile/.pipeline/"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=${{ github.event.number }}
-  # End buildAPIMobile
 
   buildAPP:
     name: Build App
@@ -124,7 +119,6 @@ jobs:
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run build -- --pr=${{ github.event.number }}
-  # End buildAPP
 
   deploy:
     name: Deploy App, API, and API-MOBILE
@@ -164,7 +158,7 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Deploy the api via execution of `oc` commands/scripts
+      # Deploy the api
       - name: Deploy API
         working-directory: "./api/.pipeline/"
         run: |
@@ -173,11 +167,11 @@ jobs:
           DEBUG=* npm run pre-deploy -- --pr=${{ github.event.number }} --env=dev
           DEBUG=* npm run setup -- --pr=${{ github.event.number }} --env=dev
           DEBUG=* npm run seed -- --pr=${{ github.event.number }} --env=dev
-          DEBUG=* npm run test -- --pr=${{ github.event.number }} --env=dev
+          # DEBUG=* npm run test -- --pr=${{ github.event.number }} --env=dev
           DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
-          DEBUG=* npm run deploy-tools -- --pr=${{ github.event.number }} --env=dev
+          # DEBUG=* npm run deploy-tools -- --pr=${{ github.event.number }} --env=dev
 
-      # Deploy the api-mobile via execution of `oc` commands/scripts
+      # Deploy the api-mobile
       - name: Deploy API Mobile
         working-directory: "./api-mobile/.pipeline/"
         run: |
@@ -188,14 +182,13 @@ jobs:
           # DEBUG=* npm run test -- --pr=${{ github.event.number }} --env=dev
           DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
 
-      # Deploy the app via execution of `oc` commands/scripts
+      # Deploy the app
       - name: Deploy App
         working-directory: "./app/.pipeline"
         run: |
           export PATH=$PATH_TO_OC
           npm ci
           DEBUG=* npm run deploy -- --pr=${{ github.event.number }} --env=dev
-  # End deploy
 
   clean:
     name: Clean Deployment Artifacts for App, API, and API-MOBILE
@@ -232,7 +225,7 @@ jobs:
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
 
-      # Clean the api deployment artifacts via execution of `oc` commands/scripts
+      # Clean the api deployment artifacts
       - name: Clean API Deployment
         working-directory: "./api/.pipeline/"
         run: |
@@ -241,7 +234,7 @@ jobs:
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=build
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=dev
 
-      # Clean the api-mobile deployment artifacts via execution of `oc` commands/scripts
+      # Clean the api-mobile deployment artifacts
       - name: Clean API Mobile Deployment
         working-directory: "./api-mobile/.pipeline/"
         run: |
@@ -250,7 +243,7 @@ jobs:
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=build
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=dev
 
-      # Clean the app deployment artifacts via execution of `oc` commands/scripts
+      # Clean the app deployment artifacts
       - name: Clean APP Deployment
         working-directory: "./app/.pipeline/"
         run: |
@@ -258,4 +251,3 @@ jobs:
           npm ci
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=build
           DEBUG=* npm run clean -- --pr=${{ github.event.number }} --env=dev
-  # End clean

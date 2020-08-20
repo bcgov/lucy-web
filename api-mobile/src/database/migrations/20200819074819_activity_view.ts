@@ -2,13 +2,13 @@ import * as Knex from "knex";
 
 
 export async function up(knex: Knex): Promise<void> {
-	
+
 	await knex.raw(`
 	    set schema 'invasivesbc';
 	    set search_path = invasivesbc,public;
 
 	CREATE OR REPLACE VIEW activity_common_fields_view as (
-	select 
+	select
 	activity_id,
 	activity_type,
 	activity_sub_type,
@@ -27,7 +27,7 @@ export async function up(knex: Knex): Promise<void> {
 
 
     `)
-    
+
 }
 
 
@@ -35,7 +35,7 @@ export async function down(knex: Knex): Promise<void> {
 	await knex.raw(`
 		    set schema 'invasivesbc';
 		    set search_path = invasivesbc,public;
-		    drop view activity_common_fields_view;
+		    drop view if exists activity_common_fields_view;
 	    `)
 }
 

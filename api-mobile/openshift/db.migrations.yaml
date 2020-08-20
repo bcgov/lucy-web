@@ -25,6 +25,10 @@ parameters:
     description: Application Environment type variable
     required: true
     value: "dev"
+  - name: NODE_ENV
+    description: Application Environment type variable
+    required: true
+    value: "dev"
   - name: CERTIFICATE_URL
     description: Authentication certificate urls
     required: true
@@ -45,10 +49,8 @@ parameters:
     value: "8080-tcp"
   - name: PORT
     value: "3002"
-  - name: DB_CLEAN_UP
-    value: "none"
-  - name: DB_SEED
-    value: "yes"
+  - name: DB_MIGRATION_TYPE
+    value: "update"
 objects:
   - kind: Pod
     apiVersion: v1
@@ -60,11 +62,15 @@ objects:
       containers:
         - name: test
           image: "${IMAGE}"
+          # Run the knex migrations
+          # - If DB_MIGRATION_TYPE == "refresh" then rollback migrations and re-run.
+          #   This allows migration scripts to be updated repeatedly during a PR based deployment.
+          # - Note: `|| true` allows the command to fail without breaking the rest of the build.
           command:
             - container-entrypoint
             - bash
-            - "-c"
-            - "npm run migrate:rollback:all && npm run migrate:latest"
+            - -c
+            - npm run migrate:latest;
           resources:
             limits:
               cpu: "1"
@@ -98,12 +104,12 @@ objects:
               value: ${CHANGE_ID}
             - name: ENVIRONMENT
               value: ${ENVIRONMENT}
+            - name: NODE_ENV
+              value: ${ENVIRONMENT}
             - name: VERSION
               value: ${VERSION}
-            - name: DB_CLEAN_UP
-              value: ${DB_CLEAN_UP}
-            - name: DB_SEED
-              value: ${DB_SEED}
+            - name: DB_MIGRATION_TYPE
+              value: ${DB_MIGRATION_TYPE}
           imagePullPolicy: Always
       restartPolicy: Never
       activeDeadlineSeconds: 900

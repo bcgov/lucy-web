@@ -1,8 +1,6 @@
-// Update with your config settings.
-
 import dotenv from 'dotenv';
 
-const env = process.env.ENVIRONMENT || process.env.NODE_ENV || 'local';
+const env = process.env.NODE_ENV || 'local';
 
 if (env === 'local') {
   dotenv.config();
