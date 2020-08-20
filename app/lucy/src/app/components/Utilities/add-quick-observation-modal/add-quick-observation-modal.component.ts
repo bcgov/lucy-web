@@ -46,7 +46,8 @@ export class AddQuickObservationModalComponent implements OnInit, AfterViewInit 
   // Lottie Animation
   public lottieConfig: Object;
   private anim: any;
-  private underConstructionIcon = 'https://assets8.lottiefiles.com/packages/lf20_hntzYU.json';
+  //private underConstructionIcon = 'https://assets8.lottiefiles.com/packages/lf20_hntzYU.json';
+  private underConstructionIcon = '../../../../assets/lf20_hntzYU.json';
 
   @Output() addQuickObservationModalEventEmitter = new EventEmitter<boolean>();
   @ViewChild('addQuickObservationModal') private content;

@@ -1,0 +1,88 @@
+# OpenShift jobs to run load test 
+kind: Template
+apiVersion: v1
+metadata:
+  name: test
+parameters:
+- name: IMAGE
+  description: 'Image for pod'
+  required: true
+- name: NAME
+  value: invasivesbc-load-test
+- name: SUFFIX
+  value: "-dev"
+- name: VERSION
+  description: Version of the application
+  value: "1.0.0"
+- name: CHANGE_ID
+  description: Change id of the project. This will help to pull image stream
+  required: true
+  value: "0"
+- name: AUTH_URL
+  description: Auth URL
+  value: "https://sso-test.pathfinder.gov.bc.ca/auth/realms"
+- name: REALM
+  description: Auth Realm
+  value: dfmlcg7z
+- name: TEST_USER_SECRET
+  description: Secret of test user profile
+  value: invasivesbc-load-test-user
+- name: NO_OF_PODS
+  description: Number of pods run in parallel
+  value: '2'
+- name: TEST_NAME
+  description: Name of the test should run
+  required: true
+- name: DURATION
+  description: Duration of the test
+  required: true
+  value: '2'
+- name: RATE
+  description: Rate of the request per second
+  required: true
+  value: '200'
+- name: TEST_URL
+  description: Relative test url for API test
+  required: true
+  value: '/'
+objects: 
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: ${NAME}
+  spec:
+    parallelism: 2
+    completions: 1    
+    activeDeadlineSeconds: 1800 
+    backoffLimit: 6   
+    template:         
+      metadata:
+        name: "${NAME}-run"
+      spec:
+        containers:
+        - name: run
+          image: ${IMAGE}
+          command: ["make",  "${TEST_NAME}", "D=${DURATION}", "R=${RATE}", "TEST_URL=${TEST_URL}"]
+          env:
+            - name: AUTH_URL
+              value: ${AUTH_URL}
+            - name: REALM
+              value: ${REALM}
+            - name: TEST_USER
+              valueFrom:
+                secretKeyRef:
+                  key: user
+                  name: ${TEST_USER_SECRET}
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: ${TEST_USER_SECRET}
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: client_id
+                  name: ${TEST_USER_SECRET}
+            - name: REMOTE
+              value: 'yes'
+        restartPolicy: OnFailure

@@ -110,8 +110,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   /******** Loading animation ********/
   setupLoadingIcon() {
     this.lottieConfig = {
-      path: 'https://assets3.lottiefiles.com/datafiles/fPx4vaZrul2Fvg9/data.json',
-      // path: 'src/assets/loading.json',
+      //path: 'https://assets3.lottiefiles.com/datafiles/fPx4vaZrul2Fvg9/data.json',
+      path: '../../assets/fPx4vaZrul2Fvg9_data.json',
       renderer: 'canvas',
       autoplay: true,
       loop: true

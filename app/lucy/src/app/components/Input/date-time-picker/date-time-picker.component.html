@@ -6,7 +6,7 @@
             <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         </div>
         <div class="picker">
-            <input class="picker__input" [ngxTimepicker]="timePicker" [format]="24" [(ngModel)]="time" (ngModelChange)="timeChanged($event)">
+            <input class="picker__input" [ngxTimepicker]="timePicker" [attr.aria-label]="'Open clock'" [format]="24" [(ngModel)]="time" (ngModelChange)="timeChanged($event)">
             <ngx-material-timepicker #timePicker [theme]="timePickerTheme"></ngx-material-timepicker>
             <ngx-material-timepicker-toggle [for]="timePicker"></ngx-material-timepicker-toggle>
         </div>

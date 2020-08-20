@@ -63,7 +63,7 @@ jobs:
         run: |
           export PATH=$PATH_TO_OC
           oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
-      - name: Build API Images
+      - name: Build APP Images
         working-directory: './app/.pipeline/'
         run: |
           export PATH=$PATH_TO_OC
@@ -116,7 +116,7 @@ jobs:
   clean:
     name: Clean PR based deployment
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.merged == true && (github.base_ref != 'dev' || github.base_ref != 'prod') }}
+    if: ${{ github.event.pull_request.merged == true && (github.base_ref != 'dev' && github.base_ref != 'prod') }}
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js 
