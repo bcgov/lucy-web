@@ -73,7 +73,16 @@ export const InitialUsers = [
         additionalInitDataInfo: {
             roles: [1]
         }
-    }
+    },
+    {
+        email: 'rstens@stens.ca',
+        preferred_username: 'postman',
+        first_name: 'Postman',
+        last_name: 'Test',
+        additionalInitDataInfo: {
+            roles: [1]
+        }
+    }    
 ];
 
 // -------------------------------------------------------------
