@@ -82,7 +82,7 @@ export const InitialUsers = [
         additionalInitDataInfo: {
             roles: [1]
         }
-    }    
+    }
 ];
 
 // -------------------------------------------------------------
