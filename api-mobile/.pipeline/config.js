@@ -10,8 +10,8 @@ const version = config.version || '1.0.0';
 const deployType = options.type || '';
 const isStaticDeployment = deployType === 'static';
 const deployChangeId = (isStaticDeployment && 'deploy') || changeId;
-const tag = (isStaticDeployment && `build-${version}-${changeId}-${branch}`) || `build-${version}-${changeId}`;
 const branch = (isStaticDeployment && options.branch) || undefined;
+const tag = (branch && `build-${version}-${changeId}-${branch}`) || `build-${version}-${changeId}`;
 const staticUrlsAPIMobile = config.staticUrlsAPIMobile || {};
 const staticBranches = config.staticBranches || [];
 
