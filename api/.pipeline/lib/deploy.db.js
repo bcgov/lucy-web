@@ -43,7 +43,8 @@ module.exports = (settings) => {
       'IMAGE_STREAM_NAME': name,
       'IMAGE_STREAM_VERSION': phases.build.tag,
       'POSTGRESQL_DATABASE': 'InvasiveBC',
-      'IMAGE_STREAM_NAMESPACE': phases.build.namespace
+      'IMAGE_STREAM_NAMESPACE': phases.build.namespace,
+      'VOLUME_CAPACITY': (`${phases[phase].name}-postgresql${phases[phase].suffix}` == 'invasivesbc-api-postgresql-dev-deploy') ? "20Gi" : "3Gi"
     }
   }))
   
