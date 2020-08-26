@@ -7,7 +7,7 @@ services:
   container_name: ${PROJECT_NAME}-${TAG}-api-dep
   build:
    context: ./api_sources
-   dockerfile: .build/Dockerfile.node
+   dockerfile: .build/Dockerfile.npm
   volumes:
     - npmcache:/opt/app-root/src/node_modules
  app_api:

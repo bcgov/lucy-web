@@ -1,6 +1,6 @@
 # bcgov/lucy-web/api-mobile
 
-# Technologies Used
+## Technologies Used
 
 | Technology | Version | Website                              | Description          |
 | ---------- | ------- | ------------------------------------ | -------------------- |
@@ -8,7 +8,41 @@
 | npm        | 6.x.x   | https://www.npmjs.com/               | Node Package Manager |
 | PostgreSQL | 10.x    | https://www.postgresql.org/download/ | PSQL database        |
 
-# Build and Run
+<br />
+
+# Running Locally with Docker
+
+See `./Makefile` for all available commands.
+
+## Primary make commands
+
+- Build and run a dockerized instance of the api-mobile api, a postgresql database, and an nginx reverse proxy.
+
+  ```
+  make local
+  ```
+
+- Build and run a dockerized instance of the api-mobile api, a postgresql database, and an nginx reverse proxy, in debug mode where all docker output is printed to the console:
+
+  ```
+  make local-debug
+  ```
+
+## Calling the API
+
+Access the api directly: `localhost:3002/api/`
+
+Access the api via the nginx reverse proxy: `localhost:80/api/`
+
+<br />
+
+# Running Locally without Docker
+
+## Prerequisites
+
+- A PostgreSQL database, with details matching the _DB\_\*_ variables in `./env_config/env.local`, is available.
+
+## Commands
 
 1. Download dependencies
 
@@ -24,6 +58,77 @@ npm start
 
 3. Go to http://localhost:3002/api/docs/ to verify that the application is running.
 
+<br />
+
+# API Specification
+
+The API is defined in `swagger.yaml`.
+
+If this project is running locally, you can view the api docs at: `http://localhost:3002/api/docs/`
+
+This project uses npm package `swagger-tools` via `./app.ts` to automatically generate the express server and its routes, based on the contents of the `swagger.yaml`.
+
+- The controller file is specified by the `x-swagger-router-controller` field.
+- The controller function, within the controller file, is specified by the `operationId` field.
+
+Recommend reviewing the [Open API Specification](https://swagger.io/docs/specification/about/) before making any changes to the `swagger.yaml` file.
+
+_Note: This API currently uses OpenAPI 2.0, as 3.0 is not yet fully supported by many of the swagger libraries/tools used._
+
+<br />
+
+# Database Migrations
+
+## Info
+
+This api users `Knex` to manage and run database migrations.
+
+A log of executed migrations can be found in the `migration` postgres table. Knex will not re-run a migration that has been run before (indicated by an entry in the `migration` table).
+
+### Technolgies used
+
+- [Knex](http://knexjs.org/)
+
+### Configuration file
+
+- knexfile.ts
+
+## Running migrations Locally
+
+- Set up the environment variables required by the `knexfile.ts` config
+
+  ```
+  make setup-local
+  ```
+
+- Run migrations:
+
+  ```
+  npm run migrate:latest
+
+  or
+
+  npx knex migrate:latest
+  ```
+
+- Rollback last set of migrations:
+
+  ```
+  npm run migrate:rollback
+
+  or
+
+  npx knex migrate:rollback
+  ```
+
+- See other available Knex commands:
+
+  ```
+  npx knex --help
+  ```
+
+<br />
+
 # Linting and Formatting
 
 ## Info
@@ -32,7 +137,9 @@ Linting and formatting is handled by a combiation of `ESlint` and `Prettier`. Th
 
 ### Technolgies used
 
-[ESlint](https://eslint.org/), [Prettier](https://prettier.io/), [EditorConfig](http://editorconfig.org)
+- [ESlint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [EditorConfig](http://editorconfig.org)
 
 ### Configuration files
 
@@ -65,20 +172,7 @@ _Note: Not all linting/formatting errors can be automatically fixed, and will re
 npm run lint-fix
 ```
 
-# API Specification
-
-The API is defined in `swagger.yaml`.
-
-If this project is running locally, you can view the api docs at: `http://localhost:3002/api/docs/`
-
-This project uses npm package `swagger-tools` via `./app.ts` to automatically generate the express server and its routes, based on the contents of the `swagger.yaml`.
-
-- The controller file is specified by the `x-swagger-router-controller` field.
-- The controller function, within the controller file, is specified by the `operationId` field.
-
-Recommend reviewing the [Open API Specification](https://swagger.io/docs/specification/about/) before making any changes to the `swagger.yaml` file.
-
-_Note: This API currently uses OpenAPI 2.0, as 3.0 is not yet fully supported by many of the swagger libraries/tools used._
+<br />
 
 # Logging
 
@@ -123,25 +217,28 @@ Supported log properties:
 - <anyObject>: any additional object properties will be JSON.stringify'd and appended to the log message.
 ```
 
+<br />
+
 # Testing
 
 - To access the API without logging in to the front end, you can manually add a user this way:
+
 ```
 $ make database
 $ psql
-psql_prompt: insert into application_user (first_name, last_name, email,preferred_username) values ('micheal', 'wells', 'micheal.w
-.wells@bananasInPajamas.ca','officialUserName@idir');
+psql_prompt: insert into application_user (first_name, last_name, email,preferred_username) values ('micheal', 'wells', 'micheal.w.wells@bananasInPajamas.ca','officialUserName@idir');
 
-psql_prompt: insert into user_role (user_id, role_code_id) values (8
-,3);
+psql_prompt: insert into user_role (user_id, role_code_id) values (8,3);
 ```
-
 
 ## Info
 
 ### Technolgies used
 
-[Mocha](https://www.npmjs.com/package/mocha), [Chai](https://www.npmjs.com/package/chai), [SuperTest](https://www.npmjs.com/package/supertest), [Nock](https://www.npmjs.com/package/nock)
+- [Mocha](https://www.npmjs.com/package/mocha)
+- [Chai](https://www.npmjs.com/package/chai)
+- [SuperTest](https://www.npmjs.com/package/supertest)
+- [Nock](https://www.npmjs.com/package/nock)
 
 ## Run Tests
 
@@ -150,6 +247,8 @@ psql_prompt: insert into user_role (user_id, role_code_id) values (8
 ```
 npm run test
 ```
+
+<br />
 
 # Keycloak
 
