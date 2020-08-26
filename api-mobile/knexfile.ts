@@ -3,14 +3,14 @@ import dotenv from 'dotenv';
 const env = process.env.NODE_ENV || 'local';
 
 if (env === 'local') {
-  dotenv.config();
+  dotenv.config({ path: './env_config/env.local' });
 }
 
 module.exports = {
   local: {
     client: 'postgresql',
     connection: {
-      host: process.env.DB_HOST_FOR_LOCAL_API,
+      host: process.env.DB_HOST,
       port: process.env.DB_PORT || 5432,
       database: process.env.DB_DATABASE,
       user: process.env.DB_USER,

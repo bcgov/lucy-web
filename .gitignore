@@ -7,3 +7,6 @@ swagger/
 **/.node-*/
 .bash_history
 
+.env
+
+.npm
