@@ -10,5 +10,3 @@ dist
 coverage
 
 .env
-env.local
-
