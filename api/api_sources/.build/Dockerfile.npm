@@ -10,12 +10,6 @@ ENV HOME=/opt/app-root/src
 
 RUN mkdir -p $HOME
 
-# Create DIR Structure
-# Temp File Structure
-RUN mkdir -p ${HOME_ROOT}/temp
-# Issue Files
-RUN mkdir -p ${HOME_ROOT}/temp/uploads/issues
-
 WORKDIR $HOME_ROOT
 
 WORKDIR $HOME
@@ -30,23 +24,4 @@ COPY ./package*.json ./
 RUN npm set progress=false && npm ci
 
 VOLUME ${HOME}/node_modules
-
-VOLUME ${HOME}
-ENV PATH ${HOME}/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
-
-# Bundle app source
-COPY ./ .
-
-# Remove build dir
-RUN rm -rf ./dist-server
-
-# Lint
-RUN npm run test:lint
-
-# Build
-RUN npm run build
-
-# Entrypoint 
-CMD [ "npm", "run", "git:run" ]
-
-
+ENTRYPOINT /usr/bin/tail -f /dev/null
