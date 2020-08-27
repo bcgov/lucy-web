@@ -8,7 +8,7 @@ import { validateSwaggerObject, ignoreAdditionalPropertyErrorsOnAnyObjectFields 
 import { getLogger } from '../utils/logger';
 import { sendResponse } from '../utils/query-actions';
 
-const defaultLog = getLogger('observation-controller');
+const defaultLog = getLogger('activity-controller');
 
 /**
  * Authenticated route handler for OPTIONS
