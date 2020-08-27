@@ -1,4 +1,4 @@
-FROM node:11.0.0
+FROM node:10
 
 RUN apt-get -qq update
 RUN apt-get -qq install -y curl

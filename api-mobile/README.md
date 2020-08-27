@@ -6,7 +6,7 @@
 | ---------- | ------- | ------------------------------------ | -------------------- |
 | node       | 10.x.x  | https://nodejs.org/en/               | JavaScript Runtime   |
 | npm        | 6.x.x   | https://www.npmjs.com/               | Node Package Manager |
-| PostgreSQL | 10.x    | https://www.postgresql.org/download/ | PSQL database        |
+| PostgreSQL | 9.6     | https://www.postgresql.org/download/ | PSQL database        |
 
 <br />
 
@@ -85,7 +85,7 @@ This api users `Knex` to manage and run database migrations.
 
 A log of executed migrations can be found in the `migration` postgres table. Knex will not re-run a migration that has been run before (indicated by an entry in the `migration` table).
 
-### Technolgies used
+### Technologies used
 
 - [Knex](http://knexjs.org/)
 
@@ -135,7 +135,7 @@ A log of executed migrations can be found in the `migration` postgres table. Kne
 
 Linting and formatting is handled by a combiation of `ESlint` and `Prettier`. The reason for this, is that you get the best of both worlds: ESlint's larger selection of linting rules with Prettier's robust formatting rules. EditorConfig is additionally used to add enforce some basic IDE formatting rules.
 
-### Technolgies used
+### Technologies used
 
 - [ESlint](https://eslint.org/)
 - [Prettier](https://prettier.io/)
@@ -233,7 +233,7 @@ psql_prompt: insert into user_role (user_id, role_code_id) values (8,3);
 
 ## Info
 
-### Technolgies used
+### Technologies used
 
 - [Mocha](https://www.npmjs.com/package/mocha)
 - [Chai](https://www.npmjs.com/package/chai)

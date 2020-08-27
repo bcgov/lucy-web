@@ -8,8 +8,6 @@ import { getLogger } from './logger';
 
 const defaultLog = getLogger('auth-utils');
 
-const APP_CERTIFICATE_ISSUER =
-  process.env.APP_CERTIFICATE_ISSUER || 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z';
 const APP_CERTIFICATE_URL =
   process.env.APP_CERTIFICATE_URL ||
   'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs';
@@ -128,12 +126,14 @@ const verifyToken = function (tokenString: any, secretOrPublicKey: any): any {
 
     defaultLog.debug({ label: 'verifyToken', message: 'verifiedToken', verifiedToken });
 
-    if (verifiedToken.iss !== APP_CERTIFICATE_ISSUER) {
+    // Verify that the token came from the expected issuer
+    // Example: when running in prod, only accept tokens from `sso.pathfinder...` and not `sso-dev.pathfinder...`, etc
+    if (!APP_CERTIFICATE_URL.includes(verifiedToken.iss)) {
       defaultLog.warn({
         label: 'verifyToken',
         message: 'jwt verification error: issuer mismatch',
-        actual: verifiedToken.iss,
-        expected: APP_CERTIFICATE_ISSUER
+        'found token issuer': verifiedToken.iss,
+        'expected to be a substring of': APP_CERTIFICATE_URL
       });
       return null;
     }
