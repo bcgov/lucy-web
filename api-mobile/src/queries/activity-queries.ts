@@ -18,14 +18,12 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
       activity_type,
       activity_sub_type,
       received_timestamp,
-      activity_payload,
-      geom
+      activity_payload
     ) VALUES (
       $1,
       $2,
       $3,
-      $4,
-      ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON($5),4326),3005)
+      $4
     )
     RETURNING
       activity_incoming_data_id
@@ -35,8 +33,7 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
     activityData.activityType,
     activityData.activitySubType,
     activityData.date,
-    activityData.activityPostBody,
-    activityData.locationAndGeometry['geometry']
+    activityData.activityPostBody
   ];
 
   return { sql, values };
