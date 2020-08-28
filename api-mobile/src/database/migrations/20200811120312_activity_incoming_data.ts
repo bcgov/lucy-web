@@ -34,7 +34,7 @@ export async function up(knex: Knex): Promise<void> {
     ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN received_timestamp timestamp NOT NULL DEFAULT NOW();
     COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.received_timestamp IS 'The date and time data was received and inserted into the database.';
 
-    ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN geom geometry(GeometryCollection,3005) CHECK (st_isValid(geom));
+    ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN geom geometry(Geometry,3005) CHECK (st_isValid(geom));
     COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.geom IS 'Geometry collection in Albers projection.';
     CREATE index activity_incoming_data_gist on ${DB_SCHEMA}.activity_incoming_data using gist ("geom");
 
