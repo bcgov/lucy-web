@@ -1,7 +1,7 @@
-'use strict';
-
+import { Operation } from 'express-openapi';
 import { PoolClient } from 'pg';
-import { getDBConnection } from '../database/db';
+import { ALL_ROLES, CacheKeys } from '../../../constants/misc';
+import { getDBConnection } from '../../../database/db';
 import {
   getJurisdictionCodesSQL,
   getObservationAspectCodesSQL,
@@ -15,49 +15,64 @@ import {
   getSpeciesDensityCodesSQL,
   getSpeciesDistributionCodesSQL,
   getSpecificUseCodesSQL
-} from '../queries/code-queries';
-import { getLogger } from '../utils/logger';
-import { sendResponse } from '../utils/query-actions';
-import { cached } from '../utils/utils';
-import { CacheKeys } from '../constants/misc';
+} from '../../../queries/code-queries';
+import { getLogger } from '../../../utils/logger';
+import { cached } from '../../../utils/utils';
 
 const defaultLog = getLogger('observation-controller');
 
-/**
- * Authenticated route handler for OPTIONS
- *
- * @param {*} args
- * @param {*} res
- * @param {*} next
- */
-exports.authenticatedOptions = async function (args: any, res: any, next: any) {
-  res.status(200).send();
-};
+export const GET: Operation = [
+  async (req, res, next) => {
+    defaultLog.debug({ label: 'code-observation-plant' });
 
-/**
- * Authenticated route handler for GET: observation plant codes
- *
- * @param {*} args
- * @param {*} res
- * @param {*} next
- * @returns response with an object containing arrays of all of the code values related to plant observations.
- */
-exports.authenticatedGet_ObservationPlant = async function (args: any, res: any, next: any) {
-  defaultLog.debug({ label: 'authenticatedGet', message: 'params', arguments: args.swagger.params });
+    const connection = await getDBConnection();
 
-  const connection = await getDBConnection();
+    if (!connection) {
+      throw {
+        status: 503
+      };
+    }
 
-  if (!connection) {
-    return sendResponse(res, 503);
+    const result = await cached(CacheKeys.ObservationCodePlant, 3600000, () =>
+      getCodesForPlantObservations(connection)
+    )();
+
+    connection.release();
+
+    res.status(200).json(result);
   }
+];
 
-  const result = await cached(CacheKeys.ObservationCodePlant, 3600000, () =>
-    getCodesForPlantObservations(connection)
-  )();
-
-  connection.release();
-
-  return sendResponse(res, 200, result);
+GET.apiDoc = {
+  description: 'Get all observation plant code values.',
+  tags: ['code'],
+  operationId: 'code-observation-plant',
+  security: [
+    {
+      Bearer: ALL_ROLES
+    }
+  ],
+  responses: {
+    200: {
+      description: 'Code values for a plant observation',
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/ObservationCodeResponse'
+          }
+        }
+      }
+    },
+    401: {
+      $ref: '#/components/responses/401'
+    },
+    503: {
+      $ref: '#/components/responses/503'
+    },
+    default: {
+      $ref: '#/components/responses/default'
+    }
+  }
 };
 
 /**
@@ -106,18 +121,18 @@ export const getCodesForPlantObservations = async function (connection: PoolClie
   };
 
   // Fetch all observation codes
-  const observation_aspect_code = await connection.query(getObservationAspectCodesSQL());
-  const jurisdiction_code = await connection.query(getJurisdictionCodesSQL());
-  const observation_geometry_code = await connection.query(getObservationGeometryCodesSQL());
-  const observation_type_code = await connection.query(getObservationTypeCodesSQL());
-  const observation_proposed_action_code = await connection.query(getObservationProposedActionCodesSQL());
-  const observation_slope_code = await connection.query(getObservationSlopeCodesSQL());
-  const soil_texture_code = await connection.query(getSoilTextureCodesSQL());
-  const species_agency_code = await connection.query(getSpeciesAgencyCodesSQL());
-  const species_density_code = await connection.query(getSpeciesDensityCodesSQL());
-  const species_distribution_code = await connection.query(getSpeciesDistributionCodesSQL());
-  const species = await connection.query(getSpeciesCodesSQL());
-  const specific_use_code = await connection.query(getSpecificUseCodesSQL());
+  const observation_aspect_code = await connection.query(getObservationAspectCodesSQL().text);
+  const jurisdiction_code = await connection.query(getJurisdictionCodesSQL().text);
+  const observation_geometry_code = await connection.query(getObservationGeometryCodesSQL().text);
+  const observation_type_code = await connection.query(getObservationTypeCodesSQL().text);
+  const observation_proposed_action_code = await connection.query(getObservationProposedActionCodesSQL().text);
+  const observation_slope_code = await connection.query(getObservationSlopeCodesSQL().text);
+  const soil_texture_code = await connection.query(getSoilTextureCodesSQL().text);
+  const species_agency_code = await connection.query(getSpeciesAgencyCodesSQL().text);
+  const species_density_code = await connection.query(getSpeciesDensityCodesSQL().text);
+  const species_distribution_code = await connection.query(getSpeciesDistributionCodesSQL().text);
+  const species = await connection.query(getSpeciesCodesSQL().text);
+  const specific_use_code = await connection.query(getSpecificUseCodesSQL().text);
 
   // Add code responses to results object
   result.data.observation_aspect_code = (observation_aspect_code && observation_aspect_code.rows) || [];

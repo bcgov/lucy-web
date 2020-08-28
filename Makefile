@@ -16,6 +16,11 @@ all : help
 # Task Aliases
 # ------------------------------------------------------------------------------
 
+# Note: If you need to edit the .env file before running the build:
+# 1. Run `make setup-docker`
+# 2. Edit the `.env` file
+# 3. Run `make local` or `make local-debug`
+
 local: | setup-docker close-local build-local run-local ## Performs all commands necessary to run api-mobile in docker
 
 local-debug: | setup-docker close-local build-local run-debug ## Performs all commands necessary to run api-mobile in docker in debug mode
@@ -24,11 +29,11 @@ local-debug: | setup-docker close-local build-local run-debug ## Performs all co
 # Development Commands
 # ------------------------------------------------------------------------------
 
-setup-docker: ## Prepares the environment variables for local development using docker
+setup-docker: ## Prepares the environment variables for local development using docker (will not overwrite an existing .env file)
 	@echo "==============================================="
 	@echo "Make: setup-local - copying env.docker to .env"
 	@echo "==============================================="
-	@cp env_config/env.docker .env
+	@cp -n env_config/env.docker .env
 
 build-local: ## Builds the local development containers
 	@echo "==============================================="
