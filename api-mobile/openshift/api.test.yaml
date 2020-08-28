@@ -49,8 +49,8 @@ parameters:
     value: "none"
   - name: DB_SEED
     value: "yes"
-  - name: MAILER_INFO
-    value: "invasivesbc-mailer"
+  - name: OBJECT_STORE_SECRETS
+    value: "invasivesbc-object-store"
 objects:
   - kind: Pod
     apiVersion: v1
@@ -108,26 +108,26 @@ objects:
               value: ${DB_SEED}
             - name: TEST_RUN
               value: "yes"
-            - name: APP_EMAIL_SENDER
+            - name: OBJECT_STORE_URL
               valueFrom:
                 secretKeyRef:
-                  key: sender
-                  name: ${MAILER_INFO}
-            - name: APP_EMAIL_SENDER_PWD
+                  key: object_store_url
+                  name: ${OBJECT_STORE_SECRETS}
+            - name: OBJECT_STORE_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  key: sender-password
-                  name: ${MAILER_INFO}
-            - name: APP_EMAIL_TEST_RECEIVER
+                  key: object_store_access_key_id
+                  name: ${OBJECT_STORE_SECRETS}
+            - name: OBJECT_STORE_SECRET_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  key: test-receiver
-                  name: ${MAILER_INFO}
-            - name: APP_REPORT_RECEIVER
+                  key: object_store_secret_key_id
+                  name: ${OBJECT_STORE_SECRETS}
+            - name: OBJECT_STORE_BUCKET_NAME
               valueFrom:
                 secretKeyRef:
-                  key: test-receiver-list
-                  name: ${MAILER_INFO}
+                  key: object_store_bucket_name
+                  name: ${OBJECT_STORE_SECRETS}
           imagePullPolicy: Always
       restartPolicy: Never
       activeDeadlineSeconds: 900
