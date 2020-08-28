@@ -30,18 +30,30 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
   //   RETURNING
   //     activity_incoming_data_id
   // `;
+  // const testing = `{
+  //     "type": "Polygon",
+  //     "coordinates": [
+  //       [
+  //         [-125.6, 48.3],[-126.6, 48.3],[-126.6, 49.3],[-125.6, 48.3]
+  //       ]
+  //     ]
+  //   }`;
+
+  const geometry = JSON.stringify(activityData.locationAndGeometry['geometry']);
 
   const sql = `
     INSERT INTO activity_incoming_data (
       activity_type,
       activity_sub_type,
       received_timestamp,
-      activity_payload
+      activity_payload,
+      geom
     ) VALUES (
       '${activityData.activityType}',
       '${activityData.activitySubType}',
       '${activityData.date}',
-      '${JSON.stringify(activityData.activityPostBody)}'
+      '${JSON.stringify(activityData.activityPostBody)}',
+      public.st_transform(public.st_setSrid(public.ST_geomFromGeoJSON('${geometry}'),4326),3005)
     )
     RETURNING
       activity_incoming_data_id
