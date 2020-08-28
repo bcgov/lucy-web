@@ -11,8 +11,12 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
   if (!activityData) {
     return null;
   }
-  //activityData.locationAndGeometry needs to be added to below:
 
+  // Geometry needs to be stringified. Postgresql doesn't know to cast
+  // GeoJSON into a string... Even though it works for a regular JSON field.
+  const geometry = JSON.stringify(activityData.locationAndGeometry['geometry']);
+
+  // Formulate the sql statement
   const sql = `
     INSERT INTO activity_incoming_data (
       activity_type,
@@ -23,17 +27,25 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
       $1,
       $2,
       $3,
-      $4
+      $4,
+      public.ST_Transform(
+        public.ST_SetSRID(
+          public.ST_GeomFromGeoJSON($5)
+          ,4326)
+        ,3005
+      )
     )
     RETURNING
       activity_incoming_data_id
   `;
 
+  // Data to be passed
   const values = [
     activityData.activityType,
     activityData.activitySubType,
     activityData.date,
-    activityData.activityPostBody
+    activityData.activityPostBody,
+    geometry
   ];
 
   return { sql, values };
