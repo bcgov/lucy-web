@@ -66,8 +66,8 @@ exports.authenticatedPost = async function (args: any, res: any, next: any) {
       return sendResponse(res, 400);
     }
 
-    // const response = await connection.query(parameterizedQuery.sql, parameterizedQuery.values);
-    const response = await connection.query(parameterizedQuery.sql);
+    const response = await connection.query(parameterizedQuery.sql, parameterizedQuery.values);
+    // const response = await connection.query(parameterizedQuery.sql);
 
     const result = (response && response.rows && response.rows[0]) || null;
 
