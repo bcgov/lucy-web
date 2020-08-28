@@ -16,6 +16,7 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
   // GeoJSON into a string... Even though it works for a regular JSON field.
   const geometry = JSON.stringify(activityData.locationAndGeometry['geometry']);
 
+  // Formulate the sql statement
   const sql = `
     INSERT INTO activity_incoming_data (
       activity_type,
@@ -39,25 +40,7 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
       activity_incoming_data_id
   `;
 
-
-  // const sql = `
-  //   INSERT INTO activity_incoming_data (
-  //     activity_type,
-  //     activity_sub_type,
-  //     received_timestamp,
-  //     activity_payload,
-  //     geom
-  //   ) VALUES (
-  //     '${activityData.activityType}',
-  //     '${activityData.activitySubType}',
-  //     '${activityData.date}',
-  //     '${JSON.stringify(activityData.activityPostBody)}',
-  //     public.st_transform(public.st_setSrid(public.ST_geomFromGeoJSON('${geometry}'),4326),3005)
-  //   )
-  //   RETURNING
-  //     activity_incoming_data_id
-  // `;
-
+  // Data to be passed
   const values = [
     activityData.activityType,
     activityData.activitySubType,
