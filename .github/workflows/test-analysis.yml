@@ -70,7 +70,8 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@master
         continue-on-error: true
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   
         with: 
           projectBaseDir: './api/api_sources/'
   ## End test job
