@@ -3,20 +3,22 @@
 name: Clean out Dev from closed PR Artifacts
 on:
   pull_request:
+    branches: [dev]
     types: [closed]
-    branches:
-      - dev
 jobs:
   clean:
     name: Clean Deployment Artifacts for App, API, and API-MOBILE in Dev and Tools environment
     runs-on: ubuntu-latest
+    # Only do this when the PR was not merged and only for dev
     if: ${{ github.event.pull_request.merged != true && github.base_ref == 'dev'  }}
     env:
       BUILD_ID: ${{ github.event.number }}
     steps:
       # Checkout the PR branch
-      - name: Checkout Target Branch
-        uses: actions/checkout@v1
+      - name: Checkout Dev Branch - Contains the Pipeline Code
+        uses: actions/checkout@v2
+        with: 
+          ref: 'dev'
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
