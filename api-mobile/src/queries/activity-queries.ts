@@ -29,11 +29,13 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
       $2,
       $3,
       $4,
-      public.ST_Transform(
-        public.ST_SetSRID(
-          public.ST_GeomFromGeoJSON($5)
-          ,4326)
-        ,3005
+      ST_Force2D(
+        public.ST_Transform(
+          public.ST_SetSRID(
+            public.ST_GeomFromGeoJSON($5)
+            ,4326)
+          ,3005
+        )
       )
     )
     RETURNING
