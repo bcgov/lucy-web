@@ -16,7 +16,7 @@ jobs:
       PROJECT_NAME: invasivesbc
       TAG: dev
       APP_PORT: 3033
-      VERSION: '0.1.1'
+      VERSION: "0.1.1"
       # ------------------------------------------------------------------------------
       # Postgres Database
       # ------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ jobs:
       APP_EMAIL_SENDER_PWD: ${{secrets.EMAIL_PWD}}
       APP_EMAIL_TEST_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
       APP_REPORT_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
-      # Docker Compose 
+      # Docker Compose
       COMPOSE_INTERACTIVE_NO_CLI: 1
     steps:
       - uses: actions/checkout@v1
@@ -46,16 +46,16 @@ jobs:
           # For sonar-scanner to work properly we can't use a shallow fetch
           fetch-depth: 0
       - name: Docker build and run
-        working-directory: './api/'
+        working-directory: "./api/"
         run: docker-compose -f docker-compose.git.yml build && docker-compose -f docker-compose.git.yml up -d
       - name: Sleep for 75 seconds
         uses: jakejarvis/wait-action@master
         with:
-            time: '75s'
-      - name: Check 
+          time: "75s"
+      - name: Check
         run: docker ps -a
       - name: Test
-        working-directory: './api/'
+        working-directory: "./api/"
         run: docker-compose -f docker-compose.git.yml exec -T app_api npm run test:all
       - name: Change permission for coverage report path
         run: |
@@ -64,18 +64,20 @@ jobs:
       - name: Fix Coverage file path
         continue-on-error: true
         working-directory: api/api_sources/coverage
-        run: | 
+        run: |
           sed -i 's+/home/runner/work/lucy-web/lucy-web+/github/workspace+g' lcov.info
       - name: Sonar Analysis API
         uses: sonarsource/sonarcloud-github-action@master
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   
-        with: 
-          projectBaseDir: './api/api_sources/'
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: "./api/api_sources/"
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.number }}
+            -Dsonar.pullrequest.branch=${{github.head_ref}}
+            -Dsonar.pullrequest.base=${{github.base_ref}}
   ## End test job
 ## --
-          
-
 
