@@ -14,7 +14,7 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
 
   // Geometry needs to be stringified. Postgresql doesn't know to cast
   // GeoJSON into a string... Even though it works for a regular JSON field.
-  const geometry = JSON.stringify(activityData.locationAndGeometry['geometry']);
+//  const geometry = JSON.stringify(activityData.locationAndGeometry['geometry']);
 
   // Formulate the sql statement
   const sql = `
