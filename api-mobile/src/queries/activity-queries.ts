@@ -22,7 +22,8 @@ export const postActivitySQL = (activityData: ActivityPostBody): ParameterizedQu
       activity_type,
       activity_sub_type,
       received_timestamp,
-      activity_payload
+      activity_payload,
+      geom
     ) VALUES (
       $1,
       $2,
