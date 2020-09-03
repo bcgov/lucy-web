@@ -32,7 +32,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
@@ -66,7 +66,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
@@ -97,7 +97,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
@@ -133,7 +133,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
@@ -187,7 +187,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
@@ -241,7 +241,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
@@ -296,7 +296,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
@@ -349,7 +349,7 @@ jobs:
     steps:
       # Checkout the PR branch
       - name: Checkout Target Branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
