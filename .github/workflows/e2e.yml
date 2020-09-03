@@ -42,7 +42,7 @@ jobs:
       # Docker Compose 
       COMPOSE_INTERACTIVE_NO_CLI: 1
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         name: Checkout latest head
         with:
           # For sonar-scanner to work properly we can't use a shallow fetch
