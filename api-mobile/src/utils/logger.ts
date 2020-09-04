@@ -1,6 +1,6 @@
 'use strict';
 
-import * as winston from 'winston';
+import winston from 'winston';
 
 /**
  * Logger input.
@@ -12,7 +12,6 @@ import * as winston from 'winston';
 export interface ILoggerMessage extends winston.Logform.TransformableInfo {
   timestamp?: string; // Optionally overwrite the default timestamp
   label: string; // Add a label to this message (generally the name of the parent function)
-  error?: Error; // An Error object
 }
 
 /**
@@ -69,11 +68,10 @@ export const getLogger = function (logLabel: string) {
           winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
           winston.format.errors({ stack: true }),
           winston.format.colorize(),
-          winston.format.printf(({ timestamp, level, label, message, error, ...other }: ILoggerMessage) => {
+          winston.format.printf(({ timestamp, level, label, message, ...other }: ILoggerMessage) => {
             const namespace = label ? ` ${label} -` : '';
-            const errorStack = error ? `\n${error}` : '';
             const otherMeta = other && Object.keys(other).length ? `\n${JSON.stringify(other, undefined, 2)}` : '';
-            return `[${timestamp}] (${level}) (${logLabel}):${namespace} ${message} ${otherMeta} ${errorStack}`;
+            return `[${timestamp}] (${level}) (${logLabel}):${namespace} ${message} ${otherMeta}`;
           })
         )
       })

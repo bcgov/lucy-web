@@ -2,8 +2,10 @@
 
 import { decode, verify } from 'jsonwebtoken';
 import JwksRsa, { JwksClient } from 'jwks-rsa';
+import { SQLStatement } from 'sql-template-strings';
 import { promisify } from 'util';
-import { getUserWithRoles } from '../controllers/user-controller';
+import { getDBConnection } from '../database/db';
+import { getUserWithRolesSQL } from '../queries/user-queries';
 import { getLogger } from './logger';
 
 const defaultLog = getLogger('auth-utils');
@@ -14,7 +16,7 @@ const APP_CERTIFICATE_URL =
 
 const TOKEN_IGNORE_EXPIRATION: boolean =
   process.env.TOKEN_IGNORE_EXPIRATION === 'true' ||
-  process.env.NODE_ENV === 'development' ||
+  process.env.NODE_ENV === 'dev' ||
   process.env.DB_HOST === 'localhost' ||
   false;
 
@@ -27,18 +29,28 @@ const TOKEN_IGNORE_EXPIRATION: boolean =
  * @param {*} callback
  * @returns {*}
  */
-export const authenticate = async function (req: any, authOrSecDef: any, token: any, callback: any): Promise<any> {
+export const authenticate = async function (req: any, scopes: string[]): Promise<any> {
   try {
-    defaultLog.debug({ label: 'authenticate', message: 'authenticating user', token });
+    defaultLog.debug({ label: 'authenticate', message: 'authenticating user', scopes });
 
-    if (!token) {
+    if (!req.headers || !req.headers.authorization) {
       defaultLog.warn({ label: 'authenticate', message: 'token was null' });
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
+
+    const token = req.headers.authorization;
+
+    defaultLog.debug({ label: 'authenticate', message: 'authenticating user', token });
 
     if (token.indexOf('Bearer ') !== 0) {
       defaultLog.warn({ label: 'authenticate', message: 'token did not have a bearer' });
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
 
     // Validate the 'Authorization' header.
@@ -47,7 +59,10 @@ export const authenticate = async function (req: any, authOrSecDef: any, token: 
 
     if (!tokenString) {
       defaultLog.warn({ label: 'authenticate', message: 'token string was null' });
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
 
     // Decode token without verifying signature
@@ -55,7 +70,10 @@ export const authenticate = async function (req: any, authOrSecDef: any, token: 
 
     if (!decodedToken) {
       defaultLog.warn({ label: 'authenticate', message: 'decoded token was null' });
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
 
     // Get token header kid
@@ -63,7 +81,10 @@ export const authenticate = async function (req: any, authOrSecDef: any, token: 
 
     if (!decodedToken) {
       defaultLog.warn({ label: 'authenticate', message: 'decoded token header kid was null' });
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
 
     const jwksClient: JwksClient = JwksRsa({ jwksUri: APP_CERTIFICATE_URL });
@@ -75,7 +96,10 @@ export const authenticate = async function (req: any, authOrSecDef: any, token: 
 
     if (!key) {
       defaultLog.warn({ label: 'authenticate', message: 'get signing key' });
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
 
     const signingKey = key['publicKey'] || key['rsaPublicKey'];
@@ -84,27 +108,36 @@ export const authenticate = async function (req: any, authOrSecDef: any, token: 
     const verifiedToken = verifyToken(tokenString, signingKey);
 
     if (!verifiedToken) {
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
 
     // Add the verified token to the request for future use, if needed
-    req.swagger.params.auth_payload = verifiedToken;
+    req.auth_payload = verifiedToken;
 
     // Verify user
-    const verifiedUser = await verifyUser(req);
+    const verifiedUser = await verifyUser(req, scopes);
 
     if (!verifiedUser) {
-      return callback(setError(req));
+      throw {
+        status: 401,
+        message: 'Access Denied'
+      };
     }
 
     // Add the user to the request for future use, if needed
-    req.swagger.params.auth_user = verifiedUser;
-  } catch (error) {
-    defaultLog.error({ label: 'authenticate', message: 'unexpected error', error });
-    return callback(setError(req));
-  }
+    req.auth_user = verifiedUser;
 
-  return callback(null);
+    return true;
+  } catch (error) {
+    defaultLog.warn({ label: 'authenticate', message: `unexpected error - ${error.message}`, error });
+    throw {
+      status: 401,
+      message: 'Access Denied'
+    };
+  }
 };
 
 /**
@@ -153,24 +186,21 @@ const verifyToken = function (tokenString: any, secretOrPublicKey: any): any {
  * @param {*} req
  * @returns
  */
-export const verifyUser = async function (req: any) {
+export const verifyUser = async function (req: any, scopes: string[]) {
   // get user and their role
-  const response = await getUserWithRoles(req.swagger.params.auth_payload.email);
+  const response = await getUserWithRoles(req.auth_payload.email);
 
   if (!response) {
     defaultLog.warn({
       label: 'verifyUser',
       message: 'failed to find user with matching email',
-      email: req.swagger.params.auth_payload.email,
+      email: req.auth_payload.email,
       response
     });
     return null;
   }
 
-  // allowed scopes/roles for the current endpoint
-  const currentSecurityScopes = req.swagger.operation['x-security-scopes'];
-
-  const userHasRole = verifyUserRoles(currentSecurityScopes, response['role_code']);
+  const userHasRole = verifyUserRoles(scopes, response['role_code']);
 
   if (!userHasRole) {
     defaultLog.warn({ label: 'verifyUser', message: 'user verification error: insufficient roles' });
@@ -178,7 +208,7 @@ export const verifyUser = async function (req: any) {
       label: 'verifyUser',
       message: 'user verification error: insufficient roles',
       userRoles: response['role_code'],
-      requiredRoles: currentSecurityScopes
+      requiredRoles: scopes
     });
     return null;
   }
@@ -217,11 +247,35 @@ export const verifyUserRoles = function (allowedRoles: string[] | string, userRo
 };
 
 /**
- * Set default error status on response when authentication fails.
+ * Finds a single user based on their email.
  *
- * @param {*} req
- * @returns response with default error status set
+ * @param {string} email
+ * @returns user
  */
-function setError(req: any) {
-  return req.res.status(401).json({ message: 'Error: Access Denied' });
-}
+export const getUserWithRoles = async function (email: string) {
+  defaultLog.debug({ label: 'getUserWithRoles', message: 'email', email });
+
+  if (!email) {
+    return null;
+  }
+
+  const connection = await getDBConnection();
+
+  if (!connection) {
+    return null;
+  }
+
+  const sqlStatement: SQLStatement = getUserWithRolesSQL(email);
+
+  if (!sqlStatement) {
+    return null;
+  }
+
+  const response = await connection.query(sqlStatement.text, sqlStatement.values);
+
+  const result = (response && response.rowCount && response.rows[0]) || null;
+
+  connection.release();
+
+  return result;
+};

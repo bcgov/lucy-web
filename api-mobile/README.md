@@ -62,16 +62,16 @@ npm start
 
 # API Specification
 
-The API is defined in `swagger.yaml`.
+The API is defined in `api-doc.yaml`.
 
-If this project is running locally, you can view the api docs at: `http://localhost:3002/api/docs/`
+If this project is running locally, you can view the api docs at: `http://localhost:3002/api/docs/` or `http://localhost:7080/api/docs/` if running in Docker.
 
-This project uses npm package `swagger-tools` via `./app.ts` to automatically generate the express server and its routes, based on the contents of the `swagger.yaml`.
+This project uses npm package `swagger-tools` via `./app.ts` to automatically generate the express server and its routes, based on the contents of the `api-doc.yaml`.
 
 - The controller file is specified by the `x-swagger-router-controller` field.
 - The controller function, within the controller file, is specified by the `operationId` field.
 
-Recommend reviewing the [Open API Specification](https://swagger.io/docs/specification/about/) before making any changes to the `swagger.yaml` file.
+Recommend reviewing the [Open API Specification](https://swagger.io/docs/specification/about/) before making any changes to the `api-doc.yaml` file.
 
 _Note: This API currently uses OpenAPI 2.0, as 3.0 is not yet fully supported by many of the swagger libraries/tools used._
 
@@ -213,7 +213,6 @@ Supported log properties:
 - level: overwrite the default level (via log.<level>()) with your own level string.
 - label: adds an additional label to the log message.
 - message: a log message.
-- error: an Error object.
 - <anyObject>: any additional object properties will be JSON.stringify'd and appended to the log message.
 ```
 
