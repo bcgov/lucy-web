@@ -83,26 +83,26 @@ objects:
                   value: ${DB_CLEAN_UP}
                 - name: DB_SEED
                   value: ${DB_SEED}
-                - name: APP_EMAIL_SENDER
+                - name: OBJECT_STORE_URL
                   valueFrom:
                     secretKeyRef:
-                      key: sender
-                      name: ${MAILER_INFO}
-                - name: APP_EMAIL_SENDER_PWD
+                      key: object_store_url
+                      name: ${OBJECT_STORE_SECRETS}
+                - name: OBJECT_STORE_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
-                      key: sender-password
-                      name: ${MAILER_INFO}
-                - name: APP_EMAIL_TEST_RECEIVER
+                      key: object_store_access_key_id
+                      name: ${OBJECT_STORE_SECRETS}
+                - name: OBJECT_STORE_SECRET_KEY_ID
                   valueFrom:
                     secretKeyRef:
-                      key: test-receiver
-                      name: ${MAILER_INFO}
-                - name: APP_REPORT_RECEIVER
+                      key: object_store_secret_key_id
+                      name: ${OBJECT_STORE_SECRETS}
+                - name: OBJECT_STORE_BUCKET_NAME
                   valueFrom:
                     secretKeyRef:
-                      key: receiver-list
-                      name: ${MAILER_INFO}
+                      key: object_store_bucket_name
+                      name: ${OBJECT_STORE_SECRETS}
               image: " "
               imagePullPolicy: Always
               name: api
@@ -293,8 +293,8 @@ parameters:
     value: "none"
   - name: DB_SEED
     value: "yes"
-  - name: MAILER_INFO
-    value: "invasivesbc-mailer"
+  - name: OBJECT_STORE_SECRETS
+    value: "invasivesbc-object-store"
   - name: REPLICA_MAX
     required: true
     value: "1"
