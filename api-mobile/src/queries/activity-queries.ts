@@ -18,7 +18,7 @@ export const postActivitySQL = (activityData: ActivityPostBody): SQLStatement =>
       activity_sub_type,
       received_timestamp,
       activity_payload,
-      geom,
+      geog,
       media_keys
     ) VALUES (
       ${activityData.activityType},
@@ -26,14 +26,11 @@ export const postActivitySQL = (activityData: ActivityPostBody): SQLStatement =>
       ${activityData.date},
       ${activityData.activityPostBody},
       public.ST_Force2D(
-        public.ST_Transform(
-          public.ST_SetSRID(
-            public.ST_GeomFromGeoJSON(${JSON.stringify(activityData.locationAndGeometry['geometry'])})
-            ,4326
-          )
-          ,3005
+        public.ST_SetSRID(
+          public.ST_GeomFromGeoJSON(${JSON.stringify(activityData.locationAndGeometry['geometry'])})
+          ,4326
         )
-      ),
+      )::geography,
       ${activityData.mediaKeys}
     )
     RETURNING

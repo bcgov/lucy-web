@@ -35,8 +35,12 @@ export async function up(knex: Knex): Promise<void> {
     COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.received_timestamp IS 'The date and time data was received and inserted into the database.';
 
     ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN geom geometry(Geometry,3005) CHECK (st_isValid(geom));
-    COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.geom IS 'Geometry collection in Albers projection.';
+    COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.geom IS 'Geometry in Albers projection.';
     CREATE index activity_incoming_data_gist on ${DB_SCHEMA}.activity_incoming_data using gist ("geom");
+
+    ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN geog geography(Geometry);
+    COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.geog IS 'Geography type containing a geometry.';
+    CREATE index activity_incoming_data_gist2 on ${DB_SCHEMA}.activity_incoming_data using gist ("geog");
 
     ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN activity_payload JSONB;
     COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.activity_payload IS 'Raw data upload in compressed JSON format.';
