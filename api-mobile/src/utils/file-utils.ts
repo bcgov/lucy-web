@@ -60,10 +60,10 @@ export async function uploadFileToS3(media: MediaBase64, metadata: Metadata = {}
 }
 
 // Regex matches a Data URL base64 encoded string, and has matching groups for the content type and raw encoded string
-const base64DataURLRegex = new RegExp(/^data:(image\/\w+);base64,(.*)/);
+const base64DataURLRegex = new RegExp(/^data:(\w+\/\w+);base64,(.*)/);
 
 /**
- * Takes a Data URL base64 encoded string, and parses out the contentType (`image/jpeg`, `image/png`, etc) and the
+ * Takes a Data URL base64 encoded string, and parses out the contentType (`image/jpeg`, `file/png`, etc) and the
  * base64 contentString.
  *
  * @export

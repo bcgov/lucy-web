@@ -37,8 +37,8 @@ const openAPIFramework = initialize({
   routesIndexFileRegExp: /(?:index)?\.[tj]s$/, // updated default to allow .ts
   promiseMode: true, // allow endpoint handlers to return promises
   consumesMiddleware: {
-    'application/json': bodyParser.json({ limit: '10mb' }),
-    'application/x-www-form-urlencoded': bodyParser.urlencoded({ limit: '10mb', extended: true })
+    'application/json': bodyParser.json({ limit: '50mb' }),
+    'application/x-www-form-urlencoded': bodyParser.urlencoded({ limit: '50mb', extended: true })
   },
   securityHandlers: {
     Bearer: function (req, scopes) {
