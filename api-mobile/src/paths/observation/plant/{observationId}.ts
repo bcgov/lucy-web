@@ -22,7 +22,8 @@ export const GET: Operation = [
     if (!req.params || !req.params.observationId) {
       defaultLog.warn({ label: 'observation-plant-{observationId}', message: 'observationId was null' });
       throw {
-        status: 400
+        status: 400,
+        message: 'Required param observationId was missing or invalid'
       };
     }
 
@@ -32,7 +33,8 @@ export const GET: Operation = [
 
     if (!connection) {
       throw {
-        status: 503
+        status: 503,
+        message: 'Failed to establish database connection'
       };
     }
 
@@ -40,7 +42,8 @@ export const GET: Operation = [
 
     if (!sqlStatement) {
       throw {
-        status: 400
+        status: 400,
+        message: 'Failed to build SQL statement'
       };
     }
 
@@ -57,7 +60,6 @@ export const GET: Operation = [
 GET.apiDoc = {
   description: 'Get a plant observation for the specific observationId.',
   tags: ['observation', 'plant'],
-  operationId: 'observation-plant-{observationId}',
   security: [
     {
       Bearer: ALL_ROLES

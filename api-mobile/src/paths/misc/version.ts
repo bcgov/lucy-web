@@ -19,7 +19,6 @@ export const GET: Operation = [
 GET.apiDoc = {
   description: 'Get all observation plant code values.',
   tags: ['misc'],
-  operationId: 'misc-version',
   responses: {
     200: {
       description: 'Code values for a plant observation',

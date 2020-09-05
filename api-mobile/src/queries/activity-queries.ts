@@ -1,13 +1,13 @@
-import { ActivityPostBody } from '../models/activity';
 import { SQL, SQLStatement } from 'sql-template-strings';
+import { ActivityPostRequestBody, ActivitySearchCriteria } from './../models/activity';
 
 /**
  * SQL query to insert a new activity, and return the inserted record.
  *
- * @param {ActivityPostBody} activityData
+ * @param {ActivityPostRequestBody} activityData
  * @returns {SQLStatement} sql query object
  */
-export const postActivitySQL = (activityData: ActivityPostBody): SQLStatement => {
+export const postActivitySQL = (activityData: ActivityPostRequestBody): SQLStatement => {
   if (!activityData) {
     return null;
   }
@@ -39,4 +39,52 @@ export const postActivitySQL = (activityData: ActivityPostBody): SQLStatement =>
     RETURNING
       activity_incoming_data_id;
   `;
+};
+
+/**
+ * SQL query to fetch activity records based on search criteria.
+ *
+ * @param {ActivitySearchCriteria} searchCriteria
+ * @returns {SQLStatement} sql query object
+ */
+export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLStatement => {
+  const sqlStatement: SQLStatement = SQL`SELECT * FROM activity_incoming_data`;
+
+  if (searchCriteria.activityType) {
+    sqlStatement.append(SQL` WHERE activity_type = ${searchCriteria.activityType}`);
+  }
+
+  if (searchCriteria.activitySubType) {
+    sqlStatement.append(SQL` WHERE activity_sub_type = ${searchCriteria.activitySubType}`);
+  }
+
+  if (searchCriteria.dateRangeStart) {
+    sqlStatement.append(SQL` WHERE received_timestamp >= ${searchCriteria.dateRangeStart}::date`);
+  }
+
+  if (searchCriteria.dateRangeEnd) {
+    sqlStatement.append(SQL` WHERE received_timestamp <= ${searchCriteria.dateRangeEnd}::date`);
+  }
+
+  if (searchCriteria.limit) {
+    sqlStatement.append(SQL` LIMIT ${searchCriteria.limit}`);
+  }
+
+  if (searchCriteria.limit) {
+    sqlStatement.append(SQL` OFFSET ${searchCriteria.page}`);
+  }
+
+  sqlStatement.append(SQL`;`);
+
+  return sqlStatement;
+};
+
+/**
+ * SQL query to fetch a single activity record based on its primary key.
+ *
+ * @param {number} activityId
+ * @returns {SQLStatement} sql query object
+ */
+export const getActivitySQL = (activityId: number): SQLStatement => {
+  return SQL`SELECT * FROM activity_incoming_data where activity_incoming_data_id = ${activityId}`;
 };
