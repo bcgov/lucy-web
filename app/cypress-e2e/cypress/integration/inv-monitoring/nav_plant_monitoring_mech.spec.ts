@@ -1,5 +1,6 @@
 import * as faker from 'faker';
 
+/*
 describe('Add or create mechanical monitoring record', () => {
   beforeEach(() => {
     cy.svcClientLogout();
@@ -166,3 +167,4 @@ describe('Add or create mechanical monitoring record', () => {
     cy.contains('button', 'Create Mechanical Treatment').click({ force: true });
   };
 });
+*/

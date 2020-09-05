@@ -45,9 +45,14 @@ const openAPIFramework = initialize({
       return authenticate(req, scopes);
     }
   },
+  errorTransformer: function (openapiError: object, ajvError: object): object {
+    // Transform openapi-request-validator and openapi-response-validator errors
+    return ajvError;
+  },
   errorMiddleware: function (error, req, res, next) {
     if (!error.status) {
-      // log any unintentional errors (where no status has been set)
+      // TODO some unplanned errors do have a status, maybe change status to code for intentional errors?
+      // log any unintentionally thrown errors (where no status has been set)
       defaultLog.error({ label: 'errorMiddleware', message: 'unexpected error', error });
     }
 

@@ -1,4 +1,4 @@
-import { parseBase64DataURLString } from '../utils/file-utils';
+import { parseBase64DataURLString } from './../utils/file-utils';
 
 /**
  * A single media item.
@@ -44,12 +44,12 @@ export class MediaBase64 {
 }
 
 /**
- * Activity post body.
+ * Activity post request body.
  *
  * @export
- * @class ActivityPostBody
+ * @class ActivityPostRequestBody
  */
-export class ActivityPostBody {
+export class ActivityPostRequestBody {
   activityPostBody: object;
   activityResponseBody: object;
 
@@ -66,10 +66,10 @@ export class ActivityPostBody {
   mediaKeys: string[];
 
   /**
-   * Creates an instance of ActivityPostBody.
+   * Creates an instance of ActivityPostRequestBody.
    *
    * @param {*} [obj]
-   * @memberof ActivityPostBody
+   * @memberof ActivityPostRequestBody
    */
   constructor(obj?: any) {
     // Add whole original object for auditing
@@ -90,5 +90,43 @@ export class ActivityPostBody {
     this.locationAndGeometry = (obj && obj.locationAndGeometry) || null;
 
     this.mediaKeys = (obj && obj.mediaKeys) || null;
+  }
+}
+
+/**
+ * Activity get search criteria object.
+ *
+ * @export
+ * @class ActivitySearchCriteria
+ */
+export class ActivitySearchCriteria {
+  activityType: string;
+  activitySubType: string;
+
+  page: number;
+  limit: number;
+
+  dateRangeStart: Date;
+  dateRangeEnd: Date;
+
+  includeMedia: boolean;
+
+  /**
+   * Creates an instance of ActivitySearchCriteria.
+   *
+   * @param {*} [obj]
+   * @memberof ActivitySearchCriteria
+   */
+  constructor(obj?: any) {
+    this.activityType = (obj && obj.activityType) || null;
+    this.activitySubType = (obj && obj.activitySubType) || null;
+
+    this.page = (obj && obj.page) || 0;
+    this.limit = (obj && obj.limit) || 50;
+
+    this.dateRangeStart = (obj && obj.dateRangeStart) || null;
+    this.dateRangeEnd = (obj && obj.dateRangeEnd) || null;
+
+    this.includeMedia = (obj && obj.includeMedia) || false;
   }
 }

@@ -29,7 +29,8 @@ export const GET: Operation = [
 
     if (!connection) {
       throw {
-        status: 503
+        status: 503,
+        message: 'Failed to establish database connection'
       };
     }
 
@@ -46,7 +47,6 @@ export const GET: Operation = [
 GET.apiDoc = {
   description: 'Get all observation plant code values.',
   tags: ['code'],
-  operationId: 'code-observation-plant',
   security: [
     {
       Bearer: ALL_ROLES
