@@ -3,5 +3,6 @@
   "pluginsFile": "./cypress/plugins/index.ts",
   "screenshotsFolder": "./cypress/results/screenshots",
   "videosFolder": "./cypress/results/videos",
-  "projectId": "un3pv5"
+  "projectId": "un3pv5",
+  "pageLoadTimeout": 6000000
 }
