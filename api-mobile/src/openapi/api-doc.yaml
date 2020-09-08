@@ -33,6 +33,8 @@ tags:
     description: Plant endpoints
   - name: code
     description: Code endpoints
+  - name: media
+    description: Media endpoints
 
 externalDocs:
   description: Visit GitHub to find out more about this API

@@ -66,10 +66,11 @@ The API is defined in `api-doc.yaml`.
 
 If this project is running locally, you can view the api docs at: `http://localhost:3002/api/docs/` or `http://localhost:7080/api/docs/` if running in Docker.
 
-This project uses npm package `swagger-tools` via `./app.ts` to automatically generate the express server and its routes, based on the contents of the `api-doc.yaml`.
+This project uses npm package `express-openapi` via `./app.ts` to automatically generate the express server and its routes, based on the contents of the `api-doc.yaml` and the `./src/path/` content.
 
-- The controller file is specified by the `x-swagger-router-controller` field.
-- The controller function, within the controller file, is specified by the `operationId` field.
+- The endpoint paths are defined based on the folder structure of the `./src/paths/` folder.
+  - Example: `<host>/api/activity` is handled by `./src/paths/activity.ts`
+  - Example: `<host>/api/code/observation/plant` is handled by `./src/paths/code/observation/plant.ts`
 
 Recommend reviewing the [Open API Specification](https://swagger.io/docs/specification/about/) before making any changes to the `api-doc.yaml` file.
 

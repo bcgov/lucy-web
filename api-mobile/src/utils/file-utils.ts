@@ -1,7 +1,7 @@
 'use strict';
 
 import AWS from 'aws-sdk';
-import { Metadata, ManagedUpload } from 'aws-sdk/clients/s3';
+import { GetObjectOutput, ManagedUpload, Metadata } from 'aws-sdk/clients/s3';
 import { v4 as uuidv4 } from 'uuid';
 import { S3ACLRole } from '../constants/misc';
 import { MediaBase64 } from '../models/activity';
@@ -14,7 +14,8 @@ const S3 = new AWS.S3({
   accessKeyId: process.env.OBJECT_STORE_ACCESS_KEY_ID,
   secretAccessKey: process.env.OBJECT_STORE_SECRET_KEY_ID,
   signatureVersion: 'v4',
-  s3ForcePathStyle: true
+  s3ForcePathStyle: true,
+  region: 'ca-central-1'
 });
 
 /**
@@ -22,9 +23,9 @@ const S3 = new AWS.S3({
  *
  * @export
  * @param {string} key the unique key assigned to the file in S3 when it was originally uploaded
- * @returns the response from S3 or null if required parameters are null
+ * @returns {Promise<GetObjectOutput>} the response from S3 or null if required parameters are null
  */
-export async function getFileFromS3(key: string) {
+export async function getFileFromS3(key: string): Promise<GetObjectOutput> {
   if (!key) {
     return null;
   }
@@ -57,6 +58,24 @@ export async function uploadFileToS3(media: MediaBase64, metadata: Metadata = {}
     ACL: S3ACLRole.AUTH_READ,
     Metadata: metadata
   }).promise();
+}
+
+/**
+ * Get an s3 signed url.
+ *
+ * @param {string} key S3 object key
+ * @returns {Promise<string>} the response from S3 or null if required parameters are null
+ */
+export async function getS3SignedURL(key: string): Promise<string> {
+  if (!key) {
+    return null;
+  }
+
+  return S3.getSignedUrl('getObject', {
+    Bucket: OBJECT_STORE_BUCKET_NAME,
+    Key: key,
+    Expires: 300000 // 5 minutes
+  });
 }
 
 // Regex matches a Data URL base64 encoded string, and has matching groups for the content type and raw encoded string
