@@ -57,9 +57,6 @@ function getSignedURL(): RequestHandler {
     }
 
     const result = await getS3SignedURL(req.params.key);
-    console.log('================');
-    console.log(result);
-    console.log('================');
 
     return res.status(200).json(result);
   };
