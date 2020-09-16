@@ -1,6 +1,6 @@
 {
-  "activityType": "observation",
-  "activitySubType": "plant",
+  "activity_type": "observation",
+  "activity_sub_type": "plant",
   "date": "2020-08-30",
   "locationAndGeometry": {
     "anchorPointY": 48.3,

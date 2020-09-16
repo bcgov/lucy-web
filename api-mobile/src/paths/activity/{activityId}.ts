@@ -38,13 +38,13 @@ GET.apiDoc = {
         'application/json': {
           schema: {
             properties: {
-              activityType: {
+              activity_type: {
                 type: 'string'
               },
               activityTypeData: {
                 type: 'object'
               },
-              activitySubType: {
+              activity_sub_type: {
                 type: 'string'
               },
               activitySubTypeData: {

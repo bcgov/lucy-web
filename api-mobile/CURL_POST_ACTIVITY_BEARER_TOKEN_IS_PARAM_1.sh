@@ -4,8 +4,8 @@ curl --location --request POST 'localhost:3002/api/activity' \
 --header 'Content-Type: application/json' \
 --data-raw '
 {
-	"activityType": "Observation",
-	"activitySubType": "Terrestrial Invasive Plant",
+	"activity_type": "Observation",
+	"activity_sub_type": "Terrestrial Invasive Plant",
 	"date": "2019-04-12",
 	"deviceRequestUID": "string",
 	"locationAndGeometry": {
