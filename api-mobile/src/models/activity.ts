@@ -53,10 +53,10 @@ export class ActivityPostRequestBody {
   activityPostBody: object;
   activityResponseBody: object;
 
-  activityType: string;
+  activity_type: string;
   activityTypeData: object;
 
-  activitySubType: string;
+  activity_sub_type: string;
   activitySubTypeData: object;
 
   date: string;
@@ -79,10 +79,10 @@ export class ActivityPostRequestBody {
       media: (obj.media && obj.media.map((item: MediaBase64) => item.fileName)) || []
     };
 
-    this.activityType = (obj && obj.activityType) || null;
+    this.activity_type = (obj && obj.activity_type) || null;
     this.activityTypeData = (obj && obj.activityTypeData) || null;
 
-    this.activitySubType = (obj && obj.activitySubType) || null;
+    this.activity_sub_type = (obj && obj.activity_sub_type) || null;
     this.activitySubTypeData = (obj && obj.activitySubTypeData) || null;
 
     this.date = (obj && obj.date) || null;
@@ -100,14 +100,14 @@ export class ActivityPostRequestBody {
  * @class ActivitySearchCriteria
  */
 export class ActivitySearchCriteria {
-  activityType: string;
-  activitySubType: string;
+  activity_type: string;
+  activity_sub_type: string;
 
   page: number;
   limit: number;
 
-  dateRangeStart: Date;
-  dateRangeEnd: Date;
+  date_range_start: Date;
+  date_range_end: Date;
 
   includeMedia: boolean;
 
@@ -118,14 +118,14 @@ export class ActivitySearchCriteria {
    * @memberof ActivitySearchCriteria
    */
   constructor(obj?: any) {
-    this.activityType = (obj && obj.activityType) || null;
-    this.activitySubType = (obj && obj.activitySubType) || null;
+    this.activity_type = (obj && obj.activity_type) || null;
+    this.activity_sub_type = (obj && obj.activity_sub_type) || null;
 
     this.page = (obj && obj.page) || 0;
     this.limit = (obj && obj.limit) || 50;
 
-    this.dateRangeStart = (obj && obj.dateRangeStart) || null;
-    this.dateRangeEnd = (obj && obj.dateRangeEnd) || null;
+    this.date_range_start = (obj && obj.date_range_start) || null;
+    this.date_range_end = (obj && obj.date_range_end) || null;
 
     this.includeMedia = (obj && obj.includeMedia) || false;
   }

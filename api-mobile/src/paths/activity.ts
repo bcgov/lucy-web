@@ -29,10 +29,10 @@ GET.apiDoc = {
       'application/json': {
         schema: {
           properties: {
-            activityType: {
+            activity_type: {
               type: 'string'
             },
-            activitySubType: {
+            activity_sub_type: {
               type: 'string'
             },
             page: {
@@ -46,11 +46,11 @@ GET.apiDoc = {
               minimum: 0,
               maximum: 100
             },
-            dateRangeStart: {
+            date_range_start: {
               type: 'string',
               description: 'Date range start, in YYYY-MM-DD format'
             },
-            dateRangeEnd: {
+            date_range_end: {
               type: 'string',
               description: 'Date range end, in YYYY-MM-DD format'
             }
@@ -69,13 +69,13 @@ GET.apiDoc = {
             items: {
               type: 'object',
               properties: {
-                activityType: {
+                activity_type: {
                   type: 'string'
                 },
                 activityTypeData: {
                   type: 'object'
                 },
-                activitySubType: {
+                activity_sub_type: {
                   type: 'string'
                 },
                 activitySubTypeData: {
@@ -177,21 +177,21 @@ POST.apiDoc = {
       'application/json': {
         schema: {
           required: [
-            'activityType',
+            'activity_type',
             'activityTypeData',
-            'activitySubType',
+            'activity_sub_type',
             'activitySubTypeData',
             'date',
             'locationAndGeometry'
           ],
           properties: {
-            activityType: {
+            activity_type: {
               type: 'string'
             },
             activityTypeData: {
               type: 'object'
             },
-            activitySubType: {
+            activity_sub_type: {
               type: 'string'
             },
             activitySubTypeData: {

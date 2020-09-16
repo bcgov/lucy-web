@@ -12,7 +12,7 @@ export const postActivitySQL = (activityData: ActivityPostRequestBody): SQLState
     return null;
   }
 
-  return SQL`
+  const sqlStatement: SQLStatement = SQL`
     INSERT INTO activity_incoming_data (
       activity_type,
       activity_sub_type,
@@ -21,21 +21,35 @@ export const postActivitySQL = (activityData: ActivityPostRequestBody): SQLState
       geog,
       media_keys
     ) VALUES (
-      ${activityData.activityType},
-      ${activityData.activitySubType},
+      ${activityData.activity_type},
+      ${activityData.activity_sub_type},
       ${activityData.date},
-      ${activityData.activityPostBody},
-      public.ST_Force2D(
+      ${activityData.activityPostBody}
+  `;
+
+  if (activityData.locationAndGeometry && activityData.locationAndGeometry['geometry']) {
+    sqlStatement.append(`
+      ,public.ST_Force2D(
         public.ST_SetSRID(
           public.ST_GeomFromGeoJSON(${JSON.stringify(activityData.locationAndGeometry['geometry'])})
           ,4326
         )
-      )::geography,
-      ${activityData.mediaKeys}
+      )::geography
+    `);
+  } else {
+    sqlStatement.append(`
+      ,null
+    `);
+  }
+
+  sqlStatement.append(`
+      ,${activityData.mediaKeys}
     )
     RETURNING
       activity_incoming_data_id;
-  `;
+  `);
+
+  return sqlStatement;
 };
 
 /**
@@ -47,20 +61,20 @@ export const postActivitySQL = (activityData: ActivityPostRequestBody): SQLState
 export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLStatement => {
   const sqlStatement: SQLStatement = SQL`SELECT * FROM activity_incoming_data`;
 
-  if (searchCriteria.activityType) {
-    sqlStatement.append(SQL` WHERE activity_type = ${searchCriteria.activityType}`);
+  if (searchCriteria.activity_type) {
+    sqlStatement.append(SQL` WHERE activity_type = ${searchCriteria.activity_type}`);
   }
 
-  if (searchCriteria.activitySubType) {
-    sqlStatement.append(SQL` WHERE activity_sub_type = ${searchCriteria.activitySubType}`);
+  if (searchCriteria.activity_sub_type) {
+    sqlStatement.append(SQL` WHERE activity_sub_type = ${searchCriteria.activity_sub_type}`);
   }
 
-  if (searchCriteria.dateRangeStart) {
-    sqlStatement.append(SQL` WHERE received_timestamp >= ${searchCriteria.dateRangeStart}::date`);
+  if (searchCriteria.date_range_start) {
+    sqlStatement.append(SQL` WHERE received_timestamp >= ${searchCriteria.date_range_start}::date`);
   }
 
-  if (searchCriteria.dateRangeEnd) {
-    sqlStatement.append(SQL` WHERE received_timestamp <= ${searchCriteria.dateRangeEnd}::date`);
+  if (searchCriteria.date_range_end) {
+    sqlStatement.append(SQL` WHERE received_timestamp <= ${searchCriteria.date_range_end}::date`);
   }
 
   if (searchCriteria.limit) {
