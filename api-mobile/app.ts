@@ -42,6 +42,7 @@ const openAPIFramework = initialize({
   },
   securityHandlers: {
     Bearer: function (req, scopes) {
+      // return true // bypass authentication
       return authenticate(req, scopes);
     }
   },

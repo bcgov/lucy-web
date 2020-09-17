@@ -29,12 +29,14 @@ export const postActivitySQL = (activityData: ActivityPostRequestBody): SQLState
 
   if (activityData.locationAndGeometry && activityData.locationAndGeometry['geometry']) {
     sqlStatement.append(`
-      ,public.ST_Force2D(
-        public.ST_SetSRID(
-          public.ST_GeomFromGeoJSON(${JSON.stringify(activityData.locationAndGeometry['geometry'])})
-          ,4326
+      ,public.geography(
+        public.ST_Force2D(
+          public.ST_SetSRID(
+            public.ST_GeomFromGeoJSON('${JSON.stringify(activityData.locationAndGeometry['geometry'])}')
+            ,4326
+          )
         )
-      )::geography
+      )
     `);
   } else {
     sqlStatement.append(`
