@@ -102,7 +102,14 @@ components:
       type: object
       required:
         - species_agency_code
+        - jurisdiction_code
         - activity_status
+        - species_id
+        - access_description
+        - media_indicator
+        - created_date_on_device
+        - updated_date_on_device
+        - subType
       properties:
         species_agency_code:
           type: string
@@ -113,6 +120,11 @@ components:
         activity_status:
           type: string
           title: "Activity status"
+          enum:
+          - sync
+          - done
+          - pending
+          - errors
         species_id:
           type: string
           title: "Species"
@@ -123,26 +135,26 @@ components:
         access_description:
           type: string
           title: "Access Description"
-        primary_paper_file_id:
-          type: string
-          title: "Primary File"
-        secondary_paper_file_id:
-          type: string
-          title: "Secondary File"
+          maximum: 300
         media_indicator:
           type: boolean
           title: "Photo"
         created_date_on_device:
           type: string
-          title: "created on device"
+          title: "Created date on device"
         updated_date_on_device:
           type: string
-          title: "created on device"
+          title: "Updated date on device"
         media:
           type: array
           title: "Photos"
           items:
             $ref: "#/components/schemas/Media"
+        paper_file:
+          type: array
+          title: "Paper file"
+          items: 
+            $ref: "#/components/schemas/PaperFile"
         subType:
           oneOf:
             - $ref: "#/components/schemas/Observation"
@@ -154,14 +166,16 @@ components:
         Observation main object.
       type: object
       required:
-        - observation_id
         - observation_date
         - observation time
         - observation_type
+        - observer_first_name
+        - observer_last_name
+        - reported_area
+        - sample_taken
+        - negative_obs_ind
+        - subType
       properties:
-        observation_id:
-          type: number
-          title: "ID"
         observation_date:
           type: string
           title: "Date"
@@ -174,18 +188,23 @@ components:
         observer_first_name:
           type: string
           title: "First Name"
+          maximum: 50
         observer_last_name:
           type: string
           title: "Last Name"
+          maximum: 50
         reported_area:
           type: integer
           title: "Area"
+          minimum: 1
+          maximum: 100
         sample_taken:
           type: boolean
           title: "Sample Taken"
         sample_number:
           type: string
           title: "Sample Number"
+          maximum: 50
         negative_obs_ind:
           type: boolean
           title: "Negative Observation"
@@ -201,6 +220,24 @@ components:
       description: |
         Plant Observation Terrestrial
       type: object
+      required:
+        - species_density_code
+        - species_distribution_code
+        - soil_texture_code
+        - specific_use_code
+        - slope_code
+        - aspect_code
+        - proposed_action_code
+        - flowering
+        - plant_life_stage
+        - plant_health
+        - plant_seed_stage
+        - legacy_site_ind
+        - early_detection_rapid_resp_ind
+        - research_detection_ind
+        - well_ind
+        - special_care_ind
+        - biological_ind
       properties:
         species_density_code:
           type: string
@@ -263,6 +300,23 @@ components:
       description:
         Plant Observation Terrestrial
       type: object
+      required:
+        - specific_use_code
+        - proposed_action_code
+        - flowering
+        - plant_life_stage
+        - plant_health
+        - plant_seed_stage
+        - legacy_site_ind
+        - early_detection_rapid_resp_ind
+        - research_detection_ind
+        - sample_taken
+        - sample_point_number
+        - special_care_ind
+        - biological_ind
+        - secchi_depth
+        - water_depth
+        - voucher_submitted_ind
       properties:
         specific_use_code:
           type: string
@@ -328,22 +382,38 @@ components:
       description: |
         Animal Observation Terrestrial.
       type: object
+      required:
+        - number_of_individuals_observed
+        - life_stage
+        - behaviour
       properties:
-        Number_of_Individuals_observed:
+        number_of_individuals_observed:
           type: number
-          title: "Number of Individuals"
-        Life_Stage:
+          title: "Number of individuals"
+        life_stage:
           type: string
           title: "Life Stage"
-        Behaviour:
+          enum:
+            - unknown
+            - egg
+            - neonate
+            - juvenile
+            - adult
+        behaviour:
           type: string
           title: "Behaviour"
-  
-        
+          enum:
+            - unknown
+            - moving 
+            - resting
+            - deceased
+    
     Observation_AnimalAquatic:
       description: |
         Animal Observation Aquatic.
       type: object
+      required: 
+        - observation_details
       properties:
         observation_details:
           type: string
@@ -359,9 +429,6 @@ components:
         - treatment_date
         - treatment_time
       properties:
-        treatment_method:
-          type: string
-          title: "Treatment method"
         treatment_date:
           type: string
           title: "Treatment date"
@@ -369,6 +436,7 @@ components:
           type: string
           title: "Treatment time"
         subType:
+          title: "Treatment method"
           oneOf:
             - $ref: "#/components/schemas/Treatment_ChemicalPlant:"
             - $ref: "#/components/schemas/Treatment_MechanicalPlant"
@@ -383,9 +451,17 @@ components:
         Chemical treament for plants - main object.
       type: object
       required:
-        - primary_applicator_employee_code
-        - secondary_applicator_employee_code
         - pesticide_employer_code
+        - project_management_plan_PMP
+        - pesticide_use_permit_PUP
+        - chemical_treatment_method
+        - temperature
+        - wind_speed
+        - humidity
+        - mix_delivery_rate
+        - application_rate
+        - area_treated
+        - herbicide
       properties:
         primary_applicator_employee_code:
           type: string
@@ -408,12 +484,35 @@ components:
         temperature:
           type: integer
           title: "Temperature"
+          minimum: 10
+          maximum: 30
         wind_speed:
           type: string
           title: "Wind"
+          enum:
+            - N
+            - NE
+            - E
+            - SE
+            - S
+            - SW
+            - W
+            - NW
         humidity:
           type: integer
           title: "Humidity"
+          enum: 
+            - 0
+            - 10
+            - 20
+            - 30
+            - 40
+            - 50
+            - 60
+            - 70
+            - 80
+            - 90
+            - 100
         mix_delivery_rate:
           type: number
           format: float
@@ -426,27 +525,11 @@ components:
           type: number
           format: float
           title: "Area treated"
-        amount_of_herbicide_1:
-          type: number
-          format: float
-          title: "Herbicide 1 amount"
-        amount_of_herbicide_2:
-          type: number
-          format: float
-          title: "Herbicide 2 amount"
-        amount_of_herbicide_3:
-          type: number
-          format: float
-          title: "Herbicide 3 amount"
-        herbicide_1:
-          type: string
-          title: "Herbicide 1"
-        herbicide_2:
-          type: string
-          title: "Herbicide 2"
-        herbicide_3:
-          type: string
-          title: "Herbicide 3"
+        herbicide:
+          type: array
+          title: "Herbicide"
+          items: 
+            $ref: "#/components/schemas/Herbicide"
 
     Treatment_MechanicalPlant:
       description:
@@ -753,4 +836,34 @@ components:
           format: 'base64'
           description: 'A Data URL base64 encoded image'
           example: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/4REy...'
+
+    PaperFile:
+      description: |
+        Paper files
+      type: object
+      properties:
+        paper_date:
+          type: string
+          title: "Date"
+        description:
+          type: string
+          title: "Description"
+          maximum: 50
+    
+    Herbicide:
+      description:
+        herbicide
+      type: object
+      required:
+        - herbicide_name
+        - herbicide_amount
+      properties:
+        herbicide_name:
+          type: string
+          title: "herbicide name"
+        herbicide_amount:
+          type: number
+          title: "herbicide amount"
+          format: float
+
     
