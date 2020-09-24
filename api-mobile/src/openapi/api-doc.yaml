@@ -438,7 +438,7 @@ components:
         subType:
           title: "Treatment method"
           oneOf:
-            - $ref: "#/components/schemas/Treatment_ChemicalPlant:"
+            - $ref: "#/components/schemas/Treatment_ChemicalPlant"
             - $ref: "#/components/schemas/Treatment_MechanicalPlant"
             - $ref: "#/components/schemas/Treatment_BiologicalPlant"
             - $ref: "#/components/schemas/Treatment_BiologicalDispersalPlant"
@@ -537,6 +537,10 @@ components:
       type: object
       required:
         - mechanical_method
+        - mechanical_disposal_method
+        - mechanical_root_removal_code
+        - mechanical_soil_disturbance_code
+        - signage_on_site
       properties:
         applicator1_first_name:
           type: string
@@ -573,10 +577,13 @@ components:
   
     Treatment_BiologicalPlant:
       description:
-        Mechanical treament for plants - main object.
+        Biological treament for plants - main object.
       type: object
       required:
         - treatment_contractor
+        - biological_agent
+        - biological_agent_stage
+        - bioagent_maturity_status
       properties:
         applicator1_first_name:
           type: string
@@ -608,9 +615,9 @@ components:
         biological_agent_stage:
           type: string
           title: "Biological agent stage"
-        biological_maturity_status:
+        bioagent_maturity_status:
           type: string
-          title: "Biological maturity status"
+          title: "Bioagent maturity status"
 
     Treatment_BiologicalDispersalPlant:
       description:
@@ -618,6 +625,7 @@ components:
       type: object
       required:
         - treatment_contractor
+        - biological_agent
       properties:
         applicator1_first_name:
           type: string
@@ -663,7 +671,7 @@ components:
 
     Treatment_ChemicalTerrestrialAnimal:
       description:
-        Chemical treament for animals - main object.
+        Chemical treament for terrestrial animals - main object.
       type: object
       required:
         - treatment_details
@@ -674,7 +682,7 @@ components:
     
     Treatment_BiologicalTerrestrialAnimal:
       description:
-        Biological treament for animals - main object.
+        Biological treament for terrestrial animals - main object.
       type: object
       required:
         - treatment_details
@@ -689,6 +697,9 @@ components:
       type: object
       required:
         - activity_id
+        - observer_first_name
+        - observer_last_name
+        - efficacy_rating_code
       properties:
         activity_id:
           type: integer
@@ -705,6 +716,28 @@ components:
         efficacy_rating_code:
           type: integer
           title: "Efficacy rating"
+          enum:
+            - 0
+            - 5
+            - 10
+            - 15
+            - 20
+            - 25
+            - 30
+            - 35
+            - 40
+            - 45
+            - 50
+            - 55
+            - 60
+            - 65
+            - 70
+            - 75
+            - 80
+            - 85
+            - 90
+            - 95
+            - 100
         subType:
           oneOf:
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAquaticPlant"
@@ -740,6 +773,20 @@ components:
       description:
         Biological monitoring for terrestrial plants - main object.
       type: object
+      required: 
+      - plant_count
+      - agent_count
+      - count_duration
+      - agent_destroyed_ind
+      - legacy_presence_ind
+      - foliar_feeding_damage_ind
+      - root_feeding_damage_ind
+      - oviposition_marks_ind
+      - eggs_present_ind
+      - larvae_present_ind
+      - pupae_present_ind
+      - adults_present_ind
+      - tunnels_present_ind
       properties:
         plant_count:
           type: integer
@@ -808,7 +855,7 @@ components:
 
     Monitoring_BiologicalTerrestrialAnimal:
       description:
-        Mechanical monitoring for terrestrial plants - main object.
+        Biological monitoring for terrestrial plants - main object.
       type: object
       required:
         - monitoring_details
