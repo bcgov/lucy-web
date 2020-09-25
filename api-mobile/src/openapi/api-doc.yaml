@@ -962,6 +962,17 @@ components:
             - LineString
             - Polygon
           description: the geometry type
+        elevation_metres:
+          type: integer
+          title: "Elevation (m)"
+        well_proximity:
+          type: number
+          format: float
+          title: "Well proximity"
+        well_tag:
+          type: integer
+          title: "Well tag"
+
     Point3D:
       type: array
       description: Point in 3D space
@@ -1013,5 +1024,7 @@ components:
 ## - If area treated comes for the geometry, does the user need that information at the time of the activity?  otherwise can we do the calculation in the back-end?
 ## - we need the full spec for the point 3D
 ## - how do we treat the waypoint offset? and boc polygon?
+## - do we still need hex_id, hex_sub_id?
+##
 
     
