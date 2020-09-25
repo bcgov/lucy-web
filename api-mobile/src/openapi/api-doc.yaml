@@ -109,6 +109,7 @@ components:
         - media_indicator
         - created_date_on_device
         - updated_date_on_device
+        - geometry
         - subType
       properties:
         species_agency_code:
@@ -155,11 +156,20 @@ components:
           title: "Paper file"
           items: 
             $ref: "#/components/schemas/PaperFile"
+        geometry:
+          type: array
+          title: "Geometry"
+          items: 
+            $ref: "#/components/schemas/Geometry"
         subType:
+          title: "Activity subtype"
           oneOf:
             - $ref: "#/components/schemas/Observation"
+              title: "Observation"
             - $ref: "#/components/schemas/Treatment"
+              title: "Treatment"
             - $ref: "#/components/schemas/Monitoring"
+              title: "Monitoring"
 
     Observation:
       description: |
@@ -209,11 +219,16 @@ components:
           type: boolean
           title: "Negative Observation"
         subType:
+          title: "Observation subtype"
           oneOf:
             - $ref: "#/components/schemas/Observation_PlantTerrestial"
+              title: "Terrestrial Plant Observation"
             - $ref: "#/components/schemas/Observation_PlantAquatic"
+              title: "Aquatic Plant Observation"
             - $ref: "#/components/schemas/Observation_AnimalTerrestrial"
+              title: "Terrestrial Animal Observation"
             - $ref: "#/components/schemas/Observation_AnimalAquatic"
+              title: "Aquatic Animal Observation"
             
 
     Observation_PlantTerrestial:
@@ -280,6 +295,7 @@ components:
           title: "Range Unit"
         legacy_site_ind:
           type: boolean
+          title: "Legacy site"
         early_detection_rapid_resp_ind:
           type: boolean
           title: "Early Detection"
@@ -288,14 +304,13 @@ components:
           title: "Research Detection"
         well_ind:
           type: boolean
-          title: "Well"
+          title: "Visible well nearby"
         special_care_ind:
           type: boolean
           title: "Special Care"
         biological_ind:
           type: boolean
           title: "Biological"
-
     Observation_PlantAquatic:
       description:
         Plant Observation Terrestrial
@@ -311,7 +326,6 @@ components:
         - early_detection_rapid_resp_ind
         - research_detection_ind
         - sample_taken
-        - sample_point_number
         - special_care_ind
         - biological_ind
         - secchi_depth
@@ -425,38 +439,37 @@ components:
         Treament main object.
       type: object
       required:
-        - treatment_method
-        - treatment_date
-        - treatment_time
+        -subType
       properties:
-        treatment_date:
-          type: string
-          title: "Treatment date"
-        treatment_time:
-          type: string
-          title: "Treatment time"
         subType:
-          title: "Treatment method"
+          title: "Treatment type"
           oneOf:
             - $ref: "#/components/schemas/Treatment_ChemicalPlant"
+              title: "Chemical treatment for plants"
             - $ref: "#/components/schemas/Treatment_MechanicalPlant"
+              title: "Mechanical treatment for plants"
             - $ref: "#/components/schemas/Treatment_BiologicalPlant"
+              title: "Biological treament for plants"
             - $ref: "#/components/schemas/Treatment_BiologicalDispersalPlant"
+              title: "Biological dispersal treament for plants"
             - $ref: "#/components/schemas/Treatment_MechanicalTerrestrialAnimal"
+              title: "Mechanical treatment for terrestrial animals"
             - $ref: "#/components/schemas/Treatment_ChemicalTerrestrialAnimal"
+              title: "Chemical treatment for terrestrial animals"
             - $ref: "#/components/schemas/Treatment_BiologicalTerrestrialAnimal"
+              title: "Biological treatment for terrestrial animals"
   
     Treatment_ChemicalPlant:
       description: |
         Chemical treament for plants - main object.
       type: object
       required:
+        - primary_applicator_employee_code
+        - secondary_applicator_employee_code
         - pesticide_employer_code
         - project_management_plan_PMP
-        - pesticide_use_permit_PUP
         - chemical_treatment_method
         - temperature
-        - wind_speed
         - humidity
         - mix_delivery_rate
         - application_rate
@@ -474,7 +487,7 @@ components:
           title: "Pesticide employer code"
         project_management_plan_PMP:
           type: string
-          title: "Projecty Management Plan"
+          title: "Project Management Plan"
         pesticide_use_permit_PUP:
           type: string
           title: "Pesticide use permit"
@@ -487,8 +500,11 @@ components:
           minimum: 10
           maximum: 30
         wind_speed:
+          type: integer
+          title: " Wind speed"
+        wind_direction:
           type: string
-          title: "Wind"
+          title: "Wind direction"
           enum:
             - N
             - NE
@@ -536,6 +552,9 @@ components:
         Mechanical treament for plants - main object.
       type: object
       required:
+        - applicator1_first_name
+        - applicator1_last_name
+        - treatment_contractor
         - mechanical_method
         - mechanical_disposal_method
         - mechanical_root_removal_code
@@ -580,7 +599,12 @@ components:
         Biological treament for plants - main object.
       type: object
       required:
+        - applicator1_first_name
+        - applicator1_last_name
         - treatment_contractor
+        - classified_area
+        - release_quantity
+        - agent_source
         - biological_agent
         - biological_agent_stage
         - bioagent_maturity_status
@@ -624,8 +648,14 @@ components:
         Mechanical treament for plants - main object.
       type: object
       required:
+        - applicator1_first_name
+        - applicator1_last_name
         - treatment_contractor
+        - duration_of_count
         - biological_agent
+        - plant_count
+        - biological_agent_count
+        - biological_agent_presence
       properties:
         applicator1_first_name:
           type: string
@@ -635,10 +665,10 @@ components:
           title: "Applicator 1 last name"
         applicator2_first_name:
           type: string
-          title: "Applicator 1 first name"
+          title: "Applicator 2 first name"
         applicator2_last_name:
           type: string
-          title: "Applicator 1 last name"
+          title: "Applicator 2 last name"
         treatment_contractor:
           type: string
           title: "Treatment contractor"
@@ -704,9 +734,6 @@ components:
         activity_id:
           type: integer
           title: "Treatment id"
-        monitoring_date:
-          type: string
-          title: "Treatment date"
         observer_first_name:
           type: string
           title: "First Name"
@@ -741,11 +768,17 @@ components:
         subType:
           oneOf:
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAquaticPlant"
+              title: " Monitoring a chemical treament for terrestrial and aquatic plants"
             - $ref: "#/components/schemas/Monitoring_MechanicalTerrestrialAquaticPlant"
+              title: "Monotoring a mechanical treatment for terrestrial and aquatic plants"
             - $ref: "#/components/schemas/Monitoring_BiologicalTerrestrialPlant"
+              title: "Monitoring a biological treatment for terrestrial plants"
             - $ref: "#/components/schemas/Monitoring_MechanicalTerrestrialAnimal"
+              title: "Monotoring a mechanical treatment for a terrestrial animal"
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAnimal"
+              title: "Monitoring a chemical treatment for a terrestrial animal"
             - $ref: "#/components/schemas/Monitoring_BiologicalTerrestrialAnimal"
+              title: "Monitoring a biological treatment for a terrestrial animal"
       
     Monitoring_ChemicalTerrestrialAquaticPlant:
       description:
@@ -888,10 +921,9 @@ components:
       description: |
         Paper files
       type: object
+      required:
+        - description
       properties:
-        paper_date:
-          type: string
-          title: "Date"
         description:
           type: string
           title: "Description"
@@ -939,6 +971,7 @@ components:
       maxItems: 3
       items:
         type: number
+    ## point needs a radius
     Point:
       type: object
       description: GeoJSon geometry
@@ -975,4 +1008,10 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/Point3D"
+
+## Questions:
+## - If area treated comes for the geometry, does the user need that information at the time of the activity?  otherwise can we do the calculation in the back-end?
+## - we need the full spec for the point 3D
+## - how do we treat the waypoint offset? and boc polygon?
+
     
