@@ -432,8 +432,6 @@ components:
         observation_details:
           type: string
           title: "Aquatic animal observations"
-
-
     Treatment:
       description: |
         Treament main object.
@@ -591,9 +589,6 @@ components:
         signage_on_site:
           type: boolean
           title: "Signage on site"
-
-
-  
     Treatment_BiologicalPlant:
       description:
         Biological treament for plants - main object.
@@ -766,6 +761,7 @@ components:
             - 95
             - 100
         subType:
+          title: "Monitoring type"
           oneOf:
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAquaticPlant"
               title: " Monitoring a chemical treament for terrestrial and aquatic plants"
@@ -1019,11 +1015,13 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/Point3D"
+    
+  
 
 ## Questions:
 ## - If area treated comes for the geometry, does the user need that information at the time of the activity?  otherwise can we do the calculation in the back-end?
 ## - we need the full spec for the point 3D
-## - how do we treat the waypoint offset? and boc polygon?
+## - how do we treat the waypoint offset? and box polygon?
 ## - do we still need hex_id, hex_sub_id?
 ##
 
