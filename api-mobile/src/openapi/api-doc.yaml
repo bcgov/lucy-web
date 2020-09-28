@@ -958,71 +958,48 @@ components:
             - LineString
             - Polygon
           description: the geometry type
-        elevation_metres:
-          type: integer
-          title: "Elevation (m)"
         well_proximity:
           type: number
           format: float
           title: "Well proximity"
+          readOnly: true
         well_tag:
           type: integer
           title: "Well tag"
+          readOnly: true
 
-    Point3D:
-      type: array
-      description: Point in 3D space
-      externalDocs:
-        url: http://geojson.org/geojson-spec.html#id2
-      minItems: 2
-      maxItems: 3
-      items:
-        type: number
-    ## point needs a radius
     Point:
       type: object
       description: GeoJSon geometry
-      externalDocs:
-        url: http://geojson.org/geojson-spec.html#id2
-      allOf:
-        - $ref: "#/components/schemas/Geometry"
-        - properties:
-            coordinates:
-              $ref: "#/components/schemas/Point3D"
+      properties:
+        radius:
+          type: number
+          format: float
+          title: "Radius"
+          writeOnly: true
+        coordinates:
+              type: array
+              items: {}
+      
     LineString:
       type: object
       description: GeoJSon geometry
-      externalDocs:
-        url: http://geojson.org/geojson-spec.html#id3
-      allOf:
-        - $ref: "#/components/schemas/Geometry"
-        - properties:
-            coordinates:
-              type: array
-              items:
-                $ref: "#/components/schemas/Point3D"
+      properties:
+        offset:
+          type: number
+          format: float
+          title: "Offset"
+          writeOnly: true
+        coordinates:
+          type: array
+          items: {}
+                
     Polygon:
       type: object
       description: GeoJSon geometry
-      externalDocs:
-        url: http://geojson.org/geojson-spec.html#id4
-      allOf:
-        - $ref: "#/components/schemas/Geometry"
-        - properties:
-            coordinates:
-              type: array
-              items:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Point3D"
-    
-  
-
-## Questions:
-## - If area treated comes for the geometry, does the user need that information at the time of the activity?  otherwise can we do the calculation in the back-end?
-## - we need the full spec for the point 3D
-## - how do we treat the waypoint offset? and box polygon?
-## - do we still need hex_id, hex_sub_id?
-##
-
+      properties:
+        coordinates:
+          type: array
+          items: {}
+                
     
