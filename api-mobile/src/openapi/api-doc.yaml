@@ -102,15 +102,7 @@ components:
       type: object
       required:
         - species_agency_code
-        - jurisdiction_code
         - activity_status
-        - species_id
-        - access_description
-        - media_indicator
-        - created_date_on_device
-        - updated_date_on_device
-        - geometry
-        - subType
       properties:
         species_agency_code:
           type: string
@@ -121,11 +113,6 @@ components:
         activity_status:
           type: string
           title: "Activity status"
-          enum:
-          - sync
-          - done
-          - pending
-          - errors
         species_id:
           type: string
           title: "Species"
@@ -136,56 +123,45 @@ components:
         access_description:
           type: string
           title: "Access Description"
-          maximum: 300
+        primary_paper_file_id:
+          type: string
+          title: "Primary File"
+        secondary_paper_file_id:
+          type: string
+          title: "Secondary File"
         media_indicator:
           type: boolean
           title: "Photo"
         created_date_on_device:
           type: string
-          title: "Created date on device"
+          title: "created on device"
         updated_date_on_device:
           type: string
-          title: "Updated date on device"
+          title: "created on device"
         media:
           type: array
           title: "Photos"
           items:
             $ref: "#/components/schemas/Media"
-        paper_file:
-          type: array
-          title: "Paper file"
-          items: 
-            $ref: "#/components/schemas/PaperFile"
-        geometry:
-          type: array
-          title: "Geometry"
-          items: 
-            $ref: "#/components/schemas/Geometry"
         subType:
-          title: "Activity subtype"
           oneOf:
             - $ref: "#/components/schemas/Observation"
-              title: "Observation"
             - $ref: "#/components/schemas/Treatment"
-              title: "Treatment"
             - $ref: "#/components/schemas/Monitoring"
-              title: "Monitoring"
 
     Observation:
       description: |
         Observation main object.
       type: object
       required:
+        - observation_id
         - observation_date
         - observation time
         - observation_type
-        - observer_first_name
-        - observer_last_name
-        - reported_area
-        - sample_taken
-        - negative_obs_ind
-        - subType
       properties:
+        observation_id:
+          type: number
+          title: "ID"
         observation_date:
           type: string
           title: "Date"
@@ -198,61 +174,33 @@ components:
         observer_first_name:
           type: string
           title: "First Name"
-          maximum: 50
         observer_last_name:
           type: string
           title: "Last Name"
-          maximum: 50
         reported_area:
           type: integer
           title: "Area"
-          minimum: 1
-          maximum: 100
         sample_taken:
           type: boolean
           title: "Sample Taken"
         sample_number:
           type: string
           title: "Sample Number"
-          maximum: 50
         negative_obs_ind:
           type: boolean
           title: "Negative Observation"
         subType:
-          title: "Observation subtype"
           oneOf:
             - $ref: "#/components/schemas/Observation_PlantTerrestial"
-              title: "Terrestrial Plant Observation"
             - $ref: "#/components/schemas/Observation_PlantAquatic"
-              title: "Aquatic Plant Observation"
             - $ref: "#/components/schemas/Observation_AnimalTerrestrial"
-              title: "Terrestrial Animal Observation"
             - $ref: "#/components/schemas/Observation_AnimalAquatic"
-              title: "Aquatic Animal Observation"
             
 
     Observation_PlantTerrestial:
       description: |
         Plant Observation Terrestrial
       type: object
-      required:
-        - species_density_code
-        - species_distribution_code
-        - soil_texture_code
-        - specific_use_code
-        - slope_code
-        - aspect_code
-        - proposed_action_code
-        - flowering
-        - plant_life_stage
-        - plant_health
-        - plant_seed_stage
-        - legacy_site_ind
-        - early_detection_rapid_resp_ind
-        - research_detection_ind
-        - well_ind
-        - special_care_ind
-        - biological_ind
       properties:
         species_density_code:
           type: string
@@ -295,7 +243,6 @@ components:
           title: "Range Unit"
         legacy_site_ind:
           type: boolean
-          title: "Legacy site"
         early_detection_rapid_resp_ind:
           type: boolean
           title: "Early Detection"
@@ -304,33 +251,18 @@ components:
           title: "Research Detection"
         well_ind:
           type: boolean
-          title: "Visible well nearby"
+          title: "Well"
         special_care_ind:
           type: boolean
           title: "Special Care"
         biological_ind:
           type: boolean
           title: "Biological"
+
     Observation_PlantAquatic:
       description:
         Plant Observation Terrestrial
       type: object
-      required:
-        - specific_use_code
-        - proposed_action_code
-        - flowering
-        - plant_life_stage
-        - plant_health
-        - plant_seed_stage
-        - legacy_site_ind
-        - early_detection_rapid_resp_ind
-        - research_detection_ind
-        - sample_taken
-        - special_care_ind
-        - biological_ind
-        - secchi_depth
-        - water_depth
-        - voucher_submitted_ind
       properties:
         specific_use_code:
           type: string
@@ -396,66 +328,55 @@ components:
       description: |
         Animal Observation Terrestrial.
       type: object
-      required:
-        - number_of_individuals_observed
-        - life_stage
-        - behaviour
       properties:
-        number_of_individuals_observed:
+        Number_of_Individuals_observed:
           type: number
-          title: "Number of individuals"
-        life_stage:
+          title: "Number of Individuals"
+        Life_Stage:
           type: string
           title: "Life Stage"
-          enum:
-            - unknown
-            - egg
-            - neonate
-            - juvenile
-            - adult
-        behaviour:
+        Behaviour:
           type: string
           title: "Behaviour"
-          enum:
-            - unknown
-            - moving 
-            - resting
-            - deceased
-    
+  
+        
     Observation_AnimalAquatic:
       description: |
         Animal Observation Aquatic.
       type: object
-      required: 
-        - observation_details
       properties:
         observation_details:
           type: string
           title: "Aquatic animal observations"
+
+
     Treatment:
       description: |
         Treament main object.
       type: object
       required:
-        -subType
+        - treatment_method
+        - treatment_date
+        - treatment_time
       properties:
+        treatment_method:
+          type: string
+          title: "Treatment method"
+        treatment_date:
+          type: string
+          title: "Treatment date"
+        treatment_time:
+          type: string
+          title: "Treatment time"
         subType:
-          title: "Treatment type"
           oneOf:
-            - $ref: "#/components/schemas/Treatment_ChemicalPlant"
-              title: "Chemical treatment for plants"
+            - $ref: "#/components/schemas/Treatment_ChemicalPlant:"
             - $ref: "#/components/schemas/Treatment_MechanicalPlant"
-              title: "Mechanical treatment for plants"
             - $ref: "#/components/schemas/Treatment_BiologicalPlant"
-              title: "Biological treament for plants"
             - $ref: "#/components/schemas/Treatment_BiologicalDispersalPlant"
-              title: "Biological dispersal treament for plants"
             - $ref: "#/components/schemas/Treatment_MechanicalTerrestrialAnimal"
-              title: "Mechanical treatment for terrestrial animals"
             - $ref: "#/components/schemas/Treatment_ChemicalTerrestrialAnimal"
-              title: "Chemical treatment for terrestrial animals"
             - $ref: "#/components/schemas/Treatment_BiologicalTerrestrialAnimal"
-              title: "Biological treatment for terrestrial animals"
   
     Treatment_ChemicalPlant:
       description: |
@@ -465,14 +386,6 @@ components:
         - primary_applicator_employee_code
         - secondary_applicator_employee_code
         - pesticide_employer_code
-        - project_management_plan_PMP
-        - chemical_treatment_method
-        - temperature
-        - humidity
-        - mix_delivery_rate
-        - application_rate
-        - area_treated
-        - herbicide
       properties:
         primary_applicator_employee_code:
           type: string
@@ -485,7 +398,7 @@ components:
           title: "Pesticide employer code"
         project_management_plan_PMP:
           type: string
-          title: "Project Management Plan"
+          title: "Projecty Management Plan"
         pesticide_use_permit_PUP:
           type: string
           title: "Pesticide use permit"
@@ -495,38 +408,12 @@ components:
         temperature:
           type: integer
           title: "Temperature"
-          minimum: 10
-          maximum: 30
         wind_speed:
-          type: integer
-          title: " Wind speed"
-        wind_direction:
           type: string
-          title: "Wind direction"
-          enum:
-            - N
-            - NE
-            - E
-            - SE
-            - S
-            - SW
-            - W
-            - NW
+          title: "Wind"
         humidity:
           type: integer
           title: "Humidity"
-          enum: 
-            - 0
-            - 10
-            - 20
-            - 30
-            - 40
-            - 50
-            - 60
-            - 70
-            - 80
-            - 90
-            - 100
         mix_delivery_rate:
           type: number
           format: float
@@ -539,25 +426,34 @@ components:
           type: number
           format: float
           title: "Area treated"
-        herbicide:
-          type: array
-          title: "Herbicide"
-          items: 
-            $ref: "#/components/schemas/Herbicide"
+        amount_of_herbicide_1:
+          type: number
+          format: float
+          title: "Herbicide 1 amount"
+        amount_of_herbicide_2:
+          type: number
+          format: float
+          title: "Herbicide 2 amount"
+        amount_of_herbicide_3:
+          type: number
+          format: float
+          title: "Herbicide 3 amount"
+        herbicide_1:
+          type: string
+          title: "Herbicide 1"
+        herbicide_2:
+          type: string
+          title: "Herbicide 2"
+        herbicide_3:
+          type: string
+          title: "Herbicide 3"
 
     Treatment_MechanicalPlant:
       description:
         Mechanical treament for plants - main object.
       type: object
       required:
-        - applicator1_first_name
-        - applicator1_last_name
-        - treatment_contractor
         - mechanical_method
-        - mechanical_disposal_method
-        - mechanical_root_removal_code
-        - mechanical_soil_disturbance_code
-        - signage_on_site
       properties:
         applicator1_first_name:
           type: string
@@ -589,20 +485,15 @@ components:
         signage_on_site:
           type: boolean
           title: "Signage on site"
+
+
+  
     Treatment_BiologicalPlant:
       description:
-        Biological treament for plants - main object.
+        Mechanical treament for plants - main object.
       type: object
       required:
-        - applicator1_first_name
-        - applicator1_last_name
         - treatment_contractor
-        - classified_area
-        - release_quantity
-        - agent_source
-        - biological_agent
-        - biological_agent_stage
-        - bioagent_maturity_status
       properties:
         applicator1_first_name:
           type: string
@@ -634,23 +525,16 @@ components:
         biological_agent_stage:
           type: string
           title: "Biological agent stage"
-        bioagent_maturity_status:
+        biological_maturity_status:
           type: string
-          title: "Bioagent maturity status"
+          title: "Biological maturity status"
 
     Treatment_BiologicalDispersalPlant:
       description:
         Mechanical treament for plants - main object.
       type: object
       required:
-        - applicator1_first_name
-        - applicator1_last_name
         - treatment_contractor
-        - duration_of_count
-        - biological_agent
-        - plant_count
-        - biological_agent_count
-        - biological_agent_presence
       properties:
         applicator1_first_name:
           type: string
@@ -660,10 +544,10 @@ components:
           title: "Applicator 1 last name"
         applicator2_first_name:
           type: string
-          title: "Applicator 2 first name"
+          title: "Applicator 1 first name"
         applicator2_last_name:
           type: string
-          title: "Applicator 2 last name"
+          title: "Applicator 1 last name"
         treatment_contractor:
           type: string
           title: "Treatment contractor"
@@ -696,7 +580,7 @@ components:
 
     Treatment_ChemicalTerrestrialAnimal:
       description:
-        Chemical treament for terrestrial animals - main object.
+        Chemical treament for animals - main object.
       type: object
       required:
         - treatment_details
@@ -707,7 +591,7 @@ components:
     
     Treatment_BiologicalTerrestrialAnimal:
       description:
-        Biological treament for terrestrial animals - main object.
+        Biological treament for animals - main object.
       type: object
       required:
         - treatment_details
@@ -722,13 +606,13 @@ components:
       type: object
       required:
         - activity_id
-        - observer_first_name
-        - observer_last_name
-        - efficacy_rating_code
       properties:
         activity_id:
           type: integer
           title: "Treatment id"
+        monitoring_date:
+          type: string
+          title: "Treatment date"
         observer_first_name:
           type: string
           title: "First Name"
@@ -738,43 +622,14 @@ components:
         efficacy_rating_code:
           type: integer
           title: "Efficacy rating"
-          enum:
-            - 0
-            - 5
-            - 10
-            - 15
-            - 20
-            - 25
-            - 30
-            - 35
-            - 40
-            - 45
-            - 50
-            - 55
-            - 60
-            - 65
-            - 70
-            - 75
-            - 80
-            - 85
-            - 90
-            - 95
-            - 100
         subType:
-          title: "Monitoring type"
           oneOf:
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAquaticPlant"
-              title: " Monitoring a chemical treament for terrestrial and aquatic plants"
             - $ref: "#/components/schemas/Monitoring_MechanicalTerrestrialAquaticPlant"
-              title: "Monotoring a mechanical treatment for terrestrial and aquatic plants"
             - $ref: "#/components/schemas/Monitoring_BiologicalTerrestrialPlant"
-              title: "Monitoring a biological treatment for terrestrial plants"
             - $ref: "#/components/schemas/Monitoring_MechanicalTerrestrialAnimal"
-              title: "Monotoring a mechanical treatment for a terrestrial animal"
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAnimal"
-              title: "Monitoring a chemical treatment for a terrestrial animal"
             - $ref: "#/components/schemas/Monitoring_BiologicalTerrestrialAnimal"
-              title: "Monitoring a biological treatment for a terrestrial animal"
       
     Monitoring_ChemicalTerrestrialAquaticPlant:
       description:
@@ -802,20 +657,6 @@ components:
       description:
         Biological monitoring for terrestrial plants - main object.
       type: object
-      required: 
-      - plant_count
-      - agent_count
-      - count_duration
-      - agent_destroyed_ind
-      - legacy_presence_ind
-      - foliar_feeding_damage_ind
-      - root_feeding_damage_ind
-      - oviposition_marks_ind
-      - eggs_present_ind
-      - larvae_present_ind
-      - pupae_present_ind
-      - adults_present_ind
-      - tunnels_present_ind
       properties:
         plant_count:
           type: integer
@@ -884,7 +725,7 @@ components:
 
     Monitoring_BiologicalTerrestrialAnimal:
       description:
-        Biological monitoring for terrestrial plants - main object.
+        Mechanical monitoring for terrestrial plants - main object.
       type: object
       required:
         - monitoring_details
@@ -912,94 +753,4 @@ components:
           format: 'base64'
           description: 'A Data URL base64 encoded image'
           example: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/4REy...'
-
-    PaperFile:
-      description: |
-        Paper files
-      type: object
-      required:
-        - description
-      properties:
-        description:
-          type: string
-          title: "Description"
-          maximum: 50
-    
-    Herbicide:
-      description:
-        herbicide
-      type: object
-      required:
-        - herbicide_name
-        - herbicide_amount
-      properties:
-        herbicide_name:
-          type: string
-          title: "herbicide name"
-        herbicide_amount:
-          type: number
-          title: "herbicide amount"
-          format: float
-
-    Geometry:
-      type: object
-      description: GeoJSon geometry
-      discriminator:
-        propertyName: type
-      required:
-        - type
-      externalDocs:
-        url: http://geojson.org/geojson-spec.html#geometry-objects
-      properties:
-        type:
-          type: string
-          enum:
-            - Point
-            - LineString
-            - Polygon
-          description: the geometry type
-        well_proximity:
-          type: number
-          format: float
-          title: "Well proximity"
-          readOnly: true
-        well_tag:
-          type: integer
-          title: "Well tag"
-          readOnly: true
-
-    Point:
-      type: object
-      description: GeoJSon geometry
-      properties:
-        radius:
-          type: number
-          format: float
-          title: "Radius"
-          writeOnly: true
-        coordinates:
-              type: array
-              items: {}
-      
-    LineString:
-      type: object
-      description: GeoJSon geometry
-      properties:
-        offset:
-          type: number
-          format: float
-          title: "Offset"
-          writeOnly: true
-        coordinates:
-          type: array
-          items: {}
-                
-    Polygon:
-      type: object
-      description: GeoJSon geometry
-      properties:
-        coordinates:
-          type: array
-          items: {}
-                
     
