@@ -437,7 +437,7 @@ components:
         Treament main object.
       type: object
       required:
-        -subType
+        - subType
       properties:
         subType:
           title: "Treatment type"
@@ -947,17 +947,8 @@ components:
       discriminator:
         propertyName: type
       required:
-        - type
-      externalDocs:
-        url: http://geojson.org/geojson-spec.html#geometry-objects
+        - subtype
       properties:
-        type:
-          type: string
-          enum:
-            - Point
-            - LineString
-            - Polygon
-          description: the geometry type
         well_proximity:
           type: number
           format: float
@@ -967,10 +958,19 @@ components:
           type: integer
           title: "Well tag"
           readOnly: true
+        subType:
+          title: "Geometry type"
+          oneOf:
+            - $ref: "#/components/schemas/Point"
+              title: "Point"
+            - $ref: "#/components/schemas/LineString"
+              title: "Line String"
+            - $ref: "#/components/schemas/Polygon"
+              title: "Polygon"
 
     Point:
       type: object
-      description: GeoJSon geometry
+      description: Point geometry
       properties:
         radius:
           type: number
@@ -983,7 +983,7 @@ components:
       
     LineString:
       type: object
-      description: GeoJSon geometry
+      description: LineString Geometry
       properties:
         offset:
           type: number
@@ -996,10 +996,9 @@ components:
                 
     Polygon:
       type: object
-      description: GeoJSon geometry
+      description: Polygon Geometry
       properties:
         coordinates:
           type: array
           items: {}
-                
     
