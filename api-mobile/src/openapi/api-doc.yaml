@@ -97,6 +97,7 @@ components:
             type: string
 
     Activity:
+      title: "Activity"
       description:
         Activity main object.
       type: object
@@ -165,13 +166,11 @@ components:
           title: "Activity subtype"
           oneOf:
             - $ref: "#/components/schemas/Observation"
-              title: "Observation"
             - $ref: "#/components/schemas/Treatment"
-              title: "Treatment"
             - $ref: "#/components/schemas/Monitoring"
-              title: "Monitoring"
 
     Observation:
+      title: "Observation"
       description: |
         Observation main object.
       type: object
@@ -222,16 +221,13 @@ components:
           title: "Observation subtype"
           oneOf:
             - $ref: "#/components/schemas/Observation_PlantTerrestial"
-              title: "Terrestrial Plant Observation"
             - $ref: "#/components/schemas/Observation_PlantAquatic"
-              title: "Aquatic Plant Observation"
             - $ref: "#/components/schemas/Observation_AnimalTerrestrial"
-              title: "Terrestrial Animal Observation"
             - $ref: "#/components/schemas/Observation_AnimalAquatic"
-              title: "Aquatic Animal Observation"
-            
+              
 
     Observation_PlantTerrestial:
+      title: "Terrestrial Plant Observation"
       description: |
         Plant Observation Terrestrial
       type: object
@@ -311,7 +307,9 @@ components:
         biological_ind:
           type: boolean
           title: "Biological"
+    
     Observation_PlantAquatic:
+      title: "Aquatic Plant Observation"
       description:
         Plant Observation Terrestrial
       type: object
@@ -393,6 +391,7 @@ components:
         
 
     Observation_AnimalTerrestrial:
+      title: "Terrestrial Animal Observation"
       description: |
         Animal Observation Terrestrial.
       type: object
@@ -423,6 +422,7 @@ components:
             - deceased
     
     Observation_AnimalAquatic:
+      title: "Aquatic Animal Observation"
       description: |
         Animal Observation Aquatic.
       type: object
@@ -432,7 +432,9 @@ components:
         observation_details:
           type: string
           title: "Aquatic animal observations"
+
     Treatment:
+      title: "Treatment"
       description: |
         Treament main object.
       type: object
@@ -442,22 +444,16 @@ components:
         subType:
           title: "Treatment type"
           oneOf:
-            - $ref: "#/components/schemas/Treatment_ChemicalPlant"
-              title: "Chemical treatment for plants"
+            - $ref: "#/components/schemas/Treatment_ChemicalPlant" 
             - $ref: "#/components/schemas/Treatment_MechanicalPlant"
-              title: "Mechanical treatment for plants"
             - $ref: "#/components/schemas/Treatment_BiologicalPlant"
-              title: "Biological treament for plants"
             - $ref: "#/components/schemas/Treatment_BiologicalDispersalPlant"
-              title: "Biological dispersal treament for plants"
             - $ref: "#/components/schemas/Treatment_MechanicalTerrestrialAnimal"
-              title: "Mechanical treatment for terrestrial animals"
             - $ref: "#/components/schemas/Treatment_ChemicalTerrestrialAnimal"
-              title: "Chemical treatment for terrestrial animals"
             - $ref: "#/components/schemas/Treatment_BiologicalTerrestrialAnimal"
-              title: "Biological treatment for terrestrial animals"
   
     Treatment_ChemicalPlant:
+      title: "Chemical treatment for plants"
       description: |
         Chemical treament for plants - main object.
       type: object
@@ -546,6 +542,7 @@ components:
             $ref: "#/components/schemas/Herbicide"
 
     Treatment_MechanicalPlant:
+      title: "Mechanical treatment for plants"
       description:
         Mechanical treament for plants - main object.
       type: object
@@ -589,7 +586,9 @@ components:
         signage_on_site:
           type: boolean
           title: "Signage on site"
+    
     Treatment_BiologicalPlant:
+      title: "Biological treament for plants"
       description:
         Biological treament for plants - main object.
       type: object
@@ -639,8 +638,9 @@ components:
           title: "Bioagent maturity status"
 
     Treatment_BiologicalDispersalPlant:
+      title: "Biological dispersal treament for plants"
       description:
-        Mechanical treament for plants - main object.
+        Biological dispersal treament for plants - main object.
       type: object
       required:
         - applicator1_first_name
@@ -684,6 +684,7 @@ components:
           title: "Biological agent presence"
 
     Treatment_MechanicalTerrestrialAnimal:
+      title: "Mechanical treatment for terrestrial animals"
       description:
         Mechanical treament for terrestrial animals - main object.
       type: object
@@ -695,6 +696,7 @@ components:
           title: "Treatment details"
 
     Treatment_ChemicalTerrestrialAnimal:
+      title: "Chemical treatment for terrestrial animals"
       description:
         Chemical treament for terrestrial animals - main object.
       type: object
@@ -706,6 +708,7 @@ components:
           title: "Treatment details"
     
     Treatment_BiologicalTerrestrialAnimal:
+      title: "Biological treatment for terrestrial animals"
       description:
         Biological treament for terrestrial animals - main object.
       type: object
@@ -717,6 +720,7 @@ components:
           title: "Treatment details"
 
     Monitoring:
+      title: "Monitoring"
       description: |
         Monitoring main object.
       type: object
@@ -764,19 +768,15 @@ components:
           title: "Monitoring type"
           oneOf:
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAquaticPlant"
-              title: " Monitoring a chemical treament for terrestrial and aquatic plants"
             - $ref: "#/components/schemas/Monitoring_MechanicalTerrestrialAquaticPlant"
-              title: "Monotoring a mechanical treatment for terrestrial and aquatic plants"
             - $ref: "#/components/schemas/Monitoring_BiologicalTerrestrialPlant"
-              title: "Monitoring a biological treatment for terrestrial plants"
             - $ref: "#/components/schemas/Monitoring_MechanicalTerrestrialAnimal"
-              title: "Monotoring a mechanical treatment for a terrestrial animal"
             - $ref: "#/components/schemas/Monitoring_ChemicalTerrestrialAnimal"
-              title: "Monitoring a chemical treatment for a terrestrial animal"
             - $ref: "#/components/schemas/Monitoring_BiologicalTerrestrialAnimal"
-              title: "Monitoring a biological treatment for a terrestrial animal"
+              
       
     Monitoring_ChemicalTerrestrialAquaticPlant:
+      title: " Monitoring a chemical treament for terrestrial and aquatic plants"
       description:
         Chemical monitoring for terrestrial plants - main object.
       type: object
@@ -788,6 +788,7 @@ components:
           title: "Monitoring details"
 
     Monitoring_MechanicalTerrestrialAquaticPlant:
+      title: "Monitoring a mechanical treatment for terrestrial and aquatic plants"
       description:
         Mechanical monitoring for terrestrial plants - main object.
       type: object
@@ -799,6 +800,7 @@ components:
           title: "Monitoring details"
 
     Monitoring_BiologicalTerrestrialPlant:
+      title: "Monitoring a biological treatment for terrestrial plants"
       description:
         Biological monitoring for terrestrial plants - main object.
       type: object
@@ -861,6 +863,7 @@ components:
           title: "Biological agent spread"
 
     Monitoring_MechanicalTerrestrialAnimal:
+      title: "Monitoring a mechanical treatment for a terrestrial animal"
       description:
         Mechanical monitoring for terrestrial plants - main object.
       type: object
@@ -872,6 +875,7 @@ components:
           title: "Monitoring details"
 
     Monitoring_ChemicalTerrestrialAnimal:
+      title: "Monitoring a chemical treatment for a terrestrial animal"
       description:
         Chemical monitoring for terrestrial plants - main object.
       type: object
@@ -883,6 +887,7 @@ components:
           title: "Monitoring details"
 
     Monitoring_BiologicalTerrestrialAnimal:
+      title: "Monitoring a biological treatment for a terrestrial animal"
       description:
         Biological monitoring for terrestrial plants - main object.
       type: object
@@ -894,6 +899,7 @@ components:
           title: "Monitoring details"
 
     Media:
+      title: "Media"
       description: |
         List of Media
       type: object
@@ -914,6 +920,7 @@ components:
           example: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/4REy...'
 
     PaperFile:
+      title: "Paper file"
       description: |
         Paper files
       type: object
@@ -926,6 +933,7 @@ components:
           maximum: 50
     
     Herbicide:
+      title: "Herbicide"
       description:
         herbicide
       type: object
@@ -942,10 +950,9 @@ components:
           format: float
 
     Geometry:
+      title: " Geometry"
       type: object
       description: GeoJSon geometry
-      discriminator:
-        propertyName: type
       required:
         - subtype
       properties:
@@ -959,16 +966,14 @@ components:
           title: "Well tag"
           readOnly: true
         subType:
-          title: "Geometry type"
+          title: "Geometry subtype"
           oneOf:
             - $ref: "#/components/schemas/Point"
-              title: "Point"
             - $ref: "#/components/schemas/LineString"
-              title: "Line String"
             - $ref: "#/components/schemas/Polygon"
-              title: "Polygon"
 
     Point:
+      title: "Point with radius"
       type: object
       description: Point geometry
       properties:
@@ -982,6 +987,7 @@ components:
               items: {}
       
     LineString:
+      title: "Line with offset (box)"
       type: object
       description: LineString Geometry
       properties:
@@ -995,10 +1001,10 @@ components:
           items: {}
                 
     Polygon:
+      title: "Polygon"
       type: object
       description: Polygon Geometry
       properties:
         coordinates:
           type: array
           items: {}
-    
