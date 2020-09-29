@@ -4,35 +4,35 @@ import { ActivityPostRequestBody, ActivitySearchCriteria } from './../models/act
 /**
  * SQL query to insert a new activity, and return the inserted record.
  *
- * @param {ActivityPostRequestBody} activityData
+ * @param {ActivityPostRequestBody} activity
  * @returns {SQLStatement} sql query object
  */
-export const postActivitySQL = (activityData: ActivityPostRequestBody): SQLStatement => {
-  if (!activityData) {
+export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement => {
+  if (!activity) {
     return null;
   }
 
   const sqlStatement: SQLStatement = SQL`
     INSERT INTO activity_incoming_data (
       activity_type,
-      activity_sub_type,
+      activity_subtype,
       received_timestamp,
       activity_payload,
       geog,
       media_keys
     ) VALUES (
-      ${activityData.activity_type},
-      ${activityData.activity_sub_type},
-      ${activityData.date},
-      ${activityData.activityPostBody}
+      ${activity.activity_type},
+      ${activity.activity_subtype},
+      ${activity.received_timestamp},
+      ${activity.activityPostBody}
   `;
 
-  if (activityData.locationAndGeometry && activityData.locationAndGeometry['geometry']) {
+  if (activity.geometry && activity.geometry.length) {
     sqlStatement.append(`
       ,public.geography(
         public.ST_Force2D(
           public.ST_SetSRID(
-            public.ST_GeomFromGeoJSON('${JSON.stringify(activityData.locationAndGeometry['geometry'])}')
+            public.ST_GeomFromGeoJSON('${JSON.stringify(activity.geometry[0])}')
             ,4326
           )
         )
@@ -45,7 +45,7 @@ export const postActivitySQL = (activityData: ActivityPostRequestBody): SQLState
   }
 
   sqlStatement.append(`
-      ,${activityData.mediaKeys}
+      ,${activity.mediaKeys}
     )
     RETURNING
       activity_incoming_data_id;
@@ -67,8 +67,8 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
     sqlStatement.append(SQL` WHERE activity_type = ${searchCriteria.activity_type}`);
   }
 
-  if (searchCriteria.activity_sub_type) {
-    sqlStatement.append(SQL` WHERE activity_sub_type = ${searchCriteria.activity_sub_type}`);
+  if (searchCriteria.activity_subtype) {
+    sqlStatement.append(SQL` WHERE activity_subtype = ${searchCriteria.activity_subtype}`);
   }
 
   if (searchCriteria.date_range_start) {

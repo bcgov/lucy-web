@@ -1,7 +1,7 @@
 CREATE OR REPLACE VIEW observation_common_fields_view as (
-select 
+select
 id as activity_id,
-activity_sub_type as observation_type,
+activity_subtype as observation_type,
 activity_payload::json->'negative_observation_ind' as negative_observation_ind,
 activity_payload::json->'negative_observation_ind' as negative_observation_ind,
 activity_payload::json->'aquatic_observation_ind' as aquatic_observation_ind,

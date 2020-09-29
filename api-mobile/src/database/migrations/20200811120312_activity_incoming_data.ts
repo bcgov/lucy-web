@@ -27,9 +27,9 @@ export async function up(knex: Knex): Promise<void> {
     COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.activity_type IS 'Type of record';
     CREATE index type_idx on ${DB_SCHEMA}.activity_incoming_data (activity_type);
 
-    ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN activity_sub_type VARCHAR(200) NULL;
-    COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.activity_sub_type IS 'Sub Type of record';
-    CREATE index sub_type_idx on ${DB_SCHEMA}.activity_incoming_data (activity_sub_type);
+    ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN activity_subtype VARCHAR(200) NULL;
+    COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.activity_subtype IS 'Sub Type of record';
+    CREATE index sub_type_idx on ${DB_SCHEMA}.activity_incoming_data (activity_subtype);
 
     ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN received_timestamp timestamp NOT NULL DEFAULT NOW();
     COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.received_timestamp IS 'The date and time data was received and inserted into the database.';

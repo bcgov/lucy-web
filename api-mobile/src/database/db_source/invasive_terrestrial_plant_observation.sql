@@ -1,5 +1,5 @@
 CREATE OR REPLACE VIEW invasive_terrestrial_plant_observation_specific_fields_view as (
-select 
+select
 'banana' as activity_id,
 'banana' as species,
 'banana' as distribution,
@@ -22,6 +22,6 @@ select
 'banana' as range_unit
 
 from activity_incoming_data
-where activity_incoming_data.activity_type = 'Observation' and activity_incoming_data.activity_sub_type = 'Terrestrial Plant Observation'
+where activity_incoming_data.activity_type = 'Observation' and activity_incoming_data.activity_subtype = 'Terrestrial Plant Observation'
 )
 COMMENT ON VIEW invasive_terrestrial_plant_observation_specific_fields_view IS 'View on fields specific to invasive terrestrial plant of observations, with table activity_incoming_data as source.';

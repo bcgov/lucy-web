@@ -44,7 +44,7 @@ GET.apiDoc = {
               activityTypeData: {
                 type: 'object'
               },
-              activity_sub_type: {
+              activity_subtype: {
                 type: 'string'
               },
               activitySubTypeData: {

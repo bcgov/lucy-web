@@ -11,7 +11,7 @@ export async function up(knex: Knex): Promise<void> {
 
     CREATE OR REPLACE VIEW ${DB_SCHEMA}.observation_common_fields_view as (
       select activity_id,
-      activity_sub_type as observation_type,
+      activity_subtype as observation_type,
       cast(activity_payload -> 'activityTypeData' ->> 'negative_observation_ind' as bool) as negative_observation_ind,
       cast(activity_payload -> 'activityTypeData' ->> 'aquatic_observation_ind' as bool) as aquatic_observation_ind,
       cast(activity_payload -> 'activityTypeData' ->> 'primary_user_first_name' as text) as primary_user_first_name,

@@ -32,7 +32,7 @@ GET.apiDoc = {
             activity_type: {
               type: 'string'
             },
-            activity_sub_type: {
+            activity_subtype: {
               type: 'string'
             },
             page: {
@@ -69,80 +69,7 @@ GET.apiDoc = {
             items: {
               type: 'object',
               properties: {
-                activity_type: {
-                  type: 'string'
-                },
-                activityTypeData: {
-                  type: 'object'
-                },
-                activity_sub_type: {
-                  type: 'string'
-                },
-                activitySubTypeData: {
-                  type: 'object'
-                },
-                date: {
-                  type: 'string',
-                  description: 'Date in YYYY-MM-DD format'
-                },
-                locationAndGeometry: {
-                  type: 'object',
-                  description: 'Location and geometry information',
-                  properties: {
-                    anchorPointY: {
-                      type: 'number'
-                    },
-                    anchorPointX: {
-                      type: 'number'
-                    },
-                    area: {
-                      type: 'number'
-                    },
-                    geometry: {
-                      type: 'object',
-                      description: 'A geoJSON object'
-                    },
-                    jurisdiction: {
-                      type: 'string'
-                    },
-                    agency: {
-                      type: 'string'
-                    },
-                    observer1FirstName: {
-                      type: 'string'
-                    },
-                    observer1LastName: {
-                      type: 'string'
-                    },
-                    locationComment: {
-                      type: 'string'
-                    },
-                    generalComment: {
-                      type: 'string'
-                    },
-                    photoTaken: {
-                      type: 'boolean'
-                    }
-                  }
-                },
-                media: {
-                  type: 'array',
-                  description: 'An array of media objects associated to the activity record',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      fileName: {
-                        type: 'string'
-                      },
-                      encodedFile: {
-                        type: 'string',
-                        format: 'base64',
-                        description: 'A Data URL base64 encoded image',
-                        example: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/4REy...'
-                      }
-                    }
-                  }
-                }
+                // don't specify exact response, as it is not currently enforced anyways
               }
             }
           }
@@ -172,95 +99,52 @@ POST.apiDoc = {
     }
   ],
   requestBody: {
-    description: 'Activity post response object.',
+    description: 'Activity post request object.',
     content: {
       'application/json': {
         schema: {
-          required: [
-            'activity_type',
-            'activityTypeData',
-            'activity_sub_type',
-            'activitySubTypeData',
-            'date',
-            'locationAndGeometry'
-          ],
+          required: ['activity_type', 'activity_subtype'],
           properties: {
             activity_type: {
               type: 'string'
             },
-            activityTypeData: {
-              type: 'object'
-            },
-            activity_sub_type: {
+            activity_subtype: {
               type: 'string'
-            },
-            activitySubTypeData: {
-              type: 'object'
-            },
-            date: {
-              type: 'string',
-              description: 'Date in YYYY-MM-DD format'
-            },
-            locationAndGeometry: {
-              type: 'object',
-              additionalProperties: false,
-              description: 'Location and geometry information',
-              properties: {
-                anchorPointY: {
-                  type: 'number'
-                },
-                anchorPointX: {
-                  type: 'number'
-                },
-                area: {
-                  type: 'number'
-                },
-                geometry: {
-                  type: 'object',
-                  description: 'A geoJSON object'
-                },
-                jurisdiction: {
-                  type: 'string'
-                },
-                agency: {
-                  type: 'string'
-                },
-                observer1FirstName: {
-                  type: 'string'
-                },
-                observer1LastName: {
-                  type: 'string'
-                },
-                locationComment: {
-                  type: 'string'
-                },
-                generalComment: {
-                  type: 'string'
-                },
-                photoTaken: {
-                  type: 'boolean'
-                }
-              }
             },
             media: {
               type: 'array',
-              description: 'An array of media objects to upload and associate to the activity record',
+              title: 'Media',
               items: {
-                type: 'object',
-                additionalProperties: false,
-                required: ['fileName', 'encodedFile'],
-                properties: {
-                  fileName: {
-                    type: 'string'
-                  },
-                  encodedFile: {
-                    type: 'string',
-                    format: 'base64',
-                    description: 'A Data URL base64 encoded image',
-                    example: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/4REy...'
-                  }
-                }
+                $ref: '#/components/schemas/Media'
               }
+            },
+            geometry: {
+              type: 'array',
+              title: 'Geometry',
+              items: {
+                $ref: '#/components/schemas/Geometry'
+              }
+            },
+            form_data: {
+              oneOf: [
+                { $ref: '#/components/schemas/Activity_Observation_PlantTerrestial' },
+                { $ref: '#/components/schemas/Activity_Observation_PlantAquatic' },
+                { $ref: '#/components/schemas/Activity_Observation_AnimalTerrestrial' },
+                { $ref: '#/components/schemas/Activity_Observation_AnimalAquatic' },
+                { $ref: '#/components/schemas/Activity_Treatment_ChemicalPlant' },
+                { $ref: '#/components/schemas/Activity_Treatment_MechanicalPlant' },
+                { $ref: '#/components/schemas/Activity_Treatment_BiologicalPlant' },
+                { $ref: '#/components/schemas/Activity_Treatment_BiologicalDispersalPlant' },
+                { $ref: '#/components/schemas/Activity_Treatment_MechanicalTerrestrialAnimal' },
+                { $ref: '#/components/schemas/Activity_Treatment_ChemicalTerrestrialAnimal' },
+                { $ref: '#/components/schemas/Activity_Treatment_BiologicalTerrestrialAnimal' },
+                { $ref: '#/components/schemas/Activity_Monitoring_ChemicalTerrestrialAquaticPlant' },
+                { $ref: '#/components/schemas/Activity_Monitoring_MechanicalTerrestrialAquaticPlant' },
+                { $ref: '#/components/schemas/Activity_Monitoring_BiologicalTerrestrialPlant' },
+                { $ref: '#/components/schemas/Activity_Monitoring_MechanicalTerrestrialAnimal' },
+                { $ref: '#/components/schemas/Activity_Monitoring_ChemicalTerrestrialAnimal' },
+                { $ref: '#/components/schemas/Activity_Monitoring_BiologicalTerrestrialAnimal' }
+              ]
             }
           }
         }
@@ -355,7 +239,7 @@ function createActivity(): RequestHandler {
   return async (req, res, next) => {
     defaultLog.debug({ label: 'activity', message: 'body', body: req.body });
 
-    const data: ActivityPostRequestBody = { ...req.body, mediaKeys: req['mediaKeys'] };
+    const data = { ...req.body, mediaKeys: req['mediaKeys'] };
 
     const sanitizedActivityData = new ActivityPostRequestBody(data);
 
