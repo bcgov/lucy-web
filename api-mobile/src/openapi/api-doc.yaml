@@ -307,6 +307,7 @@ components:
         biological_ind:
           type: boolean
           title: "Biological"
+    
     Observation_PlantAquatic:
       title: "Aquatic Plant Observation"
       description:
@@ -585,6 +586,7 @@ components:
         signage_on_site:
           type: boolean
           title: "Signage on site"
+    
     Treatment_BiologicalPlant:
       title: "Biological treament for plants"
       description:
@@ -638,7 +640,7 @@ components:
     Treatment_BiologicalDispersalPlant:
       title: "Biological dispersal treament for plants"
       description:
-        Mechanical treament for plants - main object.
+        Biological dispersal treament for plants - main object.
       type: object
       required:
         - applicator1_first_name
@@ -786,7 +788,7 @@ components:
           title: "Monitoring details"
 
     Monitoring_MechanicalTerrestrialAquaticPlant:
-      title: "Montoring a mechanical treatment for terrestrial and aquatic plants"
+      title: "Monitoring a mechanical treatment for terrestrial and aquatic plants"
       description:
         Mechanical monitoring for terrestrial plants - main object.
       type: object
@@ -951,8 +953,6 @@ components:
       title: " Geometry"
       type: object
       description: GeoJSon geometry
-      discriminator:
-        propertyName: type
       required:
         - subtype
       properties:
@@ -966,17 +966,14 @@ components:
           title: "Well tag"
           readOnly: true
         subType:
-          title: "Geometry type"
+          title: "Geometry subtype"
           oneOf:
             - $ref: "#/components/schemas/Point"
-              title: "Point"
             - $ref: "#/components/schemas/LineString"
-              title: "Line String"
             - $ref: "#/components/schemas/Polygon"
-              title: "Polygon"
 
     Point:
-      title: "Point"
+      title: "Point with radius"
       type: object
       description: Point geometry
       properties:
@@ -990,7 +987,7 @@ components:
               items: {}
       
     LineString:
-      title: "LineString"
+      title: "Line with offset (box)"
       type: object
       description: LineString Geometry
       properties:
@@ -1004,11 +1001,10 @@ components:
           items: {}
                 
     Polygon:
-      title: "Polygon123"
+      title: "Polygon"
       type: object
       description: Polygon Geometry
       properties:
         coordinates:
           type: array
           items: {}
-    
