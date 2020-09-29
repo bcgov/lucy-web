@@ -1,12 +1,9 @@
 {
   "activity_type": "observation",
-  "activity_sub_type": "plant",
+  "activity_subtype": "plant",
   "date": "2020-08-30",
-  "locationAndGeometry": {
-    "anchorPointY": 48.3,
-    "anchorPointX": -125.6,
-    "area": 0,
-    "geometry": {
+  "geometry": [
+    {
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
@@ -33,11 +30,16 @@
       },
       "properties": {}
     }
+  ],
+  "locationAndGeometry": {
+    "anchorPointY": 48.3,
+    "anchorPointX": -125.6,
+    "area": 0,
   },
-  "activityTypeData": {
+  "activity_type_data": {
     "pokiness": 17
   },
-  "activitySubTypeData": {
+  "activity_subtype_data": {
     "density": "hard",
     "colour": "green"
   },

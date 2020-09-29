@@ -5,9 +5,19 @@ curl --location --request POST 'localhost:3002/api/activity' \
 --data-raw '
 {
 	"activity_type": "Observation",
-	"activity_sub_type": "Terrestrial Invasive Plant",
+	"activity_subtype": "Terrestrial Invasive Plant",
 	"date": "2019-04-12",
 	"deviceRequestUID": "string",
+  "media": [
+    {
+
+    }
+  ],
+  "geometry": [
+    {
+
+    }
+  ],
 	"locationAndGeometry": {
 		"anchorPointY": 0,
 		"anchorPointX": 0,
@@ -21,7 +31,10 @@ curl --location --request POST 'localhost:3002/api/activity' \
 		"generalComment": "string",
 		"photoTaken": true
 	},
-	"activityTypeData": {
+  "activity_data": {
+
+  },
+	"activity_type_data": {
 		"negative_observation_ind": false,
 		"aquatic_observation_ind": false,
 		"primary_user_last_name": "mike",
@@ -35,7 +48,7 @@ curl --location --request POST 'localhost:3002/api/activity' \
 		"sample_taken_ind": true,
 		"sample_label_number": "string"
 	},
-	"activitySubTypeData": {
+	"activity_subtype_data": {
 		"species": "banana",
 		"distribution": 123,
 		"density": 123,

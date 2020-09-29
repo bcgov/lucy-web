@@ -13,7 +13,7 @@ export async function up(knex: Knex): Promise<void> {
       select
       activity_id,
       activity_type,
-      activity_sub_type,
+      activity_subtype,
       cast(activity_payload -> 'locationAndGeometry' ->> 'anchorPointX' as decimal) as anchor_point_x,
       cast(activity_payload -> 'locationAndGeometry' ->> 'anchorPointY' as decimal) as anchor_point_y,
       received_timestamp

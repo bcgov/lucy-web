@@ -54,14 +54,15 @@ export class ActivityPostRequestBody {
   activityResponseBody: object;
 
   activity_type: string;
-  activityTypeData: object;
+  activity_subtype: string;
 
-  activity_sub_type: string;
-  activitySubTypeData: object;
+  activity_data: object;
+  activity_type_data: object;
+  activity_subtype_data: object;
 
-  date: string;
+  received_timestamp: string;
 
-  locationAndGeometry: object;
+  geometry: object[];
 
   mediaKeys: string[];
 
@@ -80,14 +81,15 @@ export class ActivityPostRequestBody {
     };
 
     this.activity_type = (obj && obj.activity_type) || null;
-    this.activityTypeData = (obj && obj.activityTypeData) || null;
+    this.activity_subtype = (obj && obj.activity_subtype) || null;
 
-    this.activity_sub_type = (obj && obj.activity_sub_type) || null;
-    this.activitySubTypeData = (obj && obj.activitySubTypeData) || null;
+    this.activity_data = (obj && obj.form_data && obj.form_data.activity_data) || null;
+    this.activity_type_data = (obj && obj.form_data && obj.form_data.activity_type_data) || null;
+    this.activity_subtype_data = (obj && obj.form_data && obj.form_data.activity_subtype_data) || null;
 
-    this.date = (obj && obj.date) || null;
+    this.received_timestamp = new Date().toISOString();
 
-    this.locationAndGeometry = (obj && obj.locationAndGeometry) || null;
+    this.geometry = (obj && obj.geometry && obj.geometry.length) || [];
 
     this.mediaKeys = (obj && obj.mediaKeys) || null;
   }
@@ -101,7 +103,7 @@ export class ActivityPostRequestBody {
  */
 export class ActivitySearchCriteria {
   activity_type: string;
-  activity_sub_type: string;
+  activity_subtype: string;
 
   page: number;
   limit: number;
@@ -119,7 +121,7 @@ export class ActivitySearchCriteria {
    */
   constructor(obj?: any) {
     this.activity_type = (obj && obj.activity_type) || null;
-    this.activity_sub_type = (obj && obj.activity_sub_type) || null;
+    this.activity_subtype = (obj && obj.activity_subtype) || null;
 
     this.page = (obj && obj.page) || 0;
     this.limit = (obj && obj.limit) || 50;
