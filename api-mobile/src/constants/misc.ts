@@ -20,6 +20,7 @@ export const WRITE_ROLES = [ROLE_SUPER_USER, ROLE_ADMIN, ROLE_DATA_EDITOR];
  * @enum {number}
  */
 export enum CacheKeys {
+  AllCodeSets = 'allCodeSets',
   ObservationCodePlant = 'observationCodePlant'
 }
 
