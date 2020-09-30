@@ -6,6 +6,7 @@ import { initialize } from 'express-openapi';
 import swaggerUi from 'swagger-ui-express';
 import { authenticate } from './src/utils/auth-utils';
 import { getLogger } from './src/utils/logger';
+import { applyApiDocSecurityFilters } from './src/utils/api-doc-security-filter';
 
 const defaultLog = getLogger('app');
 
@@ -45,6 +46,10 @@ const openAPIFramework = initialize({
       // return true // bypass authentication
       return authenticate(req, scopes);
     }
+  },
+  securityFilter: async (req, res) => {
+    const updatedReq = await applyApiDocSecurityFilters(req);
+    res.status(200).json(updatedReq['apiDoc']);
   },
   errorTransformer: function (openapiError: object, ajvError: object): object {
     // Transform openapi-request-validator and openapi-response-validator errors
