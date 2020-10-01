@@ -385,14 +385,22 @@
         ],
         "properties": {
           "species_agency_code": {
-            "type": "string",
+            "type": "number",
             "title": "Agency",
-            "x-code-enum": "species_agency_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "species_agency_code",
+              "x-enum-code-value": "species_agency_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "jurisdiction_code": {
-            "type": "string",
+            "type": "number",
             "title": "Jurisdiction",
-            "x-code-enum": "jurisdiction_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "jurisdiction_code",
+              "x-enum-code-value": "jurisdiction_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "activity_status": {
             "type": "string",
@@ -522,39 +530,67 @@
         ],
         "properties": {
           "species_density_code": {
-            "type": "string",
+            "type": "number",
             "title": "Density",
-            "x-code-enum": "species_density_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "species_density_code",
+              "x-enum-code-value": "species_density_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "species_distribution_code": {
-            "type": "string",
+            "type": "number",
             "title": "Distribution",
-            "x-code-enum": "species_distribution_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "species_distribution_code",
+              "x-enum-code-value": "species_distribution_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "soil_texture_code": {
-            "type": "string",
+            "type": "number",
             "title": "Soil Texture",
-            "x-code-enum": "soil_texture_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "soil_texture_code",
+              "x-enum-code-value": "soil_texture_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "specific_use_code": {
-            "type": "string",
+            "type": "number",
             "title": "Specific Use",
-            "x-code-enum": "specific_use_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "specific_use_code",
+              "x-enum-code-value": "specific_use_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "slope_code": {
-            "type": "string",
+            "type": "number",
             "title": "Slope",
-            "x-code-enum": "observation_slope_code",
+            "x-enum-code": {
+              "x-enum-code-set-name": "observation_slope_code",
+              "x-enum-code-value": "observation_slope_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "aspect_code": {
-            "type": "string",
+            "type": "number",
             "title": "Aspect",
-            "x-code-enum": "observation_aspect_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "observation_aspect_code",
+              "x-enum-code-value": "observation_aspect_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "proposed_action_code": {
-            "type": "string",
+            "type": "number",
             "title": "Proposed Action",
-            "x-code-enum": "observation_proposed_action_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "observation_proposed_action_code",
+              "x-enum-code-value": "observation_proposed_action_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "flowering": {
             "type": "boolean",
@@ -629,9 +665,13 @@
         ],
         "properties": {
           "specific_use_code": {
-            "type": "string",
+            "type": "number",
             "title": "Specific Use",
-            "x-code-enum": "specific_use_code"
+            "x-enum-code": {
+              "x-enum-code-set-name": "specific_use_code",
+              "x-enum-code-value": "specific_use_code_id",
+              "x-enum-code-name": "description"
+            }
           },
           "proposed_action_code": {
             "type": "string",

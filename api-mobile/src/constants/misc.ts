@@ -62,3 +62,37 @@ export enum ActivitySubType {
 export enum S3ACLRole {
   AUTH_READ = 'authenticated-read'
 }
+
+/**
+ * Root custom api-doc.json keys for any `x-...` fields.
+ *
+ * @export
+ * @enum {number}
+ */
+export enum XApiDocKeys {
+  /**
+   * specifies a field whose value is an object containing `x-enum-code...` fields (see `XEnumCode`)
+   */
+  XEnumCode = 'x-enum-code'
+}
+
+/**
+ * Nested keys in a `x-enum-code` field (see `XApiDocKeys.XEnumCode`)
+ *
+ * @export
+ * @enum {number}
+ */
+export enum XEnumCode {
+  /**
+   * the name of the table/collection for the code set
+   */
+  XEnumCodeSetName = 'x-enum-code-set-name',
+  /**
+   * the name of the column/field that holds the unique code value
+   */
+  XEnumCodeValue = 'x-enum-code-value',
+  /**
+   * the name of the column/fild that holds the human readable name for the code value
+   */
+  XEnumCodeName = 'x-enum-code-name'
+}
