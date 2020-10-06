@@ -161,8 +161,6 @@ function getActivity(): RequestHandler {
 
       const response = await connection.query(sqlStatement.text, sqlStatement.values);
 
-      connection.release();
-
       const result = (response && response.rows && response.rows[0]) || null;
 
       req['activity'] = result;
