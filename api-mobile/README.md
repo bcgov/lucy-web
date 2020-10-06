@@ -62,9 +62,9 @@ npm start
 
 # API Specification
 
-The API is defined in `api-doc.yaml`.
+The base API is defined in `api-doc.json`.
 
-If this project is running locally, you can view the api docs at: `http://localhost:3002/api/docs/` or `http://localhost:7080/api/docs/` if running in Docker.
+If this project is running locally, you can view the api docs at: `http://localhost:3002/api/api-docs/` or `http://localhost:7080/api/api-docs/` if running in Docker.
 
 This project uses npm package `express-openapi` via `./app.ts` to automatically generate the express server and its routes, based on the contents of the `api-doc.yaml` and the `./src/path/` content.
 
