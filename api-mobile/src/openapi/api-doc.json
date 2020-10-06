@@ -539,11 +539,11 @@
             }
           },
           "species_distribution_code": {
-            "type": "string",
+            "type": "number",
             "title": "Distribution",
             "x-enum-code": {
               "x-enum-code-set-name": "species_distribution_code",
-              "x-enum-code-value": "distribution_code",
+              "x-enum-code-value": "species_distribution_code_id",
               "x-enum-code-name": "description"
             }
           },
