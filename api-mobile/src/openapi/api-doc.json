@@ -534,7 +534,7 @@
             "title": "Density",
             "x-enum-code": {
               "x-enum-code-set-name": "species_density_code",
-              "x-enum-code-value": "species_density_code",
+              "x-enum-code-value": "density_code",
               "x-enum-code-name": "description"
             }
           },
@@ -543,7 +543,7 @@
             "title": "Distribution",
             "x-enum-code": {
               "x-enum-code-set-name": "species_distribution_code",
-              "x-enum-code-value": "species_distribution_code",
+              "x-enum-code-value": "distribution_code",
               "x-enum-code-name": "description"
             }
           },

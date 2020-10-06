@@ -176,7 +176,7 @@ function getMedia(): RequestHandler {
   return async (req, res, next) => {
     const activity = req['activity'];
 
-    if (!activity || !req['activity'].media_keys || !req['activity'].media_keys.length) {
+    if (!activity || !activity.media_keys || !activity.media_keys.length) {
       // No media keys found, skipping get media step
       return next();
     }
