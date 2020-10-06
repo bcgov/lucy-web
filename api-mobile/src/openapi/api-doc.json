@@ -385,20 +385,20 @@
         ],
         "properties": {
           "species_agency_code": {
-            "type": "number",
+            "type": "string",
             "title": "Agency",
             "x-enum-code": {
               "x-enum-code-set-name": "species_agency_code",
-              "x-enum-code-value": "species_agency_code_id",
+              "x-enum-code-value": "species_agency_code",
               "x-enum-code-name": "description"
             }
           },
           "jurisdiction_code": {
-            "type": "number",
+            "type": "string",
             "title": "Jurisdiction",
             "x-enum-code": {
               "x-enum-code-set-name": "jurisdiction_code",
-              "x-enum-code-value": "jurisdiction_code_id",
+              "x-enum-code-value": "jurisdiction_code",
               "x-enum-code-name": "description"
             }
           },
@@ -485,7 +485,7 @@
             "maximum": 50
           },
           "reported_area": {
-            "type": "integer",
+            "type": "number",
             "title": "Area",
             "minimum": 1,
             "maximum": 100
@@ -530,65 +530,65 @@
         ],
         "properties": {
           "species_density_code": {
-            "type": "number",
+            "type": "string",
             "title": "Density",
             "x-enum-code": {
               "x-enum-code-set-name": "species_density_code",
-              "x-enum-code-value": "species_density_code_id",
+              "x-enum-code-value": "species_density_code",
               "x-enum-code-name": "description"
             }
           },
           "species_distribution_code": {
-            "type": "number",
+            "type": "string",
             "title": "Distribution",
             "x-enum-code": {
               "x-enum-code-set-name": "species_distribution_code",
-              "x-enum-code-value": "species_distribution_code_id",
+              "x-enum-code-value": "species_distribution_code",
               "x-enum-code-name": "description"
             }
           },
           "soil_texture_code": {
-            "type": "number",
+            "type": "string",
             "title": "Soil Texture",
             "x-enum-code": {
               "x-enum-code-set-name": "soil_texture_code",
-              "x-enum-code-value": "soil_texture_code_id",
+              "x-enum-code-value": "soil_texture_code",
               "x-enum-code-name": "description"
             }
           },
           "specific_use_code": {
-            "type": "number",
+            "type": "string",
             "title": "Specific Use",
             "x-enum-code": {
               "x-enum-code-set-name": "specific_use_code",
-              "x-enum-code-value": "specific_use_code_id",
+              "x-enum-code-value": "specific_use_code",
               "x-enum-code-name": "description"
             }
           },
           "slope_code": {
-            "type": "number",
+            "type": "string",
             "title": "Slope",
             "x-enum-code": {
               "x-enum-code-set-name": "observation_slope_code",
-              "x-enum-code-value": "observation_slope_code_id",
+              "x-enum-code-value": "observation_slope_code",
               "x-enum-code-name": "description"
             }
           },
           "aspect_code": {
-            "type": "number",
+            "type": "string",
             "title": "Aspect",
             "x-enum-code": {
               "x-enum-code-set-name": "observation_aspect_code",
-              "x-enum-code-value": "observation_aspect_code_id",
+              "x-enum-code-value": "observation_aspect_code",
               "x-enum-code-name": "description"
             }
           },
           "proposed_action_code": {
-            "type": "number",
+            "type": "string",
             "title": "Proposed Action",
             "x-enum-code": {
               "x-enum-code-set-name": "observation_proposed_action_code",
-              "x-enum-code-value": "observation_proposed_action_code_id",
+              "x-enum-code-value": "observation_proposed_action_code",
               "x-enum-code-name": "description"
             }
           },
@@ -665,11 +665,11 @@
         ],
         "properties": {
           "specific_use_code": {
-            "type": "number",
+            "type": "string",
             "title": "Specific Use",
             "x-enum-code": {
               "x-enum-code-set-name": "specific_use_code",
-              "x-enum-code-value": "specific_use_code_id",
+              "x-enum-code-value": "specific_use_code",
               "x-enum-code-name": "description"
             }
           },
@@ -754,34 +754,31 @@
         "type": "object",
         "required": [
           "number_of_individuals_observed",
-          "life_stage",
-          "behaviour"
+          "life_stage_code",
+          "behaviour_code"
         ],
         "properties": {
           "number_of_individuals_observed": {
             "type": "number",
             "title": "Number of individuals"
           },
-          "life_stage": {
+          "life_stage_code": {
             "type": "string",
             "title": "Life Stage",
-            "enum": [
-              "unknown",
-              "egg",
-              "neonate",
-              "juvenile",
-              "adult"
-            ]
+            "x-enum-code": {
+              "x-enum-code-set-name": "specieslife_stage_code_agency_code",
+              "x-enum-code-value": "life_stage_code",
+              "x-enum-code-name": "description"
+            }
           },
-          "behaviour": {
+          "behaviour_code": {
             "type": "string",
             "title": "Behaviour",
-            "enum": [
-              "unknown",
-              "moving",
-              "resting",
-              "deceased"
-            ]
+            "x-enum-code": {
+              "x-enum-code-set-name": "behaviour_code",
+              "x-enum-code-value": "behaviour_code",
+              "x-enum-code-name": "description"
+            }
           }
         }
       },
@@ -832,7 +829,12 @@
           },
           "pesticide_employer_code": {
             "type": "string",
-            "title": "Pesticide employer code"
+            "title": "Pesticide employer code",
+            "x-enum-code": {
+              "x-enum-code-set-name": "pesticide_employer_code",
+              "x-enum-code-value": "pesticide_employer_code",
+              "x-enum-code-name": "business_name"
+            }
           },
           "project_management_plan_PMP": {
             "type": "string",
@@ -847,31 +849,26 @@
             "title": "Chemical treatment method"
           },
           "temperature": {
-            "type": "integer",
+            "type": "number",
             "title": "Temperature",
             "minimum": 10,
             "maximum": 30
           },
           "wind_speed": {
-            "type": "integer",
-            "title": " Wind speed"
+            "type": "number",
+            "title": "Wind speed"
           },
-          "wind_direction": {
+          "wind_direction_code": {
             "type": "string",
             "title": "Wind direction",
-            "enum": [
-              "N",
-              "NE",
-              "E",
-              "SE",
-              "S",
-              "SW",
-              "W",
-              "NW"
-            ]
+            "x-enum-code": {
+              "x-enum-code-set-name": "wind_direction_code",
+              "x-enum-code-value": "wind_direction_code",
+              "x-enum-code-name": "description"
+            }
           },
           "humidity": {
-            "type": "integer",
+            "type": "number",
             "title": "Humidity",
             "enum": [
               0,
@@ -919,8 +916,8 @@
           "applicator1_first_name",
           "applicator1_last_name",
           "treatment_contractor",
-          "mechanical_method",
-          "mechanical_disposal_method",
+          "mechanical_method_code",
+          "mechanical_disposal_method_code",
           "mechanical_root_removal_code",
           "mechanical_soil_disturbance_code",
           "signage_on_site"
@@ -946,21 +943,41 @@
             "type": "string",
             "title": "Treatment contractor"
           },
-          "mechanical_method": {
+          "mechanical_method_code": {
             "type": "string",
-            "title": "Mechanical method"
+            "title": "Mechanical method",
+            "x-enum-code": {
+              "x-enum-code-set-name": "mechanical_method_code",
+              "x-enum-code-value": "mechanical_method_code",
+              "x-enum-code-name": "description"
+            }
           },
-          "mechanical_disposal_method": {
+          "mechanical_disposal_method_code": {
             "type": "string",
-            "title": "Mechanical disposal method"
+            "title": "Mechanical disposal method",
+            "x-enum-code": {
+              "x-enum-code-set-name": "mechanical_disposal_method_code",
+              "x-enum-code-value": "mechanical_disposal_method_code",
+              "x-enum-code-name": "description"
+            }
           },
           "mechanical_root_removal_code": {
             "type": "string",
-            "title": "Mechanical root removal code"
+            "title": "Mechanical root removal code",
+            "x-enum-code": {
+              "x-enum-code-set-name": "mechanical_root_removal_code",
+              "x-enum-code-value": "mechanical_root_removal_code",
+              "x-enum-code-name": "description"
+            }
           },
           "mechanical_soil_disturbance_code": {
             "type": "string",
-            "title": "Mechanical soil disturbance code"
+            "title": "Mechanical soil disturbance code",
+            "x-enum-code": {
+              "x-enum-code-set-name": "mechanical_soil_disturbance_code",
+              "x-enum-code-value": "mechanical_soil_disturbance_code",
+              "x-enum-code-name": "description"
+            }
           },
           "signage_on_site": {
             "type": "boolean",
@@ -1009,7 +1026,7 @@
             "title": "Classified area"
           },
           "release_quantity": {
-            "type": "integer",
+            "type": "number",
             "title": "Release quantity"
           },
           "agent_source": {
@@ -1066,7 +1083,7 @@
             "title": "Treatment contractor"
           },
           "duration_of_count": {
-            "type": "integer",
+            "type": "number",
             "title": "Duration of count"
           },
           "biological_agent": {
@@ -1074,11 +1091,11 @@
             "title": "Biological agent"
           },
           "plant_count": {
-            "type": "integer",
+            "type": "number",
             "title": "Plant count"
           },
           "biological_agent_count": {
-            "type": "integer",
+            "type": "number",
             "title": "Biological agent count"
           },
           "biological_agent_presence": {
@@ -1141,7 +1158,7 @@
         ],
         "properties": {
           "activity_id": {
-            "type": "integer",
+            "type": "number",
             "title": "Treatment id"
           },
           "observer_first_name": {
@@ -1153,36 +1170,18 @@
             "title": "Last Name"
           },
           "efficacy_rating_code": {
-            "type": "integer",
+            "type": "string",
             "title": "Efficacy rating",
-            "enum": [
-              0,
-              5,
-              10,
-              15,
-              20,
-              25,
-              30,
-              35,
-              40,
-              45,
-              50,
-              55,
-              60,
-              65,
-              70,
-              75,
-              80,
-              85,
-              90,
-              95,
-              100
-            ]
+            "x-enum-code": {
+              "x-enum-code-set-name": "efficacy_code",
+              "x-enum-code-value": "efficacy_code",
+              "x-enum-code-name": "description"
+            }
           }
         }
       },
       "Monitoring_ChemicalTerrestrialAquaticPlant": {
-        "title": " Monitoring a chemical treament for terrestrial and aquatic plants",
+        "title": "Monitoring a chemical treament for terrestrial and aquatic plants",
         "description": "Chemical monitoring for terrestrial plants",
         "type": "object",
         "required": [
@@ -1230,15 +1229,15 @@
         ],
         "properties": {
           "plant_count": {
-            "type": "integer",
+            "type": "number",
             "title": "Plant count"
           },
           "agent_count": {
-            "type": "integer",
+            "type": "number",
             "title": "Agent count"
           },
           "count_duration": {
-            "type": "integer",
+            "type": "number",
             "title": "Count duration"
           },
           "agent_destroyed_ind": {
@@ -1390,7 +1389,7 @@
         }
       },
       "Geometry": {
-        "title": " Geometry",
+        "title": "Geometry",
         "type": "object",
         "description": "GeoJSon geometry",
         "required": [
@@ -1404,7 +1403,7 @@
             "readOnly": true
           },
           "well_tag": {
-            "type": "integer",
+            "type": "number",
             "title": "Well tag",
             "readOnly": true
           },

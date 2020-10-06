@@ -149,22 +149,26 @@ function getActivity(): RequestHandler {
       };
     }
 
-    const sqlStatement: SQLStatement = getActivitySQL(activityId);
+    try {
+      const sqlStatement: SQLStatement = getActivitySQL(activityId);
 
-    if (!sqlStatement) {
-      throw {
-        status: 400,
-        message: 'Failed to build SQL statement'
-      };
+      if (!sqlStatement) {
+        throw {
+          status: 400,
+          message: 'Failed to build SQL statement'
+        };
+      }
+
+      const response = await connection.query(sqlStatement.text, sqlStatement.values);
+
+      connection.release();
+
+      const result = (response && response.rows && response.rows[0]) || null;
+
+      req['activity'] = result;
+    } finally {
+      connection.release();
     }
-
-    const response = await connection.query(sqlStatement.text, sqlStatement.values);
-
-    connection.release();
-
-    const result = (response && response.rows && response.rows[0]) || null;
-
-    req['activity'] = result;
 
     return next();
   };

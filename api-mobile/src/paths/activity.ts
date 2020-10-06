@@ -252,22 +252,24 @@ function createActivity(): RequestHandler {
       };
     }
 
-    const sqlStatement: SQLStatement = postActivitySQL(sanitizedActivityData);
+    try {
+      const sqlStatement: SQLStatement = postActivitySQL(sanitizedActivityData);
 
-    if (!sqlStatement) {
-      throw {
-        status: 400,
-        message: 'Failed to build SQL statement'
-      };
+      if (!sqlStatement) {
+        throw {
+          status: 400,
+          message: 'Failed to build SQL statement'
+        };
+      }
+
+      const response = await connection.query(sqlStatement.text, sqlStatement.values);
+
+      const result = (response && response.rows && response.rows[0]) || null;
+
+      return res.status(200).json(result);
+    } finally {
+      connection.release();
     }
-
-    const response = await connection.query(sqlStatement.text, sqlStatement.values);
-
-    connection.release();
-
-    const result = (response && response.rows && response.rows[0]) || null;
-
-    return res.status(200).json(result);
   };
 }
 
@@ -291,21 +293,23 @@ function getAllActivities(): RequestHandler {
       };
     }
 
-    const sqlStatement: SQLStatement = getActivitiesSQL(sanitizedSearchCriteria);
+    try {
+      const sqlStatement: SQLStatement = getActivitiesSQL(sanitizedSearchCriteria);
 
-    if (!sqlStatement) {
-      throw {
-        status: 400,
-        message: 'Failed to build SQL statement'
-      };
+      if (!sqlStatement) {
+        throw {
+          status: 400,
+          message: 'Failed to build SQL statement'
+        };
+      }
+
+      const response = await connection.query(sqlStatement.text, sqlStatement.values);
+
+      const result = (response && response.rows) || null;
+
+      return res.status(200).json(result);
+    } finally {
+      connection.release();
     }
-
-    const response = await connection.query(sqlStatement.text, sqlStatement.values);
-
-    connection.release();
-
-    const result = (response && response.rows) || null;
-
-    return res.status(200).json(result);
   };
 }
