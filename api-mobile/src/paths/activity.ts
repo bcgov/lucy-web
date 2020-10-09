@@ -10,6 +10,7 @@ import { ActivityPostRequestBody, ActivitySearchCriteria, IMediaItem, MediaBase6
 import { getActivitiesSQL, postActivitySQL } from './../queries/activity-queries';
 import { uploadFileToS3 } from './../utils/file-utils';
 import { getLogger } from './../utils/logger';
+import * as geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
 
 const defaultLog = getLogger('activity-controller');
 
@@ -106,10 +107,12 @@ POST.apiDoc = {
           required: ['activity_type', 'activity_subtype'],
           properties: {
             activity_type: {
-              type: 'string'
+              type: 'string',
+              title: 'Activity type'
             },
             activity_subtype: {
-              type: 'string'
+              type: 'string',
+              title: 'Activity subtype'
             },
             media: {
               type: 'array',
@@ -120,9 +123,9 @@ POST.apiDoc = {
             },
             geometry: {
               type: 'array',
-              title: 'Geometry',
+              title: 'Geometries',
               items: {
-                $ref: '#/components/schemas/Geometry'
+                ...geoJSON_Feature_Schema
               }
             },
             form_data: {
