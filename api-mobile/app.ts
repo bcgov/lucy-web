@@ -3,7 +3,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { initialize } from 'express-openapi';
-import swaggerUi from 'swagger-ui-express';
 import { authenticate } from './src/utils/auth-utils';
 import { getLogger } from './src/utils/logger';
 import { applyApiDocSecurityFilters } from './src/utils/api-doc-security-filter';
@@ -65,9 +64,6 @@ const openAPIFramework = initialize({
     res.status(error.status || 500).json(error);
   }
 });
-
-// Serve pretty api docs
-app.use('/api/docs/', swaggerUi.serve, swaggerUi.setup(openAPIFramework.apiDoc));
 
 // Start api
 try {
