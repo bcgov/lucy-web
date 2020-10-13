@@ -96,3 +96,10 @@ export enum XEnumCode {
    */
   XEnumCodeName = 'x-enum-code-name'
 }
+
+/**
+ * The maximum number of records the search endpoint can return.
+ *
+ * @type {number}
+ */
+export const SEARCH_LIMIT_MAX = 100;
