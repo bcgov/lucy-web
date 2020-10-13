@@ -79,6 +79,11 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
     sqlStatement.append(SQL` WHERE received_timestamp <= ${searchCriteria.date_range_end}::date`);
   }
 
+  if (searchCriteria.bbox) {
+    // TODO Add Spatial query support using `searchCriteria.bbox`
+    sqlStatement.append(SQL` `);
+  }
+
   if (searchCriteria.limit) {
     sqlStatement.append(SQL` LIMIT ${searchCriteria.limit}`);
   }

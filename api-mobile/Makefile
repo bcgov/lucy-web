@@ -33,13 +33,13 @@ setup-local: ## Prepares the environment variables for local development (will n
 	@echo "==============================================="
 	@echo "Make: setup-local - copying env.local to .env"
 	@echo "==============================================="
-	@cp -n env_config/env.local .env
+	@cp -i env_config/env.local .env
 
 setup-docker: ## Prepares the environment variables for local development using docker (will not overwrite an existing .env file)
 	@echo "==============================================="
 	@echo "Make: setup-local - copying env.docker to .env"
 	@echo "==============================================="
-	@cp -n env_config/env.docker .env
+	@cp -i env_config/env.docker .env
 
 build-local: ## Builds the local development containers
 	@echo "==============================================="

@@ -14,7 +14,7 @@ import * as geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
 
 const defaultLog = getLogger('activity-controller');
 
-export const GET: Operation = [getAllActivities()];
+export const GET: Operation = [getActivitiesBySearchFilterCriteria()];
 
 GET.apiDoc = {
   description: 'Fetches all activities based on search criteria.',
@@ -25,17 +25,11 @@ GET.apiDoc = {
     }
   ],
   requestBody: {
-    description: 'Activities search criteria object.',
+    description: 'Activities search filter criteria object.',
     content: {
       'application/json': {
         schema: {
           properties: {
-            activity_type: {
-              type: 'string'
-            },
-            activity_subtype: {
-              type: 'string'
-            },
             page: {
               type: 'number',
               default: 0,
@@ -47,13 +41,36 @@ GET.apiDoc = {
               minimum: 0,
               maximum: 100
             },
+            activity_type: {
+              type: 'string'
+            },
+            activity_subtype: {
+              type: 'string'
+            },
             date_range_start: {
               type: 'string',
-              description: 'Date range start, in YYYY-MM-DD format'
+              description: 'Date range start, in YYYY-MM-DD format. Defaults time to start of day.',
+              example: '2020-07-30'
             },
             date_range_end: {
               type: 'string',
-              description: 'Date range end, in YYYY-MM-DD format'
+              description: 'Date range end, in YYYY-MM-DD format. Defaults time to end of day.',
+              example: '2020-08-30'
+            },
+            // TODO does this risk making the response too large? Do we need to limit the number of results?
+            // TODO Or possibly remove this option and only allow media requests on single activity requests?
+            include_media: {
+              type: 'boolean',
+              default: 'false',
+              description: 'True if the response should include associated media, false otherwise.'
+            },
+            // GeoJson Bounding Box
+            bbox: {
+              type: 'array',
+              minItems: 4,
+              items: {
+                type: 'number'
+              }
             }
           }
         }
@@ -70,7 +87,8 @@ GET.apiDoc = {
             items: {
               type: 'object',
               properties: {
-                // don't specify exact response, as it is not currently enforced anyways
+                // Don't specify exact response, as it will vary, and is not currently enforced anyways
+                // Eventually this could be updated to be a oneOf list, similar to the Post request below.
               }
             }
           }
@@ -277,11 +295,11 @@ function createActivity(): RequestHandler {
 }
 
 /**
- * Fetches all activity records based on request search criteria.
+ * Fetches all activity records based on request search filter criteria.
  *
  * @return {RequestHandler}
  */
-function getAllActivities(): RequestHandler {
+function getActivitiesBySearchFilterCriteria(): RequestHandler {
   return async (req, res, next) => {
     defaultLog.debug({ label: 'activity', message: 'body', body: req.body });
 

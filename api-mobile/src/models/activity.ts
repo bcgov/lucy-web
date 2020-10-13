@@ -1,3 +1,4 @@
+import { SEARCH_LIMIT_MAX } from '../constants/misc';
 import { parseBase64DataURLString } from './../utils/file-utils';
 
 /**
@@ -96,22 +97,24 @@ export class ActivityPostRequestBody {
 }
 
 /**
- * Activity get search criteria object.
+ * Activity search filter criteria object.
  *
  * @export
  * @class ActivitySearchCriteria
  */
 export class ActivitySearchCriteria {
-  activity_type: string;
-  activity_subtype: string;
-
   page: number;
   limit: number;
+
+  activity_type: string;
+  activity_subtype: string;
 
   date_range_start: Date;
   date_range_end: Date;
 
-  includeMedia: boolean;
+  include_media: boolean;
+
+  bbox: GeoJSON.BBox;
 
   /**
    * Creates an instance of ActivitySearchCriteria.
@@ -120,15 +123,37 @@ export class ActivitySearchCriteria {
    * @memberof ActivitySearchCriteria
    */
   constructor(obj?: any) {
+    this.page = (obj && obj.page && this.setPage(obj.page)) || 0;
+    this.limit = (obj && obj.limit && this.setLimit(obj.limit)) || SEARCH_LIMIT_MAX;
+
     this.activity_type = (obj && obj.activity_type) || null;
     this.activity_subtype = (obj && obj.activity_subtype) || null;
-
-    this.page = (obj && obj.page) || 0;
-    this.limit = (obj && obj.limit) || 50;
 
     this.date_range_start = (obj && obj.date_range_start) || null;
     this.date_range_end = (obj && obj.date_range_end) || null;
 
-    this.includeMedia = (obj && obj.includeMedia) || false;
+    this.include_media = (obj && obj.include_media) || false;
+
+    this.bbox = (obj && obj.bbox) || null;
+  }
+
+  setPage(page: number): number {
+    if (!page || page < 0) {
+      return 0;
+    }
+
+    return page;
+  }
+
+  setLimit(limit: number): number {
+    if (!limit || limit < 0) {
+      return 25;
+    }
+
+    if (limit > SEARCH_LIMIT_MAX) {
+      return SEARCH_LIMIT_MAX;
+    }
+
+    return limit;
   }
 }

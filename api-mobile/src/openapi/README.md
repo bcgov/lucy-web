@@ -6,6 +6,6 @@ https://json-schema.org/
 
 Spec copied from:
 
-- https://github.com/geojson/schema)
+- https://github.com/geojson/schema
 
 _Note: It was very slightly modified to remove the top level `$schema` and `$id` fields, which are only valid at the root level of the api spec._
