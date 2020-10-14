@@ -44,19 +44,50 @@ Access the api via the nginx reverse proxy: `localhost:80/api/`
 
 ## Commands
 
-1. Download dependencies
+1. CD into `api-mobile` folder
 
-```
-npm install
-```
+   ```
+   cd api-mobile
+   ```
 
-2. Run the app
+2. Download dependencies
 
-```
-npm start
-```
+   ```
+   npm install
+   ```
 
-3. Go to http://localhost:3002/api/docs/ to verify that the application is running.
+3. Create and configure the `.env` file
+
+   - Create an empty `.env` file in `./api-mobile`
+   - Populate the `.env` with some initial basic values
+     ```
+     make setup-local
+     ```
+   - Manually edit the `.env` to update values as needed, and to set any sensitive values (passwords, etc)
+
+4. Apply the `.env` variables to the terminal
+
+   ```
+   source dotenv.sh
+   ```
+
+   - This is a convenience script that iterates over the `.env` file and runs the `export` command on all of them. This sets these environment variables in your local terminal.
+
+     _Note: these environment variables only apply to the terminal that this command was run in, and do not persist if the terminal is closed._
+
+5. Run the app, using either:
+
+   ```
+   npm start
+   ```
+
+   or
+
+   ```
+   npm run start:reload
+   ```
+
+6. Go to http://localhost:3002/api/api-docs/ to verify that the application is running.
 
 <br />
 
