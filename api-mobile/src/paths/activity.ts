@@ -220,10 +220,10 @@ function uploadMedia(): RequestHandler {
       try {
         media = new MediaBase64(rawMedia);
       } catch (error) {
+        defaultLog.debug({ label: 'uploadMedia', message: 'error', error });
         throw {
           status: 400,
-          message: 'Included media was invalid/encoded incorrectly',
-          errors: [error]
+          message: 'Included media was invalid/encoded incorrectly'
         };
       }
 

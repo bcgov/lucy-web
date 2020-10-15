@@ -29,7 +29,7 @@ app.use(function (req: any, res: any, next: any) {
 });
 
 // Initialize express-openapi framework
-const openAPIFramework = initialize({
+initialize({
   apiDoc: './src/openapi/api-doc.json', // base open api spec
   app: app, // express app to initialize
   paths: './src/paths', // base folder for endpoint routes
