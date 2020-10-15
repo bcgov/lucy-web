@@ -100,10 +100,10 @@ GET.apiDoc = {
                 items: {
                   type: 'object',
                   properties: {
-                    fileName: {
+                    file_name: {
                       type: 'string'
                     },
-                    encodedFile: {
+                    encoded_file: {
                       type: 'string',
                       format: 'base64',
                       description: 'A Data URL base64 encoded image',
@@ -191,12 +191,12 @@ function getMedia(): RequestHandler {
 
     const result: IMediaItem[] = response.map((s3Object: GetObjectOutput) => {
       // Encode image buffer as base64
-      const contentString = Buffer.from(s3Object.Body).toString('base64');
+      const content_string = Buffer.from(s3Object.Body).toString('base64');
 
       // Append DATA Url string
-      const encodedFile = `data:${s3Object.ContentType};base64,${contentString}`;
+      const encoded_file = `data:${s3Object.ContentType};base64,${content_string}`;
 
-      const mediaItem: IMediaItem = { fileName: s3Object.Metadata.filename, encodedFile: encodedFile };
+      const mediaItem: IMediaItem = { file_name: s3Object.Metadata.fileName, encoded_file: encoded_file };
 
       return mediaItem;
     });

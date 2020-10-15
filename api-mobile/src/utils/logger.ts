@@ -63,7 +63,7 @@ export const getLogger = function (logLabel: string) {
   return winston.loggers.get(logLabel || 'default', {
     transports: [
       new winston.transports.Console({
-        level: process.env.LOG_LEVEL || 'info',
+        level: process.env.LOG_LEVEL || 'error',
         format: winston.format.combine(
           winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
           winston.format.errors({ stack: true }),

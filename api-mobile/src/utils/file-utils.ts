@@ -48,12 +48,12 @@ export async function uploadFileToS3(media: MediaBase64, metadata: Metadata = {}
     return null;
   }
 
-  const key = `${uuidv4()}-${media.fileName}`;
+  const key = `${uuidv4()}-${media.file_name}`;
 
   return S3.upload({
     Bucket: OBJECT_STORE_BUCKET_NAME,
-    Body: media.fileBuffer,
-    ContentType: media.contentType,
+    Body: media.file_buffer,
+    ContentType: media.content_type,
     Key: key,
     ACL: S3ACLRole.AUTH_READ,
     Metadata: metadata
@@ -82,15 +82,15 @@ export async function getS3SignedURL(key: string): Promise<string> {
 const base64DataURLRegex = new RegExp(/^data:(\w+\/\w+);base64,(.*)/);
 
 /**
- * Takes a Data URL base64 encoded string, and parses out the contentType (`image/jpeg`, `file/png`, etc) and the
+ * Takes a Data URL base64 encoded string, and parses out the content_type (`image/jpeg`, `file/png`, etc) and the
  * base64 contentString.
  *
  * @export
  * @param {string} base64String
- * @return {{ contentType: string; contentString: string }} returns an object with the Data URL encoded strings
- * contentType and contentString, or null if string is invalid or encoded incorrectly.
+ * @return {{ contenType: string; contentString: string }} returns an object with the Data URL encoded strings
+ * content_type and contentString, or null if string is invalid or encoded incorrectly.
  */
-export function parseBase64DataURLString(base64String: string): { contentType: string; contentString: string } {
+export function parseBase64DataURLString(base64String: string): { content_type: string; contentString: string } {
   if (!base64String) {
     return null;
   }
@@ -101,5 +101,5 @@ export function parseBase64DataURLString(base64String: string): { contentType: s
     return null;
   }
 
-  return { contentType: matches[1], contentString: matches[2] };
+  return { content_type: matches[1], contentString: matches[2] };
 }

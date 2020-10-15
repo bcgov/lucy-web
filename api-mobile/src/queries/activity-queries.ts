@@ -28,7 +28,7 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
   `;
 
   if (activity.geometry && activity.geometry.length) {
-    sqlStatement.append(`
+    sqlStatement.append(SQL`
       ,public.geography(
         public.ST_Force2D(
           public.ST_SetSRID(
@@ -39,12 +39,12 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
       )
     `);
   } else {
-    sqlStatement.append(`
+    sqlStatement.append(SQL`
       ,null
     `);
   }
 
-  sqlStatement.append(`
+  sqlStatement.append(SQL`
       ,${activity.mediaKeys}
     )
     RETURNING

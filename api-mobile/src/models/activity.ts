@@ -1,5 +1,8 @@
 import { SEARCH_LIMIT_MAX } from '../constants/misc';
 import { parseBase64DataURLString } from './../utils/file-utils';
+import { getLogger } from '../utils/logger';
+
+const defaultLog = getLogger('activity-models');
 
 /**
  * A single media item.
@@ -8,8 +11,10 @@ import { parseBase64DataURLString } from './../utils/file-utils';
  * @interface IMediaItem
  */
 export interface IMediaItem {
-  fileName: string;
-  encodedFile: string;
+  //media_date: string;
+  //description: string;
+  file_name: string;
+  encoded_file: string;
 }
 
 /**
@@ -19,10 +24,10 @@ export interface IMediaItem {
  * @class MediaBase64
  */
 export class MediaBase64 {
-  fileName: string;
-  contentType: string;
-  contentString: string;
-  fileBuffer: Buffer;
+  file_name: string;
+  content_type: string;
+  content_string: string;
+  file_buffer: Buffer;
 
   /**
    * Creates an instance of MediaBase64.
@@ -31,16 +36,24 @@ export class MediaBase64 {
    * @memberof MediaBase64
    */
   constructor(obj: IMediaItem) {
-    const base64StringParts = parseBase64DataURLString(obj.encodedFile);
+    const base64StringParts = parseBase64DataURLString(obj.encoded_file);
+
+    //defaultLog.debug({ label: 'uploadActivity', message: 'obj.encoded_file', body: obj.encoded_file});
+    //defaultLog.debug({ label: 'uploadActivity', message: 'base64 String parts', body: base64StringParts});
+
+        // throw {
+        //   status: 503,
+        //   message: 'Just for fun in upload 2'
+        // };
 
     if (!base64StringParts) {
-      throw new Error('encodedFile could not be parsed');
+      throw new Error('encoded_file could not be parsed');
     }
 
-    this.contentType = base64StringParts.contentType;
-    this.contentString = base64StringParts.contentType;
-    this.fileName = obj.fileName;
-    this.fileBuffer = Buffer.from(base64StringParts.contentString, 'base64');
+    this.content_type = base64StringParts.content_type;
+    this.content_string = base64StringParts.content_type;
+    this.file_name = obj.file_name;
+    this.file_buffer = Buffer.from(base64StringParts.contentString, 'base64');
   }
 }
 
@@ -78,7 +91,7 @@ export class ActivityPostRequestBody {
     this.activityPostBody = {
       ...obj,
       // Strip out any media base64 strings which would convolute the record
-      media: (obj.media && obj.media.map((item: MediaBase64) => item.fileName)) || []
+      media: (obj.media && obj.media.map((item: MediaBase64) => item.file_name)) || []
     };
 
     this.activity_type = (obj && obj.activity_type) || null;

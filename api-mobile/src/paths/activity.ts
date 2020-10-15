@@ -1,16 +1,18 @@
 'use strict';
 
 import { ManagedUpload } from 'aws-sdk/clients/s3';
-import { RequestHandler } from 'express';
+import { RequestHandler, response } from 'express';
 import { Operation } from 'express-openapi';
 import { SQLStatement } from 'sql-template-strings';
-import { ALL_ROLES, WRITE_ROLES } from './../constants/misc';
-import { getDBConnection } from './../database/db';
-import { ActivityPostRequestBody, ActivitySearchCriteria, IMediaItem, MediaBase64 } from './../models/activity';
-import { getActivitiesSQL, postActivitySQL } from './../queries/activity-queries';
-import { uploadFileToS3 } from './../utils/file-utils';
-import { getLogger } from './../utils/logger';
+import { ALL_ROLES, WRITE_ROLES } from '../constants/misc';
+import { getDBConnection } from '../database/db';
+import { ActivityPostRequestBody, ActivitySearchCriteria, IMediaItem, MediaBase64 } from '../models/activity';
+import { getActivitiesSQL, postActivitySQL } from '../queries/activity-queries';
+import { uploadFileToS3 } from '../utils/file-utils';
+import { getLogger } from '../utils/logger';
 import * as geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
+import { json } from 'body-parser';
+import { createPrinter } from 'typescript';
 
 const defaultLog = getLogger('activity-controller');
 
@@ -233,9 +235,9 @@ function uploadMedia(): RequestHandler {
           errors: [error]
         };
       }
-
+    
       const metadata = {
-        filename: media.fileName,
+        file_name: media.file_name,
         username: (req['auth_payload'] && req['auth_payload'].preferred_username) || '',
         email: (req['auth_payload'] && req['auth_payload'].email) || ''
       };
@@ -248,6 +250,7 @@ function uploadMedia(): RequestHandler {
     req['mediaKeys'] = results.map(result => result.Key);
 
     next();
+    
   };
 }
 
@@ -258,8 +261,6 @@ function uploadMedia(): RequestHandler {
  */
 function createActivity(): RequestHandler {
   return async (req, res, next) => {
-    defaultLog.debug({ label: 'activity', message: 'body', body: req.body });
-
     const data = { ...req.body, mediaKeys: req['mediaKeys'] };
 
     const sanitizedActivityData = new ActivityPostRequestBody(data);
@@ -288,7 +289,8 @@ function createActivity(): RequestHandler {
       const result = (response && response.rows && response.rows[0]) || null;
 
       return res.status(200).json(result);
-    } finally {
+    } 
+    finally {
       connection.release();
     }
   };
