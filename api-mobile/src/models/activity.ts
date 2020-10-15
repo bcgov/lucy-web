@@ -1,5 +1,8 @@
 import { SEARCH_LIMIT_MAX } from '../constants/misc';
 import { parseBase64DataURLString } from './../utils/file-utils';
+import { getLogger } from '../utils/logger';
+
+const defaultLog = getLogger('activity-models');
 
 /**
  * A single media item.
@@ -45,8 +48,8 @@ export class MediaBase64 {
       throw new Error('media encoded_file could not be parsed');
     }
 
-    this.contentType = base64StringParts.contentType;
-    this.contentString = base64StringParts.contentType;
+    this.contentType = base64StringParts.content_type;
+    this.contentString = base64StringParts.content_type;
     this.mediaName = obj.file_name;
     this.mediaBuffer = Buffer.from(base64StringParts.contentString, 'base64');
     this.mediaDescription = obj.description || null;
