@@ -71,7 +71,7 @@ Access the api via the nginx reverse proxy: `localhost:80/api/`
    source dotenv.sh
    ```
 
-   - This is a convenience script that iterates over the `.env` file and runs the `export` command on all of them. This sets these environment variables in your local terminal.
+   - This is a convenience script that iterates over the `.env` file and runs the `export` command on all of key/value pairs. This applies these environment variables to your local terminal.
 
      _Note: these environment variables only apply to the terminal that this command was run in, and do not persist if the terminal is closed._
 

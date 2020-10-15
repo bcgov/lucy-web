@@ -4,6 +4,9 @@ import { CacheKeys, XApiDocKeys, XEnumCode } from '../constants/misc';
 import { getDBConnection } from '../database/db';
 import { getAllCodeSets, IAllCodeSets } from './code-utils';
 import { cached } from './utils';
+import { getLogger } from './logger';
+
+const defaultLog = getLogger('api-doc-security-filter');
 
 /**
  * Apply updates/filters to req.apiDoc.
@@ -55,6 +58,9 @@ export async function applyApiDocSecurityFilters(req: any) {
 
     // re-assign the updated apiDoc to the req
     req['apiDoc'] = apiDoc;
+  } catch (error) {
+    defaultLog.debug({ label: 'applyApiDocSecurityFilters', message: 'error', error });
+    throw error;
   } finally {
     connection.release();
   }

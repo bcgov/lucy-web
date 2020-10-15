@@ -8,8 +8,10 @@ import { parseBase64DataURLString } from './../utils/file-utils';
  * @interface IMediaItem
  */
 export interface IMediaItem {
-  fileName: string;
-  encodedFile: string;
+  media_date?: string;
+  description?: string;
+  file_name: string;
+  encoded_file: string;
 }
 
 /**
@@ -19,10 +21,12 @@ export interface IMediaItem {
  * @class MediaBase64
  */
 export class MediaBase64 {
-  fileName: string;
+  mediaName: string;
   contentType: string;
   contentString: string;
-  fileBuffer: Buffer;
+  mediaBuffer: Buffer;
+  mediaDescription: string;
+  mediaDate: string;
 
   /**
    * Creates an instance of MediaBase64.
@@ -31,16 +35,22 @@ export class MediaBase64 {
    * @memberof MediaBase64
    */
   constructor(obj: IMediaItem) {
-    const base64StringParts = parseBase64DataURLString(obj.encodedFile);
+    if (!obj) {
+      throw new Error('media was null');
+    }
+
+    const base64StringParts = parseBase64DataURLString(obj.encoded_file);
 
     if (!base64StringParts) {
-      throw new Error('encodedFile could not be parsed');
+      throw new Error('media encoded_file could not be parsed');
     }
 
     this.contentType = base64StringParts.contentType;
     this.contentString = base64StringParts.contentType;
-    this.fileName = obj.fileName;
-    this.fileBuffer = Buffer.from(base64StringParts.contentString, 'base64');
+    this.mediaName = obj.file_name;
+    this.mediaBuffer = Buffer.from(base64StringParts.contentString, 'base64');
+    this.mediaDescription = obj.description || null;
+    this.mediaDate = obj.media_date || null;
   }
 }
 
@@ -78,7 +88,7 @@ export class ActivityPostRequestBody {
     this.activityPostBody = {
       ...obj,
       // Strip out any media base64 strings which would convolute the record
-      media: (obj.media && obj.media.map((item: MediaBase64) => item.fileName)) || []
+      media: (obj.media && obj.media.map((item: MediaBase64) => item.mediaName)) || []
     };
 
     this.activity_type = (obj && obj.activity_type) || null;
