@@ -11,17 +11,9 @@ import { getActivitySQL } from './../../queries/activity-queries';
 import { getFileFromS3 } from './../../utils/file-utils';
 import { getLogger } from './../../utils/logger';
 
-const defaultLog = getLogger('activity-controller');
+const defaultLog = getLogger('activity/{activityId}');
 
 export const GET: Operation = [getActivity(), getMedia(), returnActivity()];
-
-export const parameters = [
-  {
-    in: 'path',
-    name: 'activityId',
-    required: true
-  }
-];
 
 GET.apiDoc = {
   description: 'Fetches a single activity based on its primary key.',
@@ -31,87 +23,23 @@ GET.apiDoc = {
       Bearer: ALL_ROLES
     }
   ],
+  parameters: [
+    {
+      in: 'path',
+      name: 'activityId',
+      required: true
+    }
+  ],
   responses: {
     200: {
       description: 'Activity get response object array.',
       content: {
         'application/json': {
           schema: {
+            type: 'object',
             properties: {
-              activity_type: {
-                type: 'string'
-              },
-              activityTypeData: {
-                type: 'object'
-              },
-              activity_subtype: {
-                type: 'string'
-              },
-              activitySubTypeData: {
-                type: 'object'
-              },
-              date: {
-                type: 'string',
-                description: 'Date in YYYY-MM-DD format'
-              },
-              locationAndGeometry: {
-                type: 'object',
-                description: 'Location and geometry information',
-                properties: {
-                  anchorPointY: {
-                    type: 'number'
-                  },
-                  anchorPointX: {
-                    type: 'number'
-                  },
-                  area: {
-                    type: 'number'
-                  },
-                  geometry: {
-                    type: 'object',
-                    description: 'A geoJSON object'
-                  },
-                  jurisdiction: {
-                    type: 'string'
-                  },
-                  agency: {
-                    type: 'string'
-                  },
-                  observer1FirstName: {
-                    type: 'string'
-                  },
-                  observer1LastName: {
-                    type: 'string'
-                  },
-                  locationComment: {
-                    type: 'string'
-                  },
-                  generalComment: {
-                    type: 'string'
-                  },
-                  photoTaken: {
-                    type: 'boolean'
-                  }
-                }
-              },
-              media: {
-                type: 'array',
-                description: 'An array of media objects associated to the activity record',
-                items: {
-                  type: 'object',
-                  properties: {
-                    file_name: {
-                      type: 'string'
-                    },
-                    encoded_file: {
-                      type: 'string',
-                      format: 'base64',
-                      description: 'A Data URL base64 encoded image',
-                      example: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/4REy...'
-                    }
-                  }
-                }
-              }
+              // Don't specify exact response, as it will vary, and is not currently enforced anyways
+              // Eventually this could be updated to be a oneOf list, similar to the Post request below.
             }
           }
         }
@@ -164,6 +92,9 @@ function getActivity(): RequestHandler {
       const result = (response && response.rows && response.rows[0]) || null;
 
       req['activity'] = result;
+    } catch (error) {
+      defaultLog.debug({ label: 'getActivity', message: 'error', error });
+      throw error;
     } finally {
       connection.release();
     }
@@ -196,7 +127,12 @@ function getMedia(): RequestHandler {
       // Append DATA Url string
       const encoded_file = `data:${s3Object.ContentType};base64,${content_string}`;
 
-      const mediaItem: IMediaItem = { file_name: s3Object.Metadata.fileName, encoded_file: encoded_file };
+      const mediaItem: IMediaItem = {
+        file_name: (s3Object && s3Object.Metadata && s3Object.Metadata.filename) || null,
+        encoded_file: encoded_file,
+        description: (s3Object && s3Object.Metadata && s3Object.Metadata.description) || null,
+        media_date: (s3Object && s3Object.Metadata && s3Object.Metadata.media_date) || null
+      };
 
       return mediaItem;
     });

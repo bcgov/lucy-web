@@ -61,22 +61,22 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
  * @returns {SQLStatement} sql query object
  */
 export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLStatement => {
-  const sqlStatement: SQLStatement = SQL`SELECT * FROM activity_incoming_data`;
+  const sqlStatement: SQLStatement = SQL`SELECT * FROM activity_incoming_data WHERE 1 = 1`;
 
   if (searchCriteria.activity_type) {
-    sqlStatement.append(SQL` WHERE activity_type = ${searchCriteria.activity_type}`);
+    sqlStatement.append(SQL` AND activity_type = ${searchCriteria.activity_type}`);
   }
 
   if (searchCriteria.activity_subtype) {
-    sqlStatement.append(SQL` WHERE activity_subtype = ${searchCriteria.activity_subtype}`);
+    sqlStatement.append(SQL` AND activity_subtype = ${searchCriteria.activity_subtype}`);
   }
 
   if (searchCriteria.date_range_start) {
-    sqlStatement.append(SQL` WHERE received_timestamp >= ${searchCriteria.date_range_start}::date`);
+    sqlStatement.append(SQL` AND received_timestamp >= ${searchCriteria.date_range_start}::DATE`);
   }
 
   if (searchCriteria.date_range_end) {
-    sqlStatement.append(SQL` WHERE received_timestamp <= ${searchCriteria.date_range_end}::date`);
+    sqlStatement.append(SQL` AND received_timestamp <= ${searchCriteria.date_range_end}::DATE`);
   }
 
   if (searchCriteria.bbox) {

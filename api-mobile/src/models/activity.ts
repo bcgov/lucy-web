@@ -11,8 +11,8 @@ const defaultLog = getLogger('activity-models');
  * @interface IMediaItem
  */
 export interface IMediaItem {
-  //media_date: string;
-  //description: string;
+  media_date?: string;
+  description?: string;
   file_name: string;
   encoded_file: string;
 }
@@ -24,10 +24,12 @@ export interface IMediaItem {
  * @class MediaBase64
  */
 export class MediaBase64 {
-  file_name: string;
-  content_type: string;
-  content_string: string;
-  file_buffer: Buffer;
+  mediaName: string;
+  contentType: string;
+  contentString: string;
+  mediaBuffer: Buffer;
+  mediaDescription: string;
+  mediaDate: string;
 
   /**
    * Creates an instance of MediaBase64.
@@ -36,24 +38,22 @@ export class MediaBase64 {
    * @memberof MediaBase64
    */
   constructor(obj: IMediaItem) {
-    const base64StringParts = parseBase64DataURLString(obj.encoded_file);
-
-    //defaultLog.debug({ label: 'uploadActivity', message: 'obj.encoded_file', body: obj.encoded_file});
-    //defaultLog.debug({ label: 'uploadActivity', message: 'base64 String parts', body: base64StringParts});
-
-        // throw {
-        //   status: 503,
-        //   message: 'Just for fun in upload 2'
-        // };
-
-    if (!base64StringParts) {
-      throw new Error('encoded_file could not be parsed');
+    if (!obj) {
+      throw new Error('media was null');
     }
 
-    this.content_type = base64StringParts.content_type;
-    this.content_string = base64StringParts.content_type;
-    this.file_name = obj.file_name;
-    this.file_buffer = Buffer.from(base64StringParts.contentString, 'base64');
+    const base64StringParts = parseBase64DataURLString(obj.encoded_file);
+
+    if (!base64StringParts) {
+      throw new Error('media encoded_file could not be parsed');
+    }
+
+    this.contentType = base64StringParts.content_type;
+    this.contentString = base64StringParts.content_type;
+    this.mediaName = obj.file_name;
+    this.mediaBuffer = Buffer.from(base64StringParts.contentString, 'base64');
+    this.mediaDescription = obj.description || null;
+    this.mediaDate = obj.media_date || null;
   }
 }
 
@@ -91,7 +91,7 @@ export class ActivityPostRequestBody {
     this.activityPostBody = {
       ...obj,
       // Strip out any media base64 strings which would convolute the record
-      media: (obj.media && obj.media.map((item: MediaBase64) => item.file_name)) || []
+      media: (obj.media && obj.media.map((item: MediaBase64) => item.mediaName)) || []
     };
 
     this.activity_type = (obj && obj.activity_type) || null;

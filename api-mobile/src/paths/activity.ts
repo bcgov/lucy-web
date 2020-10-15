@@ -14,7 +14,7 @@ import * as geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
 import { json } from 'body-parser';
 import { createPrinter } from 'typescript';
 
-const defaultLog = getLogger('activity-controller');
+const defaultLog = getLogger('activity');
 
 export const GET: Operation = [getActivitiesBySearchFilterCriteria()];
 
@@ -58,13 +58,6 @@ GET.apiDoc = {
               type: 'string',
               description: 'Date range end, in YYYY-MM-DD format. Defaults time to end of day.',
               example: '2020-08-30'
-            },
-            // TODO does this risk making the response too large? Do we need to limit the number of results?
-            // TODO Or possibly remove this option and only allow media requests on single activity requests?
-            include_media: {
-              type: 'boolean',
-              default: 'false',
-              description: 'True if the response should include associated media, false otherwise.'
             },
             // GeoJson Bounding Box
             bbox: {
@@ -229,15 +222,15 @@ function uploadMedia(): RequestHandler {
       try {
         media = new MediaBase64(rawMedia);
       } catch (error) {
+        defaultLog.debug({ label: 'uploadMedia', message: 'error', error });
         throw {
           status: 400,
-          message: 'Included media was invalid/encoded incorrectly',
-          errors: [error]
+          message: 'Included media was invalid/encoded incorrectly'
         };
       }
     
       const metadata = {
-        file_name: media.file_name,
+        filename: media.mediaName,
         username: (req['auth_payload'] && req['auth_payload'].preferred_username) || '',
         email: (req['auth_payload'] && req['auth_payload'].email) || ''
       };
@@ -289,8 +282,10 @@ function createActivity(): RequestHandler {
       const result = (response && response.rows && response.rows[0]) || null;
 
       return res.status(200).json(result);
-    } 
-    finally {
+    } catch (error) {
+      defaultLog.debug({ label: 'createActivity', message: 'error', error });
+      throw error;
+    } finally {
       connection.release();
     }
   };
@@ -331,6 +326,9 @@ function getActivitiesBySearchFilterCriteria(): RequestHandler {
       const result = (response && response.rows) || null;
 
       return res.status(200).json(result);
+    } catch (error) {
+      defaultLog.debug({ label: 'getActivitiesBySearchFilterCriteria', message: 'error', error });
+      throw error;
     } finally {
       connection.release();
     }
