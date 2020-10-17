@@ -1,8 +1,5 @@
 import { SEARCH_LIMIT_MAX } from '../constants/misc';
 import { parseBase64DataURLString } from './../utils/file-utils';
-import { getLogger } from '../utils/logger';
-
-const defaultLog = getLogger('activity-models');
 
 /**
  * A single media item.
@@ -48,8 +45,8 @@ export class MediaBase64 {
       throw new Error('media encoded_file could not be parsed');
     }
 
-    this.contentType = base64StringParts.content_type;
-    this.contentString = base64StringParts.content_type;
+    this.contentType = base64StringParts.contentType;
+    this.contentString = base64StringParts.contentType;
     this.mediaName = obj.file_name;
     this.mediaBuffer = Buffer.from(base64StringParts.contentString, 'base64');
     this.mediaDescription = obj.description || null;
@@ -76,7 +73,7 @@ export class ActivityPostRequestBody {
 
   received_timestamp: string;
 
-  geometry: object[];
+  geoJSONFeature: GeoJSON.Feature[];
 
   mediaKeys: string[];
 
@@ -91,7 +88,13 @@ export class ActivityPostRequestBody {
     this.activityPostBody = {
       ...obj,
       // Strip out any media base64 strings which would convolute the record
-      media: (obj.media && obj.media.map((item: MediaBase64) => item.mediaName)) || []
+      media:
+        (obj.media &&
+          obj.media.map((item: IMediaItem) => {
+            delete item.encoded_file;
+            return item;
+          })) ||
+        []
     };
 
     this.activity_type = (obj && obj.activity_type) || null;
@@ -103,7 +106,7 @@ export class ActivityPostRequestBody {
 
     this.received_timestamp = new Date().toISOString();
 
-    this.geometry = (obj && obj.geometry && obj.geometry.length) || [];
+    this.geoJSONFeature = (obj && obj.geometry) || [];
 
     this.mediaKeys = (obj && obj.mediaKeys) || null;
   }

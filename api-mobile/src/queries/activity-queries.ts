@@ -12,6 +12,8 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
     return null;
   }
 
+  console.log(activity);
+
   const sqlStatement: SQLStatement = SQL`
     INSERT INTO activity_incoming_data (
       activity_type,
@@ -27,12 +29,15 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
       ${activity.activityPostBody}
   `;
 
-  if (activity.geometry && activity.geometry.length) {
+  if (activity.geoJSONFeature && activity.geoJSONFeature.length) {
+    // Note: this is only saving the `geometry` part of the feature, and not any assocaited `properties`.
+    const geometry = JSON.stringify(activity.geoJSONFeature[0].geometry);
+
     sqlStatement.append(SQL`
       ,public.geography(
         public.ST_Force2D(
           public.ST_SetSRID(
-            public.ST_GeomFromGeoJSON('${JSON.stringify(activity.geometry[0])}')
+            public.ST_GeomFromGeoJSON(${geometry})
             ,4326
           )
         )
@@ -44,12 +49,24 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
     `);
   }
 
-  sqlStatement.append(SQL`
+  if (activity.mediaKeys) {
+    sqlStatement.append(SQL`
       ,${activity.mediaKeys}
+    `);
+  } else {
+    sqlStatement.append(SQL`
+      ,null
+    `);
+  }
+
+  sqlStatement.append(SQL`
     )
     RETURNING
       activity_incoming_data_id;
   `);
+
+  console.log(sqlStatement.text);
+  console.log(sqlStatement.values);
 
   return sqlStatement;
 };

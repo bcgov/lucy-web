@@ -64,7 +64,7 @@ GET.apiDoc = {
  */
 function getActivity(): RequestHandler {
   return async (req, res, next) => {
-    defaultLog.debug({ label: '{activityId}', message: 'params', body: req.params });
+    defaultLog.debug({ label: '{activityId}', message: 'getActivity', body: req.params });
 
     const activityId = Number(req.params.activityId);
 
@@ -105,6 +105,8 @@ function getActivity(): RequestHandler {
 
 function getMedia(): RequestHandler {
   return async (req, res, next) => {
+    defaultLog.debug({ label: '{activityId}', message: 'getMedia', body: req.body });
+
     const activity = req['activity'];
 
     if (!activity || !activity.media_keys || !activity.media_keys.length) {
@@ -122,16 +124,16 @@ function getMedia(): RequestHandler {
 
     const result: IMediaItem[] = response.map((s3Object: GetObjectOutput) => {
       // Encode image buffer as base64
-      const content_string = Buffer.from(s3Object.Body).toString('base64');
+      const contentString = Buffer.from(s3Object.Body).toString('base64');
 
       // Append DATA Url string
-      const encoded_file = `data:${s3Object.ContentType};base64,${content_string}`;
+      const encodedFile = `data:${s3Object.ContentType};base64,${contentString}`;
 
       const mediaItem: IMediaItem = {
         file_name: (s3Object && s3Object.Metadata && s3Object.Metadata.filename) || null,
-        encoded_file: encoded_file,
+        encoded_file: encodedFile,
         description: (s3Object && s3Object.Metadata && s3Object.Metadata.description) || null,
-        media_date: (s3Object && s3Object.Metadata && s3Object.Metadata.media_date) || null
+        media_date: (s3Object && s3Object.Metadata && s3Object.Metadata.date) || null
       };
 
       return mediaItem;

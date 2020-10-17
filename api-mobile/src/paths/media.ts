@@ -85,7 +85,7 @@ function getMedia(): RequestHandler {
         file_name: (s3Object && s3Object.Metadata && s3Object.Metadata.filename) || null,
         encoded_file: encodedFile,
         description: (s3Object && s3Object.Metadata && s3Object.Metadata.description) || null,
-        media_date: (s3Object && s3Object.Metadata && s3Object.Metadata.media_date) || null
+        media_date: (s3Object && s3Object.Metadata && s3Object.Metadata.date) || null
       };
 
       return mediaItem;
