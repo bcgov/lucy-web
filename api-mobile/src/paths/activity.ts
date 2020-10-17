@@ -1,7 +1,7 @@
 'use strict';
 
 import { ManagedUpload } from 'aws-sdk/clients/s3';
-import { RequestHandler, response } from 'express';
+import { RequestHandler } from 'express';
 import { Operation } from 'express-openapi';
 import { SQLStatement } from 'sql-template-strings';
 import { ALL_ROLES, WRITE_ROLES } from '../constants/misc';
@@ -11,8 +11,6 @@ import { getActivitiesSQL, postActivitySQL } from '../queries/activity-queries';
 import { uploadFileToS3 } from '../utils/file-utils';
 import { getLogger } from '../utils/logger';
 import * as geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
-import { json } from 'body-parser';
-import { createPrinter } from 'typescript';
 
 const defaultLog = getLogger('activity');
 
@@ -204,6 +202,8 @@ POST.apiDoc = {
  */
 function uploadMedia(): RequestHandler {
   return async (req, res, next) => {
+    defaultLog.debug({ label: 'activity', message: 'uploadMedia', body: req.body });
+
     if (!req.body.media || !req.body.media.length) {
       // no media objects included, skipping media upload step
       return next();
@@ -218,7 +218,7 @@ function uploadMedia(): RequestHandler {
         return;
       }
 
-      let media;
+      let media: MediaBase64;
       try {
         media = new MediaBase64(rawMedia);
       } catch (error) {
@@ -228,9 +228,13 @@ function uploadMedia(): RequestHandler {
           message: 'Included media was invalid/encoded incorrectly'
         };
       }
-    
+
+      console.log(media);
+
       const metadata = {
-        filename: media.mediaName,
+        filename: media.mediaName || '',
+        description: media.mediaDescription || '',
+        date: media.mediaDate || '',
         username: (req['auth_payload'] && req['auth_payload'].preferred_username) || '',
         email: (req['auth_payload'] && req['auth_payload'].email) || ''
       };
@@ -243,7 +247,6 @@ function uploadMedia(): RequestHandler {
     req['mediaKeys'] = results.map(result => result.Key);
 
     next();
-    
   };
 }
 
@@ -254,6 +257,8 @@ function uploadMedia(): RequestHandler {
  */
 function createActivity(): RequestHandler {
   return async (req, res, next) => {
+    defaultLog.debug({ label: 'activity', message: 'createActivity', body: req.params });
+
     const data = { ...req.body, mediaKeys: req['mediaKeys'] };
 
     const sanitizedActivityData = new ActivityPostRequestBody(data);
@@ -298,7 +303,7 @@ function createActivity(): RequestHandler {
  */
 function getActivitiesBySearchFilterCriteria(): RequestHandler {
   return async (req, res, next) => {
-    defaultLog.debug({ label: 'activity', message: 'body', body: req.body });
+    defaultLog.debug({ label: 'activity', message: 'getActivitiesBySearchFilterCriteria', body: req.body });
 
     const sanitizedSearchCriteria = new ActivitySearchCriteria(req.body);
 
