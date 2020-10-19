@@ -12,8 +12,6 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
     return null;
   }
 
-  console.log(activity);
-
   const sqlStatement: SQLStatement = SQL`
     INSERT INTO activity_incoming_data (
       activity_type,
@@ -37,8 +35,8 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
       ,public.geography(
         public.ST_Force2D(
           public.ST_SetSRID(
-            public.ST_GeomFromGeoJSON(${geometry})
-            ,4326
+            public.ST_GeomFromGeoJSON(${geometry}),
+            4326
           )
         )
       )
@@ -64,9 +62,6 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
     RETURNING
       activity_incoming_data_id;
   `);
-
-  console.log(sqlStatement.text);
-  console.log(sqlStatement.values);
 
   return sqlStatement;
 };
@@ -96,9 +91,20 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
     sqlStatement.append(SQL` AND received_timestamp <= ${searchCriteria.date_range_end}::DATE`);
   }
 
-  if (searchCriteria.bbox) {
-    // TODO Add Spatial query support using `searchCriteria.bbox`
-    sqlStatement.append(SQL` `);
+  if (searchCriteria.search_polygon) {
+    sqlStatement.append(SQL`
+      AND public.ST_INTERSECTS(
+        geog,
+        public.geography(
+          public.ST_Force2D(
+            public.ST_SetSRID(
+              public.ST_GeomFromGeoJSON(${searchCriteria.search_polygon}),
+              4326
+            )
+          )
+        )
+      )
+    `);
   }
 
   if (searchCriteria.limit) {
