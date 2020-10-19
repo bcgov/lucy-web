@@ -130,7 +130,7 @@ export class ActivitySearchCriteria {
 
   include_media: boolean;
 
-  bbox: GeoJSON.BBox;
+  search_polygon: GeoJSON.Polygon;
 
   /**
    * Creates an instance of ActivitySearchCriteria.
@@ -150,7 +150,7 @@ export class ActivitySearchCriteria {
 
     this.include_media = (obj && obj.include_media) || false;
 
-    this.bbox = (obj && obj.bbox) || null;
+    this.search_polygon = (obj && obj.search_polygon) || null;
   }
 
   setPage(page: number): number {
