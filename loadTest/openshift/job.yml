@@ -20,7 +20,7 @@ parameters:
   value: "0"
 - name: AUTH_URL
   description: Auth URL
-  value: "https://sso-test.pathfinder.gov.bc.ca/auth/realms"
+  value: "https://test.oidc.gov.bc.ca/auth/realms"
 - name: REALM
   description: Auth Realm
   value: dfmlcg7z
