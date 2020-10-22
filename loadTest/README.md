@@ -25,7 +25,7 @@ The __/loadTest__ directory under root contains all resources and source code fi
         TEST_USER=#NAME
         PASSWORD=#PWD
         # Keycloak auth details
-        AUTH_URL=https://sso-dev.pathfinder.gov.bc.ca/auth/realms
+        AUTH_URL=https://dev.oidc.gov.bc.ca/auth/realms
         REALM=dfmlcg7z
         CLIENT_ID=invasives-bc
     ```
