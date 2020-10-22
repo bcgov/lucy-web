@@ -14,11 +14,11 @@ import * as geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
 
 const defaultLog = getLogger('activity');
 
-export const GET: Operation = [getActivitiesBySearchFilterCriteria()];
+export const GET: Operation = [getElevation()];
 
 GET.apiDoc = {
-  description: 'Fetches all activities based on search criteria.',
-  tags: ['activity'],
+  description: 'Fetches elevation for a single point',
+  tags: ['activity','elevation'],
   security: [
     {
       Bearer: ALL_ROLES
@@ -106,9 +106,11 @@ GET.apiDoc = {
  *
  * @return {RequestHandler}
  */
-function getActivitiesBySearchFilterCriteria(): RequestHandler {
+function getElevation(): RequestHandler {
   return async (req, res, next) => {
-    defaultLog.debug({ label: 'activity', message: 'getActivitiesBySearchFilterCriteria', body: req.body });
+    defaultLog.debug({ label: 'activity', message: 'getElevation', body: req.body });
+    console.log(req);
+    var url = 'http://geogratis.gc.ca/services/elevation/cdem/altitude?lat=45.5&lon=-71.5';
 
     const sanitizedSearchCriteria = new ActivitySearchCriteria(req.body);
 
@@ -137,7 +139,7 @@ function getActivitiesBySearchFilterCriteria(): RequestHandler {
 
       return res.status(200).json(result);
     } catch (error) {
-      defaultLog.debug({ label: 'getActivitiesBySearchFilterCriteria', message: 'error', error });
+      defaultLog.debug({ label: 'getElevation', message: 'error', error });
       throw error;
     } finally {
       connection.release();
