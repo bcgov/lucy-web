@@ -110,7 +110,7 @@ function getElevation(): RequestHandler {
   return async (req, res, next) => {
     defaultLog.debug({ label: 'activity', message: 'getElevation', body: req.body });
     console.log(req);
-    var url = 'http://geogratis.gc.ca/services/elevation/cdem/altitude?lat=45.5&lon=-71.5';
+    var url = `https://geogratis.gc.ca/services/elevation/cdem/altitude?lat=45.5&lon=-71.5`;
 
     const sanitizedSearchCriteria = new ActivitySearchCriteria(req.body);
 
