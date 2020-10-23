@@ -1,5 +1,6 @@
 'use strict';
 
+import axios from 'axios';
 import { ManagedUpload } from 'aws-sdk/clients/s3';
 import { RequestHandler } from 'express';
 import { Operation } from 'express-openapi';
@@ -8,9 +9,9 @@ import { ALL_ROLES, WRITE_ROLES } from '../../constants/misc';
 import { getDBConnection } from '../../database/db';
 import { ActivityPostRequestBody, ActivitySearchCriteria, IMediaItem, MediaBase64 } from '../../models/activity';
 import { getActivitiesSQL, postActivitySQL } from '../../queries/activity-queries';
-import { uploadFileToS3 } from '../../utils/file-utils';
+// import { uploadFileToS3 } from '../../utils/file-utils';
 import { getLogger } from '../../utils/logger';
-import * as geoJSON_Feature_Schema from '../../openapi/geojson-feature-doc.json';
+// import * as geoJSON_Feature_Schema from '../../openapi/geojson-feature-doc.json';
 
 const defaultLog = getLogger('activity');
 
@@ -108,41 +109,28 @@ GET.apiDoc = {
  */
 function getElevation(): RequestHandler {
   return async (req, res, next) => {
-    console.log('heres a req: ',req);
-    defaultLog.debug({ label: 'activity', message: 'getElevation', body: req.body });
-    var url = `https://geogratis.gc.ca/services/elevation/cdem/altitude?lat=45.5&lon=-71.5`;
 
-    const sanitizedSearchCriteria = new ActivitySearchCriteria(req.body);
+    // Grab coordinates from the query string
+    const {lon,lat} = req.query;
 
-    const connection = await getDBConnection();
-
-    if (!connection) {
+    // Error if no coordinates
+    if (!lon || !lat) {
       throw {
-        status: 503,
-        message: 'Failed to establish database connection'
-      };
-    }
-
-    try {
-      const sqlStatement: SQLStatement = getActivitiesSQL(sanitizedSearchCriteria);
-
-      if (!sqlStatement) {
-        throw {
-          status: 400,
-          message: 'Failed to build SQL statement'
-        };
+        status: 400,
+        message: 'Did not supply valid coordinates'
       }
-
-      const response = await connection.query(sqlStatement.text, sqlStatement.values);
-
-      const result = (response && response.rows) || null;
-
-      return res.status(200).json(result);
-    } catch (error) {
-      defaultLog.debug({ label: 'getElevation', message: 'error', error });
-      throw error;
-    } finally {
-      connection.release();
     }
+
+    defaultLog.debug({ label: 'elevation', message: 'getElevation', body: req.body });
+
+    var url = `https://geogratis.gc.ca/services/elevation/cdem/altitude?lat=${lat}&lon=${lon}`;
+
+    axios.get(url)
+      .then((response) => {
+        return res.status(200).json(response.data);
+      })
+      .catch((error) => {
+        return defaultLog.debug({ label: 'getElevation', message: 'error', error });
+      });
   };
 }
