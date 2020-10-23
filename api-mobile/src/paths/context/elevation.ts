@@ -4,9 +4,7 @@ import axios from 'axios';
 import { RequestHandler } from 'express';
 import { Operation } from 'express-openapi';
 import { ALL_ROLES } from '../../constants/misc';
-// import { uploadFileToS3 } from '../../utils/file-utils';
 import { getLogger } from '../../utils/logger';
-// import * as geoJSON_Feature_Schema from '../../openapi/geojson-feature-doc.json';
 
 const defaultLog = getLogger('activity');
 
