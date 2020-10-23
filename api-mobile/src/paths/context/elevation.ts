@@ -4,13 +4,13 @@ import { ManagedUpload } from 'aws-sdk/clients/s3';
 import { RequestHandler } from 'express';
 import { Operation } from 'express-openapi';
 import { SQLStatement } from 'sql-template-strings';
-import { ALL_ROLES, WRITE_ROLES } from '../constants/misc';
-import { getDBConnection } from '../database/db';
-import { ActivityPostRequestBody, ActivitySearchCriteria, IMediaItem, MediaBase64 } from '../models/activity';
-import { getActivitiesSQL, postActivitySQL } from '../queries/activity-queries';
-import { uploadFileToS3 } from '../utils/file-utils';
-import { getLogger } from '../utils/logger';
-import * as geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
+import { ALL_ROLES, WRITE_ROLES } from '../../constants/misc';
+import { getDBConnection } from '../../database/db';
+import { ActivityPostRequestBody, ActivitySearchCriteria, IMediaItem, MediaBase64 } from '../../models/activity';
+import { getActivitiesSQL, postActivitySQL } from '../../queries/activity-queries';
+import { uploadFileToS3 } from '../../utils/file-utils';
+import { getLogger } from '../../utils/logger';
+import * as geoJSON_Feature_Schema from '../../openapi/geojson-feature-doc.json';
 
 const defaultLog = getLogger('activity');
 
@@ -108,8 +108,8 @@ GET.apiDoc = {
  */
 function getElevation(): RequestHandler {
   return async (req, res, next) => {
+    console.log('heres a req: ',req);
     defaultLog.debug({ label: 'activity', message: 'getElevation', body: req.body });
-    console.log(req);
     var url = `https://geogratis.gc.ca/services/elevation/cdem/altitude?lat=45.5&lon=-71.5`;
 
     const sanitizedSearchCriteria = new ActivitySearchCriteria(req.body);
