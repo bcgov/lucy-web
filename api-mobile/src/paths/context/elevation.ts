@@ -21,13 +21,11 @@ GET.apiDoc = {
   parameters: [
     {
       in: 'path',
-      name: 'lon',
-      required: true
+      name: 'lon'
     },
     {
       in: 'path',
-      name: 'lat',
-      required: true
+      name: 'lat'
     }
   ],
   responses: {
