@@ -20,12 +20,14 @@ GET.apiDoc = {
   ],
   parameters: [
     {
-      in: 'path',
-      name: 'lon'
+      in: 'query',
+      name: 'lon',
+      required: true
     },
     {
-      in: 'path',
-      name: 'lat'
+      in: 'query',
+      name: 'lat',
+      required: true
     }
   ],
   responses: {
