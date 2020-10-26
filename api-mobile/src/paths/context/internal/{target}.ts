@@ -67,7 +67,11 @@ GET.apiDoc = {
 /**
  * ## getPlanningArea
  * Get the Invasive Plant Management Area
- *
+ * @param lon {float} Longitude
+ * @param lat {float} Latitude
+ * @param res {object} Express response object
+ * @param attr {string} The postres table attribute to target
+ * @param table {string} The postres table to target
  */
 const getPlanningArea = async (
   lon: any,
@@ -75,7 +79,7 @@ const getPlanningArea = async (
   res: Response,
   attr: string,
   table: string
-  ) => {
+) => {
   const connection = await getDBConnection();
 
   if (!connection) {
