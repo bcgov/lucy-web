@@ -144,6 +144,9 @@ function getContext(): RequestHandler {
       case 'riso':
         getPlanningArea(lon,lat,res,'agency','regional_invasive_species_organization_areas');
         break;
+      case 'utm':
+        getPlanningArea(lon,lat,res,'utm_zone','utm_zones');
+        break;
       default:
         res.status(401).send('Please specify a target dataset');
     }
