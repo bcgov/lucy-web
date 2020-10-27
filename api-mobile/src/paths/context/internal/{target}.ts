@@ -141,6 +141,9 @@ function getContext(): RequestHandler {
       case 'ipma':
         getPlanningArea(lon,lat,res,'ipma','invasive_plant_management_areas');
         break;
+      case 'riso':
+        getPlanningArea(lon,lat,res,'agency','regional_invasive_species_organization_areas');
+        break;
       default:
         res.status(401).send('Please specify a target dataset');
     }
