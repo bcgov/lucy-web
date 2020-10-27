@@ -70,8 +70,8 @@ GET.apiDoc = {
  * @param lon {float} Longitude
  * @param lat {float} Latitude
  * @param res {object} Express response object
- * @param attr {string} The postres table attribute to target
- * @param table {string} The postres table to target
+ * @param attr {string} The postgres table attribute to target
+ * @param table {string} The postgres table to target
  */
 const getPlanningArea = async (
   lon: any,
