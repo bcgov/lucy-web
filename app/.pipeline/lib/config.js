@@ -17,8 +17,8 @@ const isStaticDeployment = () => {
 const isProduction = () => false;
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
-const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
-const defaultHostAPI = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca'
+const defaultHost = 'invasivebc-8ecbmv-dev.apps.silver.devops.gov.bc.ca';
+const defaultHostAPI = 'invasivebc-8ecbmv-api.dev.apps.silver.devops.gov.bc.ca'
 
 // Get SSO_Info
 const sso = config.sso;
@@ -69,8 +69,8 @@ const phases = {
     instance: `${name}-dev-${deployChangeId}`  , 
     version:`${version}-${deployChangeId}`, 
     tag:`dev-${version}-${deployChangeId}`, 
-    host: isStaticDeployment() ? staticUrls['dev'] || defaultHost : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`, 
-    apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
+    host: isStaticDeployment() ? staticUrls['dev'] || defaultHost : `${name}-${changeId}-8ecbmv-dev.apps.silver.devops.gov.bc.ca`, 
+    apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.apps.silver.devops.gov.bc.ca`,
     env: 'dev',
     sso: sso.dev,
     replicas: 1,

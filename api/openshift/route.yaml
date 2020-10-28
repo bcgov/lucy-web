@@ -37,7 +37,7 @@ items:
     name: lucy-api-test-route
     selfLink: /apis/route.openshift.io/v1/namespaces/8ecbmv-dev/routes/lucy-api-test-route
   spec:
-    host: lucy-api-test-route-8ecbmv-dev.pathfinder.gov.bc.ca
+    host: lucy-api-test-route-8ecbmv-dev.apps.silver.devops.gov.bc.ca
     port:
       targetPort: 3001-tcp
     to:

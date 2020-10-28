@@ -2,7 +2,7 @@
 let options = require('pipeline-cli').Util.parseArguments();
 const config = require('../../.config/config.json');
 
-const defaultHost = 'invasivebc-8ecbmv-api-mobile.pathfinder.gov.bc.ca';
+const defaultHost = 'invasivebc-8ecbmv-api-mobile.apps.silver.devops.gov.bc.ca';
 const name = (config.module && config.module['api-mobile']) || 'lucy-api-mobile';
 const dbName = (config.module && config.module['api']) || 'lucy-api';
 const changeId = options.pr || `${Math.floor(Date.now() * 1000) / 60.0}`; //aka pull-request or brach to process
@@ -63,7 +63,7 @@ const phases = {
     tag: `dev-${version}-${deployChangeId}`,
     host:
       (isStaticDeployment && (staticUrlsAPIMobile.dev || defaultHost)) ||
-      `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
+      `${name}-${changeId}-8ecbmv-dev.apps.silver.devops.gov.bc.ca`,
     env: 'dev',
     certificateURL: config.certificateURL.dev,
     migrationInfo: config.migrationInfo.dev,

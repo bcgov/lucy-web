@@ -15,7 +15,7 @@ const isStaticDeployment = () => {
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
 const isProduction = () => false;
-const defaultHost = 'invasivebc-8ecbmv-api.pathfinder.gov.bc.ca';
+const defaultHost = 'invasivebc-8ecbmv-api.apps.silver.devops.gov.bc.ca';
 const branch = isStaticDeployment() && !isProduction() ? options.branch : undefined;
 const tag = isStaticDeployment() && !isProduction() ? `build-${version}-${changeId}-${branch}` : `build-${version}-${changeId}`;
 
@@ -61,7 +61,7 @@ const phases = {
     instance: `${name}-dev-${deployChangeId}`  ,
     version:`${deployChangeId}-${changeId}`,
     tag:`dev-${version}-${deployChangeId}`, 
-    host: isStaticDeployment() ? (staticUrlsAPI['dev'] || defaultHost) : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
+    host: isStaticDeployment() ? (staticUrlsAPI['dev'] || defaultHost) : `${name}-${changeId}-8ecbmv-dev.apps.silver.devops.gov.bc.ca`,
     env: 'dev',
     certificateURL: config.certificateURL.dev,
     migrationInfo: config.migrationInfo.dev,

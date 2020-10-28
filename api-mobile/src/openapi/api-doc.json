@@ -19,15 +19,15 @@
       "description": "local api via docker"
     },
     {
-      "url": "https://api-mobile-dev-invasivesbc.pathfinder.gov.bc.ca",
+      "url": "https://api-mobile-dev-invasivesbc.apps.silver.devops.gov.bc.ca",
       "description": "deployed api in dev environment"
     },
     {
-      "url": "https://api-mobile-test-invasivesbc.pathfinder.gov.bc.ca",
+      "url": "https://api-mobile-test-invasivesbc.apps.silver.devops.gov.bc.ca",
       "description": "deployed api in test environment"
     },
     {
-      "url": "https://api-mobile-invasivesbc.pathfinder.gov.bc.ca",
+      "url": "https://api-mobile-invasivesbc.apps.silver.devops.gov.bc.ca",
       "description": "deployed api in prod environmen"
     }
   ],

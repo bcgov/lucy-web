@@ -1,5 +1,5 @@
 config:
-  target: 'https://api-test-invasivesbc.pathfinder.gov.bc.ca/api'
+  target: 'https://api-test-invasivesbc.apps.silver.devops.gov.bc.ca/api'
   phases:
     - duration: 1
       arrivalRate: 10
