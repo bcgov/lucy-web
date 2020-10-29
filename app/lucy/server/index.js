@@ -24,6 +24,23 @@ const path = require('path');
 const request = require('request');
 
 /**
+ * @description Response options for static route
+ */
+const responseOptions = {
+    immutable: true,
+    maxAge: 50000000,
+    setHeaders: (res, path, stat) => {
+        res.set('Strict-Transport-Security', ' max-age=31536000 ; includeSubDomains');
+        res.set('X-Frame-Options', 'deny');
+        res.set('X-Content-Type-Options', 'nosniff');
+        res.set('X-Permitted-Cross-Domain-Policies', 'none');
+        res.set('X-XSS-Protection', '1; mode=block');
+        res.set('Cache-Control', 'max-age=31536000, private, no-cache, no-store, must-revalidate');
+        res.set('Pragma', 'no-cache');
+    }
+};
+
+/**
  * @description Bootstrap script to start app web server
  */
 (() => {
@@ -37,7 +54,7 @@ const request = require('request');
     // Resource path
     const resourcePath = path.resolve(__dirname, '../dist/www')
     // Setting express static
-    app.use(express.static(resourcePath));
+    app.use(express.static(resourcePath, responseOptions));
     // Setting configure path
     app.use('/config', (req, resp) => {
         const config = {
@@ -73,7 +90,7 @@ const request = require('request');
 
     // All routes
     const route = express.Router();
-    route.all('*', express.static(resourcePath));
+    route.all('*', express.static(resourcePath, responseOptions));
     app.use('*', route);
 
     // Logging
