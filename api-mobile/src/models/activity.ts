@@ -128,8 +128,6 @@ export class ActivitySearchCriteria {
   date_range_start: Date;
   date_range_end: Date;
 
-  include_media: boolean;
-
   search_polygon: GeoJSON.Polygon;
 
   /**
@@ -147,8 +145,6 @@ export class ActivitySearchCriteria {
 
     this.date_range_start = (obj && obj.date_range_start) || null;
     this.date_range_end = (obj && obj.date_range_end) || null;
-
-    this.include_media = (obj && obj.include_media) || false;
 
     this.search_polygon = (obj && obj.search_polygon) || null;
   }
