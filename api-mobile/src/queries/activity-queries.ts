@@ -91,14 +91,14 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
     sqlStatement.append(SQL` AND received_timestamp <= ${searchCriteria.date_range_end}::DATE`);
   }
 
-  if (searchCriteria.search_polygon) {
+  if (searchCriteria.search_feature) {
     sqlStatement.append(SQL`
       AND public.ST_INTERSECTS(
         geog,
         public.geography(
           public.ST_Force2D(
             public.ST_SetSRID(
-              public.ST_GeomFromGeoJSON(${searchCriteria.search_polygon}),
+              public.ST_GeomFromGeoJSON(${searchCriteria.search_feature}),
               4326
             )
           )
