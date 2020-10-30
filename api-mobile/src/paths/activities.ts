@@ -6,7 +6,7 @@ import { SQLStatement } from 'sql-template-strings';
 import { ALL_ROLES } from '../constants/misc';
 import { getDBConnection } from '../database/db';
 import { ActivitySearchCriteria } from '../models/activity';
-import geoJSON_Polygon_Schema from '../openapi/geojson-polygon-doc.json';
+import geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
 import { getActivitiesSQL } from '../queries/activity-queries';
 import { getLogger } from '../utils/logger';
 
@@ -55,8 +55,8 @@ POST.apiDoc = {
               description: 'Date range end, in YYYY-MM-DD format. Defaults time to end of day.',
               example: '2020-08-30'
             },
-            search_polygon: {
-              ...geoJSON_Polygon_Schema
+            search_feature: {
+              ...geoJSON_Feature_Schema
             }
           }
         }

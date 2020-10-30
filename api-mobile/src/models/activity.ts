@@ -128,7 +128,7 @@ export class ActivitySearchCriteria {
   date_range_start: Date;
   date_range_end: Date;
 
-  search_polygon: GeoJSON.Polygon;
+  search_feature: GeoJSON.Feature;
 
   /**
    * Creates an instance of ActivitySearchCriteria.
@@ -146,7 +146,7 @@ export class ActivitySearchCriteria {
     this.date_range_start = (obj && obj.date_range_start) || null;
     this.date_range_end = (obj && obj.date_range_end) || null;
 
-    this.search_polygon = (obj && obj.search_polygon) || null;
+    this.search_feature = (obj && obj.search_feature) || null;
   }
 
   setPage(page: number): number {
