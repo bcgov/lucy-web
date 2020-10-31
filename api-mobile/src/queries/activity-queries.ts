@@ -98,7 +98,7 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
         public.geography(
           public.ST_Force2D(
             public.ST_SetSRID(
-              public.ST_GeomFromGeoJSON(${searchCriteria.search_feature}),
+              public.ST_GeomFromGeoJSON(${searchCriteria.search_feature.geometry}),
               4326
             )
           )
