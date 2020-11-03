@@ -24,11 +24,11 @@ export async function up(knex: Knex): Promise<void> {
 
     ALTER TABLE ${DB_SCHEMA}.point_of_interest_incoming_data ADD COLUMN point_of_interest_type VARCHAR(200) NULL;
     COMMENT ON COLUMN ${DB_SCHEMA}.point_of_interest_incoming_data.point_of_interest_type IS 'Type of record';
-    CREATE index type_idx on ${DB_SCHEMA}.point_of_interest_incoming_data (point_of_interest_type);
+    CREATE index poi_type_idx on ${DB_SCHEMA}.point_of_interest_incoming_data (point_of_interest_type);
 
     ALTER TABLE ${DB_SCHEMA}.point_of_interest_incoming_data ADD COLUMN point_of_interest_subtype VARCHAR(200) NULL;
     COMMENT ON COLUMN ${DB_SCHEMA}.point_of_interest_incoming_data.point_of_interest_subtype IS 'Sub Type of record';
-    CREATE index sub_type_idx on ${DB_SCHEMA}.point_of_interest_incoming_data (point_of_interest_subtype);
+    CREATE index poi_sub_type_idx on ${DB_SCHEMA}.point_of_interest_incoming_data (point_of_interest_subtype);
 
     ALTER TABLE ${DB_SCHEMA}.point_of_interest_incoming_data ADD COLUMN received_timestamp timestamp NOT NULL DEFAULT NOW();
     COMMENT ON COLUMN ${DB_SCHEMA}.point_of_interest_incoming_data.received_timestamp IS 'The date and time data was received and inserted into the database.';
@@ -76,6 +76,6 @@ export async function down(knex: Knex): Promise<void> {
         set schema '${DB_SCHEMA}';
         set search_path = ${DB_SCHEMA},public;
 
-        DROP TABLE IF EXISTS ${DB_SCHEMA}.point_of_interest;
+        DROP TABLE IF EXISTS ${DB_SCHEMA}.point_of_interest_incoming_data;
       `);
 }

@@ -1387,6 +1387,156 @@
             "format": "float"
           }
         }
+      },
+      "PointOfInterest_IAPP_Site": {
+        "type": "object",
+        "properties": {
+          "point_of_interest_data": {
+            "$ref": "#/components/schemas/Point_Of_Interest"
+          },
+          "point_of_interest_type_data": {
+            "$ref": "#/components/schemas/IAPP_Site"
+          }
+        }
+      },
+      "Point_Of_Interest": {
+        "title": "Basic Information",
+        "description": "Basic information captured for all points of interest",
+        "type": "object",
+        "required": [
+          "species_agency_code",
+          "jurisdiction_code",
+          "point_of_interest_status",
+          "access_description",
+          "media_indicator",
+          "created_date_on_device",
+          "updated_date_on_device"
+        ],
+        "properties": {
+          "jurisdiction_code": {
+            "type": "string",
+            "title": "Jurisdiction",
+            "x-enum-code": {
+              "x-enum-code-set-name": "jurisdiction_code",
+              "x-enum-code-value": "jurisdiction_code",
+              "x-enum-code-name": "description"
+            }
+          },
+          "point_of_interest_status": {
+            "type": "string",
+            "title": "Point of interest status",
+            "enum": [
+              "sync",
+              "done",
+              "pending",
+              "errors"
+            ]
+          },
+          "general_comment": {
+            "type": "string",
+            "title": "Comment",
+            "maximum": 300
+          },
+          "access_description": {
+            "type": "string",
+            "title": "Access Description",
+            "maximum": 300
+          },
+          "media_indicator": {
+            "type": "boolean",
+            "title": "Photo"
+          },
+          "created_date_on_device": {
+            "type": "string",
+            "title": "Created date on device"
+          },
+          "updated_date_on_device": {
+            "type": "string",
+            "title": "Updated date on device"
+          },
+          "paper_file": {
+            "type": "array",
+            "title": "Paper file",
+            "items": {
+              "$ref": "#/components/schemas/PaperFile"
+            }
+          }
+        }
+      },
+      "IAPP_Site": {
+        "title": "IAPP Site",
+        "description": "IAPP Site",
+        "type": "object",
+        "required": [
+          "site_id",
+          "longitude",
+          "latitude",
+          "albers_x",
+          "albers_y",
+          "off_longitude",
+          "off_latitude",
+          "off_albers_x",
+          "off_albers_y",
+          "created_date",
+          "aspect",
+          "original_bec_id",
+          "map_sheet",
+          "specific_use",
+          "soil_texture",
+          "comments"
+
+
+        ],
+        "properties": {
+          "jurisdiction_code": {
+            "type": "string",
+            "title": "Jurisdiction",
+            "x-enum-code": {
+              "x-enum-code-set-name": "jurisdiction_code",
+              "x-enum-code-value": "jurisdiction_code",
+              "x-enum-code-name": "description"
+            }
+          },
+          "point_of_interest_status": {
+            "type": "string",
+            "title": "Point of interest status",
+            "enum": [
+              "sync",
+              "done",
+              "pending",
+              "errors"
+            ]
+          },
+          "general_comment": {
+            "type": "string",
+            "title": "Comment",
+            "maximum": 300
+          },
+          "access_description": {
+            "type": "string",
+            "title": "Access Description",
+            "maximum": 300
+          },
+          "media_indicator": {
+            "type": "boolean",
+            "title": "Photo"
+          },
+          "created_date_on_device": {
+            "type": "string",
+            "title": "Created date on device"
+          },
+          "updated_date_on_device": {
+            "type": "string",
+            "title": "Updated date on device"
+          },
+          "paper_file": {
+            "type": "array",
+            "title": "Paper file",
+            "items": {
+              "$ref": "#/components/schemas/PaperFile"
+            }
+          }
+        }
       }
     }
   }
