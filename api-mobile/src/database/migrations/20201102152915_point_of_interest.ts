@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     set schema '${DB_SCHEMA}';
     set search_path = ${DB_SCHEMA},public;
 
-    -- ### Creating View: observation_common_fields_view ### -
+    -- ### Creating table: point of interest incoming data ### -
     CREATE SCHEMA IF NOT EXISTS ${DB_SCHEMA};
 
     CREATE TABLE ${DB_SCHEMA}.point_of_interest_incoming_data ();
