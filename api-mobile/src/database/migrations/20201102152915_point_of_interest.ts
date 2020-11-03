@@ -66,7 +66,7 @@ export async function up(knex: Knex): Promise<void> {
     COMMENT ON COLUMN ${DB_SCHEMA}.point_of_interest_incoming_data.moti_districts IS 'Ministry of Transportation and Infrastructure districts';
 
     ALTER TABLE ${DB_SCHEMA}.activity_incoming_data ADD COLUMN media_keys text[];
-    COMMENT ON COLUMN ${DB_SCHEMA}.activity_incoming_data.media_keys IS 'Array of keys used to fetch original files from external storage';
+    COMMENT ON COLUMN ${DB_SCHEMA}.point_of_interest_incoming_data.media_keys IS 'Array of keys used to fetch original files from external storage';
 
     `);
 }
