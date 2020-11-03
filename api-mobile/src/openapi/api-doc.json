@@ -1469,14 +1469,6 @@
         "type": "object",
         "required": [
           "site_id",
-          "longitude",
-          "latitude",
-          "albers_x",
-          "albers_y",
-          "off_longitude",
-          "off_latitude",
-          "off_albers_x",
-          "off_albers_y",
           "created_date",
           "aspect",
           "original_bec_id",
@@ -1484,57 +1476,47 @@
           "specific_use",
           "soil_texture",
           "comments"
-
-
         ],
         "properties": {
-          "jurisdiction_code": {
+          "site_id": {
             "type": "string",
-            "title": "Jurisdiction",
-            "x-enum-code": {
-              "x-enum-code-set-name": "jurisdiction_code",
-              "x-enum-code-value": "jurisdiction_code",
-              "x-enum-code-name": "description"
-            }
+            "title": "Site ID",
+            "maximum": 30
           },
-          "point_of_interest_status": {
+          "created_date": {
             "type": "string",
-            "title": "Point of interest status",
-            "enum": [
-              "sync",
-              "done",
-              "pending",
-              "errors"
-            ]
+            "title": "",
+            "maximum": 30
           },
-          "general_comment": {
+          "aspect": {
             "type": "string",
-            "title": "Comment",
+            "title": "",
+            "maximum": 30
+          },
+          "original_bec_id": {
+            "type": "string",
+            "title": "",
+            "maximum": 30
+          },
+          "map_sheet": {
+            "type": "string",
+            "title": "",
+            "maximum": 30
+          },
+          "specific_use": {
+            "type": "string",
+            "title": "",
+            "maximum": 30
+          },
+          "soil_texture": {
+            "type": "string",
+            "title": "",
+            "maximum": 30
+          },
+          "comments": {
+            "type": "string",
+            "title": "",
             "maximum": 300
-          },
-          "access_description": {
-            "type": "string",
-            "title": "Access Description",
-            "maximum": 300
-          },
-          "media_indicator": {
-            "type": "boolean",
-            "title": "Photo"
-          },
-          "created_date_on_device": {
-            "type": "string",
-            "title": "Created date on device"
-          },
-          "updated_date_on_device": {
-            "type": "string",
-            "title": "Updated date on device"
-          },
-          "paper_file": {
-            "type": "array",
-            "title": "Paper file",
-            "items": {
-              "$ref": "#/components/schemas/PaperFile"
-            }
           }
         }
       }
