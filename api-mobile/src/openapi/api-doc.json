@@ -1475,13 +1475,20 @@
           "map_sheet",
           "specific_use",
           "soil_texture",
-          "comments"
+          "comments",
+          "species"
         ],
         "properties": {
           "site_id": {
             "type": "string",
             "title": "Site ID",
             "maximum": 30
+          },
+          "species": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "created_date": {
             "type": "string",
