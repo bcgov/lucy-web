@@ -72,7 +72,7 @@ export const postPointOfInterestSQL = (point_of_interest: PointOfInterestPostReq
  * @param {PointOfInterestSearchCriteria} searchCriteria
  * @returns {SQLStatement} sql query object
  */
-export const getActivitiesSQL = (searchCriteria: PointOfInterestSearchCriteria): SQLStatement => {
+export const getPointsOfInterestSQL = (searchCriteria: PointOfInterestSearchCriteria): SQLStatement => {
   const sqlStatement: SQLStatement = SQL`SELECT * FROM point_of_interest_incoming_data WHERE 1 = 1`;
 
   if (searchCriteria.pontOfInterest_type) {
