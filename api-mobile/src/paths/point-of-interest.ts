@@ -6,16 +6,15 @@ import { Operation } from 'express-openapi';
 import { SQLStatement } from 'sql-template-strings';
 import { WRITE_ROLES } from '../constants/misc';
 import { getDBConnection } from '../database/db';
-import { ActivityPostRequestBody, IMediaItem, MediaBase64 } from '../models/activity';
-import { PointOfInterestPostRequestBody } from '../models/point-of-interest';
+import { IMediaItem, MediaBase64, PointOfInterestPostRequestBody } from '../models/point-of-interest';
 import geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
-import { postActivitySQL } from '../queries/activity-queries';
+import { postPointOfInterestSQL } from '../queries/point-of-interest-queries';
 import { uploadFileToS3 } from '../utils/file-utils';
 import { getLogger } from '../utils/logger';
 
-const defaultLog = getLogger('activity');
+const defaultLog = getLogger('point-of-interest');
 
-export const POST: Operation = [uploadMedia(), createActivity()];
+export const POST: Operation = [uploadMedia(), createPointOfInterest()];
 
 POST.apiDoc = {
   description: 'Create a new point of interest.',
@@ -32,11 +31,11 @@ POST.apiDoc = {
         schema: {
           required: ['point_of_interest_type', 'point_of_interest_subtype'],
           properties: {
-            activity_type: {
+            point_of_interest_type: {
               type: 'string',
               title: 'Point of Interest type'
             },
-            activity_subtype: {
+            point_of_interest_subtype: {
               type: 'string',
               title: 'Point of Interest subtype'
             },
@@ -55,9 +54,7 @@ POST.apiDoc = {
               }
             },
             form_data: {
-              oneOf: [
-                { $ref: '#/components/schemas/PointOfInterest_IAPP_Site' },
-              ]
+              oneOf: [{ $ref: '#/components/schemas/PointOfInterest_IAPP_Site' }]
             }
           }
         }
@@ -97,11 +94,13 @@ POST.apiDoc = {
  *
  * Does nothing if no media is present in the request.
  *
+ * TODO: make media handling an extension that can be added to different endpoints/record types
+ *
  * @returns {RequestHandler}
  */
 function uploadMedia(): RequestHandler {
   return async (req, res, next) => {
-    defaultLog.debug({ label: 'activity', message: 'uploadMedia', body: req.body });
+    defaultLog.debug({ label: 'point-of-interest', message: 'uploadMedia', body: req.body });
 
     if (!req.body.media || !req.body.media.length) {
       // no media objects included, skipping media upload step
@@ -150,13 +149,13 @@ function uploadMedia(): RequestHandler {
 }
 
 /**
- * Creates a new activity record.
+ * Creates a new point of interest record.
  *
  * @returns {RequestHandler}
  */
-function createActivity(): RequestHandler {
+function createPointOfInterest(): RequestHandler {
   return async (req, res, next) => {
-    defaultLog.debug({ label: 'activity', message: 'createPointOfInterest', body: req.params });
+    defaultLog.debug({ label: 'point-of-interest', message: 'createPointOfInterest', body: req.params });
 
     const data = { ...req.body, mediaKeys: req['mediaKeys'] };
 
