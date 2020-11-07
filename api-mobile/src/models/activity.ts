@@ -1,4 +1,4 @@
-import { SEARCH_LIMIT_MAX } from '../constants/misc';
+import { SEARCH_LIMIT_MAX, SORT_DIRECTION } from '../constants/misc';
 import { parseBase64DataURLString } from './../utils/file-utils';
 
 /**
@@ -121,14 +121,18 @@ export class ActivityPostRequestBody {
 export class ActivitySearchCriteria {
   page: number;
   limit: number;
+  sort_by: string;
+  sort_direction: string;
 
-  activity_type: string;
-  activity_subtype: string;
+  activity_type: string[];
+  activity_subtype: string[];
 
   date_range_start: Date;
   date_range_end: Date;
 
   search_feature: GeoJSON.Feature;
+
+  column_names: string[];
 
   /**
    * Creates an instance of ActivitySearchCriteria.
@@ -139,14 +143,18 @@ export class ActivitySearchCriteria {
   constructor(obj?: any) {
     this.page = (obj && obj.page && this.setPage(obj.page)) || 0;
     this.limit = (obj && obj.limit && this.setLimit(obj.limit)) || SEARCH_LIMIT_MAX;
+    this.sort_by = (obj && obj.sort_by) || '';
+    this.sort_direction = (obj && obj.sort_direction) || SORT_DIRECTION.ASC;
 
-    this.activity_type = (obj && obj.activity_type) || null;
-    this.activity_subtype = (obj && obj.activity_subtype) || null;
+    this.activity_type = (obj && obj.activity_type) || [];
+    this.activity_subtype = (obj && obj.activity_subtype) || [];
 
     this.date_range_start = (obj && obj.date_range_start) || null;
     this.date_range_end = (obj && obj.date_range_end) || null;
 
     this.search_feature = (obj && obj.search_feature) || null;
+
+    this.column_names = (obj && obj.column_names) || [];
   }
 
   setPage(page: number): number {
