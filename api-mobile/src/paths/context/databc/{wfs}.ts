@@ -11,7 +11,7 @@ const defaultLog = getLogger('activity');
 export const GET: Operation = [getDataBC()];
 
 GET.apiDoc = {
-  description: 'Fetches elevation for a single point',
+  description: 'Fetches a single feature of a DataBC WFS layer from a geographic point location.',
   tags: ['activity','databc'],
   security: [
     {
@@ -62,7 +62,7 @@ GET.apiDoc = {
 
 
 /**
- * Fetches all activity records based on request search filter criteria.
+ * Fetches a single feature of a DataBC WFS layer from a geographic point location.
  *
  * @return {RequestHandler}
  */
