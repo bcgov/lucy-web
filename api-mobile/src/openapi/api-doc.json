@@ -28,7 +28,7 @@
     },
     {
       "url": "https://api-mobile-invasivesbc.pathfinder.gov.bc.ca",
-      "description": "deployed api in prod environmen"
+      "description": "deployed api in prod environment"
     }
   ],
   "tags": [

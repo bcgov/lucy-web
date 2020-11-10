@@ -103,3 +103,14 @@ export enum XEnumCode {
  * @type {number}
  */
 export const SEARCH_LIMIT_MAX = 100;
+
+/**
+ * Supported PSQL `ORDER BY` directions.
+ *
+ * @export
+ * @enum {number}
+ */
+export enum SORT_DIRECTION {
+  ASC = 'ASC',
+  DESC = 'DESC'
+}

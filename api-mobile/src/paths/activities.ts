@@ -39,11 +39,24 @@ POST.apiDoc = {
               minimum: 0,
               maximum: 100
             },
-            activity_type: {
+            sort_by: {
               type: 'string'
             },
+            sort_direction: {
+              type: 'string',
+              enum: ['ASC', 'DESC']
+            },
+            activity_type: {
+              type: 'array',
+              items: {
+                type: 'string'
+              }
+            },
             activity_subtype: {
-              type: 'string'
+              type: 'array',
+              items: {
+                type: 'string'
+              }
             },
             date_range_start: {
               type: 'string',
@@ -57,6 +70,12 @@ POST.apiDoc = {
             },
             search_feature: {
               ...geoJSON_Feature_Schema
+            },
+            column_names: {
+              type: 'array',
+              items: {
+                type: 'string'
+              }
             }
           }
         }
@@ -73,8 +92,19 @@ POST.apiDoc = {
             items: {
               type: 'object',
               properties: {
-                // Don't specify exact response, as it will vary, and is not currently enforced anyways
-                // Eventually this could be updated to be a oneOf list, similar to the Post request below.
+                rows: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      // Don't specify exact object properties, as it will vary, and is not currently enforced anyways
+                      // Eventually this could be updated to be a oneOf list, similar to the Post request below.
+                    }
+                  }
+                },
+                count: {
+                  type: 'number'
+                }
               }
             }
           }
@@ -125,7 +155,14 @@ function getActivitiesBySearchFilterCriteria(): RequestHandler {
 
       const response = await connection.query(sqlStatement.text, sqlStatement.values);
 
-      const result = (response && response.rows) || null;
+      // parse the rows from the response
+      const rows = { rows: (response && response.rows) || [] };
+
+      // parse the count from the response
+      const count = { count: rows.rows.length && rows.rows[0]['total_rows_count'] } || {};
+
+      // build the return object
+      const result = { ...rows, ...count };
 
       return res.status(200).json(result);
     } catch (error) {
