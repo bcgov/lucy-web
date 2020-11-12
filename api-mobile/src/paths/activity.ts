@@ -201,7 +201,7 @@ function createActivity(): RequestHandler {
       const result = (response && response.rows && response.rows[0]) || null;
 
       // Kick off unblocked process for filling contextual data
-      saveContextData(result);
+      saveContextData(result.activity_incoming_data_id,req.body.locationAndGeometry);
 
       return res.status(200).json(result);
     } catch (error) {
@@ -214,11 +214,13 @@ function createActivity(): RequestHandler {
 }
 
 /**
- * Creates a new activity record.
+ * Insert contextual data for the new activity record.
  *
- * @param id {object} The record ID for the activity recently
- *   entered in the database
+ * @param id {integar} The record ID for the activity recently
+ *   entered in the database.
+ * @param geom {object} The location object containing the way point.
  */
-const saveContextData = (id) => {
+const saveContextData = (id,geom) => {
   console.log('id: ',id);
+  console.log('geom: ',geom);
 };
