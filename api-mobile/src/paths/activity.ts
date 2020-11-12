@@ -200,6 +200,9 @@ function createActivity(): RequestHandler {
 
       const result = (response && response.rows && response.rows[0]) || null;
 
+      // Kick off unblocked process for filling contextual data
+      saveContextData(result);
+
       return res.status(200).json(result);
     } catch (error) {
       defaultLog.debug({ label: 'createActivity', message: 'error', error });
@@ -209,3 +212,13 @@ function createActivity(): RequestHandler {
     }
   };
 }
+
+/**
+ * Creates a new activity record.
+ *
+ * @param id {object} The record ID for the activity recently
+ *   entered in the database
+ */
+const saveContextData = (id) => {
+  console.log('id: ',id);
+};
