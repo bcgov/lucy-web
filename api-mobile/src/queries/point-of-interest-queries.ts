@@ -111,8 +111,8 @@ export const getPointsOfInterestSQL = (searchCriteria: PointOfInterestSearchCrit
     sqlStatement.append(SQL` LIMIT ${searchCriteria.limit}`);
   }
 
-  if (searchCriteria.limit) {
-    sqlStatement.append(SQL` OFFSET ${searchCriteria.page}`);
+  if (searchCriteria.page && searchCriteria.limit) {
+    sqlStatement.append(SQL` OFFSET ${searchCriteria.page * searchCriteria.limit}`);
   }
 
   sqlStatement.append(SQL`;`);

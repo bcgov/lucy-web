@@ -1,3 +1,4 @@
+import { SORT_DIRECTION } from './../constants/misc';
 import { SQL, SQLStatement } from 'sql-template-strings';
 import { ActivityPostRequestBody, ActivitySearchCriteria } from './../models/activity';
 
@@ -73,14 +74,47 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
  * @returns {SQLStatement} sql query object
  */
 export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLStatement => {
-  const sqlStatement: SQLStatement = SQL`SELECT * FROM activity_incoming_data WHERE 1 = 1`;
+  const sqlStatement: SQLStatement = SQL`SELECT`;
 
-  if (searchCriteria.activity_type) {
-    sqlStatement.append(SQL` AND activity_type = ${searchCriteria.activity_type}`);
+  if (searchCriteria.column_names && searchCriteria.column_names.length) {
+    // do not include the `SQL` template string prefix, as column names can not be parameterized
+    sqlStatement.append(` ${searchCriteria.column_names.join(', ')}`);
+  } else {
+    // if no column_names specified, select all
+    sqlStatement.append(SQL` *`);
   }
 
-  if (searchCriteria.activity_subtype) {
-    sqlStatement.append(SQL` AND activity_subtype = ${searchCriteria.activity_subtype}`);
+  // include the total count of results that would be returned if the limit and offset constraints weren't applied
+  sqlStatement.append(SQL`, COUNT(*) OVER() AS total_rows_count`);
+
+  sqlStatement.append(SQL` FROM activity_incoming_data WHERE 1 = 1`);
+
+  if (searchCriteria.activity_subtype && searchCriteria.activity_type.length) {
+    sqlStatement.append(SQL` AND activity_type IN (`);
+
+    // add the first activity type, which does not get a comma prefix
+    sqlStatement.append(SQL`${searchCriteria.activity_type[0]}`);
+
+    for (let idx = 1; idx < searchCriteria.activity_type.length; idx++) {
+      // add all subsequent activity types, which do get a comma prefix
+      sqlStatement.append(SQL`, ${searchCriteria.activity_type[idx]}`);
+    }
+
+    sqlStatement.append(SQL`)`);
+  }
+
+  if (searchCriteria.activity_subtype && searchCriteria.activity_subtype.length) {
+    sqlStatement.append(SQL` AND activity_subtype IN (`);
+
+    // add the first activity subtype, which does not get a comma prefix
+    sqlStatement.append(SQL`${searchCriteria.activity_subtype[0]}`);
+
+    for (let idx = 1; idx < searchCriteria.activity_subtype.length; idx++) {
+      // add all subsequent activity subtypes, which do get a comma prefix
+      sqlStatement.append(SQL`, ${searchCriteria.activity_subtype[idx]}`);
+    }
+
+    sqlStatement.append(SQL`)`);
   }
 
   if (searchCriteria.date_range_start) {
@@ -107,12 +141,17 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
     `);
   }
 
+  if (searchCriteria.sort_by) {
+    // do not include the `SQL` template string prefix, as column names and sort direction can not be parameterized
+    sqlStatement.append(` ORDER BY ${searchCriteria.sort_by} ${searchCriteria.sort_direction}`);
+  }
+
   if (searchCriteria.limit) {
     sqlStatement.append(SQL` LIMIT ${searchCriteria.limit}`);
   }
 
-  if (searchCriteria.limit) {
-    sqlStatement.append(SQL` OFFSET ${searchCriteria.page}`);
+  if (searchCriteria.page && searchCriteria.limit) {
+    sqlStatement.append(SQL` OFFSET ${searchCriteria.page * searchCriteria.limit}`);
   }
 
   sqlStatement.append(SQL`;`);

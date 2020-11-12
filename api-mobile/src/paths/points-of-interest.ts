@@ -5,25 +5,25 @@ import { Operation } from 'express-openapi';
 import { SQLStatement } from 'sql-template-strings';
 import { ALL_ROLES } from '../constants/misc';
 import { getDBConnection } from '../database/db';
-import { ActivitySearchCriteria } from '../models/activity';
+import { PointOfInterestSearchCriteria } from '../models/point-of-interest';
 import geoJSON_Feature_Schema from '../openapi/geojson-feature-doc.json';
-import { getActivitiesSQL } from '../queries/activity-queries';
+import { getPointOfInterestSQL, getPointsOfInterestSQL } from '../queries/point-of-interest-queries';
 import { getLogger } from '../utils/logger';
 
-const defaultLog = getLogger('activity');
+const defaultLog = getLogger('point-of-interest');
 
-export const POST: Operation = [getActivitiesBySearchFilterCriteria()];
+export const POST: Operation = [getPointsOfInterestBySearchFilterCriteria()];
 
 POST.apiDoc = {
-  description: 'Fetches all activities based on search criteria.',
-  tags: ['activity'],
+  description: 'Fetches all ponts of interest based on search criteria.',
+  tags: ['point-of-interest'],
   security: [
     {
       Bearer: ALL_ROLES
     }
   ],
   requestBody: {
-    description: 'Activities search filter criteria object.',
+    description: 'Points Of Interest search filter criteria object.',
     content: {
       'application/json': {
         schema: {
@@ -39,24 +39,11 @@ POST.apiDoc = {
               minimum: 0,
               maximum: 100
             },
-            sort_by: {
+            point_of_interest_type: {
               type: 'string'
             },
-            sort_direction: {
-              type: 'string',
-              enum: ['ASC', 'DESC']
-            },
-            activity_type: {
-              type: 'array',
-              items: {
-                type: 'string'
-              }
-            },
-            activity_subtype: {
-              type: 'array',
-              items: {
-                type: 'string'
-              }
+            point_of_interest_subtype: {
+              type: 'string'
             },
             date_range_start: {
               type: 'string',
@@ -70,12 +57,6 @@ POST.apiDoc = {
             },
             search_feature: {
               ...geoJSON_Feature_Schema
-            },
-            column_names: {
-              type: 'array',
-              items: {
-                type: 'string'
-              }
             }
           }
         }
@@ -84,7 +65,7 @@ POST.apiDoc = {
   },
   responses: {
     200: {
-      description: 'Activity get response object array.',
+      description: 'Point Of Interest get response object array.',
       content: {
         'application/json': {
           schema: {
@@ -92,19 +73,8 @@ POST.apiDoc = {
             items: {
               type: 'object',
               properties: {
-                rows: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      // Don't specify exact object properties, as it will vary, and is not currently enforced anyways
-                      // Eventually this could be updated to be a oneOf list, similar to the Post request below.
-                    }
-                  }
-                },
-                count: {
-                  type: 'number'
-                }
+                // Don't specify exact response, as it will vary, and is not currently enforced anyways
+                // Eventually this could be updated to be a oneOf list, similar to the Post request below.
               }
             }
           }
@@ -124,15 +94,19 @@ POST.apiDoc = {
 };
 
 /**
- * Fetches all activity records based on request search filter criteria.
+ * Fetches all point-of-interest records based on request search filter criteria.
  *
  * @return {RequestHandler}
  */
-function getActivitiesBySearchFilterCriteria(): RequestHandler {
+function getPointsOfInterestBySearchFilterCriteria(): RequestHandler {
   return async (req, res, next) => {
-    defaultLog.debug({ label: 'activity', message: 'getActivitiesBySearchFilterCriteria', body: req.body });
+    defaultLog.debug({
+      label: 'point-of-interest',
+      message: 'getPointsOfInterestBySearchFilterCriteria',
+      body: req.body
+    });
 
-    const sanitizedSearchCriteria = new ActivitySearchCriteria(req.body);
+    const sanitizedSearchCriteria = new PointOfInterestSearchCriteria(req.body);
 
     const connection = await getDBConnection();
 
@@ -144,7 +118,7 @@ function getActivitiesBySearchFilterCriteria(): RequestHandler {
     }
 
     try {
-      const sqlStatement: SQLStatement = getActivitiesSQL(sanitizedSearchCriteria);
+      const sqlStatement: SQLStatement = getPointsOfInterestSQL(sanitizedSearchCriteria);
 
       if (!sqlStatement) {
         throw {
@@ -155,18 +129,11 @@ function getActivitiesBySearchFilterCriteria(): RequestHandler {
 
       const response = await connection.query(sqlStatement.text, sqlStatement.values);
 
-      // parse the rows from the response
-      const rows = { rows: (response && response.rows) || [] };
-
-      // parse the count from the response
-      const count = { count: rows.rows.length && rows.rows[0]['total_rows_count'] } || {};
-
-      // build the return object
-      const result = { ...rows, ...count };
+      const result = (response && response.rows) || null;
 
       return res.status(200).json(result);
     } catch (error) {
-      defaultLog.debug({ label: 'getActivitiesBySearchFilterCriteria', message: 'error', error });
+      defaultLog.debug({ label: 'getPointsOfInterestBySearchFilterCriteria', message: 'error', error });
       throw error;
     } finally {
       connection.release();
