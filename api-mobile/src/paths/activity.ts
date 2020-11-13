@@ -1,5 +1,7 @@
 'use strict';
 
+import axios from 'axios';
+import { integer } from 'aws-sdk/clients/cloudfront';
 import { ManagedUpload } from 'aws-sdk/clients/s3';
 import { RequestHandler } from 'express';
 import { Operation } from 'express-openapi';
@@ -201,7 +203,7 @@ function createActivity(): RequestHandler {
       const result = (response && response.rows && response.rows[0]) || null;
 
       // Kick off unblocked process for filling contextual data
-      saveContextData(result.activity_incoming_data_id,req.body.locationAndGeometry);
+      saveContextData(result.activity_incoming_data_id,req);
 
       return res.status(200).json(result);
     } catch (error) {
@@ -220,7 +222,27 @@ function createActivity(): RequestHandler {
  *   entered in the database.
  * @param geom {object} The location object containing the way point.
  */
-const saveContextData = (id,geom) => {
-  console.log('id: ',id);
-  console.log('geom: ',geom);
+const saveContextData = (id: integer,req: any) => {
+  const geom = req.body.locationAndGeometry;
+  const x = geom.anchorPointX;
+  const y = geom.anchorPointY;
+  const api = `${req.protocol}://${req.get('host')}/api`
+  const config = {
+    headers: {
+      authorization: req.headers.authorization
+    }
+  }
+
+
+  const ownershipUrl = `${api}/context/databc/WHSE_CADASTRE.CBM_CADASTRAL_FABRIC_PUB_SVW?lon=${x}&lat=${y}`
+
+
+  axios.get(ownershipUrl,config)
+    .then((response) => {
+      console.log('response',response.data);
+    })
+    .catch((error) => {
+      defaultLog.debug({ label: 'addingContext', message: 'error', error });
+    });
+
 };
