@@ -200,7 +200,7 @@ export const verifyUser = async function (req: any, scopes: string[]) {
     return null;
   }
 
-  const userHasRole = verifyUserRoles(scopes, response['role_code']);
+  const userHasRole = verifyUserRoles(scopes, response['code_name']);
 
   if (!userHasRole) {
     defaultLog.warn({ label: 'verifyUser', message: 'user verification error: insufficient roles' });
