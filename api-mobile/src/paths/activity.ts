@@ -238,11 +238,15 @@ const saveContextData = (id: integer,req: any) => {
 
 
   axios.get(ownershipUrl,config)
-    .then((response) => {
-      console.log('response',response.data);
+    .then(async (response) => {
+      const ownership = response.data.OWNERSHIP_CLASS;
+      const column = 'forest_cover_ownership'
+      const connection = await getDBConnection();
+      const sql = `insert into activity_incoming_data (${column}) values ('${ownership}') where activity_incoming_data_id = ${id}`;
+      await connection.query(sql);
+      connection.release();
     })
     .catch((error) => {
       defaultLog.debug({ label: 'addingContext', message: 'error', error });
     });
-
 };
