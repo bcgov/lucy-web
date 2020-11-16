@@ -239,10 +239,12 @@ const saveContextData = (id: integer,req: any) => {
 
   axios.get(ownershipUrl,config)
     .then(async (response) => {
-      const ownership = response.data.OWNERSHIP_CLASS;
+      const ownership = response.data.target.OWNERSHIP_CLASS;
+      console.log('Resposne: ',response.data)
       const column = 'forest_cover_ownership'
       const connection = await getDBConnection();
-      const sql = `insert into activity_incoming_data (${column}) values ('${ownership}') where activity_incoming_data_id = ${id}`;
+      const sql = `update activity_incoming_data set (${column}) = ('${ownership}') where activity_incoming_data_id = ${id}`;
+      console.log(sql);
       await connection.query(sql);
       connection.release();
     })
