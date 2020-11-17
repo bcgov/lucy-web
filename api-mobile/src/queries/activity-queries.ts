@@ -1,4 +1,3 @@
-import { SORT_DIRECTION } from './../constants/misc';
 import { SQL, SQLStatement } from 'sql-template-strings';
 import { ActivityPostRequestBody, ActivitySearchCriteria } from './../models/activity';
 
@@ -15,15 +14,19 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
 
   const sqlStatement: SQLStatement = SQL`
     INSERT INTO activity_incoming_data (
+      activity_id,
       activity_type,
       activity_subtype,
+      created_timestamp,
       received_timestamp,
       activity_payload,
       geog,
       media_keys
     ) VALUES (
+      ${activity.activity_id},
       ${activity.activity_type},
       ${activity.activity_subtype},
+      ${activity.created_timestamp},
       ${activity.received_timestamp},
       ${activity.activityPostBody}
   `;
@@ -67,6 +70,36 @@ export const postActivitySQL = (activity: ActivityPostRequestBody): SQLStatement
   return sqlStatement;
 };
 
+export interface IPutActivitySQL {
+  updateSQL: SQLStatement;
+  createSQL: SQLStatement;
+}
+
+/**
+ * SQL queries to update an existing activity record and mark it as `deleted` and to create a new activity record.
+ *
+ * @param {ActivityPostRequestBody} activity
+ * @return {*}  {IPutActivitySQL} array of sql query objects
+ */
+export const putActivitySQL = (activity: ActivityPostRequestBody): IPutActivitySQL => {
+  if (!activity) {
+    return null;
+  }
+
+  // update existing activity record
+  const updateSQLStatement: SQLStatement = SQL`
+    UPDATE activity_incoming_data
+    SET deleted_timestamp = ${new Date().toISOString()}
+    WHERE activity_id = ${activity.activity_id}
+    AND deleted_timestamp IS NULL;
+  `;
+
+  // create new activity record
+  const createSQLStatement: SQLStatement = postActivitySQL(activity);
+
+  return { updateSQL: updateSQLStatement, createSQL: createSQLStatement };
+};
+
 /**
  * SQL query to fetch activity records based on search criteria.
  *
@@ -88,6 +121,9 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
   sqlStatement.append(SQL`, COUNT(*) OVER() AS total_rows_count`);
 
   sqlStatement.append(SQL` FROM activity_incoming_data WHERE 1 = 1`);
+
+  // don't include deleted or out-dated records
+  sqlStatement.append(SQL` AND deleted_timestamp IS NULL`);
 
   if (searchCriteria.activity_subtype && searchCriteria.activity_type.length) {
     sqlStatement.append(SQL` AND activity_type IN (`);
@@ -160,11 +196,18 @@ export const getActivitiesSQL = (searchCriteria: ActivitySearchCriteria): SQLSta
 };
 
 /**
- * SQL query to fetch a single activity record based on its primary key.
+ * SQL query to fetch a single activity record based on its `activity_id` and `deleted_timestamp` fields.
  *
- * @param {number} activityId
+ * Note: An activity record with a non-null `deleted_timestamp` indicates it has either been deleted or is an out-dated
+ * version.  The latest version should have a null `deleted_timestamp`.
+ *
+ * @param {string} activityId
  * @returns {SQLStatement} sql query object
  */
-export const getActivitySQL = (activityId: number): SQLStatement => {
-  return SQL`SELECT * FROM activity_incoming_data where activity_incoming_data_id = ${activityId}`;
+export const getActivitySQL = (activityId: string): SQLStatement => {
+  return SQL`
+    SELECT * FROM activity_incoming_data
+    WHERE activity_id = ${activityId}
+    AND deleted_timestamp IS NULL;
+  `;
 };

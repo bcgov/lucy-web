@@ -64,6 +64,8 @@ export class ActivityPostRequestBody {
   activityPostBody: object;
   activityResponseBody: object;
 
+  activity_id: string;
+
   activity_type: string;
   activity_subtype: string;
 
@@ -71,7 +73,9 @@ export class ActivityPostRequestBody {
   activity_type_data: object;
   activity_subtype_data: object;
 
+  created_timestamp: string; // ISO string
   received_timestamp: string;
+  deleted_timestamp: string; // ISO string
 
   geoJSONFeature: GeoJSON.Feature[];
 
@@ -97,6 +101,8 @@ export class ActivityPostRequestBody {
         []
     };
 
+    this.activity_id = (obj && obj.activity_id) || null;
+
     this.activity_type = (obj && obj.activity_type) || null;
     this.activity_subtype = (obj && obj.activity_subtype) || null;
 
@@ -104,7 +110,9 @@ export class ActivityPostRequestBody {
     this.activity_type_data = (obj && obj.form_data && obj.form_data.activity_type_data) || null;
     this.activity_subtype_data = (obj && obj.form_data && obj.form_data.activity_subtype_data) || null;
 
+    this.created_timestamp = (obj && obj.created_timestamp) || null;
     this.received_timestamp = new Date().toISOString();
+    this.deleted_timestamp = (obj && obj.deleted_timestamp) || null;
 
     this.geoJSONFeature = (obj && obj.geometry) || [];
 

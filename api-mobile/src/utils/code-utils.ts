@@ -1,88 +1,60 @@
-import { PoolClient } from 'pg';
-import {
-  getJurisdictionCodesSQL,
-  getObservationAspectCodesSQL,
-  getObservationGeometryCodesSQL,
-  getObservationProposedActionCodesSQL,
-  getObservationSlopeCodesSQL,
-  getObservationTypeCodesSQL,
-  getSoilTextureCodesSQL,
-  getSpeciesAgencyCodesSQL,
-  getSpeciesCodesSQL,
-  getSpeciesDensityCodesSQL,
-  getSpeciesDistributionCodesSQL,
-  getSpecificUseCodesSQL
-} from '../queries/code-queries';
+import { QueryResult, QueryResultRow } from 'pg';
+import { SQLStatement } from 'sql-template-strings';
+import { getDBConnection } from '../database/db';
+import { getCodeCategoriesSQL, getCodeHeadersSQL, getCodesSQL } from '../queries/code-queries';
+import { getLogger } from './logger';
 
-export interface IAllCodeSets {
-  observation_aspect_code: object;
-  jurisdiction_code: object;
-  observation_geometry_code: object;
-  observation_type_code: object;
-  observation_proposed_action_code: object;
-  observation_slope_code: object;
-  soil_texture_code: object;
-  species_agency_code: object;
-  species_density_code: object;
-  species_distribution_code: object;
-  species: object;
-  specific_use_code: object;
+const defaultLog = getLogger('code-utils');
+
+export interface IAllCodeEntities {
+  categories: QueryResultRow[];
+  headers: QueryResultRow[];
+  codes: QueryResultRow[];
 }
 
-/**
- * Function that fetches all code sets.
- *
- * @param {PoolClient} connection
- * @returns {IAllCodeSets} an object containing all code sets
- */
-export async function getAllCodeSets(connection: PoolClient): Promise<IAllCodeSets> {
+export async function getAllCodeEntities(): Promise<IAllCodeEntities> {
+  const connection = await getDBConnection();
+
   if (!connection) {
-    return null;
+    throw {
+      status: 503,
+      message: 'Failed to establish database connection'
+    };
   }
 
-  const result: IAllCodeSets = {
-    observation_aspect_code: [],
-    jurisdiction_code: [],
-    observation_geometry_code: [],
-    observation_type_code: [],
-    observation_proposed_action_code: [],
-    observation_slope_code: [],
-    soil_texture_code: [],
-    species_agency_code: [],
-    species_density_code: [],
-    species_distribution_code: [],
-    species: [],
-    specific_use_code: []
-  };
+  try {
+    const codeCategoriesSQL: SQLStatement = getCodeCategoriesSQL();
+    const codeHeadersSQL: SQLStatement = getCodeHeadersSQL();
+    const codesSQL: SQLStatement = getCodesSQL();
 
-  // Fetch all observation codes
-  const observation_aspect_code = await connection.query(getObservationAspectCodesSQL().text);
-  const jurisdiction_code = await connection.query(getJurisdictionCodesSQL().text);
-  const observation_geometry_code = await connection.query(getObservationGeometryCodesSQL().text);
-  const observation_type_code = await connection.query(getObservationTypeCodesSQL().text);
-  const observation_proposed_action_code = await connection.query(getObservationProposedActionCodesSQL().text);
-  const observation_slope_code = await connection.query(getObservationSlopeCodesSQL().text);
-  const soil_texture_code = await connection.query(getSoilTextureCodesSQL().text);
-  const species_agency_code = await connection.query(getSpeciesAgencyCodesSQL().text);
-  const species_density_code = await connection.query(getSpeciesDensityCodesSQL().text);
-  const species_distribution_code = await connection.query(getSpeciesDistributionCodesSQL().text);
-  const species = await connection.query(getSpeciesCodesSQL().text);
-  const specific_use_code = await connection.query(getSpecificUseCodesSQL().text);
+    if (!codeCategoriesSQL || !codeHeadersSQL || !codesSQL) {
+      throw {
+        status: 400,
+        message: 'Failed to build SQL statement'
+      };
+    }
 
-  // Add code responses to results object
-  result.observation_aspect_code = (observation_aspect_code && observation_aspect_code.rows) || [];
-  result.jurisdiction_code = (jurisdiction_code && jurisdiction_code.rows) || [];
-  result.observation_geometry_code = (observation_geometry_code && observation_geometry_code.rows) || [];
-  result.observation_type_code = (observation_type_code && observation_type_code.rows) || [];
-  result.observation_proposed_action_code =
-    (observation_proposed_action_code && observation_proposed_action_code.rows) || [];
-  result.observation_slope_code = (observation_slope_code && observation_slope_code.rows) || [];
-  result.soil_texture_code = (soil_texture_code && soil_texture_code.rows) || [];
-  result.species_agency_code = (species_agency_code && species_agency_code.rows) || [];
-  result.species_density_code = (species_density_code && species_density_code.rows) || [];
-  result.species_distribution_code = (species_distribution_code && species_distribution_code.rows) || [];
-  result.species = (species && species.rows) || [];
-  result.specific_use_code = (specific_use_code && specific_use_code.rows) || [];
+    const promises = [];
 
-  return result;
+    promises.push(connection.query(codeCategoriesSQL.text, codeCategoriesSQL.values));
+    promises.push(connection.query(codeHeadersSQL.text, codeHeadersSQL.values));
+    promises.push(connection.query(codesSQL.text, codesSQL.values));
+
+    const responses: QueryResult[] = await Promise.all(promises);
+
+    if (!responses || responses.length !== 3) {
+      return null;
+    }
+
+    return {
+      categories: responses[0].rows,
+      headers: responses[1].rows,
+      codes: responses[2].rows
+    };
+  } catch (error) {
+    defaultLog.debug({ label: 'getAllCodeEntities', message: 'error', error });
+    throw error;
+  } finally {
+    connection.release();
+  }
 }

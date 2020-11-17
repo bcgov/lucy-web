@@ -1,10 +1,9 @@
 import jsonpatch from 'fast-json-patch';
 import traverse from 'json-schema-traverse';
-import { CacheKeys, XApiDocKeys, XEnumCode } from '../constants/misc';
-import { getDBConnection } from '../database/db';
-import { getAllCodeSets, IAllCodeSets } from './code-utils';
-import { cached } from './utils';
+import { CacheKeys, X_API_DOC_KEYS, X_ENUM_CODE } from '../constants/misc';
+import { getAllCodeEntities, IAllCodeEntities } from './code-utils';
 import { getLogger } from './logger';
+import { cached } from './utils';
 
 const defaultLog = getLogger('api-doc-security-filter');
 
@@ -16,18 +15,14 @@ const defaultLog = getLogger('api-doc-security-filter');
  * @return {*} req
  */
 export async function applyApiDocSecurityFilters(req: any) {
-  const connection = await getDBConnection();
-
-  if (!connection) {
-    throw {
-      status: 503,
-      message: 'Failed to establish database connection'
-    };
-  }
-
   try {
-    // fetch all code sets
-    const allCodeSets: IAllCodeSets = await cached(CacheKeys.AllCodeSets, 3600000, () => getAllCodeSets(connection))();
+    const allCodeEntities: IAllCodeEntities = await cached(CacheKeys.ALL_CODE_CATEGORIES, 3600000, () =>
+      getAllCodeEntities()
+    )();
+
+    if (!allCodeEntities) {
+      return req;
+    }
 
     // the apiDoc that updates will be applied to
     const apiDoc = req['apiDoc'];
@@ -46,9 +41,9 @@ export async function applyApiDocSecurityFilters(req: any) {
         }
 
         // apply code enum filters, if a matching `x-...` field exists
-        if (Object.keys(schema).includes(XApiDocKeys.XEnumCode)) {
+        if (Object.keys(schema).includes(X_API_DOC_KEYS.X_ENUM_CODE)) {
           // apply code enum filtering to this piece of schema
-          const updatedSchema = applyCodeEnumFilter(schema, allCodeSets);
+          const updatedSchema = applyCodeEnumFilter(schema, allCodeEntities);
 
           // update apiDoc, replacing the old schema part with the updated schema part
           jsonpatch.applyPatch(apiDoc, [{ op: 'replace', path: jsonPtr, value: updatedSchema }]);
@@ -61,8 +56,6 @@ export async function applyApiDocSecurityFilters(req: any) {
   } catch (error) {
     defaultLog.debug({ label: 'applyApiDocSecurityFilters', message: 'error', error });
     throw error;
-  } finally {
-    connection.release();
   }
 
   return req;
@@ -73,61 +66,90 @@ export async function applyApiDocSecurityFilters(req: any) {
  *
  * @export
  * @param {object} obj the schema object to apply updates to
- * @param {IAllCodeSets} allCodeSets an object containing all of the code sets and their values
+ * @param {IAllCodeEntities} allCodeEntities an object containing all of the code categories, headers, and codes
  * @return {*}  {object} the updated object
  */
-export function applyCodeEnumFilter(obj: object, allCodeSets: IAllCodeSets): object {
-  // get the XEnumCode object
-  const xEnumCodeObj = obj[XApiDocKeys.XEnumCode];
+export function applyCodeEnumFilter(obj: object, allCodeEntities: IAllCodeEntities): object {
+  // prase the `x-enum-code` object
+  const xEnumCodeObj = obj[X_API_DOC_KEYS.X_ENUM_CODE];
 
-  // get the name of the code set
-  const codeSetName = xEnumCodeObj[XEnumCode.XEnumCodeSetName];
+  const codeCategoryName = xEnumCodeObj[X_ENUM_CODE.CATEGORY_NAME];
+  const codeHeaderName = xEnumCodeObj[X_ENUM_CODE.HEADER_NAME];
+  const codeName = xEnumCodeObj[X_ENUM_CODE.CODE_NAME];
+  const codeText = xEnumCodeObj[X_ENUM_CODE.CODE_TEXT];
+  const codeSortOrder = xEnumCodeObj[X_ENUM_CODE.CODE_SORT_ORDER] || [];
 
-  if (!codeSetName) {
+  if (!codeCategoryName || !codeHeaderName || !codeName || !codeText) {
     return obj;
   }
 
-  // get the list of codes for this code set name
-  const codes: any[] = allCodeSets[codeSetName];
+  // Get the matching code category row
+  const codeCategoryRow = allCodeEntities.categories.find(item => {
+    return item['code_category_name'] === codeCategoryName;
+  });
 
-  if (!codes || !codes.length) {
+  if (!codeCategoryRow) {
+    return obj;
+  }
+
+  // Get the matching code header row
+  const codeHeaderRow = allCodeEntities.headers.find(item => {
+    return (
+      item['code_category_id'] === codeCategoryRow['code_category_id'] && item['code_header_name'] === codeHeaderName
+    );
+  });
+
+  if (!codeHeaderRow) {
+    return obj;
+  }
+
+  // Get all of the matching code rows
+  const codeRows = allCodeEntities.codes.filter(item => {
+    return item['code_header_id'] === codeHeaderRow['code_header_id'];
+  });
+
+  if (!codeRows || !codeRows.length) {
     return obj;
   }
 
   // update the object, adding an `anyOf` field whose value is an array of enum objects
   obj = {
     ...obj,
-    anyOf: codes
-      .map(code => {
+    anyOf: codeRows
+      .map(codeRow => {
         return {
-          // the `type` specified by the field that contains the enum (the enum `type` must match the field `type`)
+          // the `type` specified by the parent object that contains this enum object (their types must match)
           type: obj['type'],
           // the column that contains the unique value for this code
-          enum: [code[xEnumCodeObj[XEnumCode.XEnumCodeValue]]],
+          enum: [codeRow[codeName]],
           // the column that contains the human readable name of this code
-          title: code[xEnumCodeObj[XEnumCode.XEnumCodeName]]
+          title: codeRow[codeText]
         };
       })
-      .sort(getAscObjectSorter('title'))
+      // sort by code sort order, and secondarily by title
+      .sort(getAscObjectSorter([codeSortOrder, 'title']))
   };
 
   return obj;
 }
 
 /**
- * Returns a comparator function that sorts objects in ascending order based on a specified `field`.
+ * Returns a comparator function that sorts objects in ascending order.
  *
- * @param {string} field the object field to sort based on
- * @return {number}
+ * @param {string[]} fields An array of ordered field names to sort on.
+ * If the the fields[0] comparison results in a tie, then the fields[1] comparison will run, etc.
+ * @return {*}
  */
-function getAscObjectSorter(field: string) {
+function getAscObjectSorter(fields: string[]) {
   return (a: object, b: object) => {
-    if (a[field] < b[field]) {
-      return -1;
-    }
+    for (const field of fields) {
+      if (a[field] < b[field]) {
+        return -1;
+      }
 
-    if (a[field] > b[field]) {
-      return 1;
+      if (a[field] > b[field]) {
+        return 1;
+      }
     }
 
     return 0;

@@ -20,8 +20,9 @@ export const WRITE_ROLES = [ROLE_SUPER_USER, ROLE_ADMIN, ROLE_DATA_EDITOR];
  * @enum {number}
  */
 export enum CacheKeys {
-  AllCodeSets = 'allCodeSets',
-  ObservationCodePlant = 'observationCodePlant'
+  ALL_CODE_CATEGORIES = 'all-code-categories',
+  ALL_CODE_HEADERS = 'all-code-headers',
+  ALL_CODES = 'all-codes'
 }
 
 /**
@@ -69,32 +70,40 @@ export enum S3ACLRole {
  * @export
  * @enum {number}
  */
-export enum XApiDocKeys {
+export enum X_API_DOC_KEYS {
   /**
-   * specifies a field whose value is an object containing `x-enum-code...` fields (see `XEnumCode`)
+   * specifies a field whose value is an object containing `x-enum-code...` fields (see `X_ENUM_CODE`)
    */
-  XEnumCode = 'x-enum-code'
+  X_ENUM_CODE = 'x-enum-code'
 }
 
 /**
- * Nested keys in a `x-enum-code` field (see `XApiDocKeys.XEnumCode`)
+ * Nested keys in a `x-enum-code` field (see `X_API_DOC_KEYS.X_ENUM_CODE`)
  *
  * @export
  * @enum {number}
  */
-export enum XEnumCode {
+export enum X_ENUM_CODE {
   /**
-   * the name of the table/collection for the code set
+   * The `code_category` name.
    */
-  XEnumCodeSetName = 'x-enum-code-set-name',
+  CATEGORY_NAME = 'x-enum-code-category-name',
   /**
-   * the name of the column/field that holds the unique code value
+   * The `code_header` name.
    */
-  XEnumCodeValue = 'x-enum-code-value',
+  HEADER_NAME = 'x-enum-code-header-name',
   /**
-   * the name of the column/fild that holds the human readable name for the code value
+   * The `code` column name that holds the unique code value.
    */
-  XEnumCodeName = 'x-enum-code-name'
+  CODE_NAME = 'x-enum-code-name',
+  /**
+   * The `code` column name that holds the human readable name for the code value.
+   */
+  CODE_TEXT = 'x-enum-code-text',
+  /**
+   * The `code` column name that defines the sort order.
+   */
+  CODE_SORT_ORDER = 'x-enum-code-sort-order'
 }
 
 /**

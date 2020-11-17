@@ -127,8 +127,6 @@ function uploadMedia(): RequestHandler {
         };
       }
 
-      console.log(media);
-
       const metadata = {
         filename: media.mediaName || '',
         description: media.mediaDescription || '',
