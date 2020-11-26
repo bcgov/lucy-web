@@ -53,40 +53,6 @@ jobs:
           npm ci
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
 
-  # Build the `api-mobile` API
-  # Note: This job relies on setup (database, etc) executed as part of the previous `buildAPI` job
-  buildAPIMobile:
-    name: Build "api-mobile" Static
-    runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.merged == true}} # Only run when the PR is merged
-    env:
-      BUILD_ID: ${{ github.event.number }}
-    needs:
-      - buildAPI
-    steps:
-      # Checkout the PR branch
-      - name: Checkout Target Branch
-        uses: actions/checkout@v2
-
-      # Install Node - for `node` and `npm` commands
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 10.16
-
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
-      - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
-
-      # Build the api-mobile images
-      - name: Build API Mobile Images
-        working-directory: "./api-mobile/.pipeline/"
-        run: |
-          npm ci
-          DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
-
   # Build the web frontend app
   buildAPP:
     name: Build App Static
@@ -119,16 +85,15 @@ jobs:
           DEBUG=* npm run build -- --pr=$BUILD_ID --branch=${{ github.base_ref }} --type=static
   # End buildAPP
 
-  # Deploy App, API, and API-MOBILE images in Dev
+  # Deploy App, API images in Dev
   deployDev:
-    name: Deploy App, API, and API-MOBILE to DEV environment
+    name: Deploy App, API to DEV environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref != 'prod'}}
     env:
       BUILD_ID: ${{ github.event.number }}
     needs:
       - buildAPI
-      - buildAPIMobile
       - buildAPP
     steps:
       # Checkout the PR branch
@@ -158,14 +123,6 @@ jobs:
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the api-mobile
-      - name: Deploy API Mobile
-        working-directory: "./api-mobile/.pipeline/"
-        run: |
-          npm ci
-          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
-
       # Deploy the app
       - name: Deploy App
         working-directory: "./app/.pipeline"
@@ -173,16 +130,15 @@ jobs:
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
 
-  # Deploy App, API, and API-MOBILE images in Test
+  # Deploy App, API images in Test
   deployTest:
-    name: Deploy App, API, and API-MOBILE to TEST environment
+    name: Deploy App, API to TEST environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref != 'prod'}}
     env:
       BUILD_ID: ${{ github.event.number }}
     needs:
       - buildAPI
-      - buildAPIMobile
       - buildAPP
     steps:
       # Checkout the PR branch
@@ -212,14 +168,6 @@ jobs:
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the api-mobile
-      - name: Deploy API Mobile
-        working-directory: "./api-mobile/.pipeline/"
-        run: |
-          npm ci
-          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-
       # Deploy the app
       - name: Deploy App
         working-directory: "./app/.pipeline"
@@ -227,16 +175,15 @@ jobs:
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
 
-  # Deploy App, API, and API-MOBILE images in Prod
+  # Deploy App, API images in Prod
   deployProd:
-    name: Deploy App, API, and API-MOBILE to PROD environment
+    name: Deploy App, API to PROD environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref == 'prod'}}
     env:
       BUILD_ID: ${{ github.event.number }}
     needs:
       - buildAPI
-      - buildAPIMobile
       - buildAPP
     steps:
       # Checkout the PR branch
@@ -265,14 +212,6 @@ jobs:
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
 
-      # Deploy the api-mobile
-      - name: Deploy API Mobile
-        working-directory: "./api-mobile/.pipeline/"
-        run: |
-          npm ci
-          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
-
       # Deploy the app
       - name: Deploy App
         working-directory: "./app/.pipeline"
@@ -280,14 +219,13 @@ jobs:
           npm ci
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
 
-  # Deploy App, API, and API-MOBILE images and related build/deployment artifacts
+  # Deploy App, API images and related build/deployment artifacts
   clean:
-    name: Clean Deployment Artifacts for App, API, and API-MOBILE in DEV and Test environments
+    name: Clean Deployment Artifacts for App, API in DEV and Test environments
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref == 'dev'  }}
     needs:
       - buildAPI
-      - buildAPIMobile
       - buildAPP
       - deployDev
       - deployTest
@@ -318,14 +256,6 @@ jobs:
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
 
-      # Clean the api-mobile deployment artifacts
-      - name: Clean API Mobile Deployment
-        working-directory: "./api-mobile/.pipeline/"
-        run: |
-          npm ci
-          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
-          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
-
       # Clean the app deployment artifacts
       - name: Clean APP Deployment
         working-directory: "./app/.pipeline/"
@@ -334,14 +264,13 @@ jobs:
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
 
-  # Clean App, API, and API-MOBILE images and related build/deployment artifacts
+  # Clean App, API images and related build/deployment artifacts
   cleanProd:
-    name: Clean Deployment Artifacts for App, API, and API-MOBILE in PROD environment
+    name: Clean Deployment Artifacts for App, API in PROD environment
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && github.base_ref == 'prod' }}
     needs:
       - buildAPI
-      - buildAPIMobile
       - buildAPP
       - deployProd
     env:
@@ -366,14 +295,6 @@ jobs:
       # Clean the api deployment artifacts
       - name: Clean API Deployment
         working-directory: "./api/.pipeline/"
-        run: |
-          npm ci
-          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
-          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
-
-      # Clean the api-mobile deployment artifacts
-      - name: Clean API Mobile Deployment
-        working-directory: "./api-mobile/.pipeline/"
         run: |
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build

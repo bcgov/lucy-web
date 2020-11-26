@@ -7,7 +7,7 @@ on:
     types: [closed]
 jobs:
   clean:
-    name: Clean Deployment Artifacts for App, API, and API-MOBILE in Dev and Tools environment
+    name: Clean Deployment Artifacts for App, API in Dev and Tools environment
     runs-on: ubuntu-latest
     # Only do this when the PR was not merged and only for dev
     if: ${{ github.event.pull_request.merged != true && github.base_ref == 'dev'  }}
@@ -33,14 +33,6 @@ jobs:
       # Clean the api deployment artifacts
       - name: Clean API Deployment
         working-directory: "./api/.pipeline/"
-        run: |
-          npm ci
-          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
-          DEBUG=* npm run clean -- --pr=$BUILD_ID --env=dev
-
-      # Clean the api-mobile deployment artifacts
-      - name: Clean API Mobile Deployment
-        working-directory: "./api-mobile/.pipeline/"
         run: |
           npm ci
           DEBUG=* npm run clean -- --pr=$BUILD_ID --env=build
