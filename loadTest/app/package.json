@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bcgov/lucy-web.git"
+    "url": "git+https://github.com/rstens/lucy-web.git"
   },
   "keywords": [
     "test",
@@ -19,9 +19,9 @@
   "author": "Pushan Mitra",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/bcgov/lucy-web/issues"
+    "url": "https://github.com/rstens/lucy-web/issues"
   },
-  "homepage": "https://github.com/bcgov/lucy-web#readme",
+  "homepage": "https://github.com/rstens/lucy-web#readme",
   "devDependencies": {
   },
   "dependencies": {

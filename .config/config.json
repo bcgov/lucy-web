@@ -1,6 +1,6 @@
 {
     "name": "invasivesbc",
-    "namespaceSuffix": "8ecbmv",
+    "namespaceSuffix": "7068ad",
     "namespace": {
         "tools": "tools",
         "dev": "dev",
@@ -16,14 +16,14 @@
     },
     "staticBranches": ["dev", "staging", "prod"],
     "staticUrls": {
-        "dev": "dev-invasivesbc.pathfinder.gov.bc.ca",
-        "staging": "test-invasivesbc.pathfinder.gov.bc.ca",
-        "prod": "invasivesbc.pathfinder.gov.bc.ca"
+        "dev": "dev-invasivesbc.apps.silver.devops.gov.bc.ca",
+        "staging": "test-invasivesbc.apps.silver.devops.gov.bc.ca",
+        "prod": "invasivesbc.apps.silver.devops.gov.bc.ca"
     },
     "staticUrlsAPI": {
-        "dev": "api-dev-invasivesbc.pathfinder.gov.bc.ca",
-        "staging": "api-test-invasivesbc.pathfinder.gov.bc.ca",
-        "prod": "api-invasivesbc.pathfinder.gov.bc.ca"
+        "dev": "api-dev-invasivesbc.apps.silver.devops.gov.bc.ca",
+        "staging": "api-test-invasivesbc.apps.silver.devops.gov.bc.ca",
+        "prod": "api-invasivesbc.apps.silver.devops.gov.bc.ca"
     },
     "certificateURL": {
         "dev": "https://dev.oidc.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",

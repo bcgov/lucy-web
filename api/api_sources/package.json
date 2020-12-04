@@ -33,7 +33,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/bcgov/lucy-web.git"
+        "url": "https://github.com/rstens/lucy-web.git"
     },
     "devDependencies": {
         "@types/axios": "^0.14.0",

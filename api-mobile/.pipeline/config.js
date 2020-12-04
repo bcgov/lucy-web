@@ -2,7 +2,7 @@
 let options = require('pipeline-cli').Util.parseArguments();
 const config = require('../../.config/config.json');
 
-const defaultHost = 'invasivebc-8ecbmv-api-mobile.pathfinder.gov.bc.ca';
+const defaultHost = 'invasivebc-7068ad-api-mobile.apps.silver.devops.gov.bc.ca';
 const name = (config.module && config.module['api-mobile']) || 'lucy-api-mobile';
 const dbName = (config.module && config.module['api']) || 'lucy-api';
 const changeId = options.pr || `${Math.floor(Date.now() * 1000) / 60.0}`; //aka pull-request or brach to process
@@ -40,7 +40,7 @@ options = processOptions(options);
 
 const phases = {
   build: {
-    namespace: '8ecbmv-tools',
+    namespace: '7068ad-tools',
     name: `${name}`,
     dbName: `${dbName}`,
     phase: 'build',
@@ -52,7 +52,7 @@ const phases = {
     branch: branch
   },
   dev: {
-    namespace: '8ecbmv-dev',
+    namespace: '7068ad-dev',
     name: `${name}`,
     dbName: `${dbName}`,
     phase: 'dev',
@@ -63,7 +63,7 @@ const phases = {
     tag: `dev-${version}-${deployChangeId}`,
     host:
       (isStaticDeployment && (staticUrlsAPIMobile.dev || defaultHost)) ||
-      `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
+      `${name}-${changeId}-7068ad-dev.apps.silver.devops.gov.bc.ca`,
     env: 'dev',
     certificateURL: config.certificateURL.dev,
     migrationInfo: config.migrationInfo.dev,
@@ -71,7 +71,7 @@ const phases = {
     maxReplicas: 2
   },
   test: {
-    namespace: '8ecbmv-test',
+    namespace: '7068ad-test',
     name: `${name}`,
     dbName: `${dbName}`,
     phase: 'test',
@@ -89,7 +89,7 @@ const phases = {
     maxReplicas: 5
   },
   prod: {
-    namespace: '8ecbmv-prod',
+    namespace: '7068ad-prod',
     name: `${name}`,
     dbName: `${dbName}`,
     phase: 'prod',

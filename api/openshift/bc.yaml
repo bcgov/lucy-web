@@ -17,7 +17,7 @@ parameters:
   - repo:
       name: "SOURCE_REPOSITORY_URL"
       required: true
-      value: 'https://github.com/bcgov/lucy-web.git'
+      value: 'https://github.com/rstens/lucy-web.git'
   - repo_ref:
       name: "SOURCE_REPOSITORY_REF"
       required: true
@@ -31,7 +31,7 @@ metadata:
   labels:
     app: ${}
   name: ${SUFFIX}
-  namespace: 8ecbmv-dev
+  namespace: 7068ad-dev
 spec:
   failedBuildsHistoryLimit: 5
   nodeSelector: null

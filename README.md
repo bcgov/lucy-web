@@ -2,7 +2,7 @@
 
 https://bcdevexchange.org/projects/prj-invasive-species
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_lucy-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web) ![ZAP Baseline Scan](https://github.com/bcgov/lucy-web/workflows/ZAP%20Baseline%20Scan/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_lucy-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web) ![ZAP Baseline Scan](https://github.com/rstens/lucy-web/workflows/ZAP%20Baseline%20Scan/badge.svg)
 
 ## Introduction
 
@@ -56,7 +56,7 @@ This application is anticipated to include the following main features:
 
 ## Getting Help or Reporting an Issue
 
-To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/lucy-web/issues).
+To report bugs/issues/features requests, please file an [issue](https://github.com/rstens/lucy-web/issues).
 
 ## How to Contribute
 
@@ -105,13 +105,13 @@ If you wish to deploy the application, you will also need to install [OpenShift 
 
 ## Setup Instructions
 
-Begin by cloning the repository to create a local copy. The repository on GitHub provides instructions: https://github.com/bcgov/lucy-web
+Begin by cloning the repository to create a local copy. The repository on GitHub provides instructions: https://github.com/rstens/lucy-web
 
 All subsequent commands are run at the project root.
 
 For example:
 
-`git clone https://github.com/bcgov/lucy-web`
+`git clone https://github.com/rstens/lucy-web`
 
 `cd lucy-web`
 

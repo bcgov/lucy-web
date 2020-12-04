@@ -81,7 +81,7 @@ A list of all the major pieces which can be used as a reference to identify the 
 ## Pipeline
 The pipeline is a task management and scheduling application. The main purpose of this is to run continuous integration and deployment process. 
 
-For the behavioral aspect of the pipeline application, please check (here)[https://github.com/bcgov/lucy-web/blob/dev/PIPELINE.md].
+For the behavioral aspect of the pipeline application, please check (here)[https://github.com/rstens/lucy-web/blob/dev/PIPELINE.md].
 
 The application source code resides in /api/.pipeline (api, db and tools)and /app/.pipeline (app) directory. 
 

@@ -36,7 +36,7 @@
         {
           "name": "SOURCE_REPOSITORY_URL",
           "required": true,
-          "value": "https://github.com/bcgov/lucy-web"
+          "value": "https://github.com/rstens/lucy-web"
         },
         {
           "name": "SOURCE_REPOSITORY_REF",
