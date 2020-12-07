@@ -106,7 +106,7 @@ jobs:
     # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
     # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
     - name: Log in to OpenShift
-      run: oc login --token=${​​​​​​{​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​}​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
+      run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
     # Deploy the api
     - name: Deploy API
@@ -149,8 +149,8 @@ jobs:
     # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
     # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
     - name: Log in to OpenShift
-      run: oc login --token=${​​​​​​{​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​}​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
-
+      run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
+      
     # Clean the api deployment artifacts
     - name: Clean API Deployment
       working-directory: "./api/.pipeline/"
