@@ -1,0 +1,11 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: postgresql-9.6-oracle-fdw
+  namespace: 7068ad-tools
+  labels:
+    shared: 'true'
+spec:
+  lookupPolicy:
+    local: false
+    
