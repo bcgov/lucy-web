@@ -121,7 +121,6 @@ jobs:
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run seed -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
 
       # Deploy the app
       - name: Deploy App
@@ -166,7 +165,6 @@ jobs:
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run seed -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=test --type=static --branch=${{ github.base_ref }}
 
       # Deploy the app
       - name: Deploy App
@@ -210,7 +208,6 @@ jobs:
           DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
           DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
 
       # Deploy the app
       - name: Deploy App
