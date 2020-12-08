@@ -116,7 +116,6 @@ jobs:
         DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=dev
         DEBUG=* npm run setup -- --pr=$BUILD_ID --env=dev
         DEBUG=* npm run seed -- --pr=$BUILD_ID --env=dev
-        DEBUG=* npm run test -- --pr=$BUILD_ID --env=dev
         DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev
         DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=dev
 
