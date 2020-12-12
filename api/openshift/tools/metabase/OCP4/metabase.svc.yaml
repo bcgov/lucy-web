@@ -1,0 +1,25 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: metabase
+  namespace: 7068ad-dev
+  labels:
+    app: metabase
+    app.kubernetes.io/component: metabase
+    app.kubernetes.io/instance: metabase
+    app.kubernetes.io/part-of: metabase
+    app.openshift.io/runtime-version: latest
+    role: app
+    template: metabase-dc-template
+spec:
+  ports:
+    - name: 3000-tcp
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: metabase
+    deploymentconfig: metabase
+  clusterIP: 10.98.22.65
+  type: ClusterIP
+  sessionAffinity: None

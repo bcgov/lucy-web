@@ -1,0 +1,56 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: metabase
+  namespace: 7068ad-tools
+  labels:
+    app: metabase
+    role: app
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'metabase:latest'
+  resources:
+    limits:
+      cpu: '2'
+      memory: 2Gi
+    requests:
+      cpu: '1'
+      memory: 1Gi
+  successfulBuildsHistoryLimit: 3
+  failedBuildsHistoryLimit: 3
+  completionDeadlineSeconds: 600
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: 'openjdk:8-jdk-alpine'
+      buildArgs:
+        - name: METABASE_VERSION
+          value: v0.37.0.2
+  postCommit: {}
+  source:
+    type: Dockerfile
+    dockerfile: >
+      FROM BuildConfig
+
+      WORKDIR /app
+
+      ENV FC_LANG=en-US \
+          LC_CTYPE=en_US.UTF-8
+      RUN apk add --update bash wget ttf-dejavu fontconfig
+
+      RUN wget -q https://downloads.metabase.com/enterprise/v1.37.2/metabase.jar
+      \
+       && chmod -R 777 /app
+      EXPOSE 3000
+
+      ENTRYPOINT ["java", "-jar", "metabase.jar"]
+  triggers:
+    - type: ConfigChange
+  runPolicy: SerialLatestOnly
+status:
+  lastVersion: 2

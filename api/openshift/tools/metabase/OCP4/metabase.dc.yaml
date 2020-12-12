@@ -1,0 +1,112 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: metabase
+  namespace: 7068ad-dev
+  labels:
+    app: metabase
+spec:
+  strategy:
+    type: Recreate
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - metabase
+        from:
+          kind: ImageStreamTag
+          namespace: 7068ad-tools
+          name: 'metabase:latest'
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    app: metabase
+    deploymentconfig: metabase
+  template:
+    metadata:
+      name: metabase
+      creationTimestamp: null
+      labels:
+        app: metabase
+        deploymentconfig: metabase
+        role: app
+    spec:
+      containers:
+        - resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 768Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 120
+            timeoutSeconds: 10
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: metabase
+          command:
+            - bash
+            - '-c'
+            - >-
+              cd /app && if [[ $PR_ENVIRONMENT == 'true' ]]; then tail -f
+              /dev/null; else java -jar metabase.jar; fi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 120
+            timeoutSeconds: 10
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: MB_DB_TYPE
+              value: postgres
+            - name: MB_DB_HOST
+              value: postgresql-metabase
+            - name: MB_DB_DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-metabase-secret
+                  key: database-name
+            - name: MB_DB_PORT
+              value: '5432'
+            - name: MB_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-metabase-secret
+                  key: database-user
+            - name: MB_DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-metabase-secret
+                  key: database-password
+            - name: MB_JETTY_HOST
+              value: 0.0.0.0
+            - name: MB_PASSWORD_COMPLEXITY
+              value: strong
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
