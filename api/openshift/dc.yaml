@@ -1,4 +1,7 @@
-apiVersion: v1
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: api-dc
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -241,10 +244,6 @@ objects:
       name: ${NAME}${SUFFIX}
     cpuUtilization:
       targetPercentage: 95
-kind: Template
-metadata:
-  resourceVersion: ""
-  selfLink: ""
 parameters:
 - name: NAME
   value: invasivesbc-api
