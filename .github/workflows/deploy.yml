@@ -33,9 +33,9 @@ jobs:
 
     # Install Node - for `node` and `npm` commands
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
-        node-version: 10.16
+        node-version: '12'
 
     # Log in to OpenShift.
     # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
@@ -64,9 +64,9 @@ jobs:
 
     # Install Node - for `node` and `npm` commands
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
-        node-version: 10.16
+        node-version: '12'
 
     # Log in to OpenShift.
     # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
@@ -98,9 +98,9 @@ jobs:
 
     # Install Node - for `node` and `npm` commands
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
-        node-version: 10.16
+        node-version: '12'
 
     # Log in to OpenShift.
     # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
@@ -140,9 +140,9 @@ jobs:
 
     # Install Node - for `node` and `npm` commands
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
-        node-version: 10.16
+        node-version: '12'
 
     # Log in to OpenShift.
     # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.

@@ -1,10 +1,10 @@
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
-  name: metabase
+  name: postgresql-metabase
   labels:
     app: metabase
-    role: app
+    role: db
 spec:
   strategy:
     type: Recreate
@@ -17,93 +17,84 @@ spec:
       imageChangeParams:
         automatic: true
         containerNames:
-          - metabase
+          - postgresql
         from:
           kind: ImageStreamTag
-          namespace: 7068ad-tools
-          name: 'metabase:latest'
+          namespace: openshift
+          name: 'postgresql:latest'
     - type: ConfigChange
   replicas: 1
   revisionHistoryLimit: 10
   test: false
   selector:
     app: metabase
-    deploymentconfig: metabase
+    deploymentconfig: postgresql-metabase
+    name: postgresql-metabase
   template:
     metadata:
-      name: metabase
+      name: postgresql-metabase
       creationTimestamp: null
       labels:
         app: metabase
-        deploymentconfig: metabase
-        role: app
+        deploymentconfig: postgresql-metabase
+        name: postgresql-metabase
+        role: db
     spec:
+      volumes:
+        - name: postgresql-metabase-data
+          persistentVolumeClaim:
+            claimName: postgresql-metabase-data
       containers:
         - resources:
             limits:
-              cpu: 500m
-              memory: 1Gi
-            requests:
-              cpu: 100m
-              memory: 768Mi
+              memory: 512Mi
           readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-              scheme: HTTP
-            initialDelaySeconds: 120
-            timeoutSeconds: 10
-            periodSeconds: 20
+            exec:
+              command:
+                - /usr/libexec/check-container
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           terminationMessagePath: /dev/termination-log
-          name: metabase
-          command:
-            - bash
-            - '-c'
-            - >-
-              cd /app && if [[ $PR_ENVIRONMENT == 'true' ]]; then tail -f
-              /dev/null; else java -jar metabase.jar; fi
+          name: postgresql
           livenessProbe:
-            httpGet:
-              path: /
-              port: 3000
-              scheme: HTTP
+            exec:
+              command:
+                - /usr/libexec/check-container
+                - '--live'
             initialDelaySeconds: 120
             timeoutSeconds: 10
-            periodSeconds: 20
+            periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           env:
-            - name: MB_DB_TYPE
-              value: postgres
-            - name: MB_DB_HOST
-              value: postgresql-metabase
-            - name: MB_DB_DBNAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgresql-metabase-secret
-                  key: database-name
-            - name: MB_DB_PORT
-              value: '5432'
-            - name: MB_DB_USER
+            - name: POSTGRESQL_USER
               valueFrom:
                 secretKeyRef:
                   name: postgresql-metabase-secret
                   key: database-user
-            - name: MB_DB_PASS
+            - name: POSTGRESQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgresql-metabase-secret
                   key: database-password
-            - name: MB_JETTY_HOST
-              value: 0.0.0.0
-            - name: MB_PASSWORD_COMPLEXITY
-              value: strong
+            - name: POSTGRESQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-metabase-secret
+                  key: database-name
+          securityContext:
+            capabilities: {}
+            privileged: false
           ports:
-            - containerPort: 3000
+            - containerPort: 5432
               protocol: TCP
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: postgresql-metabase-data
+              mountPath: /var/lib/pgsql/data
           terminationMessagePolicy: File
       restartPolicy: Always
       terminationGracePeriodSeconds: 30

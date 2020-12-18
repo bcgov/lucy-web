@@ -22,13 +22,13 @@ jobs:
 
       # Install Node - for `node` and `npm` commands
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
-          node-version: 10.16
+          node-version: '12'
 
       # Log in to OpenShift.
       - name: Log in to OpenShift
-        run: oc login --token=${​​​​​​{​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​}​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
+        run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Clean the api deployment artifacts
       - name: Clean API Deployment
