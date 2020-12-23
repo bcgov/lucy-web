@@ -44,7 +44,7 @@ jobs:
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+        run: oc login --token=${​​​​​​​​​​​​​​​​​​​​​​​{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Build the api images
       - name: Build API Images
@@ -75,7 +75,7 @@ jobs:
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+        run: oc login --token=${​​​​​​​​​​​​​​​​​​​​​​​{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Build the app images
       - name: Build APP Images
@@ -110,7 +110,7 @@ jobs:
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+        run: oc login --token=${​​​​​​​​​​​​​​​​​​​​​​​{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Deploy the api
       - name: Deploy API
@@ -155,7 +155,7 @@ jobs:
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+        run: oc login --token=${​​​​​​​​​​​​​​​​​​​​​​​{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Deploy the api
       - name: Deploy API
@@ -200,7 +200,7 @@ jobs:
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+        run: oc login --token=${​​​​​​​​​​​​​​​​​​​​​​​{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Deploy the api
       - name: Deploy API
@@ -246,7 +246,7 @@ jobs:
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+        run: oc login --token=${​​​​​​​​​​​​​​​​​​​​​​​{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Clean the api deployment artifacts
       - name: Clean API Deployment
@@ -290,7 +290,7 @@ jobs:
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login https://console.pathfinder.gov.bc.ca:8443 --token=${{ secrets.TOOLS_SA_TOKEN }}
+        run: oc login --token=${​​​​​​​​​​​​​​​​​​​​​​​{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ secrets.TOOLS_SA_TOKEN }​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Clean the api deployment artifacts
       - name: Clean API Deployment

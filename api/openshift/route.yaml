@@ -9,7 +9,7 @@ items:
     labels:
       app: lucy-api-test
     name: lucy-api-test
-    selfLink: /api/v1/namespaces/8ecbmv-dev/services/lucy-api-test
+    selfLink: /api/v1/namespaces/7068ad-dev/services/lucy-api-test
   spec:
     ports:
     - name: 3001-tcp
@@ -35,9 +35,9 @@ items:
     labels:
       app: lucy-api-test
     name: lucy-api-test-route
-    selfLink: /apis/route.openshift.io/v1/namespaces/8ecbmv-dev/routes/lucy-api-test-route
+    selfLink: /apis/route.openshift.io/v1/namespaces/7068ad-dev/routes/lucy-api-test-route
   spec:
-    host: lucy-api-test-route-8ecbmv-dev.pathfinder.gov.bc.ca
+    host: lucy-api-test-route-7068ad-dev.apps.silver.devops.gov.bc.ca
     port:
       targetPort: 3001-tcp
     to:

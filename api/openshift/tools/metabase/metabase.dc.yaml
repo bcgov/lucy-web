@@ -67,7 +67,7 @@ objects:
     metadata:
       name: "${NAME}"
     spec:
-      host: "${NAME}-${NAMESPACE}.pathfinder.gov.bc.ca"
+      host: "${NAME}-${NAMESPACE}.apps.silver.devops.gov.bc.ca"
       tls:
         insecureEdgeTerminationPolicy: Redirect
         termination: edge
