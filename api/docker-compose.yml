@@ -7,7 +7,7 @@ services:
   container_name: ${PROJECT_NAME}-${TAG}-api-dep
   build:
    context: ./api_sources
-   dockerfile: .build/Dockerfile.node
+   dockerfile: .build/Dockerfile.npm
   volumes:
     - npmcache:/opt/app-root/src/node_modules
  app_api:
@@ -110,7 +110,7 @@ services:
 networks:
  local-network:
   driver: bridge
-  name: ${PROJECT_NAME}-${TAG}-network
+  #  name: ${PROJECT_NAME}-${TAG}-network
 volumes:
   postgres:
     name: ${PROJECT_NAME}-${TAG}-vol-postgres

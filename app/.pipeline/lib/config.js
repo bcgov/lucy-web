@@ -17,8 +17,8 @@ const isStaticDeployment = () => {
 const isProduction = () => false;
 
 const deployChangeId  = isStaticDeployment() ? 'deploy' : changeId;
-const defaultHost = 'invasivebc-8ecbmv-dev.pathfinder.gov.bc.ca';
-const defaultHostAPI = 'invasivebc-8ecbmv-api.dev.pathfinder.gov.bc.ca'
+const defaultHost = 'invasivebc-7068ad-dev.apps.silver.devops.gov.bc.ca';
+const defaultHostAPI = 'invasivebc-7068ad-api.dev.apps.silver.devops.gov.bc.ca'
 
 // Get SSO_Info
 const sso = config.sso;
@@ -49,7 +49,7 @@ options = processOptions(options);
 
 const phases = {
   build: {
-    namespace:'8ecbmv-tools'    ,
+    namespace:'7068ad-tools'    ,
     name: `${name}`, 
     phase: 'build'  , 
     changeId:changeId, 
@@ -61,7 +61,7 @@ const phases = {
     branch: branch
   },
   dev: {
-    namespace:'8ecbmv-dev'    , 
+    namespace:'7068ad-dev'    , 
     name: `${name}`, 
     phase: 'dev'  , 
     changeId:deployChangeId, 
@@ -69,15 +69,15 @@ const phases = {
     instance: `${name}-dev-${deployChangeId}`  , 
     version:`${version}-${deployChangeId}`, 
     tag:`dev-${version}-${deployChangeId}`, 
-    host: isStaticDeployment() ? staticUrls['dev'] || defaultHost : `${name}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`, 
-    apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-8ecbmv-dev.pathfinder.gov.bc.ca`,
+    host: isStaticDeployment() ? staticUrls['dev'] || defaultHost : `${name}-${changeId}-7068ad-dev.apps.silver.devops.gov.bc.ca`, 
+    apiHost: isStaticDeployment() ? staticUrlsAPI['dev'] || defaultHostAPI : `${apiName}-${changeId}-7068ad-dev.apps.silver.devops.gov.bc.ca`,
     env: 'dev',
     sso: sso.dev,
     replicas: 1,
     maxReplicas: 3
   },
   test: {
-    namespace:'8ecbmv-test'    , 
+    namespace:'7068ad-test'    , 
     name: `${name}`, 
     phase: 'test'  , 
     changeId: deployChangeId, 
@@ -93,7 +93,7 @@ const phases = {
     maxReplicas: 5
   },
   prod: {
-    namespace:'8ecbmv-prod'    , 
+    namespace:'7068ad-prod'    , 
     name: `${name}`,
     phase: 'prod'  , 
     changeId: deployChangeId,

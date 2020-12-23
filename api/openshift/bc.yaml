@@ -31,7 +31,7 @@ metadata:
   labels:
     app: ${}
   name: ${SUFFIX}
-  namespace: 8ecbmv-dev
+  namespace: 7068ad-dev
 spec:
   failedBuildsHistoryLimit: 5
   nodeSelector: null

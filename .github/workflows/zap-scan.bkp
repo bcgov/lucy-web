@@ -22,4 +22,4 @@ jobs:
         continue-on-error: true
         with:
           docker_name: 'owasp/zap2docker-stable'
-          target: "https://dev-invasivesbc.pathfinder.gov.bc.ca"
+          target: "https://dev-invasivesbc.apps.silver.devops.gov.bc.ca"

@@ -50,7 +50,7 @@ Run tests with SonarQube Analysis.
 
 #### Security Scan
 
-Whenever a new PR is created or a new commit is pushed to an existing PR, a dynamic security scan will be performed on the DEV environment (https://dev-invasivesbc.pathfinder.gov.bc.ca/) using OWASP Zap's baseline scan. The results of the scan will be displayed on the PR's page in GitHub.
+Whenever a new PR is created or a new commit is pushed to an existing PR, a dynamic security scan will be performed on the DEV environment (https://dev-invasivesbc.apps.silver.devops.gov.bc.ca/) using OWASP Zap's baseline scan. The results of the scan will be displayed on the PR's page in GitHub.
 
 OWASP Zap and GitHub Actions will automatically create a new Issue for any security vulnerabilities discovered during the scan.
 

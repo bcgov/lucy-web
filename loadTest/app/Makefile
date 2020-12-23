@@ -4,4 +4,4 @@ load-test-api-read:
 	@npx artillery run --overrides '{"config": {"phases": [{"duration": ${D}, "arrivalRate": ${R} }]}}' -v '{"url": "${TEST_URL}"}' ./tests/api.yml
 load-test-app:
 	@echo "+\n Load test app or web app front end with DURATION = D = $$D, RATE = R = $$R TEST_URL= $$TEST_URL ...\n+"
-	@npx artillery quick -d $$D -r $$R -k https://test-invasivesbc.pathfinder.gov.bc.ca
+	@npx artillery quick -d $$D -r $$R -k https://test-invasivesbc.apps.silver.devops.gov.bc.ca

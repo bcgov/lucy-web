@@ -1,5 +1,4 @@
 node_modules/
-swagger/
 .nvm
 .DS_Store
 *.swp
@@ -7,3 +6,6 @@ swagger/
 **/.node-*/
 .bash_history
 
+.env
+
+.npm

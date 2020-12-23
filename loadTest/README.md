@@ -25,7 +25,7 @@ The __/loadTest__ directory under root contains all resources and source code fi
         TEST_USER=#NAME
         PASSWORD=#PWD
         # Keycloak auth details
-        AUTH_URL=https://sso-dev.pathfinder.gov.bc.ca/auth/realms
+        AUTH_URL=https://dev.oidc.gov.bc.ca/auth/realms
         REALM=dfmlcg7z
         CLIENT_ID=invasives-bc
     ```
@@ -50,7 +50,7 @@ The __/loadTest__ directory under root contains all resources and source code fi
    **__ make deploy-remote ENV=#OpenShift Env (build, dev, test) BRANCH=#GIT BUILD BRANCH NAME __**
 
 3. Shell into pod
-   **__ make load-app PROJECT=#PROJECT/env NAME(8ecbmv-tools, 8ecbmv-dev) __**
+   **__ make load-app PROJECT=#PROJECT/env NAME(7068ad-tools, 7068ad-dev) __**
 
 4. Deploy job
    **__ make deploy-job ENV=#OpenShift Project env (build, dev) BRANCH=#GIT BUILD BRANCH NAME __**
