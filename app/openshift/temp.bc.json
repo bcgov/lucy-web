@@ -10,7 +10,7 @@
             "build": "lucy-app-test"
         },
         "name": "lucy-app-test",
-        "selfLink": "/apis/build.openshift.io/v1/namespaces/8ecbmv-tools/buildconfigs/lucy-app-test"
+        "selfLink": "/apis/build.openshift.io/v1/namespaces/7068ad-tools/buildconfigs/lucy-app-test"
     },
     "spec": {
         "failedBuildsHistoryLimit": 5,

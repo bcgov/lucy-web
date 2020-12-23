@@ -36,9 +36,9 @@ module.exports = (settings) => {
   const name = `${phases[phase].name}-backup`;
   delete options.git;
   const dbIdentifiers = {
-    'dev': 'bk-8ecbmv-dev-s8nuyo61qmct',
-    'prod': 'bk-8ecbmv-prod-rt7kpgp8p2a2',
-    'test': 'bk-8ecbmv-test-1d2ol2h3lcy5'
+    'dev': 'bk-7068ad-dev-s8nuyo61qmct',
+    'prod': 'bk-7068ad-prod-rt7kpgp8p2a2',
+    'test': 'bk-7068ad-test-1d2ol2h3lcy5'
   };
   // The deployment of your cool app goes here ▼▼▼
   objects.push(...oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/db.backup.dc.yaml`, {

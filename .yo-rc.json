@@ -4,21 +4,21 @@
       "modules": {
         "jenkins": {
           "path": ".jenkins",
-          "namespace": "8ecbmv-tools",
+          "namespace": "7068ad-tools",
           "name": "jenkins",
           "version": "1.0.0",
           "environments": {
             "build": {
-              "namespace": "8ecbmv-tools"
+              "namespace": "7068ad-tools"
             },
             "dev": {
-              "namespace": "8ecbmv-tools"
+              "namespace": "7068ad-tools"
             },
             "test": {
-              "namespace": "8ecbmv-tools"
+              "namespace": "7068ad-tools"
             },
             "prod": {
-              "namespace": "8ecbmv-tools"
+              "namespace": "7068ad-tools"
             }
           },
           "jenkinsJobName": "_jenkins",
@@ -33,16 +33,16 @@
           "path": "app",
           "environments": {
             "build": {
-              "namespace": "8ecbmv-tools"
+              "namespace": "7068ad-tools"
             },
             "dev": {
-              "namespace": "8ecbmv-dev"
+              "namespace": "7068ad-dev"
             },
             "test": {
-              "namespace": "8ecbmv-test"
+              "namespace": "7068ad-test"
             },
             "prod": {
-              "namespace": "8ecbmv-prod"
+              "namespace": "7068ad-prod"
             }
           },
           "jenkinsJobName": "app",
@@ -57,16 +57,16 @@
           "path": "api",
           "environments": {
             "build": {
-              "namespace": "8ecbmv-tools"
+              "namespace": "7068ad-tools"
             },
             "dev": {
-              "namespace": "8ecbmv-dev"
+              "namespace": "7068ad-dev"
             },
             "test": {
-              "namespace": "8ecbmv-test"
+              "namespace": "7068ad-test"
             },
             "prod": {
-              "namespace": "8ecbmv-prod"
+              "namespace": "7068ad-prod"
             }
           },
           "jenkinsJobName": "api",
