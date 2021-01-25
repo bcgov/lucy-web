@@ -100,7 +100,7 @@ const phases = {
     certificateURL: config.certificateURL.prod,
     migrationInfo: config.migrationInfo.prod,
     replicas: 1,
-    maxReplicas: 2
+    maxReplicas: 3
   }
 };
 

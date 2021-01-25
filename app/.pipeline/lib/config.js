@@ -106,7 +106,7 @@ const phases = {
     env: 'prod',
     sso: sso.prod,
     replicas: 1,
-    maxReplicas: 2
+    maxReplicas: 3
   }
 };
 
