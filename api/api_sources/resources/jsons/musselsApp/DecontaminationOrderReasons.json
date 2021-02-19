@@ -1,0 +1,17 @@
+[
+  {
+    "DecontaminationOrderReason": "Inspection/decontamination could not be performed (e.g. commercially hauled)"
+  },
+  {
+    "DecontaminationOrderReason": "Partial decontamination only"
+  },
+  {
+    "DecontaminationOrderReason": "No decontamination - pressure washer not working"
+  },
+  {
+    "DecontaminationOrderReason": "No decontamination - watercraft too complex"
+  },
+  {
+    "DecontaminationOrderReason": "INo decontamination - non-compliant refusing decontamination"
+  }
+]
