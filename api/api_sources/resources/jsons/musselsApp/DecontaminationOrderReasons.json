@@ -1,17 +1,17 @@
 [
   {
-    "DecontaminationOrderReason": "Inspection/decontamination could not be performed (e.g. commercially hauled)"
+    "Decontamination_Order_Reasons": "Inspection/decontamination could not be performed (e.g. commercially hauled)"
   },
   {
-    "DecontaminationOrderReason": "Partial decontamination only"
+    "Decontamination_Order_Reasons": "Partial decontamination only"
   },
   {
-    "DecontaminationOrderReason": "No decontamination - pressure washer not working"
+    "Decontamination_Order_Reasons": "No decontamination - pressure washer not working"
   },
   {
-    "DecontaminationOrderReason": "No decontamination - watercraft too complex"
+    "Decontamination_Order_Reasons": "No decontamination - watercraft too complex"
   },
   {
-    "DecontaminationOrderReason": "INo decontamination - non-compliant refusing decontamination"
+    "Decontamination_Order_Reasons": "No decontamination - non-compliant refusing decontamination"
   }
 ]

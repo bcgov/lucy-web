@@ -7,11 +7,11 @@ externalTables:
     description: Country code table
   - name: country_province
     schema: CountryProvinceSchema
-    description: Country province table
+    description: Country province table 
 schemas: 
   ## -- MajorCitiesSchema
   MajorCitiesSchema:
-    name: major_cities
+    name: major_city
     description: 'The table to store all major city information. Watercraft observation require information regarding its source and destination.'
     baseSchema: RecordSchema
     meta:
@@ -30,6 +30,10 @@ schemas:
         name: 'composite'
         comment: 'Composite name of major city and country'
         definition: VARCHAR(100) NOT NULL
+      id: 
+        name: 'major_city_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY 
       city_name:
         name: city_name
         comment: Common or popular name of the major-city
@@ -44,7 +48,7 @@ schemas:
         definition: NUMERIC(10, 7) NOT NULL
         meta: {}
       country_code:
-        name: country_code
+        name: country
         comment: Country of the city location. Joint foreign key reference to country_province table country_code column along with province_code.
         definition: VARCHAR(3) NULL
       province:
