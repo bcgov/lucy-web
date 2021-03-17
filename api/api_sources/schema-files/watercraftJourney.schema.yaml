@@ -26,10 +26,10 @@ schemas:
         comment: 'Journey type of the associated regarding water body. i.e Previous (0) and next (1)'
         definition: INT NOT NULL DEFAULT 0
       # Counter
-      numberOfDaysOut:
+      numberOf:
         name: number_of_days_out
         comment: 'Number of days out of water'
-        definition: INT NULL
+        definition: VARCHAR(25) NULL
         required: false
       # Other Details
       otherWaterBody:
