@@ -20,9 +20,11 @@ export interface HighRiskAssessmentSpec {
 	decontaminationPerformed: boolean;
 	decontaminationOrderIssued: boolean;
 	sealIssued: boolean;
+	dreissenidMusselsFoundPrevious: boolean;
 	watercraftRegistration: string;
 	decontaminationReference: string;
 	decontaminationOrderNumber: number;
+	decontaminationOrderReason: string;
 	sealNumber: number;
 	standingWaterLocation: object;
 	adultDreissenidaeMusselDetail: object;
@@ -44,9 +46,11 @@ export interface HighRiskAssessmentUpdateSpec {
 	decontaminationPerformed?: boolean;
 	decontaminationOrderIssued?: boolean;
 	sealIssued?: boolean;
+	dreissenidMusselsFoundPrevious?: boolean;
 	watercraftRegistration?: string;
 	decontaminationReference?: string;
 	decontaminationOrderNumber?: number;
+	decontaminationOrderReason?: string;
 	sealNumber?: number;
 	standingWaterLocation?: object;
 	adultDreissenidaeMusselDetail?: object;
@@ -127,6 +131,13 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	sealIssued: boolean;
 
 	/**
+	 * @description Getter/Setter property for column {dreissenid_mussels_found_previous}
+	 */
+	 @Column({ name: HighRiskAssessmentSchema.columns.dreissenidMusselsFoundPrevious})
+	 @ModelProperty({type: PropertyType.boolean})
+	 dreissenidMusselsFoundPrevious: boolean;
+
+	/**
 	 * @description Getter/Setter property for column {watercraft_registration}
 	 */
 	@Column({ name: HighRiskAssessmentSchema.columns.watercraftRegistration})
@@ -146,6 +157,13 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	@Column({name: HighRiskAssessmentSchema.columns.decontaminationOrderNumber, transformer: new IntTransformer()})
 	@ModelProperty({type: PropertyType.number})
 	decontaminationOrderNumber: number;
+
+	/**
+	 * @description Getter/Setter property for column {decontamination_order_reason}
+	 */
+	 @Column({name: HighRiskAssessmentSchema.columns.decontaminationOrderReason, transformer: new IntTransformer()})
+	 @ModelProperty({type: PropertyType.string})
+	 decontaminationOrderReason: string;
 
 	/**
 	 * @description Getter/Setter property for column {seal_number}

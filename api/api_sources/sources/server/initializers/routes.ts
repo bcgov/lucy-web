@@ -33,6 +33,7 @@ import { accountRoute,
     mechanicalMonitorRoute,
     UploadRouteController,
     animalObservationRoute,
+    MajorCitiesRouteController,
 } from '../modules';
 import { LocationRouteController } from '../modules/location';
 import { BCGeoDataRouteController } from '../modules/bcGeoData';
@@ -72,6 +73,9 @@ export const routes = (app: Application) => {
 
     // Water body
     app.use('/api/mussels/water-body', WaterBodyRouteController.shared.router);
+
+    // Major Cities
+    app.use('/api/mussels/major-cities', MajorCitiesRouteController.shared.router);
 
     // Observer Workflow
     app.use('/api/mussels/workflow', ObserverWorkflowRouteController.shared.router);
