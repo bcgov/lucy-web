@@ -279,7 +279,7 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	 /**
 	 * @description Getter/Setter property for column {destination_major_city}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.destination_major_city})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationMajorCity})
 	@ModelProperty({type: PropertyType.string})
 	destinationMajorCity: string;
 
