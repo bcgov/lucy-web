@@ -97,6 +97,8 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			'highRiskAssessment.sealNumber': basePriority - 603,
 			'highRiskAssessment.otherInspectionFindings': basePriority - 604,
 			'highRiskAssessment.generalComments': basePriority - 605,
+			'highRiskAssessment.decontaminationOrderReason': basePriority - 606,
+			'highRiskAssessment.dreissenidMusselsFoundPrevious': basePriority - 606,
 			generalComment: -1
         };
     }
