@@ -133,7 +133,7 @@ export class MajorCity extends Record implements MajorCitySpec {
 	distance: number;
 
 	/**
-	 * @description Getter/Setter property for column {active_ind}
+	 * @description Getter/Setter property for column {active}
 	 */
 	@Column({ name: MajorCitySchema.columns.active})
 	@ModelProperty({type: PropertyType.boolean})
