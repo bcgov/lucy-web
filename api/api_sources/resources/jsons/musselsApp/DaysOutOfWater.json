@@ -1,0 +1,20 @@
+[
+    {
+        "Days_Out_Of_Water": "0-10 days"
+    },
+    {
+        "Days_Out_Of_Water": "11-20 days"
+    },
+    {
+        "Days_Out_Of_Water": "21-30 days"
+    },
+    {
+        "Days_Out_Of_Water": "30 days to 6 months"
+    },
+    {
+        "Days_Out_Of_Water": "6 months to 1 year"
+    },
+    {
+        "Days_Out_Of_Water": "> 1 year"
+    }
+]

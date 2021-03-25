@@ -66,7 +66,7 @@ const phases = {
     certificateURL: config.certificateURL.dev,
     migrationInfo: config.migrationInfo.dev,
     replicas: 1,
-    maxReplicas: 2
+    maxReplicas: 1
   },
   test: {
     namespace:'7068ad-test',
@@ -82,8 +82,8 @@ const phases = {
     env: 'test',
     certificateURL: config.certificateURL.test,
     migrationInfo: config.migrationInfo.test,
-    replicas: 3,
-    maxReplicas: 5
+    replicas: 1,
+    maxReplicas: 1
   },
   prod: {
     namespace:'7068ad-prod'    , 
@@ -99,8 +99,8 @@ const phases = {
     env: 'prod',
     certificateURL: config.certificateURL.prod,
     migrationInfo: config.migrationInfo.prod,
-    replicas: 3,
-    maxReplicas: 6
+    replicas: 1,
+    maxReplicas: 3
   }
 };
 

@@ -50,6 +50,19 @@ export class WaterBodySchema extends RecordTableSchema {
 }
 
 /**
+ * @description Schema Class for MajorCitySchema
+ */
+ export class MajorCitySchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('majorCities.schema.yaml');
+    }
+
+    get hasDefaultValues(): boolean {
+        return true;
+    }
+}
+
+/**
  * @description Schema Class for ObserverWorkflowSchema
  */
 export class ObserverWorkflowSchema extends RecordTableSchema {
