@@ -49,6 +49,10 @@ schemas:
         name: 'passport_holder_ind'
         comment: 'Indicator to show that inspected boat has previously issued passport'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      isNewPassportIssued:
+        name: 'is_new_passport_issued'
+        comment: 'Indicator to show that inspected boat was issued a new passport'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       k9Inspection:
         name: k9_inspection_ind
         comment: 'Indicator to show that inspection type is K9'
