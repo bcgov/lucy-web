@@ -108,7 +108,7 @@
         "snyk": "^1.192.5",
         "source-map-loader": "^0.2.4",
         "typeorm": "^0.2.18",
-        "underscore": "^1.9.1"
+        "underscore": "^1.12.1"
     },
     "snyk": true
 }
