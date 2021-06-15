@@ -162,7 +162,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 				};
 			}
 			if (item.journeyType === 1) {
-				if (item.numberOfDaysOut && item.numberOfDaysOut > 0) {
+				if (item.numberOfDaysOut && item.numberOfDaysOut !== '') {
 					details.numberOfDaysOut = `${item.numberOfDaysOut}`;
 				} else {
 					details.numberOfDaysOut = `NA`;

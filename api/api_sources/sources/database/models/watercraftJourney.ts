@@ -22,7 +22,7 @@ import { Record } from './generic.data.models';
  */
 export interface WatercraftJourneySpec {
 	journeyType: number;
-	numberOfDaysOut: number;
+	numberOfDaysOut: string;
 	otherWaterBody: string;
 	watercraftAssessment: WatercraftRiskAssessment;
 	waterBody: WaterBody;
@@ -36,7 +36,7 @@ export interface WatercraftJourneySpec {
  */
 export interface WatercraftJourneyUpdateSpec {
 	journeyType?: number;
-	numberOfDaysOut?: number;
+	numberOfDaysOut?: string;
 	otherWaterBody?: string;
 	watercraftAssessment?: WatercraftRiskAssessment;
 	waterBody?: WaterBody;
@@ -77,7 +77,7 @@ export class WatercraftJourney extends Record implements WatercraftJourneySpec {
 	 */
 	@Column({name: WatercraftJourneySchema.columns.numberOfDaysOut, transformer: new IntTransformer()})
 	@ModelProperty({type: PropertyType.number})
-	numberOfDaysOut: number;
+	numberOfDaysOut: string;
 
 	/**
 	 * @description Getter/Setter property for column {other_water_body_detail}

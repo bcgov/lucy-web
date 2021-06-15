@@ -29,7 +29,7 @@ schemas:
       numberOfDaysOut:
         name: number_of_days_out
         comment: 'Number of days out of water'
-        definition: INT NULL
+        definition: VARCHAR(25) NULL
         required: false
       # Other Details
       otherWaterBody:
