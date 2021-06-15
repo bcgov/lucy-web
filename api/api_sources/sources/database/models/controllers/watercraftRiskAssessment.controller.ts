@@ -49,6 +49,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			shiftEndComment: (basePriority - 140),
 			timestamp: (basePriority + - 145),
 			passportHolder: (basePriority - 150),
+			isNewPassportIssued: (basePriority - 155),
 			passportNumber: (basePriority - 160),
 			timeOfInspection: (basePriority - 165),
 			launchedOutsideBC: (basePriority - 170),
@@ -69,10 +70,12 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			previousInspectionDays: (basePriority - 320),
 			previousJourneyDetails: (basePriority - 330),
 			previousDryStorage: (basePriority - 340),
+			previousMajorCity: (basePriority - 345),
 			unknownPreviousWaterBody: (basePriority - 350),
 			commercialManufacturerAsPreviousWaterBody: (basePriority - 360),
 			destinationJourneyDetails: (basePriority - 370),
 			destinationDryStorage: (basePriority - 380),
+			destinationMajorCity: (basePriority - 385),
 			unknownDestinationWaterBody: (basePriority - 390),
 			commercialManufacturerAsDestinationWaterBody: (basePriority - 400),
 			marineSpeciesFound: (basePriority - 410),
@@ -97,6 +100,8 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			'highRiskAssessment.sealNumber': basePriority - 603,
 			'highRiskAssessment.otherInspectionFindings': basePriority - 604,
 			'highRiskAssessment.generalComments': basePriority - 605,
+			'highRiskAssessment.decontaminationOrderReason': basePriority - 606,
+			'highRiskAssessment.dreissenidMusselsFoundPrevious': basePriority - 606,
 			generalComment: -1
         };
     }

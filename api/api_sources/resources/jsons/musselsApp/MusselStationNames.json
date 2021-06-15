@@ -1,68 +1,68 @@
 [
   {
-    "Station_Name": "Other"
+    "Station_Name": "Cascade"
   },
   {
-    "Station_Name": "Cascade / Grand Forks"
+    "Station_Name": "Cutts (Hwy 93)"
   },
   {
     "Station_Name": "Dawson Creek"
   },
   {
-    "Station_Name": "Cutts Hwy 93"
+    "Station_Name": "Fraser Valley Roving"
   },
   {
     "Station_Name": "Golden"
   },
   {
-    "Station_Name": "Laidlaw / Chilliwack"
+    "Station_Name": "Keremeos (Hwy 3)"
+  },
+  {
+    "Station_Name": "Midway"
   },
   {
     "Station_Name": "Mt. Robson"
   },
   {
-    "Station_Name": "Olsen Hwy 3"
+    "Station_Name": "Olsen (Hwy 3)"
   },
   {
     "Station_Name": "Osoyoos"
   },
   {
-    "Station_Name": "Pacific / Surrey"
+    "Station_Name": "Other"
+  },
+  {
+    "Station_Name": "Pacific Border"
+  },
+  {
+    "Station_Name": "Penticton Roving"
   },
   {
     "Station_Name": "Radium"
   },
   {
-    "Station_Name": "Salmo"
+    "Station_Name": "Scheduled Inspection (AB notification)"
   },
   {
-    "Station_Name": "Calemount"
+    "Station_Name": "Scheduled Inspection (CBSA notification)"
+  },
+  {
+    "Station_Name": "Scheduled Inspection (New boat)"
+  },
+  {
+    "Station_Name": "Scheduled Inspection (other notification)"
+  },
+  {
+    "Station_Name": "Scheduled Inspection (RAPP notification)"
+  },
+  {
+    "Station_Name": "Sumas Border"
+  },
+  {
+    "Station_Name": "Valemount"
   },
   {
     "Station_Name": "Yahk"
-  },
-  {
-    "Station_Name": "Fraser Valley Roving"
-  },
-  {
-    "Station_Name": "Sumas border"
-  },
-  {
-    "Station_Name": "Aldergrove border"
-  },
-  {
-    "Station_Name": "Scheduled inspection (RAPP notification)"
-  },
-  {
-    "Station_Name": "Scheduled inspection (CBSA referral)"
-  },
-  {
-    "Station_Name": "Scheduled inspection (AB notification)"
-  },
-  {
-    "Station_Name": "Scheduled inspection (other notification)"
-  },
-  {
-    "Station_Name": "Scheduled inspection (new boat)"
   }
 ]

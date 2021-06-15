@@ -52,6 +52,7 @@ export interface WatercraftRiskAssessmentSpec {
 	timestamp: string;
 	passportHolder: boolean;
 	inspectionTime: string;
+	isNewPassportIssued: boolean;
 	k9Inspection: boolean;
 	marineSpeciesFound: boolean;
 	aquaticPlantsFound: boolean;
@@ -66,6 +67,8 @@ export interface WatercraftRiskAssessmentSpec {
 	highRiskAIS: boolean;
 	previousDryStorage: boolean;
 	destinationDryStorage: boolean;
+	previousMajorCity: string;
+	destinationMajorCity: string;
 	unknownPreviousWaterBody: boolean;
 	unknownDestinationWaterBody: boolean;
 	commercialManufacturerAsPreviousWaterBody: boolean;
@@ -111,6 +114,8 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	highRiskAIS?: boolean;
 	previousDryStorage?: boolean;
 	destinationDryStorage?: boolean;
+	previousMajorCity?: string;
+	destinationMajorCity?: string;
 	unknownPreviousWaterBody?: boolean;
 	unknownDestinationWaterBody?: boolean;
 	commercialManufacturerAsPreviousWaterBody?: boolean;
@@ -175,6 +180,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	 @Column({ name: WatercraftRiskAssessmentSchema.columns.inspectionTime})
 	 @ModelProperty({type: PropertyType.string})
 	 inspectionTime: string;
+
+	 /**
+	 * @description Getter/Setter property for column {is_new_passport_issued}
+	 */
+	 @Column({ name: WatercraftRiskAssessmentSchema.columns.isNewPassportIssued})
+	 @ModelProperty({type: PropertyType.boolean})
+	 isNewPassportIssued: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {k9_inspection_ind}
@@ -273,6 +285,20 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationDryStorage})
 	@ModelProperty({type: PropertyType.boolean})
 	destinationDryStorage: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {previous_major_city}
+	 */
+	 @Column({ name: WatercraftRiskAssessmentSchema.columns.previousMajorCity})
+	 @ModelProperty({type: PropertyType.string})
+	 previousMajorCity: string;
+
+	 /**
+	 * @description Getter/Setter property for column {destination_major_city}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationMajorCity})
+	@ModelProperty({type: PropertyType.string})
+	destinationMajorCity: string;
 
 	/**
 	 * @description Getter/Setter property for column {unknown_previous_water_body_ind}

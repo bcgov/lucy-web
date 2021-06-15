@@ -67,6 +67,10 @@ schemas:
         name: distance
         comment: Distance from closest water body in kilometer
         definition: NUMERIC(10, 5)
+      active:
+        name: active
+        comment: Boolean flag to check, the record is active or not.
+        definition: BOOLEAN NOT NULL DEFAULT TRUE
   #   ## -- columns
   #   imports:
   #     init:

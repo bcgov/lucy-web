@@ -53,6 +53,10 @@ schemas:
         name: inspection_time
         comment: 'The time of the inspection'
         definition: VARCHAR(100) NULL
+      isNewPassportIssued:
+        name: 'is_new_passport_issued'
+        comment: 'Indicator to show that inspected boat was issued a new passport'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       k9Inspection:
         name: k9_inspection_ind
         comment: 'Indicator to show that inspection type is K9'
@@ -109,6 +113,14 @@ schemas:
         name: destination_dry_storage_ind
         comment: Boolean indicator that watercraft''s destination water body is Dry Storage
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      previousMajorCity:
+        name: previous_major_city
+        comment: The closest major city to previous water body
+        definition: VARCHAR(100) NULL
+      destinationMajorCity:
+        name: destination_major_city
+        comment: The closest major city to destination water body
+        definition: VARCHAR(100) NULL
       unknownPreviousWaterBody:
         name: unknown_previous_water_body_ind
         comment: Boolean indicate that watercraft''s previous water body is unknown

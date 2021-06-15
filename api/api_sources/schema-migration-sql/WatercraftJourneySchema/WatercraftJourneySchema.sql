@@ -4,7 +4,7 @@
 CREATE TABLE watercraft_journey ();
 ALTER TABLE watercraft_journey ADD COLUMN watercraft_journey_id SERIAL PRIMARY KEY;
 ALTER TABLE watercraft_journey ADD COLUMN journey_type INT NOT NULL DEFAULT 0;
-ALTER TABLE watercraft_journey ADD COLUMN number_of_days_out INT NULL;
+ALTER TABLE watercraft_journey ADD COLUMN number_of_days_out VARCHAR(25) NULL;
 ALTER TABLE watercraft_journey ADD COLUMN other_water_body_detail VARCHAR(300) NULL;
 ALTER TABLE watercraft_journey ADD COLUMN watercraft_risk_assessment_id INT NULL REFERENCES watercraft_risk_assessment(watercraft_risk_assessment_id) ON DELETE SET NULL;
 ALTER TABLE watercraft_journey ADD COLUMN water_body_id INT NULL REFERENCES water_body(water_body_id) ON DELETE SET NULL;

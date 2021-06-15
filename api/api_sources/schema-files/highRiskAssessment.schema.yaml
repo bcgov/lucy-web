@@ -48,6 +48,10 @@ schemas:
         name: seal_issued_ind
         comment: 'Status flag to check seal was issued or not'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      dreissenidMusselsFoundPrevious:
+        name: dreissenid_mussels_found_previous
+        comment: 'Status flag to check if dreissenid mussels were found on the previous inspection or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Number
       watercraftRegistration:
         name: watercraft_registration
@@ -62,6 +66,11 @@ schemas:
         name: decontamination_order_number
         comment: 'Decontamination order number'
         definition: INT NULL
+        required: false
+      decontaminationOrderReason:
+        name: decontamination_order_reason
+        comment: 'Decontamination order reason'
+        definition: VARCHAR(100) NULL
         required: false
       sealNumber:
         name: seal_number
