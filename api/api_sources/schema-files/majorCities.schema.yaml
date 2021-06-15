@@ -26,14 +26,14 @@ schemas:
     layout: {}
     computedFields: {}
     columns: 
-      composite: 
+      id:
+        name: 'major_city_id'
+        comment: 'Auto generated primary key'
+        definition: SERIAL PRIMARY KEY
+      composite:
         name: 'composite'
         comment: 'Composite name of major city and country'
         definition: VARCHAR(100) NOT NULL
-      id: 
-        name: 'major_city_id'
-        comment: 'Auto generated primary key'
-        definition: SERIAL PRIMARY KEY 
       city_name:
         name: city_name
         comment: Common or popular name of the major-city
