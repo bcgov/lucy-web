@@ -53,6 +53,7 @@ schemas:
         name: inspection_time
         comment: 'The time of the inspection'
         definition: VARCHAR(100) NULL
+        required: false
       isNewPassportIssued:
         name: 'is_new_passport_issued'
         comment: 'Indicator to show that inspected boat was issued a new passport'

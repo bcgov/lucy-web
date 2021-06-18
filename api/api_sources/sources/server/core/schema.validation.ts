@@ -143,8 +143,8 @@ export class SchemaValidator {
            info = {
                 validate: validate => validate.isString().custom(async (value: string, {req}) => {
                     // 1. Check Size
-                    assert(value, `${printKey}: Value must be defined`);
-                    assert(value.length <= typeInfo.size, `${printKey}: Exceed maximum size ${typeInfo.size}`);
+                    // assert(value, `${printKey}: Value must be defined`);
+                    // assert(value.length <= typeInfo.size, `${printKey}: Exceed maximum size ${typeInfo.size}`);
                     // 2. Regx check
                     const verification = field.fieldVerification() || {};
                     if (verification.regx) {
