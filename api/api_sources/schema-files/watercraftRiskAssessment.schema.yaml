@@ -255,7 +255,7 @@ schemas:
       ## -- end: numberOfPeopleInParty
       ## -- version: inspectionTime
       - name: 'inspectionTime'
-        id: '20210606'
+        id: '20210706'
         info: 'Adding new column inspectionTime'
         columns:
           inspectionTime:
