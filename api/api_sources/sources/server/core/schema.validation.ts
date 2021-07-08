@@ -156,7 +156,7 @@ export class SchemaValidator {
                     const verification = field.fieldVerification() || {};
                     if (verification.regx) {
                         const regx = new RegExp(verification.regx.re, verification.regx.flag || 'gm');
-                        assert(value.match(regx), `${printKey}: should match regx: ${regx}`);
+                        assert(regx.test(value), `${printKey}: should match regx: ${regx}`);
                     }
                 }),
                 message: 'should be string',
