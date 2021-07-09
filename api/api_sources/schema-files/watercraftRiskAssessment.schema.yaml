@@ -253,6 +253,18 @@ schemas:
             required: false
             meta: {}
       ## -- end: numberOfPeopleInParty
+      ## -- version: inspectionTime
+      - name: 'inspectionTime'
+        id: '20210706'
+        info: 'Adding new column inspectionTime'
+        columns:
+          inspectionTime:
+            name: inspection_time
+            comment: The time of the inspection
+            definition: VARCHAR(100) NULL
+            required: false
+            meta: {}
+      ## -- end: inspectionTime
     ## -- end version
   ## --
 

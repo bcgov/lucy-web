@@ -142,14 +142,21 @@ export class SchemaValidator {
         } else {
            info = {
                 validate: validate => validate.isString().custom(async (value: string, {req}) => {
-                    // 1. Check Size
-                    assert(value, `${printKey}: Value must be defined`);
-                    assert(value.length <= typeInfo.size, `${printKey}: Exceed maximum size ${typeInfo.size}`);
-                    // 2. Regx check
+                    if (field.required) {
+                        // 1. Check Null
+                        assert(value, `${printKey}: Value must be defined`);
+                    }
+
+                    if (value) {
+                        // 2. Check Size
+                        assert(value.length <= typeInfo.size, `${printKey}: Exceed maximum size ${typeInfo.size}`);
+                    }
+
+                    // 3. Regx check
                     const verification = field.fieldVerification() || {};
                     if (verification.regx) {
                         const regx = new RegExp(verification.regx.re, verification.regx.flag || 'gm');
-                        assert(value.match(regx), `${printKey}: should match regx: ${regx}`);
+                        assert(regx.test(value), `${printKey}: should match regx: ${regx}`);
                     }
                 }),
                 message: 'should be string',

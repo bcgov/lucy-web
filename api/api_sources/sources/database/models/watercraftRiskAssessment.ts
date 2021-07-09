@@ -51,6 +51,7 @@ import { WatercraftJourney } from './watercraftJourney';
 export interface WatercraftRiskAssessmentSpec {
 	timestamp: string;
 	passportHolder: boolean;
+	inspectionTime: string;
 	isNewPassportIssued: boolean;
 	k9Inspection: boolean;
 	marineSpeciesFound: boolean;
@@ -98,6 +99,7 @@ export interface WatercraftRiskAssessmentSpec {
 export interface WatercraftRiskAssessmentUpdateSpec {
 	timestamp?: string;
 	passportHolder?: boolean;
+	inspectionTime: string;
 	k9Inspection?: boolean;
 	marineSpeciesFound?: boolean;
 	aquaticPlantsFound?: boolean;
@@ -171,6 +173,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportHolder})
 	@ModelProperty({type: PropertyType.boolean})
 	passportHolder: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {inspection_time}
+	 */
+	 @Column({ name: WatercraftRiskAssessmentSchema.columns.inspectionTime})
+	 @ModelProperty({type: PropertyType.string})
+	 inspectionTime: string;
 
 	/**
 	 * @description Getter/Setter property for column {is_new_passport_issued}
