@@ -1,0 +1,14 @@
+[
+    {
+        "Days_Since_Previous_Inspection": "Same day"
+    },
+    {
+        "Days_Since_Previous_Inspection": "< 30 days"
+    },
+    {
+        "Days_Since_Previous_Inspection": "> 30 days"
+    },
+    {
+        "Days_Since_Previous_Inspection": "> 1 year"
+    }
+]
