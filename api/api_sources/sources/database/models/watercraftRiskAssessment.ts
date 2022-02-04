@@ -77,7 +77,7 @@ export interface WatercraftRiskAssessmentSpec {
 	simple: number;
 	complex: number;
 	veryComplex: number;
-	previousInspectionDays: number;
+	previousInspectionDays: string;
 	generalComment: string;
 	passportNumber: string;
 	decontaminationReference: string;
@@ -124,7 +124,7 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	simple?: number;
 	complex?: number;
 	veryComplex?: number;
-	previousInspectionDays?: number;
+	previousInspectionDays?: string;
 	generalComment?: string;
 	passportNumber?: string;
 	decontaminationReference?: string;
@@ -359,9 +359,9 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	/**
 	 * @description Getter/Setter property for column {previous_inspection_days_count}
 	 */
-	@Column({name: WatercraftRiskAssessmentSchema.columns.previousInspectionDays, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
-	previousInspectionDays: number;
+	@Column({name: WatercraftRiskAssessmentSchema.columns.previousInspectionDays})
+	@ModelProperty({type: PropertyType.string})
+	previousInspectionDays: string;
 
 	/**
 	 * @description Getter/Setter property for column {general_comment}

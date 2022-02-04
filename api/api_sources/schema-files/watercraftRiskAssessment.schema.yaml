@@ -153,7 +153,7 @@ schemas:
       previousInspectionDays:
         name: 'previous_inspection_days_count'
         comment: 'Counter for number of very complex boats in the inspection'
-        definition: INT NULL
+        definition: VARCHAR(100) NULL
       # Strings
       generalComment:
         name: general_comment
