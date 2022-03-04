@@ -133,9 +133,9 @@ schemas:
         name: commercial_manufacturer_as_destination_water_body_ind
         comment: Boolean indicate that watercraft''s destination water body is commercial manufacturer
         definition: BOOLEAN NOT NULL DEFAULT FALSE
-      cleanDrainDryAfterInspection:
-        name: clean_drain_dry_after_inspection_ind
-        comment: 'Indicator is to show, watercraft was cleaned, drained and dried after inspection'
+      dreissenidMusselsFoundPrevious:
+        name: dreissenid_mussels_found_previous
+        comment: 'Status flag to check if dreissenid mussels were found on the previous inspection or not'
         definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:
