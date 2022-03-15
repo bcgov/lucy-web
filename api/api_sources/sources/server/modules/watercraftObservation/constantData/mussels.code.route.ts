@@ -17,6 +17,7 @@ const Stations = require('../../../../../resources/jsons/musselsApp/MusselStatio
 const WatercraftList = require('../../../../../resources/jsons/musselsApp/MusselWatercrafts.json');
 const DecontaminationOrderReasons = require('../../../../../resources/jsons/musselsApp/DecontaminationOrderReasons.json');
 const DaysOutOfWater = require('../../../../../resources/jsons/musselsApp/DaysOutOfWater.json');
+const DaysSincePreviousInspection = require('../../../../../resources/jsons/musselsApp/DaysSincePreviousInspection.json');
 
 /**
  * @description Route Controller for Mussel app constants
@@ -41,6 +42,7 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
         const watercraftList: any[] = this.processList(WatercraftList as any[], 'Watercraft');
         const decontaminationOrderReasonList: any[] = this.processList(DecontaminationOrderReasons as any[], 'Decontamination_Order_Reasons');
         const daysOutOfWaterList: any[] = this.processList(DaysOutOfWater as any[], 'Days_Out_Of_Water');
+        const daysSincePreviousInspectionList: any[] = this.processList(DaysSincePreviousInspection as any[], 'Days_Since_Previous_Inspection');
 
         // Code tables
         const adultMusselsLocation: any[] = await AdultMusselsLocationController.shared.all();
@@ -54,6 +56,7 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
             watercraftList: watercraftList,
             decontaminationOrderReasons: decontaminationOrderReasonList,
             daysOutOfWater: daysOutOfWaterList,
+            daysSincePreviousInspection: daysSincePreviousInspectionList,
             adultMusselsLocation,
             previousAISKnowledgeSource,
             previousInspectionSource,

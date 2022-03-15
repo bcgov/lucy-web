@@ -99,3 +99,8 @@ INSERT INTO previous_ais_knowledge_source_code(description)
 VALUES
 ('US/Canada Border Inspection');
 -- ## End of item: 19 ## --
+-- ## Inserting Item: 20  ## --
+INSERT INTO previous_ais_knowledge_source_code(description)
+VALUES
+('Parks Canada');
+-- ## End of item: 20 ## --

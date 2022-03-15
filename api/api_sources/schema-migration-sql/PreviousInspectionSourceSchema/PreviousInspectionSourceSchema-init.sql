@@ -449,3 +449,28 @@ INSERT INTO previous_inspection_source_code(description)
 VALUES
 ('Wyoming');
 -- ## End of item: 89 ## --
+-- ## Inserting Item: 90  ## --
+INSERT INTO previous_inspection_source_code(description)
+VALUES
+('Jasper National Park');
+-- ## End of item: 90 ## --
+-- ## Inserting Item: 91  ## --
+INSERT INTO previous_inspection_source_code(description)
+VALUES
+('Kootenay National Park');
+-- ## End of item: 91 ## --
+-- ## Inserting Item: 92  ## --
+INSERT INTO previous_inspection_source_code(description)
+VALUES
+('Lake Minnewanka (Banff National Park)');
+-- ## End of item: 92 ## --
+-- ## Inserting Item: 93  ## --
+INSERT INTO previous_inspection_source_code(description)
+VALUES
+('Waterton Lakes National Park');
+-- ## End of item: 93 ## --
+-- ## Inserting Item: 94  ## --
+INSERT INTO previous_inspection_source_code(description)
+VALUES
+('Yoho National Park');
+-- ## End of item: 94 ## --

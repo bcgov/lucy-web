@@ -133,6 +133,10 @@ schemas:
         name: commercial_manufacturer_as_destination_water_body_ind
         comment: Boolean indicate that watercraft''s destination water body is commercial manufacturer
         definition: BOOLEAN NOT NULL DEFAULT FALSE
+      dreissenidMusselsFoundPrevious:
+        name: dreissenid_mussels_found_previous
+        comment: 'Status flag to check if dreissenid mussels were found on the previous inspection or not'
+        definition: BOOLEAN NOT NULL DEFAULT FALSE
       # Counter
       nonMotorized:
         name: 'non_motorized_counter'
@@ -152,8 +156,9 @@ schemas:
         definition: INT NULL
       previousInspectionDays:
         name: 'previous_inspection_days_count'
-        comment: 'Counter for number of very complex boats in the inspection'
-        definition: INT NULL
+        comment: 'Number of days the previous inspection was conducted'
+        definition: VARCHAR(100) NULL
+        required: false
       # Strings
       generalComment:
         name: general_comment
