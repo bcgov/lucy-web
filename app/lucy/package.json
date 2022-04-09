@@ -48,7 +48,7 @@
         "leaflet": "^1.5.1",
         "leaflet-draw": "^1.0.4",
         "leaflet.markercluster": "^1.4.1",
-        "moment": "^2.24.0",
+        "moment": "^2.29.2",
         "moment-timezone": "^0.5.26",
         "ng-in-viewport": "^6.0.3",
         "ng-lottie": "^0.3.2",
