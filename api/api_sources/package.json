@@ -105,7 +105,7 @@
         "q": "^1.5.1",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^6.5.2",
-        "snyk": "^1.192.5",
+        "snyk": "^1.1012.0",
         "source-map-loader": "^0.2.4",
         "typeorm": "^0.2.18",
         "underscore": "^1.9.1"
