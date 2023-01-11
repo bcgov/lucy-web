@@ -92,7 +92,7 @@
         "js-yaml": "^3.13.1",
         "jsonwebtoken": "^8.5.1",
         "jwt-decode": "^2.2.0",
-        "knex": "^0.21.4",
+        "knex": "^2.4.0",
         "minimist": "^1.2.3",
         "mocha": "^5.2.0",
         "moment": "^2.24.0",
