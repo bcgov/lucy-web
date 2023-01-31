@@ -78,7 +78,7 @@
         "@storybook/addon-links": "^5.1.9",
         "@storybook/addon-notes": "^5.1.9",
         "@storybook/addons": "^5.1.9",
-        "@storybook/angular": "^5.1.9",
+        "@storybook/angular": "^6.5.16",
         "@types/bootstrap": "^4.3.0",
         "@types/file-saver": "^2.0.1",
         "@types/jasmine": "~2.8.8",
