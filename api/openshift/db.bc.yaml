@@ -1,6 +1,6 @@
 ---
 kind: Template
-apiVersion: v1
+apiVersion: build.openshift.io/v1
 metadata:
   name: postgresql
   creationTimestamp: null
