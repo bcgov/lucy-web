@@ -8,6 +8,10 @@ on:
     branches:
       - dev
       - prod
+  push:
+    branches:
+      - dev
+      - prod
 
 jobs:
   # Print variables for logging and debugging purposes
