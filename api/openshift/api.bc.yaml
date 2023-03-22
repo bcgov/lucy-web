@@ -1,16 +1,16 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   creationTimestamp: null
   labels:
-    build: invasivebc-api
-  name: invasivebc-api
+    build: invasivesbc-api
+  name: invasivesbc-api
 parameters:
 - name: NAME
   displayName: Name
   description: A suffix appended to all objects
   required: true
-  value: invasivebc-api
+  value: invasivesbc-api
 - name: SUFFIX
   displayName: Name Suffix
   description: A suffix appended to all objects

@@ -110,5 +110,5 @@ module.exports = (resourceName, settings, countArg, timeoutArg) => {
         
     };
 
-    setTimeout(check, (timeout + 10000));
+    setTimeout(check, (timeout + 30000));
 };
