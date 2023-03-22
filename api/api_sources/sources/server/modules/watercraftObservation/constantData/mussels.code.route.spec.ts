@@ -75,4 +75,25 @@ describe(`Test for ${resourceName}`, () => {
             });
         });
     });
+
+    // Ticket #197: Additional stations fields
+    it('should return additional stations (#197)', async () => {
+        await testRequest(SharedExpressApp.app, {
+            type: HttpMethodType.get,
+            url: '/api/mussels/codes',
+            expect: 200,
+            auth: AuthType.viewer
+        }).then(async resp => {
+            await verifySuccessBody(resp.body, async (data: any) => {
+                should().exist(data.stations);
+                const stations: string[] = data.stations as string[];
+                const filter = stations.filter( item => (
+                    item === 'Kootenay Sgt' ||
+                    item === 'Okanagan Sgt' ||
+                    item === 'Rocky Mountain Sgt')
+                );
+                expect(filter.length).to.be.equal(3);
+            });
+        });
+    });
 });
