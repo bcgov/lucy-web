@@ -1,6 +1,6 @@
 -- ## Reverting table: high_risk_assessment
--- ## Version: multipleLocations
--- ## Info: Adding multipleLocations
+-- ## Version: addMultipleLocations
+-- ## Info: Adding addMultipleLocations
 -- ## Removing New Columns ## --
 ALTER TABLE high_risk_assessment DROP COLUMN IF EXISTS standing_water_location_code_id_1;
 ALTER TABLE high_risk_assessment DROP COLUMN IF EXISTS standing_water_location_code_id_2;

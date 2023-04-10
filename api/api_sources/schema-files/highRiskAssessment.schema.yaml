@@ -106,7 +106,7 @@ schemas:
         meta: {}
     versions:
       ## -- version: multiple locations
-      - name: 'multipleLocations'
+      - name: 'addMultipleLocations'
         id: '20230407'
         info: 'Adding multiple locations'
         columns:

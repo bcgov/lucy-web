@@ -1,5 +1,3 @@
-
-
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { AppDBMigrator } from '../applicationSchemaInterface';
 import { HighRiskAssessmentSchema } from '../database-schema';
@@ -10,7 +8,7 @@ export class AddMultipleLocations1681165022709 extends AppDBMigrator implements 
 
     setup() {
         this.highRiskAssessment = new HighRiskAssessmentSchema();
-        this.addSchemaVersion(this.highRiskAssessment, 'multipleLocations');
+        this.addSchemaVersion(this.highRiskAssessment, 'addMultipleLocations');
     }
 
     public async up(queryRunner: QueryRunner): Promise<any> {
@@ -28,4 +26,3 @@ export class AddMultipleLocations1681165022709 extends AppDBMigrator implements 
     }
 
 }
-    

@@ -1,6 +1,6 @@
 -- ## Changing table: high_risk_assessment
--- ## Version: multipleLocations
--- ## Info: Adding multipleLocations
+-- ## Version: addMultipleLocations
+-- ## Info: Adding addMultipleLocations
 -- ## Adding New Columns ## --
 
 -- ## Adding Column standing_water_location_code_id_1 on table high_risk_assessment
