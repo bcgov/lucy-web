@@ -279,6 +279,7 @@ schemas:
             name: k9_inspection_results
             comment: 'result of k9 inspection'
             definition: VARCHAR(100) NULL
+            required: false
       ## -- end: k9InspectionResults
     ## -- end version
   ## --
