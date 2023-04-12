@@ -26,4 +26,4 @@ const settings = require('./lib/config.js');
 const taskDeployDB = require('./lib/deploy.db.js');
 
 // Deploying DB
-//taskDeployDB(Object.assign(settings, { phase: settings.options.env}));
+// taskDeployDB(Object.assign(settings, { phase: settings.options.env}));

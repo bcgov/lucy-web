@@ -26,10 +26,16 @@ export interface HighRiskAssessmentSpec {
 	decontaminationOrderNumber: number;
 	decontaminationOrderReason: string;
 	sealNumber: number;
-	standingWaterLocation: object;
-	adultDreissenidaeMusselDetail: object;
 	otherInspectionFindings: string;
 	generalComments: string;
+	standingWaterLocation: object;
+	adultDreissenidaeMusselDetail: object;
+	standingWaterLocation1: object;
+	standingWaterLocation2: object;
+	standingWaterLocation3: object;
+	adultDreissenidaeMusselDetail1: object;
+	adultDreissenidaeMusselDetail2: object;
+	adultDreissenidaeMusselDetail3: object;
 }
 // -- End: HighRiskAssessmentSpec --
 
@@ -52,10 +58,16 @@ export interface HighRiskAssessmentUpdateSpec {
 	decontaminationOrderNumber?: number;
 	decontaminationOrderReason?: string;
 	sealNumber?: number;
-	standingWaterLocation?: object;
-	adultDreissenidaeMusselDetail?: object;
 	otherInspectionFindings?: string;
 	generalComments?: string;
+	standingWaterLocation?: object;
+	adultDreissenidaeMusselDetail?: object;
+	standingWaterLocation1?: object;
+	standingWaterLocation2?: object;
+	standingWaterLocation3?: object;
+	adultDreissenidaeMusselDetail1?: object;
+	adultDreissenidaeMusselDetail2?: object;
+	adultDreissenidaeMusselDetail3?: object;
 }
 // -- End: HighRiskAssessmentUpdateSpec --
 
@@ -133,9 +145,9 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	/**
 	 * @description Getter/Setter property for column {dreissenid_mussels_found_previous}
 	 */
-	 @Column({ name: HighRiskAssessmentSchema.columns.dreissenidMusselsFoundPrevious})
-	 @ModelProperty({type: PropertyType.boolean})
-	 dreissenidMusselsFoundPrevious: boolean;
+	@Column({ name: HighRiskAssessmentSchema.columns.dreissenidMusselsFoundPrevious})
+	@ModelProperty({type: PropertyType.boolean})
+	dreissenidMusselsFoundPrevious: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {watercraft_registration}
@@ -161,9 +173,9 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	/**
 	 * @description Getter/Setter property for column {decontamination_order_reason}
 	 */
-	 @Column({name: HighRiskAssessmentSchema.columns.decontaminationOrderReason, transformer: new IntTransformer()})
-	 @ModelProperty({type: PropertyType.string})
-	 decontaminationOrderReason: string;
+	@Column({name: HighRiskAssessmentSchema.columns.decontaminationOrderReason, transformer: new IntTransformer()})
+	@ModelProperty({type: PropertyType.string})
+	decontaminationOrderReason: string;
 
 	/**
 	 * @description Getter/Setter property for column {seal_number}
@@ -201,6 +213,54 @@ export class HighRiskAssessment extends Record implements HighRiskAssessmentSpec
 	@JoinColumn({ name: HighRiskAssessmentSchema.columns.adultDreissenidaeMusselDetail, referencedColumnName: AdultMusselsLocationSchema.pk})
 	@ModelProperty({type: PropertyType.object})
 	adultDreissenidaeMusselDetail: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {standing_water_location_code_id_1}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.standingWaterLocation1, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	standingWaterLocation1: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {standing_water_location_code_id_2}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.standingWaterLocation2, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	standingWaterLocation2: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {standing_water_location_code_id_3}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.standingWaterLocation3, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	standingWaterLocation3: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {adult_mussels_location_code_id_1}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.adultDreissenidaeMusselDetail1, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	adultDreissenidaeMusselDetail1: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {adult_mussels_location_code_id_2}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.adultDreissenidaeMusselDetail2, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	adultDreissenidaeMusselDetail2: AdultMusselsLocation;
+
+	/**
+	 * @description Getter/Setter property for column {adult_mussels_location_code_id_3}
+	 */
+	@ManyToOne( type => AdultMusselsLocation, { eager: true})
+	@JoinColumn({ name: HighRiskAssessmentSchema.columns.adultDreissenidaeMusselDetail3, referencedColumnName: AdultMusselsLocationSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	adultDreissenidaeMusselDetail3: AdultMusselsLocation;
 
 }
 
