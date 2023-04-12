@@ -54,6 +54,7 @@ export interface WatercraftRiskAssessmentSpec {
 	inspectionTime: string;
 	isNewPassportIssued: boolean;
 	k9Inspection: boolean;
+	k9InspectionResults: string;
 	marineSpeciesFound: boolean;
 	aquaticPlantsFound: boolean;
 	previousAISKnowledge: boolean;
@@ -102,6 +103,7 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	passportHolder?: boolean;
 	inspectionTime: string;
 	k9Inspection?: boolean;
+	k9InspectionResults?: string;
 	marineSpeciesFound?: boolean;
 	aquaticPlantsFound?: boolean;
 	previousAISKnowledge?: boolean;
@@ -196,6 +198,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.k9Inspection})
 	@ModelProperty({type: PropertyType.boolean})
 	k9Inspection: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {inspection_time}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.k9InspectionResults})
+	@ModelProperty({type: PropertyType.string})
+	k9InspectionResults: string;
 
 	/**
 	 * @description Getter/Setter property for column {marine_species_found_ind}

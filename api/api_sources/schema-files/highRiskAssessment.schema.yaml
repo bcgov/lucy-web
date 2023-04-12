@@ -104,5 +104,65 @@ schemas:
         deleteCascade: false
         required: false
         meta: {}
-    versions: []
+    versions:
+      ## -- version: multiple locations
+      - name: 'addMultipleLocations'
+        id: '20230407'
+        info: 'Adding multiple locations'
+        columns:
+          standingWaterLocation1:
+            name: standing_water_location_code_id_1
+            comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations of standing water
+            definition: INT NULL
+            foreignTable: adult_mussels_location_code
+            refColumn: adult_mussels_location_code_id
+            deleteCascade: false
+            required: false
+            meta: {}
+          standingWaterLocation2:
+            name: standing_water_location_code_id_2
+            comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations of standing water
+            definition: INT NULL
+            foreignTable: adult_mussels_location_code
+            refColumn: adult_mussels_location_code_id
+            deleteCascade: false
+            required: false
+            meta: {}
+          standingWaterLocation3:
+            name: standing_water_location_code_id_3
+            comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations of standing water
+            definition: INT NULL
+            foreignTable: adult_mussels_location_code
+            refColumn: adult_mussels_location_code_id
+            deleteCascade: false
+            required: false
+            meta: {}
+          adultDreissenidaeMusselDetail1:
+            name: adult_mussels_location_code_id_1
+            comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations where adult mussels were found on the watercraft 
+            definition: INT NULL
+            foreignTable: adult_mussels_location_code
+            refColumn: adult_mussels_location_code_id
+            deleteCascade: false
+            required: false
+            meta: {}
+          adultDreissenidaeMusselDetail2:
+            name: adult_mussels_location_code_id_2
+            comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations where adult mussels were found on the watercraft 
+            definition: INT NULL
+            foreignTable: adult_mussels_location_code
+            refColumn: adult_mussels_location_code_id
+            deleteCascade: false
+            required: false
+            meta: {}
+          adultDreissenidaeMusselDetail3:
+            name: adult_mussels_location_code_id_3
+            comment: Foreign key reference to code table (named adult_mussels_location_code) of possible locations on watercraft where standing water or adult mussels may be found. This field is specifically for locations where adult mussels were found on the watercraft 
+            definition: INT NULL
+            foreignTable: adult_mussels_location_code
+            refColumn: adult_mussels_location_code_id
+            deleteCascade: false
+            required: false
+            meta: {}
+    ## -- end: multiple locations
     fields: {}

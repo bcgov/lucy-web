@@ -18,6 +18,8 @@ const WatercraftList = require('../../../../../resources/jsons/musselsApp/Mussel
 const DecontaminationOrderReasons = require('../../../../../resources/jsons/musselsApp/DecontaminationOrderReasons.json');
 const DaysOutOfWater = require('../../../../../resources/jsons/musselsApp/DaysOutOfWater.json');
 const DaysSincePreviousInspection = require('../../../../../resources/jsons/musselsApp/DaysSincePreviousInspection.json');
+const K9InspectionResults = require('../../../../../resources/jsons/musselsApp/K9InspectionResults.json');
+const DaysSincePreviousInspection = require('../../../../../resources/jsons/musselsApp/DaysSincePreviousInspection.json');
 
 /**
  * @description Route Controller for Mussel app constants
@@ -43,6 +45,8 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
         const decontaminationOrderReasonList: any[] = this.processList(DecontaminationOrderReasons as any[], 'Decontamination_Order_Reasons');
         const daysOutOfWaterList: any[] = this.processList(DaysOutOfWater as any[], 'Days_Out_Of_Water');
         const daysSincePreviousInspectionList: any[] = this.processList(DaysSincePreviousInspection as any[], 'Days_Since_Previous_Inspection');
+        const k9InspectionResults: any[] = this.processList(K9InspectionResults as any[], 'K9_Inspection_Results');
+        const daysSincePreviousInspectionList: any[] = this.processList(DaysSincePreviousInspection as any[], 'Days_Since_Previous_Inspection');
 
         // Code tables
         const adultMusselsLocation: any[] = await AdultMusselsLocationController.shared.all();
@@ -56,6 +60,8 @@ export class MusselsAppCodesRouteController extends SecureRouteController<any> {
             watercraftList: watercraftList,
             decontaminationOrderReasons: decontaminationOrderReasonList,
             daysOutOfWater: daysOutOfWaterList,
+            daysSincePreviousInspection: daysSincePreviousInspectionList,
+            k9InspectionResults: k9InspectionResults,
             daysSincePreviousInspection: daysSincePreviousInspectionList,
             adultMusselsLocation,
             previousAISKnowledgeSource,
