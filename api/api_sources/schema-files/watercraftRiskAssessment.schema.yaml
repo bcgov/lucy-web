@@ -270,6 +270,17 @@ schemas:
             required: false
             meta: {}
       ## -- end: inspectionTime
+      ## -- version: k9InspectionResults
+      - name: 'k9InspectionResults'
+        id: '20230330'
+        info: 'Adding new column k9InspectionResults'
+        columns:
+          k9InspectionResults:
+            name: k9_inspection_results
+            comment: 'result of k9 inspection'
+            definition: VARCHAR(100) NULL
+            required: false
+      ## -- end: k9InspectionResults
     ## -- end version
   ## --
 
