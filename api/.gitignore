@@ -44,7 +44,7 @@ app_api/npm-debug.log
 app_api/dist-server
 app_api/_app_data
 
-
+*.vscode-server/
 # NPM Dir
 node_modules/
 # Logs
