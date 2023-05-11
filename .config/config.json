@@ -27,8 +27,8 @@
     },
     "certificateURL": {
         "dev": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
-        "test": "https://test.oidc.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs",
-        "prod": "https://oidc.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/certs"
+        "test": "https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+        "prod": "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs"
     },
     "sso": {
         "dev": {
@@ -37,14 +37,14 @@
             "realm": "standard"
         },
         "test": {
-            "url": "https://test.oidc.gov.bc.ca",
-            "clientId": "invasives-bc",
-            "realm": "dfmlcg7z"
+            "url": "https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+            "clientId": "inspect-bc-mussels-4817",
+            "realm": "standard"
         },
         "prod": {
-            "url": "https://oidc.gov.bc.ca",
-            "clientId": "invasives-bc",
-            "realm": "dfmlcg7z"
+            "url": "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+            "clientId": "inspect-bc-mussels-4817",
+            "realm": "standard"
         }
     },
     "migrationInfo" : {
