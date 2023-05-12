@@ -19,10 +19,10 @@ parameters:
   value: "0"
 - name: AUTH_URL
   description: Auth URL
-  value: "https://test.oidc.gov.bc.ca/auth/realms"
+  value: "https://test.loginproxy.gov.bc.ca/auth/realms"
 - name: REALM
   description: Auth Realm
-  value: dfmlcg7z
+  value: standard
 - name: TEST_USER_SECRET
   description: Secret of test user profile
   value: invasivesbc-load-test-user

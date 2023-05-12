@@ -233,13 +233,13 @@ parameters:
   value: '2Gi'
 - name: SSO_URL
   description: Key clock login url
-  value: 'https://oidc.gov.bc.ca'
+  value: 'https://loginproxy.gov.bc'
 - name: SSO_CLIENT_ID
   description: Client Id for application
   value: "lucy"
 - name: SSO_REALM
   description: Realm identifier or name
-  value: dfmlcg7z
+  value: standard
 - name: REPLICAS
   value: '1'
 - name: REPLICA_MAX

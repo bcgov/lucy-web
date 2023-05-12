@@ -25,9 +25,9 @@ The __/loadTest__ directory under root contains all resources and source code fi
         TEST_USER=#NAME
         PASSWORD=#PWD
         # Keycloak auth details
-        AUTH_URL=https://dev.oidc.gov.bc.ca/auth/realms
-        REALM=dfmlcg7z
-        CLIENT_ID=invasives-bc
+        AUTH_URL=https://dev.loginproxy.gov.bc.ca/auth/realms
+        REALM=standard
+        CLIENT_ID=inspect-bc-mussels-4817
     ```
 
 ## Run test locally
