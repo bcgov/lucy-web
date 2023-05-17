@@ -66,7 +66,7 @@ export class AppConstants {
     // SSO
     static SSOConstants = {
         SSO_CLIENT_ID : `inspect-bc-mussels-4817`,
-        SSO_BASE_URL : `https://dev.loginproxy.gov.bc.ca`,
+        SSO_BASE_URL : `https://loginproxy.gov.bc.ca`,
         SSO_REALM_NAME : `standard`,
         SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
     };
