@@ -121,11 +121,11 @@ jobs:
         working-directory: "./api/.pipeline/"
         run: |
           npm ci
-          DEBUG=* npm run pre-deploy -- --pr=1054 --env=dev --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run setup -- --pr=1054 --env=dev --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run seed -- --pr=1054 --env=dev --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy -- --pr=1054 --env=dev --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy-tools -- --pr=1054 --env=dev --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run seed -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=dev --type=static --branch=${{ github.base_ref }}
 
       # Deploy the app
       - name: Deploy App
@@ -211,10 +211,10 @@ jobs:
         working-directory: "./api/.pipeline/"
         run: |
           npm ci
-          DEBUG=* npm run pre-deploy -- --pr=1054 --env=prod --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run setup -- --pr=1054 --env=prod --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy -- --pr=1054 --env=prod --type=static --branch=${{ github.base_ref }}
-          DEBUG=* npm run deploy-tools -- --pr=1054 --env=prod --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run pre-deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run setup -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
+          DEBUG=* npm run deploy-tools -- --pr=$BUILD_ID --env=prod --type=static --branch=${{ github.base_ref }}
 
       # Deploy the app
       - name: Deploy App
