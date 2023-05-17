@@ -236,7 +236,7 @@ parameters:
   value: 'https://loginproxy.gov.bc'
 - name: SSO_CLIENT_ID
   description: Client Id for application
-  value: "lucy"
+  value: "inspect-bc-mussels-4817"
 - name: SSO_REALM
   description: Realm identifier or name
   value: standard
