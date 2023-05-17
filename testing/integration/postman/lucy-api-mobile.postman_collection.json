@@ -1014,7 +1014,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "https://dev.oidc.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/token",
+			"name": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
 			"event": [
 				{
 					"listen": "test",
@@ -1051,7 +1051,7 @@
 						},
 						{
 							"key": "client_id",
-							"value": "invasives-bc",
+							"value": "inspect-bc-mussels-4817",
 							"type": "text"
 						},
 						{
@@ -1072,7 +1072,7 @@
 					]
 				},
 				"url": {
-					"raw": "https://dev.oidc.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/token",
+					"raw": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
 					"protocol": "https",
 					"host": [
 						"sso-dev",
@@ -1084,7 +1084,7 @@
 					"path": [
 						"auth",
 						"realms",
-						"dfmlcg7z",
+						"standard",
 						"protocol",
 						"openid-connect",
 						"token"
@@ -1112,7 +1112,7 @@
 				"type": "text/javascript",
 				"exec": [
 					"const echoPostRequest = {",
-					"  url: 'https://dev.oidc.gov.bc.ca/auth/realms/dfmlcg7z/protocol/openid-connect/token',",
+					"  url: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token',",
 					"  method: 'POST',",
 					"  header: 'Content-Type:application/x-www-form-urlencoded',",
 					"  body: {",
@@ -1121,7 +1121,7 @@
 					"        {key:'username', value:'istest1@idir'}, ",
 					"        {key:'password', value:pm.environment.get('postman_pw')}, ",
 					"        {key:'scope', value:'openid'}, ",
-					"        {key:'client_id', value:'invasives-bc'}, ",
+					"        {key:'client_id', value:'inspect-bc-mussels-4817'}, ",
 					"        {key:'grant_type', value:'password'}",
 					"    ]",
 					"  }",

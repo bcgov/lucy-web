@@ -3,7 +3,7 @@
     "exp": 1557947030,
     "nbf": 0,
     "iat": 1557946730,
-    "iss": "https://oidc.gov.bc.ca/auth/realms/dfmlcg7z",
+    "iss": "https://loginproxy.gov.bc.ca/auth/realms/standard",
     "aud": "lucy",
     "sub": "32e33e03-9d12-43a5-88e6-ce031fc36be8",
     "typ": "Bearer",
