@@ -233,10 +233,10 @@ parameters:
   value: '2Gi'
 - name: SSO_URL
   description: Key clock login url
-  value: 'https://loginproxy.gov.bc'
+  value: 'https://loginproxy.gov.bc.ca'
 - name: SSO_CLIENT_ID
   description: Client Id for application
-  value: "lucy"
+  value: "inspect-bc-mussels-4817"
 - name: SSO_REALM
   description: Realm identifier or name
   value: standard
