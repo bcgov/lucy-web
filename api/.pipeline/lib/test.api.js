@@ -35,7 +35,7 @@ module.exports = (settings) => {
       'ENVIRONMENT': phases[phase].env || 'dev',
       'DB_SERVICE_NAME': `${phases[phase].name}-postgresql${phases[phase].suffix}`,
       'IMAGE': imageStream.image.dockerImageReference,
-      'CERTIFICATE_URL': 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
+      'CERTIFICATE_URL': 'https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs',
       'DB_MIGRATION_TYPE': phases[phase].migrationInfo.type,
       'DB_CLEAN_UP': phases[phase].migrationInfo.cleanup,
       'DB_SEED': phases[phase].migrationInfo.dbSeed

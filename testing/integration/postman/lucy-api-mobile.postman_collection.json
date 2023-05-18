@@ -1014,7 +1014,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
+			"name": "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
 			"event": [
 				{
 					"listen": "test",
@@ -1072,7 +1072,7 @@
 					]
 				},
 				"url": {
-					"raw": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
+					"raw": "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
 					"protocol": "https",
 					"host": [
 						"sso-dev",
@@ -1112,7 +1112,7 @@
 				"type": "text/javascript",
 				"exec": [
 					"const echoPostRequest = {",
-					"  url: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token',",
+					"  url: 'https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token',",
 					"  method: 'POST',",
 					"  header: 'Content-Type:application/x-www-form-urlencoded',",
 					"  body: {",
