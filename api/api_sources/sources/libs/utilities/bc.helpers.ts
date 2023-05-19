@@ -61,8 +61,7 @@ export class BCHelperLib {
               }
               // If enc is the use type of response.data.keys[0] you are in production and need to use the next key.
               let certsJson = response.data.keys[0];
-              //  console.log(JSON.stringify(certsJson, null, 2))
-               if (certsJson.use === 'enc') {
+              if (certsJson.use === 'enc') {
                 certsJson = response.data.keys[1];
               }
               const modulus = certsJson.n;
