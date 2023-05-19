@@ -88,7 +88,6 @@ export class BCHelperLib {
               });
             } catch (error) {
               const message = 'Unable to parse certificate(s)';
-              console.log(`${message}, error = ${error.message}`);
               reject(new Error(message));
             }
           });
