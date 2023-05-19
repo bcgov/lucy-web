@@ -112,7 +112,6 @@ class AppConfiguration {
      */
     public get certificateURL(): string {
         assert(process.env.APP_CERTIFICATE_URL, `No App Certificate url`);
-        console.log('APP_CERTIFICATE_URL ~~~~~~~ ', process.env.APP_CERTIFICATE_URL);
         return process.env.APP_CERTIFICATE_URL;
     }
 
