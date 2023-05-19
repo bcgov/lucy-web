@@ -21,7 +21,8 @@
  */
 import * as assert from 'assert';
 import AppConfig from '../../AppConfig';
-
+import axios from 'axios';
+const getPem = require('rsa-pem-from-mod-exp');
 /**
  * @description Require common utility module as any
  */
@@ -38,9 +39,62 @@ export class BCHelperLib {
      * @returns Promise<{algorithm: any, certificate: any}>
      */
     static async getCertificate(): Promise<any> {
-        const { getJwtCertificate} = commonUtility;
-        assert(getJwtCertificate, 'No getJwtCertificate lib');
-        const { algorithm, certificate } = await getJwtCertificate(AppConfig.certificateURL);
+
+        interface CertificateResult {
+            algorithm: string;
+            certificate: string;
+          }
+
+        const ssoCertificateUrl = AppConfig.certificateURL;
+
+        // Assign algorith and certificate with the values from the parsed data from certificate
+        const { algorithm, certificate } = await new Promise<CertificateResult>(async (resolve, reject) => {
+            if (!ssoCertificateUrl) {
+              reject(new Error('No certificate URL provided'));
+              return;
+            }
+            try {
+              const response = await axios.get(ssoCertificateUrl);
+              if (response.data.keys && response.data.keys.length === 0) {
+                reject(new Error('No keys in certificate body'));
+                return;
+              }
+              // If enc is the use type of response.data.keys[0] you are in production and need to use the next key.
+              let certsJson = response.data.keys[0];
+              //  console.log(JSON.stringify(certsJson, null, 2))
+               if (certsJson.use === 'enc') {
+                certsJson = response.data.keys[1];
+              }
+              const modulus = certsJson.n;
+              const exponent = certsJson.e;
+              const alg = certsJson.alg;
+              // Verify required fields were found in Certificate
+              if (!modulus) {
+                reject(new Error('No modulus'));
+                return;
+              }
+              if (!exponent) {
+                reject(new Error('No exponent'));
+                return;
+              }
+              if (!alg) {
+                reject(new Error('No algorithm'));
+                return;
+              }
+              // build a certificate
+              const pem = getPem(modulus, exponent);
+              resolve({
+                certificate: pem,
+                algorithm: alg,
+              });
+            } catch (error) {
+              const message = 'Unable to parse certificate(s)';
+              console.log(`${message}, error = ${error.message}`);
+              reject(new Error(message));
+            }
+          });
+        assert(certificate, 'No getJwtCertificate');
+        assert(algorithm, 'No algorithm');
         return {algorithm, certificate};
     }
 

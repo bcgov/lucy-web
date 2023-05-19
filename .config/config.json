@@ -26,19 +26,19 @@
         "prod": "api-invasivesbc.apps.silver.devops.gov.bc.ca"
     },
     "certificateURL": {
-        "dev": "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
-        "test": "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+        "dev": "https://devloginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
+        "test": "https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
         "prod": "https://loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs"
     },
     "sso": {
         "dev": {
-            "url": "https://loginproxy.gov.bc.ca",
+            "url": "https://dev.loginproxy.gov.bc.ca",
 
             "clientId": "inspect-bc-mussels-4817",
             "realm": "standard"
         },
         "test": {
-            "url": "https://loginproxy.gov.bc.ca",
+            "url": "https://test.loginproxy.gov.bc.ca",
 
             "clientId": "inspect-bc-mussels-4817",
             "realm": "standard"
