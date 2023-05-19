@@ -94,6 +94,8 @@ export class BCHelperLib {
           });
         assert(certificate, 'No getJwtCertificate');
         assert(algorithm, 'No algorithm');
+        console.log(`Certificate: ~~~~~~~~ ${certificate}`);
+        console.log(`Algorithm: ~~~~~~~~ ${algorithm}`);
         return {algorithm, certificate};
     }
 
