@@ -88,14 +88,11 @@ export class BCHelperLib {
               });
             } catch (error) {
               const message = 'Unable to parse certificate(s)';
-              console.log(`${message}, error = ${error.message}`);
               reject(new Error(message));
             }
           });
         assert(certificate, 'No getJwtCertificate');
         assert(algorithm, 'No algorithm');
-        console.log(`Certificate: ~~~~~~~~ ${certificate}`);
-        console.log(`Algorithm: ~~~~~~~~ ${algorithm}`);
         return {algorithm, certificate};
     }
 
