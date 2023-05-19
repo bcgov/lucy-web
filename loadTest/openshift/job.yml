@@ -20,7 +20,7 @@ parameters:
   value: "0"
 - name: AUTH_URL
   description: Auth URL
-  value: "https://dev.loginproxy.gov.bc.ca/auth/realms"
+  value: "https://loginproxy.gov.bc.ca/auth/realms"
 - name: REALM
   description: Auth Realm
   value: standard
