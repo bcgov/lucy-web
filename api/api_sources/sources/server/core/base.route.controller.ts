@@ -361,8 +361,8 @@ export class RouteController {
             const tag = `authHandler-(${this.apiName(req)})`;
             try {
                 passport.authenticate('jwt', {session: false}, (err, user) => {
-                    console.log('user ~~~~~~~~ ', user);
-                    console.log('err ~~~~~~~~', err);
+                    this.logger.error('user exception ', user);
+                    this.logger.error('error exception', err);
                     if (err) {
                         const msg = `Authorization fail with error ${err}`;
                         this.commonError(401, tag, err, resp, msg);
