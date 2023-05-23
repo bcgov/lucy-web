@@ -3,7 +3,7 @@
  */
 import * as path from 'path';
 import * as assert from 'assert';
-import { Logger } from '../../../api_sources/sources/server/logger';
+import { Logger } from '../server/logger';
 declare const process: any;
 declare const __dirname: any;
 
@@ -22,6 +22,8 @@ class AppConfiguration {
     public appName: string = process.env.PROJECT_NAME || 'lucy';
     public dbs: string[] = ['templateDB'];
 
+    logger: Logger;
+
     /**
      * @description Getter for shard instance
      * @return AppConfiguration
@@ -34,6 +36,7 @@ class AppConfiguration {
      * @description Constructing
      */
     constructor() {
+        this.logger = new Logger(this.constructor.name);
         this.port = (process.env.PORT || 3001);
         this.host = process.env.HOST || '127.0.0.1';
     }
