@@ -23,7 +23,6 @@ import * as assert from 'assert';
 import AppConfig from '../../AppConfig';
 import axios from 'axios';
 const getPem = require('rsa-pem-from-mod-exp');
-import { Logger } from '../../server/logger';
 
 /**
  * @description Require common utility module as any
@@ -35,14 +34,9 @@ const commonUtility = require('@bcgov/nodejs-common-utils');
  * @export class BCHelperLib
  */
 export class BCHelperLib {
-  static logger: Logger;
-
     /**
      * @description Constructing
      */
-      constructor() {
-      BCHelperLib.logger = new Logger(this.constructor.name);
-    }
 
     /**
      * @description Get certificate for JWT token validation
@@ -98,8 +92,6 @@ export class BCHelperLib {
               });
             } catch (error) {
               const message = 'Unable to parse certificate(s)';
-              this.logger.error('algorithm exception ', algorithm);
-              this.logger.error('certificate exception ', certificate);
               reject(new Error(message));
             }
           });

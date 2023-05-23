@@ -3,7 +3,6 @@
  */
 import * as path from 'path';
 import * as assert from 'assert';
-import { Logger } from '../server/logger';
 declare const process: any;
 declare const __dirname: any;
 
@@ -11,18 +10,14 @@ declare const __dirname: any;
  * @description Application configuration class
  */
 class AppConfiguration {
-    logger: Logger;
     // Shared instance
     private static instance: AppConfiguration;
-
     // Instance variables
     public port = 0;
     public host = '127.0.0.1';
     public secure = false;
     public appName: string = process.env.PROJECT_NAME || 'lucy';
     public dbs: string[] = ['templateDB'];
-
-    logger: Logger;
 
     /**
      * @description Getter for shard instance
@@ -36,7 +31,6 @@ class AppConfiguration {
      * @description Constructing
      */
     constructor() {
-        this.logger = new Logger(this.constructor.name);
         this.port = (process.env.PORT || 3001);
         this.host = process.env.HOST || '127.0.0.1';
     }
@@ -117,7 +111,6 @@ class AppConfiguration {
      */
     public get certificateURL(): string {
         assert(process.env.APP_CERTIFICATE_URL, `No App Certificate url`);
-        this.logger.error('APP_CERTIFICATE_URL exception ', process.env.APP_CERTIFICATE_URL);
         return process.env.APP_CERTIFICATE_URL;
     }
 

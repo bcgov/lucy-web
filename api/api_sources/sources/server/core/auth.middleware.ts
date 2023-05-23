@@ -66,6 +66,7 @@ export class ApplicationAuthMiddleware extends LoggerBase {
         this.app.use(passport.session());
         // Get algorithm and public key
         const { algorithm, certificate } = await BCHelperLib.getCertificate();
+        ApplicationAuthMiddleware.logger.info(`algorithm: ${algorithm}, \n certificate: ${certificate}`);
         const options: StrategyOptions = {
             jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
             algorithms: [algorithm],
