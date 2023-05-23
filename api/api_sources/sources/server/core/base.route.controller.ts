@@ -360,9 +360,10 @@ export class RouteController {
         return async (req: express.Request, resp: express.Response, next: any) => {
             const tag = `authHandler-(${this.apiName(req)})`;
             try {
-                passport.authenticate('jwt', {session: false}, (err, user) => {
+                passport.authenticate('jwt', {session: false}, (err, user, errorAlpha) => {
                     this.logger.error('user exception ', user);
                     this.logger.error('error exception', err);
+                    this.logger.error('errorAlpha exception', errorAlpha);
                     if (err) {
                         const msg = `Authorization fail with error ${err}`;
                         this.commonError(401, tag, err, resp, msg);

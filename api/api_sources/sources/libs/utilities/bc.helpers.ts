@@ -23,7 +23,7 @@ import * as assert from 'assert';
 import AppConfig from '../../AppConfig';
 import axios from 'axios';
 const getPem = require('rsa-pem-from-mod-exp');
-import { Logger } from '../../../../api_sources/sources/server/logger';
+import { Logger } from '../../server/logger';
 
 /**
  * @description Require common utility module as any
@@ -35,13 +35,13 @@ const commonUtility = require('@bcgov/nodejs-common-utils');
  * @export class BCHelperLib
  */
 export class BCHelperLib {
-    logger: Logger;
+  static logger: Logger;
 
     /**
      * @description Constructing
      */
       constructor() {
-      this.logger = new Logger(this.constructor.name);
+      BCHelperLib.logger = new Logger(this.constructor.name);
     }
 
     /**
@@ -98,13 +98,13 @@ export class BCHelperLib {
               });
             } catch (error) {
               const message = 'Unable to parse certificate(s)';
+              this.logger.error('algorithm exception ', algorithm);
+              this.logger.error('certificate exception ', certificate);
               reject(new Error(message));
             }
           });
         assert(certificate, 'No getJwtCertificate');
         assert(algorithm, 'No algorithm');
-        this.logger.error('certificate exception ', certificate);
-        this.logger.error('algorithm exception ', algorithm);
         return {algorithm, certificate};
     }
 

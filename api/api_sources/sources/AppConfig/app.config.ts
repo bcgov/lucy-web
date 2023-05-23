@@ -3,7 +3,7 @@
  */
 import * as path from 'path';
 import * as assert from 'assert';
-import { Logger } from '../../../api_sources/sources/server/logger';
+import { Logger } from '../server/logger';
 declare const process: any;
 declare const __dirname: any;
 
@@ -11,7 +11,6 @@ declare const __dirname: any;
  * @description Application configuration class
  */
 class AppConfiguration {
-    logger: Logger;
     // Shared instance
     private static instance: AppConfiguration;
 
@@ -21,6 +20,8 @@ class AppConfiguration {
     public secure = false;
     public appName: string = process.env.PROJECT_NAME || 'lucy';
     public dbs: string[] = ['templateDB'];
+
+    logger: Logger;
 
     /**
      * @description Getter for shard instance
