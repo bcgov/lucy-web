@@ -38,6 +38,13 @@ export class BCHelperLib {
     logger: Logger;
 
     /**
+     * @description Constructing
+     */
+      constructor() {
+      this.logger = new Logger(this.constructor.name);
+    }
+
+    /**
      * @description Get certificate for JWT token validation
      * @returns Promise<{algorithm: any, certificate: any}>
      */

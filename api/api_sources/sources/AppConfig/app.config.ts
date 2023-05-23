@@ -34,6 +34,7 @@ class AppConfiguration {
      * @description Constructing
      */
     constructor() {
+        this.logger = new Logger(this.constructor.name);
         this.port = (process.env.PORT || 3001);
         this.host = process.env.HOST || '127.0.0.1';
     }
