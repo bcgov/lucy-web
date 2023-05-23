@@ -23,6 +23,8 @@ import * as assert from 'assert';
 import AppConfig from '../../AppConfig';
 import axios from 'axios';
 const getPem = require('rsa-pem-from-mod-exp');
+import { Logger } from '../../../../api_sources/sources/server/logger';
+
 /**
  * @description Require common utility module as any
  */
@@ -33,6 +35,7 @@ const commonUtility = require('@bcgov/nodejs-common-utils');
  * @export class BCHelperLib
  */
 export class BCHelperLib {
+    logger: Logger;
 
     /**
      * @description Get certificate for JWT token validation
@@ -93,8 +96,8 @@ export class BCHelperLib {
           });
         assert(certificate, 'No getJwtCertificate');
         assert(algorithm, 'No algorithm');
-        console.log(`Certificate: ~~~~~~~~ ${certificate}`);
-        console.log(`Algorithm: ~~~~~~~~ ${algorithm}`);
+        this.logger.error('certificate exception ', certificate);
+        this.logger.error('algorithm exception ', algorithm);
         return {algorithm, certificate};
     }
 

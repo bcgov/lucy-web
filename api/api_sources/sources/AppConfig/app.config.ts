@@ -3,6 +3,7 @@
  */
 import * as path from 'path';
 import * as assert from 'assert';
+import { Logger } from '../../../api_sources/sources/server/logger';
 declare const process: any;
 declare const __dirname: any;
 
@@ -10,6 +11,7 @@ declare const __dirname: any;
  * @description Application configuration class
  */
 class AppConfiguration {
+    logger: Logger;
     // Shared instance
     private static instance: AppConfiguration;
 
@@ -112,7 +114,7 @@ class AppConfiguration {
      */
     public get certificateURL(): string {
         assert(process.env.APP_CERTIFICATE_URL, `No App Certificate url`);
-        console.log('APP_CERTIFICATE_URL ~~~~~~~ ', process.env.APP_CERTIFICATE_URL);
+        this.logger.error('APP_CERTIFICATE_URL exception ', process.env.APP_CERTIFICATE_URL);
         return process.env.APP_CERTIFICATE_URL;
     }
 
