@@ -11,6 +11,7 @@ declare const __dirname: any;
  * @description Application configuration class
  */
 class AppConfiguration {
+    logger: Logger;
     // Shared instance
     private static instance: AppConfiguration;
 

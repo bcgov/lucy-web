@@ -105,7 +105,6 @@ export class BCHelperLib {
           });
         assert(certificate, 'No getJwtCertificate');
         assert(algorithm, 'No algorithm');
-        return {algorithm, certificate};
     }
 
      /**
