@@ -366,7 +366,7 @@ export class RouteController {
                         this.commonError(401, tag, err, resp, msg);
                     } else if (!user) {
                         this.commonError(401, tag, 'Un-authorize access', resp, `Un-authorize access (No User) check auth provider url`);
-                        this.logger.info(`err = ${err}, user = ${user}, second error? = ${err2}`);
+                        this.logger.info(`err = ${err}, user = ${user}, err2 = ${err2}`);
                     } else {
                         req.user = user;
                         next();
