@@ -33,13 +33,11 @@
     "sso": {
         "dev": {
             "url": "https://dev.loginproxy.gov.bc.ca",
-
             "clientId": "inspect-bc-mussels-4817",
             "realm": "standard"
         },
         "test": {
             "url": "https://test.loginproxy.gov.bc.ca",
-
             "clientId": "inspect-bc-mussels-4817",
             "realm": "standard"
         },
