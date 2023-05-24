@@ -35,10 +35,6 @@ const commonUtility = require('@bcgov/nodejs-common-utils');
  */
 export class BCHelperLib {
     /**
-     * @description Constructing
-     */
-
-    /**
      * @description Get certificate for JWT token validation
      * @returns Promise<{algorithm: any, certificate: any}>
      */
