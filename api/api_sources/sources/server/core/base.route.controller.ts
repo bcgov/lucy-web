@@ -360,13 +360,12 @@ export class RouteController {
         return async (req: express.Request, resp: express.Response, next: any) => {
             const tag = `authHandler-(${this.apiName(req)})`;
             try {
-                passport.authenticate('jwt', {session: false}, (err, user, err2) => {
+                passport.authenticate('jwt', {session: false}, (err, user) => {
                     if (err) {
                         const msg = `Authorization fail with error ${err}`;
                         this.commonError(401, tag, err, resp, msg);
                     } else if (!user) {
                         this.commonError(401, tag, 'Un-authorize access', resp, `Un-authorize access (No User) check auth provider url`);
-                        this.logger.info(`err = ${err}, user = ${user}, err2 = ${err2}`);
                     } else {
                         req.user = user;
                         next();
