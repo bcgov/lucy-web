@@ -12,7 +12,6 @@ declare const __dirname: any;
 class AppConfiguration {
     // Shared instance
     private static instance: AppConfiguration;
-
     // Instance variables
     public port = 0;
     public host = '127.0.0.1';
