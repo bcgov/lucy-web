@@ -1,0 +1,107 @@
+version: "3.7"
+services:
+  ############################################################
+  #                         Database                         #
+  ############################################################
+  db:
+    image: ${PROJECT_NAME}-${TAG}-postgress-img
+    container_name: ${PROJECT_NAME}-${TAG}-db
+    build:
+      context: ./.docker/db
+      dockerfile: Dockerfile.local
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_DATABASE}
+      - PORT=${DB_PORT}
+    networks:
+      - local-network
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-p", "5432", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  ############################################################
+  #                            API                           #
+  ############################################################
+  app_api:
+    platform: linux/x86_64
+    image: ${PROJECT_NAME}-${TAG}-api-img
+    container_name: ${PROJECT_NAME}-${TAG}-api
+    build:
+      context: ./api_sources
+      dockerfile: .build/Dockerfile.local
+    ports:
+    - ${API_PORT}:${API_PORT}
+    environment:
+      - PORT=${API_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - APP_CERTIFICATE_URL=${APP_CERTIFICATE_URL}
+      - APP_CERTIFICATE_URL_TEST=${APP_CERTIFICATE_URL_TEST}
+      - VERSION=${VERSION}
+      - ENVIRONMENT=local
+      - DB_MIGRATION_TYPE=normal
+      - DB_SEED=yes
+      - DB_CLEAN_UP=none
+      - APP_EMAIL_SENDER=${APP_EMAIL_SENDER}
+      - APP_EMAIL_SENDER_PWD=${APP_EMAIL_SENDER_PWD}
+      - APP_EMAIL_TEST_RECEIVER=${APP_EMAIL_TEST_RECEIVER}
+      - APP_REPORT_RECEIVER=${APP_REPORT_RECEIVER}
+    volumes:
+      - ./api_sources:/opt/app-root/src
+      - npmcache:/opt/app-root/src/node_modules
+    networks:
+      - local-network
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["npm", "run", "hotload"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT}/api/misc/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  app_dependency:
+    image: ${PROJECT_NAME}-${TAG}-api-dep-img
+    container_name: ${PROJECT_NAME}-${TAG}-api-dep
+    build:
+      context: ./api_sources
+      dockerfile: .build/Dockerfile.npm
+    volumes:
+      - npmcache:/opt/app-root/src/node_modules
+  ############################################################
+  #                          PGAdmin                         #
+  ############################################################
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: admin@invasives.com
+    networks:
+      - local-network
+
+
+############################################################
+#                       Network/Volumes                    #
+############################################################
+networks:
+ local-network:
+  driver: bridge
+
+volumes:
+  postgres:
+    name: ${PROJECT_NAME}-${TAG}-vol-postgres
+  npmcache: 
+    name: ${PROJECT_NAME}-${TAG}-vol-npmcache
