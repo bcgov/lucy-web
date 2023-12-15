@@ -7,7 +7,9 @@ import {
     PreviousAISKnowledgeSourceSchema,
     PreviousInspectionSourceSchema,
     CountrySchema,
-    CountryProvinceSchema
+    CountryProvinceSchema,
+    MajorCitySchema,
+
 } from '../database-schema';
 import { AppDBMigrator } from '../applicationSchemaInterface';
 
@@ -21,6 +23,7 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
     previousAISKnowledgeSourceSchema: PreviousAISKnowledgeSourceSchema;
     previousInspectionSourceSchema: PreviousInspectionSourceSchema;
     countrySchema: CountrySchema;
+    majorCitiesSchema: MajorCitySchema;
     countryProvinceSchema: CountryProvinceSchema;
     /**
      * Setup
@@ -31,6 +34,7 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         this.previousAISKnowledgeSourceSchema = new PreviousAISKnowledgeSourceSchema();
         this.previousInspectionSourceSchema = new PreviousInspectionSourceSchema();
         this.countrySchema = new CountrySchema();
+        this.majorCitiesSchema = new MajorCitySchema();
         this.countryProvinceSchema = new CountryProvinceSchema();
         this.waterCraftRiskAssessmentSchema = new WatercraftRiskAssessmentSchema();
         this.observerWorkflowSchema = new ObserverWorkflowSchema();
@@ -40,6 +44,10 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         this.addSchemaInitVersion(this.countrySchema);
         // Add populate country table sql file
         this.addUpMigration(this.countrySchema.className, 'CountrySchema-init.sql');
+
+        // Create Major Cities table
+        this.addSchemaInitVersion(this.majorCitiesSchema);
+        this.addUpMigration(this.majorCitiesSchema.className, 'MajorCitySchema-init.sql');
 
         // Create Country province table
         this.addSchemaInitVersion(this.countryProvinceSchema);
@@ -82,6 +90,7 @@ export class MusselAppDatabase1572894977602 extends AppDBMigrator implements Mig
         await queryRunner.query(this.observerWorkflowSchema.dropTable());
         await queryRunner.query(this.countryProvinceSchema.dropTable());
         await queryRunner.query(this.countrySchema.dropTable());
+        await queryRunner.query(this.majorCitiesSchema.dropTable());
         await queryRunner.query('DROP TABLE IF EXISTS adult_mussels_location');
         await queryRunner.query('DROP TABLE IF EXISTS previous_ais_knowledge_source');
         await queryRunner.query('DROP TABLE IF EXISTS previous_inspection_source');
