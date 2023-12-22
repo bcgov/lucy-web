@@ -1,0 +1,44 @@
+version: '1.0'
+description: Schema file for table blow_by
+externalTables: []
+includes: []
+schemas:
+  BlowBySchema:
+    name: blow_by
+    description: BlowBy table
+    baseSchema: RecordSchema
+    resource: true
+    api: blow_by
+    baseModel: Record
+    columns:
+      id: 
+        name: blow_by_id
+        comment: Auto generated primary key
+        definition: SERIAL PRIMARY KEY
+      blowByTime:
+        name: blow_by_time
+        comment: Time of blow by
+        definition: VARCHAR(100) NULL
+      watercraftComplexity:
+        name: watercraft_complexity
+        comment: Watercraft complexity
+        definition: VARCHAR(100) NULL
+      reportedToRapp:
+        name: reported_to_rapp
+        comment: Reported to rapp
+        definition: BOOLEAN NOT NULL DEFAULT false
+    relations:
+      observerWorkflow:
+        header:
+          key: blow_by.observer_workflow
+          default: Observer Workflow
+        description:
+          key: blow_by.observer_workflow.description
+          default: Observer workflow associated with the blow by
+        type: array
+        relationshipType: many-to-one
+        schema: ObserverWorkflowSchema
+        meta:
+          embedded: true
+      versions: []
+      fields: {}

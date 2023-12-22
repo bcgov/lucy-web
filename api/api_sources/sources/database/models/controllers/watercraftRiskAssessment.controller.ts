@@ -42,8 +42,8 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			shiftStartTime: (basePriority + topPriority - 60),
 			shiftEndTime: (basePriority + topPriority - 70),
 			k9OnShift: (basePriority  + topPriority - 80),
-			motorizedBlowBys: (basePriority + topPriority - 90),
-			nonMotorizedBlowBys: (basePriority + topPriority - 100),
+			// motorizedBlowBys: (basePriority + topPriority - 90),
+			// nonMotorizedBlowBys: (basePriority + topPriority - 100),
 			noBoatInspected: (basePriority + topPriority - 110),
 			shiftStartComment: (basePriority - 120),
 			shiftEndComment: (basePriority - 140),
@@ -128,9 +128,9 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		result.shiftStartTime = `${workflow.startTime}`;
 		result.shiftEndTime = `${workflow.endTime}`;
 		result.k9OnShift = `${workflow.k9OnShift}`;
-		result.motorizedBlowBys = workflow.motorizedBlowBys;
+		// result.motorizedBlowBys = workflow.motorizedBlowBys;
+		// result.nonMotorizedBlowBys = workflow.nonMotorizedBlowBys;
 		result.noBoatInspected = false;
-		result.nonMotorizedBlowBys = workflow.nonMotorizedBlowBys;
 		result.shiftStartComment = workflow.shiftStartComment;
 		result.shiftEndComment = workflow.shiftEndComment;
 
