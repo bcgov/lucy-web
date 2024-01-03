@@ -1,22 +1,19 @@
 // ** Model: BlowBy from schema BlowBySchema **
 
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { BlowBySchema } from '../database-schema';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { BlowBySchema, ObserverWorkflowSchema } from '../database-schema';
 import {
 } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import {
-} from '../models';
-
-import { BaseModel } from './baseModel';
-import { DataModelController } from '../data.model.controller';
+import { ObserverWorkflow, Record } from '../models';
 
 /** Interface **/
 /**
  * @description BlowBy create interface
  */
 export interface BlowBySpec {
+	observerWorkflowId: ObserverWorkflow;
 	blowByTime: string;
 	watercraftComplexity: string;
 	reportedToRapp: boolean;
@@ -29,6 +26,7 @@ export interface BlowBySpec {
  * @description BlowBy update interface
  */
 export interface BlowByUpdateSpec {
+	observerWorkflowId?: ObserverWorkflow;
 	blowByTime?: string;
 	watercraftComplexity?: string;
 	reportedToRapp?: boolean;
@@ -44,7 +42,7 @@ export interface BlowByUpdateSpec {
 	apiResource: false
 })
 @Entity( { name: BlowBySchema.dbTable} )
-export class BlowBy extends BaseModel implements BlowBySpec {
+export class BlowBy extends Record implements BlowBySpec {
 
 	/**
 	 * Class Properties
@@ -56,6 +54,14 @@ export class BlowBy extends BaseModel implements BlowBySpec {
 	@PrimaryGeneratedColumn()
 	@ModelProperty({type: PropertyType.number})
 	blow_by_id: number;
+
+	/**
+	 * @description Getter/Setter property for column {observer_workflow_id}
+	 */
+	@ManyToOne( type => ObserverWorkflow, { eager: true})
+	@JoinColumn({ name: BlowBySchema.columns.observerWorkflowId, referencedColumnName: ObserverWorkflowSchema.pk})
+	@ModelProperty({type: PropertyType.object})
+	observerWorkflowId: ObserverWorkflow;
 
 	/**
 	 * @description Getter/Setter property for column {blow_by_time}
@@ -78,22 +84,6 @@ export class BlowBy extends BaseModel implements BlowBySpec {
 	@ModelProperty({type: PropertyType.boolean})
 	reportedToRapp: boolean;
 
-}
-
-
-// ** BlowByController ** //
-
-
-/**
- * @description Data Model Controller Class for BlowBySchema and BlowBy
- */
-export class BlowByController extends DataModelController<BlowBy> {
-	/**
-	* @description Getter for shared instance
-	*/
-	public static get shared(): BlowByController {
-		return this.sharedInstance<BlowBy>(BlowBy, BlowBySchema) as BlowByController;
-	}
 }
 
 // -------------------------------------

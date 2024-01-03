@@ -3,6 +3,7 @@
         
 CREATE TABLE blow_by ();
 ALTER TABLE blow_by ADD COLUMN blow_by_id SERIAL PRIMARY KEY;
+ALTER TABLE blow_by ADD COLUMN observer_workflow_id INT NULL REFERENCES observer_workflow(observer_workflow_id) ON DELETE SET NULL;
 ALTER TABLE blow_by ADD COLUMN blow_by_time VARCHAR(100) NULL;
 ALTER TABLE blow_by ADD COLUMN watercraft_complexity VARCHAR(100) NULL;
 ALTER TABLE blow_by ADD COLUMN reported_to_rapp BOOLEAN NOT NULL DEFAULT false;
@@ -12,8 +13,9 @@ ALTER TABLE blow_by ADD COLUMN reported_to_rapp BOOLEAN NOT NULL DEFAULT false;
 -- ### Creating Comments on table ### --
 
         
-COMMENT ON TABLE blow_by IS 'BlowBy table';
+COMMENT ON TABLE blow_by IS 'Table to store blow by data for watercraft observer.';
 COMMENT ON COLUMN blow_by.blow_by_id IS 'Auto generated primary key';
+COMMENT ON COLUMN blow_by.observer_workflow_id IS 'Foreign key to observer_workflow';
 COMMENT ON COLUMN blow_by.blow_by_time IS 'Time of blow by';
 COMMENT ON COLUMN blow_by.watercraft_complexity IS 'Watercraft complexity';
 COMMENT ON COLUMN blow_by.reported_to_rapp IS 'Reported to rapp';

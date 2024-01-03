@@ -1,21 +1,45 @@
 import {MigrationInterface, QueryRunner} from 'typeorm';
+import { AppDBMigrator } from '../applicationSchemaInterface';
+import { BlowBySchema, ObserverWorkflowSchema } from '../database-schema';
 
-export class CreateBlowBy1703285389562 implements MigrationInterface {
+export class CreateBlowBy1703888022971 extends AppDBMigrator implements MigrationInterface {
+   blowBySchema: BlowBySchema;
+   observerWorkflowSchema: ObserverWorkflowSchema;
 
-    public async up(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`
-            CREATE TABLE "blow_by" (
-                "id" SERIAL NOT NULL,
-                "blow_by_time" character varying NULL,
-                "watercraft_complexity" character varying NULL,
-                "reported_to_rapp" boolean NOT NULL DEFAULT false,
-                CONSTRAINT "PK_b6a2e2bb3be67b05b8a2c4f6a4" PRIMARY KEY ("id")
-            )
-        `);
-    }
+   /**
+    * Setup
+    */
+   setup() {
+       // Adding BlowBy schema to migrator
+       this.blowBySchema = new BlowBySchema();
+       this.observerWorkflowSchema = new ObserverWorkflowSchema();
 
+       // Create BlowBy table
+       this.addSchemaInitVersion(this.blowBySchema);
+
+       // Add FK ref
+       this.addUpMigration(this.blowBySchema.className, 'BlowByConstraint.sql');
+   }
+
+   /**
+    * UP: Create DB method
+    */
+   public async up(queryRunner: QueryRunner): Promise<any> {
+       // Start Log
+       this.log('[START]', 'UP');
+       // Running all up migration files
+       await this.runQuerySqlFiles(this.upMigrations(), queryRunner);
+       this.log('[END]', 'UP');
+   }
+
+   /**
+    * Down: Revert
+    */
    public async down(queryRunner: QueryRunner): Promise<any> {
-       await queryRunner.query(`DROP TABLE "blow_by"`);
+       this.log('[START]', 'DOWN');
+       await queryRunner.query(this.blowBySchema.dropTable());
+       await queryRunner.query(this.observerWorkflowSchema.dropTable());
+       this.log('[END]', 'DOWN');
    }
 
 }
