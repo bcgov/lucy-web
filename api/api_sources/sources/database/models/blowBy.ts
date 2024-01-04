@@ -7,6 +7,7 @@ import {
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObserverWorkflow, Record } from '../models';
+import { DateTimeTransformer } from '../../libs/transformer';
 
 /** Interface **/
 /**
@@ -66,7 +67,7 @@ export class BlowBy extends Record implements BlowBySpec {
 	/**
 	 * @description Getter/Setter property for column {blow_by_time}
 	 */
-	@Column({ name: BlowBySchema.columns.blowByTime})
+	@Column({ name: BlowBySchema.columns.blowByTime, transformer: new DateTimeTransformer()})
 	@ModelProperty({type: PropertyType.string})
 	blowByTime: string;
 

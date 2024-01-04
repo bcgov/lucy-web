@@ -4,7 +4,7 @@
 CREATE TABLE blow_by ();
 ALTER TABLE blow_by ADD COLUMN blow_by_id SERIAL PRIMARY KEY;
 ALTER TABLE blow_by ADD COLUMN observer_workflow_id INT NULL REFERENCES observer_workflow(observer_workflow_id) ON DELETE SET NULL;
-ALTER TABLE blow_by ADD COLUMN blow_by_time VARCHAR(100) NULL;
+ALTER TABLE blow_by ADD COLUMN blow_by_time TIMESTAMP NULL;
 ALTER TABLE blow_by ADD COLUMN watercraft_complexity VARCHAR(100) NULL;
 ALTER TABLE blow_by ADD COLUMN reported_to_rapp BOOLEAN NOT NULL DEFAULT false;
 

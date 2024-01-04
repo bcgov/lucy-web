@@ -28,7 +28,7 @@ schemas:
       blowByTime:
         name: blow_by_time
         comment: Time of blow by
-        definition: VARCHAR(100) NULL
+        definition: TIMESTAMP NULL
       watercraftComplexity:
         name: watercraft_complexity
         comment: Watercraft complexity

@@ -16,9 +16,6 @@ export class CreateBlowBy1703888022971 extends AppDBMigrator implements Migratio
 
        // Create BlowBy table
        this.addSchemaInitVersion(this.blowBySchema);
-
-       // Add FK ref
-       this.addUpMigration(this.blowBySchema.className, 'BlowByConstraint.sql');
    }
 
    /**
