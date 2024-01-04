@@ -20,22 +20,21 @@ export class BlowByController extends RecordController<BlowBy> {
 
 	public async all(query?: any): Promise<BlowBy[]> {
 		const options = query || {};
-		options.relations = ['createdBy'];
+		options.relations = ['observerWorkflowId'];
 		return await this.repo.find(options) as BlowBy[];
 	}
 
 	get exportKeyPriorities(): {[key: string]: number} {
 		const basePriority = 1000;
 		const topPriority = 100;
-        return {
+		return {
 			id: basePriority + topPriority,
-			createdBy: (basePriority + topPriority  - 10),
-			shiftId: (basePriority + topPriority - 40),
+			observerWorkflowId: (basePriority + topPriority - 10),
 			blowByTime: (basePriority + topPriority - 50),
 			watercraftComplexity: (basePriority + topPriority - 60),
 			reportedToRapp: (basePriority + topPriority - 70),
-        };
-    }
+		};
+	}
 
 	processForExport(data: BlowBy): any {
 		const result: any = {};

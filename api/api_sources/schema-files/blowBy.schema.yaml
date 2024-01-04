@@ -45,10 +45,10 @@ schemas:
         description:
           key: blow_by.observer_workflow.description
           default: Observer workflow associated with the blow by
-        type: array
+        type: single
         relationshipType: many-to-one
         schema: ObserverWorkflowSchema
         meta:
-          embedded: true
-      versions: []
-      fields: {}
+          skipValidation: true
+    versions: []
+    fields: {}
