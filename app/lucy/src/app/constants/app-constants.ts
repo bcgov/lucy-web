@@ -16,12 +16,13 @@
  * 	Created by Amir Shayegh on 2019-10-23.
  */
 
+import { encryptStringWithSHA256, getRandomString, hashToBase64url } from "../utils/helpers";
+
 /**
  * @description Advance declare window obj
  */
 declare var window: any;
 export class AppConstants {
-
     // Mussles App
     static get API_WatercraftAssessment_Export(): string { return `${AppConstants.API_baseURL}/mussels/wra/export`;}
     static get API_Shift_Export(): string { return `${AppConstants.API_baseURL}/mussels/workflow/export`;}
@@ -63,16 +64,39 @@ export class AppConstants {
     // API Reference data
     static get API_Roles(): string { return `${AppConstants.API_baseURL}/account/roles`; }
 
+    static getAuthorizationParams = async() =>  {
+        // Create random "state"
+        const state = getRandomString();
+        const nonce = getRandomString();
+        sessionStorage.setItem('oauth_state', state);
+        sessionStorage.setItem('oidc_nonce', nonce);
+
+        // Create PKCE Code Verifier
+        const code_verifier = getRandomString();
+        sessionStorage.setItem('code_verifier', code_verifier);
+
+        // Create PKCE Code Challenge
+        const arrayHash: any = await encryptStringWithSHA256(code_verifier);
+        const code_challenge = hashToBase64url(arrayHash);
+        sessionStorage.setItem('code_challenge', code_challenge);
+
+        return { code_challenge, state, nonce };
+    };
+
+    // PKCE Verifier
+    static CODE_VERIFIER = getRandomString();
+
     // SSO
     static SSOConstants = {
         SSO_CLIENT_ID : `inspect-bc-mussels-4817`,
         SSO_BASE_URL : `https://dev.loginproxy.gov.bc.ca`,
         SSO_REALM_NAME : `standard`,
         SSO_LOGIN_REDIRECT_URI : `http://${window.location.host}`,
+        SSO_CODE_CHALLENGE_METHOD : `S256`,
     };
 
     // API
-    static API_baseURL = 'http://localhost:80/api';
+    static API_baseURL = 'http://localhost:7070/api';
 
     // Default Config
     static CONFIG = {
@@ -118,13 +142,15 @@ export class AppConstants {
    static API_observationChemicallyTreated(): string { return `${AppConstants.API_baseURL}/obschem`; }
 
     // SSO non static endpoints
-    static SSO_LoginEndpoint(): string {
-        const baseAuthEndpoint = `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;
-        return `${baseAuthEndpoint}/auth?response_type=code&client_id=${this.SSOConstants.SSO_CLIENT_ID}&redirect_uri=${this.SSOConstants.SSO_LOGIN_REDIRECT_URI}`;
+    static SSO_LoginEndpoint = async() => {
+        AppConstants.getAuthorizationParams().then((authorizationParams) => {
+            const baseAuthEndpoint = `${AppConstants.SSOConstants.SSO_BASE_URL}/auth/realms/${AppConstants.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;
+            return `${baseAuthEndpoint}/auth?response_type=code&client_id=${AppConstants.SSOConstants.SSO_CLIENT_ID}&redirect_uri=${AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI}&code_challenge_method=${AppConstants.SSOConstants.SSO_CODE_CHALLENGE_METHOD}&code_challenge=${encodeURIComponent(authorizationParams.code_challenge)}&state=${encodeURIComponent(authorizationParams.state)}&nonce=${encodeURIComponent(authorizationParams.nonce)}`;
+        })
     }
 
     static SSO_TokenEndpoint(): string {
-        return `${this.SSOConstants.SSO_BASE_URL}/auth/realms/${this.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect/token`;
+        return `${AppConstants.SSOConstants.SSO_BASE_URL}/auth/realms/${AppConstants.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect/token`;
     }
 
     // API Non static endpoints
