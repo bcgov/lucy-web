@@ -10,7 +10,7 @@
         "test": "ng test --watch=false",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "deploy_run": "ng serve --host 0.0.0.0 --port 3030 --disableHostCheck",
+        "deploy_run": "ng serve --poll 2000 --host 0.0.0.0 --port 3030 --disable-host-check",
         "deploy_start": "node server",
         "storybook": "start-storybook -p 6006",
         "build-storybook": "build-storybook",
