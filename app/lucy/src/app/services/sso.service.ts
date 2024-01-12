@@ -67,12 +67,12 @@ export class SsoService {
 
   /***** Computed variables *****/
 
-   /**
-   * Return Login endpoint by concatenating Constants from AppConstants -> SSOConstants
-   */
+  /**
+  * Return Login endpoint by concatenating Constants from AppConstants -> SSOConstants
+  */
   private SSO_LoginEndpoint(): string {
     const baseAuthEndpoint = `${AppConstants.SSOConstants.SSO_BASE_URL}/auth/realms/${AppConstants.SSOConstants.SSO_REALM_NAME}/protocol/openid-connect`;
-    return `${baseAuthEndpoint}/auth?response_type=code&client_id=${AppConstants.SSOConstants.SSO_CLIENT_ID}&redirect_uri=${AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI}`;
+    return `${baseAuthEndpoint}/auth?response_type=code&client_id=${AppConstants.SSOConstants.SSO_CLIENT_ID}&redirect_uri=${AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI}&code_challenge_method=${AppConstants.SSOConstants.SSO_CODE_CHALLENGE_METHOD}`;
   }
 
   private SSO_idirLoginEndpoint(): string {
@@ -213,22 +213,23 @@ export class SsoService {
    * THe route will include a code that we will use in getToken() to get the user's token
    * @param provider SSOLoginProvider
    */
-  public login(provider: SSOLoginProvider) {
-    switch (provider) {
-      case SSOLoginProvider.idir: {
-         window.open(this.SSO_idirLoginEndpoint(), `_self`);
-         break;
+  public async login(provider: SSOLoginProvider) {
+    AppConstants.getAuthorizationParams().then((authorizationParams) => {
+      switch (provider) {
+        case SSOLoginProvider.idir: {
+          window.open(`${this.SSO_idirLoginEndpoint()}&code_challenge=${encodeURIComponent(authorizationParams.code_challenge)}&state=${encodeURIComponent(authorizationParams.state)}&nonce=${encodeURIComponent(authorizationParams.nonce)}`, `_self`);
+          break;
+        }
+        case SSOLoginProvider.BCeID: {
+          window.open(`${this.SSO_BCeidLoginEndpoint()}&code_challenge=${encodeURIComponent(authorizationParams.code_challenge)}&state=${encodeURIComponent(authorizationParams.state)}&nonce=${encodeURIComponent(authorizationParams.nonce)}`, `_self`);
+          break;
+        }
+        default: {
+          window.open(`${this.SSO_LoginEndpoint()}&code_challenge=${encodeURIComponent(authorizationParams.code_challenge)}&state=${encodeURIComponent(authorizationParams.state)}&nonce=${encodeURIComponent(authorizationParams.nonce)}`, `_self`);
+          break;
+        }
       }
-      case SSOLoginProvider.BCeID: {
-         window.open(this.SSO_BCeidLoginEndpoint(), `_self`);
-         break;
-      }
-      default: {
-         console.log(`where am i`);
-         window.open(this.SSO_LoginEndpoint(), `_self`);
-         break;
-      }
-   }
+    });
   }
 
   /**
@@ -299,13 +300,21 @@ export class SsoService {
   }
 
   private getTokensFromAPIResult(result: any): TokenReponse | undefined {
-    if (result['success'] === false) {
+    // PKCE Validation
+    const oidc_nonce = sessionStorage.getItem('oidc_nonce');
+    const tokenNonce = jwtDecode(result.refresh_token)['nonce'];
+
+    if (!result['success'] || oidc_nonce !== tokenNonce) {
       return undefined;
     } else {
       const accessToken = result['access_token'];
       const expiresIn = result['expires_in'];
       const newRefreshToken = result['refresh_token'];
       const newRefreshTokenExpiery = result['refresh_expires_in'];
+
+      sessionStorage.removeItem('oauth_state');
+      sessionStorage.removeItem('code_verifier');
+      sessionStorage.removeItem('code_challenge');
 
       if (!accessToken || !expiresIn || !newRefreshToken || !newRefreshTokenExpiery) {
         console.log('response doesnt have all required data');
@@ -409,6 +418,7 @@ export class SsoService {
       grant_type: 'authorization_code',
       redirect_uri: AppConstants.SSOConstants.SSO_LOGIN_REDIRECT_URI,
       client_id: AppConstants.SSOConstants.SSO_CLIENT_ID,
+      code_verifier: sessionStorage.getItem('code_verifier')
     };
 
     const response: TokenReponse = {
