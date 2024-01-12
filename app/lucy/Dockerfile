@@ -25,7 +25,7 @@ RUN npm install @angular/cli@15.1.0
 # Copy All the sources
 COPY . .
 
-# INSATLL NODE DEPENDENCIES
+# INSTALL NODE DEPENDENCIES
 RUN npm ci
 # BUILD APP
 RUN npm run build-prod
