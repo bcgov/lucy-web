@@ -304,7 +304,7 @@ export class SsoService {
     const oidc_nonce = sessionStorage.getItem('oidc_nonce');
     const tokenNonce = jwtDecode(result.refresh_token)['nonce'];
 
-    if (result['success'] === false || oidc_nonce !== tokenNonce) {
+    if (!result['success'] || oidc_nonce !== tokenNonce) {
       return undefined;
     } else {
       const accessToken = result['access_token'];
