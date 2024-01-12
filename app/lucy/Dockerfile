@@ -20,13 +20,13 @@ WORKDIR /opt/app-root/src
 # where available (npm@5+)
 # COPY PACKAGE JSON
 COPY ./package*.json ./
+RUN npm install @angular/cli@15.1.0
+
+# Copy All the sources
+COPY . .
 
 # INSATLL NODE DEPENDENCIES
 RUN npm ci
-
-# Copy All the sources
-COPY ./ .
-
 # BUILD APP
 RUN npm run build-prod
 

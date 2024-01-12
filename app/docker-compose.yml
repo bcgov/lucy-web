@@ -5,7 +5,7 @@ services:
     container_name: "lucy-web"
     build:
       context: ./lucy
-      dockerfile: .build/Dockerfile.local
+      dockerfile: Dockerfile
     ports:
       - 3030:3030
     networks:
