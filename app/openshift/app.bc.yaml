@@ -30,10 +30,10 @@ parameters:
   value: dev
 - name: SOURCE_IMAGE_NAME
   required: true
-  value: node:14.21.3
+  value: node
 - name: SOURCE_IMAGE_TAG
   required: true
-  value: 1-41
+  value: 14.21.3
 - name: BASE_IMAGE_URL
   required: true
   value: node:14.21.3
