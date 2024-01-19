@@ -77,6 +77,33 @@ export class ApplicationAuthMiddleware extends LoggerBase {
 
         passport.use(jwtStrategy);
     }
+    /**
+     * Create list of user roles in invasives-db matching the keycloak roles
+     * @param roleCodes {[string]} array of keycloak roles
+     * @returns [RoleCode] Correlated rolecodes
+     */
+    async getRoleCodes(roleCodes: string[]) {
+        const roles = [];
+        if (roleCodes.includes('admin')) {
+            roles.push(await RoleCodeController.shared.getCode(RolesCodeValue.admin));
+        }
+        if (roleCodes.includes('dataEditor')) {
+           roles.push(await RoleCodeController.shared.getCode(RolesCodeValue.editor));
+        }
+        if (roleCodes.includes('superUser')) {
+           roles.push(await RoleCodeController.shared.getCode(RolesCodeValue.superUser));
+        }
+        if (roleCodes.includes('inspectAppOfficer')) {
+           roles.push(await RoleCodeController.shared.getCode(RolesCodeValue.inspectAppOfficer));
+        }
+        if (roleCodes.includes('inspectAppAdmin')) {
+           roles.push(await RoleCodeController.shared.getCode(RolesCodeValue.inspectAppAdmin));
+        }
+        if ( roles.length === 0 ) {
+           roles.push(await RoleCodeController.shared.getCode(RolesCodeValue.viewer));
+        }
+        return roles;
+    }
 
     /**
      * @description Passport token callback
@@ -88,9 +115,10 @@ export class ApplicationAuthMiddleware extends LoggerBase {
         const { errorWithCode } = BCHelperLib.getCommonUtility();
         try {
              // Get user info
-             // ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
+            // ApplicationAuthMiddleware.logger.info(`Payload: ${JSON.stringify(payload)}`);
              ApplicationAuthMiddleware.logger.disableInfoLog = true;
-             const { preferred_username, email, family_name, given_name} = payload;
+
+             const { preferred_username, email, family_name, given_name, client_roles } = payload;
              assert((preferred_username || email), `Email And Preferred user name is missing from payload\n ${JSON.stringify(payload)}`);
 
              const api = `${request.originalUrl}[${request.method}]`;
@@ -128,17 +156,23 @@ export class ApplicationAuthMiddleware extends LoggerBase {
              if (!user) {
                  ApplicationAuthMiddleware.logger.info(`${api} | Creating new user with email and username: {${email}, ${preferred_username}}`);
 
-                 // Creating new user with viewer role
+                 // Creating new user with keycloak roles
                  user = UserDataController.shared.create();
                  user.email = email || preferred_username;
                  user.preferredUsername = preferred_username || email;
                  user.firstName = given_name || 'Test';
                  user.lastName = family_name || 'User';
-                 user.roles = [await RoleCodeController.shared.getCode(RolesCodeValue.viewer)];
+                 user.roles = await this.getRoleCodes(client_roles);
                  user.accountStatus = AccountStatus.active;
                  await UserDataController.shared.saveInDB(user);
              } else {
-                 // Update user data if require
+                // When a user Signs in, check current keycloak roles, update if they've changed
+                const currentUserRoles = await this.getRoleCodes(client_roles);
+                 if (JSON.stringify(user.roles) !== JSON.stringify(currentUserRoles)) {
+                    user.roles = currentUserRoles;
+                    await UserDataController.shared.saveInDB(user);
+                 }
+                 // Update user profile if necessary
                  if (user.preferredUsername !== preferred_username || user.email !== email) {
                     user.preferredUsername = preferred_username || user.preferredUsername;
                     user.email = email || user.email;
@@ -197,7 +231,6 @@ export class ApplicationAuthMiddleware extends LoggerBase {
                  await UserDataController.shared.setCurrentSession(user, newSession);
                  done(null, user);
              }
-
         } catch (excp) {
             ApplicationAuthMiddleware.logger.error(`_tokenCallback | Exception | ${excp}`);
             done(excp, false);
@@ -287,4 +320,3 @@ export const inspectAppEditorRoute = () => {
 export const inspectAppAdminRoute = () => {
     return roleAuthenticationMiddleware([RolesCodeValue.admin, RolesCodeValue.inspectAppAdmin]);
 };
-// -----------------------------------------------------------------------------------------------------------
