@@ -2,9 +2,6 @@
 
 import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
 import { BlowBySchema, ObserverWorkflowSchema } from '../database-schema';
-import {
-} from '../database-schema';
-
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
 import { ObserverWorkflow, Record } from '../models';
 import { DateTimeTransformer } from '../../libs/transformer';
