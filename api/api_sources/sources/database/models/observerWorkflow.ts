@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ObserverWorkflowSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { DateTransformer, DateTimeTransformer } from '../../libs/transformer';
+import { DateTransformer, DateTimeTransformer, IntTransformer } from '../../libs/transformer';
 import { Record } from './generic.data.models';
 
 /** Interface **/
@@ -19,8 +19,8 @@ export interface ObserverWorkflowSpec {
 	location: string;
 	shiftStartComment: string;
 	shiftEndComment: string;
-	// motorizedBlowBys: number;
-	// nonMotorizedBlowBys: number;
+	motorizedBlowBys: number;
+	nonMotorizedBlowBys: number;
 	boatsInspected: boolean;
 	k9OnShift: boolean;
 }
@@ -39,8 +39,8 @@ export interface ObserverWorkflowUpdateSpec {
 	location?: string;
 	shiftStartComment?: string;
 	shiftEndComment?: string;
-	// motorizedBlowBys?: number;
-	// nonMotorizedBlowBys?: number;
+	motorizedBlowBys?: number;
+	nonMotorizedBlowBys?: number;
 	boatsInspected?: boolean;
 	k9OnShift?: boolean;
 }
@@ -120,16 +120,16 @@ export class ObserverWorkflow extends Record implements ObserverWorkflowSpec {
 	/**
 	 * @description Getter/Setter property for column {motorized_blow_bys_counter}
 	 */
-	// @Column({name: ObserverWorkflowSchema.columns.motorizedBlowBys, transformer: new IntTransformer()})
-	// @ModelProperty({type: PropertyType.number})
-	// motorizedBlowBys: number;
+	@Column({name: ObserverWorkflowSchema.columns.motorizedBlowBys, transformer: new IntTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	motorizedBlowBys: number;
 
 	/**
 	 * @description Getter/Setter property for column {non_motorized_blow_bys_counter}
 	 */
-	// @Column({name: ObserverWorkflowSchema.columns.nonMotorizedBlowBys, transformer: new IntTransformer()})
-	// @ModelProperty({type: PropertyType.number})
-	// nonMotorizedBlowBys: number;
+	@Column({name: ObserverWorkflowSchema.columns.nonMotorizedBlowBys, transformer: new IntTransformer()})
+	@ModelProperty({type: PropertyType.number})
+	nonMotorizedBlowBys: number;
 
 	/**
 	 * @description Getter/Setter property for column {boats_inspected_ind}

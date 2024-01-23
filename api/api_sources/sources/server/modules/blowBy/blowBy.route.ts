@@ -60,8 +60,6 @@ export class BlowByRouteController extends ResourceRouteController<BlowByControl
      */
     public async createResource(req: any, data: any): Promise<[number, any]> {
         // Get Proper data mapping
-        console.log('BlowBy: createResource: req: ', req);
-        console.log('BlowBy: createResource: data: ', data);
         return [201, await this.dataController.createNewObject(data, req.user)];
     }
 
