@@ -129,8 +129,8 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		result.shiftEndTime = `${workflow.endTime}`;
 		result.k9OnShift = `${workflow.k9OnShift}`;
 		result.motorizedBlowBys = workflow.motorizedBlowBys;
-		result.noBoatInspected = false;
 		result.nonMotorizedBlowBys = workflow.nonMotorizedBlowBys;
+		result.noBoatInspected = false;
 		result.shiftStartComment = workflow.shiftStartComment;
 		result.shiftEndComment = workflow.shiftEndComment;
 

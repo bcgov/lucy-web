@@ -38,6 +38,7 @@ import { accountRoute,
 import { LocationRouteController } from '../modules/location';
 import { BCGeoDataRouteController } from '../modules/bcGeoData';
 import { defaultRoute, miscellaneousRouter } from '../modules';
+import { BlowByRouteController } from '../modules/blowBy';
 
 /**
  * @description Configuring main app routes
@@ -79,6 +80,9 @@ export const routes = (app: Application) => {
 
     // Observer Workflow
     app.use('/api/mussels/workflow', ObserverWorkflowRouteController.shared.router);
+
+    // Watercraft Risk Assessment
+    app.use('/api/mussels/blow-bys', BlowByRouteController.shared.router);
 
     // Mussels App Codes
     app.use('/api/mussels/codes', MusselsAppCodesRouteController.shared.router);

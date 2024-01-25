@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import { ObserverWorkflowSchema } from '../database-schema';
 
 import { ModelProperty, PropertyType, ModelDescription } from '../../libs/core-model';
-import { IntTransformer, DateTransformer, DateTimeTransformer } from '../../libs/transformer';
+import { DateTransformer, DateTimeTransformer, IntTransformer } from '../../libs/transformer';
 import { Record } from './generic.data.models';
 
 /** Interface **/
