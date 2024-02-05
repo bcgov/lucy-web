@@ -64,7 +64,7 @@
         "web-animations-js": "^2.3.2",
         "webpack": "^4.40.2",
         "webpack-cli": "^3.3.9",
-        "yarn": "^1.17.3",
+        "yarn": "^1.22.13",
         "zone.js": "~0.8.26"
     },
     "devDependencies": {
