@@ -1,74 +1,44 @@
-# invasives BC - Invasive species management tools (ISMT) - API
+# Invasives Mussels BC - API
 
-
-
-
-This is the application source code for the Restful API of the invasive species database.
+This is the application source code for the Restful API of the Invasive Mussels database.
 
 -----
 
 ## Table of Contents
 
-* [Setting Up](#Setting-Up)
-* [Installing Node and NPM](#installing-node-and-npm)
-* [Running the Application](#Running-the-Application)
-* [Closing the Application](#closing-the-application)
-* [Schema documentation](SchemaAndDatabaseController.md)
-* [Deployment to OpenShift](#Deployment-to-OpenShift)
-* [Clean Remote Instance of the application](#Clean-Remote-Instance-of-the-application)
-* [Running Tests and SonarQube Analysis](#Running-Tests-and-SonarQube-Analysis)
-* [SchemaSpy](#SchemaSpy)
-* [Database Backup and Restoration](#Database-Backup-and-Restoration)
-* [Cloud Script: Change User role](#Cloud-Script:-Change-user-role)
+1. [Setting Up](#setting-up)
+1. [Running the Application](#running-the-application)
+1. [Closing the Application](#closing-the-application)
+1. [Deployment to OpenShift](#deployment-to-openshift)
+1. [Clean Remote Instance of the application](#clean-remote-instance-of-the-application)
+1. [Running Tests](#running-tests)
+1. [SchemaSpy](#schemaspy)
+1. [Database Backup and Restoration](#database-backup-and-restoration)
+1. [Cloud Script: Change User role](#cloud-script-change-user-role)
 
 -----
 
 ## Setting Up
 ### Requirements
 
-If you wish to use the Makefile commands to run the project with Docker, there are no additional requirements required for local development.
-
-To run locally without Docker, you will need to install Node and NPM.
-
-## Installing Node and NPM
-
-*For Mac OSX:*
-
-1. Install Xcode from the App Store
-
-2. Install Homebrew following the instructions here: https://brew.sh/
-
-3. Install Node (Note: This will also install the Command Line Tools for Xcode)  
-`brew install node`
-
-*For Windows:*
-
-1. Select the appropriate installer (32-bit or 64-bit) from here: https://nodejs.org/en/download/
-
-2. Run the installer and follow its prompts
-
-3. Restart your computer
-
-*Validate install:*
-
-You can test your installation by running `node -v` and `npm -v` which should produce output indicating which version has been installed.
+The default, active branch for this repo is `dev`. All pull requests merged into `dev` will create new `dev` pods in Openshift.
 
 ### Setting Up Env
 
 * Make a copy of the example file `env.example` to create a `env.local` file
 * Create an empty `.env` file in the root dir `/api`
-* Update the app secret values in `env.local` (env.local is .gitignored and will not be committed)
+* Update the app secret values in `env.local` (env.local is `.gitignored` and will not be committed)
 
 ## Running the Application
 
-*Run App in Local env*
+### Run App in Local env
 
 * Run app: `make run-local`
 * Debug app: `make local-debug`
 
-*Clean the Local App*
+### Clean the Local App
 
-Note: the database has a persistant volume when run with Docker. If you need to rebuild this, run `make clean-local`
+Note: the database has a persistent volume when run with Docker. If you need to rebuild this, run `make clean-local`
 
 ## Closing the Application
 
@@ -76,9 +46,9 @@ Run `make close-local`
 
 ## Deployment to OpenShift
 
-Use command `oc` for local OpenShift build and deployment options.
+When making a PR against the `dev` branch, any successful merges will automatically start a GitHub Action to build a new instance of the app in the Openshift **Dev** realm.
 
-The command `make deploy-remote` may also be run to build and deploy remote containers using our Jenkins pipelines.
+To deploy to production, you will need to merge your `dev` changes into the `prod` branch. This will start a GitHub action to deploy to production.
 
 ## Clean Remote Instance of the application
 
@@ -91,15 +61,11 @@ The clean script can be run against each persistent environment.
 * make clean-remote PR=99 ENV=dev
 * make clean-remote PR=dev ENV=dev
 
-*Warning*: Do *NOT* run against `test` or `prod`. It will cause *PERMANENT* deletion of all objects including `PVC`! be warned!
+<span style="color:red;font-weight:bold">Warning: Do NOT run against `test` or `prod`. It will cause PERMANENT deletion of all objects including `PVC`! You've been warned!</span>
 
-## Running Tests and SonarQube Analysis
+## Running Tests
 
 To run tests locally, run `npm test` or `npm test:all` to execute tests via [Mocha](https://www.npmjs.com/package/ts-mocha).
-
-For local analysis with [SonarQube](https://www.sonarqube.org/), run `make sonarqube`
-
-To run tests and SonarQube analysis against a remote instance, run `make test-remote-api`
 
 ## SchemaSpy
 

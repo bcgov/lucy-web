@@ -1,25 +1,15 @@
-# Invasive Species BC
+# Invasive Mussels BC
 
-
-
-
-[![img](https://img.shields.io/badge/Lifecycle-Dormant-ff7f2a)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
-Note:  In progress of being deprecated by /bcgov/invasivesbc.  API still supports /bcgov/mussels-ios
-
-https://bcdevexchange.org/projects/prj-invasive-species
-
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_lucy-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web) ![ZAP Baseline Scan](https://github.com/bcgov/lucy-web/workflows/ZAP%20Baseline%20Scan/badge.svg)
+This API currently supports the [Invasives Mussels BC iOS app](https://github.com/bcgov/invasivesBC-mussels-iOS/tree/inspect-272-update-readme) only. A new InvasivesBC inventory and database for the creation, treatment, and report on BC Invasive plants and animals can be found [here](https://github.com/bcgov/invasivesbc).
 
 ## Introduction
 
-Invasive species are non-native plants and animals whose introduction and spread in British Columbia cause significant economic, social or environmental damage. This application tracks the observation, treatment, and monitoring of invasive species in the Province of British Columbia.
+Invasive species are non-native plants and animals whose introduction and spread in British Columbia cause significant economic, social or environmental damage. This application tracks the observation, treatment, and monitoring of invasive Quagga and Zebra mussels in the Province of British Columbia.
 This project is part of the Species and Ecosystems Information System Modernization (SEISM) program.
 
 ## Table of Contents
 
-1. [Project Status](#project-status)
 1. [Audience](#audience)
-1. [Features](#features)
 1. [Getting Help or Reporting an Issue](#getting-help-or-reporting-an-issue)
 1. [How to Contribute](#how-to-contribute)
 1. [Architecture](#architecture)
@@ -30,38 +20,16 @@ This project is part of the Species and Ecosystems Information System Modernizat
 1. [Running the Application](#running-the-application)
 1. [License](#license)
 
-## Project Status
-
-This application is in active development and has not yet been released.
-
 ## Audience
 
-Anyone with a valid IDIR or BCeID login may access the application to view data that is being tracked.
-
-In addition, the application is intended for use by:
-
-* Surveyors who observe and record the absence, presence, and spread of invasive species
-* Subject matter experts who perform a variety of duties, including to record and analyze data and create action plans
-* Contractors who implement recommended treatments for observed invasive species
-* Administrators who manage the application and its users
-
-## Features
-
-This application is anticipated to include the following main features:
-
-1. Support for IDIR and BCeID access
-1. User roles and permissions management
-1. Interactive maps displaying multiple data layers
-1. Observations of invasive species absence/presence
-1. Recommendations, planning, and application records of treatments
-1. Monitoring of treatment outcomes
-1. Query and export of data
-1. Auditing and reports
-1. Bulk data entry and mobile device data entry
+This API is intended to be used by the Inspect iOS app where Inspection Officers and Admins can submit Shifts and Watercraft Inspections. Users with a valid IDIR can login to the Inspect iOS app, but only users with the following roles can access and submit data:
+- `inspectAppOfficer`
+- `inspectAppAdmin`
+- `admin`
 
 ## Getting Help or Reporting an Issue
 
-To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/lucy-web/issues).
+To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/lucy-web/issues) or contact the [Sustainment Team](mailto:sustainment.team@gov.bc.ca).
 
 ## How to Contribute
 
@@ -71,7 +39,7 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ## Architecture
 
-This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Containers are built using Jenkins pipelines and Docker. Our environments run on an OpenShift container platform cluster.
+This application uses PostgreSQL (with PostGIS) and TypeORM. Containers are built using Jenkins pipelines and Docker. Our environments run on an OpenShift container platform cluster.
 
 ## Project Structure
 
@@ -91,10 +59,11 @@ This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Container
 
 ## Documentation
 
-* [Client Readme](app/README.md)
-* [Server Readme](api/README.md)
-* [Form Framework Tool Readme](FormFrameworkREADME.md)
-* [Jenkins Readme](.jenkins/README.md)
+* [Client README](app/README.md)
+* [Server README](api/README.md)
+* [Form Framework Tool README](FormFrameworkREADME.md)
+* [Migrations Demo README](MigrationsREADME.md)
+* [Jenkins README](.jenkins/README.md)
 * [Pipeline](PIPELINE.md)
 * Our database is documented using [SchemaSpy](http://schemaspy.org/)
 * [Load Test](loadTest/README.md)
@@ -106,52 +75,56 @@ This application uses PostgreSQL (with PostGIS), TypeORM, and Angular. Container
 
 On Windows, you may require a tool like [Visual Studio Code](https://code.visualstudio.com/) or [Cygwin](http://www.cygwin.com/) in order to use the Makefile.
 
-If you wish to deploy the application, you will also need to install [OpenShift CLI](https://docs.openshift.com/container-platform/3.7/cli_reference/get_started_cli.html).
-
 ## Setup Instructions
 
-Begin by cloning the repository to create a local copy. The repository on GitHub provides instructions: https://github.com/bcgov/lucy-web
+Begin by cloning the repository to create a local copy.
 
-All subsequent commands are run at the project root.
+```
+git clone git@github.com:bcgov/lucy-web.git
+```
+> *Note: the default branch is* `dev` - *more information about [branches and deployment here](api/README.md#deployment-to-openshift)*
 
-For example:
 
-`git clone https://github.com/bcgov/lucy-web`
-
-`cd lucy-web`
-
-Finally, create initial local environment files:
+Create initial local environment files:
 
 1. Create an empty `.env` file at the `api` directory root
 1. Within `api/env_config` create a `env.local` file, using `env.example` as a reference
 1. Update the app secret values in `env.local`
 
-Note: these files are git-ignored.
+Note: these files are `.gitignored`.
 
 ## Running the Application
 
 *Using Docker:*
 
-The client (frontend app) and server(s) (backend api/api-mobile) of the application run in separate containers. To run all of the application containers, use the following commands:
+To run all of the backend containers, use the following commands:
 
-* Run the appliation containers  
-`make local`
+1. `cd` into the `api` directory
 
-* Run the application containers in debug mode  
-   `make local-debug`  
-   This will print additional logging statements to the console, which may be useful when debugging the backend.  
+2. Run the application containers  
 
-* Close and clean the application containers  
-   `make clean-local`  
-   This will close and remove the containers and images created by either of the above commands.
+```
+make local
+```
 
-   _Note: See the `Makefile` for the full list of commands._ 
+or run the application containers in debug mode 
 
-To run a subset of the application contains, refer to the `README` and `Makefile` in their respective sub-folders (ie: `./api` or `./api-mobile`).
+```
+make local-debug
+```
 
-## Acknowledgements
+This will print additional logging statements to the console, which may be useful when debugging the backend.  
 
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/dashboard?id=bcgov_lucy-web)
+## Closing the Application
+
+To close and clean the application containers  
+```
+make clean-local
+```
+
+This will close and remove the containers and images created by either of the above commands.
+
+> *Note: See the* `Makefile` *for the full list of commands.* 
 
 ## License
 
