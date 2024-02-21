@@ -79,7 +79,7 @@
     },
     "dependencies": {
         "@bcgov/nodejs-common-utils": "0.0.16",
-        "axios": "^0.21.1",
+        "axios": "^0.28.0",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
         "chai": "^4.2.0",
