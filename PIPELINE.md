@@ -1,6 +1,6 @@
 # Invasives BC Pipeline
 
-Invasives BC automatic Jenkins pipeline check code integrity (Continuous integration) and perform deployment to various environment (Continuous deployment).  
+Invasives BC automatic Jenkins pipeline checks code integrity (Continuous integration) and perform deployment to various environment (Continuous deployment).  
   
 ## Pull Request with Continuous Integration
 
@@ -14,11 +14,11 @@ Invasives BC automatic Jenkins pipeline check code integrity (Continuous integra
 
 ## Branch Action for Continuous Deployment
 
-Any changes like Push or Merge to dev branch triggers a build and deployment to Dev/Test Environment.
+Any changes like Push or Merge to `dev` branch triggers a build and deployment to Dev/Test Environment.
 
 ## Continuous Production Deployment
 
-* Create Pull Request with target branch as **prod** (conventionally source branch will be __dev__).
+* Create Pull Request with target branch as `prod` (conventionally source branch will be `dev`).
 
 * Automatic pipeline continuous integration stages (Build and Test) will invoke. CI stages check integrity of new code, must finish with success.
 
