@@ -57,7 +57,7 @@ print-status:
 	@echo " +---------------------------------------------------------+ "
 	@echo " | Docker-Compose Config Output "
 	@echo " +---------------------------------------------------------+ "
-	@docker-compose -f docker-compose.yml config
+	@docker-compose -f docker-compose.dev.yml config
 
 
 # ------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ print-status:
 
 build-local: ## -- Target : Builds the local development containers.
 	@echo "+\n++ Make: Building local Docker image ...\n+"
-	@docker-compose -f docker-compose.yml build 
+	@docker-compose -f docker-compose.dev.yml build 
 
 setup-local: ## -- Target : Prepares the environment variables for local development.
 	@echo "+\n++ Make: Preparing project for local development ...\n+"
@@ -75,22 +75,22 @@ setup-local: ## -- Target : Prepares the environment variables for local develop
 
 run-local: ## -- Target : Runs the local development containers.
 	@echo "+\n++ Make: Running locally ...\n+"
-	@docker-compose -f docker-compose.yml up -d
+	@docker-compose -f docker-compose.dev.yml up -d
 
 run-debug: ## -- Target : Runs the local development containers.
 	@echo "+\n++ Make: Running locally for debugging...\n+"
 	@mkdir -p ./_app_data
-	@docker-compose -f docker-compose.yml up
+	@docker-compose -f docker-compose.dev.yml up
 
 
 close-local: ## -- Target : Closes the local development containers.
 	@echo "+\n++ Make: Closing local container ...\n+"
-	@docker-compose -f docker-compose.yml down
+	@docker-compose -f docker-compose.dev.yml down
 
 
 clean-local: ## -- Target : Closes and clean local development containers.
 	@echo "+\n++ Make: Closing and cleaning local container ...\n+"
-	@docker-compose -f docker-compose.yml down -v
+	@docker-compose -f docker-compose.dev.yml down -v
 	@rm -rf ./_app_data
 
 test-local: ## -- Test API: Locally
