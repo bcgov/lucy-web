@@ -77,6 +77,7 @@ export * from './behaviourCode';
 export * from './animalSpecies';
 export * from './animalObservation';
 export * from './majorCity';
+export * from './blowBy';
 
 /**
  * Controllers
@@ -107,4 +108,5 @@ export * from './controllers/watercraftJourney.controller';
 export * from './controllers/seed.controller';
 export * from './controllers/animalObservation.controller';
 export * from './controllers/majorCity.controller';
+export * from './controllers/blowBy.controller';
 // ----------------------------------------------------------------------------------------------------------------

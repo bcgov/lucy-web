@@ -112,3 +112,9 @@ export class AdultMusselsLocationSchema extends RecordTableSchema {
         return true;
     }
 }
+
+export class BlowBySchema extends RecordTableSchema {
+    get schemaFilePath(): string {
+        return getYAMLFilePath('blowBy.schema.yaml');
+    }
+}
