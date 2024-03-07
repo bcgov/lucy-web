@@ -5,13 +5,14 @@ services:
     container_name: "lucy-web"
     build:
       context: ./lucy
-      dockerfile: .build/Dockerfile.local
+      dockerfile: Dockerfile
     ports:
       - 3030:3030
     networks:
       - web-net
+    volumes:
+      - ./lucy:/opt/app-root/src
 networks:
   web-net:
     driver: bridge
     name: lucy-web-network
-  
