@@ -1,5 +1,6 @@
 FROM node:10
 
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
 RUN apt-get update
 RUN npm install -g npm@6.14.12
 
@@ -48,5 +49,3 @@ RUN npm run build
 
 # Entrypoint 
 CMD [ "npm", "run", "git:run" ]
-
-
