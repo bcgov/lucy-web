@@ -1,4 +1,4 @@
-CREATE TABLE invasivesbc.major_city (
+CREATE TABLE major_city (
     composite character varying(1024),
     city_name character varying(1024),
     city_longitude numeric,
@@ -13,17 +13,14 @@ CREATE TABLE invasivesbc.major_city (
     updated_at timestamp without time zone,
     created_by_user_id character varying(100),
     updated_by_user_id character varying(100),
-    active_ind boolean
+    active boolean
 );
-
-
-ALTER TABLE invasivesbc.major_city OWNER TO invasivebc;
 
 --
 -- Name: major_city_major_city_id_seq; Type: SEQUENCE; Schema: invasivesbc; Owner: invasivebc
 --
 
-CREATE SEQUENCE invasivesbc.major_city_major_city_id_seq
+CREATE SEQUENCE major_city_major_city_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -31,25 +28,23 @@ CREATE SEQUENCE invasivesbc.major_city_major_city_id_seq
     CACHE 1;
 
 
-ALTER TABLE invasivesbc.major_city_major_city_id_seq OWNER TO invasivebc;
-
 --
 -- Name: major_city_major_city_id_seq; Type: SEQUENCE OWNED BY; Schema: invasivesbc; Owner: invasivebc
 --
 
-ALTER SEQUENCE invasivesbc.major_city_major_city_id_seq OWNED BY invasivesbc.major_city.major_city_id;
+ALTER SEQUENCE major_city_major_city_id_seq OWNED BY major_city.major_city_id;
 
 
 --
 -- Name: major_city major_city_id; Type: DEFAULT; Schema: invasivesbc; Owner: invasivebc
 --
 
-ALTER TABLE ONLY invasivesbc.major_city ALTER COLUMN major_city_id SET DEFAULT nextval('invasivesbc.major_city_major_city_id_seq'::regclass);  
+ALTER TABLE ONLY major_city ALTER COLUMN major_city_id SET DEFAULT nextval('major_city_major_city_id_seq'::regclass);  
 
 
 --
 -- Name: major_city major_city_pkey; Type: CONSTRAINT; Schema: invasivesbc; Owner: invasivebc
 --
 
-ALTER TABLE ONLY invasivesbc.major_city
+ALTER TABLE ONLY major_city
     ADD CONSTRAINT major_city_pkey PRIMARY KEY (major_city_id);
