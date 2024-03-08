@@ -23,24 +23,15 @@ Install the following to run the application locally
 After installation, follow the instructions below to start local development
   1. To install all the dependencies, go to the following folder from the root directory and run either `npm install` or `npm ci`
       - `api/api_sources` - Installs the packages required by the backend node application
-      - `app/lucy` - To install the packages needed for the angular application
   2. Navigate to `api` directory and run either of the following
       - `make local-debug` - To run the application with logs
-      - `make local` - To start the application in the background and hide the logs
+      - `make run-local` - To start the application in the background and hide the logs
   3. Other handy make commands:
       - `make api` - Shell into the api container. Local api container is customized with all development related CLI tools. Using api container shell is recommended.
       - `make database` - To shell into the database container. As an additional step, the schema needs to be set by running the command given below before running any queries
         ```ts
         SET SCHEMA 'invasivesbc'
         ```
-
-Note:
-
-To run any command which is related to pipeline, install the dependencies from the following folders
-  - `api/.pipeline`
-  - `app/.pipeline`
-  - `.jenkins/.pipeline`
-
 ## Step-by-Step Guide to Create a New Form
 
 ### 1. Create the .yaml file for the schema

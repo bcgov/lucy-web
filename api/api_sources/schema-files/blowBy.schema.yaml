@@ -1,0 +1,54 @@
+version: '1.0'
+description: Schema file for table blow_by
+externalTables: []
+includes:
+  - observerWorkflow.schema.yaml
+schemas:
+  BlowBySchema:
+    name: blow_by
+    description: 'Table to store blow by data for watercraft observer.'
+    baseSchema: RecordSchema
+    meta:
+      resource: true
+      api: /mussels/blow-bys
+      base: api
+    resource: true
+    baseModel: Record
+    columns:
+      id: 
+        name: blow_by_id
+        comment: Auto generated primary key
+        definition: SERIAL PRIMARY KEY
+      observerWorkflowId:
+        name: observer_workflow_id
+        comment: Foreign key to observer_workflow
+        definition: INT NULL
+        foreignTable: observer_workflow
+        refColumn: observer_workflow_id
+      blowByTime:
+        name: blow_by_time
+        comment: Time of blow by
+        definition: TIMESTAMP NULL
+      watercraftComplexity:
+        name: watercraft_complexity
+        comment: Watercraft complexity
+        definition: VARCHAR(100) NULL
+      reportedToRapp:
+        name: reported_to_rapp
+        comment: Reported to rapp
+        definition: BOOLEAN NOT NULL DEFAULT false
+    relations:
+      observerWorkflow:
+        header:
+          key: blow_by.observer_workflow
+          default: Observer Workflow
+        description:
+          key: blow_by.observer_workflow.description
+          default: Observer workflow associated with the blow by
+        type: single
+        relationshipType: many-to-one
+        schema: ObserverWorkflowSchema
+        meta:
+          skipValidation: true
+    versions: []
+    fields: {}

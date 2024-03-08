@@ -29,7 +29,7 @@ export class AppBootService {
                 // Get config
                 const result: any = await this.api.get('/config').toPromise();
                 // Get API host
-                const host = result.apiHost || 'localhost:80';
+                const host = result.apiHost || 'localhost:7070';
                 // Create base url
                 const baseURL = `${location.protocol}//${host}/api`;
                 // Setting base url to API const

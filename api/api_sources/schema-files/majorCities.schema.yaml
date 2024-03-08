@@ -71,22 +71,4 @@ schemas:
         name: active
         comment: Boolean flag to check, the record is active or not.
         definition: BOOLEAN NOT NULL DEFAULT TRUE
-  #   ## -- columns
-  #   imports:
-  #     init:
-  #       fileName: MajorCities.csv
-  #       allColumnsExcept: 
-  #         - active
-  #     ocean:
-  #       fileName: WaterBodyOcean.csv
-  #       allColumnsExcept: 
-  #         - active
-  #     june2020:
-  #       fileName: WaterBodiesJune2020.csv
-  #       allColumnsExcept: 
-  #         - active
-  # ## --    
-
-
-
-  
+  ## --
