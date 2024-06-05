@@ -23,7 +23,7 @@
 
 // ** Model: WatercraftRiskAssessment from schema WatercraftRiskAssessmentSchema **
 
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMany} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { WatercraftRiskAssessmentSchema } from '../database-schema';
 import {
 	HighRiskAssessmentSchema,
@@ -90,6 +90,8 @@ export interface WatercraftRiskAssessmentSpec {
 	provinceOfResidence: string;
 	countryOfResidence: string;
 	numberOfPeopleInParty: number;
+	watercraftHasDrainplugs: boolean;
+	drainplugRemovedAtInspection: boolean;
 }
 // -- End: WatercraftRiskAssessmentSpec --
 
@@ -139,6 +141,8 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	provinceOfResidence?: string;
 	countryOfResidence?: string;
 	numberOfPeopleInParty?: number;
+	watercraftHasDrainplugs: boolean;
+	drainplugRemovedAtInspection: boolean;
 }
 // -- End: WatercraftRiskAssessmentUpdateSpec --
 
@@ -150,7 +154,7 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	schema: WatercraftRiskAssessmentSchema,
 	apiResource: false
 })
-@Entity( { name: WatercraftRiskAssessmentSchema.dbTable} )
+@Entity({ name: WatercraftRiskAssessmentSchema.dbTable })
 export class WatercraftRiskAssessment extends Record implements WatercraftRiskAssessmentSpec {
 
 	/**
@@ -161,298 +165,298 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	 * @description Getter/Setter property for column {watercraft_risk_assessment_id}
 	 */
 	@PrimaryGeneratedColumn()
-	@ModelProperty({type: PropertyType.number})
+	@ModelProperty({ type: PropertyType.number })
 	watercraft_risk_assessment_id: number;
 
 	/**
 	 * @description Getter/Setter property for column {timestamp}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.timestamp, transformer: new DateTimeTransformer()})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.timestamp, transformer: new DateTimeTransformer() })
+	@ModelProperty({ type: PropertyType.string })
 	timestamp: string;
 
 	/**
 	 * @description Getter/Setter property for column {passport_holder_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportHolder})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportHolder })
+	@ModelProperty({ type: PropertyType.boolean })
 	passportHolder: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {inspection_time}
 	 */
-	 @Column({ name: WatercraftRiskAssessmentSchema.columns.inspectionTime})
-	 @ModelProperty({type: PropertyType.string})
-	 inspectionTime: string;
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.inspectionTime })
+	@ModelProperty({ type: PropertyType.string })
+	inspectionTime: string;
 
 	/**
 	 * @description Getter/Setter property for column {is_new_passport_issued}
 	 */
-	 @Column({ name: WatercraftRiskAssessmentSchema.columns.isNewPassportIssued})
-	 @ModelProperty({type: PropertyType.boolean})
-	 isNewPassportIssued: boolean;
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.isNewPassportIssued })
+	@ModelProperty({ type: PropertyType.boolean })
+	isNewPassportIssued: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {k9_inspection_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.k9Inspection})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.k9Inspection })
+	@ModelProperty({ type: PropertyType.boolean })
 	k9Inspection: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {inspection_time}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.k9InspectionResults})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.k9InspectionResults })
+	@ModelProperty({ type: PropertyType.string })
 	k9InspectionResults: string;
 
 	/**
 	 * @description Getter/Setter property for column {marine_species_found_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.marineSpeciesFound})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.marineSpeciesFound })
+	@ModelProperty({ type: PropertyType.boolean })
 	marineSpeciesFound: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {aquatic_plants_found_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.aquaticPlantsFound})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.aquaticPlantsFound })
+	@ModelProperty({ type: PropertyType.boolean })
 	aquaticPlantsFound: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {previous_ais_knowledge_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledge})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledge })
+	@ModelProperty({ type: PropertyType.boolean })
 	previousAISKnowledge: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {previous_inspection_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousInspection})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousInspection })
+	@ModelProperty({ type: PropertyType.boolean })
 	previousInspection: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {marine_mussel_found_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.marineMusselFound})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.marineMusselFound })
+	@ModelProperty({ type: PropertyType.boolean })
 	marineMusselFound: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {adult_dreissenidae_found_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.adultDreissenidaeFound})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.adultDreissenidaeFound })
+	@ModelProperty({ type: PropertyType.boolean })
 	adultDreissenidaeFound: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {launched_outside_bc_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.launchedOutsideBC})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.launchedOutsideBC })
+	@ModelProperty({ type: PropertyType.boolean })
 	launchedOutsideBC: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {decontamination_performed_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.decontaminationPerformed})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.decontaminationPerformed })
+	@ModelProperty({ type: PropertyType.boolean })
 	decontaminationPerformed: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {commercially_hauled_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.commerciallyHauled})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commerciallyHauled })
+	@ModelProperty({ type: PropertyType.boolean })
 	commerciallyHauled: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {high_risk_area_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.highRiskArea})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.highRiskArea })
+	@ModelProperty({ type: PropertyType.boolean })
 	highRiskArea: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {high_risk_ais_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.highRiskAIS})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.highRiskAIS })
+	@ModelProperty({ type: PropertyType.boolean })
 	highRiskAIS: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {previous_dry_storage_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousDryStorage})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousDryStorage })
+	@ModelProperty({ type: PropertyType.boolean })
 	previousDryStorage: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {destination_dry_storage_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationDryStorage})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationDryStorage })
+	@ModelProperty({ type: PropertyType.boolean })
 	destinationDryStorage: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {previous_major_city}
 	 */
-	 @Column({ name: WatercraftRiskAssessmentSchema.columns.previousMajorCity})
-	 @ModelProperty({type: PropertyType.string})
-	 previousMajorCity: string;
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousMajorCity })
+	@ModelProperty({ type: PropertyType.string })
+	previousMajorCity: string;
 
-	 /**
-	 * @description Getter/Setter property for column {destination_major_city}
-	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationMajorCity})
-	@ModelProperty({type: PropertyType.string})
+	/**
+	* @description Getter/Setter property for column {destination_major_city}
+	*/
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.destinationMajorCity })
+	@ModelProperty({ type: PropertyType.string })
 	destinationMajorCity: string;
 
 	/**
 	 * @description Getter/Setter property for column {unknown_previous_water_body_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.unknownPreviousWaterBody})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.unknownPreviousWaterBody })
+	@ModelProperty({ type: PropertyType.boolean })
 	unknownPreviousWaterBody: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {unknown_destination_water_body_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.unknownDestinationWaterBody})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.unknownDestinationWaterBody })
+	@ModelProperty({ type: PropertyType.boolean })
 	unknownDestinationWaterBody: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {commercial_manufacturer_as_previous_water_body_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsPreviousWaterBody})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsPreviousWaterBody })
+	@ModelProperty({ type: PropertyType.boolean })
 	commercialManufacturerAsPreviousWaterBody: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {commercial_manufacturer_as_destination_water_body_ind}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsDestinationWaterBody})
-	@ModelProperty({type: PropertyType.boolean})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.commercialManufacturerAsDestinationWaterBody })
+	@ModelProperty({ type: PropertyType.boolean })
 	commercialManufacturerAsDestinationWaterBody: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {dreissenid_mussels_found_previous}
 	 */
-	 @Column({ name: WatercraftRiskAssessmentSchema.columns.dreissenidMusselsFoundPrevious})
-	 @ModelProperty({type: PropertyType.boolean})
-	 dreissenidMusselsFoundPrevious: boolean;
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.dreissenidMusselsFoundPrevious })
+	@ModelProperty({ type: PropertyType.boolean })
+	dreissenidMusselsFoundPrevious: boolean;
 
 	/**
 	 * @description Getter/Setter property for column {non_motorized_counter}
 	 */
-	@Column({name: WatercraftRiskAssessmentSchema.columns.nonMotorized, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.nonMotorized, transformer: new IntTransformer() })
+	@ModelProperty({ type: PropertyType.number })
 	nonMotorized: number;
 
 	/**
 	 * @description Getter/Setter property for column {simple_counter}
 	 */
-	@Column({name: WatercraftRiskAssessmentSchema.columns.simple, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.simple, transformer: new IntTransformer() })
+	@ModelProperty({ type: PropertyType.number })
 	simple: number;
 
 	/**
 	 * @description Getter/Setter property for column {complex_counter}
 	 */
-	@Column({name: WatercraftRiskAssessmentSchema.columns.complex, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.complex, transformer: new IntTransformer() })
+	@ModelProperty({ type: PropertyType.number })
 	complex: number;
 
 	/**
 	 * @description Getter/Setter property for column {very_complex_count}
 	 */
-	@Column({name: WatercraftRiskAssessmentSchema.columns.veryComplex, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.veryComplex, transformer: new IntTransformer() })
+	@ModelProperty({ type: PropertyType.number })
 	veryComplex: number;
 
 	/**
 	 * @description Getter/Setter property for column {previous_inspection_days_count}
 	 */
-	@Column({name: WatercraftRiskAssessmentSchema.columns.previousInspectionDays})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionDays })
+	@ModelProperty({ type: PropertyType.string })
 	previousInspectionDays: string;
 
 	/**
 	 * @description Getter/Setter property for column {general_comment}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.generalComment})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.generalComment })
+	@ModelProperty({ type: PropertyType.string })
 	generalComment: string;
 
 	/**
 	 * @description Getter/Setter property for column {passport_number}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportNumber})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.passportNumber })
+	@ModelProperty({ type: PropertyType.string })
 	passportNumber: string;
 
 	/**
 	 * @description Getter/Setter property for column {decontamination_reference}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.decontaminationReference})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.decontaminationReference })
+	@ModelProperty({ type: PropertyType.string })
 	decontaminationReference: string;
 
 	/**
 	 * @description Getter/Setter property for column {high_risk_assessment_id}
 	 */
-	@ManyToOne( type => HighRiskAssessment, { eager: true})
-	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.highRiskAssessment, referencedColumnName: HighRiskAssessmentSchema.pk})
-	@ModelProperty({type: PropertyType.object})
+	@ManyToOne(type => HighRiskAssessment, { eager: true })
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.highRiskAssessment, referencedColumnName: HighRiskAssessmentSchema.pk })
+	@ModelProperty({ type: PropertyType.object })
 	highRiskAssessment: HighRiskAssessment;
 
 	/**
 	 * @description Getter/Setter property for column {previous_ais_knowledge_source_code_id}
 	 */
-	@ManyToOne( type => PreviousAISKnowledgeSource, { eager: true})
-	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource, referencedColumnName: PreviousAISKnowledgeSourceSchema.pk})
-	@ModelProperty({type: PropertyType.object})
+	@ManyToOne(type => PreviousAISKnowledgeSource, { eager: true })
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousAISKnowledgeSource, referencedColumnName: PreviousAISKnowledgeSourceSchema.pk })
+	@ModelProperty({ type: PropertyType.object })
 	previousAISKnowledgeSource: PreviousAISKnowledgeSource;
 
 	/**
 	 * @description Getter/Setter property for column {previous_inspection_source_code_id}
 	 */
-	@ManyToOne( type => PreviousInspectionSource, { eager: true})
-	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource, referencedColumnName: PreviousInspectionSourceSchema.pk})
-	@ModelProperty({type: PropertyType.object})
+	@ManyToOne(type => PreviousInspectionSource, { eager: true })
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.previousInspectionSource, referencedColumnName: PreviousInspectionSourceSchema.pk })
+	@ModelProperty({ type: PropertyType.object })
 	previousInspectionSource: PreviousInspectionSource;
 
 	/**
 	 * @description Getter/Setter property for column {province_code}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.provinceOfResidence})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.provinceOfResidence })
+	@ModelProperty({ type: PropertyType.string })
 	provinceOfResidence: string;
 
 	/**
 	 * @description Getter/Setter property for column {country_code}
 	 */
-	@Column({ name: WatercraftRiskAssessmentSchema.columns.countryOfResidence})
-	@ModelProperty({type: PropertyType.string})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.countryOfResidence })
+	@ModelProperty({ type: PropertyType.string })
 	countryOfResidence: string;
 
-    /**
+	/**
 	 * @description Getter/Setter property for column {number_of_people_in_party}
 	 */
-	@Column({name: WatercraftRiskAssessmentSchema.columns.numberOfPeopleInParty, transformer: new IntTransformer()})
-	@ModelProperty({type: PropertyType.number})
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.numberOfPeopleInParty, transformer: new IntTransformer() })
+	@ModelProperty({ type: PropertyType.number })
 	numberOfPeopleInParty: number;
 
 	/**
 	 * @description Getter/Setter property for column {observer_workflow_id}
 	 */
-	@ManyToOne( type => ObserverWorkflow, { eager: true})
-	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.workflow, referencedColumnName: ObserverWorkflowSchema.pk})
-	@ModelProperty({type: PropertyType.object})
+	@ManyToOne(type => ObserverWorkflow, { eager: true })
+	@JoinColumn({ name: WatercraftRiskAssessmentSchema.columns.workflow, referencedColumnName: ObserverWorkflowSchema.pk })
+	@ModelProperty({ type: PropertyType.object })
 	workflow: ObserverWorkflow;
 
 	/**
@@ -461,10 +465,25 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@OneToMany(
 		type => WatercraftJourney,
 		obj => obj.watercraftAssessment,
-		{ eager: true}
+		{ eager: true }
 	)
-	@ModelProperty({type: PropertyType.array, $ref: '#/definitions/WatercraftJourney'})
+	@ModelProperty({ type: PropertyType.array, $ref: '#/definitions/WatercraftJourney' })
 	journeys: WatercraftJourney[];
+
+
+	/**
+	 * @description Getter/Setter property for column {watercraft_has_drainplugs}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.watercraftHasDrainplugs })
+	@ModelProperty({ type: PropertyType.boolean })
+	watercraftHasDrainplugs: boolean;
+
+	/**
+	 * @description Getter/Setter property for column {drainplug_removed_at_inspection}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.drainplugRemovedAtInspection })
+	@ModelProperty({ type: PropertyType.boolean })
+	drainplugRemovedAtInspection: boolean;
 }
 
 // -------------------------------------
