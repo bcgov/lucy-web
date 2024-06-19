@@ -1,7 +1,7 @@
 // ** WatercraftRiskAssessmentController ** //
 
 import { RecordController } from '../generic.data.models';
-import { WatercraftRiskAssessment} from '../watercraftRiskAssessment';
+import { WatercraftRiskAssessment } from '../watercraftRiskAssessment';
 import { WatercraftRiskAssessmentSchema } from '../../database-schema';
 
 
@@ -22,7 +22,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		return await this.repo.find(options) as WatercraftRiskAssessment[];
 	}
 
-	get exportKeyMapper(): {[key: string]: string} {
+	get exportKeyMapper(): { [key: string]: string } {
 		return {
 			highRiskArea: 'highRiskWhirlingDisease',
 			decontaminationReference: 'recordOfDecontaminationNumber',
@@ -31,17 +31,17 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		};
 	}
 
-	get exportKeyPriorities(): {[key: string]: number} {
+	get exportKeyPriorities(): { [key: string]: number } {
 		const basePriority = 1000;
 		const topPriority = 100;
-        return {
+		return {
 			id: basePriority + topPriority,
-			createdBy: (basePriority + topPriority  - 10),
+			createdBy: (basePriority + topPriority - 10),
 			stationName: (basePriority + topPriority - 40),
 			shiftDate: (basePriority + topPriority - 50),
 			shiftStartTime: (basePriority + topPriority - 60),
 			shiftEndTime: (basePriority + topPriority - 70),
-			k9OnShift: (basePriority  + topPriority - 80),
+			k9OnShift: (basePriority + topPriority - 80),
 			motorizedBlowBys: (basePriority + topPriority - 90),
 			nonMotorizedBlowBys: (basePriority + topPriority - 100),
 			noBoatInspected: (basePriority + topPriority - 110),
@@ -103,11 +103,11 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			'highRiskAssessment.decontaminationOrderReason': basePriority - 606,
 			'highRiskAssessment.dreissenidMusselsFoundPrevious': basePriority - 606,
 			generalComment: -1
-        };
-    }
+		};
+	}
 
 	processForExport(data: WatercraftRiskAssessment): any {
-		const temp: any = {...super.processForExport(data)};
+		const temp: any = { ...super.processForExport(data) };
 		delete temp.displayLabel;
 		let result: any = {};
 		result.id = temp.id;
@@ -140,7 +140,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 		result.timeOfInspection = timeString;
 
 		// Creating final result
-		result = { ...result, ...temp};
+		result = { ...result, ...temp };
 
 		// Next handle journey details
 		const previousJourney: any[] = [];
