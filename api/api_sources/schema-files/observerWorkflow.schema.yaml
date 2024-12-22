@@ -57,6 +57,11 @@ schemas:
         comment: 'This column will store user comment on end of the day'
         definition: VARCHAR(300) NULL
         required: false
+      stationInformation:
+        name: 'station_information'
+        comment: 'This column will store additional information about the station'
+        definition: VARCHAR(300) NULL
+        required: false
       # Counter
       motorizedBlowBys:
         name: 'motorized_blow_bys_counter'
