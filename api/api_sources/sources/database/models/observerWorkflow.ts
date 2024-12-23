@@ -1,4 +1,3 @@
-
 // ** Model: ObserverWorkflow from schema ObserverWorkflowSchema **
 
 import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
@@ -17,6 +16,7 @@ export interface ObserverWorkflowSpec {
 	startTime: string;
 	endTime: string;
 	station: string;
+	stationInformation: string;
 	location: string;
 	shiftStartComment: string;
 	shiftEndComment: string;
@@ -37,6 +37,7 @@ export interface ObserverWorkflowUpdateSpec {
 	startTime?: string;
 	endTime?: string;
 	station?: string;
+	stationInformation?: string;
 	location?: string;
 	shiftStartComment?: string;
 	shiftEndComment?: string;
@@ -117,6 +118,13 @@ export class ObserverWorkflow extends Record implements ObserverWorkflowSpec {
 	@Column({ name: ObserverWorkflowSchema.columns.shiftEndComment})
 	@ModelProperty({type: PropertyType.string})
 	shiftEndComment: string;
+
+	/**
+	 * @description Getter/Setter property for column {station_information}
+	 */
+	@Column({ name: ObserverWorkflowSchema.columns.stationInformation})
+	@ModelProperty({type: PropertyType.string})
+	stationInformation: string;
 
 	/**
 	 * @description Getter/Setter property for column {motorized_blow_bys_counter}
