@@ -153,7 +153,7 @@ export class AppDatabaseMigrationManager extends LoggerBase {
                     await connection.query(`SET search_path TO ${schema}, public;`);
                     await connection.query(`SET SCHEMA '${schema}';`);
                     // Set Timezone
-                    const timezone = process.env.TIMEZONE || 'America/Vancouver';
+                    const timezone = process.env.TIMEZONE || 'UTC';
                     await connection.query(`SET TIME ZONE '${timezone}';`);
                     // await connection.query(`CREATE TABLE IF NOT EXISTS ${dbConfig.migrationsTableName}();`);
                     await connection.close();
