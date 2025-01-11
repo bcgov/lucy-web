@@ -3,7 +3,7 @@ FROM centos/postgresql-95-centos7
 USER root
 
 ENV POSTGISV 2.5
-ENV TZ America/New_York
+ENV TZ UTC
 
 # add addressing dictionary
 RUN mkdir -p /opt/apps
