@@ -19,6 +19,11 @@ jobs:
     name: Check Env variables
     runs-on: ubuntu-latest
     steps:
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
+
       - name: Print Env Vars
         run: |
           echo Git Base Ref: ${{ github.base_ref }}
@@ -44,11 +49,16 @@ jobs:
         with:
           node-version: 10.16
 
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
+
       # Log in to OpenShift.
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
-        run: oc login --token=${{secrets.TOOLS_SA_TOKEN}} --server=https://api.silver.devops.gov.bc.ca:6443
+        run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Build the api images
       - name: Build API Images
@@ -74,6 +84,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 10.16
+
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift.
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
@@ -109,6 +124,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 10.16
+
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift.
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
@@ -154,6 +174,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 10.16
+      
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift.
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
@@ -199,6 +224,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 10.16
+
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift.
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
@@ -246,6 +276,11 @@ jobs:
         with:
           node-version: 10.16
 
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
+
       # Log in to OpenShift.
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
       # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
@@ -289,6 +324,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 10.16
+
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift.
       # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
