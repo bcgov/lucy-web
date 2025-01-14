@@ -49,13 +49,6 @@ jobs:
         with:
           node-version: 10.16
 
-      # # Install OpenShift CLI
-      # - name: Install OpenShift CLI
-      #   run: |
-      #     curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-      #     tar xzvf /tmp/oc.tar.gz -C /tmp/
-      #     sudo mv /tmp/oc /usr/local/bin/
-      #     rm -rf /tmp/oc.tar.gz
       - name: Install CLI tools from OpenShift Mirror
         uses: redhat-actions/openshift-tools-installer@v1
         with:
@@ -90,13 +83,10 @@ jobs:
         with:
           node-version: 10.16
 
-      # # Install OpenShift CLI
-      # - name: Install OpenShift CLI
-      #   run: |
-      #     curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-      #     tar xzvf /tmp/oc.tar.gz -C /tmp/
-      #     sudo mv /tmp/oc /usr/local/bin/
-      #     rm -rf /tmp/oc.tar.gz
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift
       - name: Log in to OpenShift
@@ -131,13 +121,10 @@ jobs:
         with:
           node-version: 10.16
 
-      # Install OpenShift CLI
-      - name: Install OpenShift CLI
-        run: |
-          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar xzvf /tmp/oc.tar.gz -C /tmp/
-          sudo mv /tmp/oc /usr/local/bin/
-          rm -rf /tmp/oc.tar.gz
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift
       - name: Log in to OpenShift
@@ -181,14 +168,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 10.16
-
-      # Install OpenShift CLI
-      - name: Install OpenShift CLI
-        run: |
-          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar xzvf /tmp/oc.tar.gz -C /tmp/
-          sudo mv /tmp/oc /usr/local/bin/
-          rm -rf /tmp/oc.tar.gz
+      
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift
       - name: Log in to OpenShift
@@ -233,13 +217,10 @@ jobs:
         with:
           node-version: 10.16
 
-      # Install OpenShift CLI
-      - name: Install OpenShift CLI
-        run: |
-          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar xzvf /tmp/oc.tar.gz -C /tmp/
-          sudo mv /tmp/oc /usr/local/bin/
-          rm -rf /tmp/oc.tar.gz
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift
       - name: Log in to OpenShift
@@ -285,13 +266,10 @@ jobs:
         with:
           node-version: 10.16
 
-      # Install OpenShift CLI
-      - name: Install OpenShift CLI
-        run: |
-          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar xzvf /tmp/oc.tar.gz -C /tmp/
-          sudo mv /tmp/oc /usr/local/bin/
-          rm -rf /tmp/oc.tar.gz
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift
       - name: Log in to OpenShift
@@ -335,13 +313,10 @@ jobs:
         with:
           node-version: 10.16
 
-      # Install OpenShift CLI
-      - name: Install OpenShift CLI
-        run: |
-          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
-          tar xzvf /tmp/oc.tar.gz -C /tmp/
-          sudo mv /tmp/oc /usr/local/bin/
-          rm -rf /tmp/oc.tar.gz
+      - name: Install CLI tools from OpenShift Mirror
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.14.37
 
       # Log in to OpenShift
       - name: Log in to OpenShift
