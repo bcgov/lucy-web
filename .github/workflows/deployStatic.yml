@@ -19,6 +19,14 @@ jobs:
     name: Check Env variables
     runs-on: ubuntu-latest
     steps:
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
+        run: |
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
+
       - name: Print Env Vars
         run: |
           echo Git Base Ref: ${{ github.base_ref }}
@@ -44,19 +52,17 @@ jobs:
         with:
           node-version: 10.16
 
-      # Check OpenShift CLI status
-      - name: Check OpenShift CLI
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
         run: |
-          which oc || echo "oc not found"
-          echo "PATH=$PATH"
-          ls -la /usr/local/bin/
-          ls -la /usr/bin/
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
 
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift
       - name: Log in to OpenShift
-        run: oc login --token=${{secrets.TOOLS_SA_TOKEN}} --server=https://api.silver.devops.gov.bc.ca:6443
+        run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
       # Build the api images
       - name: Build API Images
@@ -83,17 +89,15 @@ jobs:
         with:
           node-version: 10.16
 
-      # Check OpenShift CLI status
-      - name: Check OpenShift CLI
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
         run: |
-          which oc || echo "oc not found"
-          echo "PATH=$PATH"
-          ls -la /usr/local/bin/
-          ls -la /usr/bin/
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
 
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift
       - name: Log in to OpenShift
         run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
@@ -126,17 +130,15 @@ jobs:
         with:
           node-version: 10.16
 
-      # Check OpenShift CLI status
-      - name: Check OpenShift CLI
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
         run: |
-          which oc || echo "oc not found"
-          echo "PATH=$PATH"
-          ls -la /usr/local/bin/
-          ls -la /usr/bin/
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
 
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift
       - name: Log in to OpenShift
         run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
@@ -179,17 +181,15 @@ jobs:
         with:
           node-version: 10.16
 
-      # Check OpenShift CLI status
-      - name: Check OpenShift CLI
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
         run: |
-          which oc || echo "oc not found"
-          echo "PATH=$PATH"
-          ls -la /usr/local/bin/
-          ls -la /usr/bin/
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
 
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift
       - name: Log in to OpenShift
         run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
@@ -232,17 +232,15 @@ jobs:
         with:
           node-version: 10.16
 
-      # Check OpenShift CLI status
-      - name: Check OpenShift CLI
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
         run: |
-          which oc || echo "oc not found"
-          echo "PATH=$PATH"
-          ls -la /usr/local/bin/
-          ls -la /usr/bin/
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
 
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift
       - name: Log in to OpenShift
         run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
 
@@ -286,17 +284,15 @@ jobs:
         with:
           node-version: 10.16
 
-      # Check OpenShift CLI status
-      - name: Check OpenShift CLI
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
         run: |
-          which oc || echo "oc not found"
-          echo "PATH=$PATH"
-          ls -la /usr/local/bin/
-          ls -la /usr/bin/
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
 
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift
       - name: Log in to OpenShift
         run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
         
@@ -338,17 +334,15 @@ jobs:
         with:
           node-version: 10.16
 
-      # Check OpenShift CLI status
-      - name: Check OpenShift CLI
+      # Install OpenShift CLI
+      - name: Install OpenShift CLI
         run: |
-          which oc || echo "oc not found"
-          echo "PATH=$PATH"
-          ls -la /usr/local/bin/
-          ls -la /usr/bin/
+          curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+          tar xzvf /tmp/oc.tar.gz -C /tmp/
+          sudo mv /tmp/oc /usr/local/bin/
+          rm -rf /tmp/oc.tar.gz
 
-      # Log in to OpenShift.
-      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift
       - name: Log in to OpenShift
         run: oc login --token=${{ secrets.TOOLS_SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
         
