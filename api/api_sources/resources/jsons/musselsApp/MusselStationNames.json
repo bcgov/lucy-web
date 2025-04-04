@@ -1,77 +1,89 @@
 [
   {
-    "Station_Name": "Cascade"
-  },
-  {
-    "Station_Name": "Cutts (Hwy 93)"
+    "Station_Name": "Golden"
   },
   {
     "Station_Name": "Dawson Creek"
   },
   {
-    "Station_Name": "Fraser Valley Roving"
-  },
-  {
-    "Station_Name": "Golden"
-  },
-  {
-    "Station_Name": "Keremeos (Hwy 3)"
-  },
-  {
-    "Station_Name": "Kootenay Sgt"
-  },
-  {
-    "Station_Name": "Midway"
-  },
-  {
-    "Station_Name": "Mt. Robson"
+    "Station_Name": "Yahk"
   },
   {
     "Station_Name": "Olsen (Hwy 3)"
   },
   {
-    "Station_Name": "Okanagan Sgt"
-  },
-  {
     "Station_Name": "Osoyoos"
   },
   {
-    "Station_Name": "Other"
+    "Station_Name": "Cutts (Hwy 93)"
+  },
+  {
+    "Station_Name": "Mt. Robson"
+  },
+  {
+    "Station_Name": "Sumas"
   },
   {
     "Station_Name": "Pacific Border"
   },
   {
-    "Station_Name": "Penticton Roving"
+    "Station_Name": "Lower Mainland - Scheduled Inspection"
   },
   {
-    "Station_Name": "Radium"
+    "Station_Name": "Lower Mainland - Outreach"
   },
   {
-    "Station_Name": "Rocky Mountain Sgt"
+    "Station_Name": "Lower Mainland - Douglas"
   },
   {
-    "Station_Name": "Scheduled Inspection (AB notification)"
+    "Station_Name": "Lower Mainland - Aldergrove"
   },
   {
-    "Station_Name": "Scheduled Inspection (CBSA notification)"
+    "Station_Name": "Lower Mainland - Huntington"
   },
   {
-    "Station_Name": "Scheduled Inspection (New boat)"
+    "Station_Name": "Penticton Roving - Carson"
   },
   {
-    "Station_Name": "Scheduled Inspection (other notification)"
+    "Station_Name": "Penticton Roving - Cascade"
   },
   {
-    "Station_Name": "Scheduled Inspection (RAPP notification)"
+    "Station_Name": "Penticton Roving - Midway"
   },
   {
-    "Station_Name": "Sumas Border"
+    "Station_Name": "Penticton Roving - Osoyoos"
   },
   {
-    "Station_Name": "Valemount"
+    "Station_Name": "Penticton Roving - Outreach"
   },
   {
-    "Station_Name": "Yahk"
+    "Station_Name": "Penticton Roving - Scheduled Inspection"
+  },
+  {
+    "Station_Name": "Cranbrook Roving - Scheduled Inspection"
+  },
+  {
+    "Station_Name": "Cranbrook Roving - Rykerts"
+  },
+  {
+    "Station_Name": "Cranbrook Roving - Nelway"
+  },
+  {
+    "Station_Name": "Cranbrook Roving - Waneta"
+  },
+  {
+    "Station_Name": "Cranbrook Roving - Patterson"
+  },
+  {
+    "Station_Name": "Cranbrook Roving - Outreach"
+  },
+  {
+    "Station_Name": "Other"
+  },
+  {
+    "Station_Name": "Project"
+  },
+  {
+    "Station_Name": "Emergency Response"
   }
 ]
