@@ -1,89 +1,59 @@
 [
-  {
-    "Station_Name": "Golden"
-  },
-  {
-    "Station_Name": "Dawson Creek"
-  },
-  {
-    "Station_Name": "Yahk"
-  },
-  {
-    "Station_Name": "Olsen (Hwy 3)"
-  },
-  {
-    "Station_Name": "Osoyoos"
-  },
-  {
-    "Station_Name": "Cutts (Hwy 93)"
-  },
-  {
-    "Station_Name": "Mt. Robson"
-  },
-  {
-    "Station_Name": "Sumas"
-  },
-  {
-    "Station_Name": "Pacific Border"
-  },
-  {
-    "Station_Name": "Lower Mainland - Scheduled Inspection"
-  },
-  {
-    "Station_Name": "Lower Mainland - Outreach"
-  },
-  {
-    "Station_Name": "Lower Mainland - Douglas"
-  },
-  {
-    "Station_Name": "Lower Mainland - Aldergrove"
-  },
-  {
-    "Station_Name": "Lower Mainland - Huntington"
-  },
-  {
-    "Station_Name": "Penticton Roving - Carson"
-  },
-  {
-    "Station_Name": "Penticton Roving - Cascade"
-  },
-  {
-    "Station_Name": "Penticton Roving - Midway"
-  },
-  {
-    "Station_Name": "Penticton Roving - Osoyoos"
-  },
-  {
-    "Station_Name": "Penticton Roving - Outreach"
-  },
-  {
-    "Station_Name": "Penticton Roving - Scheduled Inspection"
-  },
-  {
-    "Station_Name": "Cranbrook Roving - Scheduled Inspection"
-  },
-  {
-    "Station_Name": "Cranbrook Roving - Rykerts"
-  },
-  {
-    "Station_Name": "Cranbrook Roving - Nelway"
-  },
-  {
-    "Station_Name": "Cranbrook Roving - Waneta"
-  },
-  {
-    "Station_Name": "Cranbrook Roving - Patterson"
-  },
-  {
-    "Station_Name": "Cranbrook Roving - Outreach"
-  },
-  {
-    "Station_Name": "Other"
-  },
-  {
-    "Station_Name": "Project"
-  },
-  {
-    "Station_Name": "Emergency Response"
-  }
+  { "Station_Name": "Cutts (Hwy 93)" },
+
+  { "Station_Name": "Dawson Creek" },
+
+  { "Station_Name": "Golden" },
+
+  { "Station_Name": "Mt. Robson" },
+
+  { "Station_Name": "Olsen (Hwy 3)" },
+
+  { "Station_Name": "Osoyoos" },
+
+  { "Station_Name": "Radium" },
+
+  { "Station_Name": "Yahk" },
+
+  { "Station_Name": "Lower Mainland Roving - Aldergrove" },
+
+  { "Station_Name": "Lower Mainland Roving - Douglas" },
+
+  { "Station_Name": "Lower Mainland Roving - Huntington" },
+
+  { "Station_Name": "Lower Mainland Roving - Outreach" },
+
+  { "Station_Name": "Lower Mainland Roving - Scheduled Inspection" },
+
+  { "Station_Name": "Pacific Border" },
+
+  { "Station_Name": "Penticton Roving - Carson" },
+
+  { "Station_Name": "Penticton Roving - Cascade" },
+
+  { "Station_Name": "Penticton Roving - Midway" },
+
+  { "Station_Name": "Penticton Roving - Outreach" },
+
+  { "Station_Name": "Penticton Roving - Scheduled Inspection" },
+
+  { "Station_Name": "Cranbrook Roving - Nelway" },
+
+  { "Station_Name": "Cranbrook Roving - Outreach" },
+
+  { "Station_Name": "Cranbrook Roving - Patterson" },
+
+  { "Station_Name": "Cranbrook Roving - Rykerts" },
+
+  { "Station_Name": "Cranbrook Roving - Scheduled Inspection" },
+
+  { "Station_Name": "Cranbrook Roving - Waneta" },
+
+  { "Station_Name": "Sumas" },
+
+  { "Station_Name": "Emergency Response" },
+
+  { "Station_Name": "Other" },
+
+  { "Station_Name": "Project" }
 ]
