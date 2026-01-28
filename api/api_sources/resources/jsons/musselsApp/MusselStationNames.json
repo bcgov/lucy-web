@@ -19,8 +19,6 @@
 
   { "Station_Name": "Lower Mainland Roving - Douglas" },
 
-  { "Station_Name": "Lower Mainland Roving - Huntington" },
-
   { "Station_Name": "Lower Mainland Roving - Outreach" },
 
   { "Station_Name": "Lower Mainland Roving - Scheduled Inspection" },
@@ -49,11 +47,11 @@
 
   { "Station_Name": "Cranbrook Roving - Waneta" },
 
-  { "Station_Name": "Sumas" },
+  { "Station_Name": "Sumas - Huntington" },
+
+  { "Station_Name": "Sumas/Huntington" },
 
   { "Station_Name": "Emergency Response" },
-
-  { "Station_Name": "Other" },
 
   { "Station_Name": "Project" }
 ]
