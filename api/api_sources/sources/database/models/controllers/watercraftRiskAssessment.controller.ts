@@ -48,6 +48,7 @@ export class WatercraftRiskAssessmentController extends RecordController<Watercr
 			shiftStartComment: (basePriority - 120),
 			shiftEndComment: (basePriority - 140),
 			timestamp: (basePriority + - 145),
+            officerInspection: (basePriority - 147),
 			passportHolder: (basePriority - 150),
 			isNewPassportIssued: (basePriority - 155),
 			passportNumber: (basePriority - 160),

@@ -270,6 +270,18 @@ schemas:
             required: false
             meta: {}
       ## -- end: inspectionTime
+      ## -- version: officerInspection
+      - name: "officerInspection"
+        id: "20260203"
+        info: "Adding new column officerInspection (officer_inspection_ind)"
+        columns:
+          officerInspection:
+            name: officer_inspection_ind
+            comment: "Indicator to show that inspection was directed by an officer after a blow by was returned to station"
+            definition: BOOLEAN NOT NULL DEFAULT FALSE
+            required: false
+            meta: {}
+      ## -- end: officerInspection
       ## -- version: k9InspectionResults
       - name: "k9InspectionResults"
         id: "20230330"
