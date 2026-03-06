@@ -33,8 +33,13 @@ The default, active branch for this repo is `dev`. All pull requests merged into
 
 ### Run App in Local env
 
+<!-- Might be outdate -->
 * Run app: `make run-local`
 * Debug app: `make local-debug`
+
+<!-- How to run app locally 2026 -->
+* cd api
+* docker compose -f docker-compose.dev.yml up -d
 
 ### Clean the Local App
 
