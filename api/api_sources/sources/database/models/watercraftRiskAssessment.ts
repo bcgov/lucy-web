@@ -52,7 +52,6 @@ export interface WatercraftRiskAssessmentSpec {
 	timestamp: string;
 	passportHolder: boolean;
 	inspectionTime: string;
-    officerInspection: boolean;
 	isNewPassportIssued: boolean;
 	k9Inspection: boolean;
 	k9InspectionResults: string;
@@ -93,6 +92,8 @@ export interface WatercraftRiskAssessmentSpec {
 	numberOfPeopleInParty: number;
 	watercraftHasDrainplugs: boolean;
 	drainplugRemovedAtInspection: boolean;
+    officerInspection: boolean;
+    invertedFullyDrained: boolean;
 }
 // -- End: WatercraftRiskAssessmentSpec --
 
@@ -145,6 +146,7 @@ export interface WatercraftRiskAssessmentUpdateSpec {
 	numberOfPeopleInParty?: number;
 	watercraftHasDrainplugs: boolean;
 	drainplugRemovedAtInspection: boolean;
+	invertedFullyDrained: boolean;
 }
 // -- End: WatercraftRiskAssessmentUpdateSpec --
 
@@ -493,6 +495,13 @@ export class WatercraftRiskAssessment extends Record implements WatercraftRiskAs
 	@Column({ name: WatercraftRiskAssessmentSchema.columns.drainplugRemovedAtInspection })
 	@ModelProperty({ type: PropertyType.boolean })
 	drainplugRemovedAtInspection: boolean;
+
+    /**
+	 * @description Getter/Setter property for column {inverted_fully_drained}
+	 */
+	@Column({ name: WatercraftRiskAssessmentSchema.columns.invertedFullyDrained })
+	@ModelProperty({ type: PropertyType.boolean })
+	invertedFullyDrained: boolean;
 }
 
 // -------------------------------------

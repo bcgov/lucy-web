@@ -270,18 +270,6 @@ schemas:
             required: false
             meta: {}
       ## -- end: inspectionTime
-      ## -- version: officerInspection
-      - name: "officerInspection"
-        id: "20260203"
-        info: "Adding new column officerInspection (officer_inspection_ind)"
-        columns:
-          officerInspection:
-            name: officer_inspection_ind
-            comment: "Indicator to show that inspection was directed by an officer after a blow by was returned to station"
-            definition: BOOLEAN NOT NULL DEFAULT FALSE
-            required: false
-            meta: {}
-      ## -- end: officerInspection
       ## -- version: k9InspectionResults
       - name: "k9InspectionResults"
         id: "20230330"
@@ -289,7 +277,7 @@ schemas:
         columns:
           k9InspectionResults:
             name: k9_inspection_results
-            comment: "result of k9 inspection"
+            comment: "result of the k9 inspection"
             definition: VARCHAR(100) NULL
             required: false
       ## -- end: k9InspectionResults
@@ -306,6 +294,29 @@ schemas:
           drainplugRemovedAtInspection:
             name: drainplug_removed_at_inspection
             comment: "With 'Pull The Plug' legislation in mind, were the drain plugs removed from vehicle"
+            definition: BOOLEAN NOT NULL DEFAULT FALSE
+            required: false
+      ## -- end: bilgePlugs
+      ## -- version: officerInspection
+      - name: "officerInspection"
+        id: "20260203"
+        info: "Adding new column officerInspection (officer_inspection_ind)"
+        columns:
+          officerInspection:
+            name: officer_inspection_ind
+            comment: "Indicator to show that inspection was directed by an officer after a blow by was returned to station"
+            definition: BOOLEAN NOT NULL DEFAULT FALSE
+            required: false
+            meta: {}
+      ## -- end: officerInspection
+      ## -- version: invertedFullyDrained
+      - name: "invertedFullyDrained"
+        id: "20260520"
+        info: "Adding new column invertedFullyDrained"
+        columns:
+          invertedFullyDrained:
+            name: inverted_fully_drained
+            comment: "Indicator that the inspected watercraft was transported inverted and fully drained"
             definition: BOOLEAN NOT NULL DEFAULT FALSE
             required: false
 
