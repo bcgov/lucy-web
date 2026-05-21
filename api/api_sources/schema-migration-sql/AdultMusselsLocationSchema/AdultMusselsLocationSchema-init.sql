@@ -79,3 +79,8 @@ INSERT INTO adult_mussels_location_code(description)
 VALUES
 ('Bilge');
 -- ## End of item: 15 ## --
+-- ## Inserting Item: 16  ## --
+INSERT INTO adult_mussels_location_code(description)
+VALUES
+('Hull');
+-- ## End of item: 16 ## --

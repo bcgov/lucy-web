@@ -1,17 +1,23 @@
 [
   {
-    "Decontamination_Order_Reasons": "Inspection/decontamination could not be performed (e.g. commercially hauled)"
+    "Decontamination_Order_Reasons": "Full decontamination performed"
+  },
+  {
+    "Decontamination_Order_Reasons": "No inspection/decontamination (commercially hauled/shrink wrap)"
+  },
+  {
+    "Decontamination_Order_Reasons": "No decontamination (refusing decontamination)"
+  },
+  {
+    "Decontamination_Order_Reasons": "No decontamination (pressure washer not working)"
+  },
+  {
+    "Decontamination_Order_Reasons": "No decontamination (watercraft too complex)"
   },
   {
     "Decontamination_Order_Reasons": "Partial decontamination only"
   },
   {
-    "Decontamination_Order_Reasons": "No decontamination - pressure washer not working"
-  },
-  {
-    "Decontamination_Order_Reasons": "No decontamination - watercraft too complex"
-  },
-  {
-    "Decontamination_Order_Reasons": "No decontamination - non-compliant refusing decontamination"
+    "Decontamination_Order_Reasons": "Non compliant with pull the plug"
   }
 ]
