@@ -4,7 +4,7 @@ import { WatercraftRiskAssessmentSchema } from '../database-schema';
 
 export class AddInvertedFullyDrainedTo1779291890244 extends AppDBMigrator implements MigrationInterface {
     watercraftRiskAssessment: WatercraftRiskAssessmentSchema;
-    
+
     setup() {
         this.watercraftRiskAssessment = new WatercraftRiskAssessmentSchema();
         this.addSchemaVersion(this.watercraftRiskAssessment, 'invertedFullyDrained');
