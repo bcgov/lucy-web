@@ -10,7 +10,7 @@ export $(shell sed 's/=.*//' .env)
 
 all : help
 .DEFAULT : help
-.PHONY : local local-debug build-local setup-local run-local run-debug close-local cclean-local test-local database api app api-mobile help
+.PHONY : local local-debug build-local setup-local run-local run-debug close-local clean-local test-local database api app api-mobile help
 
 # ------------------------------------------------------------------------------
 # Task Aliases

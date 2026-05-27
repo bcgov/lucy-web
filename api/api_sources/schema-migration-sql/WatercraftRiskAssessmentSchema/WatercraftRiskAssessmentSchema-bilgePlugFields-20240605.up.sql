@@ -11,7 +11,7 @@ COMMENT ON COLUMN watercraft_risk_assessment.watercraft_has_drainplugs IS 'Indic
 
 -- ## Adding Column drainplug_removed_at_inspection on table watercraft_risk_assessment
 ALTER TABLE watercraft_risk_assessment ADD COLUMN drainplug_removed_at_inspection BOOLEAN NOT NULL DEFAULT FALSE;
-COMMENT ON COLUMN watercraft_risk_assessment.drainplug_removed_at_inspection IS 'With 'Pull The Plug' legislation in mind, were the drain plugs removed from vehicle';
+COMMENT ON COLUMN watercraft_risk_assessment.drainplug_removed_at_inspection IS 'With "Pull The Plug" legislation in mind, were the drain plugs removed from vehicle';
 -- ## --
 
 
