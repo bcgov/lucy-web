@@ -55,18 +55,3 @@ spec:
         name: 'node:9'
     type: Docker
   successfulBuildsHistoryLimit: 5
-  triggers:
-    - github:
-        secret: fT94ctykslmWZgzDhuWe
-      type: GitHub
-    - generic:
-        secret: Atjvk6HAWSNz2lmpIH3q
-      type: Generic
-    - type: ConfigChange
-    - imageChange:
-        lastTriggeredImageID: >-
-          node@sha256:5aa0756284c7f0222c2c16988fb58d6446427ac7ae8891aa50a2de721ef4191c
-      type: ImageChange
-status:
-  lastVersion: 1
-

@@ -3,8 +3,6 @@ items:
 - apiVersion: v1
   kind: Service
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
     creationTimestamp: null
     labels:
       app: lucy-api-test
@@ -21,7 +19,8 @@ items:
       protocol: TCP
       targetPort: 8080
     selector:
-      deploymentconfig: lucy-api-test
+      matchLabels:
+        deployment: lucy-api-test
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -29,8 +28,6 @@ items:
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
-    annotations:
-      openshift.io/host.generated: "true"
     creationTimestamp: null
     labels:
       app: lucy-api-test

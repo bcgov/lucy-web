@@ -106,8 +106,5 @@ objects:
           name: ${SOURCE_IMAGE_NAME}:${SOURCE_IMAGE_TAG}
       type: Docker
     successfulBuildsHistoryLimit: 5
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
   status:
     lastVersion: 7

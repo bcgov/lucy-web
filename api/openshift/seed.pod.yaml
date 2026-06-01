@@ -100,4 +100,3 @@ objects:
     restartPolicy: Never
     activeDeadlineSeconds: 900
     dnsPolicy: ClusterFirst
-  status: {}

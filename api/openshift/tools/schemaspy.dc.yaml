@@ -19,7 +19,8 @@ objects:
       port: 8080
       targetPort: 8080
     selector:
-      deploymentconfig: ${NAME}${SUFFIX}
+      matchLabels:
+        deployment: ${NAME}${SUFFIX}
     type: ClusterIP
     sessionAffinity: None
 - kind: Route
@@ -53,7 +54,7 @@ objects:
     lookupPolicy:
       local: false
     tags: []
-- kind: DeploymentConfig
+- kind: Deployment
   apiVersion: v1
   metadata:
     name: "${NAME}${SUFFIX}"
@@ -72,26 +73,17 @@ objects:
           cpu: 500m
           memory: 1Gi
       type: Recreate
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - "${NAME}"
-        from:
-          kind: ImageStreamTag
-          name: "${NAME}:${VERSION}"
     replicas: 1
     revisionHistoryLimit: 10
     selector:
-      deploymentConfig: ${NAME}${SUFFIX}
+      matchLabels:
+        deployment: ${NAME}${SUFFIX}
     template:
       metadata:
         annotations: null
         creationTimestamp: null
         labels:
-          deploymentConfig: ${NAME}${SUFFIX}
+          deployment: ${NAME}${SUFFIX}
       spec:
         containers:
         - name: "${NAME}"
