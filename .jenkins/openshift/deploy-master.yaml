@@ -17,9 +17,6 @@ objects:
 - apiVersion: v1
   kind: Secret
   metadata:
-    annotations:
-      as-copy-of: template.${NAME}-slave-user
-      as-copy-of/preserve: password
     name: ${NAME}${SUFFIX}-slave-user
   stringData:
     metadata.name: ${NAME}${SUFFIX}-slave-user
@@ -29,8 +26,6 @@ objects:
 - apiVersion: v1
   kind: Secret
   metadata:
-    annotations:
-      as-copy-of: template.${NAME}-github
     name: ${NAME}${SUFFIX}-github
   stringData:
     metadata.name: ${NAME}${SUFFIX}-github
@@ -40,9 +35,6 @@ objects:
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    annotations:
-      volume.beta.kubernetes.io/storage-class: gluster-file
-      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
     name: ${NAME}${SUFFIX}
   spec:
     accessModes:
@@ -53,8 +45,6 @@ objects:
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    annotations:
-      serviceaccounts.openshift.io/oauth-redirectreference.jenkins: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"${NAME}${SUFFIX}"}}'
     name: ${NAME}${SUFFIX}
 - apiVersion: v1
   groupNames: null
@@ -77,17 +67,16 @@ objects:
   - kind: ServiceAccount
     name: ${NAME}${SUFFIX}
 - apiVersion: v1
-  kind: DeploymentConfig
+  kind: Deployment
   metadata:
-    annotations:
-      template.alpha.openshift.io/wait-for-ready: "true"
     creationTimestamp: null
     name: ${NAME}${SUFFIX}
   spec:
     replicas: 1
     revisionHistoryLimit: 10
     selector:
-      deploymentconfig: ${NAME}${SUFFIX}
+      matchLabels:
+        deployment: ${NAME}${SUFFIX}
     strategy:
       activeDeadlineSeconds: 21600
       recreateParams:
@@ -98,7 +87,7 @@ objects:
       metadata:
         creationTimestamp: null
         labels:
-          deploymentconfig: ${NAME}${SUFFIX}
+          deployment: ${NAME}${SUFFIX}
       spec:
         containers:
         - command:
@@ -195,16 +184,6 @@ objects:
             defaultMode: 420
             secretName: ${NAME}${SUFFIX}-github
     test: false
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - jenkins
-        from:
-          kind: ImageStreamTag
-          name: ${NAME}:${VERSION}
-      type: ImageChange
-    - type: ConfigChange
 - apiVersion: v1
   kind: Service
   metadata:
@@ -221,7 +200,8 @@ objects:
       protocol: TCP
       targetPort: 50000
     selector:
-      deploymentconfig: ${NAME}${SUFFIX}
+      matchLabels:
+        deployment: ${NAME}${SUFFIX}
     sessionAffinity: None
     type: ClusterIP
 - apiVersion: v1

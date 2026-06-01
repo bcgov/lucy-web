@@ -22,10 +22,11 @@ module.exports = (settings)=>{
           }
         })
         
-        let deploymentConfigs=oc.get('dc', {selector:`app=${phase.instance},env-id=${phase.changeId},env-name=${k},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, namespace:phase.namespace})
-        deploymentConfigs.forEach((dc)=>{
-          dc.spec.triggers.forEach((trigger)=>{
-            if (trigger.type == 'ImageChange' && trigger.imageChangeParams.from.kind == 'ImageStreamTag'){
+        let deployments=oc.get('deployment', {selector:`app=${phase.instance},env-id=${phase.changeId},env-name=${k},!shared,github-repo=${oc.git.repository},github-owner=${oc.git.owner}`, namespace:phase.namespace})
+        deployments.forEach((deployment)=>{
+          let containers=deployment.spec.template.spec.containers
+          containers.forEach((trigger)=>{
+            if (containers.image.includes(':')){
               oc.delete([`ImageStreamTag/${trigger.imageChangeParams.from.name}`],{'ignore-not-found':'true', 'wait':'true', namespace:phase.namespace})
             }
           })

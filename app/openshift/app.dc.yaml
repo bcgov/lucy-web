@@ -3,8 +3,6 @@ objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    annotations:
-      description: Nodejs Runtime Image
     labels:
       shared: "true"
     creationTimestamp: null
@@ -15,11 +13,9 @@ objects:
       local: false
   status:
     dockerImageRepository: null
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
     creationTimestamp: null
     generation: 0
     labels: null
@@ -28,7 +24,7 @@ objects:
     replicas: "${{REPLICAS}}"
     revisionHistoryLimit: 10
     selector:
-      deploymentConfig: ${NAME}${SUFFIX}
+      deployment: ${NAME}${SUFFIX}
     strategy:
       activeDeadlineSeconds: 21600
       recreateParams:
@@ -40,13 +36,13 @@ objects:
         requests:
           cpu: ${CPU_REQUEST}
           memory: ${MEMORY_REQUEST}
-      type: Rolling
+      type: RollingUpdate
     template:
       metadata:
         annotations: null
         creationTimestamp: null
         labels:
-          deploymentConfig: ${NAME}${SUFFIX}
+          deployment: ${NAME}${SUFFIX}
       spec:
         containers:
         - env:
@@ -110,16 +106,6 @@ objects:
         - emptyDir: {}
           name: ${NAME}${SUFFIX}
     test: false
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - app
-        from:
-          kind: ImageStreamTag
-          name: ${NAME}:${VERSION}
-      type: ImageChange
-    - type: ConfigChange
   status:
     availableReplicas: 0
     latestVersion: 0
@@ -130,7 +116,6 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    annotations: null
     creationTimestamp: null
     labels: {}
     name: ${NAME}${SUFFIX}
@@ -145,7 +130,7 @@ objects:
       protocol: TCP
       targetPort: ${{APP_PORT_OTHER}}
     selector:
-      deploymentconfig: ${NAME}${SUFFIX}
+      deployment: ${NAME}${SUFFIX}
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -153,7 +138,6 @@ objects:
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
-    annotations: {}
     creationTimestamp: null
     labels: {}
     name: ${NAME}${SUFFIX}
@@ -174,7 +158,6 @@ objects:
 - apiVersion: autoscaling/v1
   kind: HorizontalPodAutoscaler
   metadata:
-    annotations: {}
     creationTimestamp: null
     labels: {}
     name: ${NAME}${SUFFIX}
@@ -183,7 +166,7 @@ objects:
     minReplicas: "${{REPLICAS}}"
     scaleTargetRef:
       apiVersion: v1
-      kind: DeploymentConfig
+      kind: Deployment
       name: ${NAME}${SUFFIX}
     cpuUtilization:
       targetPercentage: 95

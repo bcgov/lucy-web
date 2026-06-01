@@ -90,7 +90,7 @@ objects:
       resources:
         requests:
           storage: "${PVC_SIZE}"  
-  - kind: DeploymentConfig
+  - kind: Deployment
     apiVersion: v1
     metadata:
       name: "postgresql-${NAME}"
@@ -100,13 +100,13 @@ objects:
         type: Recreate
       selector:
         app: "${NAME}"
-        deploymentconfig: "postgresql-${NAME}"
+        deployment: "postgresql-${NAME}"
       template:
         metadata:
           name: "postgresql-${NAME}"
           labels:
             app: "${NAME}"
-            deploymentconfig: "postgresql-${NAME}"
+            deployment: "postgresql-${NAME}"
         spec:
           containers:
             - env:
@@ -171,18 +171,7 @@ objects:
               persistentVolumeClaim:
                 claimName: "postgresql-${NAME}-data"
       test: false
-      triggers:
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-              - postgresql
-            from:
-              kind: ImageStreamTag
-              name: "postgresql:latest"
-              namespace: openshift
-          type: ImageChange
-        - type: ConfigChange
-  - kind: DeploymentConfig
+  - kind: Deployment
     apiVersion: v1
     metadata:
       name: "${NAME}"
@@ -192,13 +181,13 @@ objects:
         type: Recreate
       selector:
         app: "${NAME}"
-        deploymentconfig: "${NAME}"
+        deployment: "${NAME}"
       template:
         metadata:
           name: "${NAME}"
           labels:
             app: "${NAME}"
-            deploymentconfig: "${NAME}"
+            deployment: "${NAME}"
         spec:
           containers:
             - command:
@@ -265,17 +254,6 @@ objects:
           dnsPolicy: ClusterFirst
           restartPolicy: Always
       test: false
-      triggers:
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-              - metabase
-            from:
-              kind: ImageStreamTag
-              name: "${NAME}:${VERSION}"
-              namespace: "${NAMESPACE}"
-          type: ImageChange
-        - type: ConfigChange
 parameters:
   - name: NAME
     displayName: Name

@@ -5,7 +5,7 @@ metadata:
   name: jenkins
 objects:
 - apiVersion: v1
-  kind: DeploymentConfig
+  kind: Deployment
   metadata:
     creationTimestamp: null
     name: ${NAME}-${SLAVE_NAME}${SUFFIX}
@@ -13,7 +13,8 @@ objects:
     replicas: "${{REPLICAS}}"
     revisionHistoryLimit: 10
     selector:
-      deploymentconfig: ${NAME}-${SLAVE_NAME}${SUFFIX}
+      matchLabels:
+        deployment: ${NAME}-${SLAVE_NAME}${SUFFIX}
     strategy:
       activeDeadlineSeconds: 21600
       recreateParams:
@@ -24,7 +25,7 @@ objects:
       metadata:
         creationTimestamp: null
         labels:
-          deploymentconfig: ${NAME}-${SLAVE_NAME}${SUFFIX}
+          deployment: ${NAME}-${SLAVE_NAME}${SUFFIX}
       spec:
         initContainers:
           - name: init
@@ -120,17 +121,6 @@ objects:
             defaultMode: 420
             secretName: ${NAME}${SUFFIX}-github
     test: false
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - jenkins
-          - init
-        from:
-          kind: ImageStreamTag
-          name: ${NAME}:${VERSION}
-      type: ImageChange
-    - type: ConfigChange
 parameters:
 - description: A name used for all objects
   displayName: Name

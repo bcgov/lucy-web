@@ -4,7 +4,6 @@ objects:
 - apiVersion: v1
   kind: Secret
   metadata:
-    annotations: null
     name: template.${NAME}-slave-user
   stringData:
     metadata.name: template.${NAME}-slave-user
@@ -12,7 +11,6 @@ objects:
 - apiVersion: v1
   kind: Secret
   metadata:
-    annotations: null
     name: template.${NAME}-github
   stringData:
     metadata.name: template.${NAME}-github
