@@ -59,8 +59,6 @@ objects:
             kind: DockerImage
             name: openjdk:8-jdk-alpine
         type: Docker
-      triggers:
-        - type: ConfigChange
 parameters:
   - name: NAME
     displayName: Name

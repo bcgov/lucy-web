@@ -43,9 +43,6 @@ objects:
       app: "${NAME}"
   spec:
     completionDeadlineSeconds: 600
-    triggers:
-    - type: ImageChange
-    - type: ConfigChange
     runPolicy: SerialLatestOnly
     source:
       type: Git

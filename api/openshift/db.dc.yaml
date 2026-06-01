@@ -102,12 +102,6 @@ objects:
 - apiVersion: v1
   kind: Secret
   metadata:
-    annotations:
-      template.openshift.io/expose-database_name: "{.data['database-name']}"
-      template.openshift.io/expose-password: "{.data['database-password']}"
-      template.openshift.io/expose-admin-password: "{.data['database-admin-password']}"
-      template.openshift.io/expose-admin-username: "{.data['database-admin-user']}"
-      as-copy-of: invasivebc
     name: "${DATABASE_SERVICE_NAME}"
   stringData:
     database-name: "${POSTGRESQL_DATABASE}"
@@ -123,8 +117,6 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    annotations:
-      template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
     name: "${DATABASE_SERVICE_NAME}"
   spec:
     ports:
@@ -160,11 +152,9 @@ objects:
   spec:
     lookupPolicy:
       local: false
-- kind: DeploymentConfig
+- kind: Deployment
   apiVersion: v1
   metadata:
-    annotations:
-      template.alpha.openshift.io/wait-for-ready: 'true'
     name: "${DATABASE_SERVICE_NAME}"
   spec:
     replicas: 1
@@ -283,16 +273,3 @@ objects:
             claimName: "${DATABASE_SERVICE_NAME}"
         - name: "${DATABASE_SERVICE_NAME}-run"
           emptyDir: {}
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - postgresql
-        from:
-          kind: ImageStreamTag
-          name: "${IMAGE_STREAM_NAME}:${IMAGE_STREAM_VERSION}"
-          namespace: "${IMAGE_STREAM_NAMESPACE}"
-        lastTriggeredImage: ''
-      type: ImageChange
-    - type: ConfigChange
-  status: {}

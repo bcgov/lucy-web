@@ -78,7 +78,7 @@
       }
     },
     {
-      "kind": "DeploymentConfig",
+      "kind": "Deployment",
       "apiVersion": "v1",
       "metadata": {
         "name": "${NAME}${SUFFIX}",

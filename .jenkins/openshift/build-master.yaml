@@ -48,10 +48,6 @@ objects:
           namespace: ${SOURCE_IMAGE_STREAM_NAMESPACE}
       type: Docker
     successfulBuildsHistoryLimit: 2
-    triggers:
-    - type: ConfigChange
-    - imageChange: {}
-      type: ImageChange
 parameters:
 - description: A name used for all objects
   displayName: Name
